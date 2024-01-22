@@ -1,4 +1,4 @@
-# 操作系统思考 中文版
+# 操作系统思维中文版
 
 作者：[Allen B. Downey](http://greenteapress.com/wp/)
 

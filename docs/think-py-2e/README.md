@@ -1,4 +1,4 @@
-# Think Python
+# Python 编程思维第二版
 
 >第二版，基于 Python3
 

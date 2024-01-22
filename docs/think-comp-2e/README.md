@@ -1,4 +1,4 @@
-# 复杂性思维 中文第二版
+# 复杂性思维文第二版
 
 > 来源：[Think Complexity](http://greenteapress.com/complexity2/html/index.html)
 
