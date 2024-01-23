@@ -482,30 +482,37 @@
   id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: 协方差是这些乘积的平均值：
 - en: '| Cov(X,Y) =  |'
   id: totrans-80
   prefs: []
   type: TYPE_TB
+  zh: '| Cov(X,Y) =  |'
 - en: '&#124; 1 &#124;'
   id: totrans-81
   prefs: []
   type: TYPE_NORMAL
+  zh: '| 1 |'
 - en: '&#124;  &#124;'
   id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: '|  |'
 - en: '&#124; n &#124;'
   id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: '| n |'
 - en: '|  ∑dx[i] dy[i]  |'
   id: totrans-84
   prefs: []
   type: TYPE_TB
+  zh: '|  ∑dx[i] dy[i]  |'
 - en: where n is the length of the two series (they have to be the same length).
   id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: 其中n是两个序列的长度（它们必须是相同的长度）。
 - en: 'If you have studied linear algebra, you might recognize that `Cov` is the dot
     product of the deviations, divided by their length. So the covariance is maximized
     if the two vectors are identical, 0 if they are orthogonal, and negative if they
@@ -513,6 +520,7 @@
   id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果您学过线性代数，您可能会意识到`Cov`是偏差的点积，除以它们的长度。因此，如果两个向量相同，则协方差最大化，如果它们正交，则为0，并且如果它们指向相反的方向，则为负。`thinkstats2`使用`np.dot`有效地实现`Cov`：
 - en: '[PRE11]'
   id: totrans-87
   prefs: []
@@ -524,6 +532,7 @@
   id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: 默认情况下，`Cov`计算样本均值的偏差，或者您可以提供已知的均值。如果`xs`和`ys`是Python序列，`np.asarray`将它们转换为NumPy数组。如果它们已经是NumPy数组，`np.asarray`则不执行任何操作。
 - en: This implementation of covariance is meant to be simple for purposes of explanation.
     NumPy and pandas also provide implementations of covariance, but both of them
     apply a correction for small sample sizes that we have not covered yet, and `np.cov`
@@ -531,11 +540,13 @@
   id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个协方差的实现是为了解释的简单。NumPy和pandas也提供了协方差的实现，但它们都对小样本量进行了校正，这是我们尚未涵盖的，`np.cov`返回一个协方差矩阵，这对我们现在来说已经超出需要了。
 - en: 7.5  Pearson’s correlation
   id: totrans-90
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 7.5 皮尔逊相关系数
 - en: Covariance is useful in some computations, but it is seldom reported as a summary
     statistic because it is hard to interpret. Among other problems, its units are
     the product of the units of X and Y. For example, the covariance of weight and
@@ -543,106 +554,131 @@
   id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: 协方差在某些计算中很有用，但很少作为摘要统计数据报告，因为它很难解释。在其他问题中，它的单位是X和Y的单位的乘积。例如，在BRFSS数据集中，体重和身高的协方差是113千克-厘米，不管那意味着什么。
 - en: 'One solution to this problem is to divide the deviations by the standard deviation,
     which yields standard scores, and compute the product of standard scores:'
   id: totrans-92
   prefs: []
   type: TYPE_NORMAL
+  zh: 解决这个问题的一个方法是将偏差除以标准差，得到标准分数，并计算标准分数的乘积：
 - en: '| p[i] =  |'
   id: totrans-93
   prefs: []
   type: TYPE_TB
+  zh: '| p[i] =  |'
 - en: '&#124; (x[i] − x) &#124;'
   id: totrans-94
   prefs: []
   type: TYPE_NORMAL
+  zh: '| (x[i] − x) |'
 - en: '&#124;  &#124;'
   id: totrans-95
   prefs: []
   type: TYPE_NORMAL
+  zh: '|  |'
 - en: '&#124; S[X] &#124;'
   id: totrans-96
   prefs: []
   type: TYPE_NORMAL
+  zh: '| S[X] |'
 - en: '|   |'
   id: totrans-97
   prefs: []
   type: TYPE_TB
+  zh: '|  |'
 - en: '&#124; (y[i] − ȳ) &#124;'
   id: totrans-98
   prefs: []
   type: TYPE_NORMAL
+  zh: '| (y[i] − ȳ) |'
 - en: '&#124;  &#124;'
   id: totrans-99
   prefs: []
   type: TYPE_NORMAL
+  zh: '|  |'
 - en: '&#124; S[Y] &#124;'
   id: totrans-100
   prefs: []
   type: TYPE_NORMAL
+  zh: '| S[Y] |'
 - en: '|   |'
   id: totrans-101
   prefs: []
   type: TYPE_TB
+  zh: '|  |'
 - en: Where S[X] and S[Y] are the standard deviations of X and Y. The mean of these
     products is
   id: totrans-102
   prefs: []
   type: TYPE_NORMAL
+  zh: 其中S[X]和S[Y]分别是X和Y的标准差。这些乘积的均值是
 - en: '| ρ =  |'
   id: totrans-103
   prefs: []
   type: TYPE_TB
+  zh: '| ρ =  |'
 - en: '&#124; 1 &#124;'
   id: totrans-104
   prefs: []
   type: TYPE_NORMAL
+  zh: '| 1 |'
 - en: '&#124;  &#124;'
   id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: '|  |'
 - en: '&#124; n &#124;'
   id: totrans-106
   prefs: []
   type: TYPE_NORMAL
+  zh: '| n |'
 - en: '|  ∑p[i]  |'
   id: totrans-107
   prefs: []
   type: TYPE_TB
+  zh: '|  ∑p[i]  |'
 - en: 'Or we can rewrite ρ by factoring out S[X] and S[Y]:'
   id: totrans-108
   prefs: []
   type: TYPE_NORMAL
+  zh: 或者我们可以通过分解S[X]和S[Y]来重写ρ：
 - en: '| ρ =  |'
   id: totrans-109
   prefs: []
   type: TYPE_TB
+  zh: '| ρ =  |'
 - en: '&#124; Cov(X,Y) &#124;'
   id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: '| Cov(X,Y) |'
 - en: '&#124;  &#124;'
   id: totrans-111
   prefs: []
   type: TYPE_NORMAL
+  zh: '|  |'
 - en: '&#124; S[X] S[Y] &#124;'
   id: totrans-112
   prefs: []
   type: TYPE_NORMAL
+  zh: '| S[X] S[Y] |'
 - en: '|   |'
   id: totrans-113
   prefs: []
   type: TYPE_TB
+  zh: '|  |'
 - en: This value is called Pearson’s correlation after Karl Pearson, an influential
     early statistician. It is easy to compute and easy to interpret. Because standard
     scores are dimensionless, so is ρ.
   id: totrans-114
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个值被称为皮尔逊相关系数，以Karl Pearson命名，他是一位有影响力的早期统计学家。它易于计算和解释。因为标准分数是无量纲的，所以ρ也是无量纲的。
 - en: 'Here is the implementation in `thinkstats2`:'
   id: totrans-115
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是`thinkstats2`中的实现：
 - en: '[PRE12]'
   id: totrans-116
   prefs: []
@@ -653,6 +689,7 @@
   id: totrans-117
   prefs: []
   type: TYPE_NORMAL
+  zh: '`MeanVar`计算均值和方差比分别调用`np.mean`和`np.var`更有效率一些。'
 - en: Pearson’s correlation is always between -1 and +1 (including both). If ρ is
     positive, we say that the correlation is positive, which means that when one variable
     is high, the other tends to be high. If ρ is negative, the correlation is negative,
@@ -660,23 +697,27 @@
   id: totrans-118
   prefs: []
   type: TYPE_NORMAL
+  zh: 皮尔逊相关系数始终在-1和+1之间（包括两者）。如果ρ是正的，我们说相关性是正的，这意味着当一个变量很高时，另一个变量很可能也很高。如果ρ是负的，相关性是负的，所以当一个变量很高时，另一个变量很低。
 - en: The magnitude of ρ indicates the strength of the correlation. If ρ is 1 or -1,
     the variables are perfectly correlated, which means that if you know one, you
     can make a perfect prediction about the other.
   id: totrans-119
   prefs: []
   type: TYPE_NORMAL
+  zh: ρ的大小表示相关性的强度。如果ρ为1或-1，则变量是完全相关的，这意味着如果您知道一个变量，您可以对另一个变量进行完美的预测。
 - en: Most correlation in the real world is not perfect, but it is still useful. The
     correlation of height and weight is 0.51, which is a strong correlation compared
     to similar human-related variables.
   id: totrans-120
   prefs: []
   type: TYPE_NORMAL
+  zh: 现实世界中的大多数相关性并不完美，但仍然很有用。身高和体重的相关性为0.51，与类似的人类相关变量相比是很强的相关性。
 - en: 7.6  Nonlinear relationships
   id: totrans-121
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 7.6 非线性关系
 - en: If Pearson’s correlation is near 0, it is tempting to conclude that there is
     no relationship between the variables, but that conclusion is not valid. Pearson’s
     correlation only measures *linear* relationships. If there’s a nonlinear relationship,
@@ -684,11 +725,13 @@
   id: totrans-122
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果皮尔逊相关系数接近0，很容易得出结论认为变量之间没有关系，但这个结论是无效的。皮尔逊相关系数只测量*线性*关系。如果存在非线性关系，ρ低估了它的强度。
 - en: '* * *'
   id: totrans-123
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
   id: totrans-124
   prefs:
@@ -699,6 +742,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/4e6870ded39e797594ed9f2fdc54d84f.png)'
 - en: ''
   id: totrans-126
   prefs:
@@ -709,6 +753,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_TB
+  zh: '| 图7.4：具有各种相关性的数据集示例。 |'
 - en: ''
   id: totrans-128
   prefs:
@@ -719,12 +764,14 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: Figure [7.4](#corr_examples) is from [http://wikipedia.org/wiki/Correlation_and_dependence](http://wikipedia.org/wiki/Correlation_and_dependence).
     It shows scatter plots and correlation coefficients for several carefully constructed
     datasets.
   id: totrans-130
   prefs: []
   type: TYPE_NORMAL
+  zh: 图[7.4](#corr_examples)来自[http://wikipedia.org/wiki/Correlation_and_dependence](http://wikipedia.org/wiki/Correlation_and_dependence)。它显示了几个精心构造的数据集的散点图和相关系数。
 - en: The top row shows linear relationships with a range of correlations; you can
     use this row to get a sense of what different values of ρ look like. The second
     row shows perfect correlations with a range of slopes, which demonstrates that
