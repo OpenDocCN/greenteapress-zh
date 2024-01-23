@@ -1,246 +1,396 @@
 - en: Testing Order of Growth
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 测试增长顺序
 - en: 原文：[https://allendowney.github.io/DSIRP/timing.html](https://allendowney.github.io/DSIRP/timing.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/DSIRP/timing.html](https://allendowney.github.io/DSIRP/timing.html)
 - en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/timing.ipynb)'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: '[点击此处在Colab上运行本章](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/timing.ipynb)'
 - en: Analysis of algorithms makes it possible to predict how run time will grow as
     the size of a problem increases. But this kind of analysis ignores leading coefficients
     and non-leading terms. So the behavior for small and medium problems might not
     be what the analysis predicts.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 算法分析使得能够预测随着问题规模增加运行时间的增长。但是这种分析忽略了主导系数和非主导项。因此，对于小型和中型问题，行为可能不符合分析的预测。
 - en: To see how run time really behaves for a range of problem sizes, we can run
     the algorithm and measure.
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了真正了解运行时间如何随问题规模的变化而变化，我们可以运行算法并进行测量。
 - en: To do the measurement, we’ll use the [times](https://docs.python.org/3/library/os.html#os.times)
     function from the `os` module.
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了进行测量，我们将使用`os`模块中的[times](https://docs.python.org/3/library/os.html#os.times)函数。
 - en: '[PRE0]'
+  id: totrans-6
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '[PRE1]'
+  id: totrans-7
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '[PRE2]'
+  id: totrans-8
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: 'Exercise: Use `etime` to measure the computation time used by `sleep`.'
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 练习：使用`etime`来测量`sleep`使用的计算时间。
 - en: '[PRE3]'
+  id: totrans-10
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '[PRE4]'
+  id: totrans-11
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: One of the things that makes timing tricky is that many operations are too fast
     to measure accurately.
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 使计时变得棘手的一件事是许多操作速度太快，无法准确测量。
 - en: '`%timeit` handles this by running enough times get a precise estimate, even
     for things that run very fast.'
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: '`%timeit`通过运行足够多次来获得精确估计，即使对于运行非常快的事情也是如此。'
 - en: We’ll handle it by running over a wide range of problem sizes, hoping to find
     sizes that run long enough to measure, but not more than a few seconds.
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将通过运行一系列问题规模的范围来处理它，希望找到运行时间足够长但不超过几秒的规模。
 - en: The following function takes a size, `n`, creates an empty list, and calls `list.append`
     `n` times.
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数接受一个大小`n`，创建一个空列表，并调用`list.append` `n`次。
 - en: '[PRE5]'
+  id: totrans-16
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '`timeit` can time this function accurately.'
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: '`timeit`可以准确计时这个函数。'
 - en: '[PRE6]'
+  id: totrans-18
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '[PRE7]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: But our `time_func` is not that smart.
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是我们的`time_func`并不那么聪明。
 - en: '[PRE8]'
+  id: totrans-21
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '[PRE9]'
+  id: totrans-22
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: 'Exercise: Increase the number of iterations until the run time is measureable.'
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: 练习：增加迭代次数，直到运行时间可测量。
 - en: List append
+  id: totrans-24
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 列表附加
 - en: The following function gradually increases `n` and records the total time.
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数逐渐增加`n`并记录总时间。
 - en: '[PRE10]'
+  id: totrans-26
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '[PRE11]'
+  id: totrans-27
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: '[PRE12]'
+  id: totrans-28
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '[PRE13]'
+  id: totrans-29
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: '![_images/timing_21_0.png](../Images/de967991f7841998e3585c9626348eea.png)'
+  id: totrans-30
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/timing_21_0.png](../Images/de967991f7841998e3585c9626348eea.png)'
 - en: This one looks pretty linear, but it won’t always be so clear. It will help
     to plot a straight line that goes through the last data point.
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个看起来是相当线性的，但不会总是那么清晰。绘制一条通过最后一个数据点的直线将有所帮助。
 - en: '[PRE14]'
+  id: totrans-32
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '[PRE15]'
+  id: totrans-33
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '[PRE16]'
+  id: totrans-34
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: The following function plots the actual results and the fitted line.
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数绘制实际结果和拟合线。
 - en: '[PRE17]'
+  id: totrans-36
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: '[PRE18]'
+  id: totrans-37
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: '![_images/timing_27_0.png](../Images/ffc01fafc63bbbd03fec9cd950e27f17.png)'
+  id: totrans-38
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/timing_27_0.png](../Images/ffc01fafc63bbbd03fec9cd950e27f17.png)'
 - en: From these results, what can we conclude about the order of growth of `list.append`?
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 从这些结果中，我们对`list.append`的增长顺序能得出什么结论？
 - en: Before we go on, let’s also look at the results on a log-log scale.
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: 在继续之前，让我们也在对数-对数刻度上查看结果。
 - en: '[PRE19]'
+  id: totrans-41
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '![_images/timing_30_0.png](../Images/ddfc704936836d5a523d49f90545015e.png)'
+  id: totrans-42
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/timing_30_0.png](../Images/ddfc704936836d5a523d49f90545015e.png)'
 - en: Why might we prefer this scale?
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 为什么我们更喜欢这个刻度？
 - en: List pop
+  id: totrans-44
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 列表弹出
 - en: Now let’s do the same for `list.pop` (which pops from the end of the list by
     default).
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们对`list.pop`（默认从列表末尾弹出）做同样的事情。
 - en: Notice that we have to make the list before we pop things from it, so we will
     have to think about how to interpret the results.
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: 请注意，我们必须在从中弹出东西之前制作列表，因此我们必须考虑如何解释结果。
 - en: '[PRE20]'
+  id: totrans-47
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '[PRE21]'
+  id: totrans-48
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: '![_images/timing_33_1.png](../Images/52c1ade3798cd00abed858d566252789.png)'
+  id: totrans-49
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/timing_33_1.png](../Images/52c1ade3798cd00abed858d566252789.png)'
 - en: What can we conclude?
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们能得出什么结论？
 - en: What about `pop(0)`, which pops from the beginning of the list?
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: '`pop(0)`是从列表的开头弹出的，怎么样？'
 - en: 'Note: You might have to adjust `exp` to make the fitted line fit.'
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: 注意：您可能需要调整`exp`以使拟合线拟合。
 - en: '[PRE22]'
+  id: totrans-53
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: '[PRE23]'
+  id: totrans-54
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: '![_images/timing_35_1.png](../Images/25710c0d1158368978bc3573ecee763e.png)'
+  id: totrans-55
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/timing_35_1.png](../Images/25710c0d1158368978bc3573ecee763e.png)'
 - en: Searching a list
+  id: totrans-56
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 搜索列表
 - en: '`list.index` searches a list and returns the index of the first element that
     matches the target.'
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: '`list.index`搜索列表并返回与目标匹配的第一个元素的索引。'
 - en: What do we expect if we always search for the first element?
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们总是搜索第一个元素，我们会得到什么期望？
 - en: '[PRE24]'
+  id: totrans-59
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: '[PRE25]'
+  id: totrans-60
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: '![_images/timing_37_1.png](../Images/e690c7073f011818f06cf13e8b61a404.png)'
+  id: totrans-61
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/timing_37_1.png](../Images/e690c7073f011818f06cf13e8b61a404.png)'
 - en: What if we always search for the last element?
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们总是搜索最后一个元素会怎样？
 - en: '[PRE26]'
+  id: totrans-63
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: '[PRE27]'
+  id: totrans-64
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: '![_images/timing_39_1.png](../Images/1330a6bb9f90c0d8eeeae3dce07dbda5.png)'
+  id: totrans-65
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/timing_39_1.png](../Images/1330a6bb9f90c0d8eeeae3dce07dbda5.png)'
 - en: Dictionary add
+  id: totrans-66
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 字典添加
 - en: '[PRE28]'
+  id: totrans-67
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: '[PRE29]'
+  id: totrans-68
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: '![_images/timing_41_1.png](../Images/610c775fab59c8d3df1e0ec4f43400b5.png)'
+  id: totrans-69
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/timing_41_1.png](../Images/610c775fab59c8d3df1e0ec4f43400b5.png)'
 - en: Dictionary lookup
+  id: totrans-70
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 字典查找
 - en: '[PRE30]'
+  id: totrans-71
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: '[PRE31]'
+  id: totrans-72
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: '![_images/timing_43_1.png](../Images/3e6801ef3662ca0a2f4fc968124abfc8.png)'
+  id: totrans-73
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/timing_43_1.png](../Images/3e6801ef3662ca0a2f4fc968124abfc8.png)'
 - en: This characteristic of dictionaries is the foundation of a lot of efficient
     algorithms!
+  id: totrans-74
   prefs: []
   type: TYPE_NORMAL
+  zh: 这种字典的特性是许多高效算法的基础！

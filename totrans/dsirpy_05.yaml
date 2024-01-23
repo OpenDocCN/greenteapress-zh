@@ -1,171 +1,270 @@
 - en: Quiz 1
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 测验1
 - en: 原文：[https://allendowney.github.io/DSIRP/quiz01.html](https://allendowney.github.io/DSIRP/quiz01.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/DSIRP/quiz01.html](https://allendowney.github.io/DSIRP/quiz01.html)
 - en: 'BEFORE YOU START THIS QUIZ:'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 在开始此测验之前：
 - en: Click on “Copy to Drive” to make a copy of the quiz,
+  id: totrans-3
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 单击“复制到驱动器”以复制测验，
 - en: Click on “Share”,
+  id: totrans-4
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 单击“分享”,
 - en: Click on “Change” and select “Anyone with this link can edit”
+  id: totrans-5
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 单击“更改”，然后选择“任何人都可以编辑此链接”
 - en: Click “Copy link” and
+  id: totrans-6
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 点击“复制链接”
 - en: Paste the link into [this Canvas assignment](https://canvas.olin.edu/courses/313/assignments/4866).
+  id: totrans-7
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 将链接粘贴到[此Canvas作业](https://canvas.olin.edu/courses/313/assignments/4866)中。
 - en: Copyright 2021 Allen Downey, [MIT License](http://opensource.org/licenses/MIT)
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 版权所有2021年Allen Downey，[MIT许可证](http://opensource.org/licenses/MIT)
 - en: Setup
+  id: totrans-9
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 设置
 - en: The following cells download a file that contains a list of words, reads the
     words, and stores them in a `set`.
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下单元格下载一个包含单词列表的文件，读取单词，并将它们存储在一个`set`中。
 - en: '[PRE0]'
+  id: totrans-11
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '[PRE1]'
+  id: totrans-12
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '[PRE2]'
+  id: totrans-13
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '[PRE3]'
+  id: totrans-14
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: Question 1
+  id: totrans-15
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 问题1
 - en: The following function takes a string and returns `True` if the letters in the
     string appear in alphabetical order.
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数接受一个字符串，并在字符串中的字母按字母顺序出现时返回`True`。
 - en: '[PRE4]'
+  id: totrans-17
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '[PRE5]'
+  id: totrans-18
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '[PRE6]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '[PRE7]'
+  id: totrans-20
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '[PRE8]'
+  id: totrans-21
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: Make a new list called `alpha_words` that contains only the words in `word_list`
     that are alphabetical, and display the length of the list.
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 创建一个名为`alpha_words`的新列表，其中仅包含`word_list`中按字母顺序的单词，并显示列表的长度。
 - en: Question 2
+  id: totrans-23
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 问题2
 - en: Find and display the longest word in `alpha_words`. If there is more than one
     word with the maximal length, you can display any one of them (but only one).
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 找到并显示`alpha_words`中最长的单词。如果有多个具有最大长度的单词，则可以显示其中任何一个（但只能显示一个）。
 - en: 'NOTE: You can write code for this question even if your answer to the previous
     question doesn’t work. I’ll grade the code, not the output.'
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 注意：即使您对上一个问题的答案不起作用，您也可以为此问题编写代码。我会评估代码，而不是输出。
 - en: Question 3
+  id: totrans-26
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 问题3
 - en: Write a function called `encompasses` that takes two words and returns `True`
     if the first word contains the second word, but not at the beginning or the end
     (and `False` otherwise). For example, `hippopotomus` encompasses the word `pot`.
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 编写一个名为`encompasses`的函数，该函数接受两个单词并返回`True`，如果第一个单词包含第二个单词，但不在开头或结尾（否则返回`False`）。例如，`hippopotomus`包含单词`pot`。
 - en: 'HINT: You might find the string method `find` useful.'
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: 提示：您可能会发现字符串方法`find`有用。
 - en: '[PRE9]'
+  id: totrans-29
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '[PRE10]'
+  id: totrans-30
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '[PRE11]'
+  id: totrans-31
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: '[PRE12]'
+  id: totrans-32
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '[PRE13]'
+  id: totrans-33
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: You can use the following examples to test your function.
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 您可以使用以下示例来测试您的函数。
 - en: '[PRE14]'
+  id: totrans-35
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '[PRE15]'
+  id: totrans-36
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '[PRE16]'
+  id: totrans-37
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '[PRE17]'
+  id: totrans-38
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: '[PRE18]'
+  id: totrans-39
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: '[PRE19]'
+  id: totrans-40
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '[PRE20]'
+  id: totrans-41
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '[PRE21]'
+  id: totrans-42
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: '[PRE22]'
+  id: totrans-43
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: Question 4
+  id: totrans-44
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 问题4
 - en: Two words make a “reverse pair” if one of them is the reverse of the other.
     For example, `pots` and `stop` are a reverse pair.
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果其中一个单词是另一个单词的倒转，则两个单词构成“倒转对”。例如，`pots`和`stop`是一个倒转对。
 - en: The words in a reverse pair must be different, so `gag` and `gag` are not a
     reverse pair.
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: 倒转对中的单词必须不同，因此`gag`和`gag`不构成倒转对。
 - en: Make a list of all reverse pairs in `word_list`. Each pair of words should appear
     only once, so if `('tons', 'snot')` is in the list, `('snot', 'tons')` should
     not be.
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 制作`word_list`中所有倒转对的列表。每对单词应该只出现一次，因此如果列表中有`('tons', 'snot')`，则不应该有`('snot',
+    'tons')`。
 - en: 'BONUS QUESTION JUST FOR FUN: What is the longest reverse pair in this word
     list?'
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 仅供娱乐的奖励问题：这个单词列表中最长的倒转对是什么？
