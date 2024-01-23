@@ -3,27 +3,32 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 第9章 假设检验
 - en: 原文：[https://greenteapress.com/thinkstats2/html/thinkstats2010.html](https://greenteapress.com/thinkstats2/html/thinkstats2010.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://greenteapress.com/thinkstats2/html/thinkstats2010.html](https://greenteapress.com/thinkstats2/html/thinkstats2010.html)
 - en: The code for this chapter is in `hypothesis.py`. For information about downloading
     and working with this code, see Section [0.2](thinkstats2001.html#code).
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章的代码在`hypothesis.py`中。有关下载和使用此代码的信息，请参阅第[0.2](thinkstats2001.html#code)节。
 - en: 9.1  Classical hypothesis testing
   id: totrans-3
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 9.1 经典假设检验
 - en: Exploring the data from the NSFG, we saw several “apparent effects,” including
     differences between first babies and others. So far we have taken these effects
     at face value; in this chapter, we put them to the test.
   id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 通过研究NSFG的数据，我们看到了几个“表面效应”，包括初生婴儿和其他婴儿之间的差异。到目前为止，我们已经直接接受了这些效应；在本章中，我们将对它们进行测试。
 - en: The fundamental question we want to address is whether the effects we see in
     a sample are likely to appear in the larger population. For example, in the NSFG
     sample we see a difference in mean pregnancy length for first babies and others.
@@ -32,6 +37,7 @@
   id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们要解决的基本问题是，我们在样本中看到的效应是否可能出现在更大的人群中。例如，在NSFG样本中，我们看到初生婴儿和其他婴儿的怀孕期长度有差异。我们想知道这种效应是否反映了美国妇女之间的真实差异，或者是否可能仅仅是样本中偶然出现的。
 - en: There are several ways we could formulate this question, including Fisher null
     hypothesis testing, Neyman-Pearson decision theory, and Bayesian inference^([1](#note4)).
     What I present here is a subset of all three that makes up most of what people
@@ -39,12 +45,14 @@
   id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以用几种方法来制定这个问题，包括费舍尔零假设检验、内曼-皮尔逊决策理论和贝叶斯推断^([1](#note4))。我在这里介绍的是这三种方法的一个子集，它包括了大多数人在实践中使用的内容，我将其称为经典假设检验。
 - en: 'The goal of classical hypothesis testing is to answer the question, “Given
     a sample and an apparent effect, what is the probability of seeing such an effect
     by chance?” Here’s how we answer that question:'
   id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 经典假设检验的目标是回答这样一个问题：“在给定一个样本和一个表面效应的情况下，看到这样的效应的概率是多少？”我们是这样回答这个问题的：
 - en: The first step is to quantify the size of the apparent effect by choosing a
     test statistic. In the NSFG example, the apparent effect is a difference in pregnancy
     length between first babies and others, so a natural choice for the test statistic
@@ -53,6 +61,7 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 第一步是通过选择一个检验统计量来量化表面效应的大小。在NSFG的例子中，表面效应是初生婴儿和其他婴儿的怀孕期长度差异，因此检验统计量的一个自然选择是两组之间的均值差异。
 - en: The second step is to define a null hypothesis, which is a model of the system
     based on the assumption that the apparent effect is not real. In the NSFG example
     the null hypothesis is that there is no difference between first babies and others;
@@ -61,6 +70,7 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 第二步是定义一个零假设，这是一个基于表面效应不是真实的假设系统模型。在NSFG的例子中，零假设是初生婴儿和其他婴儿之间没有差异；也就是说，两组的怀孕期长度具有相同的分布。
 - en: The third step is to compute a p-value, which is the probability of seeing the
     apparent effect if the null hypothesis is true. In the NSFG example, we would
     compute the actual difference in means, then compute the probability of seeing
@@ -69,6 +79,7 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 第三步是计算p值，即在零假设成立的情况下看到表面效应的概率。在NSFG的例子中，我们将计算实际的均值差异，然后计算在零假设下看到一个与之一样大或更大的差异的概率。
 - en: The last step is to interpret the result. If the p-value is low, the effect
     is said to be statistically significant, which means that it is unlikely to have
     occurred by chance. In that case we infer that the effect is more likely to appear
@@ -77,12 +88,14 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 最后一步是解释结果。如果p值很低，效应被认为是统计显著的，这意味着它不太可能是偶然发生的。在这种情况下，我们推断这种效应更可能出现在更大的人群中。
 - en: The logic of this process is similar to a proof by contradiction. To prove a
     mathematical statement, A, you assume temporarily that A is false. If that assumption
     leads to a contradiction, you conclude that A must actually be true.
   id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个过程的逻辑类似于反证法。为了证明一个数学命题A，你暂时假设A是假的。如果这个假设导致矛盾，那么你就得出结论A实际上是真的。
 - en: Similarly, to test a hypothesis like, “This effect is real,” we assume, temporarily,
     that it is not. That’s the null hypothesis. Based on that assumption, we compute
     the probability of the apparent effect. That’s the p-value. If the p-value is
@@ -90,16 +103,19 @@
   id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 类似地，为了测试“这种效应是真实的”这样的假设，我们暂时假设它不是。这就是零假设。基于这一假设，我们计算表面效应的概率。这就是p值。如果p值很低，我们得出结论，零假设不太可能成立。
 - en: 9.2  HypothesisTest
   id: totrans-14
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 9.2 假设检验
 - en: '`thinkstats2` provides `HypothesisTest`, a class that represents the structure
     of a classical hypothesis test. Here is the definition:'
   id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: '`thinkstats2`提供了`HypothesisTest`类，表示经典假设检验的结构。以下是定义：'
 - en: '[PRE0]'
   id: totrans-16
   prefs: []
@@ -112,12 +128,14 @@
   id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: '`HypothesisTest`是一个抽象的父类，为一些方法提供完整的定义，并为其他方法提供占位符。基于`HypothesisTest`的子类继承`__init__`和`PValue`，并提供`TestStatistic`，`RunModel`，以及可选的`MakeModel`。'
 - en: '`__init__` takes the data in whatever form is appropriate. It calls `MakeModel`,
     which builds a representation of the null hypothesis, then passes the data to
     `TestStatistic`, which computes the size of the effect in the sample.'
   id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: '`__init__`以适当的形式接受数据。它调用`MakeModel`，建立零假设的表示，然后将数据传递给`TestStatistic`，计算样本中效应的大小。'
 - en: '`PValue` computes the probability of the apparent effect under the null hypothesis.
     It takes as a parameter `iters`, which is the number of simulations to run. The
     first line generates simulated data, computes test statistics, and stores them
