@@ -3,205 +3,253 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 第6章概率密度函数
 - en: 原文：[https://greenteapress.com/thinkstats2/html/thinkstats2007.html](https://greenteapress.com/thinkstats2/html/thinkstats2007.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://greenteapress.com/thinkstats2/html/thinkstats2007.html](https://greenteapress.com/thinkstats2/html/thinkstats2007.html)
 - en: The code for this chapter is in `density.py`. For information about downloading
     and working with this code, see Section [0.2](thinkstats2001.html#code).
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章的代码在`density.py`中。有关下载和使用此代码的信息，请参见第[0.2](thinkstats2001.html#code)节。
 - en: 6.1  PDFs
   id: totrans-3
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 6.1 PDFs
 - en: The derivative of a CDF is called a probability density function, or PDF. For
     example, the PDF of an exponential distribution is
   id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: CDF的导数称为概率密度函数，或PDF。例如，指数分布的PDF是
 - en: '| PDF[expo](x) = λ e^(−λ x)    |'
   id: totrans-5
   prefs: []
   type: TYPE_TB
+  zh: '| PDF[expo](x) = λ e^(−λ x)    |'
 - en: The PDF of a normal distribution is
   id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 正态分布的概率密度函数是
 - en: '| PDF[normal](x) =  |'
   id: totrans-7
   prefs: []
   type: TYPE_TB
+  zh: '| PDF[normal](x) =  |'
 - en: '&#124; 1 &#124;'
   id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124; 1 &#124;'
 - en: '&#124;  &#124;'
   id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124;  &#124;'
 - en: '&#124;'
   id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124;'
 - en: '&#124; σ  &#124; √ &#124;'
   id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124; σ  &#124; √ &#124;'
 - en: '&#124;  &#124;'
   id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124;  &#124;'
 - en: '&#124; 2 π &#124;'
   id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124; 2 π &#124;'
 - en: '&#124;'
   id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124;'
 - en: '&#124;'
   id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124;'
 - en: '| exp | ⎡ ⎢'
   id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: '| exp | ⎡ ⎢'
 - en: ⎢
   id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: ⎢
 - en: ⎢
   id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: ⎢
 - en: ⎢
   id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: ⎢
 - en: ⎢
   id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: ⎢
 - en: ⎣ | − |
   id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: ⎣ | − |
 - en: '&#124; 1 &#124;'
   id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124; 1 &#124;'
 - en: '&#124;  &#124;'
   id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124;  &#124;'
 - en: '&#124; 2 &#124;'
   id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124; 2 &#124;'
 - en: '|  | ⎛ ⎜'
   id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: '|  | ⎛ ⎜'
 - en: ⎜
   id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: ⎜
 - en: ⎝ |
   id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: ⎝ |
 - en: '&#124; x − µ &#124;'
   id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124; x − µ &#124;'
 - en: '&#124;  &#124;'
   id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124;  &#124;'
 - en: '&#124; σ &#124;'
   id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124; σ &#124;'
 - en: '|   | ⎞ ⎟'
   id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: '|   | ⎞ ⎟'
 - en: ⎟
   id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: ⎟
 - en: ⎠ |
   id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: ⎠ |
 - en: '&#124; 2 &#124;'
   id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124; 2 &#124;'
 - en: '&#124;    &#124;'
   id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124;    &#124;'
 - en: '&#124;   &#124;'
   id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124;   &#124;'
 - en: '|   | ⎤ ⎥'
   id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: '|   | ⎤ ⎥'
 - en: ⎥
   id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: ⎥
 - en: ⎥
   id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: ⎥
 - en: ⎥
   id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: ⎥
 - en: ⎥
   id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: ⎥
 - en: ⎦ |
   id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: ⎦ |
 - en: Evaluating a PDF for a particular value of x is usually not useful. The result
     is not a probability; it is a probability *density*.
   id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 通常对特定值x的PDF进行评估通常是没有用的。结果不是概率；它是概率*密度*。
 - en: In physics, density is mass per unit of volume; in order to get a mass, you
     have to multiply by volume or, if the density is not constant, you have to integrate
     over volume.
   id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: 在物理学中，密度是单位体积的质量；为了得到质量，你必须乘以体积，或者如果密度不是恒定的，你必须对体积进行积分。
 - en: Similarly, probability density measures probability per unit of x. In order
     to get a probability mass, you have to integrate over x.
   id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 类似地，概率密度测量x的单位概率。为了得到概率质量，你必须对x进行积分。
 - en: '`thinkstats2` provides a class called Pdf that represents a probability density
     function. Every Pdf object provides the following methods:'
   id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: '`thinkstats2`提供了一个名为Pdf的类，表示概率密度函数。每个Pdf对象都提供以下方法：'
 - en: '`Density`, which takes a value, `x`, and returns the density of the distribution
     at `x`.'
   id: totrans-47
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`Density`，它接受一个值`x`，并返回分布在`x`处的密度。'
 - en: '`Render`, which evaluates the density at a discrete set of values and returns
     a pair of sequences: the sorted values, `xs`, and their probability densities,
     `ds`.'
@@ -209,18 +257,21 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`Render`，它在一组离散值上评估密度，并返回一对序列：排序后的值`xs`和它们的概率密度`ds`。'
 - en: '`MakePmf`, which evaluates `Density` at a discrete set of values and returns
     a normalized Pmf that approximates the Pdf.'
   id: totrans-49
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`MakePmf`，它在一组离散值上评估`Density`，并返回一个近似于Pdf的归一化Pmf。'
 - en: '`GetLinspace`, which returns the default set of points used by `Render` and
     `MakePmf`.'
   id: totrans-50
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`GetLinspace`返回`Render`和`MakePmf`使用的默认点集。'
 - en: Pdf is an abstract parent class, which means you should not instantiate it;
     that is, you cannot create a Pdf object. Instead, you should define a child class
     that inherits from Pdf and provides definitions of `Density` and `GetLinspace`.
@@ -228,11 +279,13 @@
   id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: Pdf是一个抽象的父类，这意味着你不应该实例化它；也就是说，你不能创建一个Pdf对象。相反，你应该定义一个从Pdf继承并提供`Density`和`GetLinspace`定义的子类。Pdf提供`Render`和`MakePmf`。
 - en: For example, `thinkstats2` provides a class named `NormalPdf` that evaluates
     the normal density function.
   id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，`thinkstats2`提供了一个名为`NormalPdf`的类，用于评估正态密度函数。
 - en: '[PRE0]'
   id: totrans-53
   prefs: []
@@ -244,6 +297,7 @@
   id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: NormalPdf对象包含参数`mu`和`sigma`。`Density`使用`scipy.stats.norm`，它是一个表示正态分布并提供`cdf`和`pdf`等方法的对象（参见第[5.2](thinkstats2006.html#normal)节）。
 - en: The following example creates a NormalPdf with the mean and variance of adult
     female heights, in cm, from the BRFSS (see Section [5.4](thinkstats2006.html#brfss)).
     Then it computes the density of the distribution at a location one standard deviation
@@ -251,6 +305,7 @@
   id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下示例使用BRFSS（参见第[5.4](thinkstats2006.html#brfss)节）中成年女性身高的平均值和方差（以厘米为单位）创建一个NormalPdf。然后它计算分布在距离平均值一个标准差的位置的密度。
 - en: '[PRE1]'
   id: totrans-56
   prefs: []
@@ -262,6 +317,7 @@
   id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果约为0.03，以概率质量每厘米为单位。再次强调，概率密度本身并没有太多意义。但如果我们绘制Pdf，我们可以看到分布的形状：
 - en: '[PRE2]'
   id: totrans-58
   prefs: []
@@ -273,10 +329,12 @@
   id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: '`thinkplot.Pdf`将Pdf绘制为平滑函数，与`thinkplot.Pmf`相反，后者将Pmf渲染为阶梯函数。图[6.1](#pdf_example)显示了结果，以及从样本估计的PDF，我们将在下一节中计算。'
 - en: 'You can use `MakePmf` to approximate the Pdf:'
   id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 你可以使用`MakePmf`来近似Pdf：
 - en: '[PRE3]'
   id: totrans-61
   prefs: []
@@ -288,11 +346,13 @@
   id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: 默认情况下，生成的Pmf包含从`mu - 3*sigma`到`mu + 3*sigma`等距的101个点。可选地，`MakePmf`和`Render`可以接受关键字参数`low`、`high`和`n`。
 - en: '* * *'
   id: totrans-63
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
   id: totrans-64
   prefs:
@@ -303,6 +363,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/6d2ce04600dea5b3a58ad2825c13cb2c.png)'
 - en: ''
   id: totrans-66
   prefs:
@@ -314,6 +375,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_TB
+  zh: '| 图6.1：美国成年女性身高的正态概率密度函数，以及n=500的样本的核密度估计。 |'
 - en: ''
   id: totrans-68
   prefs:
@@ -324,16 +386,19 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: 6.2  Kernel density estimation
   id: totrans-70
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 6.2 核密度估计
 - en: Kernel density estimation (KDE) is an algorithm that takes a sample and finds
     an appropriately smooth PDF that fits the data. You can read details at [http://en.wikipedia.org/wiki/Kernel_density_estimation](http://en.wikipedia.org/wiki/Kernel_density_estimation).
   id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: 核密度估计（KDE）是一种算法，它接受一个样本，并找到一个适当平滑的PDF来适应数据。你可以在[http://en.wikipedia.org/wiki/Kernel_density_estimation](http://en.wikipedia.org/wiki/Kernel_density_estimation)上阅读详细信息。
 - en: '`scipy` provides an implementation of KDE and `thinkstats2` provides a class
     called `EstimatedPdf` that uses it:'
   id: totrans-72
