@@ -3,64 +3,79 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 时间和地点
 - en: 原文：[https://allendowney.github.io/ElementsOfDataScience/02_times.html](https://allendowney.github.io/ElementsOfDataScience/02_times.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ElementsOfDataScience/02_times.html](https://allendowney.github.io/ElementsOfDataScience/02_times.html)
 - en: '[Run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/02_times.ipynb)
     or'
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: '[在Colab上运行此笔记本](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/02_times.ipynb)
+    或'
 - en: '[Run this notebook on Sagemaker Studio Lab](https://studiolab.sagemaker.aws/import/github/AllenDowney/ElementsOfDataScience/blob/master/02_times.ipynb)
     or'
   id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: '[在Sagemaker Studio Lab上运行此笔记本](https://studiolab.sagemaker.aws/import/github/AllenDowney/ElementsOfDataScience/blob/master/02_times.ipynb)
+    或'
 - en: '[Download this notebook](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/02_times.ipynb).'
   id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: '[下载此笔记本](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/02_times.ipynb)。'
 - en: 'In the previous chapter, you learned about variables and two kinds of values:
     integers and floating-point numbers.'
   id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 在上一章中，您学习了变量和两种值：整数和浮点数。
 - en: 'In this chapter, you’ll see some additional types:'
   id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本章中，您将看到一些其他类型：
 - en: Strings, which represent text.
   id: totrans-7
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 表示文本的字符串。
 - en: Time stamps, which represent dates and times.
   id: totrans-8
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 时间戳，表示日期和时间。
 - en: And several ways to represent and display geographical locations.
   id: totrans-9
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 以及表示和显示地理位置的几种方法。
 - en: Not every data science project uses all of these types, but many projects use
     at least one.
   id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 并非每个数据科学项目都使用所有这些类型，但许多项目至少使用一个。
 - en: Strings
   id: totrans-11
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 字符串
 - en: A **string** is a sequence of letters, numbers, and punctuation marks. In Python
     you can create a string by enclosing text between single or double quotation marks.
   id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: '**字符串**是字母、数字和标点符号的序列。在Python中，您可以通过在单引号或双引号之间放置文本来创建字符串。'
 - en: '[PRE0]'
   id: totrans-13
   prefs: []
@@ -85,6 +100,7 @@
   id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: 您还可以将字符串值分配给变量。
 - en: '[PRE4]'
   id: totrans-18
   prefs: []
@@ -101,6 +117,7 @@
   id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 一些算术运算符可以与字符串一起使用，但它们可能不会产生您期望的结果。例如，`+`运算符**连接**两个字符串；也就是说，它创建一个包含第一个字符串后跟第二个字符串的新字符串：
 - en: '[PRE6]'
   id: totrans-21
   prefs: []
@@ -116,6 +133,7 @@
   id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果要在单词之间放置一个空格，可以使用包含空格的字符串：
 - en: '[PRE8]'
   id: totrans-24
   prefs: []
@@ -130,11 +148,13 @@
   id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 字符串用于存储文本数据，如姓名、地址、标题等。
 - en: 'When you read data from a file, you might see values that look like numbers,
     but they are actually strings, like this:'
   id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 当您从文件中读取数据时，您可能会看到看起来像数字的值，但实际上是字符串，就像这样：
 - en: '[PRE10]'
   id: totrans-28
   prefs: []
@@ -146,6 +166,8 @@
   id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果您尝试对这些字符串进行数学运算，*可能*会出现错误。例如，以下表达式会导致`TypeError`，并显示“can only concatenate
+    `str` (not `int`) to `str`”。
 - en: '[PRE11]'
   id: totrans-30
   prefs: []
@@ -156,6 +178,7 @@
   id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 但您并不总是会收到错误消息；相反，您可能会得到一个令人惊讶的结果。例如：
 - en: '[PRE12]'
   id: totrans-32
   prefs: []
@@ -171,11 +194,13 @@
   id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果您将字符串乘以整数，Python将重复给定次数的字符串。
 - en: 'If you have a string that contains only digits, you can convert it to an integer
     using the `int` function:'
   id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果字符串只包含数字，可以使用`int`函数将其转换为整数：
 - en: '[PRE14]'
   id: totrans-36
   prefs: []
@@ -190,6 +215,7 @@
   id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 或者您可以使用`float`将其转换为浮点数：
 - en: '[PRE16]'
   id: totrans-39
   prefs: []
@@ -204,11 +230,13 @@
   id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是，如果字符串包含小数点，您无法将其转换为`int`。
 - en: 'Going in the other direction, you can convert any type of value to a string
     using `str`:'
   id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: 另一方面，您可以使用`str`将任何类型的值转换为字符串：
 - en: '[PRE18]'
   id: totrans-43
   prefs: []
@@ -235,6 +263,7 @@
   id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习**：当个人姓名存储在数据库中时，它们通常存储在三个变量中：名、姓和有时是中间名。例如，伟大的摇滚鼓手名单可能包括：'
 - en: '[PRE22]'
   id: totrans-48
   prefs: []
@@ -247,21 +276,26 @@
   id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是在不同的上下文中，名称通常以不同的方式显示。例如，在文章中首次提到某人时，您可能会给出所有三个名称，例如“Neil Ellwood Peart”。但在书的索引中，您可能会先放姓，例如“Peart,
+    Neil Ellwood”。
 - en: Write Python expressions that use the variables `given`, `middle`, and `family`
     to display Neil Peart’s name in these two formats.
   id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用变量`given`，`middle`和`family`编写Python表达式，以这两种格式显示Neil Peart的名称。
 - en: Representing Dates and Times
   id: totrans-51
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 表示日期和时间
 - en: If you read data from a file, you might also find that dates and times are represented
     with strings.
   id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果您从文件中读取数据，您可能还会发现日期和时间是用字符串表示的。
 - en: '[PRE23]'
   id: totrans-53
   prefs: []
@@ -272,6 +306,7 @@
   id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: 要确认该值是字符串，我们可以使用`type`函数，该函数接受一个值并报告其类型。
 - en: '[PRE24]'
   id: totrans-55
   prefs: []
@@ -286,10 +321,12 @@
   id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: '`str`表示`not_really_a_date`的值是字符串。'
 - en: 'We get the same result with `not_really_a_time`, below:'
   id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以在下面的`not_really_a_time`中获得相同的结果：
 - en: '[PRE26]'
   id: totrans-59
   prefs: []
@@ -305,12 +342,14 @@
   id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: 表示日期和时间的字符串对于人们来说是可读的，但对于计算来说并不实用。
 - en: 'Fortunately, Python provides libraries for working with date and time data;
     the one we’ll use is called Pandas. As always, we have to import a library before
     we use it; it is conventional to import Pandas with the abbreviated name `pd`:'
   id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: 幸运的是，Python提供了用于处理日期和时间数据的库；我们将使用的一个库叫做Pandas。与往常一样，在使用库之前，我们必须导入它；通常使用缩写名称`pd`导入Pandas：
 - en: '[PRE28]'
   id: totrans-63
   prefs: []
@@ -320,11 +359,13 @@
   id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: Pandas提供了一种称为`Timestamp`的类型，它表示日期和时间。
 - en: 'It also provides a function called `Timestamp`, which we can use to convert
     a string to a `Timestamp`:'
   id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: 它还提供了一个名为`Timestamp`的函数，我们可以使用它将字符串转换为`Timestamp`：
 - en: '[PRE29]'
   id: totrans-66
   prefs: []
@@ -339,6 +380,7 @@
   id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: 或者我们可以使用上面定义的变量执行相同的操作。
 - en: '[PRE31]'
   id: totrans-69
   prefs: []
