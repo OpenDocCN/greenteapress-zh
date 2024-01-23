@@ -1,8 +1,10 @@
 - en: Estimating vaccine efficacy
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
 - en: 原文：[https://allendowney.github.io/ThinkBayes2/vaccine2.html](https://allendowney.github.io/ThinkBayes2/vaccine2.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
@@ -10,43 +12,53 @@
     so the makers of the vaccine reported that it is 100% effective. Of course, nothing
     in the real world is 100% effective, so this example raises a question: how do
     we estimate efficacy when the number of cases is 0?'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
 - en: In this article, I present a Bayesian way to answer this question – and the
     answer turns out to be about 94%.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
 - en: '*If you like this article, you might also like the second edition of [*Think
     Bayes*](https://greenteapress.com/wp/think-bayes/).*'
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
 - en: '[Click here to run this article on Colab](https://colab.research.google.com/github/AllenDowney/ThinkBayes2/blob/master/examples/vaccine2.ipynb)'
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
 - en: The Data
+  id: totrans-6
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: According to [this press release](https://www.pfizer.com/news/press-release/press-release-detail/pfizer-biontech-announce-positive-topline-results-pivotal)
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
 - en: …in a Phase 3 trial in adolescents 12 to 15 years of age with or without prior
     evidence of SARS-CoV-2 infection, the Pfizer-BioNTech COVID-19 vaccine BNT162b2
     demonstrated 100% efficacy and robust antibody responses…
+  id: totrans-8
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: Of course, it is good news that the vaccine seems to work in this age group
     as well as it does in adults, and possibly better. But reporting that the vaccine
     is 100% effective is a little strange.
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
 - en: The press release includes the following details about the results
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
 - en: The trial enrolled 2,260 adolescents 12 to 15 years of age in the United States.
     In the trial, 18 cases of COVID-19 were observed in the placebo group (n=1,129)
     versus none in the vaccinated group (n=1,131).
+  id: totrans-11
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
@@ -54,165 +66,241 @@
     that the vaccine works, but in the real world, nothing is 100% effective. In a
     bigger trial, we should expect to see at least one case in the vaccinated group.
     But how can we estimate the frequency of something that has not happened yet?
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
 - en: Bayesian statistics provides a sensible way to do just that.
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
 - en: Here’s the data as reported in the press release.
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE0]'
+  id: totrans-15
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: To estimate the efficacy of the vaccine, I’ll start by computing the risk in
     each group separately.
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
 - en: The Beta Distribution
+  id: totrans-17
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: If we start with a uniform prior distribution, the posterior is a beta distribution
     with parameters
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE1]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: We can use SciPy to make beta distributions that represents the posteriors.
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE2]'
+  id: totrans-21
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: Here’s the posterior distribution for the control branch.
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE3]'
+  id: totrans-23
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '[PRE4]'
+  id: totrans-24
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: 'The posterior mean is close to the observed proportion:'
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE5]'
+  id: totrans-26
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '[PRE6]'
+  id: totrans-27
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: Here’s the posterior distribution for the treatment branch.
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE7]'
+  id: totrans-29
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '[PRE8]'
+  id: totrans-30
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: The posterior mean is about 0.1%, which is small, but not 0.
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
 - en: 'To compute the distribution of risk ratios, I’ll make a discrete approximation
     to the two posterior distributions, using the `Pmf` object from `empiricaldist`:'
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE9]'
+  id: totrans-33
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: 'Here are the `Pmf` objects:'
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE10]'
+  id: totrans-35
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: 'And here’s what they look like:'
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE11]'
+  id: totrans-37
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: '![_images/d49a40c56490a24d2bed801957622063f28a37002fbdcdeb9e1bb630bcefc1ba.png](../Images/0774531b7db34a1d885c794d474cd7fa.png)'
+  id: totrans-38
   prefs: []
   type: TYPE_IMG
 - en: Computing Efficacy
+  id: totrans-39
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: Now, to compute efficacy, I’ll use these distributions to compute the distribution
     of risk ratio, `RR`, and then compute the distribution of efficacy, which is the
     complement of risk ration, `1-RR`.
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
 - en: We can use `div_dist` to compute the risk ratio.
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE12]'
+  id: totrans-42
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: Here’s the CDF of the risk ratio. I cut it off at 1 because higher values have
     very low probabilities; that is, we are pretty sure the treatment is effective.
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE13]'
+  id: totrans-44
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: '![_images/52ddb97b67f0e1e0ef654e57e3821a182ca4da7ac9eb3139252a3b843439a763.png](../Images/fd0c4a9a47780bc9f7e9c1bc2549d78c.png)'
+  id: totrans-45
   prefs: []
   type: TYPE_IMG
 - en: To compute the distribution of efficacy, we have to compute the distribution
     of `1-RR`, where `RR` is the risk ratio. We can do that with `empiricaldist` by
     creating a deterministic `Pmf` with the quantity `1` and using `sub_dist` to subtract
     two `Pmf`s.
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE14]'
+  id: totrans-47
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: Here’s the result.
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE15]'
+  id: totrans-49
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '![_images/31e48b6b6d9ba65a9acbcc12f0d0e324e7a5f51e9d71a5219389681f5d4a6a94.png](../Images/18ab9b62e59b1dc92850cf29c46fa713.png)'
+  id: totrans-50
   prefs: []
   type: TYPE_IMG
 - en: The posterior mean is about 94%.
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE16]'
+  id: totrans-52
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '[PRE17]'
+  id: totrans-53
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: And the 95% credible interval is between 79% and 99.9%.
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: 95%的可信区间在79%和99.9%之间。
 - en: '[PRE18]'
+  id: totrans-55
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: '[PRE19]'
+  id: totrans-56
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: By these estimates, the efficacy in teenagers is about the same as in adults.
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 根据这些估计，青少年的功效与成年人大致相同。
 - en: '*If you like this article, you might also like the second edition of [*Think
     Bayes*](https://greenteapress.com/wp/think-bayes/).*'
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你喜欢这篇文章，你可能也会喜欢第二版的[*Think Bayes*](https://greenteapress.com/wp/think-bayes/)。
 - en: Copyright 2020 Allen Downey
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 版权所有 2020 Allen Downey
 - en: 'Code: [MIT License](https://opensource.org/licenses/MIT)'
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 代码：[MIT许可证](https://opensource.org/licenses/MIT)
 - en: 'Text: [Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA
     4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: 文本：[署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/)

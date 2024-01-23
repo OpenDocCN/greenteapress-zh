@@ -522,45 +522,53 @@
   id: totrans-90
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/61d9287b6df210c1961fdd80866bb33aed5bd0f21854fe0ae10d4fbf5e6cda7d.png](../Images/75e81c84847b0f9a0cbfd30dae478be9.png)'
 - en: Because of rounding errors, `posterior_y` contains quantities that are not in
     `posterior_x` and `posterior_z`; that’s why I plotted it as a CDF, and why it
     appears jaggy.
   id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: 由于四舍五入误差，`posterior_y`包含`posterior_x`和`posterior_z`中没有的数量；这就是为什么我将其绘制为CDF，以及为什么它看起来不平滑。
 - en: Decision analysis
   id: totrans-92
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 决策分析
 - en: 'At this point we can use the number of passengers on the platform to predict
     the distribution of wait times. Now let’s get to the second part of the question:
     when should I stop waiting for the train and go catch a taxi?'
   id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这一点上，我们可以使用站台上的乘客数量来预测等待时间的分布。现在让我们来回答问题的第二部分：我应该在什么时候停止等待火车，转而打车呢？
 - en: Remember that in the original scenario, I am trying to get to South Station
     to catch the commuter rail. Suppose I leave the office with enough time that I
     can wait 15 minutes and still make my connection at South Station.
   id: totrans-94
   prefs: []
   type: TYPE_NORMAL
+  zh: 请记住，在原始情景中，我试图去南站赶通勤列车。假设我离开办公室的时间足够长，可以等待15分钟，仍然能在南站换乘。
 - en: In that case I would like to know the probability that `y` exceeds 15 minutes
     as a function of `num_passengers`. To answer that question, we can run the analysis
     from the previous section with range of `num_passengers`.
   id: totrans-95
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这种情况下，我想知道`y`超过15分钟的概率作为`num_passengers`的函数。为了回答这个问题，我们可以使用`num_passengers`的范围运行上一节的分析。
 - en: But there’s a problem. The analysis is sensitive to the frequency of long delays,
     and because long delays are rare, it is hard to estimate their frequency.
   id: totrans-96
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是有一个问题。分析对长时间延迟的频率很敏感，因为长时间延迟很少，很难估计它们的频率。
 - en: I only have data from one week, and the longest delay I observed was 15 minutes.
     So I can’t estimate the frequency of longer delays accurately.
   id: totrans-97
   prefs: []
   type: TYPE_NORMAL
+  zh: 我只有一周的数据，我观察到的最长延迟是15分钟。因此，我无法准确估计更长延迟的频率。
 - en: However, I can use previous observations to make at least a coarse estimate.
     When I commuted by Red Line for a year, I saw three long delays caused by a signaling
     problem, a power outage, and “police activity” at another stop. So I estimate
@@ -568,12 +576,14 @@
   id: totrans-98
   prefs: []
   type: TYPE_NORMAL
+  zh: 然而，我可以使用以前的观察来至少粗略估计。当我每天乘坐红线通勤一年时，我看到了由信号问题、停电和另一个站点的“警方活动”引起的三次长时间延迟。因此，我估计每年大约有3次重大延误。
 - en: But remember that my observations are biased. I am more likely to observe long
     delays because they affect a large number of passengers. So we should treat my
     observations as a sample of `posterior_z` rather than `pmf_z`.
   id: totrans-99
   prefs: []
   type: TYPE_NORMAL
+  zh: 但请记住，我的观察是有偏见的。我更有可能观察到长时间延迟，因为它们影响了大量的乘客。因此，我们应该将我的观察视为`posterior_z`的样本，而不是`pmf_z`的样本。
 - en: Here’s how we can augment the observed distribution of gap times with some assumptions
     about long delays. From `posterior_z`, I’ll draw a sample of 260 values (roughly
     the number of work days in a year). Then I’ll add in delays of 30, 40, and 50
@@ -581,6 +591,7 @@
   id: totrans-100
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是我们如何使用一些关于长时间延迟的假设来增加间隔时间的观察分布。从`posterior_z`中，我将抽取260个值的样本（大约是一年的工作日数）。然后我将添加30、40和50分钟的延迟（我一年观察到的长时间延迟的数量）。
 - en: '[PRE31]'
   id: totrans-101
   prefs: []
@@ -591,6 +602,7 @@
   id: totrans-102
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将使用这个增强的样本来对`z`的后验分布进行新的估计。
 - en: '[PRE32]'
   id: totrans-103
   prefs: []
@@ -600,6 +612,7 @@
   id: totrans-104
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是它的样子。
 - en: '[PRE33]'
   id: totrans-105
   prefs: []
@@ -609,10 +622,12 @@
   id: totrans-106
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/7bfbd95ae9bd4887c57bc32400c1dec1dbeb8652fa9241dc818eacb979846646.png](../Images/f95937bcdf0834cd93a8fc34d62d2008.png)'
 - en: Now let’s take the analysis from the previous sections and wrap it in a function.
   id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们把前面章节的分析封装成一个函数。
 - en: '[PRE34]'
   id: totrans-108
   prefs: []
@@ -624,6 +639,7 @@
   id: totrans-109
   prefs: []
   type: TYPE_NORMAL
+  zh: 根据我们到达车站时的乘客数量，计算`y`的后验分布。例如，如果我们看到10名乘客，这是等待时间的分布。
 - en: '[PRE35]'
   id: totrans-110
   prefs: []
@@ -634,6 +650,7 @@
   id: totrans-111
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以用它来计算平均等待时间和等待时间超过15分钟的概率。
 - en: '[PRE36]'
   id: totrans-112
   prefs: []
@@ -659,10 +676,12 @@
   id: totrans-116
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们看到10名乘客，我们预计等待时间会略少于5分钟，等待超过15分钟的几率约为1%。
 - en: Let’s see what happens if we sweep through a range of values for `num_passengers`.
   id: totrans-117
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们看看如果我们扫描`num_passengers`的一系列值会发生什么。
 - en: '[PRE40]'
   id: totrans-118
   prefs: []
@@ -672,6 +691,7 @@
   id: totrans-119
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是等待时间的平均值作为乘客数量的函数。
 - en: '[PRE41]'
   id: totrans-120
   prefs: []
@@ -686,26 +706,31 @@
   id: totrans-122
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/de8465ec97e738535f8ac65691bea6648336280ca606ad9c716453477a6eb069.png](../Images/5e37984f60418e47375174ccc8603cdf.png)'
 - en: If there are no passengers on the platform when I arrive, I infer that I just
     missed a train; in that case, the expected wait time is the mean of `augmented_posterior_z`.
   id: totrans-123
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我到达站台时没有乘客，我推断我刚错过了一班火车；在这种情况下，期望的等待时间是`augmented_posterior_z`的均值。
 - en: The more passengers I see, the longer I think it has been since the last train,
     and the more likely a train arrives soon.
   id: totrans-124
   prefs: []
   type: TYPE_NORMAL
+  zh: 我看到的乘客越多，我认为自上一班火车以来的时间越长，下一班火车到达的可能性就越大。
 - en: But only up to a point. If there are more than 30 passengers on the platform,
     that suggests that there is a long delay, and the expected wait time starts to
     increase.
   id: totrans-125
   prefs: []
   type: TYPE_NORMAL
+  zh: 但只有到一定程度。如果站台上的乘客超过30人，这表明有长时间延迟，预期的等待时间开始增加。
 - en: Now here’s the probability that wait time exceeds 15 minutes.
   id: totrans-126
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在这里是等待时间超过15分钟的概率。
 - en: '[PRE43]'
   id: totrans-127
   prefs: []
@@ -720,12 +745,14 @@
   id: totrans-129
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/a87493d6a5550a6e781319f383c1cbe9de96056c8d7a72a31c5b2d216b9adac1.png](../Images/92079aa07aadc5383a5fa67cef4c049b.png)'
 - en: When the number of passengers is less than 20, we infer that the system is operating
     normally, so the probability of a long delay is small. If there are 30 passengers,
     we suspect that something is wrong and expect longer delays.
   id: totrans-130
   prefs: []
   type: TYPE_NORMAL
+  zh: 当乘客数量少于20时，我们推断系统正常运行，因此长时间延迟的概率很小。如果有30名乘客，我们怀疑出了问题，并且预计会有更长的延迟。
 - en: If we are willing to accept a 5% chance of missing the connection at South Station,
     we should stay and wait as long as there are fewer than 30 passengers, and take
     a taxi if there are more.
