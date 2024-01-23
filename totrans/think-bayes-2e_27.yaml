@@ -1,17 +1,25 @@
 - en: Flipping USB Connectors
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 翻转USB连接器
 - en: 原文：[https://allendowney.github.io/ThinkBayes2/usb.html](https://allendowney.github.io/ThinkBayes2/usb.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ThinkBayes2/usb.html](https://allendowney.github.io/ThinkBayes2/usb.html)
 - en: This notebook is one of the examples in the second edition of [*Think Bayes*](https://greenteapress.com/wp/think-bayes/).
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个笔记本是第二版[*Think Bayes*](https://greenteapress.com/wp/think-bayes/)中的一个例子。
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ThinkBayes2/blob/master/examples/usb.ipynb).'
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: '[点击这里在Colab上运行这个笔记本](https://colab.research.google.com/github/AllenDowney/ThinkBayes2/blob/master/examples/usb.ipynb)。'
 - en: I am not the first person to observe that it sometimes takes several tries to
     plug in a USB connector (specifically the rectangular [Type A connector](https://en.wikipedia.org/wiki/USB),
     which is not reversible). There are [memes about it](https://knowyourmeme.com/memes/usb-insertion-issues),
@@ -22,198 +30,295 @@
     [about](https://www.quora.com/People-that-can-plug-the-USB-in-on-their-first-try-How)
     [it](https://www.quora.com/Why-cant-we-plug-in-USB-devices-correctly-the-first-time)
     more than once.
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 我不是第一个观察到插入USB连接器（特别是不可逆的矩形[Type A连接器](https://en.wikipedia.org/wiki/USB)）有时需要尝试几次的人。有[关于它的迷因](https://knowyourmeme.com/memes/usb-insertion-issues)，有[关于它的漫画](https://www.smbc-comics.com/?id=2388)，仅在Quora上，[人们](https://www.quora.com/Why-do-you-always-have-to-flip-a-USB-twice-when-trying-to-plug-it-in-Shouldn-t-it-have-gone-in-the-first-time-when-you-had-it-the-right-way)
+    [问过](https://www.quora.com/There-is-a-50-chance-of-plugging-in-a-USB-cable-the-right-way-on-the-first-try-Why-does-it-only-happen-20-of-the-time-when-I-do-it)
+    [关于](https://www.quora.com/Why-doesnt-the-USB-go-in-the-first-time-but-does-after-youve-turn-it-a-few-times)
+    [它](https://www.quora.com/People-that-can-plug-the-USB-in-on-their-first-try-How)
+    [更](https://www.quora.com/Why-cant-we-plug-in-USB-devices-correctly-the-first-time)
+    [一次](https://www.quora.com/Why-cant-we-plug-in-USB-devices-correctly-the-first-time)。
 - en: But I might be the first to use Bayesian decision analysis to figure out the
     optimal strategy for plugging in a USB connector. Specifically, I have worked
     out how long you should try on the first side before flipping, how long you should
     try on the second side before flipping again, how long you should try on the third
     side, and so on.
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 但我可能是第一个使用贝叶斯决策分析来找出插入USB连接器的最佳策略的人。具体来说，我已经计算出在翻转之前你应该在第一边尝试多长时间，在翻转之前你应该在第二边尝试多长时间，在第三边尝试多长时间，依此类推。
 - en: 'Of course, my analysis is based on some modeling assumptions:'
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 当然，我的分析是基于一些建模假设：
 - en: Initially, the probability is 0.5 that the connector is in the right orientation.
+  id: totrans-7
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 最初，连接器方向正确的概率是0.5。
 - en: If it is, the time it takes to succeed follows an exponential distribution with
     a mean of 1.1 seconds.
+  id: totrans-8
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如果是的话，成功所需的时间遵循均值为1.1秒的指数分布。
 - en: Flipping the connector takes 0.1 seconds.
+  id: totrans-9
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 翻转连接器需要0.1秒。
 - en: With that, we are ready to get started.
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 有了这个，我们准备好开始了。
 - en: Continuous Updates
+  id: totrans-11
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 持续更新
 - en: The first step is to figure out the probability that the connector is in the
     right orientation as a function of how long you have been trying. For that, we
     can use a Bayes table, which is a form of Bayes’s Theorem I use in [Chapter 2
     of *Think Bayes*](https://allendowney.github.io/ThinkBayes2/chap02.html#bayes-tables).
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 第一步是根据你尝试的时间来确定连接器方向正确的概率。为此，我们可以使用贝叶斯表，这是我在[*Think Bayes*](https://allendowney.github.io/ThinkBayes2/chap02.html#bayes-tables)第2章中使用的贝叶斯定理的一种形式。
 - en: The following function takes a sequence of hypotheses, prior probabilities,
     and likelihoods, and returns a pandas `DataFrame` that represents a Bayes table.
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下功能接受假设序列、先验概率和似然性，并返回一个表示贝叶斯表的pandas `DataFrame`。
 - en: '[PRE0]'
+  id: totrans-14
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: Now suppose that the prior probability is 0.5 that the orientation of the connector
     is correct, and you have been trying for 0.9 seconds. What is the likelihood that
     you would have to try so long?
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在假设连接器方向正确的先验概率是0.5，并且你已经尝试了0.9秒。你需要尝试这么长时间的概率是多少？
 - en: If you are on the wrong side, it is 100%.
+  id: totrans-16
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果你在错误的一边，那就是100%。
 - en: If you are on the right side, it’s given by the survival function (complementary
     CDF) of the exponential distribution, which is \(\exp(-\lambda t)\), where \(\lambda\)
     is the rate parameter and \(t\) is time.
+  id: totrans-17
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果你在正确的一边，它由指数分布的生存函数（补充CDF）给出，即\(\exp(-\lambda t)\)，其中\(\lambda\)是速率参数，\(t\)是时间。
 - en: 'The following function computes this likelihood:'
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数计算这个似然性：
 - en: '[PRE1]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: We can use this function to compute the likelihood of trying for 0.9 seconds
     or more, given an exponential distribution with mean 1.1.
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用这个函数来计算尝试0.9秒或更长时间的似然性，假设具有均值为1.1的指数分布。
 - en: '[PRE2]'
+  id: totrans-21
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '[PRE3]'
+  id: totrans-22
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: The result is the likelihood of the data, given that the orientation of the
     connector is correct.
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是数据的似然性，假设连接器的方向是正确的。
 - en: Now let’s make a Bayes table with two hypotheses – the connector is either the
     right way or the wrong way – with equal prior probabilities.
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们用两个假设制作一个贝叶斯表——连接器要么是正确的，要么是错误的——先验概率相等。
 - en: '[PRE4]'
+  id: totrans-25
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: 'And here is the likelihood of the data for each hypothesis:'
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是每个假设的数据的似然性：
 - en: '[PRE5]'
+  id: totrans-27
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: Putting it together, here’s the Bayes table.
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: 把它放在一起，这是贝叶斯表。
 - en: '[PRE6]'
+  id: totrans-29
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '|  | prior | likelihood | unnorm | posterior |'
+  id: totrans-30
   prefs: []
   type: TYPE_TB
+  zh: '|  | 先验 | 似然性 | 非标准化 | 后验 |'
 - en: '| --- | --- | --- | --- | --- |'
+  id: totrans-31
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- |'
 - en: '| Right way | 0.5 | 0.441233 | 0.220617 | 0.30615 |'
+  id: totrans-32
   prefs: []
   type: TYPE_TB
+  zh: '| 正确方向 | 0.5 | 0.441233 | 0.220617 | 0.30615 |'
 - en: '| Wrong way | 0.5 | 1.000000 | 0.500000 | 0.69385 |'
+  id: totrans-33
   prefs: []
   type: TYPE_TB
+  zh: '| 错误方向 | 0.5 | 1.000000 | 0.500000 | 0.69385 |'
 - en: After 0.9 seconds, the probability is about 69% that the orientation of the
     connector is wrong, so you might want to think about trying the other side.
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 0.9秒后，连接器方向错误的概率约为69%，所以你可能想考虑尝试另一边。
 - en: But if it takes 0.1 seconds to flip, maybe you should keep trying a little longer.
     To figure out when to flip, let’s do the same analysis again for general values
     of \(\lambda\) and \(t\).
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
 - en: Generalization
+  id: totrans-36
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: To minimize human error, I’ll use Sympy to do the algebra. Here are the symbols
     I’ll use.
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE7]'
+  id: totrans-38
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: Here’s the likelihood again, using the symbols.
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE8]'
+  id: totrans-40
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '[PRE9]'
+  id: totrans-41
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: And here’s the Bayes table, using \(p\) and \(q\) for the prior probabilities
     of the hypotheses.
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE10]'
+  id: totrans-43
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '|  | prior | likelihood | unnorm | posterior |'
+  id: totrans-44
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- | --- | --- |'
+  id: totrans-45
   prefs: []
   type: TYPE_TB
 - en: '| Right way | p | exp(-lam*t) | p*exp(-lam*t) | p*exp(-lam*t)/(p*exp(-lam*t)
     + q) |'
+  id: totrans-46
   prefs: []
   type: TYPE_TB
 - en: '| Wrong way | q | 1 | q | q/(p*exp(-lam*t) + q) |'
+  id: totrans-47
   prefs: []
   type: TYPE_TB
 - en: From the table I’ll select the posterior probability that the orientation is
     correct.
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE11]'
+  id: totrans-49
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: \[\displaystyle \frac{p}{p + q e^{lam t}}\]
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
 - en: 'You might recognize this as a form of the [logistic function](https://en.wikipedia.org/wiki/Logistic_function);
     we can compute it like this:'
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE12]'
+  id: totrans-52
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: Let’s see what that looks like for a range of values of `t`, assuming that the
     prior probability is `p=0.5`.
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE13]'
+  id: totrans-54
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: '![_images/de7c57b361e3862191718049c129160d6a2e309b37236e2a27b5b2808d885d73.png](../Images/e0b43dd27c7fbea3ab513e80e876d2c8.png)'
+  id: totrans-55
   prefs: []
   type: TYPE_IMG
 - en: After a few seconds of fiddling, you should be reasonably convinced that the
     orientation is wrong.
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
 - en: Strategy
+  id: totrans-57
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -222,323 +327,485 @@
     of correct orientation drops below some threshold (to be determined), then try
     on the second side until the probability drops below that threshold again, and
     repeat until success.'
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
 - en: To test this strategy, we will have to figure out how long to try as a function
     of the prior probability, `p`, and the threshold probability, `r`. Again, I’ll
     make Sympy do the work.
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
 - en: Here’s the equation that sets the posterior probability, which we computed in
     the previous section, to `r`.
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE14]'
+  id: totrans-61
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: \[\displaystyle \frac{p e^{- lam t}}{p e^{- lam t} + q} = r\]
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
 - en: And here’s the solution for `t` in terms of `p`, `q`, `r`, and `lam`.
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE15]'
+  id: totrans-64
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: \[\displaystyle \frac{\log{\left(\frac{p \left(1 - r\right)}{q r} \right)}}{lam}\]
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
 - en: And here’s how we can express this solution in terms of the prior and posterior
     odds.
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE16]'
+  id: totrans-67
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: Let’s see what that looks like for a range of values of `r`, assuming that the
     prior probability is `p=0.5`.
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE17]'
+  id: totrans-69
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: '![_images/585af370b3b160af0bbacf09de7d129454c09bcd871873947b05f4c51cef9119.png](../Images/92988963e15d5f8249194a7819a6f3b5.png)'
+  id: totrans-70
   prefs: []
   type: TYPE_IMG
 - en: When the threshold is low, we have to wait a few seconds to reach it. As the
     threshold increases, the time to reach it decreases. We’ll use this function in
     the next section to simulate the strategy.
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
 - en: Simulation
+  id: totrans-72
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: 'As a step toward optimization, let’s run a simulation. The following function
     takes as parameters:'
+  id: totrans-73
   prefs: []
   type: TYPE_NORMAL
 - en: '`correct`: A Boolean indicating if the orientation is correct.'
+  id: totrans-74
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: '`p`: The prior probability that the orientation is correct.'
+  id: totrans-75
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: '`lam`: The rate parameter for the distribution of time until success.'
+  id: totrans-76
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: '`r`: The threshold for the posterior probability.'
+  id: totrans-77
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: '`flip`: The time it takes to flip the connector, in seconds.'
+  id: totrans-78
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: '`trace`: A list that indicates how much time we have spent, so far, trying
     and flipping.'
+  id: totrans-79
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: It runs the simulation and returns a sequence of waiting and flipping times.
     The sum of this sequence is the total time it took to connect. And we can use
     the length of the sequence to figure out how many times we had to flip.
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE18]'
+  id: totrans-81
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: Here’s a test run, starting on the correct side.
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE19]'
+  id: totrans-83
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '[PRE20]'
+  id: totrans-84
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: And here’s a run where we start on the wrong side.
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE21]'
+  id: totrans-86
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: '[PRE22]'
+  id: totrans-87
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: The following function runs the simulation many times with initial probability
     `p=0.5`, starting in the right orientation half the time.
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
 - en: It returns two arrays, containing the length of the trace and the total duration
     for each simulation.
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE23]'
+  id: totrans-90
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: Here’s the average total duration with threshold probability `r=0.25`.
+  id: totrans-91
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE24]'
+  id: totrans-92
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: '[PRE25]'
+  id: totrans-93
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: With this threshold, it takes about 2 seconds to connect, on average.
+  id: totrans-94
   prefs: []
   type: TYPE_NORMAL
 - en: Optimization
+  id: totrans-95
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: 'Now let’s see how the average duration varies as we sweep through a range of
     values for the threshold probability, `r`:'
+  id: totrans-96
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE26]'
+  id: totrans-97
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: '[PRE27]'
+  id: totrans-98
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: '[PRE28]'
+  id: totrans-99
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-100
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE29]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-101
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE29]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE30]</details>'
+  id: totrans-102
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE30]</details>'
 - en: Here’s what the results look like.
+  id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是结果的样子。
 - en: '[PRE31]'
+  id: totrans-104
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: '![_images/ef0f082f51ddabf66af0c0bbf2d1d4782f60fe8dbe4dcddffbcce2057af35668.png](../Images/46c9bf10513019779a2766dd437dcf8a.png)'
+  id: totrans-105
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/ef0f082f51ddabf66af0c0bbf2d1d4782f60fe8dbe4dcddffbcce2057af35668.png](../Images/46c9bf10513019779a2766dd437dcf8a.png)'
 - en: The optimal value of `r` is close to `0.3`. With that threshold we can see how
     long we should try on the first side, starting with prior probability `p=0.5`.
+  id: totrans-106
   prefs: []
   type: TYPE_NORMAL
+  zh: '`r`的最佳值接近`0.3`。 有了这个阈值，我们可以看到我们应该在第一面尝试多长时间，从先验概率`p=0.5`开始。'
 - en: '[PRE32]'
+  id: totrans-107
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: '[PRE33]'
+  id: totrans-108
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: With the given values of `lam` and `flip`, it turns out the optimal time to
     wait is about `0.9` seconds.
+  id: totrans-109
   prefs: []
   type: TYPE_NORMAL
+  zh: 根据给定的`lam`和`flip`的值，最佳等待时间约为0.9秒。
 - en: If we have to flip, the prior probability for the second side is `p=1-r`, so
     we have to wait twice as long for the posterior probability to get down to `r`.
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们必须翻转，第二面的先验概率为`p=1-r`，所以我们必须等待后验概率下降到`r`的时间是先验概率的两倍。
 - en: '[PRE34]'
+  id: totrans-111
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: '[PRE35]'
+  id: totrans-112
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: How many flips?
+  id: totrans-113
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 多少次翻转？
 - en: Now let’s run the simulations with the optimal value of `r` and see what the
     distributions look like for the total time and the number of flips.
+  id: totrans-114
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们使用`r`的最佳值运行模拟，看看总时间和翻转次数的分布是什么样子。
 - en: '[PRE36]'
+  id: totrans-115
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: Here’s the distribution of total time, represented as a CDF.
+  id: totrans-116
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是总时间的分布，表示为CDF。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-117
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE37]</details>'
+  id: totrans-118
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE37]</details>'
 - en: '[PRE38]'
+  id: totrans-119
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: '![_images/9a5ebc6d681cac7ad22288b3e56e8dcf324fd8c82edfcdff5c099b0adbca4dcf.png](../Images/019ab7cd4409dae18454950f0eb8b385.png)'
+  id: totrans-120
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/9a5ebc6d681cac7ad22288b3e56e8dcf324fd8c82edfcdff5c099b0adbca4dcf.png](../Images/019ab7cd4409dae18454950f0eb8b385.png)'
 - en: '[PRE39]'
+  id: totrans-121
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: '[PRE40]'
+  id: totrans-122
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE40]'
 - en: '[PRE41]'
+  id: totrans-123
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE41]'
 - en: '[PRE42]'
+  id: totrans-124
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE42]'
 - en: '[PRE43]'
+  id: totrans-125
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE43]'
 - en: '[PRE44]'
+  id: totrans-126
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE44]'
 - en: The average is about 2.4 seconds, but occasionally it takes much longer!
+  id: totrans-127
   prefs: []
   type: TYPE_NORMAL
+  zh: 平均时间约为2.4秒，但有时需要更长的时间！
 - en: And here’s the distribution for the total number of flips.
+  id: totrans-128
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是总翻转次数的分布。
 - en: '[PRE45]'
+  id: totrans-129
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE45]'
 - en: '![_images/329756fe4226fb8140b519ec40aeaa938e308f4be1f6881e173cfec0fecedb4c.png](../Images/e98ce3352f7d73ac847fc303eb0e09bd.png)'
+  id: totrans-130
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/329756fe4226fb8140b519ec40aeaa938e308f4be1f6881e173cfec0fecedb4c.png](../Images/e98ce3352f7d73ac847fc303eb0e09bd.png)'
 - en: '[PRE46]'
+  id: totrans-131
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE46]'
 - en: '|  | probs |'
+  id: totrans-132
   prefs: []
   type: TYPE_TB
+  zh: '|  | 概率 |'
 - en: '| --- | --- |'
+  id: totrans-133
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| 0.0 | 0.282925 |'
+  id: totrans-134
   prefs: []
   type: TYPE_TB
+  zh: '| 0.0 | 0.282925 |'
 - en: '| 1.0 | 0.407050 |'
+  id: totrans-135
   prefs: []
   type: TYPE_TB
+  zh: '| 1.0 | 0.407050 |'
 - en: '| 2.0 | 0.177200 |'
+  id: totrans-136
   prefs: []
   type: TYPE_TB
+  zh: '| 2.0 | 0.177200 |'
 - en: '| 3.0 | 0.075200 |'
+  id: totrans-137
   prefs: []
   type: TYPE_TB
+  zh: '| 3.0 | 0.075200 |'
 - en: '| 4.0 | 0.032575 |'
+  id: totrans-138
   prefs: []
   type: TYPE_TB
+  zh: '| 4.0 | 0.032575 |'
 - en: The probability of getting it right on the first try is only about 28%. That
     might seem low, because the chance of starting in the right orientation is 50%,
     but remember that we have a substantial chance of flipping even if we start in
     the right orientation (and in that case, we have to flip at least twice).
+  id: totrans-139
   prefs: []
   type: TYPE_NORMAL
+  zh: 第一次就猜对的概率只有28%左右。 这可能看起来很低，因为正确方向的概率是50%，但请记住，即使我们从正确的方向开始，我们也有相当大的翻转的机会（在这种情况下，我们至少要翻转两次）。
 - en: The most common outcome is that we have to flip once, about 40% of the time.
     And the probability of the notorious double flip is about 18%.
+  id: totrans-140
   prefs: []
   type: TYPE_NORMAL
+  zh: 最常见的结果是我们必须翻转一次，大约40%的时间。 臭名昭著的双重翻转的概率约为18%。
 - en: Fortunately, it is rare to flip three or more times.
+  id: totrans-141
   prefs: []
   type: TYPE_NORMAL
+  zh: 幸运的是，翻转三次或更多次的情况很少见。
 - en: Summary
+  id: totrans-142
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 摘要
 - en: With that, I think we have solved the USB connector problem.
+  id: totrans-143
   prefs: []
   type: TYPE_NORMAL
+  zh: 有了这个，我认为我们已经解决了USB连接器的问题。
 - en: For given parameters `lam` and `flip`, we can find the threshold probability,
     `r`, that minimizes the average time to connect.
+  id: totrans-144
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 对于给定的参数`lam`和`flip`，我们可以找到最小化连接平均时间的阈值概率`r`。
 - en: Given this optimal value, we can estimate the distribution of total time and
     the number of times we have to flip.
+  id: totrans-145
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 在给定这个最佳值的情况下，我们可以估计总时间的分布以及我们必须翻转的次数。
 - en: Sadly, all of this fun is gradually being spoiled by the encroachment of the
     [USB-C](https://en.wikipedia.org/wiki/USB-C) connector, which is reversible.
+  id: totrans-146
   prefs: []
   type: TYPE_NORMAL
+  zh: 遗憾的是，所有这些乐趣逐渐被[USB-C](https://en.wikipedia.org/wiki/USB-C)连接器的侵蚀所破坏，它是可逆的。
 - en: '*If you like this article, you might also like the second edition of [*Think
     Bayes*](https://greenteapress.com/wp/think-bayes/).*'
+  id: totrans-147
   prefs: []
   type: TYPE_NORMAL
+  zh: '*如果你喜欢这篇文章，你可能也会喜欢第二版的[*Think Bayes*](https://greenteapress.com/wp/think-bayes/)*。'
 - en: Copyright 2021 Allen Downey
+  id: totrans-148
   prefs: []
   type: TYPE_NORMAL
+  zh: 版权所有 2021 Allen Downey
 - en: 'Code: [MIT License](https://opensource.org/licenses/MIT)'
+  id: totrans-149
   prefs: []
   type: TYPE_NORMAL
+  zh: 代码：[MIT 许可证](https://opensource.org/licenses/MIT)
 - en: 'Text: [Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA
     4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  id: totrans-150
   prefs: []
   type: TYPE_NORMAL
+  zh: 文本：[署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
