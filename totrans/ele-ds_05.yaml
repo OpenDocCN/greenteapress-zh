@@ -253,6 +253,7 @@
   id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是伦敦的价格，以1.25美元/英镑的汇率转换成美元。
 - en: '[PRE20]'
   id: totrans-51
   prefs: []
@@ -263,6 +264,7 @@
   id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: 列表提供了一些算术运算符，但它们可能不会得到你想要的结果。例如，你可以“相加”两个列表：
 - en: '[PRE21]'
   id: totrans-53
   prefs: []
@@ -279,21 +281,25 @@
   id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: 但它连接了这两个列表，在这个例子中并不是很有用。要计算价格之间的差异，你可以尝试减去列表，但会得到一个错误。
 - en: We can solve this problem with NumPy.
   id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以用NumPy解决这个问题。
 - en: NumPy Arrays
   id: totrans-57
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: NumPy数组
 - en: We’ve already seen that the NumPy library provides math functions. It also provides
     a type of sequence called an **array**. You can create a new array with the `np.array`
     function, starting with a list or tuple.
   id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们已经看到NumPy库提供了数学函数。它还提供了一种称为**数组**的序列类型。你可以使用`np.array`函数创建一个新数组，从一个列表或元组开始。
 - en: '[PRE23]'
   id: totrans-59
   prefs: []
@@ -303,6 +309,7 @@
   id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果的类型是`numpy.ndarray`。
 - en: '[PRE24]'
   id: totrans-61
   prefs: []
@@ -319,6 +326,7 @@
   id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: “nd”代表“n维”，这表明NumPy数组可以有任意数量的维度。但现在我们将使用一维序列。如果你显示一个数组，Python会显示元素：
 - en: '[PRE26]'
   id: totrans-64
   prefs: []
@@ -334,6 +342,7 @@
   id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: 你还可以显示数组的**数据类型**，即元素的类型：
 - en: '[PRE28]'
   id: totrans-67
   prefs: []
@@ -350,11 +359,13 @@
   id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: '`float64`表示元素是占据64位的浮点数。你不需要了解这些数字的存储格式，但如果你感兴趣，可以在[https://en.wikipedia.org/wiki/Floating-point_arithmetic#Internal_representation](https://en.wikipedia.org/wiki/Floating-point_arithmetic#Internal_representation)上阅读相关内容。'
 - en: The elements of a NumPy array can be any type, but they all have to be the same
     type. Most often the elements are numbers, but you can also make an array of strings.
   id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: NumPy数组的元素可以是任何类型，但它们都必须是相同的类型。最常见的情况是元素是数字，但你也可以创建一个字符串数组。
 - en: '[PRE30]'
   id: totrans-71
   prefs: []
@@ -371,11 +382,13 @@
   id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个例子中，`dtype`是`<U17`。`U`表示元素是Unicode字符串；Unicode是Python用来表示字符串的标准。数字`17`是数组中最长字符串的长度。
 - en: 'Now, here’s why NumPy arrays are useful: they can do arithmetic. For example,
     to compute the differences between Boston and London prices, we can write:'
   id: totrans-74
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，这就是为什么NumPy数组很有用的原因：它们可以进行算术运算。例如，要计算波士顿和伦敦价格之间的差异，我们可以这样写：
 - en: '[PRE32]'
   id: totrans-75
   prefs: []
@@ -391,15 +404,18 @@
   id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: 减法是**逐元素**进行的；也就是说，NumPy将两个数组对齐并相减对应的元素。结果是一个新数组。
 - en: Statistical Summaries
   id: totrans-78
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 统计摘要
 - en: 'NumPy provides functions that compute statistical summaries like the mean:'
   id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: NumPy提供了计算统计摘要的函数，比如均值：
 - en: '[PRE34]'
   id: totrans-80
   prefs: []
@@ -416,6 +432,7 @@
   id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，我们可以这样描述价格的差异：“波士顿的三明治平均更贵2.64美元”。我们也可以先计算均值，然后计算它们的差异：
 - en: '[PRE36]'
   id: totrans-83
   prefs: []
@@ -432,6 +449,7 @@
   id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一样的：均值的差异与差异的均值是一样的。顺便说一句，许多NumPy函数也适用于列表，所以我们也可以这样做：
 - en: '[PRE38]'
   id: totrans-86
   prefs: []
@@ -447,38 +465,46 @@
   id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**标准差是衡量一组数字变异性的方法。计算标准差的NumPy函数是`np.std`。'
 - en: Compute the standard deviation of sandwich prices in Boston and London. By this
     measure, which set of prices is more variable?
   id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: 计算波士顿和伦敦三明治价格的标准差。按照这个度量，哪组价格更具变异性？
 - en: '**Exercise:** The definition of the mean, in math notation, is'
   id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**均值的定义，在数学符号中，是'
 - en: \(\mu = \frac{1}{N} \sum_i x_i\)
   id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: \(\mu = \frac{1}{N} \sum_i x_i\)
 - en: where \(x\) is a sequence of elements, \(x_i\) is the element with index \(i\),
     and \(N\) is the number of elements. The definition of standard deviation is
   id: totrans-92
   prefs: []
   type: TYPE_NORMAL
+  zh: 其中\(x\)是一个元素序列，\(x_i\)是索引为\(i\)的元素，\(N\)是元素的数量。标准差的定义是
 - en: \(\sigma = \sqrt{\frac{1}{N} \sum_i (x_i - \mu)^2}\)
   id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: \(\sigma = \sqrt{\frac{1}{N} \sum_i (x_i - \mu)^2}\)
 - en: Compute the standard deviation of `boston_price_list` using NumPy functions
     `np.mean` and `np.sqrt` and see if you get the same result as `np.std`.
   id: totrans-94
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用NumPy函数`np.mean`和`np.sqrt`计算`boston_price_list`的标准差，看看是否得到与`np.std`相同的结果。
 - en: You can (and should) do this exercise using only features we have discussed
     so far.
   id: totrans-95
   prefs: []
   type: TYPE_NORMAL
+  zh: 你可以（也应该）只使用我们到目前为止讨论过的功能来完成这个练习。
 - en: This definition of standard deviation is sometimes called the “population standard
     deviation”. You might have seen another definition with \(N-1\) in the denominator;
     that’s the “sample standard deviation”. We’ll use the population standard deviation
@@ -486,21 +512,25 @@
   id: totrans-96
   prefs: []
   type: TYPE_NORMAL
+  zh: 这种标准差的定义有时被称为“总体标准差”。你可能见过分母中有\(N-1\)的另一种定义；那是“样本标准差”。我们现在使用总体标准差，稍后再回到这个问题。
 - en: Relative Difference
   id: totrans-97
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 相对差异
 - en: In the previous section we computed differences between prices. But often when
     we make this kind of comparison, we are interested in **relative differences**,
     which are differences expressed as a fraction or percentage of a quantity.
   id: totrans-98
   prefs: []
   type: TYPE_NORMAL
+  zh: 在前面的部分中，我们计算了价格之间的差异。但通常当我们进行这种比较时，我们对**相对差异**感兴趣，这是以某个数量的分数或百分比表示的差异。
 - en: 'Taking the lobster roll as an example, the difference in price is:'
   id: totrans-99
   prefs: []
   type: TYPE_NORMAL
+  zh: 以龙虾卷为例，价格的差异是：
 - en: '[PRE40]'
   id: totrans-100
   prefs: []
@@ -515,6 +545,7 @@
   id: totrans-102
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以将这种差异表示为伦敦价格的一部分，就像这样：
 - en: '[PRE42]'
   id: totrans-103
   prefs: []
@@ -529,6 +560,7 @@
   id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: 或者作为伦敦价格的*百分比*，就像这样：
 - en: '[PRE44]'
   id: totrans-106
   prefs: []
@@ -545,6 +577,7 @@
   id: totrans-108
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，我们可以说波士顿的龙虾卷贵了33%。但将伦敦放在分母是一个任意的选择。我们也可以将差异计算为波士顿价格的百分比：
 - en: '[PRE46]'
   id: totrans-109
   prefs: []
@@ -563,11 +596,13 @@
   id: totrans-111
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们进行这样的计算，我们可能会说在伦敦龙虾卷要便宜25%。当你阅读这种比较时，你应该确保你理解了分母是哪个量，并且你可能想想为什么会做出这样的选择。在这个例子中，如果你想让差异看起来更大，你可能会把伦敦的价格放在分母中。
 - en: 'If we do the same calculation with the arrays `boston_price_array` and `boston_price_array`,
     we can compute the relative differences for all sandwiches:'
   id: totrans-112
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们用`boston_price_array`和`boston_price_array`数组进行相同的计算，我们可以计算所有三明治的相对差异：
 - en: '[PRE48]'
   id: totrans-113
   prefs: []
@@ -582,6 +617,7 @@
   id: totrans-115
   prefs: []
   type: TYPE_NORMAL
+  zh: 以及百分差异。
 - en: '[PRE50]'
   id: totrans-116
   prefs: []
@@ -597,11 +633,13 @@
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 总结相对差异
 - en: Now let’s think about how to summarize an array of percentage differences. One
     option is to report the range, which we can compute with `np.min` and `np.max`.
   id: totrans-119
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们考虑如何总结百分差异的数组。一个选择是报告范围，我们可以用`np.min`和`np.max`来计算。
 - en: '[PRE52]'
   id: totrans-120
   prefs: []
@@ -617,16 +655,19 @@
   id: totrans-122
   prefs: []
   type: TYPE_NORMAL
+  zh: 在波士顿，龙虾卷只贵了33%；而鸡蛋三明治贵了121%（也就是说，价格是原来的两倍多）。
 - en: '**Exercise:** What are the percent differences if we put the Boston prices
     in the denominator? What is the range of those differences? Write a sentence that
     summarizes the results.'
   id: totrans-123
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**如果我们把波士顿的价格放在分母，百分差异是多少？这些差异的范围是多少？写一句话总结结果。'
 - en: Another way to summarize percentage differences is to report the mean.
   id: totrans-124
   prefs: []
   type: TYPE_NORMAL
+  zh: 总结百分差异的另一种方法是报告平均值。
 - en: '[PRE54]'
   id: totrans-125
   prefs: []
@@ -643,6 +684,7 @@
   id: totrans-127
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，我们可以说，平均而言，波士顿的三明治价格要贵65%。但另一种总结数据的方法是计算每个城市的平均价格，然后计算平均数的百分比差异：
 - en: '[PRE56]'
   id: totrans-128
   prefs: []
@@ -658,46 +700,54 @@
   id: totrans-130
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，我们可以说波士顿的三明治平均价格要高56%。正如这个例子所示：
 - en: With relative and percentage differences, the mean of the differences is not
     the same as the difference of the means.
   id: totrans-131
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 对于相对和百分差异，差异的平均值与平均数的差异不同。
 - en: When you report data like this, you should think about different ways to summarize
     the data.
   id: totrans-132
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 当你报告这样的数据时，你应该考虑不同的总结数据的方法。
 - en: When you read a summary of data like this, make sure you understand what summary
     was chosen and what it means.
   id: totrans-133
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 当你阅读这样的数据总结时，确保你理解选择了什么总结以及它的含义。
 - en: In this example, I think the second option (the relative difference in the means)
     is more meaningful, because it reflects the difference in price between “baskets
     of goods” that include one of each sandwich.
   id: totrans-134
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个例子中，我认为第二个选择（平均数的相对差异）更有意义，因为它反映了包括每种三明治的“商品篮子”之间的价格差异。
 - en: Debugging
   id: totrans-135
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 调试
 - en: So far, most of the exercises have only required a few lines of code. If you
     made errors along the way, you probably found them quickly.
   id: totrans-136
   prefs: []
   type: TYPE_NORMAL
+  zh: 到目前为止，大多数练习只需要几行代码。如果你在这个过程中犯了错误，你可能会很快发现它们。
 - en: As we go along, the exercises will be more substantial, and you may find yourself
     spending more time debugging. Here are a couple of suggestions to help you find
     errors quickly – and avoid them in the first place.
   id: totrans-137
   prefs: []
   type: TYPE_NORMAL
+  zh: 随着练习的进行，难度会更大，你可能会花更多时间进行调试。以下是一些建议，可以帮助你快速找到错误，并在一开始就避免错误。
 - en: Most importantly, you should develop code incrementally; that is, you should
     write a small amount of code and test it. If it works, add more code; otherwise,
     debug what you have.
@@ -705,18 +755,21 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 最重要的是，你应该逐步开发代码；也就是说，你应该编写少量的代码并进行测试。如果它有效，就添加更多的代码；否则，调试你已经有的代码。
 - en: Conversely, if you have written too much code, and you are having a hard time
     debugging it, split it into smaller chunks and debug them separately.
   id: totrans-139
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 相反，如果你写了太多的代码，而且很难进行调试，可以将其分成较小的块，并分别进行调试。
 - en: 'For example, suppose you want to compute, for each sandwich in the sandwich
     list, the midpoint of the Boston and London prices. As a first draft, you might
     write something like this:'
   id: totrans-140
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，假设你想计算三明治列表中每个三明治的波士顿和伦敦价格的中点。作为初稿，你可能会写出类似这样的东西：
 - en: '[PRE58]'
   id: totrans-141
   prefs: []
@@ -732,6 +785,7 @@
   id: totrans-143
   prefs: []
   type: TYPE_NORMAL
+  zh: 这段代码运行了，并且得到了一个答案，但这个答案是一个单一的数字，而不是我们期望的列表。
 - en: You might have already spotted the error, but let’s suppose you did not. To
     debug this code, I would start by splitting the computation into smaller steps
     and displaying the intermediate results. For example, we might add the two lists
@@ -739,6 +793,7 @@
   id: totrans-144
   prefs: []
   type: TYPE_NORMAL
+  zh: 你可能已经发现了错误，但假设你没有。要调试这段代码，我会从将计算分成较小的步骤并显示中间结果开始。例如，我们可以将两个列表相加并显示结果，就像这样。
 - en: '[PRE60]'
   id: totrans-145
   prefs: []
@@ -755,10 +810,12 @@
   id: totrans-147
   prefs: []
   type: TYPE_NORMAL
+  zh: 看结果，我们发现它没有按我们的意图对三明治的价格进行逐个元素相加。因为参数是列表，`+`运算符连接它们而不是将元素相加。
 - en: We can solve this problem by converting the lists to arrays.
   id: totrans-148
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以通过将列表转换为数组来解决这个问题。
 - en: '[PRE62]'
   id: totrans-149
   prefs: []
@@ -773,6 +830,7 @@
   id: totrans-151
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后计算每对价格的中点，就像这样：
 - en: '[PRE64]'
   id: totrans-152
   prefs: []
