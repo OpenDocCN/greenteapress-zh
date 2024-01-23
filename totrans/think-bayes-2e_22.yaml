@@ -1,520 +1,801 @@
 - en: MCMC
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: MCMC
 - en: 原文：[https://allendowney.github.io/ThinkBayes2/chap19.html](https://allendowney.github.io/ThinkBayes2/chap19.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '[https://allendowney.github.io/ThinkBayes2/chap19.html](https://allendowney.github.io/ThinkBayes2/chap19.html)'
 - en: For most of this book we’ve been using grid methods to approximate posterior
     distributions. For models with one or two parameters, grid algorithms are fast
     and the results are precise enough for most practical purposes. With three parameters,
     they start to be slow, and with more than three they are usually not practical.
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本书的大部分内容中，我们一直在使用网格方法来近似后验分布。对于具有一个或两个参数的模型，网格算法速度快，结果对于大多数实际目的而言足够精确。对于三个参数，它们开始变慢，而对于三个以上的参数，它们通常不实用。
 - en: In the previous chapter we saw that we can solve some problems using conjugate
     priors. But the problems we can solve this way tend to be the same ones we can
     solve with grid algorithms.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 在上一章中，我们看到可以使用共轭先验解决一些问题。但是我们可以用网格算法解决的问题往往是可以用共轭先验解决的问题。
 - en: For problems with more than a few parameters, the most powerful tool we have
     is MCMC, which stands for “Markov chain Monte Carlo”. In this context, “Monte
     Carlo” refers to to methods that generate random samples from a distribution.
     Unlike grid methods, MCMC methods don’t try to compute the posterior distribution;
     they sample from it instead.
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于具有多个参数的问题，我们拥有的最强大的工具是MCMC，它代表“马尔可夫链蒙特卡洛”。在这种情况下，“蒙特卡洛”是指从分布中生成随机样本的方法。与网格方法不同，MCMC方法不试图计算后验分布；它们只是从中抽样。
 - en: It might seem strange that you can generate a sample without ever computing
     the distribution, but that’s the magic of MCMC.
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 你可能会觉得奇怪，你可以在不计算分布的情况下生成样本，但这就是MCMC的魔力。
 - en: To demonstrate, we’ll start by solving the World Cup problem. Yes, again.
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了演示，我们将首先解决世界杯问题。是的，再次。
 - en: The World Cup Problem
+  id: totrans-7
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 世界杯问题
 - en: In <<_PoissonProcesses>> we modeled goal scoring in football (soccer) as a Poisson
     process characterized by a goal-scoring rate, denoted \(\lambda\).
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 在<<_PoissonProcesses>>中，我们将足球（足球）中的进球得分建模为由进球率\(\lambda\)表示的泊松过程。
 - en: We used a gamma distribution to represent the prior distribution of \(\lambda\),
     then we used the outcome of the game to compute the posterior distribution for
     both teams.
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们使用伽玛分布来表示\(\lambda\)的先验分布，然后我们使用比赛结果来计算两支球队的后验分布。
 - en: To answer the first question, we used the posterior distributions to compute
     the “probability of superiority” for France.
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了回答第一个问题，我们使用后验分布来计算法国的“优势概率”。
 - en: To answer the second question, we computed the posterior predictive distributions
     for each team, that is, the distribution of goals we expect in a rematch.
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了回答第二个问题，我们计算了每支球队的后验预测分布，即我们在复赛中预期的进球分布。
 - en: In this chapter we’ll solve this problem again using PyMC3, which is a library
     that provide implementations of several MCMC methods. But we’ll start by reviewing
     the grid approximation of the prior and the prior predictive distribution.
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本章中，我们将再次使用PyMC3解决这个问题，PyMC3是一个提供多种MCMC方法实现的库。但我们将首先回顾先验的网格近似和先验预测分布。
 - en: Grid Approximation
+  id: totrans-13
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 网格近似
 - en: As we did in <<_TheGammaDistribution>> we’ll use a gamma distribution with parameter
     \(\alpha=1.4\) to represent the prior.
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 就像我们在<<_TheGammaDistribution>>中所做的那样，我们将使用参数\(\alpha=1.4\)的伽玛分布来表示先验。
 - en: '[PRE0]'
+  id: totrans-15
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: I’ll use `linspace` to generate possible values for \(\lambda\), and `pmf_from_dist`
     to compute a discrete approximation of the prior.
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将使用`linspace`生成\(\lambda\)的可能值，并使用`pmf_from_dist`计算先验的离散近似。
 - en: '[PRE1]'
+  id: totrans-17
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: We can use the Poisson distribution to compute the likelihood of the data; as
     an example, we’ll use 4 goals.
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用泊松分布来计算数据的似然性；例如，我们将使用4个进球。
 - en: '[PRE2]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: Now we can do the update in the usual way.
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以按照通常的方式进行更新。
 - en: '[PRE3]'
+  id: totrans-21
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '[PRE4]'
+  id: totrans-22
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: 'Soon we will solve the same problem with PyMC3, but first it will be useful
     to introduce something new: the prior predictive distribution.'
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: 很快我们将使用PyMC3解决相同的问题，但首先介绍一些新内容：先验预测分布。
 - en: Prior Predictive Distribution
+  id: totrans-24
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 先验预测分布
 - en: We have seen the posterior predictive distribution in previous chapters; the
     prior predictive distribution is similar except that (as you might have guessed)
     it is based on the prior.
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们在以前的章节中已经看到了后验预测分布；先验预测分布类似，只是（你可能已经猜到）它是基于先验的。
 - en: To estimate the prior predictive distribution, we’ll start by drawing a sample
     from the prior.
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了估计先验预测分布，我们将从先验中抽取样本。
 - en: '[PRE5]'
+  id: totrans-27
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: The result is an array of possible values for the goal-scoring rate, \(\lambda\).
     For each value in `sample_prior`, I’ll generate one value from a Poisson distribution.
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个可能值数组，对于`sample_prior`中的每个值，我将从泊松分布中生成一个值。
 - en: '[PRE6]'
+  id: totrans-29
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '`sample_prior_pred` is a sample from the prior predictive distribution. To
     see what it looks like, we’ll compute the PMF of the sample.'
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: '`sample_prior_pred`是先验预测分布的样本。为了看看它的样子，我们将计算样本的PMF。'
 - en: '[PRE7]'
+  id: totrans-31
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: 'And here’s what it looks like:'
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是它的样子：
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码隐藏代码单元格源代码</summary>
 - en: '[PRE8]</details> ![_images/eca8cc1de30bb001a105eb6a2bf94133ee6740cbf48d21dadeb130afe219aac7.png](../Images/3dd262bbe6abdce4ea23ae2cb00d096b.png)'
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE8]</details> ![_images/eca8cc1de30bb001a105eb6a2bf94133ee6740cbf48d21dadeb130afe219aac7.png](../Images/3dd262bbe6abdce4ea23ae2cb00d096b.png)'
 - en: One reason to compute the prior predictive distribution is to check whether
     our model of the system seems reasonable. In this case, the distribution of goals
     seems consistent with what we know about World Cup football.
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 计算先验预测分布的一个原因是检查我们对系统的模型是否合理。在这种情况下，进球的分布似乎与我们对世界杯足球的了解一致。
 - en: 'But in this chapter we have another reason: computing the prior predictive
     distribution is a first step toward using MCMC.'
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 但在本章中，我们有另一个原因：计算先验预测分布是使用MCMC的第一步。
 - en: Introducing PyMC3
+  id: totrans-37
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 介绍PyMC3
 - en: 'PyMC3 is a Python library that provides several MCMC methods. To use PyMC3,
     we have to specify a model of the process that generates the data. In this example,
     the model has two steps:'
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: PyMC3是一个提供多种MCMC方法的Python库。要使用PyMC3，我们必须指定生成数据的过程的模型。在这个例子中，模型有两个步骤：
 - en: First we draw a goal-scoring rate from the prior distribution,
+  id: totrans-39
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 首先我们从先验分布中抽取一个进球率，
 - en: Then we draw a number of goals from a Poisson distribution.
+  id: totrans-40
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 然后我们从泊松分布中抽取一定数量的进球。
 - en: 'Here’s how we specify this model in PyMC3:'
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是我们在PyMC3中指定此模型的方式：
 - en: '[PRE9]'
+  id: totrans-42
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: After importing `pymc3`, we create a `Model` object named `model`.
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 导入`pymc3`后，我们创建了一个名为`model`的`Model`对象。
 - en: If you are not familiar with the `with` statement in Python, it is a way to
     associate a block of statements with an object. In this example, the two indented
     statements are associated with the new `Model` object. As a result, when we create
     the distribution objects, `Gamma` and `Poisson`, they are added to the `Model`.
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果您对Python中的`with`语句不熟悉，它是一种将一组语句与对象关联的方法。在这个例子中，两个缩进的语句与新的`Model`对象相关联。因此，当我们创建分布对象`Gamma`和`Poisson`时，它们被添加到`Model`中。
 - en: 'Inside the `with` statement:'
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 在`with`语句内部：
 - en: The first line creates the prior, which is a gamma distribution with the given
     parameters.
+  id: totrans-46
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 第一行创建了先验，这是一个具有给定参数的gamma分布。
 - en: The second line creates the prior predictive, which is a Poisson distribution
     with the parameter `lam`.
+  id: totrans-47
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 第二行创建了先验预测，这是一个具有参数`lam`的泊松分布。
 - en: The first parameter of `Gamma` and `Poisson` is a string variable name.
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: '`Gamma`和`Poisson`的第一个参数是一个字符串变量名。'
 - en: PyMC3 provides a function that generates a visual representation of the model.
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: PyMC3提供了一个生成模型的可视化表示的函数。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE10]'
+  id: totrans-51
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '![_images/609b52cdd995310fa9f12f9f2aa7d3f49ae50dbdca73040d1e57a879aeaa36fc.svg](../Images/20d889a293bd0942c8e78861a5bfe4d9.png)</details>'
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/609b52cdd995310fa9f12f9f2aa7d3f49ae50dbdca73040d1e57a879aeaa36fc.svg](../Images/20d889a293bd0942c8e78861a5bfe4d9.png)</details>'
 - en: In this visualization, the ovals show that `lam` is drawn from a gamma distribution
     and `goals` is drawn from a Poisson distribution. The arrow shows that the values
     of `lam` are used as parameters for the distribution of `goals`.
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个可视化中，椭圆形显示`lam`是从gamma分布中抽取的，`goals`是从泊松分布中抽取的。箭头显示`lam`的值被用作`goals`分布的参数。
 - en: Sampling the Prior
+  id: totrans-54
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 抽样先验
 - en: PyMC3 provides a function that generates samples from the prior and prior predictive
     distributions. We can use a `with` statement to run this function in the context
     of the model.
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: PyMC3提供了一个从先验和先验预测分布中生成样本的函数。我们可以使用`with`语句在模型的上下文中运行此函数。
 - en: '[PRE11]'
+  id: totrans-56
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: 'The result is a dictionary-like object that maps from the variables, `lam`
     and `goals`, to the samples. We can extract the sample of `lam` like this:'
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个类似字典的对象，将变量`lam`和`goals`映射到样本。我们可以这样提取`lam`的样本：
 - en: '[PRE12]'
+  id: totrans-58
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '[PRE13]'
+  id: totrans-59
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: The following figure compares the CDF of this sample to the CDF of the sample
     we generated using the `gamma` object from SciPy.
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下图比较了此样本的CDF与使用SciPy中的`gamma`对象生成的样本的CDF。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE14]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell source Hide code cell source</summary>'
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE14]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>'
 - en: '[PRE15]</details> ![_images/193b0b47427fd7f39ff507b2ce0793f76d0f69476bfc766c47bc5e428f929d77.png](../Images/4a581ee15ec55f6c43db331b3e69b294.png)'
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE15]</details> ![_images/193b0b47427fd7f39ff507b2ce0793f76d0f69476bfc766c47bc5e428f929d77.png](../Images/4a581ee15ec55f6c43db331b3e69b294.png)'
 - en: The results are similar, which confirms that the specification of the model
     is correct and the sampler works as advertised.
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是相似的，这证实了模型的规范是正确的，采样器的工作是如广告所述的。
 - en: From the trace we can also extract `goals`, which is a sample from the prior
     predictive distribution.
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: 从跟踪中我们还可以提取`goals`，这是从先验预测分布中抽取的样本。
 - en: '[PRE16]'
+  id: totrans-66
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '[PRE17]'
+  id: totrans-67
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: And we can compare it to the sample we generated using the `poisson` object
     from SciPy.
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以将其与使用SciPy中的`poisson`对象生成的样本进行比较。
 - en: Because the quantities in the posterior predictive distribution are discrete
     (number of goals) I’ll plot the CDFs as step functions.
+  id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: 因为后验预测分布中的数量是离散的（进球数），我将绘制CDF作为阶梯函数。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE18]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell source Hide code cell source</summary>'
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE18]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>'
 - en: '[PRE19]</details> ![_images/dc0f98c00bcdf866da67931d6c2c2c5b2478e90be73e2a3f295493d47e4a36b4.png](../Images/3e04bb6f8d13f6f6a8c646159fc0add6.png)'
+  id: totrans-72
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE19]</details> ![_images/dc0f98c00bcdf866da67931d6c2c2c5b2478e90be73e2a3f295493d47e4a36b4.png](../Images/3e04bb6f8d13f6f6a8c646159fc0add6.png)'
 - en: Again, the results are similar, so we have some confidence we are using PyMC3
     right.
+  id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: 同样，结果是相似的，因此我们有一些信心我们正在正确使用PyMC3。
 - en: When Do We Get to Inference?
+  id: totrans-74
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 何时进行推断？
 - en: 'Finally, we are ready for actual inference. We just have to make one small
     change. Here is the model we used to generate the prior predictive distribution:'
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，我们准备进行实际推断。我们只需要做一个小改变。这是我们用来生成先验预测分布的模型：
 - en: '[PRE20]'
+  id: totrans-76
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: And here is the model we’ll use to compute the posterior distribution.
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是我们将用于计算后验分布的模型。
 - en: '[PRE21]'
+  id: totrans-78
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: The difference is that we mark goals as `observed` and provide the observed
     data, `4`.
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: 不同之处在于我们将goals标记为`observed`并提供观察数据`4`。
 - en: And instead of calling `sample_prior_predictive`, we’ll call `sample`, which
     is understood to sample from the posterior distribution of `lam`.
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 而不是调用`sample_prior_predictive`，我们将调用`sample`，这被理解为从`lam`的后验分布中抽样。
 - en: '[PRE22]'
+  id: totrans-81
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: <details class="hide below-input"><summary aria-label="Toggle hidden content">Show
     code cell output Hide code cell output</summary>
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide below-input"><summary aria-label="Toggle hidden content">显示代码单元格输出
+    隐藏代码单元格输出</summary>
 - en: '[PRE23]'
+  id: totrans-83
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: '<progress value="3000" class="" max="3000" style="width:300px; height:20px;
     vertical-align: middle;">100.00% [3000/3000 00:01<00:00 Sampling 2 chains, 0 divergences]</progress>'
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: '<progress value="3000" class="" max="3000" style="width:300px; height:20px;
+    vertical-align: middle;">100.00% [3000/3000 00:01<00:00 Sampling 2 chains, 0 divergences]</progress>'
 - en: '[PRE24]</details>'
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE24]</details>'
 - en: 'Although the specification of these models is similar, the sampling process
     is very different. I won’t go into the details of how PyMC3 works, but here are
     a few things you should be aware of:'
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: 尽管这些模型的规范是相似的，但采样过程是非常不同的。我不会详细介绍PyMC3的工作原理，但有几件事情你应该知道：
 - en: Depending on the model, PyMC3 uses one of several MCMC methods; in this example,
     it uses the [No U-Turn Sampler](https://en.wikipedia.org/wiki/Hamiltonian_Monte_Carlo#No_U-Turn_Sampler)
     (NUTS), which is one of the most efficient and reliable methods we have.
+  id: totrans-87
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 根据模型的不同，PyMC3使用几种MCMC方法之一；在这个例子中，它使用[无U转弯采样器](https://en.wikipedia.org/wiki/Hamiltonian_Monte_Carlo#No_U-Turn_Sampler)
+    (NUTS)，这是我们拥有的最有效和可靠的方法之一。
 - en: When the sampler starts, the first values it generates are usually not a representative
     sample from the posterior distribution, so these values are discarded. This process
     is called “tuning”.
+  id: totrans-88
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 当采样器启动时，它生成的第一个值通常不是来自后验分布的代表性样本，因此这些值被丢弃。这个过程称为“调整”。
 - en: Instead of using a single Markov chain, PyMC3 uses multiple chains. Then we
     can compare results from multiple chains to make sure they are consistent.
+  id: totrans-89
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: PyMC3不是使用单一的马尔可夫链，而是使用多个链。然后我们可以比较多个链的结果，以确保它们是一致的。
 - en: 'Although we asked for a sample of 500, PyMC3 generated two samples of 1000,
     discarded half of each, and returned the remaining 1000. From `trace2` we can
     extract a sample from the posterior distribution, like this:'
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: 尽管我们要求500个样本，PyMC3生成了两个1000个样本，丢弃了一半，返回了剩下的1000个。从`trace2`中，我们可以提取后验分布的样本，就像这样：
 - en: '[PRE25]'
+  id: totrans-91
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-92
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE26]'
+  id: totrans-93
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: '[PRE27]</details>'
+  id: totrans-94
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE27]</details>'
 - en: 'And we can compare the CDF of this sample to the posterior we computed by grid
     approximation:'
+  id: totrans-95
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以将这个样本的CDF与我们通过网格近似计算的后验进行比较：
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-96
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE28]</details> ![_images/df033dddfe2e28c72653c7a90266da82aa4902fbd977ec312df43d87c2bb4607.png](../Images/8732cbe552885e122226632c2238e45e.png)'
+  id: totrans-97
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE28]</details> ![_images/df033dddfe2e28c72653c7a90266da82aa4902fbd977ec312df43d87c2bb4607.png](../Images/8732cbe552885e122226632c2238e45e.png)'
 - en: The results from PyMC3 are consistent with the results from the grid approximation.
+  id: totrans-98
   prefs: []
   type: TYPE_NORMAL
+  zh: PyMC3的结果与网格近似的结果一致。
 - en: Posterior Predictive Distribution
+  id: totrans-99
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 后验预测分布
 - en: 'Finally, to sample from the posterior predictive distribution, we can use `sample_posterior_predictive`:'
+  id: totrans-100
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，要从后验预测分布中采样，我们可以使用`sample_posterior_predictive`：
 - en: '[PRE29]'
+  id: totrans-101
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: '<details class="hide below-input"><summary aria-label="Toggle hidden content">Show
     code cell output Hide code cell output</summary> <progress value="1000" class=""
     max="1000" style="width:300px; height:20px; vertical-align: middle;">100.00% [1000/1000
     00:00<00:00]</progress></details>'
+  id: totrans-102
   prefs: []
   type: TYPE_NORMAL
+  zh: '<details class="hide below-input"><summary aria-label="Toggle hidden content">显示代码单元格输出
+    隐藏代码单元格输出</summary> <progress value="1000" class="" max="1000" style="width:300px;
+    height:20px; vertical-align: middle;">100.00% [1000/1000 00:00<00:00]</progress></details>'
 - en: The result is a dictionary that contains a sample of `goals`.
+  id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个包含`goals`样本的字典。
 - en: '[PRE30]'
+  id: totrans-104
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE31]'
+  id: totrans-106
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: '[PRE32]</details>'
+  id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE32]</details>'
 - en: I’ll also generate a sample from the posterior distribution we computed by grid
     approximation.
+  id: totrans-108
   prefs: []
   type: TYPE_NORMAL
+  zh: 我还将从我们通过网格近似计算的后验分布中生成一个样本。
 - en: '[PRE33]'
+  id: totrans-109
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: And we can compare the two samples.
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以比较这两个样本。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-111
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE34]</details> ![_images/e72732e7236a3458b5cc5d33844fdc3fed5b8289d8a9181a56868e1235c80003.png](../Images/8561fce647062c70fa4fe583e77acf8d.png)'
+  id: totrans-112
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE34]</details> ![_images/e72732e7236a3458b5cc5d33844fdc3fed5b8289d8a9181a56868e1235c80003.png](../Images/8561fce647062c70fa4fe583e77acf8d.png)'
 - en: Again, the results are consistent. So we’ve established that we can compute
     the same results using a grid approximation or PyMC3.
+  id: totrans-113
   prefs: []
   type: TYPE_NORMAL
+  zh: 同样，结果是一致的。因此，我们已经确定我们可以使用网格近似或PyMC3计算相同的结果。
 - en: But it might not be clear why. In this example, the grid algorithm requires
     less computation than MCMC, and the result is a pretty good approximation of the
     posterior distribution, rather than a sample.
+  id: totrans-114
   prefs: []
   type: TYPE_NORMAL
+  zh: 但可能不清楚原因。在这个例子中，网格算法所需的计算量比MCMC少，结果是后验分布的一个相当不错的近似，而不是一个样本。
 - en: However, this is a simple model with just one parameter. In fact, we could have
     solved it with even less computation, using a conjugate prior. The power of PyMC3
     will be clearer with a more complex model.
+  id: totrans-115
   prefs: []
   type: TYPE_NORMAL
+  zh: 然而，这是一个只有一个参数的简单模型。事实上，我们甚至可以用更少的计算来解决它，使用共轭先验。PyMC3的强大之处将在更复杂的模型中更加明显。
 - en: Happiness
+  id: totrans-116
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 幸福
 - en: Recently I read [“Happiness and Life Satisfaction”](https://ourworldindata.org/happiness-and-life-satisfaction)
     by Esteban Ortiz-Ospina and Max Roser, which discusses (among many other things)
     the relationship between income and happiness, both between countries, within
     countries, and over time.
+  id: totrans-117
   prefs: []
   type: TYPE_NORMAL
+  zh: 最近我阅读了Esteban Ortiz-Ospina和Max Roser的[“幸福和生活满意度”](https://ourworldindata.org/happiness-and-life-satisfaction)，其中讨论了收入和幸福之间的关系，包括国家之间、国家内部和随时间的变化。
 - en: 'It cites the [“World Happiness Report”](https://worldhappiness.report/), which
     includes [results of a multiple regression analysis](https://worldhappiness.report/ed/2020/social-environments-for-world-happiness/)
     that explores the relationship between happiness and six potentially predictive
     factors:'
+  id: totrans-118
   prefs: []
   type: TYPE_NORMAL
+  zh: 它引用了[“世界幸福报告”](https://worldhappiness.report/)，其中包括[多元回归分析的结果](https://worldhappiness.report/ed/2020/social-environments-for-world-happiness/)，探讨了幸福与六个潜在预测因素之间的关系：
 - en: Income as represented by per capita GDP
+  id: totrans-119
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 收入以人均GDP表示
 - en: Social support
+  id: totrans-120
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 社会支持
 - en: Healthy life expectancy at birth
+  id: totrans-121
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 出生时的健康预期寿命
 - en: Freedom to make life choices
+  id: totrans-122
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 自由选择生活的自由
 - en: Generosity
+  id: totrans-123
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 慷慨
 - en: Perceptions of corruption
+  id: totrans-124
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 对腐败的看法
 - en: 'The dependent variable is the national average of responses to the “Cantril
     ladder question” used by the [Gallup World Poll](https://news.gallup.com/poll/122453/understanding-gallup-uses-cantril-scale.aspx):'
+  id: totrans-125
   prefs: []
   type: TYPE_NORMAL
+  zh: 因变量是国家对“Cantril梯子问题”的平均回答，该问题由[盖洛普世界民意调查](https://news.gallup.com/poll/122453/understanding-gallup-uses-cantril-scale.aspx)使用：
 - en: Please imagine a ladder with steps numbered from zero at the bottom to 10 at
     the top. The top of the ladder represents the best possible life for you and the
     bottom of the ladder represents the worst possible life for you. On which step
     of the ladder would you say you personally feel you stand at this time?
+  id: totrans-126
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 请想象一个阶梯，从底部编号为零到顶部编号为10。梯子的顶部代表您的最佳生活，梯子的底部代表您的最糟糕的生活。您会说您个人感觉您现在站在梯子的哪一步？
 - en: I’ll refer to the responses as “happiness”, but it might be more precise to
     think of them as a measure of satisfaction with quality of life.
+  id: totrans-127
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将这些回答称为“幸福”，但更精确地说，它们可能更多地被认为是对生活质量满意度的衡量。
 - en: In the next few sections we’ll replicate the analysis in this report using Bayesian
     regression.
+  id: totrans-128
   prefs: []
   type: TYPE_NORMAL
+  zh: 在接下来的几节中，我们将使用贝叶斯回归复制此报告中的分析。
 - en: We can use Pandas to read the data into a `DataFrame`.
+  id: totrans-129
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用Pandas将数据读入“DataFrame”。
 - en: '[PRE35]'
+  id: totrans-130
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-131
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE36]'
+  id: totrans-132
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: '|  | Country name | Regional indicator | Ladder score | Standard error of ladder
     score | upperwhisker | lowerwhisker | Logged GDP per capita | Social support |
     Healthy life expectancy | Freedom to make life choices | Generosity | Perceptions
@@ -522,461 +803,679 @@
     Explained by: Social support | Explained by: Healthy life expectancy | Explained
     by: Freedom to make life choices | Explained by: Generosity | Explained by: Perceptions
     of corruption | Dystopia + residual |'
+  id: totrans-133
   prefs: []
   type: TYPE_TB
+  zh: '|  | 国家名称 | 区域指标 | 梯子分数 | 梯子分数的标准误差 | 上边缘 | 下边缘 | 每人GDP的自然对数 | 社会支持 | 健康预期寿命
+    | 自由选择生活的自由 | 慷慨 | 对腐败的看法 | 理想国梯子分数 | 由:每人GDP的自然对数解释 | 由:社会支持解释 | 由:健康预期寿命解释 |
+    由:自由选择生活的自由解释 | 由:慷慨解释 | 由:对腐败的看法解释 | 理想国+残差 |'
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
     | --- | --- | --- | --- | --- | --- | --- | --- |'
+  id: totrans-134
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+    | --- | --- | --- | --- | --- | --- | --- | --- |'
 - en: '| 0 | Finland | Western Europe | 7.8087 | 0.031156 | 7.869766 | 7.747634 |
     10.639267 | 0.954330 | 71.900826 | 0.949172 | -0.059482 | 0.195445 | 1.972317
     | 1.285190 | 1.499526 | 0.961271 | 0.662317 | 0.159670 | 0.477857 | 2.762835 |'
+  id: totrans-135
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 芬兰 | 西欧 | 7.8087 | 0.031156 | 7.869766 | 7.747634 | 10.639267 | 0.954330
+    | 71.900826 | 0.949172 | -0.059482 | 0.195445 | 1.972317 | 1.285190 | 1.499526
+    | 0.961271 | 0.662317 | 0.159670 | 0.477857 | 2.762835 |'
 - en: '| 1 | Denmark | Western Europe | 7.6456 | 0.033492 | 7.711245 | 7.579955 |
     10.774001 | 0.955991 | 72.402504 | 0.951444 | 0.066202 | 0.168489 | 1.972317 |
     1.326949 | 1.503449 | 0.979333 | 0.665040 | 0.242793 | 0.495260 | 2.432741 |'
+  id: totrans-136
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 丹麦 | 西欧 | 7.6456 | 0.033492 | 7.711245 | 7.579955 | 10.774001 | 0.955991
+    | 72.402504 | 0.951444 | 0.066202 | 0.168489 | 1.972317 | 1.326949 | 1.503449
+    | 0.979333 | 0.665040 | 0.242793 | 0.495260 | 2.432741 |'
 - en: '| 2 | Switzerland | Western Europe | 7.5599 | 0.035014 | 7.628528 | 7.491272
     | 10.979933 | 0.942847 | 74.102448 | 0.921337 | 0.105911 | 0.303728 | 1.972317
     | 1.390774 | 1.472403 | 1.040533 | 0.628954 | 0.269056 | 0.407946 | 2.350267 |</details>
     <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>'
+  id: totrans-137
   prefs: []
   type: TYPE_NORMAL
+  zh: '| 2 | 瑞士 | 西欧 | 7.5599 | 0.035014 | 7.628528 | 7.491272 | 10.979933 | 0.942847
+    | 74.102448 | 0.921337 | 0.105911 | 0.303728 | 1.972317 | 1.390774 | 1.472403
+    | 1.040533 | 0.628954 | 0.269056 | 0.407946 | 2.350267 |</details> <details class="hide
+    above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE37]'
+  id: totrans-138
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE37]'
 - en: '[PRE38]</details>'
+  id: totrans-139
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE38]</details>'
 - en: The `DataFrame` has one row for each of 153 countries and one column for each
     of 20 variables.
+  id: totrans-140
   prefs: []
   type: TYPE_NORMAL
+  zh: “DataFrame”每个153个国家有一行，每个20个变量有一列。
 - en: The column called `'Ladder score'` contains the measurements of happiness we
     will try to predict.
+  id: totrans-141
   prefs: []
   type: TYPE_NORMAL
+  zh: 名为“梯子分数”的列包含我们将尝试预测的幸福测量值。
 - en: '[PRE39]'
+  id: totrans-142
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: Simple Regression
+  id: totrans-143
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 简单回归
 - en: To get started, let’s look at the relationship between happiness and income
     as represented by gross domestic product (GDP) per person.
+  id: totrans-144
   prefs: []
   type: TYPE_NORMAL
+  zh: 要开始，让我们看看幸福与收入之间的关系，收入以人均国内生产总值（GDP）表示。
 - en: The column named `'Logged GDP per capita'` represents the natural logarithm
     of GDP for each country, divided by population, corrected for [purchasing power
     parity](https://en.wikipedia.org/wiki/Purchasing_power_parity) (PPP).
+  id: totrans-145
   prefs: []
   type: TYPE_NORMAL
+  zh: “'Logged GDP per capita'”列代表每个国家的GDP的自然对数，除以人口，校正了[购买力平价](https://en.wikipedia.org/wiki/Purchasing_power_parity)（PPP）。
 - en: '[PRE40]'
+  id: totrans-146
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE40]'
 - en: The following figure is a scatter plot of `score` versus `log_gdp`, with one
     marker for each country.
+  id: totrans-147
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下图是`score`与`log_gdp`的散点图，每个国家一个标记。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-148
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE41]</details> ![_images/e8d32d702c0b82a48796b8eac7bce082b9e28192f892eddb25f8fc18bdc32a50.png](../Images/d353ec4ff47106dcc2019c7369b7f92f.png)'
+  id: totrans-149
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE41]</details> ![_images/e8d32d702c0b82a48796b8eac7bce082b9e28192f892eddb25f8fc18bdc32a50.png](../Images/d353ec4ff47106dcc2019c7369b7f92f.png)'
 - en: 'It’s clear that there is a relationship between these variables: people in
     countries with higher GDP generally report higher levels of happiness.'
+  id: totrans-150
   prefs: []
   type: TYPE_NORMAL
+  zh: 很明显这些变量之间存在关系：在GDP较高的国家，人们通常报告更高的幸福水平。
 - en: We can use `linregress` from SciPy to compute a simple regression of these variables.
+  id: totrans-151
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用SciPy中的`linregress`来计算这些变量的简单回归。
 - en: '[PRE42]'
+  id: totrans-152
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE42]'
 - en: And here are the results.
+  id: totrans-153
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里是结果。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-154
   prefs: []
   type: TYPE_NORMAL
+  zh: 显示代码单元格源代码 隐藏代码单元格源代码
 - en: '[PRE43]</details>'
+  id: totrans-155
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE43]</details>'
 - en: '|  |  |'
+  id: totrans-156
   prefs: []
   type: TYPE_TB
+  zh: '| | |'
 - en: '| --- | --- |'
+  id: totrans-157
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| Slope | 0.717738 |'
+  id: totrans-158
   prefs: []
   type: TYPE_TB
+  zh: '| 斜率 | 0.717738 |'
 - en: '| Intercept | -1.198646 |'
+  id: totrans-159
   prefs: []
   type: TYPE_TB
+  zh: '| 截距 | -1.198646 |'
 - en: The estimated slope is about 0.72, which suggests that an increase of one unit
     in log-GDP, which is a factor of \(e \approx 2.7\) in GDP, is associated with
     an increase of 0.72 units on the happiness ladder.
+  id: totrans-160
   prefs: []
   type: TYPE_NORMAL
+  zh: 估计的斜率约为0.72，这表明对数GDP增加一个单位（GDP的因子为\(e \approx 2.7\)）与幸福阶梯上升0.72个单位相关。
 - en: 'Now let’s estimate the same parameters using PyMC3. We’ll use the same regression
     model as in Section <<_RegressionModel>>:'
+  id: totrans-161
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们使用PyMC3来估计相同的参数。我们将使用与第<<_RegressionModel>>节中相同的回归模型：
 - en: \[y = a x + b + \epsilon\]
+  id: totrans-162
   prefs: []
   type: TYPE_NORMAL
+  zh: \[y = a x + b + \epsilon\]
 - en: where \(y\) is the dependent variable (ladder score), \(x\) is the predictive
     variable (log GDP) and \(\epsilon\) is a series of values from a normal distribution
     with standard deviation \(\sigma\).
+  id: totrans-163
   prefs: []
   type: TYPE_NORMAL
+  zh: 其中\(y\)是因变量（阶梯分数），\(x\)是预测变量（对数GDP），\(\epsilon\)是来自标准差为\(\sigma\)的正态分布的一系列值。
 - en: \(a\) and \(b\) are the slope and intercept of the regression line. They are
     unknown parameters, so we will use the data to estimate them.
+  id: totrans-164
   prefs: []
   type: TYPE_NORMAL
+  zh: \(a\)和\(b\)是回归线的斜率和截距。它们是未知参数，因此我们将使用数据来估计它们。
 - en: The following is the PyMC3 specification of this model.
+  id: totrans-165
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是此模型的PyMC3规范。
 - en: '[PRE44]'
+  id: totrans-166
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE44]'
 - en: The prior distributions for the parameters `a`, `b`, and `sigma` are uniform
     with ranges that are wide enough to cover the posterior distributions.
+  id: totrans-167
   prefs: []
   type: TYPE_NORMAL
+  zh: 参数`a`，`b`和`sigma`的先验分布是均匀的，范围足够宽以覆盖后验分布。
 - en: '`y_est` is the estimated value of the dependent variable, based on the regression
     equation. And `y` is a normal distribution with mean `y_est` and standard deviation
     `sigma`.'
+  id: totrans-168
   prefs: []
   type: TYPE_NORMAL
+  zh: '`y_est`是基于回归方程估计的因变量的值。`y`是均值为`y_est`，标准差为`sigma`的正态分布。'
 - en: 'Notice how the data are included in the model:'
+  id: totrans-169
   prefs: []
   type: TYPE_NORMAL
+  zh: 注意数据如何包含在模型中：
 - en: The values of the predictive variable, `x_data`, are used to compute `y_est`.
+  id: totrans-170
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 预测变量`x_data`的值用于计算`y_est`。
 - en: The values of the dependent variable, `y_data`, are provided as the observed
     values of `y`.
+  id: totrans-171
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 因变量`y_data`的值作为`y`的观察值提供。
 - en: Now we can use this model to generate a sample from the posterior distribution.
+  id: totrans-172
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以使用这个模型从后验分布中生成一个样本。
 - en: '[PRE45]'
+  id: totrans-173
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE45]'
 - en: <details class="hide below-input"><summary aria-label="Toggle hidden content">Show
     code cell output Hide code cell output</summary>
+  id: totrans-174
   prefs: []
   type: TYPE_NORMAL
+  zh: 显示代码单元格输出 隐藏代码单元格输出
 - en: '[PRE46]'
+  id: totrans-175
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE46]'
 - en: '<progress value="3000" class="" max="3000" style="width:300px; height:20px;
     vertical-align: middle;">100.00% [3000/3000 00:04<00:00 Sampling 2 chains, 0 divergences]</progress>'
+  id: totrans-176
   prefs: []
   type: TYPE_NORMAL
+  zh: '进度值="3000" class="" max="3000" style="width:300px; height:20px; vertical-align:
+    middle;">100.00% [3000/3000 00:04<00:00 Sampling 2 chains, 0 divergences]</progress>'
 - en: '[PRE47]</details>'
+  id: totrans-177
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE47]</details>'
 - en: When you run the sampler, you might get warning messages about “divergences”
     and the “acceptance probability”. You can ignore them for now.
+  id: totrans-178
   prefs: []
   type: TYPE_NORMAL
+  zh: 当运行采样器时，您可能会收到关于“发散”和“接受概率”的警告消息。现在可以忽略它们。
 - en: The result is an object that contains samples from the joint posterior distribution
     of `a`, `b`, and `sigma`.
+  id: totrans-179
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个包含来自`a`，`b`和`sigma`联合后验分布的样本的对象。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-180
   prefs: []
   type: TYPE_NORMAL
+  zh: 显示代码单元格内容 隐藏代码单元格内容
 - en: '[PRE48]'
+  id: totrans-181
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE48]'
 - en: '[PRE49]</details>'
+  id: totrans-182
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE49]</details>'
 - en: ArviZ provides `plot_posterior`, which we can use to plot the posterior distributions
     of the parameters. Here are the posterior distributions of slope, `a`, and intercept,
     `b`.
+  id: totrans-183
   prefs: []
   type: TYPE_NORMAL
+  zh: ArviZ提供了`plot_posterior`，我们可以使用它来绘制参数的后验分布。这是斜率`a`和截距`b`的后验分布。
 - en: '[PRE50]'
+  id: totrans-184
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE50]'
 - en: '![_images/2d0315a450aa2983502a89de28f3ca4f0bc5a82b977339041634e6e0c2faeb43.png](../Images/82eb00df25d4da6bf463032f64860e89.png)'
+  id: totrans-185
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/2d0315a450aa2983502a89de28f3ca4f0bc5a82b977339041634e6e0c2faeb43.png](../Images/82eb00df25d4da6bf463032f64860e89.png)'
 - en: The graphs show the distributions of the samples, estimated by KDE, and 94%
     credible intervals. In the figure, “HDI” stands for [“highest-density interval”](https://www.sciencedirect.com/topics/mathematics/highest-density-interval).
+  id: totrans-186
   prefs: []
   type: TYPE_NORMAL
+  zh: 图表显示了样本的分布，由KDE估计，并显示了94%的可信区间。在图中，“HDI”代表[“最高密度区间”](https://www.sciencedirect.com/topics/mathematics/highest-density-interval)。
 - en: The means of these samples are consistent with the parameters we estimated with
     `linregress`.
+  id: totrans-187
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些样本的均值与我们用`linregress`估计的参数一致。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-188
   prefs: []
   type: TYPE_NORMAL
+  zh: 显示代码单元格内容 隐藏代码单元格内容
 - en: '[PRE51]'
+  id: totrans-189
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE51]'
 - en: '[PRE52]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-190
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE52]</details> 显示代码单元格内容 隐藏代码单元格内容'
 - en: '[PRE53]'
+  id: totrans-191
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE53]'
 - en: '[PRE54]</details>'
+  id: totrans-192
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE54]</details>'
 - en: Finally, we can check the marginal posterior distribution of `sigma`
+  id: totrans-193
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，我们可以检查`sigma`的边际后验分布
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-194
   prefs: []
   type: TYPE_NORMAL
+  zh: 显示代码单元格内容 隐藏代码单元格内容
 - en: '[PRE55]'
+  id: totrans-195
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE55]'
 - en: '![_images/76feb6bc1ab4570c10da92150b8c385ac493214901021ea2a2d7431582540ee3.png](../Images/d075f68956ee5fc62f1d2774da56482e.png)</details>'
+  id: totrans-196
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/76feb6bc1ab4570c10da92150b8c385ac493214901021ea2a2d7431582540ee3.png](../Images/d075f68956ee5fc62f1d2774da56482e.png)</details>'
 - en: The values in the posterior distribution of `sigma` seem plausible.
+  id: totrans-197
   prefs: []
   type: TYPE_NORMAL
+  zh: '`sigma`的后验分布中的值似乎是合理的。'
 - en: The simple regression model has only three parameters, so we could have used
     a grid algorithm. But the regression model in the happiness report has six predictive
     variables, so it has eight parameters in total, including the intercept and `sigma`.
+  id: totrans-198
   prefs: []
   type: TYPE_NORMAL
 - en: It is not practical to compute a grid approximation for a model with eight parameters.
     Even a coarse grid, with 20 points along each dimension, would have more than
     25 billion points. And with 153 countries, we would have to compute almost 4 trillion
     likelihoods.
+  id: totrans-199
   prefs: []
   type: TYPE_NORMAL
 - en: But PyMC3 can handle a model with eight parameters comfortably, as we’ll see
     in the next section.
+  id: totrans-200
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-201
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE56]'
+  id: totrans-202
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE56]'
 - en: '[PRE57]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-203
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE58]'
+  id: totrans-204
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE58]'
 - en: '[PRE59]</details>'
+  id: totrans-205
   prefs: []
   type: TYPE_NORMAL
 - en: Multiple Regression
+  id: totrans-206
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: Before we implement the multiple regression model, I’ll select the columns we
     need from the `DataFrame`.
+  id: totrans-207
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE60]'
+  id: totrans-208
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE60]'
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-209
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE61]'
+  id: totrans-210
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE61]'
 - en: '|  | Ladder score | Logged GDP per capita | Social support | Healthy life expectancy
     | Freedom to make life choices | Generosity | Perceptions of corruption |'
+  id: totrans-211
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- |'
+  id: totrans-212
   prefs: []
   type: TYPE_TB
 - en: '| 0 | 7.8087 | 10.639267 | 0.954330 | 71.900826 | 0.949172 | -0.059482 | 0.195445
     |'
+  id: totrans-213
   prefs: []
   type: TYPE_TB
 - en: '| 1 | 7.6456 | 10.774001 | 0.955991 | 72.402504 | 0.951444 | 0.066202 | 0.168489
     |'
+  id: totrans-214
   prefs: []
   type: TYPE_TB
 - en: '| 2 | 7.5599 | 10.979933 | 0.942847 | 74.102448 | 0.921337 | 0.105911 | 0.303728
     |</details>'
+  id: totrans-215
   prefs: []
   type: TYPE_NORMAL
 - en: 'The predictive variables have different units: log-GDP is in log-dollars, life
     expectancy is in years, and the other variables are on arbitrary scales. To make
     these factors comparable, I’ll standardize the data so that each variable has
     mean 0 and standard deviation 1.'
+  id: totrans-216
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE62]'
+  id: totrans-217
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE62]'
 - en: Now let’s build the model. I’ll extract the dependent variable.
+  id: totrans-218
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE63]'
+  id: totrans-219
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE63]'
 - en: And the dependent variables.
+  id: totrans-220
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE64]'
+  id: totrans-221
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE64]'
 - en: And here’s the model. `b0` is the intercept; `b1` through `b6` are the parameters
     associated with the predictive variables.
+  id: totrans-222
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE65]'
+  id: totrans-223
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE65]'
 - en: We could express this model more concisely using a vector of predictive variables
     and a vector of parameters, but I decided to keep it simple.
+  id: totrans-224
   prefs: []
   type: TYPE_NORMAL
 - en: Now we can sample from the joint posterior distribution.
+  id: totrans-225
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE66]'
+  id: totrans-226
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE66]'
 - en: <details class="hide below-input"><summary aria-label="Toggle hidden content">Show
     code cell output Hide code cell output</summary>
+  id: totrans-227
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE67]'
+  id: totrans-228
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE67]'
 - en: '<progress value="3000" class="" max="3000" style="width:300px; height:20px;
     vertical-align: middle;">100.00% [3000/3000 00:04<00:00 Sampling 2 chains, 0 divergences]</progress>'
+  id: totrans-229
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE68]</details>'
+  id: totrans-230
   prefs: []
   type: TYPE_NORMAL
 - en: Because we standardized the data, we expect the intercept to be 0, and in fact
     the posterior mean of `b0` is close to 0.
+  id: totrans-231
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-232
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE69]'
+  id: totrans-233
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE69]'
 - en: '[PRE70]</details>'
+  id: totrans-234
   prefs: []
   type: TYPE_NORMAL
 - en: 'We can also check the posterior mean of `sigma`:'
+  id: totrans-235
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-236
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE71]'
+  id: totrans-237
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE71]'
 - en: '[PRE72]</details>'
+  id: totrans-238
   prefs: []
   type: TYPE_NORMAL
 - en: From `trace4` we can extract samples from the posterior distributions of the
     parameters and compute their means.
+  id: totrans-239
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE73]'
+  id: totrans-240
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE73]'
 - en: We can also compute 94% credible intervals (between the 3rd and 97th percentiles).
+  id: totrans-241
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE74]'
+  id: totrans-242
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE74]'
 - en: The following table summarizes the results.
+  id: totrans-243
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-244
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE75]</details>'
+  id: totrans-245
   prefs: []
   type: TYPE_NORMAL
 - en: '|  | Posterior mean | 94% CI |'
+  id: totrans-246
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- |'
+  id: totrans-247
   prefs: []
   type: TYPE_TB
 - en: '| Logged GDP per capita | 0.244 | [0.085, 0.41] |'
+  id: totrans-248
   prefs: []
   type: TYPE_TB
 - en: '| Social support | 0.225 | [0.081, 0.377] |'
+  id: totrans-249
   prefs: []
   type: TYPE_TB
 - en: '| Healthy life expectancy | 0.225 | [0.081, 0.377] |'
+  id: totrans-250
   prefs: []
   type: TYPE_TB
 - en: '| Freedom to make life choices | 0.187 | [0.087, 0.289] |'
+  id: totrans-251
   prefs: []
   type: TYPE_TB
 - en: '| Generosity | 0.054 | [-0.039, 0.14] |'
+  id: totrans-252
   prefs: []
   type: TYPE_TB
 - en: '| Perceptions of corruption | -0.100 | [-0.197, 0.002] |'
+  id: totrans-253
   prefs: []
   type: TYPE_TB
 - en: It looks like GDP has the strongest association with happiness (or satisfaction),
     followed by social support, life expectancy, and freedom.
+  id: totrans-254
   prefs: []
   type: TYPE_NORMAL
 - en: After controlling for those other factors, the parameters of the other factors
     are substantially smaller, and since the CI for generosity includes 0, it is plausible
     that generosity is not substantially related to happiness, at least as they were
     measured in this study.
+  id: totrans-255
   prefs: []
   type: TYPE_NORMAL
 - en: This example demonstrates the power of MCMC to handle models with more than
     a few parameters. But it does not really demonstrate the power of Bayesian regression.
+  id: totrans-256
   prefs: []
   type: TYPE_NORMAL
 - en: If the goal of a regression model is to estimate parameters, there is no great
     advantage to Bayesian regression compared to conventional least squares regression.
+  id: totrans-257
   prefs: []
   type: TYPE_NORMAL
 - en: Bayesian methods are more useful if we plan to use the posterior distribution
     of the parameters as part of a decision analysis process.
+  id: totrans-258
   prefs: []
   type: TYPE_NORMAL
 - en: Summary
+  id: totrans-259
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -984,21 +1483,25 @@
     Poisson model of goal-scoring in soccer and a simple regression model. Then we
     implemented a multiple regression model that would not have been possible to compute
     with a grid approximation.'
+  id: totrans-260
   prefs: []
   type: TYPE_NORMAL
 - en: 'MCMC is more powerful than grid methods, but that power comes with some disadvantages:'
+  id: totrans-261
   prefs: []
   type: TYPE_NORMAL
 - en: MCMC algorithms are fiddly. The same model might behave well with some priors
     and less well with others. And the sampling process often produces warnings about
     tuning steps, divergences, “r-hat statistics”, acceptance rates, and effective
     samples. It takes some expertise to diagnose and correct these issues.
+  id: totrans-262
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: I find it easier to develop models incrementally using grid algorithms, checking
     intermediate results along the way. With PyMC3, it is not as easy to be confident
     that you have specified a model correctly.
+  id: totrans-263
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -1007,179 +1510,241 @@
     you can solve a lot of real-world problems with grid methods. But when you need
     MCMC, it is useful to have a grid algorithm to compare to (even if it is based
     on a simpler model).
+  id: totrans-264
   prefs: []
   type: TYPE_NORMAL
 - en: All of the models in this book can be implemented in PyMC3, but some of them
     are easier to translate than others. In the exercises, you will have a chance
     to practice.
+  id: totrans-265
   prefs: []
   type: TYPE_NORMAL
 - en: Exercises
+  id: totrans-266
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: '**Exercise:** As a warmup, let’s use PyMC3 to solve the Euro problem. Suppose
     we spin a coin 250 times and it comes up heads 140 times. What is the posterior
     distribution of \(x\), the probability of heads?'
+  id: totrans-267
   prefs: []
   type: TYPE_NORMAL
 - en: For the prior, use a beta distribution with parameters \(\alpha=1\) and \(\beta=1\).
+  id: totrans-268
   prefs: []
   type: TYPE_NORMAL
 - en: See [the PyMC3 documentation](https://docs.pymc.io/api/distributions/continuous.html)
     for the list of continuous distributions.
+  id: totrans-269
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-270
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE76]'
+  id: totrans-271
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE76]'
 - en: '[PRE77]'
+  id: totrans-272
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE77]'
 - en: '<progress value="3000" class="" max="3000" style="width:300px; height:20px;
     vertical-align: middle;">100.00% [3000/3000 00:00<00:00 Sampling 2 chains, 0 divergences]</progress>'
+  id: totrans-273
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE78]'
+  id: totrans-274
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE78]'
 - en: '![_images/9aceeffa47605e83ecf31ae37b480a41d897024e249e5e6400cf268e5aeecd95.png](../Images/76c133082854e9fd2a774b69a9a190a4.png)</details>'
+  id: totrans-275
   prefs: []
   type: TYPE_NORMAL
 - en: '**Exercise:** Now let’s use PyMC3 to replicate the solution to the Grizzly
     Bear problem in <<_TheGrizzlyBearProblem>>, which is based on the hypergeometric
     distribution.'
+  id: totrans-276
   prefs: []
   type: TYPE_NORMAL
 - en: I’ll present the problem with slightly different notation, to make it consistent
     with PyMC3.
+  id: totrans-277
   prefs: []
   type: TYPE_NORMAL
 - en: Suppose that during the first session, `k=23` bears are tagged. During the second
     session, `n=19` bears are identified, of which `x=4` had been tagged.
+  id: totrans-278
   prefs: []
   type: TYPE_NORMAL
 - en: Estimate the posterior distribution of `N`, the number of bears in the environment.
+  id: totrans-279
   prefs: []
   type: TYPE_NORMAL
 - en: For the prior, use a discrete uniform distribution from 50 to 500.
+  id: totrans-280
   prefs: []
   type: TYPE_NORMAL
 - en: See [the PyMC3 documentation](https://docs.pymc.io/api/distributions/discrete.html)
     for the list of discrete distributions.
+  id: totrans-281
   prefs: []
   type: TYPE_NORMAL
 - en: 'Note: `HyperGeometric` was added to PyMC3 after version 3.8, so you might need
     to update your installation to do this exercise.'
+  id: totrans-282
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-283
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE79]'
+  id: totrans-284
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE79]'
 - en: '[PRE80]'
+  id: totrans-285
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE80]'
 - en: '<progress value="4000" class="" max="4000" style="width:300px; height:20px;
     vertical-align: middle;">100.00% [4000/4000 00:00<00:00 Sampling 2 chains, 0 divergences]</progress>'
+  id: totrans-286
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE81]'
+  id: totrans-287
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE81]'
 - en: '![_images/6508eeee449a1c8e82ce7ce0664789351b1fd247cb5460e9429a6934db033734.png](../Images/dee9f9d8c3a7ab7b7a7cad18a04ff162.png)</details>'
+  id: totrans-288
   prefs: []
   type: TYPE_NORMAL
 - en: '**Exercise:** In <<_TheWeibullDistribution>> we generated a sample from a Weibull
     distribution with \(\lambda=3\) and \(k=0.8\). Then we used the data to compute
     a grid approximation of the posterior distribution of those parameters.'
+  id: totrans-289
   prefs: []
   type: TYPE_NORMAL
 - en: Now let’s do the same with PyMC3.
+  id: totrans-290
   prefs: []
   type: TYPE_NORMAL
 - en: For the priors, you can use uniform distributions as we did in <<_SurvivalAnalysis>>,
     or you could use `HalfNormal` distributions provided by PyMC3.
+  id: totrans-291
   prefs: []
   type: TYPE_NORMAL
 - en: 'Note: The `Weibull` class in PyMC3 uses different parameters than SciPy. The
     parameter `alpha` in PyMC3 corresponds to \(k\), and `beta` corresponds to \(\lambda\).'
+  id: totrans-292
   prefs: []
   type: TYPE_NORMAL
 - en: 'Here’s the data again:'
+  id: totrans-293
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE82]'
+  id: totrans-294
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE82]'
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-295
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE83]'
+  id: totrans-296
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE83]'
 - en: '[PRE84]'
+  id: totrans-297
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE84]'
 - en: '<progress value="4000" class="" max="4000" style="width:300px; height:20px;
     vertical-align: middle;">100.00% [4000/4000 00:01<00:00 Sampling 2 chains, 0 divergences]</progress>'
+  id: totrans-298
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE85]'
+  id: totrans-299
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE85]'
 - en: '![_images/20ca2eef771e17ce366680fbf0cd5b3fa489b23d328038c5def182f25c399a5e.png](../Images/90b78b9ea67cbd74076b70a4cef6125f.png)</details>'
+  id: totrans-300
   prefs: []
   type: TYPE_NORMAL
 - en: '**Exercise:** In <<_ImprovingReadingAbility>> we used data from a reading test
     to estimate the parameters of a normal distribution.'
+  id: totrans-301
   prefs: []
   type: TYPE_NORMAL
 - en: Make a model that defines uniform prior distributions for `mu` and `sigma` and
     uses the data to estimate their posterior distributions.
+  id: totrans-302
   prefs: []
   type: TYPE_NORMAL
 - en: Now estimate the parameters for the treated group.
+  id: totrans-303
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-304
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE86]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-305
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE87]'
+  id: totrans-306
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE87]'
 - en: '[PRE88]'
+  id: totrans-307
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE88]'
 - en: '<progress value="3000" class="" max="3000" style="width:300px; height:20px;
     vertical-align: middle;">100.00% [3000/3000 00:01<00:00 Sampling 2 chains, 0 divergences]</progress>'
+  id: totrans-308
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE89]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-309
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE90]'
+  id: totrans-310
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE90]'
 - en: '![_images/d8e1802f0f4db48c5429de4dc2411d4445c82281b3e3719facb259a356c7daac.png](../Images/0ea3f1ef40964a9f6ae59de890108f8d.png)</details>'
+  id: totrans-311
   prefs: []
   type: TYPE_NORMAL
 - en: '**Exercise:** In <<_TheLincolnIndexProblem>> we used a grid algorithm to solve
     the Lincoln Index problem as presented by John D. Cook:'
+  id: totrans-312
   prefs: []
   type: TYPE_NORMAL
 - en: “Suppose you have a tester who finds 20 bugs in your program. You want to estimate
@@ -1189,94 +1754,126 @@
     How can you have any idea how many bugs there are? There’s no way to know with
     one tester. But if you have two testers, you can get a good idea, even if you
     don’t know how skilled the testers are.”
+  id: totrans-313
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: Suppose the first tester finds 20 bugs, the second finds 15, and they find 3
     in common; use PyMC3 to estimate the number of bugs.
+  id: totrans-314
   prefs: []
   type: TYPE_NORMAL
 - en: 'Note: This exercise is more difficult that some of the previous ones. One of
     the challenges is that the data includes `k00`, which depends on `N`:'
+  id: totrans-315
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE91]'
+  id: totrans-316
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE91]'
 - en: 'So we have to construct the data as part of the model. To do that, we can use
     `pm.math.stack`, which makes an array:'
+  id: totrans-317
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE92]'
+  id: totrans-318
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE92]'
 - en: Finally, you might find it helpful to use `pm.Multinomial`.
+  id: totrans-319
   prefs: []
   type: TYPE_NORMAL
 - en: 'I’ll use the following notation for the data:'
+  id: totrans-320
   prefs: []
   type: TYPE_NORMAL
 - en: k11 is the number of bugs found by both testers,
+  id: totrans-321
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: k10 is the number of bugs found by the first tester but not the second,
+  id: totrans-322
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: k01 is the number of bugs found by the second tester but not the first, and
+  id: totrans-323
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: k00 is the unknown number of undiscovered bugs.
+  id: totrans-324
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'Here are the values for all but `k00`:'
+  id: totrans-325
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-326
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE93]</details>'
+  id: totrans-327
   prefs: []
   type: TYPE_NORMAL
 - en: 'In total, 32 bugs have been discovered:'
+  id: totrans-328
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-329
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE94]'
+  id: totrans-330
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE94]'
 - en: '[PRE95]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-331
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE96]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-332
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE97]'
+  id: totrans-333
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE97]'
 - en: '[PRE98]'
+  id: totrans-334
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE98]'
 - en: '<progress value="4000" class="" max="4000" style="width:300px; height:20px;
     vertical-align: middle;">100.00% [4000/4000 00:02<00:00 Sampling 2 chains, 0 divergences]</progress>'
+  id: totrans-335
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE99]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-336
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE100]'
+  id: totrans-337
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE100]'
 - en: '![_images/beeaa10ba1b2c50623f3239a25baa2d674c0a47c8035caaac00df5f38eebf9b4.png](../Images/c82753560176a0cc0aa0c7e546e6dc9a.png)</details>'
+  id: totrans-338
   prefs: []
   type: TYPE_NORMAL
