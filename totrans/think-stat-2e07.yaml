@@ -1006,11 +1006,13 @@
   id: totrans-180
   prefs: []
   type: TYPE_NORMAL
+  zh: 图[6.3](#density_totalwgt_kde)显示了结果。左尾部似乎比右侧更长，因此我们怀疑分布是左偏的。平均值为7.27磅，略低于中位数7.38磅，因此与左偏一致。而且两个偏度系数都是负的：样本偏度为-0.59；皮尔逊中位数偏度为-0.23。
 - en: '* * *'
   id: totrans-181
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
   id: totrans-182
   prefs:
@@ -1021,6 +1023,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/b210bed78dc5cd25323d63e49b690c77.png)'
 - en: ''
   id: totrans-184
   prefs:
@@ -1031,6 +1034,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_TB
+  zh: '| 图6.4：来自BRFSS的成年人体重数据的估计PDF。 |'
 - en: ''
   id: totrans-186
   prefs:
@@ -1041,11 +1045,13 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: 'Now let’s compare this distribution to the distribution of adult weight in
     the BRFSS. Again, here’s the code:'
   id: totrans-188
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们将这个分布与BRFSS中成年人体重的分布进行比较。同样，这是代码：
 - en: '[PRE17]'
   id: totrans-189
   prefs: []
@@ -1057,6 +1063,7 @@
   id: totrans-190
   prefs: []
   type: TYPE_NORMAL
+  zh: 图[6.4](#density_wtkg2_kde)显示了结果。分布呈右偏态。确实，平均值为79.0，大于中位数77.3。样本偏度为1.1，皮尔逊中位数偏度为0.26。
 - en: The sign of the skewness coefficient indicates whether the distribution skews
     left or right, but other than that, they are hard to interpret. Sample skewness
     is less robust; that is, it is more susceptible to outliers. As a result it is
@@ -1065,30 +1072,36 @@
   id: totrans-191
   prefs: []
   type: TYPE_NORMAL
+  zh: 偏度系数的符号指示分布是左偏还是右偏，但除此之外，它们很难解释。样本偏度不够健壮；也就是说，它更容易受到异常值的影响。因此，在应用于偏斜分布时，它的可靠性较低，而这正是它最相关的时候。
 - en: Pearson’s median skewness is based on a computed mean and variance, so it is
     also susceptible to outliers, but since it does not depend on a third moment,
     it is somewhat more robust.
   id: totrans-192
   prefs: []
   type: TYPE_NORMAL
+  zh: 皮尔逊中位数偏度是基于计算的均值和方差，因此它也容易受到异常值的影响，但由于它不依赖于第三阶矩，所以它稍微更健壮。
 - en: 6.9  Exercises
   id: totrans-193
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 6.9  练习
 - en: A solution to this exercise is in `chap06soln.py`.
   id: totrans-194
   prefs: []
   type: TYPE_NORMAL
+  zh: 此练习的解决方案在`chap06soln.py`中。
 - en: Exercise 1
   id: totrans-195
   prefs: []
   type: TYPE_NORMAL
+  zh: 练习1
 - en: '*The distribution of income is famously skewed to the right. In this exercise,
     we’ll measure how strong that skew is.*'
   id: totrans-196
   prefs: []
   type: TYPE_NORMAL
+  zh: '*收入分布被认为是右偏的。在这个练习中，我们将衡量这种偏斜有多强。*'
 - en: '*The Current Population Survey (CPS) is a joint effort of the Bureau of Labor
     Statistics and the Census Bureau to study income and related variables. Data collected
     in 2013 is available from* [*http://www.census.gov/hhes/www/cpstables/032013/hhinc/toc.htm*](http://www.census.gov/hhes/www/cpstables/032013/hhinc/toc.htm)*.
@@ -1099,6 +1112,7 @@
   id: totrans-197
   prefs: []
   type: TYPE_NORMAL
+  zh: '*Current Population Survey (CPS)是劳工统计局和人口普查局共同研究收入和相关变量的努力。2013年收集的数据可从[*http://www.census.gov/hhes/www/cpstables/032013/hhinc/toc.htm*](http://www.census.gov/hhes/www/cpstables/032013/hhinc/toc.htm)*获取。我下载了`hinc06.xls`，这是一个包含有关家庭收入信息的Excel电子表格，并将其转换为`hinc06.csv`，这是本书的存储库中可以找到的CSV文件。您还会找到`hinc2.py`，它读取此文件并转换数据。*'
 - en: '*The dataset is in the form of a series of income ranges and the number of
     respondents who fell in each range. The lowest range includes respondents who
     reported annual household income “Under $5000.” The highest range includes respondents
@@ -1106,6 +1120,7 @@
   id: totrans-198
   prefs: []
   type: TYPE_NORMAL
+  zh: '*数据集以一系列收入范围和每个范围内的受访者数量的形式存在。最低范围包括报告年度家庭收入“低于5000美元”的受访者。最高范围包括报告“25万美元或更多”的受访者。*'
 - en: '*To estimate mean and other statistics from these data, we have to make some
     assumptions about the lower and upper bounds, and how the values are distributed
     in each range. `hinc2.py` provides `InterpolateSample`, which shows one way to
@@ -1115,6 +1130,7 @@
   id: totrans-199
   prefs: []
   type: TYPE_NORMAL
+  zh: '*要从这些数据中估算均值和其他统计数据，我们必须对下限和上限以及每个范围内的值分布做一些假设。`hinc2.py`提供了`InterpolateSample`，它展示了对这些数据建模的一种方法。它接受一个包含每个范围的上限的列`income`和包含每个范围内受访者数量的`freq`的DataFrame。*'
 - en: '*It also takes `log_upper`, which is an assumed upper bound on the highest
     range, expressed in `log10` dollars. The default value, `log_upper=6.0` represents
     the assumption that the largest income among the respondents is* 10⁶*, or one
@@ -1122,29 +1138,34 @@
   id: totrans-200
   prefs: []
   type: TYPE_NORMAL
+  zh: '*它还需要`log_upper`，这是假定的最高范围的上限，以`log10`美元表示。默认值`log_upper=6.0`表示受访者中最大收入为10⁶美元，即一百万美元的假设。*'
 - en: '*`InterpolateSample` generates a pseudo-sample; that is, a sample of household
     incomes that yields the same number of respondents in each range as the actual
     data. It assumes that incomes in each range are equally spaced on a log10 scale.*'
   id: totrans-201
   prefs: []
   type: TYPE_NORMAL
+  zh: '*`InterpolateSample`生成一个伪样本；也就是说，一个家庭收入样本，使得每个范围内的受访者数量与实际数据相同。它假设每个范围内的收入在log10比例上是等间距的。*'
 - en: '*Compute the median, mean, skewness and Pearson’s skewness of the resulting
     sample. What fraction of households reports a taxable income below the mean? How
     do the results depend on the assumed upper bound?*'
   id: totrans-202
   prefs: []
   type: TYPE_NORMAL
+  zh: '*计算结果样本的中位数、均值、偏度和皮尔逊偏度。报告收入低于均值的家庭比例是多少？结果如何取决于假定的上限？*'
 - en: 6.10  Glossary
   id: totrans-203
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 6.10  术语表
 - en: 'Probability density function (PDF): The derivative of a continuous CDF, a function
     that maps a value to its probability density.'
   id: totrans-204
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 概率密度函数（PDF）：连续CDF的导数，将值映射到其概率密度的函数。
 - en: 'Probability density: A quantity that can be integrated over a range of values
     to yield a probability. If the values are in units of cm, for example, probability
     density is in units of probability per cm.'
@@ -1152,12 +1173,14 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 概率密度：一种可以在一定范围内积分以得出概率的数量。例如，如果值以厘米为单位，概率密度就以每厘米的概率单位为单位。
 - en: 'Kernel density estimation (KDE): An algorithm that estimates a PDF based on
     a sample.'
   id: totrans-206
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 核密度估计（KDE）：一种基于样本估计PDF的算法。
 - en: 'discretize: To approximate a continuous function or distribution with a discrete
     function. The opposite of smoothing.'
   id: totrans-207
