@@ -1,641 +1,973 @@
 - en: Grid algorithms for hierarchical models
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 分层模型的网格算法
 - en: 原文：[https://allendowney.github.io/ThinkBayes2/hospital.html](https://allendowney.github.io/ThinkBayes2/hospital.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ThinkBayes2/hospital.html](https://allendowney.github.io/ThinkBayes2/hospital.html)
 - en: Copyright 2021 Allen B. Downey
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 版权所有 2021 Allen B. Downey
 - en: 'License: [Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA
     4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 许可证：[署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 - en: It is widely believed that grid algorithms are only practical for models with
     1-3 parameters, or maybe 4-5 if you are careful. [I’ve said so myself](https://allendowney.github.io/ThinkBayes2/chap19.html).
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 人们普遍认为网格算法只适用于具有 1-3 个参数的模型，或者如果你小心的话，可能是 4-5 个参数。[我自己也这么说过](https://allendowney.github.io/ThinkBayes2/chap19.html)。
 - en: 'But recently I used a grid algorithm to solve the [emitter-detector problem](https://www.allendowney.com/blog/2021/09/05/emitter-detector-redux/),
     and along the way I noticed something about the structure of the problem: although
     the model has two parameters, the data only depend on one of them. That makes
     it possible to evaluate the likelihood function and update the model very efficiently.'
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 但最近，我使用了一个网格算法来解决[发射器-探测器问题](https://www.allendowney.com/blog/2021/09/05/emitter-detector-redux/)，在解决问题的过程中，我注意到了问题的结构：尽管模型有两个参数，但数据只依赖于其中一个。这使得能够非常有效地评估似然函数并更新模型。
 - en: 'Many hierarchical models have a similar structure: the data depend on a small
     number of parameters, which depend on a small number of hyperparameters. I wondered
     whether the same method would generalize to more complex models, and it does.'
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 许多分层模型具有类似的结构：数据依赖于少量参数，这些参数依赖于少量超参数。我想知道是否相同的方法会推广到更复杂的模型，事实上确实如此。
 - en: As an example, in this notebook I’ll use a logitnormal-binomial hierarchical
     model to solve a problem with two hyperparameters and 13 parameters. The grid
     algorithm is not just practical; it’s substantially faster than MCMC.
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，在这个笔记本中，我将使用一个 logitnormal-二项式分层模型来解决一个具有两个超参数和 13 个参数的问题。网格算法不仅实用；而且比 MCMC
+    快得多。
 - en: The following are some utility functions I’ll use.
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是我将要使用的一些实用函数。
 - en: '[PRE0]'
+  id: totrans-9
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '[PRE1]'
+  id: totrans-10
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '[PRE2]'
+  id: totrans-11
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '[PRE3]'
+  id: totrans-12
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: Heart Attack Data
+  id: totrans-13
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 心脏病发作数据
 - en: The problem I’ll solve is based on [Chapter 10 of *Probability and Bayesian
     Modeling*](https://bayesball.github.io/BOOK/bayesian-hierarchical-modeling.html#example-deaths-after-heart-attack);
     it uses data on death rates due to heart attack for patients treated at various
     hospitals in New York City.
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将要解决的问题基于[《概率与贝叶斯建模》第 10 章](https://bayesball.github.io/BOOK/bayesian-hierarchical-modeling.html#example-deaths-after-heart-attack)；它使用了纽约市各医院治疗患者心脏病发作死亡率的数据。
 - en: We can use Pandas to read the data into a `DataFrame`.
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用 Pandas 将数据读入 `DataFrame`。
 - en: '[PRE4]'
+  id: totrans-16
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '[PRE5]'
+  id: totrans-17
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '|  | Hospital | Cases | Deaths | Death % |'
+  id: totrans-18
   prefs: []
   type: TYPE_TB
+  zh: '|  | 医院 | 病例 | 死亡 | 死亡率 |'
 - en: '| --- | --- | --- | --- | --- |'
+  id: totrans-19
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- |'
 - en: '| 0 | Bellevue Hospital Center | 129 | 4 | 3.101 |'
+  id: totrans-20
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | Bellevue 医院中心 | 129 | 4 | 3.101 |'
 - en: '| 1 | Harlem Hospital Center | 35 | 1 | 2.857 |'
+  id: totrans-21
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 哈莱姆医院中心 | 35 | 1 | 2.857 |'
 - en: '| 2 | Lenox Hill Hospital | 228 | 18 | 7.894 |'
+  id: totrans-22
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 莱诺克斯山医院 | 228 | 18 | 7.894 |'
 - en: '| 3 | Metropolitan Hospital Center | 84 | 7 | 8.333 |'
+  id: totrans-23
   prefs: []
   type: TYPE_TB
+  zh: 3 | 大都会医院中心 | 84 | 7 | 8.333 |
 - en: '| 4 | Mount Sinai Beth Israel | 291 | 24 | 8.247 |'
+  id: totrans-24
   prefs: []
   type: TYPE_TB
+  zh: '| 4 | 山西贝斯以色列 | 291 | 24 | 8.247 |'
 - en: '| 5 | Mount Sinai Hospital | 270 | 16 | 5.926 |'
+  id: totrans-25
   prefs: []
   type: TYPE_TB
+  zh: '| 5 | 山西医院 | 270 | 16 | 5.926 |'
 - en: '| 6 | Mount Sinai Roosevelt | 46 | 6 | 13.043 |'
+  id: totrans-26
   prefs: []
   type: TYPE_TB
+  zh: '| 6 | 罗斯福山西医院 | 46 | 6 | 13.043 |'
 - en: '| 7 | Mount Sinai St. Luke’s | 293 | 19 | 6.485 |'
+  id: totrans-27
   prefs: []
   type: TYPE_TB
+  zh: '| 7 | 圣卢克斯山西医院 | 293 | 19 | 6.485 |'
 - en: '| 8 | NYU Hospitals Center | 241 | 15 | 6.224 |'
+  id: totrans-28
   prefs: []
   type: TYPE_TB
+  zh: '| 8 | 纽约大学医院中心 | 241 | 15 | 6.224 |'
 - en: '| 9 | NYP Hospital - Allen Hospital | 105 | 13 | 12.381 |'
+  id: totrans-29
   prefs: []
   type: TYPE_TB
+  zh: '| 9 | NYP 医院 - 艾伦医院 | 105 | 13 | 12.381 |'
 - en: '| 10 | NYP Hospital - Columbia Presbyterian Center | 353 | 25 | 7.082 |'
+  id: totrans-30
   prefs: []
   type: TYPE_TB
+  zh: '| 10 | NYP 医院 - 哥伦比亚长老中心 | 353 | 25 | 7.082 |'
 - en: '| 11 | NYP Hospital - New York Weill Cornell Center | 250 | 11 | 4.400 |'
+  id: totrans-31
   prefs: []
   type: TYPE_TB
+  zh: '| 11 | NYP 医院 - 纽约威尔康奈尔中心 | 250 | 11 | 4.400 |'
 - en: '| 12 | NYP/Lower Manhattan Hospital | 41 | 4 | 9.756 |'
+  id: totrans-32
   prefs: []
   type: TYPE_TB
+  zh: '| 12 | NYP/曼哈顿医院 | 41 | 4 | 9.756 |'
 - en: The columns we need are `Cases`, which is the number of patients treated at
     each hospital, and `Deaths`, which is the number of those patients who died.
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们需要的列是 `病例`，即每家医院治疗的患者数量，以及 `死亡`，即这些患者中死亡的数量。
 - en: '[PRE6]'
+  id: totrans-34
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: Solution with PyMC
+  id: totrans-35
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: PyMC 解决方案
 - en: Here’s a hierarchical model that estimates the death rate for each hospital
     and simultaneously estimates the distribution of rates across hospitals.
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个分层模型，它估计了每家医院的死亡率，并同时估计了各家医院的死亡率分布。
 - en: '[PRE7]'
+  id: totrans-37
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '[PRE8]'
+  id: totrans-38
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '[PRE9]'
+  id: totrans-39
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '![_images/4aa477637d76c73e22c5ba5569dcd0f6ab56abcc71deb97593454b7f77dbc822.svg](../Images/cee02df9a8687ea1e007d9785e5ee05e.png)'
+  id: totrans-40
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/4aa477637d76c73e22c5ba5569dcd0f6ab56abcc71deb97593454b7f77dbc822.svg](../Images/cee02df9a8687ea1e007d9785e5ee05e.png)'
 - en: '[PRE10]'
+  id: totrans-41
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '[PRE11]'
+  id: totrans-42
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: '<progress value="6000" class="" max="6000" style="width:300px; height:20px;
     vertical-align: middle;">100.00% [6000/6000 00:07<00:00 Sampling 4 chains, 10
     divergences]</progress>'
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: '<progress value="6000" class="" max="6000" style="width:300px; height:20px;
+    vertical-align: middle;">100.00% [6000/6000 00:07<00:00 Sampling 4 chains, 10
+    divergences]</progress>'
 - en: '[PRE12]'
+  id: totrans-44
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '[PRE13]'
+  id: totrans-45
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: To be fair, PyMC doesn’t like this parameterization much (although I’m not sure
     why). One most runs, there are a moderate number of divergences. Even so, the
     results are good enough.
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: 公平地说，PyMC 对这种参数化不太喜欢（尽管我不确定为什么）。在大多数运行中，有一定数量的发散。即便如此，结果还是足够好的。
 - en: Here are the posterior distributions of the hyperparameters.
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是超参数的后验分布。
 - en: '[PRE14]'
+  id: totrans-48
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '![_images/802eebbd477f71df4cbd9a340d2b5613eb821486aecd59aa0aa52a13b50925b4.png](../Images/12fd7003a8a0f8644da27de2aabe7a95.png)'
+  id: totrans-49
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/802eebbd477f71df4cbd9a340d2b5613eb821486aecd59aa0aa52a13b50925b4.png](../Images/12fd7003a8a0f8644da27de2aabe7a95.png)'
 - en: And we can extract the posterior distributions of the xs.
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以提取 x 的后验分布。
 - en: '[PRE15]'
+  id: totrans-51
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '[PRE16]'
+  id: totrans-52
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: As an example, here’s the posterior distribution of x for the first hospital.
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，这是第一个医院 x 的后验分布。
 - en: '[PRE17]'
+  id: totrans-54
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: '![_images/548f75d0a6ec0b23bac76b1316b5db52bedb7da62330a04f61a98e13bdf8ef4a.png](../Images/ae8b4180c3aa20fb7981df69ff63edce.png)'
+  id: totrans-55
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/548f75d0a6ec0b23bac76b1316b5db52bedb7da62330a04f61a98e13bdf8ef4a.png](../Images/ae8b4180c3aa20fb7981df69ff63edce.png)'
 - en: The grid priors
+  id: totrans-56
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 网格先验
 - en: Now let’s solve the same problem using a grid algorithm. I’ll use the same priors
     for the hyperparameters, approximated by a grid with about 100 elements in each
     dimension.
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE18]'
+  id: totrans-58
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: '![_images/4d36a111de94173800e762bcb4e11959161323a032fb787907ef801163972d21.png](../Images/b1f2ea3c74c546eb75cd9df07609763d.png)'
+  id: totrans-59
   prefs: []
   type: TYPE_IMG
 - en: '[PRE19]'
+  id: totrans-60
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '![_images/c5a4ef41048db2671496eab57fce6d329cb8f96b1be3d92a1916c1150e1a9737.png](../Images/f2dd9988c740ab93a9771e1c21d328d9.png)'
+  id: totrans-61
   prefs: []
   type: TYPE_IMG
 - en: The following cells confirm that these priors are consistent with the prior
     samples from PyMC.
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE20]'
+  id: totrans-63
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '[PRE21]'
+  id: totrans-64
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: '![_images/87280efa676b32352a19b7704ee06b02e34ee045e7ef7f4831fdb67fa9c344d0.png](../Images/bf43b5d007ea8420fe02af58fa6c5eb7.png)'
+  id: totrans-65
   prefs: []
   type: TYPE_IMG
 - en: '[PRE22]'
+  id: totrans-66
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: '[PRE23]'
+  id: totrans-67
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: '![_images/ce51b8b82a93033e1b1d67375bedb99b23fa5283788710bd0205144e236ed498.png](../Images/d38b70b734ab5e74690ed941974b4d5e.png)'
+  id: totrans-68
   prefs: []
   type: TYPE_IMG
 - en: The joint distribution of hyperparameters
+  id: totrans-69
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: I’ll use `make_joint` to make an array that represents the joint prior distribution
     of the hyperparameters.
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE24]'
+  id: totrans-71
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: '[PRE25]'
+  id: totrans-72
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: '[PRE26]'
+  id: totrans-73
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: Here’s what it looks like.
+  id: totrans-74
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE27]'
+  id: totrans-75
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: '![_images/958b2a9ea3b4c8c4b4f3da5eb4ab7ec508f51a23ee621cafca7af2836e950632.png](../Images/00ac59083dbac51dc0a419beb53d318e.png)'
+  id: totrans-76
   prefs: []
   type: TYPE_IMG
 - en: Joint prior of hyperparameters and x
+  id: totrans-77
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: Now we’re ready to lay out the grid for x, which is the proportion we’ll estimate
     for each hospital.
+  id: totrans-78
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE28]'
+  id: totrans-79
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: For each pair of hyperparameters, we’ll compute the distribution of `x`.
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE29]'
+  id: totrans-81
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: '[PRE30]'
+  id: totrans-82
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: '[PRE31]'
+  id: totrans-83
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: '[PRE32]'
+  id: totrans-84
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: '[PRE33]'
+  id: totrans-85
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: We can speed this up by computing skipping the terms that don’t depend on x
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE34]'
+  id: totrans-87
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: '[PRE35]'
+  id: totrans-88
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: The result is a 3-D array with axes for mu, sigma, and x.
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
 - en: Now we need to normalize each distribution of `x`.
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE36]'
+  id: totrans-91
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: '[PRE37]'
+  id: totrans-92
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE37]'
 - en: To normalize, we have to use a safe version of `divide` where `0/0` is `0`.
+  id: totrans-93
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE38]'
+  id: totrans-94
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: '[PRE39]'
+  id: totrans-95
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: '[PRE40]'
+  id: totrans-96
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE40]'
 - en: The result is an array that contains the distribution of `x` for each pair of
     hyperparameters.
+  id: totrans-97
   prefs: []
   type: TYPE_NORMAL
 - en: Now, to get the prior distribution, we multiply through by the joint distribution
     of the hyperparameters.
+  id: totrans-98
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE41]'
+  id: totrans-99
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE41]'
 - en: '[PRE42]'
+  id: totrans-100
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE42]'
 - en: '[PRE43]'
+  id: totrans-101
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE43]'
 - en: '[PRE44]'
+  id: totrans-102
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE44]'
 - en: The result is a 3-D array that represents the joint prior distribution of `mu`,
     `sigma`, and `x`.
+  id: totrans-103
   prefs: []
   type: TYPE_NORMAL
 - en: To check that it is correct, I’ll extract the marginal distributions and compare
     them to the priors.
+  id: totrans-104
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE45]'
+  id: totrans-105
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE45]'
 - en: '[PRE46]'
+  id: totrans-106
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE46]'
 - en: '![_images/34c43829d056d3ea02a3b60bb7ae8a85900c7622aad347608b98ca80caa33779.png](../Images/e5b39fcfba081fb44539bcc089de8761.png)'
+  id: totrans-107
   prefs: []
   type: TYPE_IMG
 - en: '[PRE47]'
+  id: totrans-108
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE47]'
 - en: '![_images/d0686bec19a94e62e2430a4f3992ecb72ff02e44030ef23a4d6856232389b10f.png](../Images/7735daeec9faf0628ff06fd7a96bac42.png)'
+  id: totrans-109
   prefs: []
   type: TYPE_IMG
 - en: We didn’t compute the prior distribution of `x` explicitly; it follows from
     the distribution of the hyperparameters. But we can extract the prior marginal
     of `x` from the joint prior.
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE48]'
+  id: totrans-111
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE48]'
 - en: '![_images/bdf43d9b32661a9cbb2dba60731aee477114f535ff9dde513a8f60a814568cd9.png](../Images/8b344dcdb4ee3fc57ed2b4d87590458a.png)'
+  id: totrans-112
   prefs: []
   type: TYPE_IMG
 - en: And compare it to the prior sample from PyMC.
+  id: totrans-113
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE49]'
+  id: totrans-114
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE49]'
 - en: '[PRE50]'
+  id: totrans-115
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE50]'
 - en: '[PRE51]'
+  id: totrans-116
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE51]'
 - en: '[PRE52]'
+  id: totrans-117
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE52]'
 - en: '![_images/4a08494ee22a1cd5637087377ca5d42275a09b72ebe2a0bcab09d4743c7880bf.png](../Images/3cca26cd857d171029edd0e7c4a4e10b.png)'
+  id: totrans-118
   prefs: []
   type: TYPE_IMG
 - en: The prior distribution of `x` I get from the grid is a bit different from what
     I get from PyMC. I’m not sure why, but it doesn’t seem to affect the results much.
+  id: totrans-119
   prefs: []
   type: TYPE_NORMAL
 - en: In addition to the marginals, we’ll also find it useful to extract the joint
     marginal distribution of the hyperparameters.
+  id: totrans-120
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE53]'
+  id: totrans-121
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE53]'
 - en: '[PRE54]'
+  id: totrans-122
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE54]'
 - en: '[PRE55]'
+  id: totrans-123
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE55]'
 - en: '![_images/ac19e03323b4eb0f5f7faff979e4b93a985cd85a2344b9596e03357d0b38d5fd.png](../Images/e4a58fb5c6bad02db959c56ff3784715.png)'
+  id: totrans-124
   prefs: []
   type: TYPE_IMG
 - en: The Update
+  id: totrans-125
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: The likelihood of the data only depends on `x`, so we can compute it like this.
+  id: totrans-126
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE56]'
+  id: totrans-127
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE56]'
 - en: '[PRE57]'
+  id: totrans-128
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE57]'
 - en: '[PRE58]'
+  id: totrans-129
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE58]'
 - en: '![_images/1d1840c79bc6a6af27158c4e2a15b8e4f57e29e8cef2496426af8782521d9b97.png](../Images/60671e80e622b1a3551d6e67df9ceb00.png)'
+  id: totrans-130
   prefs: []
   type: TYPE_IMG
 - en: And here’s the update.
+  id: totrans-131
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE59]'
+  id: totrans-132
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE59]'
 - en: '[PRE60]'
+  id: totrans-133
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE60]'
 - en: '[PRE61]'
+  id: totrans-134
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE61]'
 - en: Serial updates
+  id: totrans-135
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: At this point we can do an update based on a single hospital, but how do we
     update based on all of the hospitals?
+  id: totrans-136
   prefs: []
   type: TYPE_NORMAL
 - en: As a step toward the right answer, I’ll start with a wrong answer, which is
     to do the updates one at a time.
+  id: totrans-137
   prefs: []
   type: TYPE_NORMAL
 - en: After each update, we extract the posterior distribution of the hyperparameters
     and use it to create the prior for the next update.
+  id: totrans-138
   prefs: []
   type: TYPE_NORMAL
 - en: At the end, the posterior distribution of hyperparameters is correct, and the
     marginal posterior of `x` for the *last* hospital is correct, but the other marginals
     are wrong because they do not take into account data from subsequent hospitals.
+  id: totrans-139
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE62]'
+  id: totrans-140
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE62]'
 - en: '[PRE63]'
+  id: totrans-141
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE63]'
 - en: '[PRE64]'
+  id: totrans-142
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE64]'
 - en: Here are the posterior distributions of the hyperparameters, compared to the
     results from PyMC.
+  id: totrans-143
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE65]'
+  id: totrans-144
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE65]'
 - en: '[PRE66]'
+  id: totrans-145
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE66]'
 - en: '![_images/34b5f3aae609642555c9a66934a9f59842750d058cd635e3775a6350d7035c40.png](../Images/b79b5761da1d1849da0c955187b9f5b9.png)'
+  id: totrans-146
   prefs: []
   type: TYPE_IMG
 - en: '[PRE67]'
+  id: totrans-147
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE67]'
 - en: '[PRE68]'
+  id: totrans-148
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE68]'
 - en: '![_images/3761044539e7fc0be684821dbb5b0ea13c2ebcb0327a8a976943b7d8ef5cd7fe.png](../Images/37314e08f0517a5a6d7c9a9e027ee566.png)'
+  id: totrans-149
   prefs: []
   type: TYPE_IMG
 - en: '[PRE69]'
+  id: totrans-150
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE69]'
 - en: '[PRE70]'
+  id: totrans-151
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE70]'
 - en: '![_images/a542fa2d10fed87e7ed4b8eaf3608ebe1f6b56281ed16d700cd0f002bf301bd9.png](../Images/a4c8b46af5695de7ebe28e6536959548.png)'
+  id: totrans-152
   prefs: []
   type: TYPE_IMG
 - en: Parallel updates
+  id: totrans-153
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: Doing updates one at time is not quite right, but it gives us an insight.
+  id: totrans-154
   prefs: []
   type: TYPE_NORMAL
 - en: Suppose we start with a uniform distribution for the hyperparameters and do
     an update with data from one hospital. If we extract the posterior joint distribution
     of the hyperparameters, what we get is the likelihood function associated with
     one dataset.
+  id: totrans-155
   prefs: []
   type: TYPE_NORMAL
 - en: The following function computes these likelihood functions and saves them in
     an array called `hyper_likelihood`.
+  id: totrans-156
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE71]'
+  id: totrans-157
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE71]'
 - en: '[PRE72]'
+  id: totrans-158
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE72]'
 - en: '[PRE73]'
+  id: totrans-159
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE73]'
 - en: We can multiply this out to get the product of the likelihoods.
+  id: totrans-160
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE74]'
+  id: totrans-161
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE74]'
 - en: '[PRE75]'
+  id: totrans-162
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE75]'
 - en: '[PRE76]'
+  id: totrans-163
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE76]'
 - en: This is useful because it provides an efficient way to compute the marginal
     posterior distribution of `x` for any hospital. Here’s an example.
+  id: totrans-164
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE77]'
+  id: totrans-165
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE77]'
 - en: '[PRE78]'
+  id: totrans-166
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE78]'
 - en: Suppose we did the updates serially and saved this hospital for last. The prior
     distribution for the final update would reflect the updates from all previous
     hospitals, which we can compute by dividing out `hyper_likelihood[i]`.
+  id: totrans-167
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE79]'
+  id: totrans-168
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE79]'
 - en: '[PRE80]'
+  id: totrans-169
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE80]'
 - en: '[PRE81]'
+  id: totrans-170
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE81]'
 - en: We can use `hyper_i` to make the prior for the last update.
+  id: totrans-171
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE82]'
+  id: totrans-172
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE82]'
 - en: And then do the update.
+  id: totrans-173
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE83]'
+  id: totrans-174
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE83]'
 - en: And we can confirm that the results are similar to the results from PyMC.
+  id: totrans-175
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE84]'
+  id: totrans-176
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE84]'
 - en: '[PRE85]'
+  id: totrans-177
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE85]'
 - en: '[PRE86]'
+  id: totrans-178
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE86]'
 - en: '![_images/34b5f3aae609642555c9a66934a9f59842750d058cd635e3775a6350d7035c40.png](../Images/b79b5761da1d1849da0c955187b9f5b9.png)'
+  id: totrans-179
   prefs: []
   type: TYPE_IMG
 - en: '[PRE87]'
+  id: totrans-180
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE87]'
 - en: '[PRE88]'
+  id: totrans-181
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE88]'
 - en: '![_images/3761044539e7fc0be684821dbb5b0ea13c2ebcb0327a8a976943b7d8ef5cd7fe.png](../Images/37314e08f0517a5a6d7c9a9e027ee566.png)'
+  id: totrans-182
   prefs: []
   type: TYPE_IMG
 - en: '[PRE89]'
+  id: totrans-183
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE89]'
 - en: '[PRE90]'
+  id: totrans-184
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE90]'
 - en: '![_images/a9d4fdfb10f48b1637dd49502a40eaa7edd8fbde43581c654b938fa0020c4977.png](../Images/a8eeefee425f21107c32bce6286b1094.png)'
+  id: totrans-185
   prefs: []
   type: TYPE_IMG
 - en: Compute all marginals
+  id: totrans-186
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: The following function computes the marginals for all hospitals and stores the
     results in an array.
+  id: totrans-187
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE91]'
+  id: totrans-188
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE91]'
 - en: '[PRE92]'
+  id: totrans-189
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE92]'
 - en: '[PRE93]'
+  id: totrans-190
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE93]'
 - en: Here’s what the results look like, compared to the results from PyMC.
+  id: totrans-191
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE94]'
+  id: totrans-192
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE94]'
 - en: '[PRE95]'
+  id: totrans-193
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE95]'
 - en: '![_images/d0edcb50f337ffa8fb1aa3438f6d6b3e834fec9120c52d0b0e7e6a084ee2e721.png](../Images/daf5c629fbde95f4d9f95cab77cacad4.png)
     ![_images/9f9b3321de2136f0646b22cb95a31ee10e7d6fb91f1aeb5879646fa92de663fa.png](../Images/7f1657ec693bfe615b3224818c87d9ea.png)
     ![_images/dd45e7a3b4c455b669c74c577c44986221d25ce2af5489c2735d21ec7ac1fbac.png](../Images/6c55a70f2feb1ea5d6148e5cbb5171b7.png)
@@ -649,47 +981,67 @@
     ![_images/4b1e0fea1bea326560809ea4054d54b76b1b6071a85fcd46203200293a708086.png](../Images/7bba56a4e32abae7a8fda5b85fb16658.png)
     ![_images/1aea59ec4b6b828f78566aa465c4c4c9c5f80b3391f07dccc183314b7ab43781.png](../Images/b22db57b14186121c858ff10f2036fb0.png)
     ![_images/c4b8c68ee0b70f97fdf8ae4c88b880c00ac5b27a77ddd157d95953c8307b1bc0.png](../Images/3b60d3e1a1173a8473c26ff0871015c1.png)'
+  id: totrans-194
   prefs: []
   type: TYPE_IMG
 - en: And here are the percentage differences between the results from the grid algorithm
     and PyMC. Most of them are less than 1%.
+  id: totrans-195
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE96]'
+  id: totrans-196
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE96]'
 - en: '[PRE97]'
+  id: totrans-197
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE97]'
 - en: The total time to do all of these computations is about 300 ms, compared to
     more than 10 seconds to make and run the PyMC model. And PyMC used 4 cores; I
     only used one.
+  id: totrans-198
   prefs: []
   type: TYPE_NORMAL
+  zh: 所有这些计算所需的总时间约为300毫秒，而构建和运行PyMC模型需要超过10秒。而且PyMC使用了4个核心，而我只用了一个。
 - en: 'The grid algorithm is easy to parallelize, and it’s incremental. If you get
     data from a new hospital, or new data for an existing one, you can:'
+  id: totrans-199
   prefs: []
   type: TYPE_NORMAL
+  zh: 网格算法易于并行化，并且是增量式的。如果你从新医院获取数据，或者为现有医院获取新数据，你可以：
 - en: Compute the posterior distribution of `x` for the updated hospital, using existing
     `hyper_likelihoods` for the other hospitals.
+  id: totrans-200
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 计算更新后医院`x`的后验分布，使用现有的其他医院的`hyper_likelihoods`。
 - en: Update `hyper_likelihoods` for the other hospitals, and run their updates again.
+  id: totrans-201
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 更新其他医院的`hyper_likelihoods`，并再次运行它们的更新。
 - en: The total time would be about half of what it takes to start from scratch, and
     it’s easy to parallelize.
+  id: totrans-202
   prefs: []
   type: TYPE_NORMAL
+  zh: 总时间大约是从头开始所需时间的一半，而且很容易并行化。
 - en: One drawback of the grid algorithm is that it generates marginal distributions
     for each hospital rather than a sample from the joint distribution of all of them.
     So it’s less easy to see the correlations among them.
+  id: totrans-203
   prefs: []
   type: TYPE_NORMAL
+  zh: 网格算法的一个缺点是它生成了每家医院的边际分布，而不是它们所有的联合分布的样本。因此，很难看出它们之间的相关性。
 - en: The other drawback, in general, is that it takes more work to set up the grid
     algorithm. If we switch to another parameterization, it’s easier to change the
     PyMC model.
+  id: totrans-204
   prefs: []
   type: TYPE_NORMAL
+  zh: 另一个一般的缺点是设置网格算法需要更多的工作。如果我们切换到另一个参数化，改变PyMC模型会更容易。
