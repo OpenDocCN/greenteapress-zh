@@ -1,53 +1,73 @@
 - en: Elements of Data Science
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 数据科学要素
 - en: 原文：[https://allendowney.github.io/ElementsOfDataScience/README.html](https://allendowney.github.io/ElementsOfDataScience/README.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ElementsOfDataScience/README.html](https://allendowney.github.io/ElementsOfDataScience/README.html)
 - en: '*Elements of Data Science* is an introduction to data science for people with
     no programming experience. My goal is to present a small, powerful subset of Python
     that allows you to do real work in data science as quickly as possible.'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 《数据科学要素》是为没有编程经验的人们介绍数据科学的。我的目标是呈现Python的一个小而强大的子集，使您能够尽快在数据科学中进行真正的工作。
 - en: I don’t assume that the reader knows anything about programming, statistics,
     or data science. When I use a term, I try to define it immediately, and when I
     use a programming feature, I try to explain it.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 我不假设读者对编程、统计学或数据科学有任何了解。当我使用一个术语时，我会立即定义它，当我使用一个编程功能时，我会尝试解释它。
 - en: This book is in the form of Jupyter notebooks. Jupyter is a software development
     tool you can run in a web browser, so you don’t have to install any software.
     A Jupyter notebook is a document that contains text, Python code, and results.
     So you can read it like a book, but you can also modify the code, run it, develop
     new programs, and test them.
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 这本书是以Jupyter笔记本的形式呈现的。Jupyter是一个可以在Web浏览器中运行的软件开发工具，因此您不需要安装任何软件。Jupyter笔记本是一个包含文本、Python代码和结果的文档。因此，您可以像阅读书籍一样阅读它，但您也可以修改代码、运行代码、开发新程序并对其进行测试。
 - en: The notebooks contains exercises where you can practice what you learn. Most
     of the exercises are meant to be quick, but a few are more substantial.
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些笔记本包含练习，您可以在其中练习所学的知识。大多数练习都是快速的，但有一些更实质性。
 - en: This material is a work in progress, so suggestions are welcome. The best way
     to provide feedback is to [click here and create an issue in this GitHub repository](https://github.com/AllenDowney/ElementsOfDataScience/issues).
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些材料还在不断完善中，因此欢迎提出建议。提供反馈的最佳方式是[点击此处并在此GitHub存储库中创建一个问题](https://github.com/AllenDowney/ElementsOfDataScience/issues)。
 - en: Case Studies
+  id: totrans-7
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 案例研究
 - en: 'In addition to the notebooks below, the *Elements of Data Science* curriculum
     includes these case studies:'
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 除了下面的笔记本之外，《数据科学要素》课程还包括以下案例研究：
 - en: '[Political Alignment Case Study](https://allendowney.github.io/PoliticalAlignmentCaseStudy/):
     Using data from the General Social Survey, this case study explore changing opinions
     on a variety of topics among survey respondents in the United States. Readers
     choose one of about 120 survey questions and see how responses have changed over
     time and how these changes relate to political alignment (conservative, moderate,
     or liberal).'
+  id: totrans-9
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '[政治立场案例研究](https://allendowney.github.io/PoliticalAlignmentCaseStudy/)：使用来自美国普遍社会调查的数据，这个案例研究探讨了受访者在各种话题上的观点如何随时间变化以及这些变化如何与政治立场（保守、中间或自由）相关。读者可以选择大约120个调查问题之一，看看回答如何随时间变化以及这些变化如何与政治立场相关。'
 - en: '[Recidivism Case Study](https://allendowney.github.io/RecidivismCaseStudy/):
     This case study is based on a well known paper, “Machine Bias”, which was published
     by Politico in 2016\. It relates to COMPAS, a statistical tool used in the criminal
@@ -58,231 +78,351 @@
     data from the original article, this case study explains the (many) metrics used
     to evaluate binary classifiers, shows the challenges of defining algorithmic fairness,
     and starts a discussion of the context, ethics, and social impact of data science.'
+  id: totrans-10
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '[再犯案案例研究](https://allendowney.github.io/RecidivismCaseStudy/)：这个案例研究基于一篇著名的文章“机器偏见”，该文章于2016年由Politico发表。它涉及到COMPAS，这是一个在刑事司法系统中用于评估被告如果获释会再次犯罪风险的统计工具。ProPublica的文章得出结论，COMPAS对黑人被告不公平，因为他们更有可能被错误分类为高风险。《华盛顿邮报》上的一篇回应文章指出“事实并不那么清楚”。利用原始文章中的数据，这个案例研究解释了用于评估二元分类器的（许多）指标，展示了定义算法公平性的挑战，并开始讨论数据科学的背景、伦理和社会影响。'
 - en: '[Bite Size Bayes](https://allendowney.github.io/BiteSizeBayes/): An introduction
     to probability with a focus on Bayes’s Theorem.'
+  id: totrans-11
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '[Bayes的微观概率](https://allendowney.github.io/BiteSizeBayes/)：介绍概率，重点介绍Bayes定理。'
 - en: '[Astronomical Data in Python](https://allendowney.github.io/AstronomicalData/):
     An introduction to SQL using data from the Gaia space telescope as an example.'
+  id: totrans-12
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '[Python中的天文数据](https://allendowney.github.io/AstronomicalData/)：使用来自盖亚空间望远镜的数据作为示例，介绍SQL。'
 - en: The notebooks
+  id: totrans-13
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 这些笔记本
 - en: 'For each of the notebooks below, you have three options:'
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于下面的每个笔记本，您有三个选项：
 - en: If you view the notebook on NBViewer, you can read it, but you can’t run the
     code.
+  id: totrans-15
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果您在NBViewer上查看笔记本，您可以阅读它，但无法运行代码。
 - en: If you run the notebook on Colab, you’ll be able to run the code, do the exercises,
     and save your modified version of the notebook in a Google Drive (if you have
     one).
+  id: totrans-16
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果您在Colab上运行笔记本，您将能够运行代码，做练习，并将修改后的笔记本保存在Google Drive中（如果您有一个）。
 - en: Or, if you download the notebook, you can run it in your own environment. But
     in that case it is up to you to make sure you have the libraries you need.
+  id: totrans-17
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 或者，如果您下载笔记本，您可以在自己的环境中运行它。但在这种情况下，您需要确保您拥有所需的库。
 - en: Notebook 1
+  id: totrans-18
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 笔记本1
 - en: '**Variables and values**: The first notebook explains how to use Jupyter and
     introduces variables, values, and numerical computation.'
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: '**变量和值**：第一个笔记本解释了如何使用Jupyter，并介绍了变量、值和数值计算。'
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/01_variables.ipynb)'
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: '[点击此处在Colab上运行此笔记本](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/01_variables.ipynb)'
 - en: '[or click here to download it](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/01_variables.ipynb)'
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: '[或点击此处下载](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/01_variables.ipynb)'
 - en: Notebook 2
+  id: totrans-22
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 笔记本2
 - en: '**Times and places**: This notebook shows how to represent times, dates, and
     locations in Python, and uses the GeoPandas library to plot points on a map.'
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: 时间和地点：本笔记本展示了如何在Python中表示时间、日期和位置，并使用GeoPandas库在地图上绘制点。
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/02_times.ipynb)'
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: '[点击此处在Colab上运行此笔记本](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/02_times.ipynb)'
 - en: '[or click here to download it](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/02_times.ipynb)'
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: '[或点击此处下载](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/02_times.ipynb)'
 - en: Notebook 3
+  id: totrans-26
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 笔记本3
 - en: '**Lists and Arrays**: This notebook presents lists and NumPy arrays. It discusses
     absolute, relative, and percent errors, and ways to summarize them.'
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 列表和数组：本笔记本介绍了列表和NumPy数组。它讨论了绝对误差、相对误差和百分比误差，以及总结它们的方法。
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/03_arrays.ipynb)'
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: '[点击此处在Colab上运行此笔记本](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/03_arrays.ipynb)'
 - en: '[or click here to download it](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/03_arrays.ipynb)'
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: '[或点击此处下载](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/03_arrays.ipynb)'
 - en: Notebook 4
+  id: totrans-30
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 笔记本4
 - en: '**Loops and Files**: This notebook presents the `for` loop and the `if` statement;
     then it uses them to speed-read *War and Peace* and count the words.'
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 循环和文件：本笔记本介绍了`for`循环和`if`语句；然后使用它们来快速阅读《战争与和平》，并计算单词数。
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/04_loops.ipynb)'
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: '[点击此处在Colab上运行此笔记本](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/04_loops.ipynb)'
 - en: '[or click here to download it](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/04_loops.ipynb)'
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: '[或点击此处下载](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/04_loops.ipynb)'
 - en: Notebook 5
+  id: totrans-34
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 笔记本5
 - en: '**Dictionaries**: This notebook presents one of the most powerful features
     of Python, dictionaries, and uses them to count the unique words in a text and
     their frequencies.'
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 字典：本笔记本介绍了Python最强大的功能之一，字典，并使用它们来计算文本中唯一单词及其频率。
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/05_dictionaries.ipynb)'
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: '[点击此处在Colab上运行此笔记本](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/05_dictionaries.ipynb)'
 - en: '[or click here to download it](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/05_dictionaries.ipynb)'
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: '[或点击此处下载](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/05_dictionaries.ipynb)'
 - en: Notebook 6
+  id: totrans-38
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 笔记本6
 - en: '**Plotting**: This notebook introduces a plotting library, Matplotlib, and
     uses it to generate a few common data visualizations and one less common one,
     a Zipf plot.'
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 绘图：本笔记本介绍了绘图库Matplotlib，并使用它生成一些常见的数据可视化和一个不太常见的Zipf图。
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/06_plotting.ipynb)'
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: '[点击此处在Colab上运行此笔记本](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/06_plotting.ipynb)'
 - en: '[or click here to download it](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/06_plotting.ipynb)'
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: '[或点击此处下载](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/06_plotting.ipynb)'
 - en: Notebook 7
+  id: totrans-42
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 笔记本7
 - en: '**DataFrames**: This notebook presents DataFrames, which are used to represent
     tables of data. As an example, it uses data from the National Survey of Family
     Growth to find the average weight of babies in the U.S.'
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 数据框架：本笔记本介绍了数据框架，用于表示数据表。例如，它使用来自美国家庭增长调查的数据来找到婴儿的平均体重。
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/07_dataframes.ipynb)'
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: '[点击此处在Colab上运行此笔记本](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/07_dataframes.ipynb)'
 - en: '[or click here to download it](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/07_dataframes.ipynb)'
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: '[或点击此处下载](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/07_dataframes.ipynb)'
 - en: Notebook 8
+  id: totrans-46
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 笔记本8
 - en: '**Distributions**: This notebook explains what a distribution is and presents
     3 ways to represent one: a PMF, CDF, or PDF. It also shows how to compare a distribution
     to another distribution or a mathematical model.'
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 分布：本笔记本解释了分布是什么，并介绍了表示分布的3种方法：PMF、CDF或PDF。它还展示了如何将一个分布与另一个分布或数学模型进行比较。
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/08_distributions.ipynb)'
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: '[点击此处在Colab上运行此笔记本](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/08_distributions.ipynb)'
 - en: '[or click here to download it](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/08_distributions.ipynb)'
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: '[或点击此处下载](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/08_distributions.ipynb)'
 - en: Notebook 9
+  id: totrans-50
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 笔记本9
 - en: '**Relationships**: This notebook explores relationships between variables using
     scatter plots, violin plots, and box plots. It quantifies the strength of a relationship
     using the correlation coefficient and uses simple regression to estimate the slope
     of a line.'
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: 关系：本笔记本探讨了使用散点图、小提琴图和箱线图来探索变量之间的关系。它使用相关系数量化关系的强度，并使用简单回归估计线的斜率。
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/09_relationships.ipynb)'
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: '[点击此处在Colab上运行此笔记本](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/09_relationships.ipynb)'
 - en: '[or click here to download it](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/09_relationships.ipynb)'
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: '[或点击此处下载](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/09_relationships.ipynb)'
 - en: Notebook 10
+  id: totrans-54
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 笔记本10
 - en: '**Regression**: This notebook presents multiple regression and uses it to explore
     the relationship between age, education, and income. It uses visualization to
     interpret multivariate models. It also presents binary variables and logistic
     regression.'
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: 回归：本笔记本介绍了多元回归，并使用它来探索年龄、教育和收入之间的关系。它使用可视化来解释多元模型。它还介绍了二元变量和逻辑回归。
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/10_regression.ipynb)'
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: 单击此处在Colab上运行此笔记本
 - en: '[or click here to download it](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/10_regression.ipynb)'
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 或单击此处下载它
 - en: Notebook 11
+  id: totrans-58
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 笔记本11
 - en: '**Resampling**: This notebook presents computational methods we can use to
     quantify variation due to random sampling, which is one of several sources of
     error in statistical estimation.'
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: '**重抽样**：这本笔记本介绍了我们可以使用的计算方法，以量化由于随机抽样而产生的变化，这是统计估计中几种误差来源之一。'
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/11_resampling.ipynb)'
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 单击此处在Colab上运行此笔记本
 - en: '[or click here to download it](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/11_resampling.ipynb)'
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: 或单击此处下载它
 - en: Notebook 12
+  id: totrans-62
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 笔记本12
 - en: '**Bootstrapping**: Bootstrapping is a kind of resampling that is well suited
     to the kind of survey data we’ve been working with.'
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: '**自助法**：自助法是一种适合我们一直在处理的调查数据的重抽样方法。'
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/12_bootstrap.ipynb)'
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: 单击此处在Colab上运行此笔记本
 - en: '[or click here to download it](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/12_bootstrap.ipynb)'
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: 或单击此处下载它
 - en: Notebook 13
+  id: totrans-66
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 笔记本13
 - en: '**Hypothesis Testing**: Hypothesis testing is the bugbear of classical statistics.
     This notebook presents a computational approach to the topic that makes it clear
     that [there is only one test](http://allendowney.blogspot.com/2016/06/there-is-still-only-one-test.html).'
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: '**假设检验**：假设检验是古典统计学的大敌。这本笔记本提出了一种计算方法，使得清楚地表明[只有一个测试](http://allendowney.blogspot.com/2016/06/there-is-still-only-one-test.html)。'
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/13_hypothesis.ipynb)'
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: 单击此处在Colab上运行此笔记本
 - en: '[or click here to download it](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/13_hypothesis.ipynb)'
+  id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: 或单击此处下载它

@@ -3,76 +3,91 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: PageRank
 - en: 原文：[https://allendowney.github.io/DSIRP/pagerank.html](https://allendowney.github.io/DSIRP/pagerank.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/DSIRP/pagerank.html](https://allendowney.github.io/DSIRP/pagerank.html)
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/pagerank.ipynb)'
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: '[点击这里在Colab上运行这个笔记本](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/pagerank.ipynb)'
 - en: Ranking pages
   id: totrans-3
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 页面排名
 - en: The goal of information retrieval is to find resources that are relevant and
     high quality. “Relevant” and “quality” can be hard to define, and they depend
     on what kind of resources you are searching.
   id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 信息检索的目标是找到相关和高质量的资源。“相关”和“质量”可能很难定义，它们取决于你正在搜索的资源类型。
 - en: 'In the context of web search, relevance usually depends on the contents of
     a web page: if a web page contains the search terms, we assume that it is relevant
     to the search terms.'
   id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 在网络搜索的背景下，相关性通常取决于网页的内容：如果网页包含搜索词，我们认为它与搜索词相关。
 - en: Quality usually depends on the links between pages. If there are many links
     to a particular page, we think it is more likely to be high quality, especially
     if those links come from pages that are high quality themselves.
   id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 质量通常取决于页面之间的链接。如果有许多链接指向特定页面，我们认为它更有可能是高质量的，特别是如果这些链接来自高质量的页面。
 - en: One of the first algorithms to quantify quality in this is PageRank, which was
     the core of Google’s original search engine. As someone who used earlier search
     engines, like Alta Vista, I can tell you first-hand what a big difference it made.
   id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 其中一个最早量化质量的算法是PageRank，它是Google最初搜索引擎的核心。作为一个使用过早期搜索引擎（如Alta Vista）的人，我可以亲口告诉你它带来了多大的改变。
 - en: 'PageRank is described in [“The PageRank citation ranking: Bringing order to
     the Web”](https://web.archive.org/web/20110818093436/http://ilpubs.stanford.edu:8090/422/1/1999-66.pdf)
     by Page, Brin, Motwani, and Winograd.'
   id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 'PageRank在Page、Brin、Motwani和Winograd的[“The PageRank citation ranking: Bringing
+    order to the Web”](https://web.archive.org/web/20110818093436/http://ilpubs.stanford.edu:8090/422/1/1999-66.pdf)中有描述。'
 - en: It is a surprisingly simple algorithm; it can be computed and updated efficiently;
     and it is highly effective at identifying good quality pages. So, let’s see how
     it works.
   id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个令人惊讶的简单算法；它可以高效地计算和更新；它在识别高质量页面方面非常有效。所以，让我们看看它是如何工作的。
 - en: 'As an example, I’ll use `random_k_out_graph` to generate a directed graph with
     `n` nodes where:'
   id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 举例来说，我将使用`random_k_out_graph`生成一个有`n`个节点的有向图：
 - en: Every node has the same number of out-links, `k`,
   id: totrans-11
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 每个节点有相同数量的出链，`k`，
 - en: The number of in-links varies moderately (controlled by the parameter `alpha`).
   id: totrans-12
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 入链的数量变化适中（由参数`alpha`控制）。
 - en: Self-links and multiple links are allowed.
   id: totrans-13
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 自链接和多链接都是允许的。
 - en: '[PRE0]'
   id: totrans-14
   prefs: []
@@ -83,6 +98,7 @@
   id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是图的样子。多个链接显示为略微粗的线。
 - en: '[PRE1]'
   id: totrans-16
   prefs: []
@@ -92,11 +108,13 @@
   id: totrans-17
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/pagerank_6_0.png](../Images/d2eeb27b59adfdff0e5831278f78fe33.png)'
 - en: NetworkX provides an implementation of PageRank we can use to compute a metric
     of “importance” for each page.
   id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: NetworkX提供了PageRank的实现，我们可以用它来计算每个页面的“重要性”指标。
 - en: '[PRE2]'
   id: totrans-19
   prefs: []
@@ -111,27 +129,32 @@
   id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 你应该看到有更多入链的节点得到了更高的分数。
 - en: Random Walk
   id: totrans-22
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 随机游走
 - en: One way to interpret PageRank is in terms of a random walk. Suppose you choose
     a node at random, then choose one of its out-links at random, and continue like
     that, making a note of each node you visit.
   id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: 解释PageRank的一种方式是随机游走。假设你随机选择一个节点，然后随机选择其中一个出链，然后继续这样做，记录你访问的每个节点。
 - en: If a node has a lot of in-links, you are likely to visit it more often. And
     if those in-links come from nodes with many in-links, even more so.
   id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果一个节点有很多入链，你可能会更频繁地访问它。如果这些入链来自有很多入链的节点，情况会更加如此。
 - en: 'However, there is one catch: if a node contains no out-links, or if a set of
     nodes form a loop with no out-links, the random walker could get trapped.'
   id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 然而，有一个问题：如果一个节点不包含出链，或者一组节点形成一个没有出链的循环，随机行走者可能会被困住。
 - en: To avoid that, we’ll modify the random walk so at every step there is some probability
     that the walker jumps to a random node rather than following a link. This probability
     is determined by a parameter, `alpha`, which is the probability of following a
@@ -139,17 +162,20 @@
   id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了避免这种情况，我们将修改随机游走，使得在每一步中，行走者有一定的概率跳转到一个随机节点，而不是按照链接进行。这个概率由参数`alpha`确定，它是按照链接的概率，所以`1-alpha`是进行随机跳转的概率。
 - en: The following function implements a random walk, with these random jumps, and
     uses a `Counter` to keep track of the number of times it visits each node.
   id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数实现了一个随机游走，带有这些随机跳转，并使用`Counter`来跟踪它访问每个节点的次数。
 - en: It returns the `Counter` with the frequencies normalized to add up to one. If
     everything goes according to plan, these values should approximate the results
     from PageRank.
   id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: 它返回`Counter`，其频率归一化为总和为一。如果一切按计划进行，这些值应该接近PageRank的结果。
 - en: '[PRE4]'
   id: totrans-29
   prefs: []
@@ -165,10 +191,12 @@
   id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: '`alpha`的默认值是0.85，这与`nx.pagerank`的默认值相同。'
 - en: Here are the scores we get from the random walk.
   id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是我们从随机游走中得到的分数。
 - en: '[PRE6]'
   id: totrans-33
   prefs: []
@@ -183,6 +211,7 @@
   id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了将它们与PageRank的结果进行比较，我将它们放入Pandas的`DataFrame`中。
 - en: '[PRE8]'
   id: totrans-36
   prefs: []
@@ -192,67 +221,82 @@
   id: totrans-37
   prefs: []
   type: TYPE_TB
+  zh: '|  | PageRank | RandomWalk | Diff |'
 - en: '| --- | --- | --- | --- |'
   id: totrans-38
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- |'
 - en: '| 0 | 15.292146 | 13.3 | -1.992146 |'
   id: totrans-39
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 15.292146 | 13.3 | -1.992146 |'
 - en: '| 1 | 37.078963 | 39.0 | 1.921037 |'
   id: totrans-40
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 37.078963 | 39.0 | 1.921037 |'
 - en: '| 2 | 14.402453 | 14.5 | 0.097547 |'
   id: totrans-41
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 14.402453 | 14.5 | 0.097547 |'
 - en: '| 3 | 1.875000 | 0.9 | -0.975000 |'
   id: totrans-42
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 1.875000 | 0.9 | -0.975000 |'
 - en: '| 4 | 18.430401 | 19.0 | 0.569599 |'
   id: totrans-43
   prefs: []
   type: TYPE_TB
+  zh: '| 4 | 18.430401 | 19.0 | 0.569599 |'
 - en: '| 5 | 1.875000 | 2.1 | 0.225000 |'
   id: totrans-44
   prefs: []
   type: TYPE_TB
+  zh: '| 5 | 1.875000 | 2.1 | 0.225000 |'
 - en: '| 6 | 1.875000 | 1.9 | 0.025000 |'
   id: totrans-45
   prefs: []
   type: TYPE_TB
+  zh: '| 6 | 1.875000 | 1.9 | 0.025000 |'
 - en: '| 7 | 9.171037 | 9.3 | 0.128963 |'
   id: totrans-46
   prefs: []
   type: TYPE_TB
+  zh: '| 7 | 9.171037 | 9.3 | 0.128963 |'
 - en: The differences should be a few percentage points at most.
   id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 差异最多应该在几个百分点之间。
 - en: Adjacency Matrix
   id: totrans-48
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 邻接矩阵
 - en: The random walk implementation of PageRank is conceptually simple, but not very
     efficient to compute. An alternative is to use a matrix to represent the links
     from each node to every other node, and compute the eigenvectors of that matrix.
   id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: PageRank的随机行走实现在概念上很简单，但计算起来并不是很高效。另一种方法是使用一个矩阵来表示每个节点到每个其他节点的链接，并计算该矩阵的特征向量。
 - en: In this section, I’ll demonstrate this computation and explain how it works.
     The code here is based on the [implementation of PageRank in NetworkX](https://networkx.org/documentation/stable/_modules/networkx/algorithms/link_analysis/pagerank_alg.html).
   id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本节中，我将演示这个计算并解释它是如何工作的。这里的代码是基于[NetworkX中PageRank的实现](https://networkx.org/documentation/stable/_modules/networkx/algorithms/link_analysis/pagerank_alg.html)。
 - en: NetworkX provides a function that creates a NumPy array that represents the
     [adjacency matrix](https://en.wikipedia.org/wiki/Adjacency_matrix) of the graph.
   id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: NetworkX提供了一个函数，用于创建表示图的[邻接矩阵](https://en.wikipedia.org/wiki/Adjacency_matrix)的NumPy数组。
 - en: '[PRE9]'
   id: totrans-52
   prefs: []
@@ -268,11 +312,13 @@
   id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个矩阵中，第`i`行第`j`列的元素表示从节点`i`到节点`j`的边的数量。
 - en: If we normalize each row so it adds up to one, each element of the result represents
     the probability of a transition from one node to another.
   id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们对每一行进行归一化，使其总和为一，结果的每个元素表示从一个节点到另一个节点的转移概率。
 - en: '[PRE11]'
   id: totrans-56
   prefs: []
@@ -289,6 +335,7 @@
   id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用这个矩阵来模拟同时有许多行走者的随机行走。例如，假设我们从每个节点开始有100个行走者，用数组`x`表示：
 - en: '[PRE13]'
   id: totrans-59
   prefs: []
@@ -305,11 +352,13 @@
   id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们对`M`进行转置，我们会得到一个[转移矩阵](https://en.wikipedia.org/wiki/Stochastic_matrix)，其中第`i`行第`j`列的元素是从节点`j`移动到节点`i`的行走者的比例。
 - en: If we multiply the transition matrix by `x`, the result is an array with the
     number of walkers at each node after one time step.
   id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们将转移矩阵乘以`x`，结果是一个数组，其中包含每个节点在一个时间步长后的行走者数量。
 - en: '[PRE15]'
   id: totrans-63
   prefs: []
@@ -326,16 +375,19 @@
   id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你运行那个单元格几次，你应该会发现它会收敛到一个稳定状态，在这个状态下，每个节点的行走者数量在一个时间步长到下一个时间步长几乎不会改变。
 - en: However, you might notice that some nodes lose all of their walkers. That’s
     because the random walk we’ve simulated doesn’t include random jumps.
   id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: 然而，你可能会注意到一些节点失去了所有的行走者。这是因为我们模拟的随机行走不包括随机跳跃。
 - en: To add random jumps, we can create another matrix that include transitions from
     all nodes to all other nodes with equal probability.
   id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: 要添加随机跳跃，我们可以创建另一个矩阵，其中包括从所有节点到所有其他节点的等概率转移。
 - en: '[PRE17]'
   id: totrans-68
   prefs: []
@@ -350,6 +402,7 @@
   id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们将使用参数`alpha`来计算`M`和`p`的加权和。
 - en: '[PRE19]'
   id: totrans-71
   prefs: []
@@ -360,11 +413,13 @@
   id: totrans-72
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个代表随机行走中转移的“Google矩阵”，包括随机跳跃。
 - en: So let’s start again with an equal number of walkers on all nodes and simulate
     10 time steps.
   id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: 所以让我们再次从所有节点开始有相同数量的行走者，并模拟10个时间步长。
 - en: '[PRE20]'
   id: totrans-74
   prefs: []
@@ -375,6 +430,7 @@
   id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们对`x`进行归一化，使其总和为一，结果应该接近我们从PageRank得到的排名。
 - en: '[PRE21]'
   id: totrans-76
   prefs: []
@@ -389,6 +445,7 @@
   id: totrans-78
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个比较结果的表格。
 - en: '[PRE23]'
   id: totrans-79
   prefs: []
@@ -398,64 +455,78 @@
   id: totrans-80
   prefs: []
   type: TYPE_TB
+  zh: '|  | PageRank | AdjMatrix | Diff |'
 - en: '| --- | --- | --- | --- |'
   id: totrans-81
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- |'
 - en: '| 0 | 15.292146 | 15.293199 | 0.001053 |'
   id: totrans-82
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 15.292146 | 15.293199 | 0.001053 |'
 - en: '| 1 | 37.078963 | 37.077494 | -0.001469 |'
   id: totrans-83
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 37.078963 | 37.077494 | -0.001469 |'
 - en: '| 2 | 14.402453 | 14.404034 | 0.001581 |'
   id: totrans-84
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 14.402453 | 14.404034 | 0.001581 |'
 - en: '| 3 | 1.875000 | 1.875000 | 0.000000 |'
   id: totrans-85
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 1.875000 | 1.875000 | 0.000000 |'
 - en: '| 4 | 18.430401 | 18.427767 | -0.002634 |'
   id: totrans-86
   prefs: []
   type: TYPE_TB
+  zh: '| 4 | 18.430401 | 18.427767 | -0.002634 |'
 - en: '| 5 | 1.875000 | 1.875000 | 0.000000 |'
   id: totrans-87
   prefs: []
   type: TYPE_TB
+  zh: '| 5 | 1.875000 | 1.875000 | 0.000000 |'
 - en: '| 6 | 1.875000 | 1.875000 | 0.000000 |'
   id: totrans-88
   prefs: []
   type: TYPE_TB
+  zh: '| 6 | 1.875000 | 1.875000 | 0.000000 |'
 - en: '| 7 | 9.171037 | 9.172506 | 0.001469 |'
   id: totrans-89
   prefs: []
   type: TYPE_TB
+  zh: '| 7 | 9.171037 | 9.172506 | 0.001469 |'
 - en: Eigenvectors
   id: totrans-90
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 特征向量
 - en: If you start with almost any vector and multiply by a matrix repeatedly, as
     we did in the previous section, the result will converge to the eigenvector of
     the matrix that corresponds to the largest eigenvalue.
   id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你从几乎任何向量开始，并重复地乘以一个矩阵，就像我们在前一节中所做的那样，结果将收敛到与矩阵对应的最大特征值的特征向量。
 - en: 'In fact, repeated multiplication is one of the algorithms used to compute eigenvalues:
     it is called [power iteration](https://en.wikipedia.org/wiki/Power_iteration).'
   id: totrans-92
   prefs: []
   type: TYPE_NORMAL
+  zh: 事实上，重复乘法是计算特征值的算法之一：它被称为[幂迭代](https://en.wikipedia.org/wiki/Power_iteration)。
 - en: Instead of using an iterative method, we can also compute eigenvalues directly,
     which is what the Numpy function `eig` does. Here are the eigenvalues and eigenvectors
     of the Google matrix.
   id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们也可以直接计算特征值，而不是使用迭代方法，这就是Numpy函数`eig`所做的。这里是Google矩阵的特征值和特征向量。
 - en: '[PRE24]'
   id: totrans-94
   prefs: []
@@ -470,6 +541,7 @@
   id: totrans-96
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是我们如何得到与最大特征值对应的特征向量。
 - en: '[PRE26]'
   id: totrans-97
   prefs: []
@@ -495,6 +567,7 @@
   id: totrans-101
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果包含复数，但虚部都是0，所以我们可以只取实部。
 - en: '[PRE30]'
   id: totrans-102
   prefs: []
@@ -504,6 +577,7 @@
   id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后对其进行归一化。
 - en: '[PRE31]'
   id: totrans-104
   prefs: []
@@ -520,6 +594,7 @@
   id: totrans-106
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是基于Google矩阵的特征向量的排名集。它们应该与PageRank的结果相同，除了小的浮点误差。
 - en: '[PRE33]'
   id: totrans-107
   prefs: []
@@ -529,34 +604,42 @@
   id: totrans-108
   prefs: []
   type: TYPE_TB
+  zh: '|  | PageRank | Eigenvector | Diff |'
 - en: '| --- | --- | --- | --- |'
   id: totrans-109
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- |'
 - en: '| 0 | 15.292146 | 15.292059 | -8.752734e-05 |'
   id: totrans-110
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 15.292146 | 15.292059 | -8.752734e-05 |'
 - en: '| 1 | 37.078963 | 37.079000 | 3.719912e-05 |'
   id: totrans-111
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 37.078963 | 37.079000 | 3.719912e-05 |'
 - en: '| 2 | 14.402453 | 14.402491 | 3.839473e-05 |'
   id: totrans-112
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 14.402453 | 14.402491 | 3.839473e-05 |'
 - en: '| 3 | 1.875000 | 1.875000 | 1.734723e-15 |'
   id: totrans-113
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 1.875000 | 1.875000 | 1.734723e-15 |'
 - en: '| 4 | 18.430401 | 18.430450 | 4.913262e-05 |'
   id: totrans-114
   prefs: []
   type: TYPE_TB
+  zh: '| 4 | 18.430401 | 18.430450 | 4.913262e-05 |'
 - en: '| 5 | 1.875000 | 1.875000 | 1.040834e-15 |'
   id: totrans-115
   prefs: []
   type: TYPE_TB
+  zh: '| 5 | 1.875000 | 1.875000 | 1.040834e-15 |'
 - en: '| 6 | 1.875000 | 1.875000 | 1.040834e-15 |'
   id: totrans-116
   prefs: []
