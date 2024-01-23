@@ -1,180 +1,274 @@
 - en: Sets
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
 - en: 原文：[https://allendowney.github.io/DSIRP/set.html](https://allendowney.github.io/DSIRP/set.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/set.ipynb)'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
 - en: Set operators and methods
+  id: totrans-3
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: 'The following example is based on Luciano Ramalho’s talk, [Set Practice: Learning
     from Python’s set type](https://www.youtube.com/watch?v=tGAngdU_8D8).'
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE0]'
+  id: totrans-5
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '[PRE1]'
+  id: totrans-6
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '[PRE2]'
+  id: totrans-7
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '[PRE3]'
+  id: totrans-8
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '[PRE4]'
+  id: totrans-9
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '[PRE5]'
+  id: totrans-10
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: Checking membership is constant time.
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE6]'
+  id: totrans-12
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '[PRE7]'
+  id: totrans-13
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '[PRE8]'
+  id: totrans-14
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '[PRE9]'
+  id: totrans-15
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: 'Intersection is like AND: it returns elements in f AND in p.'
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE10]'
+  id: totrans-17
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '[PRE11]'
+  id: totrans-18
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: 'Union is like OR: it returns elements in f OR in p.'
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE12]'
+  id: totrans-20
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '[PRE13]'
+  id: totrans-21
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: 'Symmetric difference is like XOR: elements from `f` OR `p` but not both.'
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE14]'
+  id: totrans-23
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '[PRE15]'
+  id: totrans-24
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: Here are the Fibonacci numbers that are not prime.
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE16]'
+  id: totrans-26
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '[PRE17]'
+  id: totrans-27
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: And the primes that are not Fibonacci numbers.
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE18]'
+  id: totrans-29
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: '[PRE19]'
+  id: totrans-30
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: The comparison operators check for subset and superset relationships.
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
 - en: The Fibonacci numbers are not a superset of the primes.
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE20]'
+  id: totrans-33
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '[PRE21]'
+  id: totrans-34
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: And the primes are not a superset of the Fibonacci numbers.
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE22]'
+  id: totrans-36
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: '[PRE23]'
+  id: totrans-37
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: 'In that sense, sets are not like numbers: they are only [partially ordered](https://en.wikipedia.org/wiki/Partially_ordered_set).'
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
 - en: '`f` is a superset of `{1, 2, 3}`'
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE24]'
+  id: totrans-40
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: '[PRE25]'
+  id: totrans-41
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: '[PRE26]'
+  id: totrans-42
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: '[PRE27]'
+  id: totrans-43
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: Sets provide methods as well as operators. Why?
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
 - en: For one thing, the argument you pass to a method can be any iterable, not just
     a set.
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE28]'
+  id: totrans-46
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: '[PRE29]'
+  id: totrans-47
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: '[PRE30]'
+  id: totrans-48
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: '[PRE31]'
+  id: totrans-49
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: 'Methods also accept more than one argument:'
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE32]'
+  id: totrans-51
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: '[PRE33]'
+  id: totrans-52
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: If you don’t have a set to start with, you can use an empty set.
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE34]'
+  id: totrans-54
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: '[PRE35]'
+  id: totrans-55
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: 'One small syntax nuisance: `{1, 2, 3}` is a set, but `{}` is an empty dictionary.'
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
 - en: Spelling Bee
+  id: totrans-57
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -182,105 +276,145 @@
     is a daily puzzle where the goal is to spell as many words as possible using only
     the given set of seven letters. For example, in a recent Spelling Bee, the available
     letters were `dehiklo`, so you could spell “like” and “hold”.'
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
 - en: You can use each of the letters more than once, so “hook” and “deed” would be
     allowed, too.
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
 - en: To make it a little more interesting, one of the letters is special and must
     be included in every word. In this example, the special letter is `o`, so “hood”
     would be allowed, but not “like”.
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
 - en: Each word you find scores points depending on it’s length, which must be at
     least four letters. A word that uses all of the letters is called a “pangram”
     and scores extra points.
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
 - en: We’ll use this puzzle to explore the use of Python sets.
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
 - en: Suppose we’re given a word and we would like to know whether it can be spelled
     using only a given set of letters. The following function solves this problem
     using string operations.
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE36]'
+  id: totrans-64
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: If we find any letters in `word` that are not in the list of letters, we can
     return `False` immediately. If we get through the word without finding any unavailable
     letters, we can return `True`.
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
 - en: Let’s try it out with some examples. In a recent Spelling Bee, the available
     letters were `dehiklo`. Let’s see what we can spell with them.
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE37]'
+  id: totrans-67
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE37]'
 - en: '[PRE38]'
+  id: totrans-68
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: '[PRE39]'
+  id: totrans-69
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: '[PRE40]'
+  id: totrans-70
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE40]'
 - en: '**Exercise:** It is possible to implement `uses_only` more concisely using
     set operations rather than list operations. [Read the documentation of the `set`
     class](https://docs.python.org/3/tutorial/datastructures.html#sets) and rewrite
     `uses_only` using sets.'
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE41]'
+  id: totrans-72
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE41]'
 - en: '[PRE42]'
+  id: totrans-73
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE42]'
 - en: '[PRE43]'
+  id: totrans-74
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE43]'
 - en: '[PRE44]'
+  id: totrans-75
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE44]'
 - en: Word list
+  id: totrans-76
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: The following function downloads a list of about 100,000 words in American English.
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE45]'
+  id: totrans-78
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE45]'
 - en: 'The file contains one word per line, so we can read the file and split it into
     a list of words like this:'
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE46]'
+  id: totrans-80
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE46]'
 - en: '[PRE47]'
+  id: totrans-81
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE47]'
 - en: '**Exercise:** Write a loop that iterates through this word list and prints
     only words'
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
 - en: With at least four letters,
+  id: totrans-83
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: That can be spelled using only the letters `dehiklo`, and
+  id: totrans-84
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: That include the letter `o`.
+  id: totrans-85
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -288,58 +422,84 @@
     that takes two strings and returns `True` if the first string uses all of the
     letters in the second string. Think about how to express this computation using
     set operations.'
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
 - en: Test your function with at least one case that returns `True` and one that returns
     `False`.
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
 - en: '**Exercise:** Modify the previous loop to search the word list for pangrams
     using `uses_only` and `uses_all`.'
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
 - en: Or, as a bonus, write a function called `uses_all_and_only` that checks both
     conditions using a single `set` operation.
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
 - en: Leftovers
+  id: totrans-90
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 剩余部分
 - en: So far we’ve been writing Boolean functions that test specific conditions, but
     if they return `False`, they don’t explain why. As an alternative to `uses_only`,
     we could write a function called `bad_letters` that takes a word and a set of
     letters, and returns a new string that contains the letters in words that are
     not available. Let’s call it `bad_letters`.
+  id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: 到目前为止，我们一直在编写测试特定条件的布尔函数，但如果它们返回`False`，它们不会解释原因。作为`uses_only`的替代方案，我们可以编写一个名为`bad_letters`的函数，该函数接受一个单词和一组字母，并返回一个新字符串，其中包含单词中不可用的字母。让我们称它为`bad_letters`。
 - en: '[PRE48]'
+  id: totrans-92
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE48]'
 - en: Now if we run this function with an illegal word, it will tell us which letters
     in the word are not available.
+  id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，如果我们用一个非法单词运行这个函数，它会告诉我们单词中哪些字母是不可用的。
 - en: '[PRE49]'
+  id: totrans-94
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE49]'
 - en: '[PRE50]'
+  id: totrans-95
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE50]'
 - en: '**Exercise:** Write a function called `unused_letters` that takes a word and
     a set of letters and returns the subset of the letters that are not used in `word`.'
+  id: totrans-96
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**编写一个名为`unused_letters`的函数，该函数接受一个单词和一组字母，并返回在`word`中未使用的字母的子集。'
 - en: '**Exercise:** Write a function called `no_duplicates` that takes a string and
     returns `True` if each letter appears only once.'
+  id: totrans-97
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**编写一个名为`no_duplicates`的函数，该函数接受一个字符串并返回`True`，如果每个字母只出现一次。'
 - en: '*Data Structures and Information Retrieval in Python*'
+  id: totrans-98
   prefs: []
   type: TYPE_NORMAL
+  zh: Python中的数据结构和信息检索
 - en: Copyright 2021 Allen Downey
+  id: totrans-99
   prefs: []
   type: TYPE_NORMAL
+  zh: 版权所有 2021 Allen Downey
 - en: 'License: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  id: totrans-100
   prefs: []
   type: TYPE_NORMAL
+  zh: 许可证：[知识共享署名-非商业性使用-相同方式共享4.0国际许可协议](https://creativecommons.org/licenses/by-nc-sa/4.0/)
