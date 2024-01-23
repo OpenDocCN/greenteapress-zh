@@ -235,11 +235,14 @@
   id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 这种问题——观察嘈杂的数据，想知道它是上升还是下降——正是我们可以用贝叶斯回归来回答的问题。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE8]'
   id: totrans-39
   prefs: []
@@ -249,60 +252,72 @@
   id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE9]</details>'
 - en: Regression Model
   id: totrans-41
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 回归模型
 - en: 'The foundation of regression (Bayesian or not) is the assumption that a time
     series like this is the sum of two parts:'
   id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: 回归的基础（无论是贝叶斯还是非贝叶斯）是这样一个假设：这样的时间序列是两部分的总和：
 - en: A linear function of time, and
   id: totrans-43
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 时间的线性函数，以及
 - en: A series of random values drawn from a distribution that is not changing over
     time.
   id: totrans-44
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 从不随时间变化的分布中抽取的随机值系列。
 - en: Mathematically, the regression model is
   id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 从数学上讲，回归模型是
 - en: \[y = a x + b + \epsilon\]
   id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: \[y = a x + b + \epsilon\]
 - en: where \(y\) is the series of measurements (snowfall in this example), \(x\)
     is the series of times (years) and \(\epsilon\) is the series of random values.
   id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 其中\(y\)是测量系列（本例中是降雪量），\(x\)是时间系列（年份），\(\epsilon\)是随机值系列。
 - en: \(a\) and \(b\) are the slope and intercept of the line through the data. They
     are unknown parameters, so we will use the data to estimate them.
   id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: \(a\)和\(b\)是数据线的斜率和截距。它们是未知参数，所以我们将使用数据来估计它们。
 - en: We don’t know the distribution of \(\epsilon\), so we’ll make the additional
     assumption that it is a normal distribution with mean 0 and unknown standard deviation,
     \(\sigma\).
   id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们不知道\(\epsilon\)的分布，所以我们将额外假设它是一个均值为0、未知标准差\(\sigma\)的正态分布。
 - en: To see whether this assumption is reasonable, I’ll plot the distribution of
     total snowfall and a normal model with the same mean and standard deviation.
   id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了查看这个假设是否合理，我将绘制总降雪量的分布和具有相同均值和标准差的正态模型。
 - en: Here’s a `Pmf` object that represents the distribution of snowfall.
   id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个代表降雪量分布的`Pmf`对象。
 - en: '[PRE10]'
   id: totrans-52
   prefs: []
@@ -312,6 +327,7 @@
   id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里是数据的均值和标准差。
 - en: '[PRE11]'
   id: totrans-54
   prefs: []
@@ -327,6 +343,7 @@
   id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将使用SciPy中的`norm`对象来计算具有相同均值和标准差的正态分布的CDF。
 - en: '[PRE13]'
   id: totrans-57
   prefs: []
@@ -336,35 +353,43 @@
   id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是数据分布与正态模型的比较。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
   id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE14]</details> ![_images/d7b23964f610a03df17062f571da04796b630b921052f6c1b3cf18f64557c2f6.png](../Images/2290d5efd2871e877a0afa00b0c79968.png)'
   id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE14]</details> ![_images/d7b23964f610a03df17062f571da04796b630b921052f6c1b3cf18f64557c2f6.png](../Images/2290d5efd2871e877a0afa00b0c79968.png)'
 - en: We’ve had more winters below the mean than expected, but overall this looks
     like a reasonable model.
   id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们有比预期更多的冬天低于平均值，但总体上这看起来是一个合理的模型。
 - en: Least Squares Regression
   id: totrans-62
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 最小二乘回归
 - en: 'Our regression model has three parameters: slope, intercept, and standard deviation
     of \(\epsilon\). Before we can estimate them, we have to choose priors. To help
     with that, I’ll use StatsModel to fit a line to the data by [least squares regression](https://en.wikipedia.org/wiki/Least_squares).'
   id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们的回归模型有三个参数：斜率、截距和\(\epsilon\)的标准差。在我们能够估计它们之前，我们必须选择先验。为了帮助解决这个问题，我将使用StatsModel通过[最小二乘回归](https://en.wikipedia.org/wiki/Least_squares)来拟合数据。
 - en: First, I’ll use `reset_index` to convert `snow`, which is a `Series`, to a `DataFrame`.
   id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: 首先，我将使用`reset_index`将`snow`（一个`Series`）转换为`DataFrame`。
 - en: '[PRE15]'
   id: totrans-65
   prefs: []
@@ -374,32 +399,39 @@
   id: totrans-66
   prefs: []
   type: TYPE_TB
+  zh: '|  | YEAR | SNOW |'
 - en: '| --- | --- | --- |'
   id: totrans-67
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- |'
 - en: '| 0 | 1968 | 44.7 |'
   id: totrans-68
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 1968 | 44.7 |'
 - en: '| 1 | 1969 | 99.2 |'
   id: totrans-69
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 1969 | 99.2 |'
 - en: '| 2 | 1970 | 66.8 |'
   id: totrans-70
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 1970 | 66.8 |'
 - en: The result is a `DataFrame` with two columns, `YEAR` and `SNOW`, in a format
     we can use with StatsModels.
   id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个`DataFrame`，有两列，`YEAR`和`SNOW`，格式适用于StatsModels。
 - en: As we did in the previous chapter, I’ll center the data by subtracting off the
     mean.
   id: totrans-72
   prefs: []
   type: TYPE_NORMAL
+  zh: 就像我们在上一章中所做的那样，我将通过减去均值来对数据进行中心化。
 - en: '[PRE16]'
   id: totrans-73
   prefs: []
@@ -414,6 +446,7 @@
   id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将在`data`中添加一列，使因变量具有标准名称。
 - en: '[PRE18]'
   id: totrans-76
   prefs: []
@@ -424,6 +457,7 @@
   id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，我们可以使用StatsModels来计算数据的最小二乘拟合并估计`slope`和`intercept`。
 - en: '[PRE19]'
   id: totrans-78
   prefs: []
@@ -440,12 +474,14 @@
   id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 截距约为64英寸，是`x=0`时（即1994年初）预期的降雪量。估计的斜率表明总降雪量每年增加约0.5英寸。
 - en: '`results` also provides `resid`, which is an array of residuals, that is, the
     differences between the data and the fitted line. The standard deviation of the
     residuals is an estimate of `sigma`.'
   id: totrans-81
   prefs: []
   type: TYPE_NORMAL
+  zh: '`results`还提供了`resid`，这是一个残差数组，即数据与拟合线之间的差异。残差的标准差是`sigma`的估计值。'
 - en: '[PRE21]'
   id: totrans-82
   prefs: []
@@ -460,15 +496,18 @@
   id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将使用这些估计值来选择参数的先验分布。
 - en: Priors
   id: totrans-85
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 先验
 - en: I’ll use uniform distributions for all three parameters.
   id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将为所有三个参数使用均匀分布。
 - en: '[PRE23]'
   id: totrans-87
   prefs: []
@@ -490,16 +529,19 @@
   id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: 我使先验分布的长度不同有两个原因。首先，如果我们犯了错误并使用了错误的分布，那么如果它们的长度都不同，捕捉错误将更容易。
 - en: Second, it provides more precision for the most important parameter, `slope`,
     and spends less computational effort on the least important, `sigma`.
   id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: 其次，它为最重要的参数`slope`提供了更精确的估计，并在最不重要的参数`sigma`上花费了更少的计算工作。
 - en: 'In <<_ThreeParameterModel>> we made a joint distribution with three parameters.
     I’ll wrap that process in a function:'
   id: totrans-92
   prefs: []
   type: TYPE_NORMAL
+  zh: 在<<_ThreeParameterModel>>中，我们制作了一个具有三个参数的联合分布。我将把这个过程封装在一个函数中：
 - en: '[PRE26]'
   id: totrans-93
   prefs: []
@@ -510,6 +552,7 @@
   id: totrans-94
   prefs: []
   type: TYPE_NORMAL
+  zh: 并使用它制作一个代表三个参数的联合分布的`Pmf`。
 - en: '[PRE27]'
   id: totrans-95
   prefs: []
@@ -519,10 +562,12 @@
   id: totrans-96
   prefs: []
   type: TYPE_TB
+  zh: '|  |  |  | probs |'
 - en: '| --- | --- | --- | --- |'
   id: totrans-97
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- |'
 - en: '| Slope | Intercept | Sigma |  |'
   id: totrans-98
   prefs: []
