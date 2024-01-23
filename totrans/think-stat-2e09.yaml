@@ -1,106 +1,135 @@
 - en: Chapter 8  Estimation
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
 - en: 原文：[https://greenteapress.com/thinkstats2/html/thinkstats2009.html](https://greenteapress.com/thinkstats2/html/thinkstats2009.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: The code for this chapter is in `estimation.py`. For information about downloading
     and working with this code, see Section [0.2](thinkstats2001.html#code).
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
 - en: 8.1  The estimation game
+  id: totrans-3
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: 'Let’s play a game. I think of a distribution, and you have to guess what it
     is. I’ll give you two hints: it’s a normal distribution, and here’s a random sample
     drawn from it:'
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
 - en: '`[-0.441, 1.774, -0.101, -1.138, 2.975, -2.138]`'
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
 - en: What do you think is the mean parameter, µ, of this distribution?
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
 - en: One choice is to use the sample mean, x, as an estimate of µ. In this example,
     x is 0.155, so it would be reasonable to guess µ = 0.155. This process is called
     estimation, and the statistic we used (the sample mean) is called an estimator.
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
 - en: Using the sample mean to estimate µ is so obvious that it is hard to imagine
     a reasonable alternative. But suppose we change the game by introducing outliers.
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
 - en: '*I’m thinking of a distribution.* It’s a normal distribution, and here’s a
     sample that was collected by an unreliable surveyor who occasionally puts the
     decimal point in the wrong place.'
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
 - en: '`[-0.441, 1.774, -0.101, -1.138, 2.975, -213.8]`'
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
 - en: Now what’s your estimate of µ? If you use the sample mean, your guess is -35.12\.
     Is that the best choice? What are the alternatives?
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
 - en: One option is to identify and discard outliers, then compute the sample mean
     of the rest. Another option is to use the median as an estimator.
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
 - en: Which estimator is best depends on the circumstances (for example, whether there
     are outliers) and on what the goal is. Are you trying to minimize errors, or maximize
     your chance of getting the right answer?
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
 - en: If there are no outliers, the sample mean minimizes the mean squared error (MSE).
     That is, if we play the game many times, and each time compute the error x − µ,
     the sample mean minimizes
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
 - en: '| MSE =  |'
+  id: totrans-15
   prefs: []
   type: TYPE_TB
 - en: '&#124; 1 &#124;'
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124;  &#124;'
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124; m &#124;'
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
 - en: '|  ∑(x − µ)²  |'
+  id: totrans-19
   prefs: []
   type: TYPE_TB
 - en: Where m is the number of times you play the estimation game, not to be confused
     with n, which is the size of the sample used to compute x.
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
 - en: 'Here is a function that simulates the estimation game and computes the root
     mean squared error (RMSE), which is the square root of MSE:'
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE0]'
+  id: totrans-22
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: Again, `n` is the size of the sample, and `m` is the number of times we play
     the game. `means` is the list of estimates based on x. `medians` is the list of
     medians.
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
 - en: 'Here’s the function that computes RMSE:'
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE1]'
+  id: totrans-25
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '`estimates` is a list of estimates; `actual` is the actual value being estimated.
     In practice, of course, we don’t know `actual`; if we did, we wouldn’t have to
     estimate it. The purpose of this experiment is to compare the performance of the
     two estimators.'
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
 - en: When I ran this code, the RMSE of the sample mean was 0.41, which means that
@@ -108,6 +137,7 @@
     n=7, we should expect to be off by 0.41 on average. Using the median to estimate
     the mean yields RMSE 0.53, which confirms that x yields lower RMSE, at least for
     this example.
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
 - en: Minimizing MSE is a nice property, but it’s not always the best strategy. For
@@ -115,6 +145,7 @@
     site. If the estimate is too high, we might overbuild the structure, increasing
     its cost. But if it’s too low, the building might collapse. Because cost as a
     function of error is not symmetric, minimizing MSE is not the best strategy.
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
 - en: As another example, suppose I roll three six-sided dice and ask you to predict
@@ -124,114 +155,145 @@
     that has the highest chance of being right, which is a maximum likelihood estimator
     (MLE). If you pick 10 or 11, your chance of winning is 1 in 8, and that’s the
     best you can do.
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
 - en: 8.2  Guess the variance
+  id: totrans-30
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: '*I’m thinking of a distribution.* It’s a normal distribution, and here’s a
     (familiar) sample:'
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
 - en: '`[-0.441, 1.774, -0.101, -1.138, 2.975, -2.138]`'
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
 - en: What do you think is the variance, σ², of my distribution? Again, the obvious
     choice is to use the sample variance, S², as an estimator.
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
 - en: '| S² =  |'
+  id: totrans-34
   prefs: []
   type: TYPE_TB
 - en: '&#124; 1 &#124;'
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124;  &#124;'
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124; n &#124;'
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
 - en: '|  ∑(x[i] − x)²  |'
+  id: totrans-38
   prefs: []
   type: TYPE_TB
 - en: For large samples, S² is an adequate estimator, but for small samples it tends
     to be too low. Because of this unfortunate property, it is called a biased estimator.
     An estimator is unbiased if the expected total (or mean) error, after many iterations
     of the estimation game, is 0.
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
 - en: 'Fortunately, there is another simple statistic that is an unbiased estimator
     of σ²:'
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
 - en: '| S[n−1]² =  |'
+  id: totrans-41
   prefs: []
   type: TYPE_TB
 - en: '&#124; 1 &#124;'
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124;  &#124;'
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124; n−1 &#124;'
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
 - en: '|  ∑(x[i] − x)²  |'
+  id: totrans-45
   prefs: []
   type: TYPE_TB
 - en: For an explanation of why S² is biased, and a proof that S[n−1]² is unbiased,
     see [http://wikipedia.org/wiki/Bias_of_an_estimator](http://wikipedia.org/wiki/Bias_of_an_estimator).
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
 - en: The biggest problem with this estimator is that its name and symbol are used
     inconsistently. The name “sample variance” can refer to either S² or S[n−1]²,
     and the symbol S² is used for either or both.
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
 - en: 'Here is a function that simulates the estimation game and tests the performance
     of S² and S[n−1]²:'
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE2]'
+  id: totrans-49
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: Again, `n` is the sample size and `m` is the number of times we play the game.
     `np.var` computes S² by default and S[n−1]² if you provide the argument `ddof=1`,
     which stands for “delta degrees of freedom.” I won’t explain that term, but you
     can read about it at [http://en.wikipedia.org/wiki/Degrees_of_freedom_(statistics)](http://en.wikipedia.org/wiki/Degrees_of_freedom_(statistics)).
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
 - en: '`MeanError` computes the mean difference between the estimates and the actual
     value:'
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE3]'
+  id: totrans-52
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: When I ran this code, the mean error for S² was -0.13\. As expected, this biased
     estimator tends to be too low. For S[n−1]², the mean error was 0.014, about 10
     times smaller. As `m` increases, we expect the mean error for S[n−1]² to approach
     0.
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
 - en: Properties like MSE and bias are long-term expectations based on many iterations
     of the estimation game. By running simulations like the ones in this chapter,
     we can compare estimators and check whether they have desired properties.
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
 - en: But when you apply an estimator to real data, you just get one estimate. It
     would not be meaningful to say that the estimate is unbiased; being unbiased is
     a property of the estimator, not the estimate.
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
 - en: After you choose an estimator with appropriate properties, and use it to generate
     an estimate, the next step is to characterize the uncertainty of the estimate,
     which is the topic of the next section.
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
 - en: 8.3  Sampling distributions
+  id: totrans-57
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -243,66 +305,82 @@
     of the preserve is well known, so we can choose a representative sample of adult
     females. We could use the sample mean, x, to estimate the unknown population mean,
     µ.
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
 - en: Having weighed 9 female gorillas, you might find x=90 kg and sample standard
     deviation, S=7.5 kg. The sample mean is an unbiased estimator of µ, and in the
     long run it minimizes MSE. So if you report a single estimate that summarizes
     the results, you would report 90 kg.
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
 - en: But how confident should you be in this estimate? If you only weigh n=9 gorillas
     out of a much larger population, you might be unlucky and choose the 9 heaviest
     gorillas (or the 9 lightest ones) just by chance. Variation in the estimate caused
     by random selection is called sampling error.
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
 - en: To quantify sampling error, we can simulate the sampling process with hypothetical
     values of µ and σ, and see how much x varies.
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
 - en: 'Since we don’t know the actual values of µ and σ in the population, we’ll use
     the estimates x and S. So the question we answer is: “If the actual values of
     µ and σ were 90 kg and 7.5 kg, and we ran the same experiment many times, how
     much would the estimated mean, x, vary?”'
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
 - en: 'The following function answers that question:'
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE4]'
+  id: totrans-64
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '`mu` and `sigma` are the *hypothetical* values of the parameters. `n` is the
     sample size, the number of gorillas we measured. `m` is the number of times we
     run the simulation.'
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-66
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-67
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/27c11a2c428f41ee8725ae5850149ff7.png)'
+  id: totrans-68
   prefs:
   - PREF_BQ
   type: TYPE_IMG
 - en: ''
+  id: totrans-69
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 8.1: Sampling distribution of x, with confidence interval. |'
+  id: totrans-70
   prefs:
   - PREF_BQ
   type: TYPE_TB
 - en: ''
+  id: totrans-71
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-72
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
@@ -312,31 +390,37 @@
     in Figure [8.1](#estimation1). This distribution is called the sampling distribution
     of the estimator. It shows how much the estimates would vary if we ran the experiment
     over and over.
+  id: totrans-73
   prefs: []
   type: TYPE_NORMAL
 - en: The mean of the sampling distribution is pretty close to the hypothetical value
     of µ, which means that the experiment yields the right answer, on average. After
     1000 tries, the lowest result is 82 kg, and the highest is 98 kg. This range suggests
     that the estimate might be off by as much as 8 kg.
+  id: totrans-74
   prefs: []
   type: TYPE_NORMAL
 - en: 'There are two common ways to summarize the sampling distribution:'
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
 - en: Standard error (SE) is a measure of how far we expect the estimate to be off,
     on average. For each simulated experiment, we compute the error, x − µ, and then
     compute the root mean squared error (RMSE). In this example, it is roughly 2.5
     kg.
+  id: totrans-76
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: A confidence interval (CI) is a range that includes a given fraction of the
     sampling distribution. For example, the 90% confidence interval is the range from
     the 5th to the 95th percentile. In this example, the 90% CI is (86, 94) kg.
+  id: totrans-77
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'Standard errors and confidence intervals are the source of much confusion:'
+  id: totrans-78
   prefs: []
   type: TYPE_NORMAL
 - en: People often confuse standard error and standard deviation. Remember that standard
@@ -344,11 +428,13 @@
     deviation of gorilla weight is 7.5 kg. Standard error describes variability in
     an estimate. In this example, the standard error of the mean, based on a sample
     of 9 measurements, is 2.5 kg.
+  id: totrans-79
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: One way to remember the difference is that, as sample size increases, standard
     error gets smaller; standard deviation does not.
+  id: totrans-80
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
@@ -356,12 +442,14 @@
     µ, falls in the 90% confidence interval. Sadly, that is not true. If you want
     to make a claim like that, you have to use Bayesian methods (see my book, Think
     Bayes).
+  id: totrans-81
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'The sampling distribution answers a different question: it gives you a sense
     of how reliable an estimate is by telling you how much it would vary if you ran
     the experiment again.'
+  id: totrans-82
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
@@ -369,9 +457,11 @@
     quantify sampling error; that is, error due to measuring only part of the population.
     The sampling distribution does not account for other sources of error, notably
     sampling bias and measurement error, which are the topics of the next section.
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
 - en: 8.4  Sampling bias
+  id: totrans-84
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -379,11 +469,13 @@
     to know the average weight of women in the city where you live. It is unlikely
     that you would be allowed to choose a representative sample of women and weigh
     them.
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
 - en: A simple alternative would be “telephone sampling;” that is, you could choose
     random numbers from the phone book, call and ask to speak to an adult woman, and
     ask how much she weighs.
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
 - en: Telephone sampling has obvious limitations. For example, the sample is limited
@@ -392,206 +484,301 @@
     might be richer). Also, if you call home telephones during the day, you are less
     likely to sample people with jobs. And if you only sample the person who answers
     the phone, you are less likely to sample people who share a phone line.
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: 电话抽样显然有局限性。例如，样本仅限于电话号码在名单上的人，因此排除了没有电话的人（可能比平均贫穷）和电话号码未列出的人（可能比平均富有）。此外，如果你白天打家庭电话，你就不太可能抽样到有工作的人。如果你只抽样接电话的人，你就不太可能抽样到共享电话线的人。
 - en: If factors like income, employment, and household size are related to weight—and
     it is plausible that they are—the results of your survey would be affected one
     way or another. This problem is called sampling bias because it is a property
     of the sampling process.
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果收入、就业和家庭规模等因素与体重有关——这是很有可能的——那么你的调查结果会受到影响。这个问题被称为抽样偏差，因为它是抽样过程的一个特性。
 - en: This sampling process is also vulnerable to self-selection, which is a kind
     of sampling bias. Some people will refuse to answer the question, and if the tendency
     to refuse is related to weight, that would affect the results.
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: 这种抽样过程也容易受到自我选择的影响，这是一种抽样偏差。有些人会拒绝回答问题，如果拒绝的倾向与体重有关，那么这将影响结果。
 - en: Finally, if you ask people how much they weigh, rather than weighing them, the
     results might not be accurate. Even helpful respondents might round up or down
     if they are uncomfortable with their actual weight. And not all respondents are
     helpful. These inaccuracies are examples of measurement error.
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，如果你问人们他们的体重，而不是称量他们，结果可能不准确。即使是乐意回答的受访者，如果他们对自己的实际体重感到不舒服，也可能四舍五入。而且并非所有受访者都是乐意回答的。这些不准确性是测量误差的例子。
 - en: When you report an estimated quantity, it is useful to report standard error,
     or a confidence interval, or both, in order to quantify sampling error. But it
     is also important to remember that sampling error is only one source of error,
     and often it is not the biggest.
+  id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: 当你报告一个估计数量时，报告标准误差或置信区间或两者都是有用的，以便量化抽样误差。但重要的是要记住，抽样误差只是错误的一个来源，而且通常不是最大的。
 - en: 8.5  Exponential distributions
+  id: totrans-92
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 8.5 指数分布
 - en: 'Let’s play one more round of the estimation game. *I’m thinking of a distribution.*
     It’s an exponential distribution, and here’s a sample:'
+  id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们再玩一轮估计游戏。*我在想一个分布。*它是一个指数分布，这里是一个样本：
 - en: '`[5.384, 4.493, 19.198, 2.790, 6.122, 12.844]`'
+  id: totrans-94
   prefs: []
   type: TYPE_NORMAL
+  zh: '[5.384, 4.493, 19.198, 2.790, 6.122, 12.844]'
 - en: What do you think is the parameter, λ, of this distribution?
+  id: totrans-95
   prefs: []
   type: TYPE_NORMAL
+  zh: 你认为这个分布的参数λ是多少？
 - en: In general, the mean of an exponential distribution is 1/λ, so working backwards,
     we might choose
+  id: totrans-96
   prefs: []
   type: TYPE_NORMAL
+  zh: 一般来说，指数分布的均值是1/λ，所以往回推，我们可以选择
 - en: '| L = 1 / x |'
+  id: totrans-97
   prefs: []
   type: TYPE_TB
+  zh: '| L = 1 / x |'
 - en: L is an estimator of λ. And not just any estimator; it is also the maximum likelihood
     estimator (see [http://wikipedia.org/wiki/Exponential_distribution#Maximum_likelihood](http://wikipedia.org/wiki/Exponential_distribution#Maximum_likelihood)).
     So if you want to maximize your chance of guessing λ exactly, L is the way to
     go.
+  id: totrans-98
   prefs: []
   type: TYPE_NORMAL
+  zh: L是λ的估计量。不仅是任何估计量；它还是最大似然估计量（见[http://wikipedia.org/wiki/Exponential_distribution#Maximum_likelihood](http://wikipedia.org/wiki/Exponential_distribution#Maximum_likelihood)）。所以如果你想最大化猜测λ的机会，L是一个好选择。
 - en: But we know that x is not robust in the presence of outliers, so we expect L
     to have the same problem.
+  id: totrans-99
   prefs: []
   type: TYPE_NORMAL
+  zh: 但我们知道在存在异常值的情况下，x不是稳健的，所以我们预计L也会有同样的问题。
 - en: We can choose an alternative based on the sample median. The median of an exponential
     distribution is ln(2) / λ, so working backwards again, we can define an estimator
+  id: totrans-100
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以选择一个基于样本中位数的替代方案。指数分布的中位数是ln(2) / λ，所以再次往回推，我们可以定义一个估计量
 - en: '| L[m] = ln(2) / m  |'
+  id: totrans-101
   prefs: []
   type: TYPE_TB
+  zh: '| L[m] = ln(2) / m |'
 - en: where m is the sample median.
+  id: totrans-102
   prefs: []
   type: TYPE_NORMAL
+  zh: 其中m是样本中位数。
 - en: 'To test the performance of these estimators, we can simulate the sampling process:'
+  id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了测试这些估计量的性能，我们可以模拟抽样过程：
 - en: '[PRE5]'
+  id: totrans-104
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: When I run this experiment with λ=2, the RMSE of L is 1.1\. For the median-based
     estimator L[m], RMSE is 1.8\. We can’t tell from this experiment whether L minimizes
     MSE, but at least it seems better than L[m].
+  id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: 当我用λ=2运行这个实验时，L的RMSE为1.1。对于基于中位数的估计量L[m]，RMSE为1.8。从这个实验中我们无法判断L是否最小化了MSE，但至少它似乎比L[m]更好。
 - en: Sadly, it seems that both estimators are biased. For L the mean error is 0.33;
     for L[m] it is 0.45\. And neither converges to 0 as `m` increases.
+  id: totrans-106
   prefs: []
   type: TYPE_NORMAL
+  zh: 遗憾的是，似乎这两个估计量都是有偏的。对于L，平均误差为0.33；对于L[m]，平均误差为0.45。随着`m`的增加，两者都不会收敛到0。
 - en: It turns out that x is an unbiased estimator of the mean of the distribution,
     1 / λ, but L is not an unbiased estimator of λ.
+  id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: 事实证明，x是分布均值1/λ的无偏估计量，但L不是λ的无偏估计量。
 - en: 8.6  Exercises
+  id: totrans-108
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 8.6 练习
 - en: For the following exercises, you can find starter code in `chap08ex.ipynb`.
     Solutions are in `chap08soln.py`
+  id: totrans-109
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于以下练习，你可以在`chap08ex.ipynb`中找到起始代码。解决方案在`chap08soln.py`中。
 - en: Exercise 1
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: 练习1
 - en: '*In this chapter we used* x *and median to estimate* µ*, and found that* x
     *yields lower MSE. Also, we used* S² *and* S[n−1]² *to estimate* σ*, and found
     that* S² *is biased and* S[n−1]² *unbiased.*'
+  id: totrans-111
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本章中，我们使用* x *和中位数来估计* µ *，并发现* x *产生更低的均方误差。此外，我们使用* S² *和* S[n−1]² *来估计* σ
+    *，并发现* S² *是有偏的，而* S[n−1]² *是无偏的。
 - en: '*Run similar experiments to see if* x *and median are biased estimates of*
     µ*. Also check whether* S² *or* S[n−1]² *yields a lower MSE.*'
+  id: totrans-112
   prefs: []
   type: TYPE_NORMAL
+  zh: '*运行类似的实验，看看* x *和中位数是否是* µ *的有偏估计。还要检查* S² *或* S[n−1]² *哪个产生更低的MSE。*'
 - en: Exercise 2
+  id: totrans-113
   prefs: []
   type: TYPE_NORMAL
+  zh: 练习2
 - en: '*Suppose you draw a sample with size* n=10 *from an exponential distribution
     with* λ=2*. Simulate this experiment 1000 times and plot the sampling distribution
     of the estimate* L*. Compute the standard error of the estimate and the 90% confidence
     interval.*'
+  id: totrans-114
   prefs: []
   type: TYPE_NORMAL
+  zh: '*假设你从* λ=2 *的指数分布中抽取大小为* n=10 *的样本。模拟这个实验1000次，并绘制估计* L *的抽样分布。计算估计的标准误差和90%的置信区间。*'
 - en: '*Repeat the experiment with a few different values of* n *and make a plot of
     standard error versus* n*.*'
+  id: totrans-115
   prefs: []
   type: TYPE_NORMAL
+  zh: '*重复实验，使用几个不同的* n *值，并绘制标准误差与* n *的关系图。*'
 - en: Exercise 3
+  id: totrans-116
   prefs: []
   type: TYPE_NORMAL
+  zh: 练习3
 - en: '*In games like hockey and soccer, the time between goals is roughly exponential.
     So you could estimate a team’s goal-scoring rate by observing the number of goals
     they score in a game. This estimation process is a little different from sampling
     the time between goals, so let’s see how it works.*'
+  id: totrans-117
   prefs: []
   type: TYPE_NORMAL
+  zh: 在冰球和足球等比赛中，进球之间的时间大致呈指数分布。因此，你可以通过观察他们在一场比赛中得分的进球数来估计球队的进球率。这种估计过程与抽样进球时间有些不同，让我们看看它是如何工作的。
 - en: '*Write a function that takes a goal-scoring rate, `lam`, in goals per game,
     and simulates a game by generating the time between goals until the total time
     exceeds 1 game, then returns the number of goals scored.*'
+  id: totrans-118
   prefs: []
   type: TYPE_NORMAL
+  zh: '*编写一个函数，接受一个目标得分率`lam`，以每场比赛的进球数为单位，通过生成进球之间的时间来模拟一场比赛，直到总时间超过1场比赛，然后返回进球数。*'
 - en: '*Write another function that simulates many games, stores the estimates of
     `lam`, then computes their mean error and RMSE.*'
+  id: totrans-119
   prefs: []
   type: TYPE_NORMAL
+  zh: '*编写另一个函数，模拟许多比赛，存储`lam`的估计值，然后计算它们的平均误差和均方根误差（RMSE）。*'
 - en: '*Is this way of making an estimate biased? Plot the sampling distribution of
     the estimates and the 90% confidence interval. What is the standard error? What
     happens to sampling error for increasing values of `lam`?*'
+  id: totrans-120
   prefs: []
   type: TYPE_NORMAL
+  zh: '*这种估计方式是否存在偏差？绘制估计的抽样分布和90%的置信区间。标准误差是多少？随着`lam`值的增加，抽样误差会发生什么变化？*'
 - en: 8.7  Glossary
+  id: totrans-121
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 8.7 术语表
 - en: 'estimation: The process of inferring the parameters of a distribution from
     a sample.'
+  id: totrans-122
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 估计：从样本推断分布参数的过程。
 - en: 'estimator: A statistic used to estimate a parameter.'
+  id: totrans-123
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 估计器：用于估计参数的统计量。
 - en: 'mean squared error (MSE): A measure of estimation error.'
+  id: totrans-124
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 均方误差（MSE）：估计误差的度量。
 - en: 'root mean squared error (RMSE): The square root of MSE, a more meaningful representation
     of typical error magnitude.'
+  id: totrans-125
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 均方根误差（RMSE）：MSE的平方根，更有意义地表示典型误差的大小。
 - en: 'maximum likelihood estimator (MLE): An estimator that computes the point estimate
     most likely to be correct.'
+  id: totrans-126
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 最大似然估计（MLE）：计算最有可能正确的点估计的估计器。
 - en: 'bias (of an estimator): The tendency of an estimator to be above or below the
     actual value of the parameter, when averaged over repeated experiments.'
+  id: totrans-127
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 偏差（估计器的）：估计器在重复实验中平均偏离参数实际值的倾向。
 - en: 'sampling error: Error in an estimate due to the limited size of the sample
     and variation due to chance.'
+  id: totrans-128
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 抽样误差：由于样本的有限大小和由于偶然因素的变化而导致的估计误差。
 - en: 'sampling bias: Error in an estimate due to a sampling process that is not representative
     of the population.'
+  id: totrans-129
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 抽样偏差：由于抽样过程不代表总体而导致的估计误差。
 - en: 'measurement error: Error in an estimate due to inaccuracy collecting or recording
     data.'
+  id: totrans-130
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 测量误差：由于数据收集或记录的不准确性而导致的估计误差。
 - en: 'sampling distribution: The distribution of a statistic if an experiment is
     repeated many times.'
+  id: totrans-131
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 抽样分布：如果实验重复多次，统计量的分布。
 - en: 'standard error: The RMSE of an estimate, which quantifies variability due to
     sampling error (but not other sources of error).'
+  id: totrans-132
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 标准误差：估计的均方根误差，用于量化由于抽样误差（但不包括其他误差来源）而产生的变异性。
 - en: 'confidence interval: An interval that represents the expected range of an estimator
     if an experiment is repeated many times.'
+  id: totrans-133
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 置信区间：如果实验重复多次，代表估计范围的区间。
