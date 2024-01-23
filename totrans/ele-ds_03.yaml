@@ -1,20 +1,25 @@
 - en: Variables and Values
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
 - en: 原文：[https://allendowney.github.io/ElementsOfDataScience/01_variables.html](https://allendowney.github.io/ElementsOfDataScience/01_variables.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '[Run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/01_variables.ipynb)
     or'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
 - en: '[Run this notebook on Sagemaker Studio Lab](https://studiolab.sagemaker.aws/import/github/AllenDowney/ElementsOfDataScience/blob/master/01_variables.ipynb)
     or'
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
 - en: '[Download this notebook](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/01_variables.ipynb).'
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
 - en: Data science is the use of data to answers questions and guide decision making.
@@ -22,23 +27,28 @@
     wage in the United States. Some economists think that raising the minimum wage
     would raise families out of poverty; others think it would cause more unemployment.
     But economic theory can only take us so far. At some point, we need data.
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
 - en: 'A successful data science project requires three elements:'
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
 - en: 'A question: For example, what is the relationship between the minimum wage
     and unemployment?'
+  id: totrans-7
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'Data: To answer this question, the best data would be results from a well designed
     experiment. But if we can’t get ideal data, we have to work with what we can get.'
+  id: totrans-8
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'Methods: With the right data, simple methods are often enough to find answers
     and present them clearly. But sometimes we need more specialized tools.'
+  id: totrans-9
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -48,47 +58,58 @@
     a new dataset and discover the questions it can answer. Or we might start with
     a tool and look for problems it can solve. Most data science projects require
     flexibility and persistence.
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
 - en: 'The goal of this book is to give you the tools you need to execute a data science
     project from beginning to end, including these steps:'
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
 - en: Choosing questions, data, and methods that go together.
+  id: totrans-12
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Finding data or collecting it yourself.
+  id: totrans-13
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Cleaning and validating data.
+  id: totrans-14
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Exploring datasets, visualizing distributions and relationships between variables.
+  id: totrans-15
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Modeling data and generating predictions.
+  id: totrans-16
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Designing data visualizations that tell a compelling story.
+  id: totrans-17
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Communicating results effectively.
+  id: totrans-18
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: We’ll start with basic programming concepts and work our way toward data science
     tools.
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
 - en: I won’t assume that you already know about programming, statistics, or data
     science. When I use a term, I try to define it immediately, and when I use a programming
     feature, I try to explain it clearly.
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
 - en: This book is in the form of Jupyter notebooks. Jupyter is a software development
@@ -96,399 +117,604 @@
     A Jupyter notebook is a document that contains text, Python code, and results.
     So you can read it like a book, but you can also modify the code, run it, develop
     new programs, and test them.
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
 - en: The notebooks contain exercises where you can practice what you learn. I encourage
     you to do the exercises as you go along.
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
 - en: 'The topics in this chapter are:'
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
 - en: Using Jupyter to write and run Python code.
+  id: totrans-24
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'Basic programming features in Python: variables and values.'
+  id: totrans-25
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Translating formulas from math notation to Python.
+  id: totrans-26
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Along the way, we’ll review a couple of math topics I assume you have seen before,
     logarithms and algebra.
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
 - en: Numbers
+  id: totrans-28
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: Python provides tools for working with many kinds of data, including numbers,
     words, dates, times, and locations (latitude and longitude).
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
 - en: 'Let’s start with numbers. Python can work with several types of numbers, but
     the two most common are:'
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
 - en: '`int`, which represents integer values like `3`, and'
+  id: totrans-31
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: '`float`, which represents numbers that have a fraction part, like `3.14159`.'
+  id: totrans-32
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'Most often, we use `int` to represent counts and `float` to represent measurements.
     Here’s an example of an `int` and a `float`:'
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE0]'
+  id: totrans-34
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '[PRE1]'
+  id: totrans-35
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '[PRE2]'
+  id: totrans-36
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '[PRE3]'
+  id: totrans-37
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '`float` is short for “floating-point”, which is the name for the way these
     numbers are stored.'
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: '`float`是“浮点数”的缩写，这是这些数字存储的方式的名称。'
 - en: Arithmetic
+  id: totrans-39
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 算术
 - en: 'Python provides operators that perform arithmetic. The operators that perform
     addition and subtraction are `+` and `-`:'
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: Python提供了执行算术运算的运算符。执行加法和减法的运算符是`+`和`-`：
 - en: '[PRE4]'
+  id: totrans-41
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '[PRE5]'
+  id: totrans-42
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: 'The operators that perform multiplication and division are `*` and `/`:'
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 执行乘法和除法的运算符是`*`和`/`：
 - en: '[PRE6]'
+  id: totrans-44
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '[PRE7]'
+  id: totrans-45
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '[PRE8]'
+  id: totrans-46
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '[PRE9]'
+  id: totrans-47
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: 'And the operator for exponentiation is `**`:'
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 幂运算的运算符是`**`：
 - en: '[PRE10]'
+  id: totrans-49
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '[PRE11]'
+  id: totrans-50
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: Unlike math notation, Python does not allow “implicit multiplication”. For example,
     in math notation, if you write \(3 (2 + 1)\), that’s understood to be the same
     as \(3 \times (2+ 1)\). Python does not allow that notation. If you want to multiply,
     you have to use the `*` operator.
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: 与数学符号不同，Python不允许“隐式乘法”。例如，在数学符号中，如果你写\(3 (2 + 1)\)，那就等同于\(3 \times (2+ 1)\)。Python不允许这种表示。如果你想要相乘，你必须使用`*`运算符。
 - en: 'The arithmetic operators follow the rules of precedence you might have learned
     as “PEMDAS”:'
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: 算术运算符遵循您可能学过的“PEMDAS”的优先规则：
 - en: Parentheses before
+  id: totrans-53
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 括号在前
 - en: Exponentiation before
+  id: totrans-54
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 幂运算在前
 - en: Multiplication and division before
+  id: totrans-55
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 乘法和除法在前
 - en: Addition and subtraction.
+  id: totrans-56
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 加法和减法。
 - en: 'So in this expression:'
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 所以在这个表达式中：
 - en: '[PRE12]'
+  id: totrans-58
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '[PRE13]'
+  id: totrans-59
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: 'The multiplication happens first. If that’s not what you want, you can use
     parentheses to make the order of operations explicit:'
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 首先进行乘法。如果这不是你想要的，你可以使用括号来明确操作的顺序：
 - en: '[PRE14]'
+  id: totrans-61
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '[PRE15]'
+  id: totrans-62
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '**Exercise:** Write a Python expression that raises `1+2` to the power `3*4`.
     The answer should be `531441`.'
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**编写一个Python表达式，将`1+2`的幂提高到`3*4`。答案应该是`531441`。'
 - en: Math Functions
+  id: totrans-64
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 数学函数
 - en: Python provides functions that compute all the usual mathematical functions,
     like `sin` and `cos`, `exp` and `log`. However, they are not part of Python itself;
     they are in a **library**, which is a collection of functions that supplement
     the Python language.
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: Python提供了计算所有常见数学函数的函数，如`sin`和`cos`，`exp`和`log`。但是，它们不是Python本身的一部分；它们在一个**库**中，这是一个补充Python语言的函数集。
 - en: 'Actually, there are several libraries that provide math functions; the one
     we’ll use is called NumPy, which stands for “Numerical Python”, and is pronounced
     “num pie”. Before you can use a library, you have to **import** it. Here’s how
     we import NumPy:'
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: 实际上，有几个提供数学函数的库；我们将使用的是名为NumPy的库，它代表“Numerical Python”，发音为“num pie”。在使用库之前，您必须**导入**它。这是我们导入NumPy的方法：
 - en: '[PRE16]'
+  id: totrans-67
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: It is conventional to import `numpy` as `np`, which means we can refer to it
     by the short name `np` rather than the longer name `numpy`. Names like this are
     case-sensitive, which means that `numpy` is not the same as `NumPy`. So even though
     the name of the library is NumPy, when we import it we have to call it `numpy`.
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: 传统上将`numpy`导入为`np`，这意味着我们可以用简短的名称`np`来引用它，而不是较长的名称`numpy`。像这样的名称是区分大小写的，这意味着`numpy`和`NumPy`不是同一个东西。所以即使库的名称是NumPy，当我们导入它时，我们必须称其为`numpy`。
 - en: But assuming we import `np` correctly, we can use it to read the value `pi`,
     which is an approximation of the mathematical constant \(\pi\).
+  id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是假设我们正确导入了`np`，我们可以使用它来读取值`pi`，这是数学常数\(\pi\)的近似值。
 - en: '[PRE17]'
+  id: totrans-70
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: '[PRE18]'
+  id: totrans-71
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: The result is a `float` with 16 digits. As you might know, we can’t represent
     \(\pi\) with a finite number of digits, so this result is only approximate.
+  id: totrans-72
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个具有16位数字的`float`。您可能知道，我们无法用有限数量的数字表示\(\pi\)，所以这个结果只是近似值。
 - en: NumPy provides `log`, which computes the natural logarithm
+  id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: NumPy提供了`log`，它计算自然对数
 - en: '[PRE19]'
+  id: totrans-74
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '[PRE20]'
+  id: totrans-75
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: NumPy also provides `exp`, which raises the constant `e` to a power.
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
+  zh: NumPy还提供了`exp`，它将常数`e`提高到幂。
 - en: '[PRE21]'
+  id: totrans-77
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: '[PRE22]'
+  id: totrans-78
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: '**Exercise:** Use these functions to confirm the mathematical identity \(\log(e^x)
     = x\), which should be true for any value of \(x\).'
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**使用这些函数来确认数学恒等式\(\log(e^x) = x\)，这对于任何值\(x\)都应该成立。'
 - en: With floating-point values, this identity should work for values of \(x\) between
     -700 and 700\. What happens when you try it with larger and smaller values?
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于浮点值，这个恒等式应该适用于-700到700之间的\(x\)值。当您尝试使用更大和更小的值时会发生什么？
 - en: As this example shows, floating-point numbers are finite approximations, which
     means they don’t always behave like math.
+  id: totrans-81
   prefs: []
   type: TYPE_NORMAL
+  zh: 正如这个例子所示，浮点数是有限的近似值，这意味着它们并不总是像数学那样行为。
 - en: 'As another example, let’s see what happens when you add up `0.1` three times:'
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: 举个例子，让我们看看当你三次相加`0.1`时会发生什么：
 - en: '[PRE23]'
+  id: totrans-83
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: '[PRE24]'
+  id: totrans-84
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: The result is close to `0.3`, but not exact. We’ll see other examples of floating-point
     approximation later, and learn some ways to deal with it.
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果接近`0.3`，但不是精确的。我们将在以后看到其他浮点数近似的例子，并学习一些处理它的方法。
 - en: Variables
+  id: totrans-86
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 变量
 - en: 'A **variable** is a name that refers to a value. The following statement assigns
     the value `5` to a variable named `x`:'
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: '**变量**是指代一个值的名称。以下语句将值`5`赋给名为`x`的变量：'
 - en: '[PRE25]'
+  id: totrans-88
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: The variable we just created has the name `x` and the value `5`.
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们刚刚创建的变量的名称是`x`，值是`5`。
 - en: 'If we use `x` as part of an arithmetic operation, it represents the value `5`:'
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们将`x`作为算术运算的一部分，它代表值`5`：
 - en: '[PRE26]'
+  id: totrans-91
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: '[PRE27]'
+  id: totrans-92
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: '[PRE28]'
+  id: totrans-93
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: '[PRE29]'
+  id: totrans-94
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: 'We can also use `x` with `numpy` functions:'
+  id: totrans-95
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们还可以将`x`与`numpy`函数一起使用：
 - en: '[PRE30]'
+  id: totrans-96
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: '[PRE31]'
+  id: totrans-97
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: Notice that the result from `exp` is a `float`, even though the value of `x`
     is an `int`.
+  id: totrans-98
   prefs: []
   type: TYPE_NORMAL
+  zh: 请注意，`exp`的结果是一个`float`，即使`x`的值是一个`int`。
 - en: '**Exercise:** If you have not programmed before, one of the things you have
     to get used to is that programming languages are picky about details. Natural
     languages, like English, and semi-formal languages, like math notation, are more
     forgiving.'
+  id: totrans-99
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**如果您以前没有编程经验，您必须习惯于编程语言对细节的挑剔。自然语言，如英语，和半正式语言，如数学符号，更宽容。'
 - en: As an example, in math notation, parentheses and square brackets mean the same
     thing, you can write
+  id: totrans-100
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，在数学符号中，括号和方括号意思相同，你可以写
 - en: \(\sin (\omega t)\)
+  id: totrans-101
   prefs: []
   type: TYPE_NORMAL
+  zh: \(\sin (\omega t)\)
 - en: or
+  id: totrans-102
   prefs: []
   type: TYPE_NORMAL
+  zh: 或
 - en: \(\sin [\omega t]\)
+  id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: \(\sin [\omega t]\)
 - en: 'Either one is fine. And you can leave out the parentheses altogether, as long
     as the meaning is clear:'
+  id: totrans-104
   prefs: []
   type: TYPE_NORMAL
+  zh: 任何一个都可以。只要意思清楚，你可以完全省略括号：
 - en: \(\sin \omega t\)
+  id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: \(\sin \omega t\)
 - en: 'In Python, every character counts. For example, the following are all different:'
+  id: totrans-106
   prefs: []
   type: TYPE_NORMAL
+  zh: 在Python中，每个字符都很重要。例如，以下都是不同的：
 - en: '[PRE32]'
+  id: totrans-107
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: While you are learning, I encourage you to make mistakes on purpose to see what
     goes wrong. Read the error messages carefully. Sometimes they are helpful and
     tell you exactly what’s wrong. Other times they can be misleading. But if you
     have seen the message before, you might remember some likely causes.
+  id: totrans-108
   prefs: []
   type: TYPE_NORMAL
+  zh: 在你学习的过程中，我鼓励你故意犯错，看看会出现什么问题。仔细阅读错误信息。有时它们很有帮助，可以准确告诉你出了什么问题。但有时它们可能会误导你。但如果你之前见过这个消息，你可能会记得一些可能的原因。
 - en: '**Exercise:** Search the NumPy documentation to find the function that computes
     square roots, and use it to compute a floating-point approximation of the golden
     ratio:'
+  id: totrans-109
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** 搜索NumPy文档，找到计算平方根的函数，并使用它来计算黄金比例的浮点数近似值：'
 - en: \(\phi = \frac{1 + \sqrt{5}}{2}\)
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: \(\phi = \frac{1 + \sqrt{5}}{2}\)
 - en: 'Hint: The result should be close to `1.618`.'
+  id: totrans-111
   prefs: []
   type: TYPE_NORMAL
+  zh: 提示：结果应该接近`1.618`。
 - en: Calculating with Variables
+  id: totrans-112
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 使用变量进行计算
 - en: Now we’ll use variables to solve a problem involving compound interest. It might
     not be the most exciting example, but it uses everything we have done so far,
     and it reviews exponentiation and logarithms, which we are going to need.
+  id: totrans-113
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们将使用变量来解决涉及复利的问题。这可能不是最激动人心的例子，但它使用了我们到目前为止所做的一切，并且复习了指数和对数，这是我们需要的。
 - en: 'If we start with a principal sum, \(P\), and earn compounded interest, the
     total accumulated value, \(V\), at the end of time \(t\) is:'
+  id: totrans-114
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们从一个本金数\(P\)开始，并获得复利，那么在时间\(t\)结束时的累积总值\(V\)为：
 - en: \(V=P\left(1+{\frac {r}{n}}\right)^{nt}\)
+  id: totrans-115
   prefs: []
   type: TYPE_NORMAL
+  zh: \(V=P\left(1+{\frac {r}{n}}\right)^{nt}\)
 - en: where \(r\) is the annual interest rate and \(n\) is the compounding frequency.
+  id: totrans-116
   prefs: []
   type: TYPE_NORMAL
+  zh: 其中\(r\)是年利率，\(n\)是复利频率。
 - en: 'For example, if you deposit $2,100 in a bank paying an annual interest rate
     of 3.4% compounded quarterly, we can compute the balance after 7 years by defining
     these variables:'
+  id: totrans-117
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，如果你在一家每年复利3.4%的银行存入了$2,100，我们可以通过定义这些变量来计算7年后的余额：
 - en: '[PRE33]'
+  id: totrans-118
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: And computing the total accumulated value like this.
+  id: totrans-119
   prefs: []
   type: TYPE_NORMAL
+  zh: 以及像这样计算累积总值。
 - en: '[PRE34]'
+  id: totrans-120
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: '[PRE35]'
+  id: totrans-121
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: '**Exercise:** Continuing the previous example, suppose you start with the same
     principle and the same interest rate, but interest is compounded twice per year,
     so `n = 2`. What would the total value be after 7 years? Hint: we expect the answer
     to be a bit less than the previous answer.'
+  id: totrans-122
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** 继续上一个例子，假设你的本金和利率相同，但利息每年复利两次，所以`n = 2`。在7年后，总价值将是多少？提示：我们预计答案会比之前的答案略少。'
 - en: '**Exercise:** If interest is compounded continuously, the value after time
     \(t\) is given by the formula:'
+  id: totrans-123
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** 如果利息是连续复利，时间\(t\)后的价值由以下公式给出：'
 - en: \(V=P~e^{rt}\)
+  id: totrans-124
   prefs: []
   type: TYPE_NORMAL
+  zh: \(V=P~e^{rt}\)
 - en: 'Translate this equation into Python and use it compute the value of the investment
     in the previous example with continuous compounding. Hint: we expect the answer
     to be a bit more than the previous answers.'
+  id: totrans-125
   prefs: []
   type: TYPE_NORMAL
+  zh: 将这个方程翻译成Python，并用它来计算前面例子中连续复利的投资价值。提示：我们预计答案会比之前的答案略多。
 - en: Summary
+  id: totrans-126
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 总结
 - en: This chapter introduces variables, which are names that refer to values, and
     two kinds of values, integers and floating-point numbers.
+  id: totrans-127
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章介绍了变量，它们是指代值的名称，以及两种值，整数和浮点数。
 - en: It presents mathematical operators, like `+` for addition and `*` for multiplication,
     and mathematical functions like `log` for logarithms and `exp` for raising `e`
     to a power.
+  id: totrans-128
   prefs: []
   type: TYPE_NORMAL
+  zh: 它介绍了数学运算符，比如`+`表示加法，`*`表示乘法，以及数学函数，比如`log`表示对数，`exp`表示将`e`的幂。
 - en: In the next chapter, we’ll see additional data types for representing letters
     and words, dates and times, and latitude and longitude.
+  id: totrans-129
   prefs: []
   type: TYPE_NORMAL
+  zh: 在下一章中，我们将看到用于表示字母和单词、日期和时间以及纬度和经度的额外数据类型。
