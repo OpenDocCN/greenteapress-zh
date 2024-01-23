@@ -3,16 +3,19 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 比较
 - en: 原文：[https://allendowney.github.io/ThinkBayes2/chap11.html](https://allendowney.github.io/ThinkBayes2/chap11.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ThinkBayes2/chap11.html](https://allendowney.github.io/ThinkBayes2/chap11.html)
 - en: This chapter introduces joint distributions, which are an essential tool for
     working with distributions of more than one variable.
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章介绍了联合分布，这是处理多个变量的分布的基本工具。
 - en: We’ll use them to solve a silly problem on our way to solving a real problem.
     The silly problem is figuring out how tall two people are, given only that one
     is taller than the other. The real problem is rating chess players (or participants
@@ -20,22 +23,26 @@
   id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将用它们来解决一个愚蠢的问题，然后再解决一个真正的问题。愚蠢的问题是，只知道一个人比另一个人高，就要弄清楚两个人有多高。真正的问题是根据比赛结果对国际象棋选手（或其他类型比赛的参与者）进行评分。
 - en: To construct joint distributions and compute likelihoods for these problems,
     we will use outer products and similar operations. And that’s where we’ll start.
   id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了构建联合分布并计算这些问题的可能性，我们将使用外积和类似的操作。这就是我们将开始的地方。
 - en: Outer Operations
   id: totrans-5
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 外部操作
 - en: 'Many useful operations can be expressed as the “outer product” of two sequences,
     or another kind of “outer” operation. Suppose you have sequences like `x` and
     `y`:'
   id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 许多有用的操作可以表示为两个序列的“外积”，或者另一种“外部”操作。假设你有像`x`和`y`这样的序列：
 - en: '[PRE0]'
   id: totrans-7
   prefs: []
@@ -47,11 +54,13 @@
   id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些序列的外积是一个包含每对值的乘积的数组，一个来自每个序列。有几种计算外积的方法，但我认为最通用的一种是“网格”。
 - en: NumPy provides a function called `meshgrid` that computes a mesh grid. If we
     give it two sequences, it returns two arrays.
   id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: NumPy提供了一个名为`meshgrid`的函数，用于计算网格。如果我们给它两个序列，它会返回两个数组。
 - en: '[PRE1]'
   id: totrans-10
   prefs: []
@@ -62,6 +71,7 @@
   id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 第一个数组包含了`x`的副本，按行排列，行数是`y`的长度。
 - en: '[PRE2]'
   id: totrans-12
   prefs: []
@@ -77,6 +87,7 @@
   id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 第二个数组包含了`y`的副本，按列排列，列数是`x`的长度。
 - en: '[PRE4]'
   id: totrans-15
   prefs: []
@@ -92,6 +103,7 @@
   id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: 因为这两个数组的大小相同，所以我们可以将它们用作算术函数的操作数，比如乘法。
 - en: '[PRE6]'
   id: totrans-18
   prefs: []
@@ -107,6 +119,7 @@
   id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是`x`和`y`的外积。如果我们将它放在`DataFrame`中，我们可以更清楚地看到：
 - en: '[PRE8]'
   id: totrans-21
   prefs: []
@@ -116,28 +129,34 @@
   id: totrans-22
   prefs: []
   type: TYPE_TB
+  zh: '|  | 1 | 3 | 5 |'
 - en: '| --- | --- | --- | --- |'
   id: totrans-23
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- |'
 - en: '| 2 | 2 | 6 | 10 |'
   id: totrans-24
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 2 | 6 | 10 |'
 - en: '| 4 | 4 | 12 | 20 |'
   id: totrans-25
   prefs: []
   type: TYPE_TB
+  zh: '| 4 | 4 | 12 | 20 |'
 - en: The values from `x` appear as column names; the values from `y` appear as row
     labels. Each element is the product of a value from `x` and a value from `y`.
   id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: '`x`的值显示为列名；`y`的值显示为行标签。每个元素都是`x`的一个值和`y`的一个值的乘积。'
 - en: We can use mesh grids to compute other operations, like the outer sum, which
     is an array that contains the *sum* of elements from `x` and elements from `y`.
   id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用网格来计算其他操作，比如外部求和，它是一个包含`x`的元素和`y`的元素的*和*的数组。
 - en: '[PRE9]'
   id: totrans-28
   prefs: []
@@ -153,6 +172,7 @@
   id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们还可以使用比较运算符来比较`x`中的元素和`y`中的元素。
 - en: '[PRE11]'
   id: totrans-31
   prefs: []
@@ -167,48 +187,57 @@
   id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个布尔值数组。
 - en: It might not be obvious yet why these operations are useful, but we’ll see examples
     soon. With that, we are ready to take on a new Bayesian problem.
   id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 也许现在还不明显这些操作为什么有用，但我们很快就会看到例子。有了这些，我们就准备好解决一个新的贝叶斯问题了。
 - en: How Tall Is A?
   id: totrans-35
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: A有多高？
 - en: Suppose I choose two people from the population of adult males in the U.S.;
     I’ll call them A and B. If we see that A taller than B, how tall is A?
   id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设我从美国成年男性人口中选择两个人；我将称他们为A和B。如果我们看到A比B高，那么A有多高？
 - en: 'To answer this question:'
   id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 回答这个问题：
 - en: I’ll use background information about the height of men in the U.S. to form
     a prior distribution of height,
   id: totrans-38
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 我将使用关于美国成年男性身高的背景信息来形成一个身高的先验分布，
 - en: I’ll construct a joint prior distribution of height for A and B (and I’ll explain
     what that is),
   id: totrans-39
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 我将构建A和B的身高的联合先验分布（我会解释这是什么），
 - en: Then I’ll update the prior with the information that A is taller, and
   id: totrans-40
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 然后我将使用A更高的信息更新先验，和
 - en: From the joint posterior distribution I’ll extract the posterior distribution
     of height for A.
   id: totrans-41
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 从联合后验分布中，我将提取A的身高的后验分布。
 - en: In the U.S. the average height of male adults is 178 cm and the standard deviation
     is 7.7 cm. The distribution is not exactly normal, because nothing in the real
     world is, but the normal distribution is a pretty good model of the actual distribution,
@@ -216,11 +245,13 @@
   id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: 在美国，成年男性的平均身高是178厘米，标准偏差是7.7厘米。这个分布不完全是正态的，因为现实世界中没有什么是完全正态的，但正态分布是实际分布的一个很好的模型，所以我们可以将其用作A和B的先验分布。
 - en: Here’s an array of equally-spaced values from 3 standard deviations below the
     mean to 3 standard deviations above (rounded up a little).
   id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个从均值以下3个标准偏差到均值以上3个标准偏差的等间距值数组（略微向上取整）。
 - en: '[PRE13]'
   id: totrans-44
   prefs: []
@@ -232,6 +263,7 @@
   id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: SciPy提供了一个名为`norm`的函数，它表示具有给定均值和标准差的正态分布，并提供了`pdf`，用于评估正态分布的概率密度函数（PDF）：
 - en: '[PRE14]'
   id: totrans-46
   prefs: []
@@ -242,6 +274,7 @@
   id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 概率密度不是概率，但如果我们将它们放在`Pmf`中并进行归一化，结果就是正态分布的离散近似。
 - en: '[PRE15]'
   id: totrans-48
   prefs: []
@@ -252,14 +285,18 @@
   id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide below-input"><summary aria-label="Toggle hidden content">显示代码单元格输出
+    隐藏代码单元格输出</summary>
 - en: '[PRE16]</details>'
   id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE16]</details>'
 - en: Here’s what it looks like.
   id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: 就是这个样子。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
   id: totrans-52
@@ -1098,11 +1135,13 @@
   id: totrans-199
   prefs: []
   type: TYPE_NORMAL
+  zh: 美国女性的平均身高为163厘米；标准差为7.3厘米。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-200
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
 - en: '[PRE69]'
   id: totrans-201
   prefs: []
@@ -1113,6 +1152,8 @@
   id: totrans-202
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE70]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容隐藏代码单元格内容</summary>'
 - en: '[PRE71]'
   id: totrans-203
   prefs: []
@@ -1123,11 +1164,15 @@
   id: totrans-204
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE72]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容隐藏代码单元格内容</summary>'
 - en: '[PRE73]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-205
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE73]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容隐藏代码单元格内容</summary>'
 - en: '[PRE74]'
   id: totrans-206
   prefs: []
@@ -1139,6 +1184,8 @@
   id: totrans-207
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/b4ce9f2bd62a61e3311858008a797a4a2efc2cc8ea61be3110d7325ab9da910a.png](../Images/d46bdea7dd841a7a636527b54e8fd124.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>'
 - en: '[PRE75]'
   id: totrans-208
   prefs: []
@@ -1149,6 +1196,8 @@
   id: totrans-209
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE76]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容隐藏代码单元格内容</summary>'
 - en: '[PRE77]'
   id: totrans-210
   prefs: []
@@ -1160,11 +1209,15 @@
   id: totrans-211
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/290c2532c346858d5fc6608b0600e846e626a337ce17a947207b2272b1fc8c31.png](../Images/d1f82ed4fd480d24a85262be0004309e.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>'
 - en: '[PRE78]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-212
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE78]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容隐藏代码单元格内容</summary>'
 - en: '[PRE79]'
   id: totrans-213
   prefs: []
@@ -1174,11 +1227,13 @@
   id: totrans-214
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/430a2c38b379b815ec316af7c3f25e645b7614fce48de46ed7e4932f3f0e470d.png](../Images/42e2c27461adc54b23f5693da2875560.png)</details>'
 - en: '**Exercise:** [The Elo rating system](https://en.wikipedia.org/wiki/Elo_rating_system)
     is a way to quantify the skill level of players for games like chess.'
   id: totrans-215
   prefs: []
   type: TYPE_NORMAL
+  zh: 练习：[Elo评级系统](https://en.wikipedia.org/wiki/Elo_rating_system)是一种量化国际象棋等游戏玩家技能水平的方法。
 - en: 'It is based on a model of the relationship between the ratings of players and
     the outcome of a game. Specifically, if \(R_A\) is the rating of player `A` and
     \(R_B\) is the rating of player `B`, the probability that `A` beats `B` is given
@@ -1186,21 +1241,25 @@
   id: totrans-216
   prefs: []
   type: TYPE_NORMAL
+  zh: 它基于玩家评级和游戏结果之间关系的模型。具体来说，如果\(R_A\)是玩家`A`的评级，\(R_B\)是玩家`B`的评级，那么`A`击败`B`的概率由[逻辑函数](https://en.wikipedia.org/wiki/Logistic_function)给出：
 - en: \[P(\mathrm{A~beats~B}) = \frac{1}{1 + 10^{(R_B-R_A)/400}}\]
   id: totrans-217
   prefs: []
   type: TYPE_NORMAL
+  zh: \[P(\mathrm{A~beats~B}) = \frac{1}{1 + 10^{(R_B-R_A)/400}}\]
 - en: The parameters 10 and 400 are arbitrary choices that determine the range of
     the ratings. In chess, the range is from 100 to 2800.
   id: totrans-218
   prefs: []
   type: TYPE_NORMAL
+  zh: 参数10和400是确定评级范围的任意选择。在国际象棋中，范围是从100到2800。
 - en: Notice that the probability of winning depends only on the difference in rankings.
     As an example, if \(R_A\) exceeds \(R_B\) by 100 points, the probability that
     `A` wins is
   id: totrans-219
   prefs: []
   type: TYPE_NORMAL
+  zh: 注意，获胜的概率仅取决于排名的差异。例如，如果\(R_A\)超过\(R_B\)100分，`A`获胜的概率是
 - en: '[PRE80]'
   id: totrans-220
   prefs: []
@@ -1217,56 +1276,67 @@
   id: totrans-222
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设`A`当前评级为1600，但我们不确定其准确性。我们可以用均值为1600，标准差为100的正态分布描述他们的真实评级，以表明我们的不确定性。
 - en: And suppose `B` has a current rating of 1800, with the same level of uncertainty.
   id: totrans-223
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设`B`当前评级为1800，不确定性水平相同。
 - en: Then `A` and `B` play and `A` wins. How should we update their ratings?
   id: totrans-224
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后`A`和`B`进行比赛，`A`获胜。我们应该如何更新他们的评级？
 - en: 'To answer this question:'
   id: totrans-225
   prefs: []
   type: TYPE_NORMAL
+  zh: 回答这个问题：
 - en: Construct prior distributions for `A` and `B`.
   id: totrans-226
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 为`A`和`B`构建先验分布。
 - en: Use them to construct a joint distribution, assuming that the prior distributions
     are independent.
   id: totrans-227
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 使用它们构建联合分布，假设先验分布是独立的。
 - en: Use the logistic function above to compute the likelihood of the outcome under
     each joint hypothesis.
   id: totrans-228
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 使用上面的逻辑函数计算每个联合假设下结果的似然。
 - en: Use the joint prior and likelihood to compute the joint posterior.
   id: totrans-229
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 使用联合先验和似然来计算联合后验。
 - en: Extract and plot the marginal posteriors for `A` and `B`.
   id: totrans-230
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 提取并绘制`A`和`B`的边际后验。
 - en: Compute the posterior means for `A` and `B`. How much should their ratings change
     based on this outcome?
   id: totrans-231
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 计算`A`和`B`的后验均值。根据这个结果，他们的评级应该改变多少？
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-232
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
 - en: '[PRE82]'
   id: totrans-233
   prefs: []
@@ -1277,6 +1347,8 @@
   id: totrans-234
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE83]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容隐藏代码单元格内容</summary>'
 - en: '[PRE84]'
   id: totrans-235
   prefs: []
@@ -1288,6 +1360,8 @@
   id: totrans-236
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/2b25e6e47c47b1066411fcbdc6fef1aa0ff264a2e1beedadbe5815e4455136f4.png](../Images/280d8fb1883c98dafa0ec36738513e7f.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>'
 - en: '[PRE85]'
   id: totrans-237
   prefs: []
