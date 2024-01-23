@@ -867,6 +867,10 @@
   id: totrans-153
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 4.011165e-07 | 5.968996e-08 | 7.162795e-09 | 7.792856e-10 | 8.013930e-11
+    | 7.944844e-12 | 7.676178e-13 | 7.276377e-14 | 6.796616e-15 | 6.274653e-16 | ...
+    | 7.508469e-34 | 6.486483e-35 | 5.596590e-36 | 4.823148e-37 | 4.152060e-38 | 3.570691e-39
+    | 3.067777e-40 | 2.633315e-41 | 2.258457e-42 | 1.935405e-43 |'
 - en: '| 2 | 4.545987e-06 | 9.741401e-07 | 1.709122e-07 | 2.506426e-08 | 3.269131e-09
     | 3.940182e-10 | 4.490244e-11 | 4.908756e-12 | 5.197412e-13 | 5.365476e-14 | ...
     | 1.806613e-31 | 1.620070e-32 | 1.449030e-33 | 1.292922e-34 | 1.151034e-35 | 1.022555e-36
@@ -874,28 +878,38 @@
   id: totrans-154
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 4.545987e-06 | 9.741401e-07 | 1.709122e-07 | 2.506426e-08 | 3.269131e-09
+    | 3.940182e-10 | 4.490244e-11 | 4.908756e-12 | 5.197412e-13 | 5.365476e-14 | ...
+    | 1.806613e-31 | 1.620070e-32 | 1.449030e-33 | 1.292922e-34 | 1.151034e-35 | 1.022555e-36
+    | 9.066202e-38 | 8.023344e-39 | 7.088005e-40 | 6.251357e-41 |'
 - en: 3 rows × 36 columns</details>
   id: totrans-155
   prefs: []
   type: TYPE_NORMAL
+  zh: 3行×36列</details>
 - en: 'The following figure shows selected columns from the `DataFrame`, corresponding
     to different hypothetical values of `num_sensitive`:'
   id: totrans-156
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下图显示了来自`DataFrame`的选定列，对应于`num_sensitive`的不同假设值：
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
   id: totrans-157
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE48]</details> ![_images/d3a6012daa1a36dea54616b3bab308a507c20c69b4c9b2e889c0aae0dae66295.png](../Images/62e4ea7462f4fe30667801a6293636a6.png)'
   id: totrans-158
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE48]</details> ![_images/d3a6012daa1a36dea54616b3bab308a507c20c69b4c9b2e889c0aae0dae66295.png](../Images/62e4ea7462f4fe30667801a6293636a6.png)'
 - en: 'Now we can use this table to compute the likelihood of the data:'
   id: totrans-159
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以使用这个表格来计算数据的似然性：
 - en: '[PRE49]'
   id: totrans-160
   prefs: []
@@ -907,11 +921,13 @@
   id: totrans-161
   prefs: []
   type: TYPE_NORMAL
+  zh: '`loc`从`DataFrame`中选择一行。索引为12的行包含了每个`num_sensitive`假设值的12个正确识别的概率。这正是我们需要进行贝叶斯更新的似然性。'
 - en: 'I’ll use a uniform prior, which implies that I would be equally surprised by
     any value of `num_sensitive`:'
   id: totrans-162
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将使用均匀先验，这意味着我对`num_sensitive`的任何值都会感到同样惊讶：
 - en: '[PRE50]'
   id: totrans-163
   prefs: []
@@ -921,6 +937,7 @@
   id: totrans-164
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是更新：
 - en: '[PRE51]'
   id: totrans-165
   prefs: []
@@ -931,15 +948,19 @@
   id: totrans-166
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide below-input"><summary aria-label="Toggle hidden content">显示代码单元格输出
+    隐藏代码单元格输出</summary>
 - en: '[PRE52]</details>'
   id: totrans-167
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE52]</details>'
 - en: For comparison, I also compute the posterior for another possible outcome, 20
     correct identifications.
   id: totrans-168
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了比较，我还计算了另一个可能结果的后验，即20个正确的识别。
 - en: '[PRE53]'
   id: totrans-169
   prefs: []
@@ -950,31 +971,39 @@
   id: totrans-170
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide below-input"><summary aria-label="Toggle hidden content">显示代码单元格输出
+    隐藏代码单元格输出</summary>
 - en: '[PRE54]</details>'
   id: totrans-171
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE54]</details>'
 - en: The following figure shows posterior distributions of `num_sensitive` based
     on the actual data, 12 correct identifications, and the other possible outcome,
     20 correct identifications.
   id: totrans-172
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下图显示了基于实际数据（12个正确识别）和另一个可能结果（20个正确识别）的`num_sensitive`的后验分布。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
   id: totrans-173
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE55]</details> ![_images/4edbc176c039585b4e37ae3bbaa48382e58f129df43bdad9a00b9891467b7541.png](../Images/be42bd3ed0fd91410501a73a59b454c4.png)'
   id: totrans-174
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE55]</details> ![_images/4edbc176c039585b4e37ae3bbaa48382e58f129df43bdad9a00b9891467b7541.png](../Images/be42bd3ed0fd91410501a73a59b454c4.png)'
 - en: With 12 correct identifications, the most likely conclusion is that none of
     the subjects are sensitive to gluten. If there had been 20 correct identifications,
     the most likely conclusion would be that 11-12 of the subjects were sensitive.
   id: totrans-175
   prefs: []
   type: TYPE_NORMAL
+  zh: 有12个正确的识别时，最可能的结论是没有一个受麸质过敏的受试者。如果有20个正确的识别，最可能的结论是11-12个受试者对麸质过敏。
 - en: '[PRE56]'
   id: totrans-176
   prefs: []
@@ -1000,16 +1029,19 @@
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 摘要
 - en: This chapter presents two topics that are almost unrelated except that they
     make the title of the chapter catchy.
   id: totrans-181
   prefs: []
   type: TYPE_NORMAL
+  zh: '本章介绍了两个主题，它们几乎没有关联，除了它们使得章节标题引人注目。 '
 - en: The first part of the chapter is about Bayes’s Rule, evidence, and how we can
     quantify the strength of evidence using a likelihood ratio or Bayes factor.
   id: totrans-182
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章的第一部分是关于贝叶斯定理、证据以及我们如何使用似然比或贝叶斯因子来量化证据的强度。
 - en: The second part is about `add_dist`, which computes the distribution of a sum.
     We can use this function to solve forward and inverse problems; that is, given
     the parameters of a system, we can compute the distribution of the data or, given
@@ -1017,44 +1049,52 @@
   id: totrans-183
   prefs: []
   type: TYPE_NORMAL
+  zh: 第二部分是关于`add_dist`，它计算总和的分布。我们可以使用这个函数来解决正向和反向问题；也就是说，给定系统的参数，我们可以计算数据的分布，或者，给定数据，我们可以计算参数的分布。
 - en: In the next chapter, we’ll compute distributions for minimums and maximums,
     and use them to solve more Bayesian problems. But first you might want to work
     on these exercises.
   id: totrans-184
   prefs: []
   type: TYPE_NORMAL
+  zh: 在下一章中，我们将计算最小值和最大值的分布，并使用它们来解决更多的贝叶斯问题。但首先，您可能想要解决这些练习。
 - en: Exercises
   id: totrans-185
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 练习
 - en: '**Exercise:** Let’s use Bayes’s Rule to solve the Elvis problem from <<_Distributions>>:'
   id: totrans-186
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** 让我们使用贝叶斯定理来解决<<_Distributions>>中的埃尔维斯问题：'
 - en: Elvis Presley had a twin brother who died at birth. What is the probability
     that Elvis was an identical twin?
   id: totrans-187
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 埃尔维斯·普雷斯利有一个在出生时去世的孪生兄弟。埃尔维斯是同卵双胞胎的概率是多少？
 - en: In 1935, about 2/3 of twins were fraternal and 1/3 were identical. The question
     contains two pieces of information we can use to update this prior.
   id: totrans-188
   prefs: []
   type: TYPE_NORMAL
+  zh: 1935年，大约2/3的双胞胎是异卵的，1/3是同卵的。问题包含了两个我们可以用来更新先验的信息。
 - en: First, Elvis’s twin was also male, which is more likely if they were identical
     twins, with a likelihood ratio of 2.
   id: totrans-189
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 首先，埃尔维斯的孪生兄弟也是男性，如果他们是同卵双胞胎，这更有可能，可能性比为2。
 - en: Also, Elvis’s twin died at birth, which is more likely if they were identical
     twins, with a likelihood ratio of 1.25.
   id: totrans-190
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 此外，埃尔维斯的孪生兄弟在出生时去世，如果他们是同卵双胞胎，这更有可能，可能性比为1.25。
 - en: If you are curious about where those numbers come from, I wrote [a blog post
     about it](https://www.allendowney.com/blog/2020/01/28/the-elvis-problem-revisited).
   id: totrans-191
