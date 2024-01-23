@@ -1,27 +1,39 @@
 - en: Indexer
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 索引器
 - en: 原文：[https://allendowney.github.io/DSIRP/indexer.html](https://allendowney.github.io/DSIRP/indexer.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/DSIRP/indexer.html](https://allendowney.github.io/DSIRP/indexer.html)
 - en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/indexer.ipynb)'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: '[点击这里在Colab上运行本章](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/indexer.ipynb)'
 - en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/indexer.ipynb)'
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: '[点击这里在Colab上运行本章](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/indexer.ipynb)'
 - en: Indexing the web
+  id: totrans-4
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 对网页进行索引
 - en: In the context of web search, an index is a data structure that makes it possible
     to look up a search term and find the pages where that term appears. In addition,
     we would like to know how many times the search term appears on each page, which
     will help identify the pages most relevant to the term.
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 在网页搜索的上下文中，索引是一种数据结构，使得可以查找搜索词并找到包含该词的页面成为可能。此外，我们还想知道搜索词在每个页面上出现的次数，这将有助于确定与该词相关的页面。
 - en: For example, if a user submits the search terms “Python” and “programming”,
     we would look up both search terms and get two sets of pages. Pages with the word
     “Python” would include pages about the species of snake and pages about the programming
@@ -29,215 +41,333 @@
     programming languages, as well as other uses of the word. By selecting pages with
     both terms, we hope to eliminate irrelevant pages and find the ones about Python
     programming.
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，如果用户提交搜索词“Python”和“programming”，我们将查找这两个搜索词并获得两组页面。包含单词“Python”的页面将包括关于蛇种的页面和关于编程语言的页面。包含单词“programming”的页面将包括关于不同编程语言的页面，以及单词的其他用法。通过选择同时包含两个术语的页面，我们希望消除无关的页面并找到关于Python编程的页面。
 - en: In order to make an index, we’ll need to iterate through the words in a document
     and count them. So that’s where we’ll start.
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了制作一个索引，我们需要遍历文档中的单词并对其进行计数。这就是我们将开始的地方。
 - en: Here’s a minimal HTML document we have seen before, borrowed from the BeautifulSoup
     documentation.
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是一个我们之前见过的最小的HTML文档，借用自BeautifulSoup文档。
 - en: '[PRE0]'
+  id: totrans-9
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: We can use `BeautifulSoup` to parse the text and make a DOM.
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用`BeautifulSoup`来解析文本并创建DOM。
 - en: '[PRE1]'
+  id: totrans-11
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '[PRE2]'
+  id: totrans-12
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: The following is a generator function that iterates the elements of the DOM,
     finds the `NavigableString` objects, iterates through the words, and yields them
     one at a time.
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是一个生成器函数，它遍历DOM的元素，找到`NavigableString`对象，遍历单词，并逐个产生它们。
 - en: From each word, it removes the characters identified by the `string` module
     as whitespace or punctuation.
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 从每个单词中，它删除了由`string`模块标识为空格或标点符号的字符。
 - en: '[PRE3]'
+  id: totrans-15
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: 'We can loop through the words like this:'
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以像这样循环遍历单词：
 - en: '[PRE4]'
+  id: totrans-17
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '[PRE5]'
+  id: totrans-18
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: And count them like this.
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 并像这样对它们进行计数。
 - en: '[PRE6]'
+  id: totrans-20
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '[PRE7]'
+  id: totrans-21
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: Parsing Wikipedia
+  id: totrans-22
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 解析维基百科
 - en: 'Now let’s do the same thing with the text of a Wikipedia page:'
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们用维基百科页面的文本做同样的事情：
 - en: '[PRE8]'
+  id: totrans-24
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '[PRE9]'
+  id: totrans-25
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '[PRE10]'
+  id: totrans-26
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '[PRE11]'
+  id: totrans-27
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: As you might expect, the word “python” is one of the most common words on the
     Wikipedia page about Python. The word “programming” didn’t make the top 10, but
     it also appears many times.
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: 正如您所期望的那样，“python”是维基百科关于Python的页面上最常见的单词之一。单词“programming”没有进入前10名，但它也出现了很多次。
 - en: '[PRE12]'
+  id: totrans-29
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '[PRE13]'
+  id: totrans-30
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: However, there are a number of common words, like “the” and “from” that also
     appear many times. Later, we’ll come back and think about how to distinguish the
     words that really indicate what the page is about from the common words that appear
     on every page.
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 然而，有一些常见的单词，比如“the”和“from”，也出现了很多次。稍后，我们将回来考虑如何区分真正表示页面内容的单词和出现在每个页面上的常见单词。
 - en: But first, let’s think about making an index.
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 但首先，让我们考虑制作一个索引。
 - en: Indexing
+  id: totrans-33
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 索引
 - en: An index is a map from a search word, like “python”, to a collection of pages
     that contain the word. The collection should also indicate how many times the
     word appears on each page.
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 索引是从搜索词（如“python”）到包含该词的页面集合的映射。该集合还应指示该词在每个页面上出现的次数。
 - en: We want the index to be persistent, so we’ll store it on Redis.
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们希望索引是持久的，所以我们将其存储在Redis上。
 - en: So what Redis type should we use? There are several options, but one reasonable
     choice is a hash for each word, where the fields are pages (represented by URL)
     and the values are counts.
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 那么我们应该使用什么Redis类型？有几个选项，但一个合理的选择是每个单词一个哈希，其中字段是页面（由URL表示），值是计数。
 - en: To manage the size of the index, we won’t list a page for a given search word
     unless it appears at least three times.
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了管理索引的大小，除非给定搜索词至少出现三次，否则我们不会列出给定搜索词的页面。
 - en: Let’s get Redis started.
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们开始Redis。
 - en: '[PRE14]'
+  id: totrans-39
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '[PRE15]'
+  id: totrans-40
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: And make sure the Redis client is installed.
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: 并确保Redis客户端已安装。
 - en: '[PRE16]'
+  id: totrans-42
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: And let’s make a `Redis` object that creates the connection to the Redis database.
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们创建一个`Redis`对象，它创建到Redis数据库的连接。
 - en: '[PRE17]'
+  id: totrans-44
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: If you have a Redis database running on a different machine, you can create
     a `Redis` object using the URL of the database, like this
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果您在不同的机器上运行Redis数据库，可以使用数据库的URL创建一个`Redis`对象，就像这样
 - en: '[PRE18]'
+  id: totrans-46
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: '**Exercise:** Write a function called `redis_index` that takes a URL and indexes
     it. It should download the web page with the given URL, iterate through the words,
     and make a `Counter` that maps from words to their frequencies.'
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**编写一个名为`redis_index`的函数，它接受一个URL并对其进行索引。它应该下载给定URL的网页，遍历单词，并创建一个从单词到它们频率的`Counter`。'
 - en: Then it should iterate through the words and add field-value pairs to Redis
     hashes.
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后它应该遍历单词并将字段-值对添加到Redis哈希中。
 - en: The keys for the hashes should have the prefix `Index:`; for example, the key
     for the word `python` should be `Index:python`.
+  id: totrans-49
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 哈希的键应该有前缀`Index:`；例如，单词`python`的键应该是`Index:python`。
 - en: The fields in the hashes should be URLs.
+  id: totrans-50
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 哈希中的字段应该是URL。
 - en: The values in the hashes should be word counts.
+  id: totrans-51
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 哈希中的值应该是单词计数。
 - en: 'Use your function to index at least these two pages:'
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用您的函数来索引至少这两个页面：
 - en: '[PRE19]'
+  id: totrans-53
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: Use `hscan_iter` to iterate the field-values pairs in the index for the word
     `python`. Print the URLs of the pages where this word appears and the number of
     times it appears on each page.
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用`hscan_iter`来迭代单词`python`在索引中的字段-值对。打印出这个单词出现的页面的URL以及它在每个页面上出现的次数。
 - en: Shutdown
+  id: totrans-55
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 关闭
 - en: If you are running this notebook on your own computer, you can use the following
     command to shut down the Redis server.
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果您在自己的计算机上运行这个笔记本，您可以使用以下命令关闭Redis服务器。
 - en: 'If you are running on Colab, it’s not really necessary: the Redis server will
     get shut down when the Colab runtime shuts down (and everything stored in it will
     disappear).'
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果您在Colab上运行，这并不是真正必要的：当Colab运行时关闭时，Redis服务器将被关闭（其中存储的所有内容都将消失）。
 - en: '[PRE20]'
+  id: totrans-58
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: RedisToGo
+  id: totrans-59
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: RedisToGo
 - en: '[RedisToGo](https://redistogo.com) is a hosting service that provides remote
     Redis databases. They offer a free plan that includes a small database that is
     perfect for testing our indexer.'
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: '[RedisToGo](https://redistogo.com)是一个提供远程Redis数据库的托管服务。他们提供一个免费计划，其中包括一个小型数据库，非常适合测试我们的索引器。'
 - en: 'If you sign up and go to your list of instances, you should find a URL that
     looks like this:'
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果您注册并转到您的实例列表，您应该会找到一个看起来像这样的URL：
 - en: '[PRE21]'
+  id: totrans-62
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: If you pass this url to `Redis.from_url`, as described above, you should be
     able to connect to your database on RedisToGo and run your exercise solution again.
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果您将此URL传递给`Redis.from_url`，如上所述，您应该能够连接到RedisToGo上的数据库，并再次运行您的练习解决方案。
 - en: And if you come back later and read the index, your data should still be there!
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果您稍后回来并阅读索引，您的数据应该仍然在那里！

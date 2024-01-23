@@ -1,97 +1,124 @@
 - en: Quiz 5
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
 - en: 原文：[https://allendowney.github.io/DSIRP/quiz05.html](https://allendowney.github.io/DSIRP/quiz05.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: 'BEFORE YOU START THIS QUIZ:'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
 - en: Click on “Copy to Drive” to make a copy of the quiz,
+  id: totrans-3
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: Click on “Share”,
+  id: totrans-4
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: Click on “Change” and select “Anyone with this link can edit”
+  id: totrans-5
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: Click “Copy link” and
+  id: totrans-6
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: Paste the link into [this Canvas assignment](https://canvas.olin.edu/courses/313/assignments/5075).
+  id: totrans-7
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: This quiz is open notes, open internet.
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
 - en: You can ask for help from the instructor, but not from anyone else.
+  id: totrans-9
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: You can use code you find on the internet, but if you use more than a couple
     of lines from a single source, you should attribute the source.
+  id: totrans-10
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Install and Start Redis
+  id: totrans-11
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: For this quiz, we will run Redis on Colab. The following cells install and start
     the server, install the client, and instantiate a `Redis` object.
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE0]'
+  id: totrans-13
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '[PRE1]'
+  id: totrans-14
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '[PRE2]'
+  id: totrans-15
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: Linda the Banker
+  id: totrans-16
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: 'In a [famous experiment](https://en.wikipedia.org/wiki/Conjunction_fallacy),
     Tversky and Kahneman posed the following question:'
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
 - en: Linda is 31 years old, single, outspoken, and very bright. She majored in philosophy.
     As a student, she was deeply concerned with issues of discrimination and social
     justice, and also participated in anti-nuclear demonstrations. Which is more probable?
+  id: totrans-18
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-19
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: Linda is a bank teller.
+  id: totrans-20
   prefs:
   - PREF_BQ
   - PREF_OL
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-21
   prefs:
   - PREF_BQ
   - PREF_IND
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-22
   prefs:
   - PREF_BQ
   - PREF_IND
   type: TYPE_NORMAL
 - en: Linda is a bank teller and is active in the feminist movement.
+  id: totrans-23
   prefs:
   - PREF_BQ
   - PREF_OL
@@ -99,221 +126,313 @@
 - en: Many people choose the second answer, presumably because it seems more consistent
     with the description. It seems uncharacteristic if Linda is *just* a bank teller;
     it seems more consistent if she is also a feminist.
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
 - en: But the second answer cannot be “more probable”, as the question asks. To see
     why, let’s explore some data. The following cell downloads data from the [General
     Social Survey](http://www.gss.norc.org/).
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE3]'
+  id: totrans-26
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: The following cell loads the data into a Pandas `DataFrame`. If you are not
     familiar with Pandas, I will explain what you need to know.
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE4]'
+  id: totrans-28
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: 'The `DataFrame` has one row for each person surveyed, called a “respondent”,
     and one column for each variable I selected. The columns are:'
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
 - en: '`caseid`: Identification number for the respondent.'
+  id: totrans-30
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: '`year`: Year when the respondent was surveyed.'
+  id: totrans-31
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: '`age`: Respondent’s age when surveyed.'
+  id: totrans-32
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: '`sex`: Male or female.'
+  id: totrans-33
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: '`polviews`: Political views on a range from liberal to conservative.'
+  id: totrans-34
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: '`partyid`: Political party affiliation, Democrat, Independent, or Republican.'
+  id: totrans-35
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: '`indus10`: [Code](https://www.census.gov/cgi-bin/sssd/naics/naicsrch?chart=2007)
     for the industry the respondent works in.'
+  id: totrans-36
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: We will use Redis sets to explore the relationships among these variables. Specifically,
     we will answer the following questions related to the “Linda problem”.
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
 - en: The number of respondents who are female bankers,
+  id: totrans-38
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: The number of respondents who are liberal female banker.
+  id: totrans-39
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: And we will see that the second number is smaller than the first.
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
 - en: Iterating rows
+  id: totrans-41
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: The following loop iterates the first 3 rows in the `DataFrame` and prints the
     `caseid` and the contents of the row.
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE5]'
+  id: totrans-43
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: The following loop iterates through the `DataFrame` and makes a set containing
     the `caseid` for the rows where the industry code is 6870, which indicates that
     the respondent works in banking.
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE6]'
+  id: totrans-45
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: Now let’s do the same thing using a Redis set.
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
 - en: Question 1
+  id: totrans-47
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: The following loop creates a Redis set that contains the `caseid` for all respondents
     whose `indus10` is `6870`.
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE7]'
+  id: totrans-49
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: Write a Redis command to get the number of elements in the resulting set.
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
 - en: Here’s the [documentation for Redis set commands](https://redis.io/commands#set).
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
 - en: Question 2
+  id: totrans-52
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: The following cell makes a Python set that contains the `caseid` of all respondents
     who identify as female.
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE8]'
+  id: totrans-54
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: The following cell makes a Python set that includes the `caseid` for people
     who self-identify as “Extremely liberal”, “Liberal”, or “Slightly liberal”.
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE9]'
+  id: totrans-56
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: 'Write versions of these loops that create these sets on Redis, and display
     the number of elements in each set. For the keys, use the following strings:'
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE10]'
+  id: totrans-58
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: Before you go on, make sure you have three sets on Redis, and the number of
     elements in each set is consistent with the results we got with Python sets.
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
 - en: If you make a mistake, you can use `delete` to start with a fresh, empty set.
     Or you can use the following loop to start with a fresh, empty database.
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你犯了一个错误，你可以使用`delete`来从一个新的空集合开始。或者你可以使用以下循环来从一个新的空数据库开始。
 - en: '[PRE11]'
+  id: totrans-61
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: Question 3
+  id: totrans-62
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 问题3
 - en: One of the strengths of Redis is that it provides functions that perform computations
     on the server, including a function that computes the intersection of two or more
     sets.
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: Redis的一个优点是它提供了在服务器上执行计算的函数，包括一个计算两个或更多集合的交集的函数。
 - en: 'Write Redis commands to compute:'
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: 编写Redis命令来计算：
 - en: A set of `caseid` values for respondents who are female bankers.
+  id: totrans-65
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 一组`caseid`值，用于受访者是女性银行家的情况。
 - en: A set of `caseid` values for respondents who are liberal female bankers.
+  id: totrans-66
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 自由主义女性银行家的`caseid`值集合。
 - en: Confirm that the second set is, in fact, smaller than the first.
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: 确认第二个集合实际上比第一个小。
 - en: Question 4
+  id: totrans-68
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 问题4
 - en: Now suppose you want to look up a `caseid` and find all of the sets it belongs
     to.
+  id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在假设你想查找一个`caseid`并找到它所属的所有集合。
 - en: Write a function called `find_tags` that takes a `caseid` and returns a set
     of strings, where each string is the key of a set that contains the `caseid`.
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: 编写一个名为`find_tags`的函数，它接受一个`caseid`并返回一个字符串集合，其中每个字符串是包含`caseid`的集合的键。
 - en: For example, if the `caseid` is 33, the result should be the set
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，如果`caseid`是33，结果应该是这个集合
 - en: '[PRE12]'
+  id: totrans-72
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: which indicates that this respondent is a female banker (but not liberal).
+  id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: 这表明这个受访者是一名女性银行家（但不是自由主义者）。
 - en: You can use the following examples to test your function. You should find that
     the respondent with `caseid` 33 is a female banker.
+  id: totrans-74
   prefs: []
   type: TYPE_NORMAL
+  zh: 你可以使用以下示例来测试你的函数。你应该会发现`caseid`为33的受访者是一名女性银行家。
 - en: '[PRE13]'
+  id: totrans-75
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: And the respondent with `caseid` 451 is a liberal female banker.
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
+  zh: 而`caseid`为451的受访者是一名自由主义女性银行家。
 - en: '[PRE14]'
+  id: totrans-77
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: Just For Fun Extra Question
+  id: totrans-78
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 只是为了好玩的额外问题
 - en: Suppose there are a large number of sets and you often want to look up a `caseid`
     and find the sets it belongs to.
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设有大量的集合，你经常想要查找一个`caseid`并找到它所属的集合。
 - en: Iterate through the sets we’ve defined so far and make a reverse index that
     maps from each `caseid` to a list of keys for the sets it belongs to.
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 遍历到目前为止我们定义的集合，并创建一个反向索引，将每个`caseid`映射到它所属的集合的键列表。
 - en: '*Data Structures and Information Retrieval in Python*'
+  id: totrans-81
   prefs: []
   type: TYPE_NORMAL
+  zh: '*Python中的数据结构和信息检索*'
 - en: Copyright 2021 Allen Downey
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: 版权所有2021年Allen Downey
 - en: 'License: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: 许可证：[知识共享署名-非商业性使用-相同方式共享4.0国际许可协议](https://creativecommons.org/licenses/by-nc-sa/4.0/)
