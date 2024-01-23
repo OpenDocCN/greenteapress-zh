@@ -1,1059 +1,1662 @@
 - en: Distributions
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 分布
 - en: 原文：[https://allendowney.github.io/ThinkBayes2/chap03.html](https://allendowney.github.io/ThinkBayes2/chap03.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ThinkBayes2/chap03.html](https://allendowney.github.io/ThinkBayes2/chap03.html)
 - en: In the previous chapter we used Bayes’s Theorem to solve a cookie problem; then
     we solved it again using a Bayes table. In this chapter, at the risk of testing
     your patience, we will solve it one more time using a `Pmf` object, which represents
     a “probability mass function”. I’ll explain what that means, and why it is useful
     for Bayesian statistics.
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 在上一章中，我们使用贝叶斯定理解决了一个饼干问题；然后我们再次使用贝叶斯表解决了这个问题。在本章中，冒昧地测试您的耐心，我们将再次使用`Pmf`对象解决这个问题，它代表了“概率质量函数”。我将解释这意味着什么，以及为什么它对贝叶斯统计学有用。
 - en: We’ll use `Pmf` objects to solve some more challenging problems and take one
     more step toward Bayesian statistics. But we’ll start with distributions.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将使用`Pmf`对象来解决一些更具挑战性的问题，并朝着贝叶斯统计学迈出更大的一步。但我们将从分布开始。
 - en: Distributions
+  id: totrans-4
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 分布
 - en: In statistics a **distribution** is a set of possible outcomes and their corresponding
     probabilities. For example, if you toss a coin, there are two possible outcomes
     with approximately equal probability. If you roll a six-sided die, the set of
     possible outcomes is the numbers 1 to 6, and the probability associated with each
     outcome is 1/6.
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 在统计学中，**分布**是一组可能的结果及其对应的概率。例如，如果你抛硬币，有两种可能的结果，概率大致相等。如果你掷一个六面骰子，可能的结果是1到6的数字，每个结果的概率是1/6。
 - en: To represent distributions, we’ll use a library called `empiricaldist`. An “empirical”
     distribution is based on data, as opposed to a theoretical distribution. We’ll
     use this library throughout the book. I’ll introduce the basic features in this
     chapter and we’ll see additional features later.
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了表示分布，我们将使用一个名为`empiricaldist`的库。一个“经验”分布是基于数据的，而不是理论分布。我们将在整本书中使用这个库。我将在本章介绍基本特性，以后我们将看到更多特性。
 - en: Probability Mass Functions
+  id: totrans-7
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 概率质量函数
 - en: If the outcomes in a distribution are discrete, we can describe the distribution
     with a **probability mass function**, or PMF, which is a function that maps from
     each possible outcome to its probability.
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果分布中的结果是离散的，我们可以用**概率质量函数**或PMF来描述分布，它是一个将每个可能的结果映射到其概率的函数。
 - en: '`empiricaldist` provides a class called `Pmf` that represents a probability
     mass function. To use `Pmf` you can import it like this:'
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: '`empiricaldist`提供了一个名为`Pmf`的类，表示概率质量函数。要使用`Pmf`，可以像这样导入它：'
 - en: '[PRE0]'
+  id: totrans-10
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: The following example makes a `Pmf` that represents the outcome of a coin toss.
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 下面的例子制作了一个代表抛硬币结果的`Pmf`。
 - en: '[PRE1]'
+  id: totrans-12
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '|  | probs |'
+  id: totrans-13
   prefs: []
   type: TYPE_TB
+  zh: '|  | probs |'
 - en: '| --- | --- |'
+  id: totrans-14
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| heads | 0.5 |'
+  id: totrans-15
   prefs: []
   type: TYPE_TB
+  zh: '| heads | 0.5 |'
 - en: '| tails | 0.5 |'
+  id: totrans-16
   prefs: []
   type: TYPE_TB
+  zh: '| tails | 0.5 |'
 - en: '`Pmf` creates an empty `Pmf` with no outcomes. Then we can add new outcomes
     using the bracket operator. In this example, the two outcomes are represented
     with strings, and they have the same probability, 0.5.'
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: '`Pmf`创建一个没有结果的空`Pmf`。然后我们可以使用方括号运算符添加新的结果。在这个例子中，这两个结果用字符串表示，它们的概率相同，为0.5。'
 - en: You can also make a `Pmf` from a sequence of possible outcomes.
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 您还可以从可能的结果的序列中制作一个`Pmf`。
 - en: The following example uses `Pmf.from_seq` to make a `Pmf` that represents a
     six-sided die.
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 下面的例子使用`Pmf.from_seq`制作了一个代表六面骰子的`Pmf`。
 - en: '[PRE2]'
+  id: totrans-20
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '|  | probs |'
+  id: totrans-21
   prefs: []
   type: TYPE_TB
+  zh: '|  | probs |'
 - en: '| --- | --- |'
+  id: totrans-22
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| 1 | 0.166667 |'
+  id: totrans-23
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 0.166667 |'
 - en: '| 2 | 0.166667 |'
+  id: totrans-24
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 0.166667 |'
 - en: '| 3 | 0.166667 |'
+  id: totrans-25
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 0.166667 |'
 - en: '| 4 | 0.166667 |'
+  id: totrans-26
   prefs: []
   type: TYPE_TB
+  zh: '| 4 | 0.166667 |'
 - en: '| 5 | 0.166667 |'
+  id: totrans-27
   prefs: []
   type: TYPE_TB
+  zh: '| 5 | 0.166667 |'
 - en: '| 6 | 0.166667 |'
+  id: totrans-28
   prefs: []
   type: TYPE_TB
+  zh: '| 6 | 0.166667 |'
 - en: In this example, all outcomes in the sequence appear once, so they all have
     the same probability, \(1/6\).
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个例子中，序列中的所有结果都出现一次，因此它们的概率都相同，为\(1/6\)。
 - en: 'More generally, outcomes can appear more than once, as in the following example:'
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: 更一般地，结果可以出现多次，如下例所示：
 - en: '[PRE3]'
+  id: totrans-31
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '|  | probs |'
+  id: totrans-32
   prefs: []
   type: TYPE_TB
+  zh: '|  | probs |'
 - en: '| --- | --- |'
+  id: totrans-33
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| M | 0.090909 |'
+  id: totrans-34
   prefs: []
   type: TYPE_TB
+  zh: '| M | 0.090909 |'
 - en: '| i | 0.363636 |'
+  id: totrans-35
   prefs: []
   type: TYPE_TB
+  zh: '| i | 0.363636 |'
 - en: '| p | 0.181818 |'
+  id: totrans-36
   prefs: []
   type: TYPE_TB
+  zh: '| p | 0.181818 |'
 - en: '| s | 0.363636 |'
+  id: totrans-37
   prefs: []
   type: TYPE_TB
+  zh: '| s | 0.363636 |'
 - en: The letter `M` appears once out of 11 characters, so its probability is \(1/11\).
     The letter `i` appears 4 times, so its probability is \(4/11\).
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 字母`M`在11个字符中出现一次，因此其概率为\(1/11\)。字母`i`出现4次，因此其概率为\(4/11\)。
 - en: Since the letters in a string are not outcomes of a random process, I’ll use
     the more general term “quantities” for the letters in the `Pmf`.
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 由于字符串中的字母不是随机过程的结果，我将使用更一般的术语“数量”来表示`Pmf`中的字母。
 - en: The `Pmf` class inherits from a Pandas `Series`, so anything you can do with
     a `Series`, you can also do with a `Pmf`.
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: '`Pmf`类继承自Pandas的`Series`，因此您可以对`Pmf`对象执行`Series`可以执行的任何操作。'
 - en: For example, you can use the bracket operator to look up a quantity and get
     the corresponding probability.
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，您可以使用方括号运算符查找一个数量，并得到相应的概率。
 - en: '[PRE4]'
+  id: totrans-42
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '[PRE5]'
+  id: totrans-43
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: In the word “Mississippi”, about 36% of the letters are “s”.
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: 在“密西西比”这个词中，大约36%的字母是“s”。
 - en: However, if you ask for the probability of a quantity that’s not in the distribution,
     you get a `KeyError`.
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是，如果您要求一个不在分布中的数量的概率，您会得到一个`KeyError`。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE6]'
+  id: totrans-47
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '[PRE7]</details>'
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE7]</details>'
 - en: You can also call a `Pmf` as if it were a function, with a letter in parentheses.
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: 您还可以将`Pmf`作为函数调用，括号中是一个字母。
 - en: '[PRE8]'
+  id: totrans-50
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '[PRE9]'
+  id: totrans-51
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: If the quantity is in the distribution the results are the same. But if it is
     not in the distribution, the result is `0`, not an error.
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果数量在分布中，结果是相同的。但如果它不在分布中，结果是`0`，而不是错误。
 - en: '[PRE10]'
+  id: totrans-53
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '[PRE11]'
+  id: totrans-54
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: With parentheses, you can also provide a sequence of quantities and get a sequence
     of probabilities.
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: 用括号，您还可以提供一个数量的序列，并得到一个概率的序列。
 - en: '[PRE12]'
+  id: totrans-56
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '[PRE13]'
+  id: totrans-57
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: The quantities in a `Pmf` can be strings, numbers, or any other type that can
     be stored in the index of a Pandas `Series`. If you are familiar with Pandas,
     that will help you work with `Pmf` objects. But I will explain what you need to
     know as we go along.
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: '`Pmf`中的数量可以是字符串、数字或任何其他可以存储在Pandas `Series`索引中的类型。如果您熟悉Pandas，这将有助于您处理`Pmf`对象。但我会在我们继续的过程中解释您需要了解的内容。'
 - en: The Cookie Problem Revisited
+  id: totrans-59
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 重新讨论饼干问题
 - en: 'In this section I’ll use a `Pmf` to solve the cookie problem from <<_TheCookieProblem>>.
     Here’s the statement of the problem again:'
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本节中，我将使用`Pmf`来解决<<_TheCookieProblem>>中的饼干问题。以下是问题的陈述：
 - en: Suppose there are two bowls of cookies.
+  id: totrans-61
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 假设有两个碗饼干。
 - en: ''
+  id: totrans-62
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: Bowl 1 contains 30 vanilla cookies and 10 chocolate cookies.
+  id: totrans-63
   prefs:
   - PREF_BQ
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 碗1中有30块香草饼干和10块巧克力饼干。
 - en: ''
+  id: totrans-64
   prefs:
   - PREF_BQ
   - PREF_IND
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-65
   prefs:
   - PREF_BQ
   - PREF_IND
   type: TYPE_NORMAL
 - en: Bowl 2 contains 20 vanilla cookies and 20 chocolate cookies.
+  id: totrans-66
   prefs:
   - PREF_BQ
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 碗2中包含20块香草饼干和20块巧克力饼干。
 - en: ''
+  id: totrans-67
   prefs:
   - PREF_BQ
   - PREF_IND
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-68
   prefs:
   - PREF_BQ
   - PREF_IND
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-69
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: Now suppose you choose one of the bowls at random and, without looking, choose
     a cookie at random. If the cookie is vanilla, what is the probability that it
     came from Bowl 1?
+  id: totrans-70
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 现在假设你随机选择一个碗，不看的情况下随机选择一块饼干。如果饼干是香草味的，那么它来自碗1的概率是多少？
 - en: 'Here’s a `Pmf` that represents the two hypotheses and their prior probabilities:'
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个表示两个假设及其先验概率的`Pmf`：
 - en: '[PRE14]'
+  id: totrans-72
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '|  | probs |'
+  id: totrans-73
   prefs: []
   type: TYPE_TB
+  zh: '|  | 概率 |'
 - en: '| --- | --- |'
+  id: totrans-74
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| Bowl 1 | 0.5 |'
+  id: totrans-75
   prefs: []
   type: TYPE_TB
+  zh: '| 碗1 | 0.5 |'
 - en: '| Bowl 2 | 0.5 |'
+  id: totrans-76
   prefs: []
   type: TYPE_TB
+  zh: '| 碗2 | 0.5 |'
 - en: This distribution, which contains the prior probability for each hypothesis,
     is called (wait for it) the **prior distribution**.
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个分布包含了每个假设的先验概率，被称为（等待它）**先验分布**。
 - en: To update the distribution based on new data (the vanilla cookie), we multiply
     the priors by the likelihoods. The likelihood of drawing a vanilla cookie from
     Bowl 1 is `3/4`. The likelihood for Bowl 2 is `1/2`.
+  id: totrans-78
   prefs: []
   type: TYPE_NORMAL
+  zh: 根据新数据（香草饼干）更新分布，我们将先验概率乘以可能性。从碗1抽取香草饼干的可能性是`3/4`。碗2的可能性是`1/2`。
 - en: '[PRE15]'
+  id: totrans-79
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '|  | probs |'
+  id: totrans-80
   prefs: []
   type: TYPE_TB
+  zh: '|  | 概率 |'
 - en: '| --- | --- |'
+  id: totrans-81
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| Bowl 1 | 0.375 |'
+  id: totrans-82
   prefs: []
   type: TYPE_TB
+  zh: '| 碗1 | 0.375 |'
 - en: '| Bowl 2 | 0.250 |'
+  id: totrans-83
   prefs: []
   type: TYPE_TB
+  zh: '| 碗2 | 0.250 |'
 - en: The result is the unnormalized posteriors; that is, they don’t add up to 1.
     To make them add up to 1, we can use `normalize`, which is a method provided by
     `Pmf`.
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是未归一化的后验概率；也就是说，它们不加起来为1。为了使它们加起来为1，我们可以使用`normalize`，这是`Pmf`提供的一个方法。
 - en: '[PRE16]'
+  id: totrans-85
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '[PRE17]'
+  id: totrans-86
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: The return value from `normalize` is the total probability of the data, which
     is \(5/8\).
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: '`normalize`的返回值是数据的总概率，即\(5/8\)。'
 - en: '`posterior`, which contains the posterior probability for each hypothesis,
     is called (wait now) the **posterior distribution**.'
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: '`posterior`包含了每个假设的后验概率，被称为（现在等待它）**后验分布**。'
 - en: '[PRE18]'
+  id: totrans-89
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: '|  | probs |'
+  id: totrans-90
   prefs: []
   type: TYPE_TB
+  zh: '|  | 概率 |'
 - en: '| --- | --- |'
+  id: totrans-91
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| Bowl 1 | 0.6 |'
+  id: totrans-92
   prefs: []
   type: TYPE_TB
+  zh: '| 碗1 | 0.6 |'
 - en: '| Bowl 2 | 0.4 |'
+  id: totrans-93
   prefs: []
   type: TYPE_TB
+  zh: '| 碗2 | 0.4 |'
 - en: 'From the posterior distribution we can select the posterior probability for
     Bowl 1:'
+  id: totrans-94
   prefs: []
   type: TYPE_NORMAL
+  zh: 从后验分布中，我们可以选择碗1的后验概率：
 - en: '[PRE19]'
+  id: totrans-95
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '[PRE20]'
+  id: totrans-96
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: And the answer is 0.6.
+  id: totrans-97
   prefs: []
   type: TYPE_NORMAL
+  zh: 答案是0.6。
 - en: 'One benefit of using `Pmf` objects is that it is easy to do successive updates
     with more data. For example, suppose you put the first cookie back (so the contents
     of the bowls don’t change) and draw again from the same bowl. If the second cookie
     is also vanilla, we can do a second update like this:'
+  id: totrans-98
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用`Pmf`对象的一个好处是可以轻松地使用更多数据进行连续更新。例如，假设你把第一块饼干放回去（碗的内容不变），然后再次从同一个碗中抽取。如果第二块饼干也是香草味的，我们可以像这样进行第二次更新：
 - en: '[PRE21]'
+  id: totrans-99
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: '|  | probs |'
+  id: totrans-100
   prefs: []
   type: TYPE_TB
+  zh: '|  | 概率 |'
 - en: '| --- | --- |'
+  id: totrans-101
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| Bowl 1 | 0.692308 |'
+  id: totrans-102
   prefs: []
   type: TYPE_TB
+  zh: '| 碗1 | 0.692308 |'
 - en: '| Bowl 2 | 0.307692 |'
+  id: totrans-103
   prefs: []
   type: TYPE_TB
+  zh: '| 碗2 | 0.307692 |'
 - en: Now the posterior probability for Bowl 1 is almost 70%. But suppose we do the
     same thing again and get a chocolate cookie.
+  id: totrans-104
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在碗1的后验概率几乎为70%。但是假设我们再次做同样的事情，拿到了一块巧克力饼干。
 - en: 'Here are the likelihoods for the new data:'
+  id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是新数据的可能性：
 - en: '[PRE22]'
+  id: totrans-106
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: And here’s the update.
+  id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是更新。
 - en: '[PRE23]'
+  id: totrans-108
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: '|  | probs |'
+  id: totrans-109
   prefs: []
   type: TYPE_TB
+  zh: '|  | 概率 |'
 - en: '| --- | --- |'
+  id: totrans-110
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| Bowl 1 | 0.529412 |'
+  id: totrans-111
   prefs: []
   type: TYPE_TB
+  zh: '| 碗1 | 0.529412 |'
 - en: '| Bowl 2 | 0.470588 |'
+  id: totrans-112
   prefs: []
   type: TYPE_TB
+  zh: '| 碗2 | 0.470588 |'
 - en: Now the posterior probability for Bowl 1 is about 53%. After two vanilla cookies
     and one chocolate, the posterior probabilities are close to 50/50.
+  id: totrans-113
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在碗1的后验概率约为53%。经过两块香草饼干和一块巧克力饼干后，后验概率接近50/50。
 - en: 101 Bowls
+  id: totrans-114
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 101个碗
 - en: 'Next let’s solve a cookie problem with 101 bowls:'
+  id: totrans-115
   prefs: []
   type: TYPE_NORMAL
+  zh: 接下来让我们解决一个有101个碗的饼干问题：
 - en: Bowl 0 contains 0% vanilla cookies,
+  id: totrans-116
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 碗0中包含0%的香草饼干，
 - en: Bowl 1 contains 1% vanilla cookies,
+  id: totrans-117
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 碗1中包含1%的香草饼干，
 - en: Bowl 2 contains 2% vanilla cookies,
+  id: totrans-118
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 碗2中包含2%的香草饼干，
 - en: and so on, up to
+  id: totrans-119
   prefs: []
   type: TYPE_NORMAL
+  zh: 等等，一直到
 - en: Bowl 99 contains 99% vanilla cookies, and
+  id: totrans-120
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 碗99中包含99%的香草饼干，
 - en: Bowl 100 contains all vanilla cookies.
+  id: totrans-121
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 碗100中包含所有的香草饼干。
 - en: As in the previous version, there are only two kinds of cookies, vanilla and
     chocolate. So Bowl 0 is all chocolate cookies, Bowl 1 is 99% chocolate, and so
     on.
+  id: totrans-122
   prefs: []
   type: TYPE_NORMAL
+  zh: 与之前版本一样，只有两种饼干，香草味和巧克力味。所以碗0是全巧克力饼干，碗1是99%巧克力，依此类推。
 - en: Suppose we choose a bowl at random, choose a cookie at random, and it turns
     out to be vanilla. What is the probability that the cookie came from Bowl \(x\),
     for each value of \(x\)?
+  id: totrans-123
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设我们随机选择一个碗，随机选择一块饼干，结果是香草味。对于每个\(x\)的值，饼干来自碗\(x\)的概率是多少？
 - en: To solve this problem, I’ll use `np.arange` to make an array that represents
     101 hypotheses, numbered from 0 to 100.
+  id: totrans-124
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了解决这个问题，我将使用`np.arange`制作一个表示101个假设的数组，编号从0到100。
 - en: '[PRE24]'
+  id: totrans-125
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: 'We can use this array to make the prior distribution:'
+  id: totrans-126
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用这个数组来制作先验分布：
 - en: '[PRE25]'
+  id: totrans-127
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: '[PRE26]'
+  id: totrans-128
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: As this example shows, we can initialize a `Pmf` with two parameters. The first
     parameter is the prior probability; the second parameter is a sequence of quantities.
+  id: totrans-129
   prefs: []
   type: TYPE_NORMAL
+  zh: 正如这个例子所示，我们可以用两个参数初始化一个`Pmf`。第一个参数是先验概率；第二个参数是一系列数量。
 - en: In this example, the probabilities are all the same, so we only have to provide
     one of them; it gets “broadcast” across the hypotheses. Since all hypotheses have
     the same prior probability, this distribution is **uniform**.
+  id: totrans-130
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个例子中，概率都是相同的，所以我们只需要提供其中一个；它会在假设之间“广播”。由于所有假设的先验概率相同，这个分布是**均匀**的。
 - en: Here are the first few hypotheses and their probabilities.
+  id: totrans-131
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是前几个假设及其概率。
 - en: '[PRE27]'
+  id: totrans-132
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: '|  | probs |'
+  id: totrans-133
   prefs: []
   type: TYPE_TB
+  zh: '|  | 概率 |'
 - en: '| --- | --- |'
+  id: totrans-134
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| 0 | 0.009901 |'
+  id: totrans-135
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 0.009901 |'
 - en: '| 1 | 0.009901 |'
+  id: totrans-136
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 0.009901 |'
 - en: '| 2 | 0.009901 |'
+  id: totrans-137
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 0.009901 |'
 - en: 'The likelihood of the data is the fraction of vanilla cookies in each bowl,
     which we can calculate using `hypos`:'
+  id: totrans-138
   prefs: []
   type: TYPE_NORMAL
+  zh: 数据的可能性是每个碗中香草饼干的比例，我们可以使用`hypos`来计算：
 - en: '[PRE28]'
+  id: totrans-139
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: '[PRE29]'
+  id: totrans-140
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: 'Now we can compute the posterior distribution in the usual way:'
+  id: totrans-141
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以按照通常的方式计算后验分布：
 - en: '[PRE30]'
+  id: totrans-142
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: '|  | probs |'
+  id: totrans-143
   prefs: []
   type: TYPE_TB
+  zh: '|  | 概率 |'
 - en: '| --- | --- |'
+  id: totrans-144
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| 0 | 0.000000 |'
+  id: totrans-145
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 0.000000 |'
 - en: '| 1 | 0.000198 |'
+  id: totrans-146
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 0.000198 |'
 - en: '| 2 | 0.000396 |'
+  id: totrans-147
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 0.000396 |'
 - en: The following figure shows the prior distribution and the posterior distribution
     after one vanilla cookie.
+  id: totrans-148
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下图显示了先验分布和一块香草饼干后的后验分布。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-149
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE31]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell source Hide code cell source</summary>'
+  id: totrans-150
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE31]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>'
 - en: '[PRE32]</details> ![_images/701c62bf2c16f3409268caa52f308c3fd97ff18bca98c2c39570565d9d994669.png](../Images/d87868edf23191fbc85c7a9989ee0b46.png)'
+  id: totrans-151
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE32]</details> ![_images/701c62bf2c16f3409268caa52f308c3fd97ff18bca98c2c39570565d9d994669.png](../Images/d87868edf23191fbc85c7a9989ee0b46.png)'
 - en: The posterior probability of Bowl 0 is 0 because it contains no vanilla cookies.
     The posterior probability of Bowl 100 is the highest because it contains the most
     vanilla cookies. In between, the shape of the posterior distribution is a line
     because the likelihoods are proportional to the bowl numbers.
+  id: totrans-152
   prefs: []
   type: TYPE_NORMAL
+  zh: Bowl 0的后验概率是0，因为它不含香草饼干。Bowl 100的后验概率最高，因为它含有最多的香草饼干。在中间，后验分布的形状是一条线，因为似然性与碗的编号成比例。
 - en: 'Now suppose we put the cookie back, draw again from the same bowl, and get
     another vanilla cookie. Here’s the update after the second cookie:'
+  id: totrans-153
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在假设我们把饼干放回去，再从同一个碗里拿出一个香草饼干。这是第二块饼干后的更新：
 - en: '[PRE33]'
+  id: totrans-154
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: <details class="hide below-input"><summary aria-label="Toggle hidden content">Show
     code cell output Hide code cell output</summary>
+  id: totrans-155
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide below-input"><summary aria-label="Toggle hidden content">显示代码单元格输出
+    隐藏代码单元格输出</summary>
 - en: '[PRE34]</details>'
+  id: totrans-156
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE34]</details>'
 - en: And here’s what the posterior distribution looks like.
+  id: totrans-157
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是后验分布的样子。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-158
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE35]</details> ![_images/8d5be774f70698721fdb924a5597d276eb33e3a6a93a40ae4bdeb93eba11c068.png](../Images/cdada6315d31a6de84999fd183ec872e.png)'
+  id: totrans-159
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE35]</details> ![_images/8d5be774f70698721fdb924a5597d276eb33e3a6a93a40ae4bdeb93eba11c068.png](../Images/cdada6315d31a6de84999fd183ec872e.png)'
 - en: After two vanilla cookies, the high-numbered bowls have the highest posterior
     probabilities because they contain the most vanilla cookies; the low-numbered
     bowls have the lowest probabilities.
+  id: totrans-160
   prefs: []
   type: TYPE_NORMAL
+  zh: 两块香草饼干后，高编号的碗具有最高的后验概率，因为它们含有最多的香草饼干；低编号的碗具有最低的概率。
 - en: 'But suppose we draw again and get a chocolate cookie. Here’s the update:'
+  id: totrans-161
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是假设我们再次拿出一个巧克力饼干。这是更新后的情况：
 - en: '[PRE36]'
+  id: totrans-162
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: <details class="hide below-input"><summary aria-label="Toggle hidden content">Show
     code cell output Hide code cell output</summary>
+  id: totrans-163
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide below-input"><summary aria-label="Toggle hidden content">显示代码单元格输出
+    隐藏代码单元格输出</summary>
 - en: '[PRE37]</details>'
+  id: totrans-164
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE37]</details>'
 - en: And here’s the posterior distribution.
+  id: totrans-165
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是后验分布的样子。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-166
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE38]</details> ![_images/0be0644c8193f2f4b40f05ab3ff5e273fa8ef6fbe3165c1b45aa9fee1f2f8e66.png](../Images/61b1f847d27a7edc447010533be12018.png)'
+  id: totrans-167
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE38]</details> ![_images/0be0644c8193f2f4b40f05ab3ff5e273fa8ef6fbe3165c1b45aa9fee1f2f8e66.png](../Images/61b1f847d27a7edc447010533be12018.png)'
 - en: Now Bowl 100 has been eliminated because it contains no chocolate cookies. But
     the high-numbered bowls are still more likely than the low-numbered bowls, because
     we have seen more vanilla cookies than chocolate.
+  id: totrans-168
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在Bowl 100已经被排除了，因为它不含巧克力饼干。但是高编号的碗仍然比低编号的碗更有可能，因为我们看到的香草饼干比巧克力饼干多。
 - en: In fact, the peak of the posterior distribution is at Bowl 67, which corresponds
     to the fraction of vanilla cookies in the data we’ve observed, \(2/3\).
+  id: totrans-169
   prefs: []
   type: TYPE_NORMAL
+  zh: 事实上，后验分布的峰值在于Bowl 67，这对应于我们观察到的数据中香草饼干的比例，\(2/3\)。
 - en: The quantity with the highest posterior probability is called the **MAP**, which
     stands for “maximum a posteriori probability”, where “a posteriori” is unnecessary
     Latin for “posterior”.
+  id: totrans-170
   prefs: []
   type: TYPE_NORMAL
+  zh: 具有最高后验概率的数量被称为**MAP**，代表“最大后验概率”，其中“后验”是拉丁文中不必要的术语，表示“后验”。
 - en: 'To compute the MAP, we can use the `Series` method `idxmax`:'
+  id: totrans-171
   prefs: []
   type: TYPE_NORMAL
+  zh: 要计算MAP，我们可以使用`Series`方法`idxmax`：
 - en: '[PRE39]'
+  id: totrans-172
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: '[PRE40]'
+  id: totrans-173
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE40]'
 - en: 'Or `Pmf` provides a more memorable name for the same thing:'
+  id: totrans-174
   prefs: []
   type: TYPE_NORMAL
+  zh: 或者`Pmf`为相同的事情提供了一个更容易记住的名称：
 - en: '[PRE41]'
+  id: totrans-175
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE41]'
 - en: '[PRE42]'
+  id: totrans-176
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE42]'
 - en: As you might suspect, this example isn’t really about bowls; it’s about estimating
     proportions. Imagine that you have one bowl of cookies. You don’t know what fraction
     of cookies are vanilla, but you think it is equally likely to be any fraction
     from 0 to 1. If you draw three cookies and two are vanilla, what proportion of
     cookies in the bowl do you think are vanilla? The posterior distribution we just
     computed is the answer to that question.
+  id: totrans-177
   prefs: []
   type: TYPE_NORMAL
+  zh: 你可能会怀疑，这个例子并不是关于碗，而是关于估计比例。想象一下，你有一碗饼干。你不知道有多少比例的饼干是香草的，但你认为任何比例从0到1都是同样可能的。如果你拿出三块饼干，其中两块是香草的，你认为碗里的饼干比例是多少？我们刚刚计算的后验分布就是这个问题的答案。
 - en: We’ll come back to estimating proportions in the next chapter. But first let’s
     use a `Pmf` to solve the dice problem.
+  id: totrans-178
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将在下一章回到估计比例。但首先让我们使用`Pmf`来解决骰子问题。
 - en: The Dice Problem
+  id: totrans-179
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 骰子问题
 - en: 'In the previous chapter we solved the dice problem using a Bayes table. Here’s
     the statement of the problem:'
+  id: totrans-180
   prefs: []
   type: TYPE_NORMAL
+  zh: 在上一章中，我们使用贝叶斯表解决了骰子问题。以下是问题的陈述：
 - en: Suppose I have a box with a 6-sided die, an 8-sided die, and a 12-sided die.
     I choose one of the dice at random, roll it, and report that the outcome is a
     1. What is the probability that I chose the 6-sided die?
+  id: totrans-181
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 假设我有一个盒子，里面有一个6面骰子，一个8面骰子和一个12面骰子。我随机选择一个骰子，掷出来，然后报告结果是1。我选择了6面骰子的概率是多少？
 - en: 'Let’s solve it using a `Pmf`. I’ll use integers to represent the hypotheses:'
+  id: totrans-182
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们使用`Pmf`来解决这个问题。我将使用整数来表示假设：
 - en: '[PRE43]'
+  id: totrans-183
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE43]'
 - en: 'We can make the prior distribution like this:'
+  id: totrans-184
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以这样制作先验分布：
 - en: '[PRE44]'
+  id: totrans-185
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE44]'
 - en: '|  | probs |'
+  id: totrans-186
   prefs: []
   type: TYPE_TB
+  zh: '|  | 概率 |'
 - en: '| --- | --- |'
+  id: totrans-187
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| 6 | 0.333333 |'
+  id: totrans-188
   prefs: []
   type: TYPE_TB
+  zh: '| 6 | 0.333333 |'
 - en: '| 8 | 0.333333 |'
+  id: totrans-189
   prefs: []
   type: TYPE_TB
+  zh: '| 8 | 0.333333 |'
 - en: '| 12 | 0.333333 |'
+  id: totrans-190
   prefs: []
   type: TYPE_TB
+  zh: '| 12 | 0.333333 |'
 - en: 'As in the previous example, the prior probability gets broadcast across the
     hypotheses. The `Pmf` object has two attributes:'
+  id: totrans-191
   prefs: []
   type: TYPE_NORMAL
+  zh: 与前一个示例一样，先验概率被广播到了假设上。`Pmf`对象有两个属性：
 - en: '`qs` contains the quantities in the distribution;'
+  id: totrans-192
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`qs`包含了分布中的数量；'
 - en: '`ps` contains the corresponding probabilities.'
+  id: totrans-193
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`ps`包含了相应的概率。'
 - en: '[PRE45]'
+  id: totrans-194
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE45]'
 - en: '[PRE46]'
+  id: totrans-195
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE46]'
 - en: '[PRE47]'
+  id: totrans-196
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE47]'
 - en: '[PRE48]'
+  id: totrans-197
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE48]'
 - en: Now we’re ready to do the update. Here’s the likelihood of the data for each
     hypothesis.
+  id: totrans-198
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们准备进行更新。以下是每个假设的数据的似然。
 - en: '[PRE49]'
+  id: totrans-199
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE49]'
 - en: And here’s the update.
+  id: totrans-200
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是更新。
 - en: '[PRE50]'
+  id: totrans-201
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE50]'
 - en: '|  | probs |'
+  id: totrans-202
   prefs: []
   type: TYPE_TB
+  zh: '|  | 概率 |'
 - en: '| --- | --- |'
+  id: totrans-203
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| 6 | 0.444444 |'
+  id: totrans-204
   prefs: []
   type: TYPE_TB
+  zh: '| 6 | 0.444444 |'
 - en: '| 8 | 0.333333 |'
+  id: totrans-205
   prefs: []
   type: TYPE_TB
+  zh: '| 8 | 0.333333 |'
 - en: '| 12 | 0.222222 |'
+  id: totrans-206
   prefs: []
   type: TYPE_TB
+  zh: '| 12 | 0.222222 |'
 - en: The posterior probability for the 6-sided die is \(4/9\).
+  id: totrans-207
   prefs: []
   type: TYPE_NORMAL
+  zh: 6面骰子的后验概率为\(4/9\)。
 - en: 'Now suppose I roll the same die again and get a 7. Here are the likelihoods:'
+  id: totrans-208
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在假设我再次掷同一个骰子，并得到了7。以下是似然：
 - en: '[PRE51]'
+  id: totrans-209
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE51]'
 - en: The likelihood for the 6-sided die is 0 because it is not possible to get a
     7 on a 6-sided die. The other two likelihoods are the same as in the previous
     update.
+  id: totrans-210
   prefs: []
   type: TYPE_NORMAL
+  zh: 6面骰子的似然是0，因为在6面骰子上不可能得到7。其他两个似然与上一次更新中的相同。
 - en: 'Here’s the update:'
+  id: totrans-211
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是更新：
 - en: '[PRE52]'
+  id: totrans-212
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE52]'
 - en: '|  | probs |'
+  id: totrans-213
   prefs: []
   type: TYPE_TB
+  zh: '|  | 概率 |'
 - en: '| --- | --- |'
+  id: totrans-214
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| 6 | 0.000000 |'
+  id: totrans-215
   prefs: []
   type: TYPE_TB
+  zh: '| 6 | 0.000000 |'
 - en: '| 8 | 0.692308 |'
+  id: totrans-216
   prefs: []
   type: TYPE_TB
+  zh: '| 8 | 0.692308 |'
 - en: '| 12 | 0.307692 |'
+  id: totrans-217
   prefs: []
   type: TYPE_TB
+  zh: '| 12 | 0.307692 |'
 - en: After rolling a 1 and a 7, the posterior probability of the 8-sided die is about
     69%.
+  id: totrans-218
   prefs: []
   type: TYPE_NORMAL
+  zh: 在掷出1和7后，8面骰子的后验概率约为69%。
 - en: Updating Dice
+  id: totrans-219
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 更新骰子
 - en: 'The following function is a more general version of the update in the previous
     section:'
+  id: totrans-220
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数是上一节中更新的更一般版本：
 - en: '[PRE53]'
+  id: totrans-221
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE53]'
 - en: The first parameter is a `Pmf` that represents the possible dice and their probabilities.
     The second parameter is the outcome of rolling a die.
+  id: totrans-222
   prefs: []
   type: TYPE_NORMAL
+  zh: 第一个参数是表示可能的骰子及其概率的`Pmf`。第二个参数是掷骰子的结果。
 - en: The first line selects quantities from the `Pmf` which represent the hypotheses.
     Since the hypotheses are integers, we can use them to compute the likelihoods.
     In general, if there are `n` sides on the die, the probability of any possible
     outcome is `1/n`.
+  id: totrans-223
   prefs: []
   type: TYPE_NORMAL
+  zh: 第一行从`Pmf`中选择了代表假设的数量。由于假设是整数，我们可以用它们来计算似然。一般来说，如果骰子有`n`面，那么任何可能结果的概率就是`1/n`。
 - en: However, we have to check for impossible outcomes! If the outcome exceeds the
     hypothetical number of sides on the die, the probability of that outcome is 0.
+  id: totrans-224
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是，我们必须检查不可能的结果！如果结果超过了骰子的假设面数，那么该结果的概率就是0。
 - en: '`impossible` is a Boolean `Series` that is `True` for each impossible outcome.
     I use it as an index into `likelihood` to set the corresponding probabilities
     to 0.'
+  id: totrans-225
   prefs: []
   type: TYPE_NORMAL
+  zh: '`impossible`是一个布尔`Series`，对于每个不可能的结果都是`True`。我将其用作`likelihood`的索引，将相应的概率设置为0。'
 - en: Finally, I multiply `pmf` by the likelihoods and normalize.
+  id: totrans-226
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，我将`pmf`乘以似然，并进行归一化。
 - en: 'Here’s how we can use this function to compute the updates in the previous
     section. I start with a fresh copy of the prior distribution:'
+  id: totrans-227
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是如何使用此函数来计算上一节中的更新。我从先验分布的新副本开始：
 - en: '[PRE54]'
+  id: totrans-228
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE54]'
 - en: '|  | probs |'
+  id: totrans-229
   prefs: []
   type: TYPE_TB
+  zh: '|  | 概率 |'
 - en: '| --- | --- |'
+  id: totrans-230
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| 6 | 0.333333 |'
+  id: totrans-231
   prefs: []
   type: TYPE_TB
+  zh: '| 6 | 0.333333 |'
 - en: '| 8 | 0.333333 |'
+  id: totrans-232
   prefs: []
   type: TYPE_TB
+  zh: '| 8 | 0.333333 |'
 - en: '| 12 | 0.333333 |'
+  id: totrans-233
   prefs: []
   type: TYPE_TB
+  zh: '| 12 | 0.333333 |'
 - en: And use `update_dice` to do the updates.
+  id: totrans-234
   prefs: []
   type: TYPE_NORMAL
+  zh: 并使用`update_dice`来进行更新。
 - en: '[PRE55]'
+  id: totrans-235
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE55]'
 - en: '|  | probs |'
+  id: totrans-236
   prefs: []
   type: TYPE_TB
+  zh: '|  | 概率 |'
 - en: '| --- | --- |'
+  id: totrans-237
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| 6 | 0.000000 |'
+  id: totrans-238
   prefs: []
   type: TYPE_TB
+  zh: '| 6 | 0.000000 |'
 - en: '| 8 | 0.692308 |'
+  id: totrans-239
   prefs: []
   type: TYPE_TB
+  zh: '| 8 | 0.692308 |'
 - en: '| 12 | 0.307692 |'
+  id: totrans-240
   prefs: []
   type: TYPE_TB
+  zh: '| 12 | 0.307692 |'
 - en: The result is the same. We will see a version of this function in the next chapter.
+  id: totrans-241
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一样的。我们将在下一章中看到这个函数的一个版本。
 - en: Summary
+  id: totrans-242
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 总结
 - en: This chapter introduces the `empiricaldist` module, which provides `Pmf`, which
     we use to represent a set of hypotheses and their probabilities.
+  id: totrans-243
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章介绍了`empiricaldist`模块，它提供了`Pmf`，我们用它来表示一组假设及其概率。
 - en: '`empiricaldist` is based on Pandas; the `Pmf` class inherits from the Pandas
     `Series` class and provides additional features specific to probability mass functions.
     We’ll use `Pmf` and other classes from `empiricaldist` throughout the book because
     they simplify the code and make it more readable. But we could do the same things
     directly with Pandas.'
+  id: totrans-244
   prefs: []
   type: TYPE_NORMAL
+  zh: '`empiricaldist`基于Pandas；`Pmf`类继承自Pandas的`Series`类，并提供了特定于概率质量函数的其他功能。我们将在整本书中使用`empiricaldist`中的`Pmf`和其他类，因为它们简化了代码并使其更易读。但我们也可以直接使用Pandas来做同样的事情。'
 - en: We use a `Pmf` to solve the cookie problem and the dice problem, which we saw
     in the previous chapter. With a `Pmf` it is easy to perform sequential updates
     with multiple pieces of data.
+  id: totrans-245
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们使用`Pmf`来解决饼干问题和骰子问题，这些问题我们在上一章中看到了。使用`Pmf`可以很容易地对多个数据进行顺序更新。
 - en: We also solved a more general version of the cookie problem, with 101 bowls
     rather than two. Then we computed the MAP, which is the quantity with the highest
     posterior probability.
+  id: totrans-246
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们还解决了一个更一般的饼干问题，有101个碗而不是两个。然后我们计算了MAP，即具有最高后验概率的数量。
 - en: In the next chapter, I’ll introduce the Euro problem, and we will use the binomial
     distribution. And, at last, we will make the leap from using Bayes’s Theorem to
     doing Bayesian statistics.
+  id: totrans-247
   prefs: []
   type: TYPE_NORMAL
+  zh: 在下一章中，我将介绍欧洲问题，并使用二项分布。最后，我们将从使用贝叶斯定理转向进行贝叶斯统计。
 - en: But first you might want to work on the exercises.
+  id: totrans-248
   prefs: []
   type: TYPE_NORMAL
+  zh: 但首先你可能想要做练习。
 - en: Exercises
+  id: totrans-249
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 练习
 - en: '**Exercise:** Suppose I have a box with a 6-sided die, an 8-sided die, and
     a 12-sided die. I choose one of the dice at random, roll it four times, and get
     1, 3, 5, and 7. What is the probability that I chose the 8-sided die?'
+  id: totrans-250
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**假设我有一个装有6面骰子、8面骰子和12面骰子的盒子。我随机选择一个骰子，掷4次，并得到1、3、5和7。我选择了8面骰子的概率是多少？'
 - en: You can use the `update_dice` function or do the update yourself.
+  id: totrans-251
   prefs: []
   type: TYPE_NORMAL
+  zh: 您可以使用`update_dice`函数或自行进行更新。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-252
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE56]'
+  id: totrans-253
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE56]'
 - en: '|  | probs |'
+  id: totrans-254
   prefs: []
   type: TYPE_TB
+  zh: '|  | 概率 |'
 - en: '| --- | --- |'
+  id: totrans-255
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| 6 | 0.000000 |'
+  id: totrans-256
   prefs: []
   type: TYPE_TB
+  zh: '| 6 | 0.000000 |'
 - en: '| 8 | 0.835052 |'
+  id: totrans-257
   prefs: []
   type: TYPE_TB
+  zh: '| 8 | 0.835052 |'
 - en: '| 12 | 0.164948 |</details>'
+  id: totrans-258
   prefs: []
   type: TYPE_NORMAL
+  zh: '| 12 | 0.164948 |</details>'
 - en: '**Exercise:** In the previous version of the dice problem, the prior probabilities
     are the same because the box contains one of each die. But suppose the box contains
     1 die that is 4-sided, 2 dice that are 6-sided, 3 dice that are 8-sided, 4 dice
     that are 12-sided, and 5 dice that are 20-sided. I choose a die, roll it, and
     get a 7. What is the probability that I chose an 8-sided die?'
+  id: totrans-259
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**在前一个版本的骰子问题中，先验概率是相同的，因为盒子里包含每种骰子。但是假设盒子里有1个4面骰子，2个6面骰子，3个8面骰子，4个12面骰子和5个20面骰子。我选择一个骰子，掷出一个7。我选择了一个8面骰子的概率是多少？'
 - en: 'Hint: To make the prior distribution, call `Pmf` with two parameters.'
+  id: totrans-260
   prefs: []
   type: TYPE_NORMAL
+  zh: 提示：要制作先验分布，请使用两个参数调用`Pmf`。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-261
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
 - en: '[PRE57]'
+  id: totrans-262
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE57]'
 - en: '|  | probs |'
+  id: totrans-263
   prefs: []
   type: TYPE_TB
+  zh: '|  | 概率 |'
 - en: '| --- | --- |'
+  id: totrans-264
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| 4 | 0.000000 |'
+  id: totrans-265
   prefs: []
   type: TYPE_TB
+  zh: '| 4 | 0.000000 |'
 - en: '| 6 | 0.000000 |'
+  id: totrans-266
   prefs: []
   type: TYPE_TB
+  zh: '| 6 | 0.000000 |'
 - en: '| 8 | 0.391304 |'
+  id: totrans-267
   prefs: []
   type: TYPE_TB
+  zh: '| 8 | 0.391304 |'
 - en: '| 12 | 0.347826 |'
+  id: totrans-268
   prefs: []
   type: TYPE_TB
+  zh: '| 12 | 0.347826 |'
 - en: '| 20 | 0.260870 |</details>'
+  id: totrans-269
   prefs: []
   type: TYPE_NORMAL
+  zh: '| 20 | 0.260870 |</details>'
 - en: '**Exercise:** Suppose I have two sock drawers. One contains equal numbers of
     black and white socks. The other contains equal numbers of red, green, and blue
     socks. Suppose I choose a drawer at random, choose two socks at random, and I
     tell you that I got a matching pair. What is the probability that the socks are
     white?'
+  id: totrans-270
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**假设我有两个袜子抽屉。一个抽屉里有黑色和白色袜子的数量相同。另一个抽屉里有红色、绿色和蓝色袜子的数量相同。假设我随机选择一个抽屉，随机选择两只袜子，然后告诉你我拿到了一双相配的袜子。袜子是白色的概率是多少？'
 - en: For simplicity, let’s assume that there are so many socks in both drawers that
     removing one sock makes a negligible change to the proportions.
+  id: totrans-271
   prefs: []
   type: TYPE_NORMAL
+  zh: 为简单起见，让我们假设两个抽屉里都有很多袜子，取出一只袜子对比例的变化可以忽略不计。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-272
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
 - en: '[PRE58]'
+  id: totrans-273
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE58]'
 - en: '|  | probs |'
+  id: totrans-274
   prefs: []
   type: TYPE_TB
+  zh: '|  | 概率 |'
 - en: '| --- | --- |'
+  id: totrans-275
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| BlackWhite | 0.6 |'
+  id: totrans-276
   prefs: []
   type: TYPE_TB
+  zh: '| 黑白 | 0.6 |'
 - en: '| RedGreenBlue | 0.4 |</details> <details class="hide above-input"><summary
     aria-label="Toggle hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-277
   prefs: []
   type: TYPE_NORMAL
+  zh: '| 红绿蓝 | 0.4 |</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE59]'
+  id: totrans-278
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE59]'
 - en: '[PRE60]</details>'
+  id: totrans-279
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE60]</details>'
 - en: '**Exercise:** Here’s a problem from [Bayesian Data Analysis](http://www.stat.columbia.edu/~gelman/book/):'
+  id: totrans-280
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**这是来自[贝叶斯数据分析](http://www.stat.columbia.edu/~gelman/book/)的一个问题：'
 - en: Elvis Presley had a twin brother (who died at birth). What is the probability
     that Elvis was an identical twin?
+  id: totrans-281
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 埃尔维斯·普雷斯利有一个双胞胎兄弟（在出生时去世）。埃尔维斯是同卵双胞胎的概率是多少？
 - en: 'Hint: In 1935, about 2/3 of twins were fraternal and 1/3 were identical.'
+  id: totrans-282
   prefs: []
   type: TYPE_NORMAL
+  zh: 提示：1935年，大约2/3的双胞胎是异卵的，1/3是同卵的。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-283
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
 - en: '[PRE61]'
+  id: totrans-284
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE61]'
 - en: '|  | prior | likelihood | unnorm | posterior |'
+  id: totrans-285
   prefs: []
   type: TYPE_TB
+  zh: '|  | 先验 | 似然 | 未归一化 | 后验 |'
 - en: '| --- | --- | --- | --- | --- |'
+  id: totrans-286
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- |'
 - en: '| identical | 0.333333 | 1.0 | 0.333333 | 0.5 |'
+  id: totrans-287
   prefs: []
   type: TYPE_TB
+  zh: '| 相同 | 0.333333 | 1.0 | 0.333333 | 0.5 |'
 - en: '| fraternal | 0.666667 | 0.5 | 0.333333 | 0.5 |</details> <details class="hide
     above-input"><summary aria-label="Toggle hidden content">Show code cell content
     Hide code cell content</summary>'
+  id: totrans-288
   prefs: []
   type: TYPE_NORMAL
+  zh: '| 异卵 | 0.666667 | 0.5 | 0.333333 | 0.5 |</details> <details class="hide above-input"><summary
+    aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE62]'
+  id: totrans-289
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE62]'
 - en: '|  | probs |'
+  id: totrans-290
   prefs: []
   type: TYPE_TB
+  zh: '|  | 概率 |'
 - en: '| --- | --- |'
+  id: totrans-291
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| identical | 0.333333 |'
+  id: totrans-292
   prefs: []
   type: TYPE_TB
+  zh: '| 相同 | 0.333333 |'
 - en: '| fraternal | 0.666667 |</details> <details class="hide above-input"><summary
     aria-label="Toggle hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-293
   prefs: []
   type: TYPE_NORMAL
+  zh: '| 异卵 | 0.666667 |</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE63]'
+  id: totrans-294
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE63]'
 - en: '|  | probs |'
+  id: totrans-295
   prefs: []
   type: TYPE_TB
+  zh: '|  | 概率 |'
 - en: '| --- | --- |'
+  id: totrans-296
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| identical | 0.5 |'
+  id: totrans-297
   prefs: []
   type: TYPE_TB
+  zh: '| 相同 | 0.5 |'
 - en: '| fraternal | 0.5 |</details>'
+  id: totrans-298
   prefs: []
   type: TYPE_NORMAL
+  zh: '| 异卵 | 0.5 |</details>'
