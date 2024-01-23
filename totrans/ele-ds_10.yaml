@@ -894,32 +894,38 @@
   id: totrans-168
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** 几乎每个国家的收入分配都是长尾的，这意味着有少数人拥有非常高的收入。在GSS数据集中，列`REALINC`代表转换为1986年美元的总家庭收入。通过绘制CDF，我们可以对这种分布的形状有所了解。'
 - en: Select `REALINC` from the `gss` dataset, make a `Cdf` called `cdf_income`, and
     plot it. Remember to label the axes!
   id: totrans-169
   prefs: []
   type: TYPE_NORMAL
+  zh: 从`gss`数据集中选择`REALINC`，创建一个名为`cdf_income`的`Cdf`，并绘制它。记得标记坐标轴！
 - en: Comparing Distributions
   id: totrans-170
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 比较分布
 - en: So far we’ve seen two ways to represent distributions, PMFs and CDFs. Now we’ll
     use PMFs and CDFs to compare distributions, and we’ll see the pros and cons of
     each.
   id: totrans-171
   prefs: []
   type: TYPE_NORMAL
+  zh: 到目前为止，我们已经看到了两种表示分布的方法，PMF和CDF。现在我们将使用PMF和CDF来比较分布，并看到它们各自的优缺点。
 - en: One way to compare distributions is to plot multiple PMFs on the same axes.
     For example, suppose we want to compare the distribution of age for male and female
     respondents.
   id: totrans-172
   prefs: []
   type: TYPE_NORMAL
+  zh: 比较分布的一种方法是在同一坐标轴上绘制多个PMF。例如，假设我们想比较男性和女性受访者的年龄分布。
 - en: First we’ll create a Boolean Series that’s true for male respondents.
   id: totrans-173
   prefs: []
   type: TYPE_NORMAL
+  zh: 首先，我们将创建一个对男性受访者为真的布尔Series。
 - en: '[PRE37]'
   id: totrans-174
   prefs: []
@@ -929,6 +935,7 @@
   id: totrans-175
   prefs: []
   type: TYPE_NORMAL
+  zh: 还有一个对女性受访者为真的布尔Series。
 - en: '[PRE38]'
   id: totrans-176
   prefs: []
@@ -938,6 +945,7 @@
   id: totrans-177
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以选择男性和女性受访者的年龄。
 - en: '[PRE39]'
   id: totrans-178
   prefs: []
@@ -947,6 +955,7 @@
   id: totrans-179
   prefs: []
   type: TYPE_NORMAL
+  zh: 并为每个绘制一个PMF。
 - en: '[PRE40]'
   id: totrans-180
   prefs: []
@@ -956,17 +965,20 @@
   id: totrans-181
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/08_distributions_90_0.png](../Images/6ddc171d91edb4b8e7c137e063f6e4b6.png)'
 - en: The plot is pretty noisy. In the range from 40 to 50, it looks like the PMF
     is higher for men. And from 70 to 80, it is higher for women. But both of those
     differences might be due to random variation.
   id: totrans-182
   prefs: []
   type: TYPE_NORMAL
+  zh: 图表非常嘈杂。在40到50的范围内，男性的PMF似乎更高。而在70到80之间，女性更高。但这两种差异可能都是由于随机变化造成的。
 - en: Now let’s do the same thing with CDFs; everything is the same except we replace
     `Pmf` with `Cdf`.
   id: totrans-183
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们用CDF做同样的事情；一切都一样，只是我们用`Cdf`替换`Pmf`。
 - en: '[PRE41]'
   id: totrans-184
   prefs: []
@@ -976,6 +988,7 @@
   id: totrans-185
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/08_distributions_92_0.png](../Images/ae09f59ca0f017f9859f5db7759d95c7.png)'
 - en: In general, CDFs are smoother than PMFs. Because they smooth out randomness,
     we can often get a better view of real differences between distributions. In this
     case, the lines are close together until age 40; after that, the CDF is higher
@@ -983,12 +996,14 @@
   id: totrans-186
   prefs: []
   type: TYPE_NORMAL
+  zh: 一般来说，CDF比PMF更加平滑。因为它们平滑了随机性，我们通常可以更好地看到不同分布之间的真实差异。在这种情况下，这两条线在40岁之前几乎重合；之后，男性的CDF高于女性。那么这意味着什么呢？
 - en: One way to interpret the difference is that the fraction of men below a given
     age is generally more than the fraction of women below the same age. For example,
     about 79% of men are 60 or less, compared to 76% of women.
   id: totrans-187
   prefs: []
   type: TYPE_NORMAL
+  zh: 解释这种差异的一种方式是，男性在特定年龄以下的比例通常比女性更高。例如，大约79%的男性年龄在60岁以下，而女性为76%。
 - en: '[PRE42]'
   id: totrans-188
   prefs: []
@@ -1004,6 +1019,7 @@
   id: totrans-190
   prefs: []
   type: TYPE_NORMAL
+  zh: 另一种方法是比较百分位数。例如，女性的中位年龄比男性大约大一岁。
 - en: '[PRE44]'
   id: totrans-191
   prefs: []
@@ -1018,22 +1034,26 @@
   id: totrans-193
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** 男性中有多少比例超过80岁？女性呢？'
 - en: Comparing Incomes
   id: totrans-194
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 比较收入
 - en: As another example, let’s look at household income and compare the distribution
     before and after 1995 (I chose 1995 because it’s roughly the midpoint of the survey).
     The variable `REALINC` represents household income in 1986 dollars.
   id: totrans-195
   prefs: []
   type: TYPE_NORMAL
+  zh: 再举一个例子，让我们看看家庭收入，并比较1995年前后的分布（我选择1995年是因为它大致是调查的中点）。变量`REALINC`代表1986年美元的家庭收入。
 - en: We’ll make a Boolean `Series` to select respondents interviewed before and after
     1995.
   id: totrans-196
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将创建一个布尔`Series`来选择1995年前后接受访谈的受访者。
 - en: '[PRE46]'
   id: totrans-197
   prefs: []
@@ -1043,6 +1063,7 @@
   id: totrans-198
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以绘制PMF了。
 - en: '[PRE47]'
   id: totrans-199
   prefs: []
@@ -1052,18 +1073,21 @@
   id: totrans-200
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/08_distributions_102_0.png](../Images/bb298e62ea0432644782c497c335279f.png)'
 - en: There are a lot of unique values in this distribution, and none of them appear
     very often. As a result, the PMF is so noisy and we can’t really see the shape
     of the distribution.
   id: totrans-201
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个分布中有很多唯一的值，但没有一个出现得很频繁。因此，PMF非常嘈杂，我们无法真正看到分布的形状。
 - en: It’s also hard to compare the distributions. It looks like there are more people
     with high incomes after 1995, but it’s hard to tell. We can get a clearer picture
     with a CDF.
   id: totrans-202
   prefs: []
   type: TYPE_NORMAL
+  zh: 比较这两个分布也很困难。看起来1995年后有更多高收入者，但很难确定。通过CDF我们可以得到更清晰的图像。
 - en: '[PRE48]'
   id: totrans-203
   prefs: []
@@ -1073,6 +1097,7 @@
   id: totrans-204
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/08_distributions_104_0.png](../Images/5b723f08b7b04c615dad130086e966c1.png)'
 - en: Below $30,000 the CDFs are almost identical; above that, we can see that the
     post-1995 distribution is shifted to the right. In other words, the fraction of
     people with high incomes is about the same, but the income of high earners has
@@ -1080,28 +1105,33 @@
   id: totrans-205
   prefs: []
   type: TYPE_NORMAL
+  zh: 在30000美元以下，两个CDF几乎相同；在此之上，我们可以看到1995年后的分布向右移动了。换句话说，高收入人群的比例大致相同，但高收入者的收入增加了。
 - en: In general, I recommend CDFs for exploratory analysis. They give you a clear
     view of the distribution, without too much noise, and they are good for comparing
     distributions, especially if you have more than two.
   id: totrans-206
   prefs: []
   type: TYPE_NORMAL
+  zh: 一般来说，我建议使用CDF进行探索性分析。它们可以清晰地展现分布，噪音不会太多，并且适合比较分布，特别是当你有两个以上的分布时。
 - en: '**Exercise:** In the previous figure, the dollar amounts are big enough that
     the labels on the `x` axis are crowded. Improve the figure by expressing income
     in 1000s of dollars (and update the `x` label accordingly).'
   id: totrans-207
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** 在前一个图中，美元金额足够大，导致`x`轴上的标签很拥挤。通过以千美元为单位表示收入（并相应更新`x`标签）来改进图表。'
 - en: '**Exercise:** Let’s compare incomes for different levels of education in the
     GSS dataset'
   id: totrans-208
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** 让我们比较GSS数据集中不同教育水平的收入'
 - en: To do that we’ll create Boolean `Series` to identify respondents with different
     levels of education.
   id: totrans-209
   prefs: []
   type: TYPE_NORMAL
+  zh: 为此，我们将创建布尔`Series`来识别具有不同教育水平的受访者。
 - en: In the U.S, 12 years of education usually means the respondent has completed
     high school (secondary education).
   id: totrans-210
