@@ -3,47 +3,57 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 关系
 - en: 原文：[https://allendowney.github.io/ElementsOfDataScience/09_relationships.html](https://allendowney.github.io/ElementsOfDataScience/09_relationships.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ElementsOfDataScience/09_relationships.html](https://allendowney.github.io/ElementsOfDataScience/09_relationships.html)
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/09_relationships.ipynb)
     or [click here to download it](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/09_relationships.ipynb).'
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: '[点击这里在Colab上运行此笔记本](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/09_relationships.ipynb)
+    或 [点击这里下载它](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/09_relationships.ipynb)。'
 - en: This chapter explores relationships between variables.
   id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章探讨了变量之间的关系。
 - en: We will visualize relationships using scatter plots, box plots, and violin plots,
   id: totrans-4
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 我们将使用散点图、箱线图和小提琴图来可视化关系，
 - en: And we will quantify relationships using correlation and simple regression.
   id: totrans-5
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 我们将使用相关性和简单回归来量化关系。
 - en: The most important lesson in this chapter is that you should always visualize
     the relationship between variables before you try to quantify it; otherwise, you
     are likely to be misled.
   id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章最重要的一课是，在你试图量化之前，你应该始终可视化变量之间的关系；否则，你很可能会被误导。
 - en: Exploring relationships
   id: totrans-7
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 探索关系
 - en: So far we have mostly considered one variable at a time. Now it’s time to explore
     relationships between variables. As a first example, we’ll look at the relationship
     between height and weight.
   id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 到目前为止，我们主要考虑了一个变量。现在是时候探索变量之间的关系了。作为第一个例子，我们将研究身高和体重之间的关系。
 - en: We’ll use data from the Behavioral Risk Factor Surveillance System (BRFSS),
     which is run by the Centers for Disease Control at [https://www.cdc.gov/brfss](https://www.cdc.gov/brfss).
     The survey includes more than 400,000 respondents, but to keep things manageable,
@@ -51,6 +61,7 @@
   id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将使用疾病控制中心运行的行为风险因素监测系统（BRFSS）的数据，该调查包括40多万名受访者，但为了使事情更容易处理，我们将使用10万名受访者的随机子样本。
 - en: '[PRE0]'
   id: totrans-10
   prefs: []
@@ -65,6 +76,7 @@
   id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是前几行。
 - en: '[PRE2]'
   id: totrans-13
   prefs: []
@@ -75,41 +87,55 @@
   id: totrans-14
   prefs: []
   type: TYPE_TB
+  zh: '|  | 性别 | HTM4 | WTKG3 | 收入 | _LLCPWT | _AGEG5YR | _VEGESU1 | _HTMG10 | 年龄
+    |'
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
   id: totrans-15
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
 - en: '| 96230 | 2.0 | 160.0 | 60.33 | 8.0 | 1398.525290 | 6.0 | 2.14 | 150.0 | 47.0
     |'
   id: totrans-16
   prefs: []
   type: TYPE_TB
+  zh: '| 96230 | 2.0 | 160.0 | 60.33 | 8.0 | 1398.525290 | 6.0 | 2.14 | 150.0 | 47.0
+    |'
 - en: '| 244920 | 2.0 | 163.0 | 58.97 | 5.0 | 84.057503 | 13.0 | 3.14 | 160.0 | 89.5
     |'
   id: totrans-17
   prefs: []
   type: TYPE_TB
+  zh: '| 244920 | 2.0 | 163.0 | 58.97 | 5.0 | 84.057503 | 13.0 | 3.14 | 160.0 | 89.5
+    |'
 - en: '| 57312 | 2.0 | 163.0 | 72.57 | 8.0 | 390.248599 | 5.0 | 2.64 | 160.0 | 42.0
     |'
   id: totrans-18
   prefs: []
   type: TYPE_TB
+  zh: '| 57312 | 2.0 | 163.0 | 72.57 | 8.0 | 390.248599 | 5.0 | 2.64 | 160.0 | 42.0
+    |'
 - en: '| 32573 | 2.0 | 165.0 | 74.84 | 1.0 | 11566.705300 | 3.0 | 1.46 | 160.0 | 32.0
     |'
   id: totrans-19
   prefs: []
   type: TYPE_TB
+  zh: '| 32573 | 2.0 | 165.0 | 74.84 | 1.0 | 11566.705300 | 3.0 | 1.46 | 160.0 | 32.0
+    |'
 - en: '| 355929 | 2.0 | 170.0 | 108.86 | 3.0 | 844.485450 | 3.0 | 1.81 | 160.0 | 32.0
     |'
   id: totrans-20
   prefs: []
   type: TYPE_TB
+  zh: '| 355929 | 2.0 | 170.0 | 108.86 | 3.0 | 844.485450 | 3.0 | 1.81 | 160.0 | 32.0
+    |'
 - en: The BRFSS includes hundreds of variables. For the examples in this chapter,
     we’ll work with just nine. The ones we’ll start with are `HTM4`, which records
     each respondent’s height in cm, and `WTKG3`, which records weight in kg.
   id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: BRFSS包括数百个变量。在本章的示例中，我们将只使用九个。我们将从`HTM4`开始，它记录了每个受访者的身高（厘米），以及`WTKG3`，它记录了体重（千克）。
 - en: '[PRE3]'
   id: totrans-22
   prefs: []
@@ -121,11 +147,13 @@
   id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了可视化这些变量之间的关系，我们将制作一个**散点图**，它显示每对值的一个标记。散点图是常见且容易理解的，但要正确绘制它们却是令人惊讶地困难。
 - en: As a first attempt, we’ll use `plot` with the style string `o`, which plots
     a circle for each data point.
   id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为第一次尝试，我们将使用带有样式字符串`o`的`plot`，它会为每个数据点绘制一个圆。
 - en: '[PRE4]'
   id: totrans-25
   prefs: []
@@ -135,10 +163,12 @@
   id: totrans-26
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/09_relationships_11_0.png](../Images/0417d7dc0b672dd4d053b67a4f13a952.png)'
 - en: Each marker represents the height and weight of one person.
   id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 每个标记代表一个人的身高和体重。
 - en: Based on the shape of the result, it looks like taller people are heavier, but
     there are a few things about this plot that make it hard to interpret. Most importantly,
     it is **overplotted**, which means that there are markers piled on top of each
@@ -147,16 +177,19 @@
   id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: 根据结果的形状，看起来身高较高的人体重更重，但是这张图有一些让人难以解释的地方。最重要的是，它**过度绘制**，这意味着标记堆叠在一起，所以你无法判断哪里有很多数据点，哪里只有一个。当发生这种情况时，结果可能会严重误导。
 - en: One way to improve the plot is to use transparency, which we can do with the
     keyword argument `alpha`. The lower the value of alpha, the more transparent each
     data point is.
   id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 改进绘图的一种方法是使用透明度，我们可以使用关键字参数`alpha`来实现。alpha值越低，每个数据点就越透明。
 - en: Here’s what it looks like with `alpha=0.02`.
   id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是使用`alpha=0.02`的样子。
 - en: '[PRE5]'
   id: totrans-31
   prefs: []
@@ -166,6 +199,7 @@
   id: totrans-32
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/09_relationships_13_0.png](../Images/7b226a84851e1bad24d510a575ad27e5.png)'
 - en: This is better, but there are so many data points, the scatter plot is still
     overplotted. The next step is to make the markers smaller. With `markersize=1`
     and a low value of alpha, the scatter plot is less saturated. Here’s what it looks
@@ -173,6 +207,7 @@
   id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: 这样做更好，但是有这么多数据点，散点图仍然被过度绘制。下一步是使标记变小。通过`markersize=1`和较低的alpha值，散点图的饱和度较低。这是它的样子。
 - en: '[PRE6]'
   id: totrans-34
   prefs: []
@@ -182,6 +217,7 @@
   id: totrans-35
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/09_relationships_15_0.png](../Images/07e2449e50ef69aa705840b80a110dc3.png)'
 - en: Again, this is better, but now we can see that the points fall in discrete columns.
     That’s because most heights were reported in inches and converted to centimeters.
     We can break up the columns by adding some random noise to the values; in effect,
@@ -190,11 +226,13 @@
   id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 这次更好了，但现在我们可以看到点落在离散的列中。这是因为大多数身高是以英寸报告的，然后转换为厘米。我们可以通过向值添加一些随机噪声来打破这些列；实际上，我们是在填补被舍入的值。像这样添加随机噪声被称为**抖动**。
 - en: We can use NumPy to add noise from a normal distribution with mean 0 and standard
     deviation 2.
   id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用NumPy从均值为0、标准差为2的正态分布中添加噪声。
 - en: '[PRE7]'
   id: totrans-38
   prefs: []
@@ -204,6 +242,7 @@
   id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是带有抖动高度的图的样子。
 - en: '[PRE8]'
   id: totrans-40
   prefs: []
@@ -213,11 +252,13 @@
   id: totrans-41
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/09_relationships_19_0.png](../Images/4685fab19750b500644159c3d95188b9.png)'
 - en: The columns are gone, but now we can see that there are rows where people rounded
     off their weight. We can fix that by jittering weight, too.
   id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: 列已经消失，但现在我们可以看到有些人四舍五入了他们的体重。我们可以通过对体重进行抖动来修复这个问题。
 - en: '[PRE9]'
   id: totrans-43
   prefs: []
@@ -232,20 +273,24 @@
   id: totrans-45
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/09_relationships_22_0.png](../Images/e36d0a757b177922ec022735b88b7693.png)'
 - en: Finally, let’s zoom in on the area where most of the data points are.
   id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，让我们放大到大多数数据点所在的区域。
 - en: The functions `xlim` and `ylim` set the lower and upper bounds for the \(x\)
     and \(y\)-axis; in this case, we plot heights from 140 to 200 centimeters and
     weights up to 160 kilograms.
   id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 函数`xlim`和`ylim`设置了\(x\)和\(y\)轴的下限和上限；在这种情况下，我们绘制了从140到200厘米的身高和最多160公斤的体重。
 - en: Here’s what it looks like.
   id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是它的样子。
 - en: '[PRE11]'
   id: totrans-49
   prefs: []
@@ -255,16 +300,19 @@
   id: totrans-50
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/09_relationships_24_0.png](../Images/b594186e8e53e753a4be459cc9bb08b8.png)'
 - en: Now we have a reliable picture of the relationship between height and weight.
   id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: '现在我们对身高和体重之间的关系有了可靠的图片。 '
 - en: Below you can see the misleading plot we started with and the more reliable
     one we ended with. They are clearly different, and they suggest different relationships
     between these variables.
   id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: 下面你可以看到我们开始的误导性图和我们最终得到的更可靠的图。它们显然是不同的，并且它们表明了这些变量之间不同的关系。
 - en: '[PRE12]'
   id: totrans-53
   prefs: []
@@ -274,37 +322,44 @@
   id: totrans-54
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/09_relationships_26_0.png](../Images/8d3908a46b10416fbedf55126e0389ae.png)'
 - en: The point of this example is that it takes some effort to make an effective
     scatter plot.
   id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个例子的重点是制作一个有效的散点图需要一些努力。
 - en: '**Exercise:** Do people tend to gain weight as they get older? We can answer
     this question by visualizing the relationship between weight and age.'
   id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**人们随着年龄增长是否倾向于增加体重？我们可以通过可视化体重和年龄之间的关系来回答这个问题。'
 - en: But before we make a scatter plot, it is a good idea to visualize distributions
     one variable at a time. So let’s look at the distribution of age.
   id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 但在制作散点图之前，逐个变量地可视化分布是一个好主意。所以让我们看看年龄的分布。
 - en: The BRFSS dataset includes a column, `AGE`, which represents each respondent’s
     age in years. To protect respondents’ privacy, ages are rounded off into 5-year
     bins. `AGE` contains the midpoint of the bins.
   id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: BRFSS数据集包括一个名为`AGE`的列，表示每个受访者的年龄（以年为单位）。为了保护受访者的隐私，年龄被舍入到5年的区间。`AGE`包含区间的中点。
 - en: Extract the variable `'AGE'` from the DataFrame `brfss` and assign it to `age`.
   id: totrans-59
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 从DataFrame `brfss`中提取变量`'AGE'`并将其赋值给`age`。
 - en: Plot the PMF of `age` as a bar chart, using `Pmf` from `empiricaldist`.
   id: totrans-60
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 将`age`的PMF绘制为条形图，使用`empiricaldist`中的`Pmf`。
 - en: '[PRE13]'
   id: totrans-61
   prefs: []
@@ -316,6 +371,7 @@
   id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**现在让我们看看体重的分布。包含体重（公斤）的列是`WTKG3`。因为这一列包含许多唯一的值，将其显示为PMF效果不是很好。'
 - en: '[PRE14]'
   id: totrans-63
   prefs: []
@@ -325,43 +381,51 @@
   id: totrans-64
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/09_relationships_33_0.png](../Images/fa5eca877cefa3c36996fc7e39e22787.png)'
 - en: To get a better view of this distribution, try plotting the CDF.
   id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了更好地查看这个分布，尝试绘制CDF。
 - en: Compute the CDF of a normal distribution with the same mean and standard deviation,
     and compare it with the distribution of weight. Is the normal distribution a good
     model for this data? What about log-transformed weights?
   id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: 计算具有相同均值和标准差的正态分布的CDF，并将其与体重的分布进行比较。正态分布是否是这些数据的良好模型？对于对数转换后的体重呢？
 - en: '**Exercise:** Now let’s make a scatter plot of `weight` versus `age`. Adjust
     `alpha` and `markersize` to avoid overplotting. Use `ylim` to limit the `y` axis
     from 0 to 200 kilograms.'
   id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**现在让我们制作一个`weight`与`age`的散点图。调整`alpha`和`markersize`以避免重叠。使用`ylim`将`y`轴限制在0到200公斤。'
 - en: '**Exercise:** In the previous exercise, the ages fall in columns because they’ve
     been rounded into 5-year bins. If we jitter them, the scatter plot will show the
     relationship more clearly.'
   id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**在上一个练习中，年龄分布在列中，因为它们已经被舍入到5年的区间。如果我们对它们进行抖动，散点图将更清楚地显示出它们之间的关系。'
 - en: Add random noise to `age` with mean `0` and standard deviation `2.5`.
   id: totrans-69
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 给`age`添加均值为`0`、标准差为`2.5`的随机噪声。
 - en: Make a scatter plot and adjust `alpha` and `markersize` again.
   id: totrans-70
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 制作散点图并再次调整`alpha`和`markersize`。
 - en: Visualizing relationships
   id: totrans-71
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 可视化关系
 - en: In the previous section we used scatter plots to visualize relationships between
     variables, and in the exercises, you explored the relationship between age and
     weight. In this section, we’ll see other ways to visualize these relationships,
@@ -369,10 +433,12 @@
   id: totrans-72
   prefs: []
   type: TYPE_NORMAL
+  zh: 在前一节中，我们使用散点图来可视化变量之间的关系，在练习中，你探索了年龄和体重之间的关系。在本节中，我们将看到其他可视化这些关系的方法，包括箱线图和小提琴图。
 - en: Let’s start with a scatter plot of weight versus age.
   id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们从体重与年龄的散点图开始。
 - en: '[PRE15]'
   id: totrans-74
   prefs: []
@@ -382,6 +448,7 @@
   id: totrans-75
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/09_relationships_45_0.png](../Images/a50f46ab10afc40a0a690a4da0d9af81.png)'
 - en: In this version of the scatter plot, the weights are jittered, but there’s still
     space between the columns. That makes it possible to see the shape of the distribution
     in each age group, and the differences between groups. With this view, it looks
@@ -1016,10 +1083,12 @@
   id: totrans-190
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/09_relationships_100_0.png](../Images/8051e41f8fe62b0383f8e94762f267d6.png)'
 - en: And here’s what it looks like for the second example.
   id: totrans-191
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是第二个示例的情况。
 - en: '[PRE45]'
   id: totrans-192
   prefs: []
@@ -1029,21 +1098,25 @@
   id: totrans-193
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/09_relationships_102_0.png](../Images/34ed86b462b76e9d24555b2ad497ee7b.png)'
 - en: The visualization here might be misleading unless you look closely at the vertical
     scales; the slope in the second figure is almost 10 times higher.
   id: totrans-194
   prefs: []
   type: TYPE_NORMAL
+  zh: 除非您仔细查看垂直刻度，否则这里的可视化可能会产生误导；第二个图中的斜率几乎是第一个图的10倍。
 - en: Regression of Height and Weight
   id: totrans-195
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 身高和体重的回归分析
 - en: Now let’s look at an example of regression with real data. Here’s the scatter
     plot of height and weight one more time.
   id: totrans-196
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们看一个真实数据的回归分析示例。这是身高和体重的散点图。
 - en: '[PRE46]'
   id: totrans-197
   prefs: []
@@ -1053,12 +1126,14 @@
   id: totrans-198
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/09_relationships_105_0.png](../Images/3df4d14f15a6c2225ba4532d0c6a1c82.png)'
 - en: To compute the regression line, we’ll use `linregress` again. But it can’t handle
     `NaN` values, so we have to use `dropna` to remove rows that are missing the data
     we need.
   id: totrans-199
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了计算回归线，我们将再次使用`linregress`。但它无法处理`NaN`值，所以我们必须使用`dropna`来删除缺少我们需要的数据的行。
 - en: '[PRE47]'
   id: totrans-200
   prefs: []
@@ -1068,6 +1143,7 @@
   id: totrans-201
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以计算线性回归。
 - en: '[PRE48]'
   id: totrans-202
   prefs: []
@@ -1084,10 +1160,12 @@
   id: totrans-204
   prefs: []
   type: TYPE_NORMAL
+  zh: 斜率约为0.92千克每厘米，这意味着我们预计一个厘米更高的人几乎会重一公斤。这相当多。
 - en: 'As before, we can compute the line of best fit:'
   id: totrans-205
   prefs: []
   type: TYPE_NORMAL
+  zh: 与以前一样，我们可以计算最佳拟合线：
 - en: '[PRE50]'
   id: totrans-206
   prefs: []
@@ -1097,6 +1175,7 @@
   id: totrans-207
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是它的样子。
 - en: '[PRE51]'
   id: totrans-208
   prefs: []
@@ -1106,16 +1185,19 @@
   id: totrans-209
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/09_relationships_113_0.png](../Images/e4142ec64e2d0d789f6ff79b526d6ae8.png)'
 - en: The slope of this line seems consistent with the scatter plot.
   id: totrans-210
   prefs: []
   type: TYPE_NORMAL
+  zh: 这条线的斜率似乎与散点图一致。
 - en: Linear regression has the same problem as correlation; it only measures the
     strength of a linear relationship. Here’s the scatter plot of weight versus age,
     which we saw earlier.
   id: totrans-211
   prefs: []
   type: TYPE_NORMAL
+  zh: 线性回归与相关性有相同的问题；它只能衡量线性关系的强度。这是体重与年龄的散点图，我们之前看到过。
 - en: '[PRE52]'
   id: totrans-212
   prefs: []
@@ -1125,16 +1207,19 @@
   id: totrans-213
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/09_relationships_115_0.png](../Images/79646d87ba5ef26135a7892bc8ab7c0a.png)'
 - en: People in their 40s are the heaviest; younger and older people are lighter.
     So the relationship is nonlinear.
   id: totrans-214
   prefs: []
   type: TYPE_NORMAL
+  zh: 40多岁的人体重最重；年轻人和老年人体重较轻。因此，这种关系是非线性的。
 - en: If we don’t look at the scatter plot and blindly compute the regression line,
     here’s what we get.
   id: totrans-215
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们不看散点图，盲目计算回归线，我们会得到这样的结果。
 - en: '[PRE53]'
   id: totrans-216
   prefs: []
@@ -1150,6 +1235,7 @@
   id: totrans-218
   prefs: []
   type: TYPE_NORMAL
+  zh: 估计的斜率仅为0.02千克每年，或30年内为0.6千克。这是最佳拟合线的样子。
 - en: '[PRE55]'
   id: totrans-219
   prefs: []
@@ -1159,64 +1245,77 @@
   id: totrans-220
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/09_relationships_119_0.png](../Images/ca00bd2ac7b9c0132242e62e0e069f54.png)'
 - en: A straight line does not capture the relationship between these variables well.
   id: totrans-221
   prefs: []
   type: TYPE_NORMAL
+  zh: 一条直线无法很好地捕捉这些变量之间的关系。
 - en: In the next chapter, you’ll see how to use multiple regression to estimate non-linear
     relationships. But first, let’s practice simple regression.
   id: totrans-222
   prefs: []
   type: TYPE_NORMAL
+  zh: 在下一章中，您将看到如何使用多元回归来估计非线性关系。但首先，让我们练习简单的回归。
 - en: '**Exercise:** Who do you think eats more vegetables, people with low income,
     or people with high income? Let’s find out.'
   id: totrans-223
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**你认为谁吃更多蔬菜，低收入人群还是高收入人群？让我们找出来。'
 - en: As we’ve seen previously, the column `INCOME2` represents income level and `_VEGESU1`
     represents the number of vegetable servings respondents reported eating per day.
   id: totrans-224
   prefs: []
   type: TYPE_NORMAL
+  zh: 正如我们之前看到的，`INCOME2`列代表收入水平，`_VEGESU1`代表受访者每天报告的蔬菜食用量。
 - en: Make a scatter plot with vegetable servings versus income, that is, with vegetable
     servings on the `y` axis and income group on the `x` axis.
   id: totrans-225
   prefs: []
   type: TYPE_NORMAL
+  zh: 制作一个蔬菜食用量与收入的散点图，即将蔬菜食用量放在`y`轴上，将收入组放在`x`轴上。
 - en: You might want to use `ylim` to zoom in on the bottom half of the `y` axis.
   id: totrans-226
   prefs: []
   type: TYPE_NORMAL
+  zh: 您可能想使用`ylim`来放大`y`轴的底部一半。
 - en: '**Exercise:** Now let’s estimate the slope of the relationship between vegetable
     consumption and income.'
   id: totrans-227
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**现在让我们估计蔬菜消费与收入之间关系的斜率。'
 - en: Use `dropna` to select rows where `INCOME2` and `_VEGESU1` are not `NaN`.
   id: totrans-228
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 使用`dropna`来选择`INCOME2`和`_VEGESU1`不是`NaN`的行。
 - en: Extract `INCOME2` and `_VEGESU1` and compute the simple linear regression of
     these variables.
   id: totrans-229
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 提取`INCOME2`和`_VEGESU1`并计算这些变量的简单线性回归。
 - en: What is the slope of the regression line? What does this slope means in the
     context of the question we are exploring?
   id: totrans-230
   prefs: []
   type: TYPE_NORMAL
+  zh: 回归线的斜率是多少？在我们探讨的问题背景下，这个斜率意味着什么？
 - en: '**Exercise:** Finally, plot the regression line on top of the scatter plot.'
   id: totrans-231
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**最后，在散点图上绘制回归线。'
 - en: Summary
   id: totrans-232
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 总结
 - en: 'This chapter presents three ways to visualize the relationship between two
     variables: a scatter plot, violin plot, and box plot. A scatter plot is often
     a good choice when you are exploring a new data set, but it can take some attention
@@ -1225,6 +1324,7 @@
   id: totrans-233
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章介绍了可视化两个变量之间关系的三种方法：散点图、小提琴图和箱线图。当您探索新数据集时，散点图通常是一个不错的选择，但需要注意避免过度绘制。小提琴图和箱线图在一个变量只取少数离散值时特别有用。
 - en: 'And we considered two ways to quantify the strength of a relationship: the
     coefficient of correlation and the slope of a regression line. These statistics
     capture different aspect of what we might mean by “strength”. The coefficient
@@ -1235,3 +1335,4 @@
   id: totrans-234
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们考虑了两种量化关系强度的方法：相关系数和回归线的斜率。这些统计数据捕捉了我们可能称之为“强度”的不同方面。相关系数指示了我们能够根据另一个变量来预测一个变量的能力。回归线的斜率指示了我们在改变另一个变量时可以期望的差异。根据上下文，其中一种可能更相关。
