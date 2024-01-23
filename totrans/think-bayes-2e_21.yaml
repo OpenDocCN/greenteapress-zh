@@ -419,6 +419,7 @@
   id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，如果我们观察到在n次试验中有k次成功，我们可以通过使用参数为`alpha+k`和`beta+n-k`的贝塔分布来进行更新。这就是这个函数的作用：
 - en: '[PRE21]'
   id: totrans-83
   prefs: []
@@ -430,10 +431,12 @@
   id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: 再次，共轭先验使我们能够洞察参数的含义；\(\alpha\)与观察到的成功次数有关；\(\beta\)与失败次数有关。
 - en: Here’s how we do the update with the observed data.
   id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是我们如何使用观察到的数据进行更新。
 - en: '[PRE22]'
   id: totrans-86
   prefs: []
@@ -444,6 +447,7 @@
   id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了确认它是否有效，我将评估`xs`的可能值的后验分布，并将结果放入`Pmf`中。
 - en: '[PRE23]'
   id: totrans-88
   prefs: []
@@ -454,34 +458,44 @@
   id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以将我们刚刚计算的后验分布与网格算法的结果进行比较。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE24]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell source Hide code cell source</summary>'
   id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE24]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>'
 - en: '[PRE25]</details> ![_images/6690cfacd465eb40d9ec441a2922b3fdf2f2f9656494ba5973edb6e05280cb97.png](../Images/abc447a9fedcb77f484b279731c683b2.png)'
   id: totrans-92
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE25]</details> ![_images/6690cfacd465eb40d9ec441a2922b3fdf2f2f9656494ba5973edb6e05280cb97.png](../Images/abc447a9fedcb77f484b279731c683b2.png)'
 - en: They are the same other than small differences due to floating-point approximations.
   id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: 它们除了由于浮点近似而产生的小差异外是相同的。
 - en: The examples so far are problems we have already solved, so let’s try something
     new.
   id: totrans-94
   prefs: []
   type: TYPE_NORMAL
+  zh: 到目前为止的例子都是我们已经解决的问题，所以让我们尝试一些新的东西。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-95
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE26]'
   id: totrans-96
   prefs: []
@@ -491,11 +505,13 @@
   id: totrans-97
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE27]</details>'
 - en: Lions and Tigers and Bears
   id: totrans-98
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 狮子和老虎和熊
 - en: Suppose we visit a wild animal preserve where we know that the only animals
     are lions and tigers and bears, but we don’t know how many of each there are.
     During the tour, we see 3 lions, 2 tigers, and one bear. Assuming that every animal
@@ -504,6 +520,7 @@
   id: totrans-99
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设我们参观一个野生动物保护区，在那里我们知道唯一的动物是狮子和老虎和熊，但我们不知道每种动物的数量。在游览期间，我们看到3只狮子，2只老虎和一只熊。假设每只动物有相等的机会出现在我们的样本中，那么我们下一次看到的动物是熊的概率是多少？
 - en: To answer this question, we’ll use the data to estimate the prevalence of each
     species, that is, what fraction of the animals belong to each species. If we know
     the prevalences, we can use the multinomial distribution to compute the probability
@@ -512,10 +529,12 @@
   id: totrans-100
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了回答这个问题，我们将使用数据来估计每个物种的盛行率，也就是说，动物中属于每个物种的比例。如果我们知道盛行率，我们可以使用多项分布来计算数据的概率。例如，假设我们知道狮子、老虎和熊的比例分别为0.4、0.3和0.3。
 - en: 'In that case the probability of the data is:'
   id: totrans-101
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这种情况下，数据的概率是：
 - en: '[PRE28]'
   id: totrans-102
   prefs: []
@@ -531,39 +550,47 @@
   id: totrans-104
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，我们可以为盛行率选择一个先验，并使用多项分布进行贝叶斯更新，计算数据的概率。
 - en: 'But there’s an easier way, because the multinomial distribution has a conjugate
     prior: the Dirichlet distribution.'
   id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: 但有一个更简单的方法，因为多项分布有一个共轭先验：狄利克雷分布。
 - en: The Dirichlet Distribution
   id: totrans-106
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 狄利克雷分布
 - en: The Dirichlet distribution is a multivariate distribution, like the multivariate
     normal distribution we used in <<_MultivariateNormalDistribution>> to describe
     the distribution of penguin measurements.
   id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: 狄利克雷分布是一个多元分布，就像我们在<<_MultivariateNormalDistribution>>中使用的多元正态分布来描述企鹅测量的分布。
 - en: In that example, the quantities in the distribution are pairs of flipper length
     and culmen length, and the parameters of the distribution are a vector of means
     and a matrix of covariances.
   id: totrans-108
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个例子中，分布中的数量是脚蹼长度和喙长度的对，分布的参数是均值向量和协方差矩阵。
 - en: In a Dirichlet distribution, the quantities are vectors of probabilities, \(\mathbf{x}\),
     and the parameter is a vector, \(\mathbf{\alpha}\).
   id: totrans-109
   prefs: []
   type: TYPE_NORMAL
+  zh: 在狄利克雷分布中，数量是概率向量\(\mathbf{x}\)，参数是向量\(\mathbf{\alpha}\)。
 - en: An example will make that clearer. SciPy provides a `dirichlet` object that
     represents a Dirichlet distribution. Here’s an instance with \(\mathbf{\alpha}
     = 1, 2, 3\).
   id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: 一个例子会让这一点更清楚。SciPy提供了一个`dirichlet`对象，表示狄利克雷分布。这是一个实例，\(\mathbf{\alpha} = 1,
+    2, 3\)。
 - en: '[PRE30]'
   id: totrans-111
   prefs: []
@@ -574,6 +601,7 @@
   id: totrans-112
   prefs: []
   type: TYPE_NORMAL
+  zh: 由于我们提供了三个参数，结果是三个变量的分布。如果我们从这个分布中随机抽取一个值，就像这样：
 - en: '[PRE31]'
   id: totrans-113
   prefs: []
@@ -589,6 +617,8 @@
   id: totrans-115
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE33]'
   id: totrans-116
   prefs: []
@@ -598,17 +628,20 @@
   id: totrans-117
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE34]</details>'
 - en: The result is an array of three values. They are bounded between 0 and 1, and
     they always add up to 1, so they can be interpreted as the probabilities of a
     set of outcomes that are mutually exclusive and collectively exhaustive.
   id: totrans-118
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个包含三个值的数组。它们介于0和1之间，并且它们总是加起来等于1，因此它们可以被解释为一组相互排斥且完全耗尽的结果的概率。
 - en: 'Let’s see what the distributions of these values look like. I’ll draw 1000
     random vectors from this distribution, like this:'
   id: totrans-119
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们看看这些值的分布是什么样子的。我将从这个分布中随机抽取1000个向量，就像这样：
 - en: '[PRE35]'
   id: totrans-120
   prefs: []
@@ -619,6 +652,8 @@
   id: totrans-121
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE36]'
   id: totrans-122
   prefs: []
@@ -628,11 +663,13 @@
   id: totrans-123
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE37]</details>'
 - en: The result is an array with 1000 rows and three columns. I’ll compute the `Cdf`
     of the values in each column.
   id: totrans-124
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个包含1000行和三列的数组。我将计算每列中值的`Cdf`。
 - en: '[PRE38]'
   id: totrans-125
   prefs: []
@@ -643,26 +680,31 @@
   id: totrans-126
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个代表三个变量的边缘分布的`Cdf`对象列表。它们看起来是这样的。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
   id: totrans-127
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格源代码隐藏代码单元格源代码</summary>
 - en: '[PRE39]</details> ![_images/38e3455314147946835c8800653dfd01a9f1c97c9b568a01c8e33c8802a29287.png](../Images/9936b94966fbbbda87abcfe0339c0257.png)'
   id: totrans-128
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE39]</details> ![_images/38e3455314147946835c8800653dfd01a9f1c97c9b568a01c8e33c8802a29287.png](../Images/9936b94966fbbbda87abcfe0339c0257.png)'
 - en: Column 0, which corresponds to the lowest parameter, contains the lowest probabilities.
     Column 2, which corresponds to the highest parameter, contains the highest probabilities.
   id: totrans-129
   prefs: []
   type: TYPE_NORMAL
+  zh: 第0列对应最低参数，包含最低概率。第2列对应最高参数，包含最高概率。
 - en: 'As it turns out, these marginal distributions are beta distributions. The following
     function takes a sequence of parameters, `alpha`, and computes the marginal distribution
     of variable `i`:'
   id: totrans-130
   prefs: []
   type: TYPE_NORMAL
+  zh: 事实证明，这些边际分布是贝塔分布。以下函数接受参数序列`alpha`，并计算变量`i`的边缘分布：
 - en: '[PRE40]'
   id: totrans-131
   prefs: []
@@ -672,6 +714,7 @@
   id: totrans-132
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以用它来计算三个变量的边缘分布。
 - en: '[PRE41]'
   id: totrans-133
   prefs: []
@@ -682,48 +725,57 @@
   id: totrans-134
   prefs: []
   type: TYPE_NORMAL
+  zh: 下图显示了这些分布的CDF作为灰色线，并将它们与样本的CDF进行了比较。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
   id: totrans-135
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格源代码隐藏代码单元格源代码</summary>
 - en: '[PRE42]</details> ![_images/d2b045b7f54a65ceb60914590d7732e667f5f95b187400fa17363aed09dfab01.png](../Images/f50fbf1c81705f94c9ff9b1e33a4d90c.png)'
   id: totrans-136
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE42]</details> ![_images/d2b045b7f54a65ceb60914590d7732e667f5f95b187400fa17363aed09dfab01.png](../Images/f50fbf1c81705f94c9ff9b1e33a4d90c)'
 - en: This confirms that the marginals of the Dirichlet distribution are beta distributions.
     And that’s useful because the Dirichlet distribution is the conjugate prior for
     the multinomial likelihood function.
   id: totrans-137
   prefs: []
   type: TYPE_NORMAL
+  zh: 这证实了狄利克雷分布的边缘分布是贝塔分布。这很有用，因为狄利克雷分布是多项式似然函数的共轭先验。
 - en: If the prior distribution is Dirichlet with parameter vector `alpha` and the
     data is a vector of observations, `data`, the posterior distribution is Dirichlet
     with parameter vector `alpha + data`.
   id: totrans-138
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果先验分布是具有参数向量`alpha`的狄利克雷分布，数据是一组观测值`data`的向量，则后验分布是具有参数向量`alpha + data`的狄利克雷分布。
 - en: As an exercise at the end of this chapter, you can use this method to solve
     the Lions and Tigers and Bears problem.
   id: totrans-139
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为本章结束时的练习，您可以使用这种方法来解决狮子、老虎和熊的问题。
 - en: Summary
   id: totrans-140
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 总结
 - en: After reading this chapter, if you feel like you’ve been tricked, I understand.
     It turns out that many of the problems in this book can be solved with just a
     few arithmetic operations. So why did we go to all the trouble of using grid algorithms?
   id: totrans-141
   prefs: []
   type: TYPE_NORMAL
+  zh: 阅读完本章后，如果你觉得自己被愚弄了，我理解。事实证明，这本书中的许多问题只需要进行一些算术运算就可以解决。那么为什么我们要费这么大劲使用网格算法呢？
 - en: Sadly, there are only a few problems we can solve with conjugate priors; in
     fact, this chapter includes most of the ones that are useful in practice.
   id: totrans-142
   prefs: []
   type: TYPE_NORMAL
+  zh: 遗憾的是，我们只能用共轭先验解决少数问题；事实上，本章包括了实践中大部分有用的问题。
 - en: For the vast majority of problems, there is no conjugate prior and no shortcut
     to compute the posterior distribution. That’s why we need grid algorithms and
     the methods in the next two chapters, Approximate Bayesian Computation (ABC) and
@@ -731,11 +783,13 @@
   id: totrans-143
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于绝大多数问题，没有共轭先验，也没有计算后验分布的捷径。这就是为什么我们需要网格算法和接下来两章中的方法，即近似贝叶斯计算（ABC）和马尔可夫链蒙特卡洛方法（MCMC）。
 - en: Exercises
   id: totrans-144
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 练习
 - en: '**Exercise:** In the second version of the World Cup problem, the data we use
     for the update is not the number of goals in a game, but the time until the first
     goal. So the probability of the data is given by the exponential distribution
@@ -743,6 +797,7 @@
   id: totrans-145
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**在世界杯问题的第二个版本中，我们用于更新的数据不是一场比赛中的进球数，而是直到第一个进球的时间。因此，数据的概率由指数分布给出，而不是泊松分布。'
 - en: But it turns out that the gamma distribution is *also* the conjugate prior of
     the exponential distribution, so there is a simple way to compute this update,
     too. The PDF of the exponential distribution is a function of \(t\) with \(\lambda\)
@@ -750,41 +805,50 @@
   id: totrans-146
   prefs: []
   type: TYPE_NORMAL
+  zh: 但事实证明，伽玛分布也是指数分布的共轭先验，因此也有一种简单的方法来计算这个更新。指数分布的PDF是关于\(t\)的函数，其中\(\lambda\)是参数。
 - en: \[\lambda e^{-\lambda t}\]
   id: totrans-147
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\lambda e^{-\lambda t}\]
 - en: Multiply the PDF of the gamma prior by this likelihood, confirm that the result
     is an unnormalized gamma distribution, and see if you can derive its parameters.
   id: totrans-148
   prefs: []
   type: TYPE_NORMAL
+  zh: 将伽玛先验的PDF乘以这个似然，确认结果是一个未归一化的伽玛分布，并看看你是否可以推导出它的参数。
 - en: Write a few lines of code to update `prior_gamma` with the data from this version
     of the problem, which was a first goal after 11 minutes and a second goal after
     an additional 12 minutes.
   id: totrans-149
   prefs: []
   type: TYPE_NORMAL
+  zh: 写几行代码来使用这个问题版本的数据更新`prior_gamma`，这是在11分钟后的第一个目标和额外12分钟后的第二个目标之后的第一个目标。
 - en: Remember to express these quantities in units of games, which are approximately
     90 minutes.
   id: totrans-150
   prefs: []
   type: TYPE_NORMAL
+  zh: 记得用大约90分钟的游戏单位来表示这些数量。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-151
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容隐藏代码单元格内容</summary>
 - en: '[PRE43]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-152
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE43]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容隐藏代码单元格内容</summary>'
 - en: '[PRE44]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-153
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE44]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容隐藏代码单元格内容</summary>'
 - en: '[PRE45]'
   id: totrans-154
   prefs: []
@@ -795,6 +859,8 @@
   id: totrans-155
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE46]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容隐藏代码单元格内容</summary>'
 - en: '[PRE47]'
   id: totrans-156
   prefs: []
@@ -804,12 +870,14 @@
   id: totrans-157
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/4b02d1d83de1cd604d399109a433c3edb273cfc7a8407045a8aade575d235c6e.png](../Images/4d92153053608fe4987f356fc8345b6d.png)</details>'
 - en: '**Exercise:** For problems like the Euro problem where the likelihood function
     is binomial, we can do a Bayesian update with just a few arithmetic operations,
     but only if the prior is a beta distribution.'
   id: totrans-158
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** 对于像欧元问题这样的似然函数是二项式的问题，我们可以通过一些算术运算进行贝叶斯更新，但前提是先验是一个贝塔分布。'
 - en: If we want a uniform prior, we can use a beta distribution with `alpha=1` and
     `beta=1`. But what can we do if the prior distribution we want is not a beta distribution?
     For example, in <<_TrianglePrior>> we also solved the Euro problem with a triangle
@@ -817,27 +885,32 @@
   id: totrans-159
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们想要一个均匀的先验分布，我们可以使用`alpha=1`和`beta=1`的贝塔分布。但是如果我们想要的先验分布不是贝塔分布怎么办？例如，在<<_TrianglePrior>>中，我们还用三角形先验解决了欧元问题，这不是一个贝塔分布。
 - en: In these cases, we can often find a beta distribution that is a good-enough
     approximation for the prior we want. See if you can find a beta distribution that
     fits the triangle prior, then update it using `update_beta`.
   id: totrans-160
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这些情况下，我们通常可以找到一个贝塔分布，它是我们想要的先验的一个足够好的近似。看看你是否能找到一个适合三角形先验的贝塔分布，然后使用`update_beta`进行更新。
 - en: Use `pmf_from_dist` to make a `Pmf` that approximates the posterior distribution
     and compare it to the posterior we just computed using a grid algorithm. How big
     is the largest difference between them?
   id: totrans-161
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用`pmf_from_dist`制作一个近似后验分布的`Pmf`，并将其与我们刚刚使用网格算法计算的后验进行比较。它们之间的最大差异有多大？
 - en: Here’s the triangle prior again.
   id: totrans-162
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是三角形先验。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-163
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
 - en: '[PRE48]'
   id: totrans-164
   prefs: []
@@ -847,15 +920,18 @@
   id: totrans-165
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE49]</details>'
 - en: And here’s the update.
   id: totrans-166
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是更新。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-167
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
 - en: '[PRE50]'
   id: totrans-168
   prefs: []
@@ -865,15 +941,18 @@
   id: totrans-169
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE51]</details>'
 - en: To get you started, here’s the beta distribution that we used as a uniform prior.
   id: totrans-170
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了帮助你入门，这是我们用作均匀先验的贝塔分布。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-171
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
 - en: '[PRE52]'
   id: totrans-172
   prefs: []
@@ -883,15 +962,18 @@
   id: totrans-173
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE53]</details>'
 - en: And here’s what it looks like compared to the triangle prior.
   id: totrans-174
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是它与三角形先验的比较。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-175
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
 - en: '[PRE54]'
   id: totrans-176
   prefs: []
@@ -901,15 +983,18 @@
   id: totrans-177
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/8a092622087a81b63220299ed339ad33e748615fdf8b8c669f8a3a99a5c416f1.png](../Images/73af9d0e16a3a3a26f30c218b855c169.png)</details>'
 - en: Now you take it from there.
   id: totrans-178
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在由你来继续。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-179
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
 - en: '[PRE55]'
   id: totrans-180
   prefs: []
@@ -920,11 +1005,15 @@
   id: totrans-181
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE56]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容隐藏代码单元格内容</summary>'
 - en: '[PRE57]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-182
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE57]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容隐藏代码单元格内容</summary>'
 - en: '[PRE58]'
   id: totrans-183
   prefs: []
@@ -936,6 +1025,8 @@
   id: totrans-184
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/c876c409c11dd54ba4da7d89608ab9129059f96d92b73aa846a81dcf77d3d82c.png](../Images/70a181595d707f471e4b328a30987f04.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>'
 - en: '[PRE59]'
   id: totrans-185
   prefs: []
@@ -945,6 +1036,7 @@
   id: totrans-186
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE60]</details>'
 - en: '**Exercise:** [3Blue1Brown](https://en.wikipedia.org/wiki/3Blue1Brown) is a
     YouTube channel about math; if you are not already aware of it, I recommend it
     highly. In [this video](https://www.youtube.com/watch?v=8idr1WZ1A7Q) the narrator
@@ -952,6 +1044,7 @@
   id: totrans-187
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** [3Blue1Brown](https://en.wikipedia.org/wiki/3Blue1Brown) 是一个关于数学的YouTube频道；如果你还不知道它，我强烈推荐。在[这个视频](https://www.youtube.com/watch?v=8idr1WZ1A7Q)中，叙述者提出了这个问题：'
 - en: You are buying a product online and you see three sellers offering the same
     product at the same price. One of them has a 100% positive rating, but with only
     10 reviews. Another has a 96% positive rating with 50 total reviews. And yet another
@@ -960,6 +1053,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 你正在网上购买一个产品，看到有三个卖家以相同的价格提供相同的产品。其中一个卖家有100%的积极评价，但只有10条评论。另一个卖家有96%的积极评价，共有50条评论。还有一个卖家有93%的积极评价，但共有200条评论。
 - en: ''
   id: totrans-189
   prefs:
@@ -970,12 +1064,14 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 你应该从哪个卖家购买？
 - en: Let’s think about how to model this scenario. Suppose each seller has some unknown
     probability, `x`, of providing satisfactory service and getting a positive rating,
     and we want to choose the seller with the highest value of `x`.
   id: totrans-191
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们思考如何对这种情景建模。假设每个卖家都有一些未知的概率`x`，能够提供满意的服务并获得积极评价，我们想选择具有最高`x`值的卖家。
 - en: This is not the only model for this scenario, and it is not necessarily the
     best. An alternative would be something like item response theory, where sellers
     have varying ability to provide satisfactory service and customers have varying
@@ -983,23 +1079,27 @@
   id: totrans-192
   prefs: []
   type: TYPE_NORMAL
+  zh: 这不是这种情况的唯一模型，也不一定是最好的。另一种选择可能是项目反应理论，其中卖家有不同的能力提供满意的服务，顾客有不同的满意度难度。
 - en: But the first model has the virtue of simplicity, so let’s see where it gets
     us.
   id: totrans-193
   prefs: []
   type: TYPE_NORMAL
+  zh: 但第一个模型具有简单的优点，所以让我们看看它能带给我们什么。
 - en: As a prior, I suggest a beta distribution with `alpha=8` and `beta=2`. What
     does this prior look like and what does it imply about sellers?
   id: totrans-194
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 作为先验，我建议使用 `alpha=8`，`beta=2` 的贝塔分布。这个先验是什么样子的，它对卖家有什么暗示？
 - en: Use the data to update the prior for the three sellers and plot the posterior
     distributions. Which seller has the highest posterior mean?
   id: totrans-195
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 使用数据更新三个卖家的先验，并绘制后验分布。哪个卖家具有最高的后验均值？
 - en: How confident should we be about our choice? That is, what is the probability
     that the seller with the highest posterior mean actually has the highest value
     of `x`?
@@ -1007,17 +1107,20 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 我们对我们的选择应该有多大的信心？也就是说，具有最高后验均值的卖家实际上具有最高的 `x` 值的概率是多少？
 - en: Consider a beta prior with `alpha=0.7` and `beta=0.5`. What does this prior
     look like and what does it imply about sellers?
   id: totrans-197
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 考虑一个贝塔先验，其中 `alpha=0.7`，`beta=0.5`。这个先验是什么样子的，它对卖家有什么暗示？
 - en: Run the analysis again with this prior and see what effect it has on the results.
   id: totrans-198
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 使用这个先验再次运行分析，看看它对结果有什么影响。
 - en: 'Note: When you evaluate the beta distribution, you should restrict the range
     of `xs` so it does not include 0 and 1\. When the parameters of the beta distribution
     are less than 1, the probability density goes to infinity at 0 and 1\. From a
@@ -1027,11 +1130,14 @@
   id: totrans-199
   prefs: []
   type: TYPE_NORMAL
+  zh: 注意：当你评估贝塔分布时，你应该限制 `xs` 的范围，使其不包括 0 和 1。当贝塔分布的参数小于 1 时，概率密度在 0 和 1 处趋于无穷大。从数学的角度来看，这并不是问题；它仍然是一个适当的概率分布。但从计算的角度来看，这意味着我们必须避免在
+    0 和 1 处评估概率密度函数。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-200
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
 - en: '[PRE61]'
   id: totrans-201
   prefs: []
@@ -1043,21 +1149,29 @@
   id: totrans-202
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/10f1e732645ad625d44851743d4fe343a94841acc5b05777fdb17545b3e088be.png](../Images/3467044fe4b8f6bbd9e4caaca9246e97.png)</details><details
+    class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE62]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-203
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE62] </details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE63]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-204
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE63] </details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE64]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-205
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE64] </details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE65]'
   id: totrans-206
   prefs: []
@@ -1069,6 +1183,8 @@
   id: totrans-207
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/287d7bc9e8018421486a23dfd8721014d0c702fff0d03d83edec1951ee90458a.png](../Images/b9e1eb89662d72d4365e5ef48b669c68.png)</details><details
+    class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE66]'
   id: totrans-208
   prefs: []
@@ -1079,11 +1195,15 @@
   id: totrans-209
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE67] </details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE68]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-210
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE68] </details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE69]'
   id: totrans-211
   prefs: []
@@ -1093,33 +1213,40 @@
   id: totrans-212
   prefs: []
   type: TYPE_TB
+  zh: '|  | 概率 |'
 - en: '| --- | --- |'
   id: totrans-213
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| 0 | 0.2948 |'
   id: totrans-214
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 0.2948 |'
 - en: '| 1 | 0.4750 |'
   id: totrans-215
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 0.4750 |'
 - en: '| 2 | 0.2302 |</details>'
   id: totrans-216
   prefs: []
   type: TYPE_NORMAL
+  zh: '| 2 | 0.2302 |</details>'
 - en: '**Exercise:** Use a Dirichlet prior with parameter vector `alpha = [1, 1, 1]`
     to solve the Lions and Tigers and Bears problem:'
   id: totrans-217
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** 使用参数向量 `alpha = [1, 1, 1]` 的狄利克雷先验来解决狮子、老虎和熊的问题：'
 - en: Suppose we visit a wild animal preserve where we know that the only animals
     are lions and tigers and bears, but we don’t know how many of each there are.
   id: totrans-218
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 假设我们参观一个野生动物保护区，我们知道那里的动物只有狮子、老虎和熊，但我们不知道每种动物的数量。
 - en: ''
   id: totrans-219
   prefs:
@@ -1132,6 +1259,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 在游览期间，我们看到三只狮子，两只老虎和一只熊。假设每种动物在我们的样本中出现的机会是相等的，估计每种动物的普遍性。
 - en: ''
   id: totrans-221
   prefs:
@@ -1142,21 +1270,27 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 下一个我们看到的动物是熊的概率是多少？
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-223
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
 - en: '[PRE70]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-224
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE70] </details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE71]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-225
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE71] </details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE72]'
   id: totrans-226
   prefs: []
