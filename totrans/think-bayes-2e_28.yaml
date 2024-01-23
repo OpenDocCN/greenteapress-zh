@@ -1,189 +1,250 @@
 - en: The Left Handed Sister Problem
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
 - en: 原文：[https://allendowney.github.io/ThinkBayes2/sister.html](https://allendowney.github.io/ThinkBayes2/sister.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: Suppose you meet someone who looks like the brother of your friend Mary. You
     ask if he has a sister named Mary, and he says “Yes I do, but I don’t think I
     know you.”
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
 - en: You remember that Mary has a sister who is left-handed, but you don’t remember
     her name. So you ask your new friend if he has another sister who is left-handed.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
 - en: If he does, how much evidence does that provide that he is the brother of your
     friend, rather than a random person who coincidentally has a sister named Mary
     and another sister who is left-handed. In other words, what is the Bayes factor
     of the left-handed sister?
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
 - en: 'Let’s assume:'
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
 - en: Out of 100 families with children, 20 have one child, 30 have two children,
     40 have three children, and 10 have four children.
+  id: totrans-6
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: All children are either boys or girls with equal probability, one girl in 10
     is left-handed, and one girl in 100 is named Mary.
+  id: totrans-7
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Name, sex, and handedness are independent, so every child has the same probability
     of being a girl, left-handed, or named Mary.
+  id: totrans-8
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: If the person you met had more than one sister named Mary, he would have said
     so, but he could have more than one sister who is left handed.
+  id: totrans-9
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Constructing the prior
+  id: totrans-10
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: I’ll make a Pandas `Series` that enumerates possible families with 2, 3, or
     4 children.
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE0]'
+  id: totrans-12
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: To compute the proportion of each type of family, I’ll use Scipy to compute
     the binomial distribution.
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE1]'
+  id: totrans-14
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: And put the results into a Pandas `Series`.
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE2]'
+  id: totrans-16
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '|  |  | Prior |'
+  id: totrans-17
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- |'
+  id: totrans-18
   prefs: []
   type: TYPE_TB
 - en: '| Boys | Girls |  |'
+  id: totrans-19
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- |'
+  id: totrans-20
   prefs: []
   type: TYPE_TB
 - en: '| 2 | 0 | 0.2500 |'
+  id: totrans-21
   prefs: []
   type: TYPE_TB
 - en: '| 1 | 1 | 0.5000 |'
+  id: totrans-22
   prefs: []
   type: TYPE_TB
 - en: '| 0 | 2 | 0.2500 |'
+  id: totrans-23
   prefs: []
   type: TYPE_TB
 - en: '| 3 | 0 | 0.1250 |'
+  id: totrans-24
   prefs: []
   type: TYPE_TB
 - en: '| 2 | 1 | 0.3750 |'
+  id: totrans-25
   prefs: []
   type: TYPE_TB
 - en: '| 1 | 2 | 0.3750 |'
+  id: totrans-26
   prefs: []
   type: TYPE_TB
 - en: '| 0 | 3 | 0.1250 |'
+  id: totrans-27
   prefs: []
   type: TYPE_TB
 - en: '| 4 | 0 | 0.0625 |'
+  id: totrans-28
   prefs: []
   type: TYPE_TB
 - en: '| 3 | 1 | 0.2500 |'
+  id: totrans-29
   prefs: []
   type: TYPE_TB
 - en: '| 2 | 2 | 0.3750 |'
+  id: totrans-30
   prefs: []
   type: TYPE_TB
 - en: '| 1 | 3 | 0.2500 |'
+  id: totrans-31
   prefs: []
   type: TYPE_TB
 - en: '| 0 | 4 | 0.0625 |'
+  id: totrans-32
   prefs: []
   type: TYPE_TB
 - en: But we also have the information frequencies of these families are proportional
     to 30%, 40%, and 10%, so we can multiply through.
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE3]'
+  id: totrans-34
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '|  |  | Prior |'
+  id: totrans-35
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- |'
+  id: totrans-36
   prefs: []
   type: TYPE_TB
 - en: '| Boys | Girls |  |'
+  id: totrans-37
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- |'
+  id: totrans-38
   prefs: []
   type: TYPE_TB
 - en: '| 2 | 0 | 7.500 |'
+  id: totrans-39
   prefs: []
   type: TYPE_TB
 - en: '| 1 | 1 | 15.000 |'
+  id: totrans-40
   prefs: []
   type: TYPE_TB
 - en: '| 0 | 2 | 7.500 |'
+  id: totrans-41
   prefs: []
   type: TYPE_TB
 - en: '| 3 | 0 | 5.000 |'
+  id: totrans-42
   prefs: []
   type: TYPE_TB
 - en: '| 2 | 1 | 15.000 |'
+  id: totrans-43
   prefs: []
   type: TYPE_TB
 - en: '| 1 | 2 | 15.000 |'
+  id: totrans-44
   prefs: []
   type: TYPE_TB
 - en: '| 0 | 3 | 5.000 |'
+  id: totrans-45
   prefs: []
   type: TYPE_TB
 - en: '| 4 | 0 | 0.625 |'
+  id: totrans-46
   prefs: []
   type: TYPE_TB
 - en: '| 3 | 1 | 2.500 |'
+  id: totrans-47
   prefs: []
   type: TYPE_TB
 - en: '| 2 | 2 | 3.750 |'
+  id: totrans-48
   prefs: []
   type: TYPE_TB
 - en: '| 1 | 3 | 2.500 |'
+  id: totrans-49
   prefs: []
   type: TYPE_TB
 - en: '| 0 | 4 | 0.625 |'
+  id: totrans-50
   prefs: []
   type: TYPE_TB
 - en: So that’s the (unnormalized) prior.
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
 - en: I’ll use the following function to do Bayesian updates.
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE4]'
+  id: totrans-53
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: This function takes a prior and a likelihood and returns a `DataFrame`
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
 - en: The first update
+  id: totrans-55
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -191,299 +252,456 @@
     the person you met is more likely to come from family with more boys. Specifically,
     the likelihood of meeting someone from a family with \(n\) boys is proportional
     to \(n\).
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE5]'
+  id: totrans-57
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '|  |  | Prior | Likelihood | Product | Posterior |'
+  id: totrans-58
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- | --- | --- | --- |'
+  id: totrans-59
   prefs: []
   type: TYPE_TB
 - en: '| Boys | Girls |  |  |  |  |'
+  id: totrans-60
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- | --- | --- | --- |'
+  id: totrans-61
   prefs: []
   type: TYPE_TB
 - en: '| 2 | 0 | 7.500 | 2 | 15.0 | 0.136364 |'
+  id: totrans-62
   prefs: []
   type: TYPE_TB
 - en: '| 1 | 1 | 15.000 | 1 | 15.0 | 0.136364 |'
+  id: totrans-63
   prefs: []
   type: TYPE_TB
 - en: '| 0 | 2 | 7.500 | 0 | 0.0 | 0.000000 |'
+  id: totrans-64
   prefs: []
   type: TYPE_TB
 - en: '| 3 | 0 | 5.000 | 3 | 15.0 | 0.136364 |'
+  id: totrans-65
   prefs: []
   type: TYPE_TB
 - en: '| 2 | 1 | 15.000 | 2 | 30.0 | 0.272727 |'
+  id: totrans-66
   prefs: []
   type: TYPE_TB
 - en: '| 1 | 2 | 15.000 | 1 | 15.0 | 0.136364 |'
+  id: totrans-67
   prefs: []
   type: TYPE_TB
 - en: '| 0 | 3 | 5.000 | 0 | 0.0 | 0.000000 |'
+  id: totrans-68
   prefs: []
   type: TYPE_TB
 - en: '| 4 | 0 | 0.625 | 4 | 2.5 | 0.022727 |'
+  id: totrans-69
   prefs: []
   type: TYPE_TB
 - en: '| 3 | 1 | 2.500 | 3 | 7.5 | 0.068182 |'
+  id: totrans-70
   prefs: []
   type: TYPE_TB
 - en: '| 2 | 2 | 3.750 | 2 | 7.5 | 0.068182 |'
+  id: totrans-71
   prefs: []
   type: TYPE_TB
 - en: '| 1 | 3 | 2.500 | 1 | 2.5 | 0.022727 |'
+  id: totrans-72
   prefs: []
   type: TYPE_TB
 - en: '| 0 | 4 | 0.625 | 0 | 0.0 | 0.000000 |'
+  id: totrans-73
   prefs: []
   type: TYPE_TB
 - en: So that’s what we should believe about the family after the first update.
+  id: totrans-74
   prefs: []
   type: TYPE_NORMAL
 - en: The second update
+  id: totrans-75
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: The likelihood that a person has exactly one sister named Mary is given by the
     binomial distribution where `n` is the number of girls in the family and `p` is
     the probability that a girl is named Mary.
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE6]'
+  id: totrans-77
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '[PRE7]'
+  id: totrans-78
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: Here’s the second update.
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE8]'
+  id: totrans-80
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '|  |  | Prior | Likelihood | Product | Posterior |'
+  id: totrans-81
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- | --- | --- | --- |'
+  id: totrans-82
   prefs: []
   type: TYPE_TB
 - en: '| Boys | Girls |  |  |  |  |'
+  id: totrans-83
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- | --- | --- | --- |'
+  id: totrans-84
   prefs: []
   type: TYPE_TB
 - en: '| 2 | 0 | 0.136364 | 0.000000 | 0.000000 | 0.000000 |'
+  id: totrans-85
   prefs: []
   type: TYPE_TB
 - en: '| 1 | 1 | 0.136364 | 0.010000 | 0.001364 | 0.143677 |'
+  id: totrans-86
   prefs: []
   type: TYPE_TB
 - en: '| 0 | 2 | 0.000000 | 0.019800 | 0.000000 | 0.000000 |'
+  id: totrans-87
   prefs: []
   type: TYPE_TB
 - en: '| 3 | 0 | 0.136364 | 0.000000 | 0.000000 | 0.000000 |'
+  id: totrans-88
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 0 | 0.136364 | 0.000000 | 0.000000 | 0.000000 |'
 - en: '| 2 | 1 | 0.272727 | 0.010000 | 0.002727 | 0.287354 |'
+  id: totrans-89
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 1 | 0.272727 | 0.010000 | 0.002727 | 0.287354 |'
 - en: '| 1 | 2 | 0.136364 | 0.019800 | 0.002700 | 0.284481 |'
+  id: totrans-90
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 2 | 0.136364 | 0.019800 | 0.002700 | 0.284481 |'
 - en: '| 0 | 3 | 0.000000 | 0.029403 | 0.000000 | 0.000000 |'
+  id: totrans-91
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 3 | 0.000000 | 0.029403 | 0.000000 | 0.000000 |'
 - en: '| 4 | 0 | 0.022727 | 0.000000 | 0.000000 | 0.000000 |'
+  id: totrans-92
   prefs: []
   type: TYPE_TB
+  zh: '| 4 | 0 | 0.022727 | 0.000000 | 0.000000 | 0.000000 |'
 - en: '| 3 | 1 | 0.068182 | 0.010000 | 0.000682 | 0.071839 |'
+  id: totrans-93
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 1 | 0.068182 | 0.010000 | 0.000682 | 0.071839 |'
 - en: '| 2 | 2 | 0.068182 | 0.019800 | 0.001350 | 0.142240 |'
+  id: totrans-94
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 2 | 0.068182 | 0.019800 | 0.001350 | 0.142240 |'
 - en: '| 1 | 3 | 0.022727 | 0.029403 | 0.000668 | 0.070409 |'
+  id: totrans-95
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 3 | 0.022727 | 0.029403 | 0.000668 | 0.070409 |'
 - en: '| 0 | 4 | 0.000000 | 0.038812 | 0.000000 | 0.000000 |'
+  id: totrans-96
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 4 | 0.000000 | 0.038812 | 0.000000 | 0.000000 |'
 - en: Based on the sister named Mary, we can rule out families with no girls, and
     families with more than one girls are more likely.
+  id: totrans-97
   prefs: []
   type: TYPE_NORMAL
+  zh: 根据名为玛丽的姐妹，我们可以排除没有女孩的家庭，而有多于一个女孩的家庭更有可能。
 - en: Probability of a left-handed sister
+  id: totrans-98
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 左撇子姐妹的概率
 - en: Finally, we can compute the probability that he has at least one left-handed
     sister. The likelihood comes from the binomial distribution again, where `n` is
     the number of *additional* sisters, and we use the survival function to compute
     the probability that one or more are left-handed.
+  id: totrans-99
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，我们可以计算他至少有一个左撇子姐妹的概率。似然性再次来自二项分布，其中`n`是*额外*姐妹的数量，我们使用生存函数来计算一个或多个姐妹是左撇子的概率。
 - en: '[PRE9]'
+  id: totrans-100
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '|  |  | Additional sisters |'
+  id: totrans-101
   prefs: []
   type: TYPE_TB
+  zh: '|  |  | 附加姐妹 |'
 - en: '| --- | --- | --- |'
+  id: totrans-102
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- |'
 - en: '| Boys | Girls |  |'
+  id: totrans-103
   prefs: []
   type: TYPE_TB
+  zh: '| 男孩 | 女孩 |  |'
 - en: '| --- | --- | --- |'
+  id: totrans-104
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- |'
 - en: '| 2 | 0 | 0 |'
+  id: totrans-105
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 0 | 0 |'
 - en: '| 1 | 1 | 0 |'
+  id: totrans-106
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 1 | 0 |'
 - en: '| 0 | 2 | 1 |'
+  id: totrans-107
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 2 | 1 |'
 - en: '| 3 | 0 | 0 |'
+  id: totrans-108
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 0 | 0 |'
 - en: '| 2 | 1 | 0 |'
+  id: totrans-109
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 1 | 0 |'
 - en: '| 1 | 2 | 1 |'
+  id: totrans-110
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 2 | 1 |'
 - en: '| 0 | 3 | 2 |'
+  id: totrans-111
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 3 | 2 |'
 - en: '| 4 | 0 | 0 |'
+  id: totrans-112
   prefs: []
   type: TYPE_TB
+  zh: '| 4 | 0 | 0 |'
 - en: '| 3 | 1 | 0 |'
+  id: totrans-113
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 1 | 0 |'
 - en: '| 2 | 2 | 1 |'
+  id: totrans-114
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 2 | 1 |'
 - en: '| 1 | 3 | 2 |'
+  id: totrans-115
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 3 | 2 |'
 - en: '| 0 | 4 | 3 |'
+  id: totrans-116
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 4 | 3 |'
 - en: '[PRE10]'
+  id: totrans-117
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '[PRE11]'
+  id: totrans-118
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: A convenient way to compute the total probability of an outcome is to do an
     update as if it happened, ignore the posterior probabilities, and compute the
     sum of the products.
+  id: totrans-119
   prefs: []
   type: TYPE_NORMAL
+  zh: 计算结果的一个方便的方法是假设发生了更新，忽略后验概率，然后计算产品的总和。
 - en: '[PRE12]'
+  id: totrans-120
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '|  |  | Prior | Likelihood | Product | Posterior |'
+  id: totrans-121
   prefs: []
   type: TYPE_TB
+  zh: '|  |  | 先验 | 似然性 | 产品 | 后验 |'
 - en: '| --- | --- | --- | --- | --- | --- |'
+  id: totrans-122
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- | --- |'
 - en: '| Boys | Girls |  |  |  |  |'
+  id: totrans-123
   prefs: []
   type: TYPE_TB
+  zh: '| 男孩 | 女孩 |  |  |  |  |'
 - en: '| --- | --- | --- | --- | --- | --- |'
+  id: totrans-124
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- | --- |'
 - en: '| 2 | 0 | 0.000000 | 0.000 | 0.000000 | 0.000000 |'
+  id: totrans-125
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 0 | 0.000000 | 0.000 | 0.000000 | 0.000000 |'
 - en: '| 1 | 1 | 0.143677 | 0.000 | 0.000000 | 0.000000 |'
+  id: totrans-126
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 1 | 0.143677 | 0.000 | 0.000000 | 0.000000 |'
 - en: '| 0 | 2 | 0.000000 | 0.100 | 0.000000 | 0.000000 |'
+  id: totrans-127
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 2 | 0.000000 | 0.100 | 0.000000 | 0.000000 |'
 - en: '| 3 | 0 | 0.000000 | 0.000 | 0.000000 | 0.000000 |'
+  id: totrans-128
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 0 | 0.000000 | 0.000 | 0.000000 | 0.000000 |'
 - en: '| 2 | 1 | 0.287354 | 0.000 | 0.000000 | 0.000000 |'
+  id: totrans-129
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 1 | 0.287354 | 0.000 | 0.000000 | 0.000000 |'
 - en: '| 1 | 2 | 0.284481 | 0.100 | 0.028448 | 0.507550 |'
+  id: totrans-130
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 2 | 0.284481 | 0.100 | 0.028448 | 0.507550 |'
 - en: '| 0 | 3 | 0.000000 | 0.190 | 0.000000 | 0.000000 |'
+  id: totrans-131
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 3 | 0.000000 | 0.190 | 0.000000 | 0.000000 |'
 - en: '| 4 | 0 | 0.000000 | 0.000 | 0.000000 | 0.000000 |'
+  id: totrans-132
   prefs: []
   type: TYPE_TB
+  zh: '| 4 | 0 | 0.000000 | 0.000 | 0.000000 | 0.000000 |'
 - en: '| 3 | 1 | 0.071839 | 0.000 | 0.000000 | 0.000000 |'
+  id: totrans-133
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 1 | 0.071839 | 0.000 | 0.000000 | 0.000000 |'
 - en: '| 2 | 2 | 0.142240 | 0.100 | 0.014224 | 0.253775 |'
+  id: totrans-134
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 2 | 0.142240 | 0.100 | 0.014224 | 0.253775 |'
 - en: '| 1 | 3 | 0.070409 | 0.190 | 0.013378 | 0.238675 |'
+  id: totrans-135
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 3 | 0.070409 | 0.190 | 0.013378 | 0.238675 |'
 - en: '| 0 | 4 | 0.000000 | 0.271 | 0.000000 | 0.000000 |'
+  id: totrans-136
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 4 | 0.000000 | 0.271 | 0.000000 | 0.000000 |'
 - en: At this point, there are only three family types left standing, (1,2), (2,2),
     and (1,3).
+  id: totrans-137
   prefs: []
   type: TYPE_NORMAL
+  zh: 此时，只剩下三种家庭类型，(1,2), (2,2), 和(1,3)。
 - en: Here’s the total probability that your new friend has a left-handed sister.
+  id: totrans-138
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是你的新朋友有左撇子姐妹的总概率。
 - en: '[PRE13]'
+  id: totrans-139
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: '[PRE14]'
+  id: totrans-140
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: The Bayes factor
+  id: totrans-141
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 贝叶斯因子
 - en: If your interlocutor is the brother of your friend, the probability is 1 that
     he has a left-handed sister. If he is not the brother of your friend, the probability
     is `p`. So the Bayes factor is the ratio of these probabilities.
+  id: totrans-142
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你的对话者是你朋友的兄弟，那么他有左撇子姐妹的概率是1。如果他不是你朋友的兄弟，概率是`p`。因此，贝叶斯因子是这些概率的比值。
 - en: '[PRE15]'
+  id: totrans-143
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '[PRE16]'
+  id: totrans-144
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: This might be the hardest Bayesian puzzle I’ve created. In fact, I got it wrong
     the first time, until [Aubrey Clayton convinced me](https://twitter.com/aubreyclayton/status/1420041376377475075)
     I needed to take into account the number of boys and girls in each family, not
     just the size. He solved the problem by enumerating the possible families in a
     giant spreadsheet! So the fact that we get the same answer gives me more confidence
     it is correct.
+  id: totrans-145
   prefs: []
   type: TYPE_NORMAL
+  zh: 这可能是我创作的最难的贝叶斯谜题。事实上，第一次我做错了，直到[Aubrey Clayton说服我](https://twitter.com/aubreyclayton/status/1420041376377475075)我需要考虑每个家庭的男孩和女孩的数量，而不仅仅是家庭的大小。他通过在一个巨大的电子表格中列举可能的家庭来解决了这个问题！所以我们得到相同的答案让我更有信心它是正确的。
 - en: Thanks to Aubrey and the other folks on Twitter who submitted answers, including
     [Corey Yanofsky](https://twitter.com/Corey_Yanofsky/status/1418627294256582664)
     and [Michal Haltuf](https://twitter.com/MichalHaltuf/status/1418685902717693952).
+  id: totrans-146
   prefs: []
   type: TYPE_NORMAL
+  zh: 感谢Aubrey和Twitter上提交答案的其他人，包括[Corey Yanofsky](https://twitter.com/Corey_Yanofsky/status/1418627294256582664)和[Michal
+    Haltuf](https://twitter.com/MichalHaltuf/status/1418685902717693952)。
 - en: If you like this puzzle, you might like the [new second edition of *Think Bayes*](https://thinkbayes.com).
+  id: totrans-147
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你喜欢这个谜题，你可能会喜欢[《Think Bayes》的新第二版](https://thinkbayes.com)。
