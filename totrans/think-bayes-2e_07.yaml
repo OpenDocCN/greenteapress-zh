@@ -1,855 +1,1321 @@
 - en: Estimating Proportions
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 估计比例
 - en: 原文：[https://allendowney.github.io/ThinkBayes2/chap04.html](https://allendowney.github.io/ThinkBayes2/chap04.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ThinkBayes2/chap04.html](https://allendowney.github.io/ThinkBayes2/chap04.html)
 - en: In the previous chapter we solved the 101 Bowls Problem, and I admitted that
     it is not really about guessing which bowl the cookies came from; it is about
     estimating proportions.
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 在上一章中，我们解决了101碗的问题，并且我承认这个问题并不是关于猜测饼干来自哪个碗，而是关于估计比例。
 - en: 'In this chapter, we take another step toward Bayesian statistics by solving
     the Euro problem. We’ll start with the same prior distribution, and we’ll see
     that the update is the same, mathematically. But I will argue that it is a different
     problem, philosophically, and use it to introduce two defining elements of Bayesian
     statistics: choosing prior distributions, and using probability to represent the
     unknown.'
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本章中，我们通过解决欧元问题，迈出了贝叶斯统计的另一步。我们将从相同的先验分布开始，并且我们将看到更新在数学上是相同的。但我会认为这是一个不同的问题，在哲学上是一个不同的问题，并用它来介绍贝叶斯统计的两个定义要素：选择先验分布和使用概率来表示未知。
 - en: The Euro Problem
+  id: totrans-4
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 欧元问题
 - en: 'In *Information Theory, Inference, and Learning Algorithms*, David MacKay poses
     this problem:'
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 在《信息论、推理和学习算法》一书中，David MacKay提出了这个问题：
 - en: '“A statistical statement appeared in *The Guardian* on Friday January 4, 2002:'
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: “《卫报》2002年1月4日星期五刊登了一条统计声明：
 - en: When spun on edge 250 times, a Belgian one-euro coin came up heads 140 times
     and tails 110\. `It looks very suspicious to me,’ said Barry Blight, a statistics
     lecturer at the London School of Economics. `If the coin were unbiased, the chance
     of getting a result as extreme as that would be less than 7%.’
+  id: totrans-7
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 当比利时一欧元硬币被抛掷250次时，出现了140次正面和110次反面。伦敦政治经济学院的统计学讲师巴里·布莱特说：“这对我来说看起来非常可疑。如果这枚硬币是公平的，得到这样极端结果的机会将低于7%。”
 - en: “But [MacKay asks] do these data give evidence that the coin is biased rather
     than fair?”
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: “但是[MacKay问道]这些数据是否证明了硬币是有偏的，而不是公平的？”
 - en: To answer that question, we’ll proceed in two steps. First we’ll use the binomial
     distribution to see where that 7% came from; then we’ll use Bayes’s Theorem to
     estimate the probability that this coin comes up heads.
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了回答这个问题，我们将分两步进行。首先我们将使用二项分布来看看这7%是从哪里来的；然后我们将使用贝叶斯定理来估计这个硬币出现正面的概率。
 - en: The Binomial Distribution
+  id: totrans-10
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 二项分布
 - en: 'Suppose I tell you that a coin is “fair”, that is, the probability of heads
     is 50%. If you spin it twice, there are four outcomes: `HH`, `HT`, `TH`, and `TT`.
     All four outcomes have the same probability, 25%.'
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设我告诉你一枚硬币是“公平的”，也就是说，正面的概率是50%。如果你把它抛两次，就会有四种结果：`HH`、`HT`、`TH`和`TT`。所有四种结果的概率都是25%。
 - en: 'If we add up the total number of heads, there are three possible results: 0,
     1, or 2\. The probabilities of 0 and 2 are 25%, and the probability of 1 is 50%.'
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们把所有的头的数量加起来，有三种可能的结果：0、1或2。0和2的概率是25%，1的概率是50%。
 - en: 'More generally, suppose the probability of heads is \(p\) and we spin the coin
     \(n\) times. The probability that we get a total of \(k\) heads is given by the
     [binomial distribution](https://en.wikipedia.org/wiki/Binomial_distribution):'
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 更一般地，假设正面的概率是\(p\)，我们抛硬币\(n\)次。得到\(k\)个正面的概率由[二项分布](https://en.wikipedia.org/wiki/Binomial_distribution)给出：
 - en: \[\binom{n}{k} p^k (1-p)^{n-k}\]
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\binom{n}{k} p^k (1-p)^{n-k}\]
 - en: for any value of \(k\) from 0 to \(n\), including both. The term \(\binom{n}{k}\)
     is the [binomial coefficient](https://en.wikipedia.org/wiki/Binomial_coefficient),
     usually pronounced “n choose k”.
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于从0到n的任何值的\(k\)，包括两者。术语\(\binom{n}{k}\)是[二项式系数](https://en.wikipedia.org/wiki/Binomial_coefficient)，通常发音为“n
+    choose k”。
 - en: 'We could evaluate this expression ourselves, but we can also use the SciPy
     function `binom.pmf`. For example, if we flip a coin `n=2` times and the probability
     of heads is `p=0.5`, here’s the probability of getting `k=1` heads:'
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以自己评估这个表达式，但我们也可以使用SciPy函数`binom.pmf`。例如，如果我们抛一枚硬币`n=2`次，正面的概率是`p=0.5`，那么得到`k=1`个正面的概率是：
 - en: '[PRE0]'
+  id: totrans-17
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '[PRE1]'
+  id: totrans-18
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: Instead of providing a single value for `k`, we can also call `binom.pmf` with
     an array of values.
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 除了提供`k`的单个值之外，我们还可以使用一个值数组来调用`binom.pmf`。
 - en: '[PRE2]'
+  id: totrans-20
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '[PRE3]'
+  id: totrans-21
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: The result is a NumPy array with the probability of 0, 1, or 2 heads. If we
     put these probabilities in a `Pmf`, the result is the distribution of `k` for
     the given values of `n` and `p`.
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个NumPy数组，其中包含0、1或2个头的概率。如果我们把这些概率放在`Pmf`中，结果就是给定`n`和`p`的`k`的分布。
 - en: 'Here’s what it looks like:'
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: 它看起来是这样的：
 - en: '[PRE4]'
+  id: totrans-24
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '|  | probs |'
+  id: totrans-25
   prefs: []
   type: TYPE_TB
+  zh: '|  | probs |'
 - en: '| --- | --- |'
+  id: totrans-26
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| 0 | 0.25 |'
+  id: totrans-27
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 0.25 |'
 - en: '| 1 | 0.50 |'
+  id: totrans-28
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 0.50 |'
 - en: '| 2 | 0.25 |'
+  id: totrans-29
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 0.25 |'
 - en: The following function computes the binomial distribution for given values of
     `n` and `p` and returns a `Pmf` that represents the result.
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数计算给定`n`和`p`的二项分布，并返回代表结果的`Pmf`。
 - en: '[PRE5]'
+  id: totrans-31
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: 'Here’s what it looks like with `n=250` and `p=0.5`:'
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 当`n=250`和`p=0.5`时，它看起来是这样的：
 - en: '[PRE6]'
+  id: totrans-33
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE7]</details> ![_images/78776da24ecbd5525d7f021195efd37ee9f890ed482a679078c11cd2f6e24baa.png](../Images/44850b0694a0ed061791879e0749472f.png)'
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE7]</details> ![_images/78776da24ecbd5525d7f021195efd37ee9f890ed482a679078c11cd2f6e24baa.png](../Images/44850b0694a0ed061791879e0749472f.png)'
 - en: 'The most likely quantity in this distribution is 125:'
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个分布中最可能的数量是125：
 - en: '[PRE8]'
+  id: totrans-37
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '[PRE9]'
+  id: totrans-38
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: But even though it is the most likely quantity, the probability that we get
     exactly 125 heads is only about 5%.
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 但即使它是最可能的数量，我们得到恰好125个头的概率只有大约5%。
 - en: '[PRE10]'
+  id: totrans-40
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '[PRE11]'
+  id: totrans-41
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: 'In MacKay’s example, we got 140 heads, which is even less likely than 125:'
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: 在MacKay的例子中，我们得到了140个头，这比125个头更不可能：
 - en: '[PRE12]'
+  id: totrans-43
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '[PRE13]'
+  id: totrans-44
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: In the article MacKay quotes, the statistician says, “If the coin were unbiased
     the chance of getting a result as extreme as that would be less than 7%.”
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 在MacKay引用的文章中，统计学家说：“如果硬币是公平的，得到这样极端结果的机会将低于7%。”
 - en: We can use the binomial distribution to check his math. The following function
     takes a PMF and computes the total probability of quantities greater than or equal
     to `threshold`.
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用二项分布来检查他的数学。以下函数接受一个PMF并计算大于或等于`threshold`的数量的总概率。
 - en: '[PRE14]'
+  id: totrans-47
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: 'Here’s the probability of getting 140 heads or more:'
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是得到140个或更多正面朝上的概率：
 - en: '[PRE15]'
+  id: totrans-49
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '[PRE16]'
+  id: totrans-50
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '`Pmf` provides a method that does the same computation.'
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: '`Pmf`提供了一个执行相同计算的方法。'
 - en: '[PRE17]'
+  id: totrans-52
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: '[PRE18]'
+  id: totrans-53
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: The result is about 3.3%, which is less than the quoted 7%. The reason for the
     difference is that the statistician includes all outcomes “as extreme as” 140,
     which includes outcomes less than or equal to 110.
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果约为3.3%，低于引用的7%。差异的原因是统计学家包括所有“和140一样极端”的结果，其中包括小于或等于110的结果。
 - en: To see where that comes from, recall that the expected number of heads is 125\.
     If we get 140, we’ve exceeded that expectation by 15. And if we get 110, we have
     come up short by 15.
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: 要看出这是从哪里来的，回想一下预期的正面朝上的数量是125。如果我们得到140，我们超出了预期15个。如果我们得到110，我们就少了15个。
 - en: 7% is the sum of both of these “tails”, as shown in the following figure.
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: 7%是这两个“尾巴”的总和，如下图所示。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE19]</details> ![_images/bbe850c4ba1754c42250404d1be42aca905c5085d068a8cd75a524120acd38b2.png](../Images/4a2b927f5fdf7388f4b220f8fb043f38.png)'
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE19]</details> ![_images/bbe850c4ba1754c42250404d1be42aca905c5085d068a8cd75a524120acd38b2.png](../Images/4a2b927f5fdf7388f4b220f8fb043f38.png)'
 - en: Here’s how we compute the total probability of the left tail.
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是我们如何计算左尾的总概率。
 - en: '[PRE20]'
+  id: totrans-60
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '[PRE21]'
+  id: totrans-61
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: The probability of outcomes less than or equal to 110 is also 3.3%, so the total
     probability of outcomes “as extreme” as 140 is 6.6%.
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: 小于或等于110的结果的概率也是3.3%，因此“和140一样极端”的结果的总概率是6.6%。
 - en: The point of this calculation is that these extreme outcomes are unlikely if
     the coin is fair.
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个计算的要点是，如果硬币是公平的，这些极端的结果是不太可能的。
 - en: That’s interesting, but it doesn’t answer MacKay’s question. Let’s see if we
     can.
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: 这很有趣，但并没有回答MacKay的问题。让我们看看能否。
 - en: Bayesian Estimation
+  id: totrans-65
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 贝叶斯估计
 - en: Any given coin has some probability of landing heads up when spun on edge; I’ll
     call this probability `x`. It seems reasonable to believe that `x` depends on
     physical characteristics of the coin, like the distribution of weight. If a coin
     is perfectly balanced, we expect `x` to be close to 50%, but for a lopsided coin,
     `x` might be substantially different. We can use Bayes’s theorem and the observed
     data to estimate `x`.
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: 任何给定的硬币在边缘旋转时都有一定的概率正面朝上；我将这个概率称为`x`。认为`x`取决于硬币的物理特征，比如重量的分布，似乎是合理的。如果一个硬币完全平衡，我们期望`x`接近50%，但对于一个不平衡的硬币，`x`可能会有很大不同。我们可以使用贝叶斯定理和观察到的数据来估计`x`。
 - en: For simplicity, I’ll start with a uniform prior, which assumes that all values
     of `x` are equally likely. That might not be a reasonable assumption, so we’ll
     come back and consider other priors later.
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: 为简单起见，我将从一个均匀先验开始，假设`x`的所有值是同等可能的。这可能不是一个合理的假设，所以我们稍后会回来考虑其他的先验。
 - en: 'We can make a uniform prior like this:'
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以这样制作一个均匀先验：
 - en: '[PRE22]'
+  id: totrans-69
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: '`hypos` is an array of equally spaced values between 0 and 1.'
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: '`hypos`是0到1之间等间距数值的数组。'
 - en: 'We can use the hypotheses to compute the likelihoods, like this:'
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用假设来计算可能性，就像这样：
 - en: '[PRE23]'
+  id: totrans-72
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: I’ll put the likelihoods for heads and tails in a dictionary to make it easier
     to do the update.
+  id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将正面朝上和反面朝上的可能性放在一个字典中，以便更容易进行更新。
 - en: '[PRE24]'
+  id: totrans-74
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: To represent the data, I’ll construct a string with `H` repeated 140 times and
     `T` repeated 110 times.
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了表示数据，我将构建一个字符串，其中`H`重复140次，`T`重复110次。
 - en: '[PRE25]'
+  id: totrans-76
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: The following function does the update.
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数进行更新。
 - en: '[PRE26]'
+  id: totrans-78
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: The first argument is a `Pmf` that represents the prior. The second argument
     is a sequence of strings. Each time through the loop, we multiply `pmf` by the
     likelihood of one outcome, `H` for heads or `T` for tails.
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: 第一个参数是代表先验的`Pmf`。第二个参数是一个字符串序列。每次循环时，我们将`pmf`乘以一个结果的可能性，`H`代表正面，`T`代表反面。
 - en: Notice that `normalize` is outside the loop, so the posterior distribution only
     gets normalized once, at the end. That’s more efficient than normalizing it after
     each spin (although we’ll see later that it can also cause problems with floating-point
     arithmetic).
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 请注意，`normalize`在循环外部，因此后验分布只在最后归一化一次。这比在每次旋转后对其进行归一化更有效（尽管后面我们会看到它也可能导致浮点运算问题）。
 - en: Here’s how we use `update_euro`.
+  id: totrans-81
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是我们如何使用`update_euro`。
 - en: '[PRE27]'
+  id: totrans-82
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: And here’s what the posterior looks like.
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是后验的样子。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE28]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell source Hide code cell source</summary>'
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE28]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>'
 - en: '[PRE29]</details> ![_images/dd30c6b049d5869916cbb249de23ebe991fb42772dad3eb5da6714b70d4aeb42.png](../Images/e21c1ee951a38a073f43534b28b4d6c7.png)'
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE29]</details> ![_images/dd30c6b049d5869916cbb249de23ebe991fb42772dad3eb5da6714b70d4aeb42.png](../Images/e21c1ee951a38a073f43534b28b4d6c7.png)'
 - en: This figure shows the posterior distribution of `x`, which is the proportion
     of heads for the coin we observed.
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个图显示了`x`的后验分布，即我们观察到的硬币正面朝上的比例。
 - en: The posterior distribution represents our beliefs about `x` after seeing the
     data. It indicates that values less than 0.4 and greater than 0.7 are unlikely;
     values between 0.5 and 0.6 are the most likely.
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: 后验分布表示我们在看到数据后对`x`的信念。它表明小于0.4和大于0.7的值是不太可能的；0.5到0.6之间的值是最有可能的。
 - en: In fact, the most likely value for `x` is 0.56 which is the proportion of heads
     in the dataset, `140/250`.
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: 事实上，`x`的最可能值是0.56，这是数据集`140/250`中正面朝上的比例。
 - en: '[PRE30]'
+  id: totrans-90
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: '[PRE31]'
+  id: totrans-91
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: Triangle Prior
+  id: totrans-92
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 三角形先验
 - en: 'So far we’ve been using a uniform prior:'
+  id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: 到目前为止，我们一直在使用均匀先验：
 - en: '[PRE32]'
+  id: totrans-94
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: But that might not be a reasonable choice based on what we know about coins.
     I can believe that if a coin is lopsided, `x` might deviate substantially from
     0.5, but it seems unlikely that the Belgian Euro coin is so imbalanced that `x`
     is 0.1 or 0.9.
+  id: totrans-95
   prefs: []
   type: TYPE_NORMAL
+  zh: 但根据我们对硬币的了解，这可能不是一个合理的选择。我可以相信，如果硬币是不对称的，`x`可能会大大偏离0.5，但比利时欧元硬币如此不平衡，`x`为0.1或0.9似乎不太可能。
 - en: It might be more reasonable to choose a prior that gives higher probability
     to values of `x` near 0.5 and lower probability to extreme values.
+  id: totrans-96
   prefs: []
   type: TYPE_NORMAL
+  zh: 选择一个先验，使`x`的值接近0.5的概率更高，而极端值的概率更低可能更合理。
 - en: 'As an example, let’s try a triangle-shaped prior. Here’s the code that constructs
     it:'
+  id: totrans-97
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，让我们尝试一个三角形状的先验。以下是构造它的代码：
 - en: '[PRE33]'
+  id: totrans-98
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: '[PRE34]'
+  id: totrans-99
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: '`arange` returns a NumPy array, so we can use `np.append` to append `ramp_down`
     to the end of `ramp_up`. Then we use `a` and `hypos` to make a `Pmf`.'
+  id: totrans-100
   prefs: []
   type: TYPE_NORMAL
+  zh: '`arange`返回一个NumPy数组，所以我们可以使用`np.append`将`ramp_down`附加到`ramp_up`的末尾。然后我们使用`a`和`hypos`来制作一个`Pmf`。'
 - en: The following figure shows the result, along with the uniform prior.
+  id: totrans-101
   prefs: []
   type: TYPE_NORMAL
+  zh: 下图显示了结果，以及均匀的先验。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-102
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE35]</details> ![_images/4cdca293cccae337c63f6c15db30cf19669f1955bef2dc4da5e6bd5ac35c56cd.png](../Images/bbac65b9451d9bfb85aa0550962f4bb9.png)'
+  id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE35]</details> ![_images/4cdca293cccae337c63f6c15db30cf19669f1955bef2dc4da5e6bd5ac35c56cd.png](../Images/bbac65b9451d9bfb85aa0550962f4bb9.png)'
 - en: 'Now we can update both priors with the same data:'
+  id: totrans-104
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以使用相同的数据更新两个先验：
 - en: '[PRE36]'
+  id: totrans-105
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: Here are the posteriors.
+  id: totrans-106
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是后验分布。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE37]</details> ![_images/53d63fd46dbabe83c44373b98d53b283d13d9308199d87274f185e49165ae929.png](../Images/7fe81d981e1a21fa9014aff9ec397feb.png)'
+  id: totrans-108
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE37]</details> ![_images/53d63fd46dbabe83c44373b98d53b283d13d9308199d87274f185e49165ae929.png](../Images/7fe81d981e1a21fa9014aff9ec397feb.png)'
 - en: The differences between the posterior distributions are barely visible, and
     so small they would hardly matter in practice.
+  id: totrans-109
   prefs: []
   type: TYPE_NORMAL
+  zh: 后验分布之间的差异几乎看不见，而且非常小，实际上几乎没有什么影响。
 - en: And that’s good news. To see why, imagine two people who disagree angrily about
     which prior is better, uniform or triangle. Each of them has reasons for their
     preference, but neither of them can persuade the other to change their mind.
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是个好消息。要知道为什么，想象一下两个人对哪个先验更好，均匀还是三角形，进行激烈争论。他们每个人都有自己偏好的原因，但没有人能说服对方改变主意。
 - en: But suppose they agree to use the data to update their beliefs. When they compare
     their posterior distributions, they find that there is almost nothing left to
     argue about.
+  id: totrans-111
   prefs: []
   type: TYPE_NORMAL
+  zh: 但假设他们同意使用数据来更新他们的信念。当他们比较他们的后验分布时，他们发现几乎没有什么可以争论的了。
 - en: 'This is an example of **swamping the priors**: with enough data, people who
     start with different priors will tend to converge on the same posterior distribution.'
+  id: totrans-112
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是**淹没先验**的一个例子：有了足够的数据，以不同先验开始的人们倾向于收敛到相同的后验分布。
 - en: The Binomial Likelihood Function
+  id: totrans-113
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 二项式似然函数
 - en: So far we’ve been computing the updates one spin at a time, so for the Euro
     problem we have to do 250 updates.
+  id: totrans-114
   prefs: []
   type: TYPE_NORMAL
+  zh: 到目前为止，我们一次计算一个旋转的更新，因此对于欧元问题，我们必须进行250次更新。
 - en: A more efficient alternative is to compute the likelihood of the entire dataset
     at once. For each hypothetical value of `x`, we have to compute the probability
     of getting 140 heads out of 250 spins.
+  id: totrans-115
   prefs: []
   type: TYPE_NORMAL
+  zh: 一个更有效的替代方法是一次计算整个数据集的似然。对于每个假设的`x`值，我们必须计算在250次旋转中出现140次正面朝上的概率。
 - en: 'Well, we know how to do that; this is the question the binomial distribution
     answers. If the probability of heads is \(p\), the probability of \(k\) heads
     in \(n\) spins is:'
+  id: totrans-116
   prefs: []
   type: TYPE_NORMAL
+  zh: 好吧，我们知道如何做了；这是二项分布回答的问题。如果正面朝上的概率是\(p\)，则在\(n\)次旋转中出现\(k\)次正面朝上的概率是：
 - en: \[\binom{n}{k} p^k (1-p)^{n-k}\]
+  id: totrans-117
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\binom{n}{k} p^k (1-p)^{n-k}\]
 - en: 'And we can use SciPy to compute it. The following function takes a `Pmf` that
     represents a prior distribution and a tuple of integers that represent the data:'
+  id: totrans-118
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用SciPy来计算它。以下函数接受一个代表先验分布的`Pmf`和一个代表数据的整数元组：
 - en: '[PRE38]'
+  id: totrans-119
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: The data are represented with a tuple of values for `k` and `n`, rather than
     a long string of outcomes. Here’s the update.
+  id: totrans-120
   prefs: []
   type: TYPE_NORMAL
+  zh: 数据用`k`和`n`的值组成的元组表示，而不是一长串的结果。以下是更新。
 - en: '[PRE39]'
+  id: totrans-121
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: We can use `allclose` to confirm that the result is the same as in the previous
     section except for a small floating-point round-off.
+  id: totrans-122
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用`allclose`来确认结果与前一节中的结果相同，除了一个小的浮点舍入误差。
 - en: '[PRE40]'
+  id: totrans-123
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE40]'
 - en: '[PRE41]'
+  id: totrans-124
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE41]'
 - en: But this way of doing the computation is much more efficient.
+  id: totrans-125
   prefs: []
   type: TYPE_NORMAL
+  zh: 但这种计算方式更有效率。
 - en: Bayesian Statistics
+  id: totrans-126
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 贝叶斯统计
 - en: You might have noticed similarities between the Euro problem and the 101 Bowls
     Problem in <<_101Bowls>>. The prior distributions are the same, the likelihoods
     are the same, and with the same data the results would be the same. But there
     are two differences.
+  id: totrans-127
   prefs: []
   type: TYPE_NORMAL
+  zh: 你可能已经注意到了欧元问题和<<_101Bowls>>中的101碗问题之间的相似之处。先验分布相同，似然性相同，而且使用相同的数据结果也将相同。但有两个不同之处。
 - en: The first is the choice of the prior. With 101 bowls, the uniform prior is implied
     by the statement of the problem, which says that we choose one of the bowls at
     random with equal probability.
+  id: totrans-128
   prefs: []
   type: TYPE_NORMAL
+  zh: 首先是选择先验的问题。有101个碗，均匀的先验是由问题的陈述隐含的，问题陈述说我们以相等的概率随机选择一个碗。
 - en: In the Euro problem, the choice of the prior is subjective; that is, reasonable
     people could disagree, maybe because they have different information about coins
     or because they interpret the same information differently.
+  id: totrans-129
   prefs: []
   type: TYPE_NORMAL
+  zh: 在欧元问题中，选择先验是主观的；也就是说，合理的人可能会有不同的意见，也许是因为他们对硬币有不同的信息，或者是因为他们以不同的方式解释相同的信息。
 - en: Because the priors are subjective, the posteriors are subjective, too. And some
     people find that problematic.
+  id: totrans-130
   prefs: []
   type: TYPE_NORMAL
+  zh: 由于先验是主观的，后验也是主观的。有些人认为这可能有问题。
 - en: The other difference is the nature of what we are estimating. In the 101 Bowls
     problem, we choose the bowl randomly, so it is uncontroversial to compute the
     probability of choosing each bowl. In the Euro problem, the proportion of heads
     is a physical property of a given coin. Under some interpretations of probability,
     that’s a problem because physical properties are not considered random.
+  id: totrans-131
   prefs: []
   type: TYPE_NORMAL
+  zh: 另一个区别在于我们正在估计的性质。在101碗问题中，我们随机选择碗，因此计算选择每个碗的概率是毫无争议的。在欧元问题中，正面的比例是给定硬币的物理特性。根据概率的某些解释，这是一个问题，因为物理特性不被认为是随机的。
 - en: As an example, consider the age of the universe. Currently, our best estimate
     is 13.80 billion years, but it might be off by 0.02 billion years in either direction
     (see [here](https://en.wikipedia.org/wiki/Age_of_the_universe)).
+  id: totrans-132
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，考虑宇宙的年龄。目前，我们最好的估计是138.0亿年，但它可能偏差0.02亿年（参见[这里](https://en.wikipedia.org/wiki/Age_of_the_universe)）。
 - en: Now suppose we would like to know the probability that the age of the universe
     is actually greater than 13.81 billion years. Under some interpretations of probability,
     we would not be able to answer that question. We would be required to say something
     like, “The age of the universe is not a random quantity, so it has no probability
     of exceeding a particular value.”
+  id: totrans-133
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在假设我们想知道宇宙的年龄实际上是否超过138.1亿年的概率。根据概率的某些解释，我们将无法回答这个问题。我们将被要求说：“宇宙的年龄不是一个随机数量，因此它没有超过特定值的概率。”
 - en: Under the Bayesian interpretation of probability, it is meaningful and useful
     to treat physical quantities as if they were random and compute probabilities
     about them.
+  id: totrans-134
   prefs: []
   type: TYPE_NORMAL
+  zh: 根据概率的贝叶斯解释，将物理量视为随机并计算与其相关的概率是有意义且有用的。
 - en: In the Euro problem, the prior distribution represents what we believe about
     coins in general and the posterior distribution represents what we believe about
     a particular coin after seeing the data. So we can use the posterior distribution
     to compute probabilities about the coin and its proportion of heads.
+  id: totrans-135
   prefs: []
   type: TYPE_NORMAL
+  zh: 在欧元问题中，先验分布代表我们对硬币的一般信念，后验分布代表我们在看到数据后对特定硬币的信念。因此，我们可以使用后验分布来计算有关硬币及其正面比例的概率。
 - en: The subjectivity of the prior and the interpretation of the posterior are key
     differences between using Bayes’s Theorem and doing Bayesian statistics.
+  id: totrans-136
   prefs: []
   type: TYPE_NORMAL
+  zh: 先验的主观性和后验的解释是使用贝叶斯定理和进行贝叶斯统计之间的关键区别。
 - en: Bayes’s Theorem is a mathematical law of probability; no reasonable person objects
     to it. But Bayesian statistics is surprisingly controversial. Historically, many
     people have been bothered by its subjectivity and its use of probability for things
     that are not random.
+  id: totrans-137
   prefs: []
   type: TYPE_NORMAL
+  zh: 贝叶斯定理是概率的数学定律；没有理智的人会反对它。但贝叶斯统计却令人意外地有争议。从历史上看，许多人对其主观性和将概率用于非随机事物感到困扰。
 - en: If you are interested in this history, I recommend Sharon Bertsch McGrayne’s
     book, *[The Theory That Would Not Die](https://yalebooks.yale.edu/book/9780300188226/theory-would-not-die)*.
+  id: totrans-138
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你对这段历史感兴趣，我推荐Sharon Bertsch McGrayne的书，*[The Theory That Would Not Die](https://yalebooks.yale.edu/book/9780300188226/theory-would-not-die)*。
 - en: Summary
+  id: totrans-139
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 总结
 - en: In this chapter I posed David MacKay’s Euro problem and we started to solve
     it. Given the data, we computed the posterior distribution for `x`, the probability
     a Euro coin comes up heads.
+  id: totrans-140
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本章中，我提出了大卫·麦凯的欧元问题，并开始解决它。根据数据，我们计算了`x`的后验分布，即欧元硬币正面朝上的概率。
 - en: We tried two different priors, updated them with the same data, and found that
     the posteriors were nearly the same. This is good news, because it suggests that
     if two people start with different beliefs and see the same data, their beliefs
     tend to converge.
+  id: totrans-141
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们尝试了两种不同的先验，用相同的数据进行了更新，发现后验几乎相同。这是个好消息，因为它表明，如果两个人从不同的信念出发并看到相同的数据，他们的信念往往会趋于一致。
 - en: This chapter introduces the binomial distribution, which we used to compute
     the posterior distribution more efficiently. And I discussed the differences between
     applying Bayes’s Theorem, as in the 101 Bowls problem, and doing Bayesian statistics,
     as in the Euro problem.
+  id: totrans-142
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章介绍了二项分布，我们用它来更有效地计算后验分布。我讨论了应用贝叶斯定理的不同之处，就像在101碗问题中一样，以及进行贝叶斯统计，就像在欧元问题中一样。
 - en: 'However, we still haven’t answered MacKay’s question: “Do these data give evidence
     that the coin is biased rather than fair?” I’m going to leave this question hanging
     a little longer; we’ll come back to it in <<_Testing>>.'
+  id: totrans-143
   prefs: []
   type: TYPE_NORMAL
+  zh: 然而，我们仍然没有回答麦凯的问题：“这些数据是否证明了硬币有偏向性而不是公平的？”我将让这个问题再悬而未决一会儿；我们将在<<_Testing>>中回到这个问题。
 - en: In the next chapter, we’ll solve problems related to counting, including trains,
     tanks, and rabbits.
+  id: totrans-144
   prefs: []
   type: TYPE_NORMAL
+  zh: 在下一章中，我们将解决与计数有关的问题，包括火车、坦克和兔子。
 - en: But first you might want to work on these exercises.
+  id: totrans-145
   prefs: []
   type: TYPE_NORMAL
+  zh: 但首先你可能想要解决这些练习。
 - en: Exercises
+  id: totrans-146
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 练习
 - en: '**Exercise:** In Major League Baseball, most players have a batting average
     between .200 and .330, which means that their probability of getting a hit is
     between 0.2 and 0.33.'
+  id: totrans-147
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**在美国职业棒球大联盟中，大多数球员的打击率在0.200和0.330之间，这意味着他们击中的概率在0.2和0.33之间。'
 - en: Suppose a player appearing in their first game gets 3 hits out of 3 attempts.
     What is the posterior distribution for their probability of getting a hit?
+  id: totrans-148
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设一名首次出场的球员在3次尝试中击中3次。他们击中的概率的后验分布是什么？
 - en: For this exercise, I’ll construct the prior distribution by starting with a
     uniform distribution and updating it with imaginary data until it has a shape
     that reflects my background knowledge of batting averages.
+  id: totrans-149
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于这个练习，我将通过从均匀分布开始并使用虚构的数据进行更新，直到它具有反映我对打击率背景知识的形状来构建先验分布。
 - en: 'Here’s the uniform prior:'
+  id: totrans-150
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是均匀的先验：
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-151
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE42]</details>'
+  id: totrans-152
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE42]</details>'
 - en: And here is a dictionary of likelihoods, with `Y` for getting a hit and `N`
     for not getting a hit.
+  id: totrans-153
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个可能性的字典，`Y`表示得到一个命中，`N`表示没有得到一个命中。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-154
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
 - en: '[PRE43]</details>'
+  id: totrans-155
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE43]</details>'
 - en: Here’s a dataset that yields a reasonable prior distribution.
+  id: totrans-156
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个产生合理先验分布的数据集。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-157
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
 - en: '[PRE44]</details>'
+  id: totrans-158
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE44]</details>'
 - en: And here’s the update with the imaginary data.
+  id: totrans-159
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是用虚构数据更新的。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-160
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
 - en: '[PRE45]</details>'
+  id: totrans-161
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE45]</details>'
 - en: Finally, here’s what the prior looks like.
+  id: totrans-162
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，这就是先验的样子。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-163
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
 - en: '[PRE46]'
+  id: totrans-164
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE46]'
 - en: '![_images/113a21d5073b3244e9b3de11539ffe19d34f4bc5fb44f1501c7f35824bc000d4.png](../Images/34271f5e5462fbc71579f1c2dd2641d0.png)</details>'
+  id: totrans-165
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/113a21d5073b3244e9b3de11539ffe19d34f4bc5fb44f1501c7f35824bc000d4.png](../Images/34271f5e5462fbc71579f1c2dd2641d0.png)</details>'
 - en: This distribution indicates that most players have a batting average near 250,
     with only a few players below 175 or above 350\. I’m not sure how accurately this
     prior reflects the distribution of batting averages in Major League Baseball,
     but it is good enough for this exercise.
+  id: totrans-166
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个分布表明大多数球员的击球率接近250，只有少数球员的击球率低于175或高于350。我不确定这个先验分布如何准确地反映了大联盟棒球击球率的分布，但对于这个练习来说已经足够了。
 - en: Now update this distribution with the data and plot the posterior. What is the
     most likely quantity in the posterior distribution?
+  id: totrans-167
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在使用数据更新这个分布并绘制后验分布。后验分布中最可能的数量是什么？
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-168
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
 - en: '[PRE47]'
+  id: totrans-169
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE47]'
 - en: '[PRE48]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-170
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE48]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE49]'
+  id: totrans-171
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE49]'
 - en: '![_images/22d82381a7a62c41f12af9cfbff8febaa9b39ee34d570c2575e5622c02a24cc0.png](../Images/f3ea843204a9b62a832df31ac2e4bfd5.png)</details><details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-172
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/22d82381a7a62c41f12af9cfbff8febaa9b39ee34d570c2575e5622c02a24cc0.png](../Images/f3ea843204a9b62a832df31ac2e4bfd5.png)</details><details
+    class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE50]'
+  id: totrans-173
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE50]'
 - en: '[PRE51]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-174
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE51]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE52]'
+  id: totrans-175
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE52]'
 - en: '[PRE53]</details>'
+  id: totrans-176
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE53]</details>'
 - en: '**Exercise:** Whenever you survey people about sensitive issues, you have to
     deal with [social desirability bias](https://en.wikipedia.org/wiki/Social_desirability_bias),
     which is the tendency of people to adjust their answers to show themselves in
     the most positive light. One way to improve the accuracy of the results is [randomized
     response](https://en.wikipedia.org/wiki/Randomized_response).'
+  id: totrans-177
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**每当你调查人们对敏感问题的看法时，你都必须处理[社会期望偏差](https://en.wikipedia.org/wiki/Social_desirability_bias)，即人们倾向于调整他们的答案以展现自己最积极的一面。改善结果准确性的一种方法是[随机响应](https://en.wikipedia.org/wiki/Randomized_response)。'
 - en: 'As an example, suppose you want to know how many people cheat on their taxes.
     If you ask them directly, it is likely that some of the cheaters will lie. You
     can get a more accurate estimate if you ask them indirectly, like this: Ask each
     person to flip a coin and, without revealing the outcome,'
+  id: totrans-178
   prefs: []
   type: TYPE_NORMAL
+  zh: 举个例子，假设你想知道有多少人在报税时作弊。如果你直接问他们，很可能一些作弊者会撒谎。如果你间接地问他们，就像这样：让每个人抛一枚硬币，而不透露结果，
 - en: If they get heads, they report YES.
+  id: totrans-179
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果他们得到正面，他们会报告YES。
 - en: If they get tails, they honestly answer the question “Do you cheat on your taxes?”
+  id: totrans-180
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果他们得到反面，他们会诚实地回答问题“你有没有在报税时作弊？”
 - en: If someone says YES, we don’t know whether they actually cheat on their taxes;
     they might have flipped heads. Knowing this, people might be more willing to answer
     honestly.
+  id: totrans-181
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果有人说YES，我们不知道他们是否真的在报税时作弊；他们可能已经翻了正面。知道这一点，人们可能更愿意诚实地回答。
 - en: Suppose you survey 100 people this way and get 80 YESes and 20 NOs. Based on
     this data, what is the posterior distribution for the fraction of people who cheat
     on their taxes? What is the most likely quantity in the posterior distribution?
+  id: totrans-182
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设你以这种方式调查了100个人，得到了80个YES和20个NO。根据这些数据，作弊纳税人的比例的后验分布是什么？后验分布中最可能的数量是什么？
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-183
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
 - en: '[PRE54]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-184
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE54]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE55]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-185
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE55]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE56]'
+  id: totrans-186
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE56]'
 - en: '[PRE57]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-187
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE57]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE58]'
+  id: totrans-188
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE58]'
 - en: '![_images/449441453b54871fe06691651a71cb5ad95283abe7e5a15c06079f2a6f1dc9e7.png](../Images/93982c0082f09b712a1752d059bc55df.png)</details><details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-189
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/449441453b54871fe06691651a71cb5ad95283abe7e5a15c06079f2a6f1dc9e7.png](../Images/93982c0082f09b712a1752d059bc55df.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE59]'
+  id: totrans-190
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE59]'
 - en: '[PRE60]</details>'
+  id: totrans-191
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE60]</details>'
 - en: '**Exercise:** Suppose you want to test whether a coin is fair, but you don’t
     want to spin it hundreds of times. So you make a machine that spins the coin automatically
     and uses computer vision to determine the outcome.'
+  id: totrans-192
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** 假设你想测试一枚硬币是否公平，但又不想把它抛几百次。所以你制造了一台自动旋转硬币并使用计算机视觉来确定结果的机器。'
 - en: However, you discover that the machine is not always accurate. Specifically,
     suppose the probability is `y=0.2` that an actual heads is reported as tails,
     or actual tails reported as heads.
+  id: totrans-193
   prefs: []
   type: TYPE_NORMAL
+  zh: 然而，你发现这台机器并不总是准确的。具体来说，假设实际上出现正面被报告为反面，或者实际上出现反面被报告为正面的概率是`y=0.2`。
 - en: If we spin a coin 250 times and the machine reports 140 heads, what is the posterior
     distribution of `x`? What happens as you vary the value of `y`?
+  id: totrans-194
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们把一枚硬币抛250次，机器报告说有140个正面，那么`x`的后验分布是什么？当你改变`y`的值时会发生什么？
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-195
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE61]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-196
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE61]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE62]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-197
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE62]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE63]'
+  id: totrans-198
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE63]'
 - en: '![_images/e9299449114d960b46cbaa39aec91bbe8cc5f1098a613525faf9b79a51a7eead.png](../Images/1aa8dbcda6ca8c617a855081f23147f0.png)</details><details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-199
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/e9299449114d960b46cbaa39aec91bbe8cc5f1098a613525faf9b79a51a7eead.png](../Images/1aa8dbcda6ca8c617a855081f23147f0.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE64]'
+  id: totrans-200
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE64]'
 - en: '[PRE65]</details>'
+  id: totrans-201
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE65]</details>'
 - en: '**Exercise:** In preparation for an alien invasion, the Earth Defense League
     (EDL) has been working on new missiles to shoot down space invaders. Of course,
     some missile designs are better than others; let’s assume that each design has
     some probability of hitting an alien ship, `x`.'
+  id: totrans-202
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** 为了应对外星人入侵，地球防御联盟（EDL）一直在研发新型导弹来击落太空入侵者。当然，一些导弹设计比其他的更好；让我们假设每种设计都有一定的概率击中外星飞船，`x`。'
 - en: Based on previous tests, the distribution of `x` in the population of designs
     is approximately uniform between 0.1 and 0.4.
+  id: totrans-203
   prefs: []
   type: TYPE_NORMAL
+  zh: 根据以前的测试，设计人口中`x`的分布在0.1和0.4之间大致均匀。
 - en: 'Now suppose the new ultra-secret Alien Blaster 9000 is being tested. In a press
     conference, an EDL general reports that the new design has been tested twice,
     taking two shots during each test. The results of the test are confidential, so
     the general won’t say how many targets were hit, but they report: “The same number
     of targets were hit in the two tests, so we have reason to think this new design
     is consistent.”'
+  id: totrans-204
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在假设正在测试新的绝密Alien Blaster 9000。在一次新闻发布会上，一位EDL将军报告说，新设计已经进行了两次测试，在每次测试中进行了两次射击。测试的结果是保密的，所以将军不会说击中了多少目标，但他们报告说：“在两次测试中击中了相同数量的目标，所以我们有理由认为这个新设计是一致的。”
 - en: Is this data good or bad? That is, does it increase or decrease your estimate
     of `x` for the Alien Blaster 9000?
+  id: totrans-205
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个数据是好还是坏？也就是说，它增加还是减少了你对Alien Blaster 9000的估计？
 - en: 'Hint: If the probability of hitting each target is \(x\), the probability of
     hitting one target in both tests is \(\left[2x(1-x)\right]^2\).'
+  id: totrans-206
   prefs: []
   type: TYPE_NORMAL
+  zh: 提示：如果击中每个目标的概率是\(x\)，那么在两次测试中击中一个目标的概率是\(\left[2x(1-x)\right]^2\)。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-207
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE66]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-208
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE66]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE67]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-209
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE67]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE68]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-210
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE68]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE69]'
+  id: totrans-211
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE69]'
 - en: '![_images/c9c1e9bf10d628665828b3673a516fa1b68f6db8450ad81025e9011aacc14f48.png](../Images/40f4649b80c1401e56fe80eea719188b.png)</details><details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-212
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/c9c1e9bf10d628665828b3673a516fa1b68f6db8450ad81025e9011aacc14f48.png](../Images/40f4649b80c1401e56fe80eea719188b.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE70]'
+  id: totrans-213
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE70]'
 - en: '[PRE71]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-214
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE71]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE72]'
+  id: totrans-215
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE72]'
 - en: '![_images/4c35edb942e0b9bc2704ca667de18b2127c8b149fac68f4406b38a173a4d8331.png](../Images/fac2d3e336dd1ade8daa9482137f1b27.png)</details><details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-216
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/4c35edb942e0b9bc2704ca667de18b2127c8b149fac68f4406b38a173a4d8331.png](../Images/fac2d3e336dd1ade8daa9482137f1b27.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE73]</details>'
+  id: totrans-217
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE73]</details>'
