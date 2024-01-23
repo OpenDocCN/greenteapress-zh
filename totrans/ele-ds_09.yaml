@@ -3,108 +3,128 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 数据框和系列
 - en: 原文：[https://allendowney.github.io/ElementsOfDataScience/07_dataframes.html](https://allendowney.github.io/ElementsOfDataScience/07_dataframes.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '[https://allendowney.github.io/ElementsOfDataScience/07_dataframes.html](https://allendowney.github.io/ElementsOfDataScience/07_dataframes.html)'
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/07_dataframes.ipynb)
     or [click here to download it](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/07_dataframes.ipynb).'
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: '[单击此处在Colab上运行此笔记本](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/07_dataframes.ipynb)或[单击此处下载](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/07_dataframes.ipynb)。'
 - en: This chapter introduces Pandas, a Python library that provides functions for
     reading and writing data files, exploring and analyzing data, and generating visualizations.
     And it provides two new types for working with data, `DataFrame` and `Series`.
   id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章介绍了Pandas，这是一个提供读取和写入数据文件、探索和分析数据以及生成可视化的Python库。它还提供了两种用于处理数据的新类型，`DataFrame`和`Series`。
 - en: 'We will use these tools to answer a data question: what is the average birth
     weight of babies in the United States? This example will demonstrate important
     steps in almost any data science project:'
   id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将使用这些工具来回答一个数据问题：美国婴儿的平均出生体重是多少？这个例子将演示几乎任何数据科学项目中的重要步骤：
 - en: Identifying data that can answer a question.
   id: totrans-5
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 确定可以回答问题的数据。
 - en: Obtaining the data and loading it in Python.
   id: totrans-6
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 在Python中获取数据并加载数据。
 - en: Checking the data and dealing with errors.
   id: totrans-7
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 检查数据并处理错误。
 - en: Selecting relevant subsets from the data.
   id: totrans-8
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 从数据中选择相关的子集。
 - en: Using histograms to visualize a distribution of values.
   id: totrans-9
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 使用直方图来可视化值的分布。
 - en: Using summary statistics to describe the data in a way that best answers the
     question.
   id: totrans-10
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 使用摘要统计数据描述数据以最佳方式回答问题。
 - en: Considering possible sources of error and limitations in our conclusions.
   id: totrans-11
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 考虑我们结论中可能的错误来源和限制。
 - en: Let’s start by getting the data.
   id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们开始获取数据。
 - en: Reading the Data
   id: totrans-13
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 读取数据
 - en: We’ll use data from the National Survey of Family Growth (NSFG), which is available
     from the National Center for Health Statistics at [https://www.cdc.gov/nchs/nsfg/index.htm](https://www.cdc.gov/nchs/nsfg/index.htm).
   id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将使用来自国家家庭增长调查（NSFG）的数据，该数据可从国家卫生统计中心的[https://www.cdc.gov/nchs/nsfg/index.htm](https://www.cdc.gov/nchs/nsfg/index.htm)获取。
 - en: 'To download the data, you have to agree to the Data User’s Agreement at [https://www.cdc.gov/nchs/data_access/ftp_dua.htm](https://www.cdc.gov/nchs/data_access/ftp_dua.htm).
     You should read those terms carefully, but let me draw your attention to what
     I think is the most important one:'
   id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 要下载数据，您必须同意[https://www.cdc.gov/nchs/data_access/ftp_dua.htm](https://www.cdc.gov/nchs/data_access/ftp_dua.htm)上的数据使用协议。您应该仔细阅读这些条款，但让我提醒您我认为最重要的一点：
 - en: Make no attempt to learn the identity of any person or establishment included
     in these data.
   id: totrans-16
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 不要试图了解数据中包含的任何个人或机构的身份。
 - en: NSFG respondents provide honest answers to questions of the most personal nature
     with the expectation that their identities will not be revealed. As ethical data
     scientists, we should respect their privacy and adhere to the terms of use.
   id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: NSFG受访者诚实地回答了最私人性质的问题，期望他们的身份不会被揭示。作为道德数据科学家，我们应该尊重他们的隐私并遵守使用条款。
 - en: Respondents to the NSFG provide general information about themselves, which
     is stored in the respondent file, and information about each time they have been
     pregnant, which is stored in the pregnancy file.
   id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: NSFG的受访者提供有关自己的一般信息，这些信息存储在受访者文件中，以及有关他们每次怀孕的信息，这些信息存储在怀孕文件中。
 - en: We will work with the pregnancy file, which contains one row for each pregnancy
     and one column for each of the 248 variables. Each variable represents responses
     to a question on the NSFG questionnaire.
   id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将使用怀孕文件，其中每次怀孕都包含一行，每个变量都有248个。每个变量代表对NSFG问卷上的问题的回答。
 - en: The data is stored in a fixed-width format, which means that every row is the
     same length and each variable spans a fixed range of characters (see [https://www.ibm.com/docs/en/baw/19.x?topic=formats-fixed-width-format](https://www.ibm.com/docs/en/baw/19.x?topic=formats-fixed-width-format)).
     For example, the first six characters in each row represent a variable called
@@ -114,12 +134,14 @@
   id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 数据以固定宽度格式存储，这意味着每一行的长度相同，每个变量跨越固定的字符范围（参见[https://www.ibm.com/docs/en/baw/19.x?topic=formats-fixed-width-format](https://www.ibm.com/docs/en/baw/19.x?topic=formats-fixed-width-format)）。例如，每行的前六个字符代表一个名为`CASEID`的变量，它是每个受访者的唯一标识符；接下来的两个字符代表`PREGORDR`，它表示受访者的怀孕次数。
 - en: To read this data, we need a **data dictionary**, which specifies the names
     of the variables and the range of characters where each variable appears. The
     data and the data dictionary are available in separate files.
   id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 要读取这些数据，我们需要一个**数据字典**，它指定变量的名称和每个变量出现的字符范围。数据和数据字典可在单独的文件中找到。
 - en: '[PRE0]'
   id: totrans-22
   prefs: []
@@ -131,10 +153,12 @@
   id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: Pandas可以读取大多数常见格式的数据，包括CSV、Excel和固定宽度格式，但它无法读取Stata格式的数据字典。为此，我们将使用一个名为`statadict`的Python库。
 - en: From `statadict`, we’ll import `parse_stata_dict`, which reads the data dictionary.
   id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 从`statadict`中，我们将导入`parse_stata_dict`，它读取数据字典。
 - en: '[PRE1]'
   id: totrans-25
   prefs: []
@@ -149,26 +173,31 @@
   id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个包含数据的对象
 - en: '`names`, which is a list of variable names, and'
   id: totrans-28
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`names`，这是一个变量名列表，和'
 - en: '`colspecs`, which is a list of tuples.'
   id: totrans-29
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`colspecs`，这是一个元组列表。'
 - en: Each tuple in `colspecs` specifies the first and last column where a variable
     appears.
   id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: '`colspecs`中的每个元组指定变量出现的第一列和最后一列。'
 - en: These values are exactly the arguments we need to use `read_fwf`, which is the
     Pandas function that reads a file in fixed-width format.
   id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些值正是我们需要使用`read_fwf`的参数，它是Pandas函数，用于读取固定宽度格式的文件。
 - en: '[PRE3]'
   id: totrans-32
   prefs: []
@@ -415,11 +444,13 @@
   id: totrans-72
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个`Series`，它是Pandas类型，表示单列数据。在这种情况下，`Series`包含每个活产的出生体重（以磅为单位）。
 - en: '`head` shows the first five values in the `Series`, the name of the `Series`,
     and the data type:'
   id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: '`head`显示了`Series`中的前五个值，`Series`的名称和数据类型：'
 - en: '[PRE13]'
   id: totrans-74
   prefs: []
@@ -436,51 +467,61 @@
   id: totrans-76
   prefs: []
   type: TYPE_NORMAL
+  zh: 其中一个值是`NaN`，代表“不是一个数字”。`NaN`是一个特殊值，用于指示无效或缺失的数据。在这个例子中，怀孕没有以活产结束，所以出生体重是不适用的。
 - en: '**Exercise:** The variable `BIRTHWGT_OZ1` contains the ounces part of birth
     weight.'
   id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** 变量`BIRTHWGT_OZ1`包含出生体重的盎司部分。'
 - en: Select the column `'BIRTHWGT_OZ1'` from the `nsfg` `DataFrame` and assign it
     to a new variable called `ounces`. Then display the first 5 elements of `ounces`.
   id: totrans-78
   prefs: []
   type: TYPE_NORMAL
+  zh: 从`nsfg` `DataFrame`中选择列`'BIRTHWGT_OZ1'`，并将其赋值给一个名为`ounces`的新变量。然后显示`ounces`的前5个元素。
 - en: '**Exercise:** The Pandas types we have seen so far are `DataFrame`, `Index`,
     and `Series`. You can find the documentation of these types at:'
   id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** 到目前为止，我们看到的Pandas类型有`DataFrame`、`Index`和`Series`。您可以在以下找到这些类型的文档：'
 - en: '`DataFrame`: [https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html)'
   id: totrans-80
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`DataFrame`：[https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html)'
 - en: '`Index`: [https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Index.html](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Index.html)'
   id: totrans-81
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`Index`: [https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Index.html](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Index.html)'
 - en: '`Series`: [https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html)'
   id: totrans-82
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`Series`：[https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html)'
 - en: This documentation can be overwhelming; I don’t recommend trying to read it
     all now. But you might want to skim it so you know where to look later.
   id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: 这份文档可能会让人不知所措；我不建议现在就试图阅读全部。但您可能想略读一下，这样您就知道以后要查找的地方。
 - en: Validation
   id: totrans-84
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 验证
 - en: At this point we have identified the columns we need to answer the question
     and assigned them to variables named `pounds` and `ounces`.
   id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: 此时，我们已经确定了回答问题所需的列，并将它们分配给名为`pounds`和`ounces`的变量。
 - en: '[PRE15]'
   id: totrans-86
   prefs: []
@@ -491,11 +532,13 @@
   id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: 在我们对这些数据进行任何操作之前，我们必须对其进行验证。验证的一部分是确认我们是否正确地解释了数据。
 - en: We can use the `value_counts` method to see what values appear in `pounds` and
     how many times each value appears.
   id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用`value_counts`方法查看`pounds`中出现的值以及每个值出现的次数。
 - en: '[PRE16]'
   id: totrans-89
   prefs: []
@@ -507,6 +550,7 @@
   id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: 默认情况下，结果按最频繁的值排序，但我们可以使用`sort_index`按值进行排序，最轻的婴儿排在最前面，最重的婴儿排在最后面。
 - en: '[PRE17]'
   id: totrans-91
   prefs: []
@@ -524,116 +568,143 @@
   id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: 正如我们所预期的那样，最频繁的值是6-8磅，但也有一些非常轻的婴儿，一些非常重的婴儿，以及两个特殊值，98和99。根据代码簿，这些值表示受访者拒绝回答问题（98）或不知道（99）。
 - en: We can validate the results by comparing them to the codebook, which lists the
     values and their frequencies.
   id: totrans-94
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以通过将结果与代码簿进行比较来验证结果，代码簿列出了数值及其频率。
 - en: '| value | label | Total |'
   id: totrans-95
   prefs: []
   type: TYPE_TB
+  zh: '| value | label | 总数 |'
 - en: '| --- | --- | --- |'
   id: totrans-96
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- |'
 - en: '| . | INAPPLICABLE | 2863 |'
   id: totrans-97
   prefs: []
   type: TYPE_TB
+  zh: '| . | 不适用 | 2863 |'
 - en: '| 0-5 | UNDER 6 POUNDS | 901 |'
   id: totrans-98
   prefs: []
   type: TYPE_TB
+  zh: '| 0-5 | 6磅以下 | 901 |'
 - en: '| 6 | 6 POUNDS | 1644 |'
   id: totrans-99
   prefs: []
   type: TYPE_TB
+  zh: '| 6 | 6 磅 | 1644 |'
 - en: '| 7 | 7 POUNDS | 2268 |'
   id: totrans-100
   prefs: []
   type: TYPE_TB
+  zh: '| 7 | 7 磅 | 2268 |'
 - en: '| 8 | 8 POUNDS | 1287 |'
   id: totrans-101
   prefs: []
   type: TYPE_TB
+  zh: '| 8 | 8 磅 | 1287 |'
 - en: '| 9-95 | 9 POUNDS OR MORE | 499 |'
   id: totrans-102
   prefs: []
   type: TYPE_TB
+  zh: '| 9-95 | 9 磅或更多 | 499 |'
 - en: '| 98 | Refused | 2 |'
   id: totrans-103
   prefs: []
   type: TYPE_TB
+  zh: '| 98 | 拒绝 | 2 |'
 - en: '| 99 | Don’t know | 89 |'
   id: totrans-104
   prefs: []
   type: TYPE_TB
+  zh: '| 99 | 不知道 | 89 |'
 - en: '|  | Total | 9553 |'
   id: totrans-105
   prefs: []
   type: TYPE_TB
+  zh: '|  | 总数 | 9553 |'
 - en: The results from `value_counts` agree with the codebook, so we have some confidence
     that we are reading and interpreting the data correctly.
   id: totrans-106
   prefs: []
   type: TYPE_NORMAL
+  zh: '`value_counts`的结果与代码簿一致，因此我们有一些信心，我们正在正确地阅读和解释数据。'
 - en: '**Exercise:** In the `nsfg` `DataFrame`, the column `''OUTCOME''` encodes the
     outcome of each pregnancy as shown below:'
   id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** 在`nsfg` `DataFrame`中，列`''OUTCOME''`编码了每次怀孕的结果，如下所示：'
 - en: '| Value | Meaning |'
   id: totrans-108
   prefs: []
   type: TYPE_TB
+  zh: '| 值 | 含义 |'
 - en: '| --- | --- |'
   id: totrans-109
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| 1 | Live birth |'
   id: totrans-110
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 活产 |'
 - en: '| 2 | Induced abortion |'
   id: totrans-111
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 人工流产 |'
 - en: '| 3 | Stillbirth |'
   id: totrans-112
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 死胎 |'
 - en: '| 4 | Miscarriage |'
   id: totrans-113
   prefs: []
   type: TYPE_TB
+  zh: '| 4 | 流产 |'
 - en: '| 5 | Ectopic pregnancy |'
   id: totrans-114
   prefs: []
   type: TYPE_TB
+  zh: '| 5 | 异位妊娠 |'
 - en: '| 6 | Current pregnancy |'
   id: totrans-115
   prefs: []
   type: TYPE_TB
+  zh: '| 6 | 当前怀孕 |'
 - en: Use `value_counts` to display the values in this column and how many times each
     value appears. Are the results consistent with the codebook?
   id: totrans-116
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用`value_counts`来显示此列中的值以及每个值出现的次数。结果是否与代码簿一致？
 - en: Summary Statistics
   id: totrans-117
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 总结统计
 - en: Another way to validate the data is with `describe`, which computes statistics
     that summarize the data, like the mean, standard deviation, minimum, and maximum.
   id: totrans-118
   prefs: []
   type: TYPE_NORMAL
+  zh: 另一种验证数据的方法是使用`describe`，它计算总结数据的统计数据，如均值、标准差、最小值和最大值。
 - en: Here are the results for `pounds`.
   id: totrans-119
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是`pounds`的结果。
 - en: '[PRE19]'
   id: totrans-120
   prefs: []
@@ -649,12 +720,14 @@
   id: totrans-122
   prefs: []
   type: TYPE_NORMAL
+  zh: '`count`是数值的数量，不包括`NaN`。对于这个变量，有6690个数值不是`NaN`。'
 - en: '`mean` and `std` are the mean and standard deviation. `min` and `max` are the
     minimum and maximum values, and in between are the 25th, 50th, and 75th percentiles.
     The 50th percentile is the median.'
   id: totrans-123
   prefs: []
   type: TYPE_NORMAL
+  zh: '`mean`和`std`是均值和标准差。`min`和`max`是最小值和最大值，中间是25th、50th和75th百分位数。50th百分位数是中位数。'
 - en: The mean is about `8.05`, but that doesn’t mean much because it includes the
     special values 98 and 99\. Before we can really compute the mean, we have to replace
     those values with `NaN` to identify them as missing data.
