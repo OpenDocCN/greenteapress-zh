@@ -197,27 +197,32 @@
   id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: '这表明，鉴于这些数据，\(N=100\)是人口的一个合理估计。 '
 - en: 'We’ve computed the distribution of \(k\) given \(N\), \(K\), and \(n\). Now
     let’s go the other way: given \(K\), \(n\), and \(k\), how can we estimate the
     total population, \(N\)?'
   id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们已经计算了给定`N`、`K`和`n`的情况下\(k\)的分布。现在让我们反过来：给定\(K\)、\(n\)和\(k\)，我们如何估计总体人口\(N\)？
 - en: The Update
   id: totrans-33
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 更新
 - en: As a starting place, let’s suppose that, prior to this study, an expert estimates
     that the local bear population is between 50 and 500, and equally likely to be
     any value in that range.
   id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为一个起点，让我们假设，在这项研究之前，一位专家估计当地的熊种群在50到500之间，并且任何一个值都有同样的可能性。
 - en: I’ll use `make_uniform` to make a uniform distribution of integers in this range.
   id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将使用`make_uniform`在这个范围内制作一个整数的均匀分布。
 - en: '[PRE2]'
   id: totrans-36
   prefs: []
@@ -232,11 +237,13 @@
   id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是我们的先验。
 - en: To compute the likelihood of the data, we can use `hypergeom` with constants
     `K` and `n`, and a range of values of `N`.
   id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 要计算数据的可能性，我们可以使用`hypergeom`与常数`K`和`n`，以及一系列`N`的值。
 - en: '[PRE4]'
   id: totrans-40
   prefs: []
@@ -246,6 +253,7 @@
   id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以按照通常的方式计算后验。
 - en: '[PRE5]'
   id: totrans-42
   prefs: []
@@ -260,6 +268,7 @@
   id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是它的样子。
 - en: '[PRE7]'
   id: totrans-45
   prefs: []
@@ -269,10 +278,12 @@
   id: totrans-46
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/ac32416f4a54865371b1c99a43504a005ebf21adaf7c20b9674391cb8f8f2060.png](../Images/e2874514c41951147b92187305b32014.png)'
 - en: The most likely value is 109.
   id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 最可能的值是109。
 - en: '[PRE8]'
   id: totrans-48
   prefs: []
@@ -288,6 +299,7 @@
   id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是分布向右倾斜，所以后验均值明显更高。
 - en: '[PRE10]'
   id: totrans-51
   prefs: []
@@ -302,6 +314,7 @@
   id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: 而且可信区间非常宽。
 - en: '[PRE12]'
   id: totrans-54
   prefs: []
@@ -317,21 +330,25 @@
   id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个解决方案相对简单，但事实证明，如果我们明确地对观察到熊的未知概率进行建模，我们可以做得更好一点。
 - en: Two-Parameter Model
   id: totrans-57
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 两参数模型
 - en: 'Next we’ll try a model with two parameters: the number of bears, `N`, and the
     probability of observing a bear, `p`.'
   id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 接下来我们将尝试一个具有两个参数的模型：熊的数量`N`和观察到熊的概率`p`。
 - en: We’ll assume that the probability is the same in both rounds, which is probably
     reasonable in this case because it is the same kind of trap in the same place.
   id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们假设在两轮中概率是相同的，这在这种情况下可能是合理的，因为它是同一个地方的同一种陷阱。
 - en: We’ll also assume that the probabilities are independent; that is, the probability
     a bear is observed in the second round does not depend on whether it was observed
     in the first round. This assumption might be less reasonable, but for now it is
@@ -339,10 +356,12 @@
   id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们还假设这些概率是独立的；也就是说，观察到熊在第二轮的概率不取决于它是否在第一轮观察到。这个假设可能不太合理，但现在它是一个必要的简化。
 - en: 'Here are the counts again:'
   id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里再次是计数：
 - en: '[PRE14]'
   id: totrans-62
   prefs: []
@@ -353,26 +372,31 @@
   id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于这个模型，我将用一种更容易推广到两轮以上的符号表示数据：
 - en: '`k10` is the number of bears observed in the first round but not the second,'
   id: totrans-64
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`k10`是第一轮观察到的熊的数量，但第二轮没有观察到，'
 - en: '`k01` is the number of bears observed in the second round but not the first,
     and'
   id: totrans-65
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`k01`是第二轮观察到的熊的数量，但第一轮没有观察到，而'
 - en: '`k11` is the number of bears observed in both rounds.'
   id: totrans-66
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`k11`是两轮都观察到的熊的数量。'
 - en: Here are their values.
   id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是它们的值。
 - en: '[PRE15]'
   id: totrans-68
   prefs: []
@@ -383,11 +407,13 @@
   id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设我们知道`N`和`p`的实际值。我们可以使用它们来计算这些数据的可能性。
 - en: For example, suppose we know that `N=100` and `p=0.2`. We can use `N` to compute
     `k00`, which is the number of unobserved bears.
   id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，假设我们知道`N=100`和`p=0.2`。我们可以使用`N`来计算`k00`，即未观察到的熊的数量。
 - en: '[PRE16]'
   id: totrans-71
   prefs: []
@@ -403,6 +429,7 @@
   id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于更新，将数据存储为一个代表每个类别中熊的数量的列表会更方便。
 - en: '[PRE18]'
   id: totrans-74
   prefs: []
@@ -419,6 +446,7 @@
   id: totrans-76
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，如果我们知道`p=0.2`，我们可以计算熊落入每个类别的概率。例如，在两轮中都被观察到的概率是`p*p`，在两轮中都未被观察到的概率是`q*q`（其中`q=1-p`）。
 - en: '[PRE20]'
   id: totrans-77
   prefs: []
@@ -433,20 +461,24 @@
   id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，数据的概率由[多项式分布](https://en.wikipedia.org/wiki/Multinomial_distribution)给出：
 - en: \[\frac{N!}{\prod x_i!} \prod y_i^{x_i}\]
   id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\frac{N!}{\prod x_i!} \prod y_i^{x_i}\]
 - en: where \(N\) is actual population, \(x\) is a sequence with the counts in each
     category, and \(y\) is a sequence of probabilities for each category.
   id: totrans-81
   prefs: []
   type: TYPE_NORMAL
+  zh: 其中\(N\)是实际人口，\(x\)是每个类别中的计数序列，\(y\)是每个类别的概率序列。
 - en: SciPy provides `multinomial`, which provides `pmf`, which computes this probability.
     Here is the probability of the data for these values of `N` and `p`.
   id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: SciPy提供了`multinomial`，它提供了`pmf`，用于计算这个概率。这是这些`N`和`p`值的数据的概率。
 - en: '[PRE22]'
   id: totrans-83
   prefs: []
@@ -463,16 +495,19 @@
   id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是我们知道`N`和`p`的情况下的可能性，但当然我们不知道。所以我们将为`N`和`p`选择先验分布，并使用可能性来更新它。
 - en: The Prior
   id: totrans-86
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 先验
 - en: 'We’ll use `prior_N` again for the prior distribution of `N`, and a uniform
     prior for the probability of observing a bear, `p`:'
   id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将再次使用`prior_N`作为`N`的先验分布，并使用熊被观察到的概率`p`的均匀先验：
 - en: '[PRE24]'
   id: totrans-88
   prefs: []
@@ -482,6 +517,7 @@
   id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以按照通常的方式制作一个联合分布。
 - en: '[PRE25]'
   id: totrans-90
   prefs: []
@@ -499,6 +535,7 @@
   id: totrans-92
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个Pandas`DataFrame`，其中行是`N`的值，列是`p`的值。但是对于这个问题，将先验分布表示为1-D`Series`而不是2-D`DataFrame`会更方便。我们可以使用`stack`从一种格式转换为另一种格式。
 - en: '[PRE27]'
   id: totrans-93
   prefs: []
@@ -508,26 +545,32 @@
   id: totrans-94
   prefs: []
   type: TYPE_TB
+  zh: '|  |  | probs |'
 - en: '| --- | --- | --- |'
   id: totrans-95
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- |'
 - en: '| N | p |  |'
   id: totrans-96
   prefs: []
   type: TYPE_TB
+  zh: '| N | p |  |'
 - en: '| --- | --- | --- |'
   id: totrans-97
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- |'
 - en: '| 50 | 0.00 | 0.000022 |'
   id: totrans-98
   prefs: []
   type: TYPE_TB
+  zh: '| 50 | 0.00 | 0.000022 |'
 - en: '| 0.01 | 0.000022 |'
   id: totrans-99
   prefs: []
   type: TYPE_TB
+  zh: '| 0.01 | 0.000022 |'
 - en: '| 0.02 | 0.000022 |'
   id: totrans-100
   prefs: []
