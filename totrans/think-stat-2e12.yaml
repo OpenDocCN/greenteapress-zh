@@ -365,12 +365,14 @@
   id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: '`agepreg2`的参数是负的，因此抛物线向下弯曲，这与图[10.2](thinkstats2011.html#linear2)中的线条形状一致。'
 - en: The quadratic model of `agepreg` accounts for more of the variability in birth
     weight; the parameter for `isfirst` is smaller in this model, and no longer statistically
     significant.
   id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: '`agepreg`的二次模型解释了出生体重变异的更多部分；在这个模型中，`isfirst`的参数更小，不再具有统计学意义。'
 - en: Using computed variables like `agepreg2` is a common way to fit polynomials
     and other functions to data. This process is still considered linear regression,
     because the dependent variable is a linear function of the explanatory variables,
@@ -378,36 +380,44 @@
   id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 像`agepreg2`这样的计算变量是拟合多项式和其他函数到数据的常见方法。这个过程仍然被认为是线性回归，因为因变量是解释变量的线性函数，无论一些变量是否是其他变量的非线性函数。
 - en: 'The following table summarizes the results of these regressions:'
   id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下表格总结了这些回归的结果：
 - en: '|   | isfirst | agepreg | agepreg2 | R² |'
   id: totrans-65
   prefs: []
   type: TYPE_TB
+  zh: '|   | isfirst | agepreg | agepreg2 | R² |'
 - en: '| Model 1 | -0.125 * | – | – | 0.002 |'
   id: totrans-66
   prefs: []
   type: TYPE_TB
+  zh: '| 模型1 | -0.125 * | – | – | 0.002 |'
 - en: '| Model 2 | – | 0.0175 * | – | 0.0047 |'
   id: totrans-67
   prefs: []
   type: TYPE_TB
+  zh: '| 模型2 | – | 0.0175 * | – | 0.0047 |'
 - en: '| Model 3 | -0.0698 (0.025) | 0.0154 * | – | 0.0053 |'
   id: totrans-68
   prefs: []
   type: TYPE_TB
+  zh: '| 模型3 | -0.0698 (0.025) | 0.0154 * | – | 0.0053 |'
 - en: '| Model 4 | -0.0504 (0.11) | 0.112 * | -0.00185 * | 0.0075 |'
   id: totrans-69
   prefs: []
   type: TYPE_TB
+  zh: '| 模型4 | -0.0504 (0.11) | 0.112 * | -0.00185 * | 0.0075 |'
 - en: The columns in this table are the explanatory variables and the coefficient
     of determination, R². Each entry is an estimated parameter and either a p-value
     in parentheses or an asterisk to indicate a p-value less than 0.001.
   id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个表中的列是解释变量和决定系数R²。每个条目都是一个估计参数，要么是括号中的p值，要么是表示p值小于0.001的星号。
 - en: We conclude that the apparent difference in birth weight is explained, at least
     in part, by the difference in mother’s age. When we include mother’s age in the
     model, the effect of `isfirst` gets smaller, and the remaining effect might be
@@ -415,17 +425,20 @@
   id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们得出结论，出生体重的明显差异至少部分是由母亲年龄的差异解释的。当我们在模型中包括母亲年龄时，`isfirst`的影响变小了，剩下的影响可能是由于偶然。
 - en: In this example, mother’s age acts as a control variable; including `agepreg`
     in the model “controls for” the difference in age between first-time mothers and
     others, making it possible to isolate the effect (if any) of `isfirst`.
   id: totrans-72
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个例子中，母亲的年龄充当控制变量；在模型中包括`agepreg`“控制”了初次产妇和其他人之间的年龄差异，从而有可能分离出`isfirst`的影响（如果有的话）。
 - en: 11.4  Data mining
   id: totrans-73
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 11.4 数据挖掘
 - en: So far we have used regression models for explanation; for example, in the previous
     section we discovered that an apparent difference in birth weight is actually
     due to a difference in mother’s age. But the R² values of those models is very
@@ -434,12 +447,14 @@
   id: totrans-74
   prefs: []
   type: TYPE_NORMAL
+  zh: 到目前为止，我们已经使用回归模型进行解释；例如，在前一节中，我们发现出生体重的明显差异实际上是由于母亲年龄的差异。但是这些模型的R²值非常低，这意味着它们的预测能力很小。在本节中，我们将尝试做得更好。
 - en: Suppose one of your co-workers is expecting a baby and there is an office pool
     to guess the baby’s birth weight (if you are not familiar with betting pools,
     see [https://en.wikipedia.org/wiki/Betting_pool](https://en.wikipedia.org/wiki/Betting_pool)).
   id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设你的一个同事正在期待宝宝的出生重量，并且有一个办公室彩池来猜测宝宝的出生重量（如果你不熟悉彩池，请参见[https://en.wikipedia.org/wiki/Betting_pool](https://en.wikipedia.org/wiki/Betting_pool)）。
 - en: Now suppose that you *really* want to win the pool. What could you do to improve
     your chances? Well, the NSFG dataset includes 244 variables about each pregnancy
     and another 3087 variables about each respondent. Maybe some of those variables
@@ -448,6 +463,7 @@
   id: totrans-76
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在假设你*真的*想赢得彩池。你能做些什么来提高你的机会？嗯，NSFG数据集包括每个怀孕约244个变量，以及每个受访者约3087个变量。也许其中一些变量具有预测能力。要找出哪些变量最有用，为什么不尝试它们呢？
 - en: Testing the variables in the pregnancy table is easy, but in order to use the
     variables in the respondent table, we have to match up each pregnancy with a respondent.
     In theory we could iterate through the rows of the pregnancy table, use the `caseid`
@@ -456,6 +472,7 @@
   id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: 测试怀孕表中的变量很容易，但是为了使用受访者表中的变量，我们必须将每个怀孕与受访者匹配起来。理论上，我们可以遍历怀孕表的行，使用`caseid`找到相应的受访者，并将对应表中的值复制到怀孕表中。但那样会很慢。
 - en: 'A better option is to recognize this process as a join operation as defined
     in SQL and other relational database languages (see [https://en.wikipedia.org/wiki/Join_(SQL)](https://en.wikipedia.org/wiki/Join_(SQL))).
     Join is implemented as a DataFrame method, so we can perform the operation like
@@ -463,6 +480,7 @@
   id: totrans-78
   prefs: []
   type: TYPE_NORMAL
+  zh: 更好的选择是将这个过程视为SQL和其他关系数据库语言中定义的连接操作（参见[https://en.wikipedia.org/wiki/Join_(SQL)](https://en.wikipedia.org/wiki/Join_(SQL))）。连接作为DataFrame方法实现，因此我们可以这样执行操作：
 - en: '[PRE15]'
   id: totrans-79
   prefs: []
@@ -473,18 +491,21 @@
   id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 第一行选择了怀孕超过30周的记录，假设办公室彩池是在预产期前几周形成的。
 - en: The next line reads the respondent file. The result is a DataFrame with integer
     indices; in order to look up respondents efficiently, I replace `resp.index` with
     `resp.caseid`.
   id: totrans-81
   prefs: []
   type: TYPE_NORMAL
+  zh: 下一行读取了受访者文件。结果是一个带有整数索引的DataFrame；为了高效查找受访者，我用`resp.caseid`替换了`resp.index`。
 - en: The `join` method is invoked on `live`, which is considered the “left” table,
     and passed `resp`, which is the “right” table. The keyword argument `on` indicates
     the variable used to match up rows from the two tables.
   id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: '`join`方法在`live`上调用，被认为是“左”表，并传递`resp`，被认为是“右”表。关键字参数`on`指示用于匹配两个表的行的变量。'
 - en: In this example some column names appear in both tables, so we have to provide
     `rsuffix`, which is a string that will be appended to the names of overlapping
     columns from the right table. For example, both tables have a column named `race`
