@@ -326,22 +326,26 @@
   id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用你的年龄测试这个算法。使用一个变量，并使用`+=`和其他更新运算符来更新它。
 - en: Files
   id: totrans-62
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 文件
 - en: Now that we know how to count, let’s see how we can read words from a file.
     We can download *War and Peace* from Project Gutenberg, which is a repository
     of free books at [https://www.gutenberg.org](https://www.gutenberg.org).
   id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们知道如何计数了，让我们看看如何从文件中读取单词。我们可以从Project Gutenberg下载《战争与和平》，这是一个免费图书的存储库，网址是[https://www.gutenberg.org](https://www.gutenberg.org)。
 - en: In order to read the contents of the file, you have to **open** it, which you
     can do with the `open` function.
   id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了读取文件的内容，你必须**打开**它，你可以使用`open`函数来做到这一点。
 - en: '[PRE17]'
   id: totrans-65
   prefs: []
@@ -359,11 +363,13 @@
   id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是`TextIOWrapper`，这是一种**文件指针**类型。它包含文件名，模式（“r”表示“读取”）和编码（“UTF”表示“Unicode转换格式”）。文件指针就像书签一样；它跟踪你已经读取了文件的哪些部分。
 - en: 'If you use a file pointer in a `for` loop, it loops through the lines in the
     file. So we can count the number of lines like this:'
   id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你在`for`循环中使用文件指针，它会循环遍历文件中的行。所以我们可以这样计算行数：
 - en: '[PRE19]'
   id: totrans-69
   prefs: []
@@ -373,6 +379,7 @@
   id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后显示结果。
 - en: '[PRE20]'
   id: totrans-71
   prefs: []
@@ -387,17 +394,20 @@
   id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个文件中大约有66,000行。
 - en: if Statements
   id: totrans-74
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: if语句
 - en: 'We’ve already see comparison operators, like `>` and `<`, which compare values
     and produce a Boolean result, `True` or `False`. For example, we can compare the
     final value of `count` to a number:'
   id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们已经看到比较运算符，比如`>`和`<`，它们比较值并产生一个布尔结果，`True`或`False`。例如，我们可以将`count`的最终值与一个数字进行比较：
 - en: '[PRE22]'
   id: totrans-76
   prefs: []
@@ -413,6 +423,7 @@
   id: totrans-78
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以在`if`语句中使用比较运算符来检查条件并相应地采取行动。
 - en: '[PRE24]'
   id: totrans-79
   prefs: []
@@ -429,6 +440,7 @@
   id: totrans-81
   prefs: []
   type: TYPE_NORMAL
+  zh: '`if`语句的第一行指定了我们要检查的条件。就像`for`语句的头部一样，`if`语句的第一行必须以冒号结尾。'
 - en: If the condition is true, the indented statement runs; otherwise, it doesn’t.
     In the previous example, the condition is true, so the `print` statement runs.
     In the following example, the condition is false, so the `print` statement doesn’t
@@ -436,6 +448,7 @@
   id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果条件为真，则缩进的语句运行；否则，不运行。在前面的例子中，条件为真，所以`print`语句运行。在下面的例子中，条件为假，所以`print`语句不运行。
 - en: '[PRE26]'
   id: totrans-83
   prefs: []
@@ -447,6 +460,7 @@
   id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以在`for`循环内放置一个`print`语句。在这个例子中，当`count`为`1`时，我们只打印书中的一行。其他行被读取，但没有显示。
 - en: '[PRE27]'
   id: totrans-85
   prefs: []
@@ -461,38 +475,45 @@
   id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: 注意这个例子中的缩进：
 - en: Statements inside the `for` loop are indented.
   id: totrans-88
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`for`循环内的语句是缩进的。'
 - en: The statement inside the `if` statement is indented.
   id: totrans-89
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`if`语句内的语句是缩进的。'
 - en: The statement `count += 1` is **outdented** from the previous line, so it ends
     the `if` statement. But it is still inside the `for` loop.
   id: totrans-90
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 语句`count += 1`从上一行**取消缩进**，所以它结束了`if`语句。但它仍然在`for`循环内。
 - en: It is legal in Python to use spaces or tabs for indentation, but the most common
     convention is to use four spaces, never tabs. That’s what I’ll do in my code and
     I strongly suggest you follow the convention.
   id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: 在Python中使用空格或制表符进行缩进是合法的，但最常见的约定是使用四个空格，永远不使用制表符。这就是我在我的代码中要做的，我强烈建议你遵循这个约定。
 - en: The break Statement
   id: totrans-92
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: '`break`语句'
 - en: 'If we display the final value of `count`, we see that the loop reads the entire
     file, but only prints one line:'
   id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们显示`count`的最终值，我们会看到循环读取了整个文件，但只打印了一行：
 - en: '[PRE29]'
   id: totrans-94
   prefs: []
@@ -507,6 +528,7 @@
   id: totrans-96
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用`break`语句避免读取整个文件，就像这样：
 - en: '[PRE31]'
   id: totrans-97
   prefs: []
@@ -522,6 +544,7 @@
   id: totrans-99
   prefs: []
   type: TYPE_NORMAL
+  zh: '`break`语句立即结束循环，跳过文件的其余部分。我们可以通过检查`count`的最后一个值来确认：'
 - en: '[PRE33]'
   id: totrans-100
   prefs: []
@@ -537,16 +560,19 @@
   id: totrans-102
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**编写一个循环，打印文件的前5行，然后跳出循环。'
 - en: Whitespace
   id: totrans-103
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 空白
 - en: If we run the loop again and display the final value of `line`, we see the special
     sequence `\n` at the end.
   id: totrans-104
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们再次运行循环并显示`line`的最终值，我们会看到特殊序列`\n`在末尾。
 - en: '[PRE35]'
   id: totrans-105
   prefs: []
@@ -563,6 +589,7 @@
   id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个序列代表一个称为**换行符**的单个字符，它在行之间放置垂直空间。如果我们使用`print`语句来显示`line`，我们看不到特殊序列，但是我们会看到行后面有额外的空间。
 - en: '[PRE37]'
   id: totrans-108
   prefs: []
@@ -579,6 +606,7 @@
   id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: 在其他字符串中，你可能会看到序列`\t`，它代表“制表符”字符。当你打印一个制表符字符时，它会添加足够的空间，使下一个字符出现在8的倍数列中。
 - en: '[PRE39]'
   id: totrans-111
   prefs: []
@@ -595,11 +623,13 @@
   id: totrans-113
   prefs: []
   type: TYPE_NORMAL
+  zh: 换行字符、制表符和空格被称为**空白字符**，因为当它们被打印时，它们在页面上留下空白（假设背景颜色是白色）。
 - en: Counting Words
   id: totrans-114
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 计算单词
 - en: So far we’ve managed to count the lines in a file, but each line contains several
     words. To split a line into words, we can use a function called `split` that returns
     a list of words. To be more precise, `split` doesn’t actually know what a word
@@ -607,6 +637,7 @@
   id: totrans-115
   prefs: []
   type: TYPE_NORMAL
+  zh: 到目前为止，我们已经成功计算了文件中的行数，但每行包含多个单词。为了将一行分割成单词，我们可以使用一个名为`split`的函数，它返回一个单词列表。更准确地说，`split`实际上并不知道什么是一个单词；它只是在有空格或其他空白字符的地方分割行。
 - en: '[PRE41]'
   id: totrans-116
   prefs: []
