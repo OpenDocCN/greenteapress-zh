@@ -1,8 +1,10 @@
 - en: Chapter 7  Relationships between variables
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
 - en: 原文：[https://greenteapress.com/thinkstats2/html/thinkstats2008.html](https://greenteapress.com/thinkstats2/html/thinkstats2008.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
@@ -13,74 +15,96 @@
     there are short heavy people and tall light ones. But if you are trying to guess
     someone’s weight, you will be more accurate if you know their height than if you
     don’t.'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
 - en: The code for this chapter is in `scatter.py`. For information about downloading
     and working with this code, see Section [0.2](thinkstats2001.html#code).
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
 - en: 7.1  Scatter plots
+  id: totrans-4
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: The simplest way to check for a relationship between two variables is a scatter
     plot, but making a good scatter plot is not always easy. As an example, I’ll plot
     weight versus height for the respondents in the BRFSS (see Section [5.4](thinkstats2006.html#lognormal)).
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
 - en: 'Here’s the code that reads the data file and extracts height and weight:'
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE0]'
+  id: totrans-7
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '`SampleRows` chooses a random subset of the data:'
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE1]'
+  id: totrans-9
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '`df` is the DataFrame, `nrows` is the number of rows to choose, and `replace`
     is a boolean indicating whether sampling should be done with replacement; in other
     words, whether the same row could be chosen more than once.'
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
 - en: '`thinkplot` provides `Scatter`, which makes scatter plots:'
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE2]'
+  id: totrans-12
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: The result, in Figure [7.1](#scatter1) (left), shows the shape of the relationship.
     As we expected, taller people tend to be heavier.
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-14
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-15
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/d4b33f3f6ad1e6698c9af6b38ae04c74.png)'
+  id: totrans-16
   prefs:
   - PREF_BQ
   type: TYPE_IMG
 - en: ''
+  id: totrans-17
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 7.1: Scatter plots of weight versus height for the respondents in
     the BRFSS, unjittered (left), jittered (right). |'
+  id: totrans-18
   prefs:
   - PREF_BQ
   type: TYPE_TB
 - en: ''
+  id: totrans-19
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-20
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
@@ -88,6 +112,7 @@
     into columns. The problem is that the heights are rounded to the nearest inch,
     converted to centimeters, and then rounded again. Some information is lost in
     translation.
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
 - en: We can’t get that information back, but we can minimize the effect on the scatter
@@ -95,282 +120,391 @@
     of rounding off. Since these measurements were rounded to the nearest inch, they
     might be off by up to 0.5 inches or 1.3 cm. Similarly, the weights might be off
     by 0.5 kg.
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE3]'
+  id: totrans-23
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: 'Here’s the implementation of `Jitter`:'
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE4]'
+  id: totrans-25
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: The values can be any sequence; the result is a NumPy array.
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
 - en: Figure [7.1](#scatter1) (right) shows the result. Jittering reduces the visual
     effect of rounding and makes the shape of the relationship clearer. But in general
     you should only jitter data for purposes of visualization and avoid using jittered
     data for analysis.
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
 - en: Even with jittering, this is not the best way to represent the data. There are
     many overlapping points, which hides data in the dense parts of the figure and
     gives disproportionate emphasis to outliers. This effect is called saturation.
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-29
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-30
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/26a82e2534b7ede28650f23c1638dd66.png)'
+  id: totrans-31
   prefs:
   - PREF_BQ
   type: TYPE_IMG
 - en: ''
+  id: totrans-32
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 7.2: Scatter plot with jittering and transparency (left), hexbin plot
     (right). |'
+  id: totrans-33
   prefs:
   - PREF_BQ
   type: TYPE_TB
 - en: ''
+  id: totrans-34
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-35
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: 'We can solve this problem with the `alpha` parameter, which makes the points
     partly transparent:'
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE5]'
+  id: totrans-37
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: 'Figure [7.2](#scatter2) (left) shows the result. Overlapping data points look
     darker, so darkness is proportional to density. In this version of the plot we
     can see two details that were not apparent before: vertical clusters at several
     heights and a horizontal line near 90 kg or 200 pounds. Since this data is based
     on self-reports in pounds, the most likely explanation is that some respondents
     reported rounded values.'
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
 - en: Using transparency works well for moderate-sized datasets, but this figure only
     shows the first 5000 records in the BRFSS, out of a total of 414 509.
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
 - en: 'To handle larger datasets, another option is a hexbin plot, which divides the
     graph into hexagonal bins and colors each bin according to how many data points
     fall in it. `thinkplot` provides `HexBin`:'
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了处理更大的数据集，另一个选择是六边形图，它将图形分成六边形箱，并根据落入每个箱中的数据点数量对每个箱进行着色。`thinkplot`提供`HexBin`：
 - en: '[PRE6]'
+  id: totrans-41
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: Figure [7.2](#scatter2) (right) shows the result. An advantage of a hexbin is
     that it shows the shape of the relationship well, and it is efficient for large
     datasets, both in time and in the size of the file it generates. A drawback is
     that it makes the outliers invisible.
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: 图[7.2](#scatter2)（右侧）显示了结果。六边形图的优点是它能很好地显示关系的形状，并且对于大型数据集来说，它在时间和生成的文件大小方面都很高效。缺点是它使异常值不可见。
 - en: The point of this example is that it is not easy to make a scatter plot that
     shows relationships clearly without introducing misleading artifacts.
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个例子的要点是，要在不引入误导性的人为因素的情况下清晰地显示关系，制作散点图并不容易。
 - en: 7.2  Characterizing relationships
+  id: totrans-44
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 7.2 表征关系
 - en: Scatter plots provide a general impression of the relationship between variables,
     but there are other visualizations that provide more insight into the nature of
     the relationship. One option is to bin one variable and plot percentiles of the
     other.
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 散点图提供了变量之间关系的一般印象，但还有其他可视化方法可以更深入地了解关系的性质。其中一种选择是对一个变量进行分箱，并绘制另一个变量的百分位数。
 - en: 'NumPy and pandas provide functions for binning data:'
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: NumPy和pandas提供了用于分箱数据的函数：
 - en: '[PRE7]'
+  id: totrans-47
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '`dropna` drops rows with `nan` in any of the listed columns. `arange` makes
     a NumPy array of bins from 135 to, but not including, 210, in increments of 5.'
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: '`dropna`删除具有列中任何`nan`的行。`arange`从135到210（不包括）以5的增量生成一个NumPy数组的箱。'
 - en: '`digitize` computes the index of the bin that contains each value in `df.htm3`.
     The result is a NumPy array of integer indices. Values that fall below the lowest
     bin are mapped to index 0\. Values above the highest bin are mapped to `len(bins)`.'
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: '`digitize`计算包含`df.htm3`中每个值的箱的索引。结果是一个整数索引的NumPy数组。低于最低箱的值映射到索引0。高于最高箱的值映射到`len(bins)`。'
 - en: '* * *'
+  id: totrans-50
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
+  id: totrans-51
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/a02c9370e6596242b1ab6e7962db57a3.png)'
+  id: totrans-52
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/a02c9370e6596242b1ab6e7962db57a3.png)'
 - en: ''
+  id: totrans-53
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 7.3: Percentiles of weight for a range of height bins. |'
+  id: totrans-54
   prefs:
   - PREF_BQ
   type: TYPE_TB
+  zh: '| 图7.3：一系列身高箱的体重百分位数。 |'
 - en: ''
+  id: totrans-55
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-56
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: '`groupby` is a DataFrame method that returns a GroupBy object; used in a `for`
     loop, `groups` iterates the names of the groups and the DataFrames that represent
     them. So, for example, we can print the number of rows in each group like this:'
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: '`groupby`是一个DataFrame方法，返回一个GroupBy对象；在`for`循环中使用`groups`迭代组的名称和代表它们的DataFrame。因此，例如，我们可以这样打印每个组中的行数：'
 - en: '[PRE8]'
+  id: totrans-58
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: 'Now for each group we can compute the mean height and the CDF of weight:'
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，对于每个组，我们可以计算平均身高和体重的累积分布函数（CDF）：
 - en: '[PRE9]'
+  id: totrans-60
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: 'Finally, we can plot percentiles of weight versus height:'
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，我们可以绘制体重与身高的百分位数：
 - en: '[PRE10]'
+  id: totrans-62
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: Figure [7.3](#scatter3) shows the result. Between 140 and 200 cm the relationship
     between these variables is roughly linear. This range includes more than 99% of
     the data, so we don’t have to worry too much about the extremes.
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 图[7.3](#scatter3)显示了结果。在140到200厘米之间，这些变量之间的关系大致是线性的。这个范围包括了超过99%的数据，所以我们不必太担心极端情况。
 - en: 7.3  Correlation
+  id: totrans-64
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 7.3 相关性
 - en: A correlation is a statistic intended to quantify the strength of the relationship
     between two variables.
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: 相关性是一种旨在量化两个变量之间关系强度的统计量。
 - en: A challenge in measuring correlation is that the variables we want to compare
     are often not expressed in the same units. And even if they are in the same units,
     they come from different distributions.
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: 在测量相关性时的一个挑战是，我们想要比较的变量通常不是以相同的单位表示。即使它们是以相同的单位表示，它们也来自不同的分布。
 - en: 'There are two common solutions to these problems:'
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些问题有两种常见的解决方案：
 - en: Transform each value to a standard score, which is the number of standard deviations
     from the mean. This transform leads to the “Pearson product-moment correlation
     coefficient.”
+  id: totrans-68
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 将每个值转换为标准分数，即与平均值的标准偏差数。这种转换导致了“皮尔逊积矩相关系数”。
 - en: Transform each value to its rank, which is its index in the sorted list of values.
     This transform leads to the “Spearman rank correlation coefficient.”
+  id: totrans-69
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 将每个值转换为其排名，即其在值排序列表中的索引。这种转换导致了“斯皮尔曼秩相关系数”。
 - en: 'If X is a series of n values, x[i], we can convert to standard scores by subtracting
     the mean and dividing by the standard deviation: z[i] = (x[i] − µ) / σ.'
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果X是一系列n个值，x[i]，我们可以通过减去平均值并除以标准差来转换为标准分数：z[i] = (x[i] − µ) / σ。
 - en: 'The numerator is a deviation: the distance from the mean. Dividing by σ standardizes
     the deviation, so the values of Z are dimensionless (no units) and their distribution
     has mean 0 and variance 1.'
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: 分子是一个偏差：与平均值的距离。除以σ标准化偏差，因此Z的值是无量纲的（没有单位），它们的分布具有均值0和方差1。
 - en: If X is normally distributed, so is Z. But if X is skewed or has outliers, so
     does Z; in those cases, it is more robust to use percentile ranks. If we compute
     a new variable, R, so that r[i] is the rank of x[i], the distribution of R is
     uniform from 1 to n, regardless of the distribution of X.
+  id: totrans-72
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果X是正态分布的，那么Z也是正态分布的。但如果X是倾斜的或者有异常值，Z也是如此；在这些情况下，使用百分位数排名更加稳健。如果我们计算一个新变量R，使得r[i]是x[i]的排名，那么R的分布是均匀的，从1到n，不管X的分布如何。
 - en: 7.4  Covariance
+  id: totrans-73
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 7.4 协方差
 - en: Covariance is a measure of the tendency of two variables to vary together. If
     we have two series, X and Y, their deviations from the mean are
+  id: totrans-74
   prefs: []
   type: TYPE_NORMAL
+  zh: 协方差是两个变量一起变化的倾向的度量。如果我们有两个系列X和Y，它们与平均值的偏差是
 - en: '| dx[i] = x[i] − x  |'
+  id: totrans-75
   prefs: []
   type: TYPE_TB
+  zh: '| dx[i] = x[i] − x |'
 - en: '| dy[i] = y[i] − ȳ  |'
+  id: totrans-76
   prefs: []
   type: TYPE_TB
+  zh: '| dy[i] = y[i] − ȳ |'
 - en: where x is the sample mean of X and ȳ is the sample mean of Y. If X and Y vary
     together, their deviations tend to have the same sign.
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: 其中x是X的样本均值，ȳ是Y的样本均值。如果X和Y一起变化，它们的偏差往往具有相同的符号。
 - en: If we multiply them together, the product is positive when the deviations have
     the same sign and negative when they have the opposite sign. So adding up the
     products gives a measure of the tendency to vary together.
+  id: totrans-78
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们将它们相乘，当偏差具有相同的符号时，乘积是正的，当偏差具有相反的符号时，乘积是负的。因此，将这些乘积相加可以衡量一起变化的倾向。
 - en: 'Covariance is the mean of these products:'
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
 - en: '| Cov(X,Y) =  |'
+  id: totrans-80
   prefs: []
   type: TYPE_TB
 - en: '&#124; 1 &#124;'
+  id: totrans-81
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124;  &#124;'
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124; n &#124;'
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
 - en: '|  ∑dx[i] dy[i]  |'
+  id: totrans-84
   prefs: []
   type: TYPE_TB
 - en: where n is the length of the two series (they have to be the same length).
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
 - en: 'If you have studied linear algebra, you might recognize that `Cov` is the dot
     product of the deviations, divided by their length. So the covariance is maximized
     if the two vectors are identical, 0 if they are orthogonal, and negative if they
     point in opposite directions. `thinkstats2` uses `np.dot` to implement `Cov` efficiently:'
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE11]'
+  id: totrans-87
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: By default `Cov` computes deviations from the sample means, or you can provide
     known means. If `xs` and `ys` are Python sequences, `np.asarray` converts them
     to NumPy arrays. If they are already NumPy arrays, `np.asarray` does nothing.
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
 - en: This implementation of covariance is meant to be simple for purposes of explanation.
     NumPy and pandas also provide implementations of covariance, but both of them
     apply a correction for small sample sizes that we have not covered yet, and `np.cov`
     returns a covariance matrix, which is more than we need for now.
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
 - en: 7.5  Pearson’s correlation
+  id: totrans-90
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -378,108 +512,140 @@
     statistic because it is hard to interpret. Among other problems, its units are
     the product of the units of X and Y. For example, the covariance of weight and
     height in the BRFSS dataset is 113 kilogram-centimeters, whatever that means.
+  id: totrans-91
   prefs: []
   type: TYPE_NORMAL
 - en: 'One solution to this problem is to divide the deviations by the standard deviation,
     which yields standard scores, and compute the product of standard scores:'
+  id: totrans-92
   prefs: []
   type: TYPE_NORMAL
 - en: '| p[i] =  |'
+  id: totrans-93
   prefs: []
   type: TYPE_TB
 - en: '&#124; (x[i] − x) &#124;'
+  id: totrans-94
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124;  &#124;'
+  id: totrans-95
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124; S[X] &#124;'
+  id: totrans-96
   prefs: []
   type: TYPE_NORMAL
 - en: '|   |'
+  id: totrans-97
   prefs: []
   type: TYPE_TB
 - en: '&#124; (y[i] − ȳ) &#124;'
+  id: totrans-98
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124;  &#124;'
+  id: totrans-99
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124; S[Y] &#124;'
+  id: totrans-100
   prefs: []
   type: TYPE_NORMAL
 - en: '|   |'
+  id: totrans-101
   prefs: []
   type: TYPE_TB
 - en: Where S[X] and S[Y] are the standard deviations of X and Y. The mean of these
     products is
+  id: totrans-102
   prefs: []
   type: TYPE_NORMAL
 - en: '| ρ =  |'
+  id: totrans-103
   prefs: []
   type: TYPE_TB
 - en: '&#124; 1 &#124;'
+  id: totrans-104
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124;  &#124;'
+  id: totrans-105
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124; n &#124;'
+  id: totrans-106
   prefs: []
   type: TYPE_NORMAL
 - en: '|  ∑p[i]  |'
+  id: totrans-107
   prefs: []
   type: TYPE_TB
 - en: 'Or we can rewrite ρ by factoring out S[X] and S[Y]:'
+  id: totrans-108
   prefs: []
   type: TYPE_NORMAL
 - en: '| ρ =  |'
+  id: totrans-109
   prefs: []
   type: TYPE_TB
 - en: '&#124; Cov(X,Y) &#124;'
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124;  &#124;'
+  id: totrans-111
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124; S[X] S[Y] &#124;'
+  id: totrans-112
   prefs: []
   type: TYPE_NORMAL
 - en: '|   |'
+  id: totrans-113
   prefs: []
   type: TYPE_TB
 - en: This value is called Pearson’s correlation after Karl Pearson, an influential
     early statistician. It is easy to compute and easy to interpret. Because standard
     scores are dimensionless, so is ρ.
+  id: totrans-114
   prefs: []
   type: TYPE_NORMAL
 - en: 'Here is the implementation in `thinkstats2`:'
+  id: totrans-115
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE12]'
+  id: totrans-116
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '`MeanVar` computes mean and variance slightly more efficiently than separate
     calls to `np.mean` and `np.var`.'
+  id: totrans-117
   prefs: []
   type: TYPE_NORMAL
 - en: Pearson’s correlation is always between -1 and +1 (including both). If ρ is
     positive, we say that the correlation is positive, which means that when one variable
     is high, the other tends to be high. If ρ is negative, the correlation is negative,
     so when one variable is high, the other is low.
+  id: totrans-118
   prefs: []
   type: TYPE_NORMAL
 - en: The magnitude of ρ indicates the strength of the correlation. If ρ is 1 or -1,
     the variables are perfectly correlated, which means that if you know one, you
     can make a perfect prediction about the other.
+  id: totrans-119
   prefs: []
   type: TYPE_NORMAL
 - en: Most correlation in the real world is not perfect, but it is still useful. The
     correlation of height and weight is 0.51, which is a strong correlation compared
     to similar human-related variables.
+  id: totrans-120
   prefs: []
   type: TYPE_NORMAL
 - en: 7.6  Nonlinear relationships
+  id: totrans-121
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -487,39 +653,48 @@
     no relationship between the variables, but that conclusion is not valid. Pearson’s
     correlation only measures *linear* relationships. If there’s a nonlinear relationship,
     ρ understates its strength.
+  id: totrans-122
   prefs: []
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-123
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-124
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/4e6870ded39e797594ed9f2fdc54d84f.png)'
+  id: totrans-125
   prefs:
   - PREF_BQ
   type: TYPE_IMG
 - en: ''
+  id: totrans-126
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 7.4: Examples of datasets with a range of correlations. |'
+  id: totrans-127
   prefs:
   - PREF_BQ
   type: TYPE_TB
 - en: ''
+  id: totrans-128
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-129
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: Figure [7.4](#corr_examples) is from [http://wikipedia.org/wiki/Correlation_and_dependence](http://wikipedia.org/wiki/Correlation_and_dependence).
     It shows scatter plots and correlation coefficients for several carefully constructed
     datasets.
+  id: totrans-130
   prefs: []
   type: TYPE_NORMAL
 - en: The top row shows linear relationships with a range of correlations; you can
@@ -528,16 +703,22 @@
     correlation is unrelated to slope (we’ll talk about estimating slope soon). The
     third row shows variables that are clearly related, but because the relationship
     is nonlinear, the correlation coefficient is 0.
+  id: totrans-131
   prefs: []
   type: TYPE_NORMAL
+  zh: 顶部一行显示了一系列相关性的线性关系；您可以使用此行来了解不同ρ值的不同情况。第二行显示了一系列斜率的完美相关性，这表明相关性与斜率无关（我们将很快讨论如何估计斜率）。第三行显示了明显相关的变量，但由于关系是非线性的，相关系数为0。
 - en: The moral of this story is that you should always look at a scatter plot of
     your data before blindly computing a correlation coefficient.
+  id: totrans-132
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个故事的教训是，在盲目计算相关系数之前，您应该始终查看数据的散点图。
 - en: 7.7  Spearman’s rank correlation
+  id: totrans-133
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 7.7 斯皮尔曼秩相关
 - en: Pearson’s correlation works well if the relationship between variables is linear
     and if the variables are roughly normal. But it is not robust in the presence
     of outliers. Spearman’s rank correlation is an alternative that mitigates the
@@ -546,186 +727,266 @@
     For example, in the sample `[1, 2, 5, 7]` the rank of the value 5 is 3, because
     it appears third in the sorted list. Then we compute Pearson’s correlation for
     the ranks.
+  id: totrans-134
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果变量之间的关系是线性的，并且变量大致正态分布，皮尔逊相关性效果很好。但是在存在异常值时不稳健。斯皮尔曼秩相关是一种替代方法，可以减轻异常值和偏斜分布的影响。要计算斯皮尔曼相关性，我们必须计算每个值的秩，即其在排序样本中的索引。然后我们计算秩的皮尔逊相关性。
 - en: '`thinkstats2` provides a function that computes Spearman’s rank correlation:'
+  id: totrans-135
   prefs: []
   type: TYPE_NORMAL
+  zh: '`thinkstats2`提供了一个计算斯皮尔曼秩相关的函数：'
 - en: '[PRE13]'
+  id: totrans-136
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: I convert the arguments to pandas Series objects so I can use `rank`, which
     computes the rank for each value and returns a Series. Then I use `Corr` to compute
     the correlation of the ranks.
+  id: totrans-137
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将参数转换为pandas Series对象，以便使用`rank`，它计算每个值的秩并返回一个Series。然后我使用`Corr`来计算秩的相关性。
 - en: 'I could also use `Series.corr` directly and specify Spearman’s method:'
+  id: totrans-138
   prefs: []
   type: TYPE_NORMAL
+  zh: 我还可以直接使用`Series.corr`并指定斯皮尔曼的方法：
 - en: '[PRE14]'
+  id: totrans-139
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: 'The Spearman rank correlation for the BRFSS data is 0.54, a little higher than
     the Pearson correlation, 0.51\. There are several possible reasons for the difference,
     including:'
+  id: totrans-140
   prefs: []
   type: TYPE_NORMAL
+  zh: BRFSS数据的斯皮尔曼秩相关为0.54，略高于皮尔逊相关0.51。差异可能有几个可能的原因，包括：
 - en: If the relationship is nonlinear, Pearson’s correlation tends to underestimate
     the strength of the relationship, and
+  id: totrans-141
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果关系是非线性的，皮尔逊相关往往会低估关系的强度，以及
 - en: Pearson’s correlation can be affected (in either direction) if one of the distributions
     is skewed or contains outliers. Spearman’s rank correlation is more robust.
+  id: totrans-142
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果分布中包含偏斜或异常值，皮尔逊相关性可能会受到影响（无论方向如何）。斯皮尔曼秩相关性更加稳健。
 - en: 'In the BRFSS example, we know that the distribution of weights is roughly lognormal;
     under a log transform it approximates a normal distribution, so it has no skew.
     So another way to eliminate the effect of skewness is to compute Pearson’s correlation
     with log-weight and height:'
+  id: totrans-143
   prefs: []
   type: TYPE_NORMAL
+  zh: 在BRFSS示例中，我们知道体重分布大致呈对数正态分布；在对数变换下，它近似为正态分布，因此没有偏斜。因此，消除偏斜影响的另一种方法是使用对数体重和身高计算皮尔逊相关性：
 - en: '[PRE15]'
+  id: totrans-144
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: The result is 0.53, close to the rank correlation, 0.54\. So that suggests that
     skewness in the distribution of weight explains most of the difference between
     Pearson’s and Spearman’s correlation.
+  id: totrans-145
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果为0.53，接近秩相关系数0.54。这表明体重分布的偏斜大部分解释了皮尔逊和斯皮尔曼相关性之间的差异。
 - en: 7.8  Correlation and causation
+  id: totrans-146
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 7.8 相关性和因果关系
 - en: 'If variables A and B are correlated, there are three possible explanations:
     A causes B, or B causes A, or some other set of factors causes both A and B. These
     explanations are called “causal relationships”.'
+  id: totrans-147
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果变量A和B相关，则有三种可能的解释：A导致B，或B导致A，或其他一些因素导致A和B。这些解释被称为“因果关系”。
 - en: 'Correlation alone does not distinguish between these explanations, so it does
     not tell you which ones are true. This rule is often summarized with the phrase
     “Correlation does not imply causation,” which is so pithy it has its own Wikipedia
     page: [http://wikipedia.org/wiki/Correlation_does_not_imply_causation](http://wikipedia.org/wiki/Correlation_does_not_imply_causation).'
+  id: totrans-148
   prefs: []
   type: TYPE_NORMAL
+  zh: 仅仅相关性并不能区分这些解释，因此它不能告诉您哪些是真实的。这个规则通常用短语“相关性不意味着因果关系”来概括，这个短语非常简洁，甚至有自己的维基百科页面：[http://wikipedia.org/wiki/Correlation_does_not_imply_causation](http://wikipedia.org/wiki/Correlation_does_not_imply_causation)。
 - en: So what can you do to provide evidence of causation?
+  id: totrans-149
   prefs: []
   type: TYPE_NORMAL
+  zh: 那么，您可以采取什么措施来提供因果关系的证据？
 - en: Use time. If A comes before B, then A can cause B but not the other way around
     (at least according to our common understanding of causation). The order of events
     can help us infer the direction of causation, but it does not preclude the possibility
     that something else causes both A and B.
+  id: totrans-150
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 使用时间。如果A在B之前发生，那么A可能导致B，但反之则不然（至少根据我们对因果关系的共同理解）。事件的顺序可以帮助我们推断因果关系的方向，但这并不排除其他因素同时导致A和B的可能性。
 - en: Use randomness. If you divide a large sample into two groups at random and compute
     the means of almost any variable, you expect the difference to be small. If the
     groups are nearly identical in all variables but one, you can eliminate spurious
     relationships.
+  id: totrans-151
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 使用随机性。如果将大样本随机分成两组，并计算几乎任何变量的均值，您期望差异很小。如果两组在所有变量上几乎相同，只有一个变量不同，您可以消除虚假关系。
 - en: This works even if you don’t know what the relevant variables are, but it works
     even better if you do, because you can check that the groups are identical.
+  id: totrans-152
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: 即使您不知道相关变量是什么，这也适用，但如果您知道相关变量，效果会更好，因为您可以检查这些组是否相同。
 - en: 'These ideas are the motivation for the randomized controlled trial, in which
     subjects are assigned randomly to two (or more) groups: a treatment group that
     receives some kind of intervention, like a new medicine, and a control group that
     receives no intervention, or another treatment whose effects are known.'
+  id: totrans-153
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些想法是随机对照试验的动机，其中受试者被随机分配到两个（或更多）组：一个接受某种干预（如新药）的治疗组，以及一个不接受干预或其效果已知的对照组。
 - en: A randomized controlled trial is the most reliable way to demonstrate a causal
     relationship, and the foundation of science-based medicine (see [http://wikipedia.org/wiki/Randomized_controlled_trial](http://wikipedia.org/wiki/Randomized_controlled_trial)).
+  id: totrans-154
   prefs: []
   type: TYPE_NORMAL
+  zh: 随机对照试验是证明因果关系最可靠的方法，也是基于科学的医学的基础（参见[http://wikipedia.org/wiki/Randomized_controlled_trial](http://wikipedia.org/wiki/Randomized_controlled_trial)）。
 - en: Unfortunately, controlled trials are only possible in the laboratory sciences,
     medicine, and a few other disciplines. In the social sciences, controlled experiments
     are rare, usually because they are impossible or unethical.
+  id: totrans-155
   prefs: []
   type: TYPE_NORMAL
+  zh: 不幸的是，对照试验只在实验室科学、医学和其他几个学科中可能。在社会科学中，受控实验很少见，通常是因为不可能或不道德。
 - en: An alternative is to look for a natural experiment, where different “treatments”
     are applied to groups that are otherwise similar. One danger of natural experiments
     is that the groups might differ in ways that are not apparent. You can read more
     about this topic at [http://wikipedia.org/wiki/Natural_experiment](http://wikipedia.org/wiki/Natural_experiment).
+  id: totrans-156
   prefs: []
   type: TYPE_NORMAL
+  zh: 另一种方法是寻找自然实验，其中对于其他方面相似的组应用不同的“治疗”。自然实验的一个危险是组可能在不明显的方面有所不同。您可以在[http://wikipedia.org/wiki/Natural_experiment](http://wikipedia.org/wiki/Natural_experiment)上阅读更多关于这个主题的内容。
 - en: In some cases it is possible to infer causal relationships using regression
     analysis, which is the topic of Chapter [11](thinkstats2012.html#regression).
+  id: totrans-157
   prefs: []
   type: TYPE_NORMAL
+  zh: 在某些情况下，可以使用回归分析来推断因果关系，这是第[11](thinkstats2012.html#regression)章的主题。
 - en: 7.9  Exercises
+  id: totrans-158
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 7.9 练习
 - en: A solution to this exercise is in `chap07soln.py`.
+  id: totrans-159
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个练习的解决方案在`chap07soln.py`中。
 - en: Exercise 1   *Using data from the NSFG, make a scatter plot of birth weight
     versus mother’s age. Plot percentiles of birth weight versus mother’s age. Compute
     Pearson’s and Spearman’s correlations. How would you characterize the relationship
     between these variables?*
+  id: totrans-160
   prefs: []
   type: TYPE_NORMAL
+  zh: 练习1 *使用NSFG的数据，制作出生体重与母亲年龄的散点图。绘制出生体重与母亲年龄的百分位数。计算Pearson和Spearman的相关性。你如何描述这些变量之间的关系？*
 - en: 7.10  Glossary
+  id: totrans-161
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 7.10 术语表
 - en: 'scatter plot: A visualization of the relationship between two variables, showing
     one point for each row of data.'
+  id: totrans-162
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 散点图：展示两个变量之间关系的可视化，每行数据显示一个点。
 - en: 'jitter: Random noise added to data for purposes of visualization.'
+  id: totrans-163
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 抖动：为了可视化而添加到数据中的随机噪音。
 - en: 'saturation: Loss of information when multiple points are plotted on top of
     each other.'
+  id: totrans-164
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 饱和度：当多个点叠加在一起时丢失信息。
 - en: 'correlation: A statistic that measures the strength of the relationship between
     two variables.'
+  id: totrans-165
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 相关性：衡量两个变量之间关系强度的统计量。
 - en: 'standardize: To transform a set of values so that their mean is 0 and their
     variance is 1.'
+  id: totrans-166
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 标准化：将一组值转换为它们的平均值为0，方差为1。
 - en: 'standard score: A value that has been standardized so that it is expressed
     in standard deviations from the mean.'
+  id: totrans-167
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 标准分数：已经标准化为从平均值的标准偏差中表达的值。
 - en: 'covariance: A measure of the tendency of two variables to vary together.'
+  id: totrans-168
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 协方差：衡量两个变量一起变化倾向的度量。
 - en: 'rank: The index where an element appears in a sorted list.'
+  id: totrans-169
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 等级：元素在排序列表中出现的索引。
 - en: 'randomized controlled trial: An experimental design in which subjects are divided
     into groups at random, and different groups are given different treatments.'
+  id: totrans-170
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 随机对照试验：一种实验设计，其中受试者被随机分成组，不同的组被给予不同的治疗。
 - en: 'treatment group: A group in a controlled trial that receives some kind of intervention.'
+  id: totrans-171
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 治疗组：在对照试验中接受某种干预的组。
 - en: 'control group: A group in a controlled trial that receives no treatment, or
     a treatment whose effect is known.'
+  id: totrans-172
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 对照组：在对照试验中不接受治疗或其效果已知的组。
 - en: 'natural experiment: An experimental design that takes advantage of a natural
     division of subjects into groups in ways that are at least approximately random.'
+  id: totrans-173
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 自然实验：利用主体自然分组的实验设计，这些分组至少近似随机。
