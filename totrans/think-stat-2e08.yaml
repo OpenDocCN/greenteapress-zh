@@ -3,11 +3,13 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 第7章  变量之间的关系
 - en: 原文：[https://greenteapress.com/thinkstats2/html/thinkstats2008.html](https://greenteapress.com/thinkstats2/html/thinkstats2008.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://greenteapress.com/thinkstats2/html/thinkstats2008.html](https://greenteapress.com/thinkstats2/html/thinkstats2008.html)
 - en: 'So far we have only looked at one variable at a time. In this chapter we look
     at relationships between variables. Two variables are related if knowing one gives
     you information about the other. For example, height and weight are related; people
@@ -18,26 +20,31 @@
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 到目前为止，我们只看了一个变量。在本章中，我们将研究变量之间的关系。如果知道一个变量，就能得到关于另一个变量的信息，那么这两个变量就是相关的。例如，身高和体重是相关的；较高的人往往体重更重。当然，这不是一个完美的关系：有矮胖的人和高瘦的人。但是，如果你想猜测某人的体重，如果你知道他们的身高，你会更准确。
 - en: The code for this chapter is in `scatter.py`. For information about downloading
     and working with this code, see Section [0.2](thinkstats2001.html#code).
   id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章的代码在`scatter.py`中。有关下载和使用此代码的信息，请参见第[0.2](thinkstats2001.html#code)节。
 - en: 7.1  Scatter plots
   id: totrans-4
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 7.1  散点图
 - en: The simplest way to check for a relationship between two variables is a scatter
     plot, but making a good scatter plot is not always easy. As an example, I’ll plot
     weight versus height for the respondents in the BRFSS (see Section [5.4](thinkstats2006.html#lognormal)).
   id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 检查两个变量之间的关系的最简单方法是散点图，但是制作一个好的散点图并不总是容易。例如，我将为BRFSS中的受访者的体重与身高绘制散点图（参见第[5.4](thinkstats2006.html#lognormal)节）。
 - en: 'Here’s the code that reads the data file and extracts height and weight:'
   id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是读取数据文件并提取身高和体重的代码：
 - en: '[PRE0]'
   id: totrans-7
   prefs: []
@@ -47,6 +54,7 @@
   id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: '`SampleRows`选择数据的随机子集：'
 - en: '[PRE1]'
   id: totrans-9
   prefs: []
@@ -58,10 +66,12 @@
   id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: '`df`是DataFrame，`nrows`是要选择的行数，`replace`是一个布尔值，指示是否应该进行有放回的抽样；换句话说，是否可以多次选择相同的行。'
 - en: '`thinkplot` provides `Scatter`, which makes scatter plots:'
   id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: '`thinkplot`提供`Scatter`，用于制作散点图：'
 - en: '[PRE2]'
   id: totrans-12
   prefs: []
@@ -72,11 +82,13 @@
   id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果在图[7.1](#scatter1)（左）中显示了关系的形状。正如我们预期的那样，较高的人往往体重更重。
 - en: '* * *'
   id: totrans-14
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
   id: totrans-15
   prefs:
@@ -87,6 +99,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/d4b33f3f6ad1e6698c9af6b38ae04c74.png)'
 - en: ''
   id: totrans-17
   prefs:
@@ -98,6 +111,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_TB
+  zh: '| 图7.1：BRFSS受访者体重与身高的散点图，未抖动（左），抖动（右）。 |'
 - en: ''
   id: totrans-19
   prefs:
@@ -108,6 +122,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: But this is not the best representation of the data, because the data are packed
     into columns. The problem is that the heights are rounded to the nearest inch,
     converted to centimeters, and then rounded again. Some information is lost in
@@ -115,6 +130,7 @@
   id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 但这并不是数据的最佳表示，因为数据被打包到列中。问题在于，身高四舍五入到最接近的英寸，转换为厘米，然后再次四舍五入。一些信息在转换中丢失了。
 - en: We can’t get that information back, but we can minimize the effect on the scatter
     plot by jittering the data, which means adding random noise to reverse the effect
     of rounding off. Since these measurements were rounded to the nearest inch, they
@@ -123,6 +139,7 @@
   id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们无法恢复这些信息，但我们可以通过抖动数据来最小化散点图的影响，这意味着添加随机噪声以抵消四舍五入的影响。由于这些测量值四舍五入到最接近的英寸，它们可能偏差多达0.5英寸或1.3厘米。同样，重量可能偏差0.5公斤。
 - en: '[PRE3]'
   id: totrans-23
   prefs: []
@@ -132,6 +149,7 @@
   id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是`Jitter`的实现：
 - en: '[PRE4]'
   id: totrans-25
   prefs: []
@@ -141,6 +159,7 @@
   id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些值可以是任何序列；结果是一个NumPy数组。
 - en: Figure [7.1](#scatter1) (right) shows the result. Jittering reduces the visual
     effect of rounding and makes the shape of the relationship clearer. But in general
     you should only jitter data for purposes of visualization and avoid using jittered
@@ -148,17 +167,20 @@
   id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 图[7.1](#scatter1)（右）显示了结果。抖动减少了四舍五入的视觉效果，并使关系的形状更清晰。但是一般来说，你应该只为了可视化目的而抖动数据，并避免使用抖动的数据进行分析。
 - en: Even with jittering, this is not the best way to represent the data. There are
     many overlapping points, which hides data in the dense parts of the figure and
     gives disproportionate emphasis to outliers. This effect is called saturation.
   id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: 即使抖动了，这仍不是表示数据的最佳方式。有许多重叠的点，这隐藏了图中密集部分的数据，并且过分强调了异常值。这种效应称为饱和。
 - en: '* * *'
   id: totrans-29
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
   id: totrans-30
   prefs:
@@ -169,6 +191,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/26a82e2534b7ede28650f23c1638dd66.png)'
 - en: ''
   id: totrans-32
   prefs:
@@ -180,6 +203,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_TB
+  zh: '| 图7.2：抖动和透明度的散点图（左），六边形图（右）。 |'
 - en: ''
   id: totrans-34
   prefs:
@@ -190,11 +214,13 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: 'We can solve this problem with the `alpha` parameter, which makes the points
     partly transparent:'
   id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以用`alpha`参数解决这个问题，这会使点部分透明：
 - en: '[PRE5]'
   id: totrans-37
   prefs: []
@@ -209,11 +235,13 @@
   id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 图[7.2](#scatter2)（左）显示了结果。重叠的数据点看起来更暗，因此暗度与密度成正比。在这个图的版本中，我们可以看到之前不明显的两个细节：在几个高度处有垂直聚类和在90公斤或200磅附近的水平线。由于这些数据是基于磅的自我报告，最可能的解释是一些受访者报告了四舍五入的值。
 - en: Using transparency works well for moderate-sized datasets, but this figure only
     shows the first 5000 records in the BRFSS, out of a total of 414 509.
   id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 透明度对于中等大小的数据集效果很好，但是这个图只显示了BRFSS中的前5000条记录，总共有414509条记录。
 - en: 'To handle larger datasets, another option is a hexbin plot, which divides the
     graph into hexagonal bins and colors each bin according to how many data points
     fall in it. `thinkplot` provides `HexBin`:'
