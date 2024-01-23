@@ -456,6 +456,7 @@
   id: totrans-76
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个散点图的版本中，重量被抖动了，但列之间仍然有空间。这使得可以看到每个年龄组的分布形状和组之间的差异。从这个视角来看，体重似乎在40或50岁时增加，然后开始减少。
 - en: 'If we take this idea one step farther, we can use KDE to estimate the density
     function in each column and plot it. And there’s a name for that; it’s called
     a **violin plot**. Seaborn provides a function that makes violin plots, but before
@@ -463,6 +464,7 @@
   id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们进一步思考这个想法，我们可以使用KDE来估计每一列的密度函数并绘制它。而且这有一个名字；它叫做**小提琴图**。Seaborn提供了一个函数来制作小提琴图，但在使用之前，我们必须去掉任何带有缺失数据的行。方法如下：
 - en: '[PRE16]'
   id: totrans-78
   prefs: []
@@ -478,6 +480,7 @@
   id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: '`dropna()`创建一个新的DataFrame，删除`brfss`中`AGE`或`WTKG3`为`NaN`的行。现在我们可以调用`violinplot`。'
 - en: '[PRE18]'
   id: totrans-81
   prefs: []
@@ -487,27 +490,32 @@
   id: totrans-82
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/09_relationships_49_0.png](../Images/fe1e5b44ac02b33d284b3b2fd43bc087.png)'
 - en: The `x` and `y` arguments mean we want `AGE` on the x-axis and `WTKG3` on the
     y-axis. `data` is the DataFrame we just created, which contains the variables
     we’re going to plot. The argument `inner=None` simplifies the plot a little.
   id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: '`x`和`y`参数表示我们希望`AGE`在x轴上，`WTKG3`在y轴上。`data`是我们刚刚创建的DataFrame，其中包含我们要绘制的变量。参数`inner=None`简化了图。'
 - en: In the figure, each shape represents the distribution of weight in one age group.
     The width of these shapes is proportional to the estimated density, so it’s like
     two vertical KDEs plotted back to back.
   id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: 在图中，每个形状代表一个年龄组中的体重分布。这些形状的宽度与估计的密度成比例，所以就像两个垂直的KDE绘制在一起。
 - en: Another, related way to look at data like this is called a **box plot**, which
     represents summary statistics for the values in each group.
   id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: 另一种相关的查看这类数据的方法叫做**箱线图**，它代表了每个组中值的摘要统计信息。
 - en: The code to generate a box plot is very similar.
   id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: 生成箱线图的代码非常相似。
 - en: '[PRE19]'
   id: totrans-87
   prefs: []
@@ -517,11 +525,13 @@
   id: totrans-88
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/09_relationships_51_0.png](../Images/7e87973eda9a7d48126c43c0c368a578.png)'
 - en: The argument `whis=10` turns off a feature we don’t need. If you are curious
     about it, you can [read the documentation](https://seaborn.pydata.org/generated/seaborn.boxplot.html).
   id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: 参数`whis=10`关闭了一个我们不需要的功能。如果你对此感到好奇，你可以[阅读文档](https://seaborn.pydata.org/generated/seaborn.boxplot.html)。
 - en: Each box represents the distribution of weight in an age group. The height of
     each box represents the range from the 25th to the 75th percentile. The line in
     the middle of each box is the median. The spines sticking out of the top and bottom
@@ -529,34 +539,40 @@
   id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: 每个箱子代表一个年龄组中的体重分布。每个箱子的高度代表从第25到第75百分位数的范围。每个箱子中间的线是中位数。从顶部和底部伸出的脊柱显示了最小值和最大值。
 - en: In my opinion, this plot gives us the best view of the relationship between
     weight and age.
   id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: 在我看来，这个图给了我们最好的体重和年龄之间的关系视图。
 - en: Looking at the medians, it seems like people in their 40s are the heaviest;
     younger and older people are lighter.
   id: totrans-92
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 从中位数来看，似乎40多岁的人最重；年轻和年长的人体重较轻。
 - en: Looking at the sizes of the boxes, it seems like people in their 40s have the
     most variability in weight, too.
   id: totrans-93
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 从箱子的大小来看，似乎40多岁的人体重的变化最大。
 - en: These plots also show how skewed the distribution of weight is; that is, the
     heaviest people are much farther from the median than the lightest people.
   id: totrans-94
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 这些图还显示了体重分布的偏斜程度；也就是说，最重的人远离中位数的距离比最轻的人大得多。
 - en: For data that skews toward higher values, it is sometimes useful to look at
     it on a logarithmic scale. We can do that with the Pyplot function `yscale`.
   id: totrans-95
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于偏向较高值的数据，有时在对数刻度上查看它是有用的。我们可以使用Pyplot函数`yscale`来做到这一点。
 - en: '[PRE20]'
   id: totrans-96
   prefs: []
@@ -566,17 +582,20 @@
   id: totrans-97
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/09_relationships_53_0.png](../Images/93107d54504b014bbf0d7e7e7f82ea89.png)'
 - en: On a log scale, the distributions are symmetric, so the spines are the same
     length, the boxes are close to the middle of the figure, and we can see the relationship
     between age and weight more clearly.
   id: totrans-98
   prefs: []
   type: TYPE_NORMAL
+  zh: 在对数刻度上，分布是对称的，因此脊柱的长度相同，箱子靠近图的中间，我们可以更清楚地看到年龄和体重之间的关系。
 - en: In the following exercises, you’ll have a chance to generate violin and box
     plots for other variables.
   id: totrans-99
   prefs: []
   type: TYPE_NORMAL
+  zh: 在接下来的练习中，你将有机会为其他变量生成小提琴图和箱线图。
 - en: '**Exercise:** Previously we looked at a scatter plot of height and weight,
     and saw that taller people tend to be heavier. Now let’s take a closer look using
     a box plot. The `brfss` DataFrame contains a column named `_HTMG10` that represents
@@ -584,21 +603,25 @@
   id: totrans-100
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**之前我们看过身高和体重的散点图，看到较高的人倾向于更重。现在让我们使用箱线图来更仔细地观察。`brfss` DataFrame包含一个名为`_HTMG10`的列，表示以厘米为单位分组的身高。'
 - en: Make a boxplot that shows the distribution of weight in each height group.
   id: totrans-101
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 制作一个箱线图，显示每个身高组中体重的分布。
 - en: Plot the y-axis on a logarithmic scale.
   id: totrans-102
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 将y轴绘制在对数刻度上。
 - en: 'Suggestion: If the labels on the `x` axis collide, you can rotate them like
     this:'
   id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: 建议：如果`x`轴上的标签发生碰撞，你可以像这样旋转它们：
 - en: '[PRE21]'
   id: totrans-104
   prefs: []
@@ -609,48 +632,57 @@
   id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**作为第二个例子，让我们看一下收入和身高之间的关系。'
 - en: In the BRFSS, income is represented as a categorical variable; that is, respondents
     are assigned to one of 8 income categories. The column name is `INCOME2`.
   id: totrans-106
   prefs: []
   type: TYPE_NORMAL
+  zh: 在BRFSS中，收入被表示为一个分类变量；也就是说，受访者被分配到8个收入类别中的一个。列名是`INCOME2`。
 - en: Before we connect income with anything else, let’s look at the distribution
     by computing the PMF.
   id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: 在将收入与其他任何东西联系之前，让我们通过计算PMF来查看分布。
 - en: Extract `INCOME2` from `brfss` and assign it to `income`.
   id: totrans-108
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 从`brfss`中提取`INCOME2`并将其分配给`income`。
 - en: Plot the PMF of `income` as a bar chart.
   id: totrans-109
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 绘制`income`的PMF作为条形图。
 - en: 'Note: You will see that about a third of the respondents are in the highest
     income group; ideally, it would be better if there were more groups at the high
     end, but we’ll work with what we have.'
   id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: 注意：你会发现大约三分之一的受访者属于最高收入组；理想情况下，如果高端有更多的组会更好，但我们将使用现有的数据。
 - en: '**Exercise:** Generate a violin plot that shows the distribution of height
     in each income group. Can you see a relationship between these variables?'
   id: totrans-111
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**生成一个小提琴图，显示每个收入组中身高的分布。你能看到这些变量之间的关系吗？'
 - en: Quantifying Correlation
   id: totrans-112
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 量化相关性
 - en: In the previous section, we visualized relationships between pairs of variables.
     Now we’ll learn about the **coefficient of correlation**, which quantifies the
     strength of these relationships.
   id: totrans-113
   prefs: []
   type: TYPE_NORMAL
+  zh: 在前一节中，我们可视化了变量对之间的关系。现在我们将学习**相关系数**，它量化了这些关系的强度。
 - en: When people say “correlation” casually, they might mean any relationship between
     two variables. In statistics, it usually means Pearson’s correlation coefficient,
     which is a number between `-1` and `1` that quantifies the strength of a linear
@@ -658,10 +690,12 @@
   id: totrans-114
   prefs: []
   type: TYPE_NORMAL
+  zh: 当人们随意提到“相关性”时，他们可能指的是两个变量之间的任何关系。在统计学中，它通常指的是皮尔逊相关系数，它是一个介于`-1`和`1`之间的数字，用来量化变量之间线性关系的强度。
 - en: 'To demonstrate, we’ll select three columns from the BRFSS dataset:'
   id: totrans-115
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了演示，我们将从BRFSS数据集中选择三列：
 - en: '[PRE22]'
   id: totrans-116
   prefs: []
@@ -672,6 +706,7 @@
   id: totrans-117
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个只有这些列的DataFrame。有了这些数据子集，我们可以使用`corr`方法，就像这样：
 - en: '[PRE23]'
   id: totrans-118
   prefs: []
@@ -681,28 +716,34 @@
   id: totrans-119
   prefs: []
   type: TYPE_TB
+  zh: '|  | 身高 | 体重 | 年龄 |'
 - en: '| --- | --- | --- | --- |'
   id: totrans-120
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- |'
 - en: '| HTM4 | 1.000000 | 0.474203 | -0.093684 |'
   id: totrans-121
   prefs: []
   type: TYPE_TB
+  zh: '| 身高 | 1.000000 | 0.474203 | -0.093684 |'
 - en: '| WTKG3 | 0.474203 | 1.000000 | 0.021641 |'
   id: totrans-122
   prefs: []
   type: TYPE_TB
+  zh: '| 体重 | 0.474203 | 1.000000 | 0.021641 |'
 - en: '| AGE | -0.093684 | 0.021641 | 1.000000 |'
   id: totrans-123
   prefs: []
   type: TYPE_TB
+  zh: '| 年龄 | -0.093684 | 0.021641 | 1.000000 |'
 - en: The result is a **correlation matrix**. Reading across the first row, the correlation
     of `HTM4` with itself is `1`. That’s expected; the correlation of anything with
     itself is `1`.
   id: totrans-124
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个**相关矩阵**。从第一行开始阅读，`HTM4`与自身的相关性为`1`。这是预期的；任何事物与自身的相关性都是`1`。
 - en: The next entry is more interesting; the correlation of height and weight is
     about `0.47`. It’s positive, which means taller people are heavier, and it is
     moderate in strength, which means it has some predictive value, but not much.
@@ -711,12 +752,14 @@
   id: totrans-125
   prefs: []
   type: TYPE_NORMAL
+  zh: 下一个条目更有趣；身高和体重的相关性约为`0.47`。它是正相关的，这意味着身材较高的人体重更重，它的预测价值适中，但不是很大。如果你知道某人的身高，你可以更好地猜测他们的体重。
 - en: The correlation between height and age is about `-0.09`. It’s negative, which
     means that older people tend to be shorter, but it’s weak, which means that knowing
     someone’s age would not help much if you were trying to guess their height.
   id: totrans-126
   prefs: []
   type: TYPE_NORMAL
+  zh: 身高和年龄之间的相关性约为`-0.09`。它是负相关的，这意味着年长的人倾向于身材较矮，但它很弱，这意味着如果你试图猜测他们的身高，知道某人的年龄并不会有太大帮助。
 - en: The correlation between age and weight is even smaller. It is tempting to conclude
     that there is no relationship between age and weight, but we have already seen
     that there is. So why is the correlation so low? Remember that the relationship
@@ -724,6 +767,7 @@
   id: totrans-127
   prefs: []
   type: TYPE_NORMAL
+  zh: 年龄和体重之间的相关性甚至更小。很容易得出结论认为年龄和体重之间没有关系，但我们已经看到有关系。那么为什么相关性如此之低呢？记住体重和年龄之间的关系是这样的。
 - en: '[PRE24]'
   id: totrans-128
   prefs: []
@@ -733,6 +777,7 @@
   id: totrans-129
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/09_relationships_67_0.png](../Images/e08b2449d2f26f07edcbc56575745657.png)'
 - en: People in their forties are the heaviest; younger and older people are lighter.
     So this relationship is nonlinear. But correlation only measures linear relationships.
     If the relationship is nonlinear, correlation generally underestimates how strong
@@ -740,11 +785,13 @@
   id: totrans-130
   prefs: []
   type: TYPE_NORMAL
+  zh: 四十多岁的人体重最重；年轻和年长的人体重较轻。所以这种关系是非线性的。但是相关性只能测量线性关系。如果关系是非线性的，相关性通常低估了它的强度。
 - en: 'To demonstrate, I’ll generate some fake data: `xs` contains equally-spaced
     points between `-1` and `1`. `ys` is `xs` squared plus some random noise.'
   id: totrans-131
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了演示，我将生成一些虚假数据：`xs`包含在`-1`和`1`之间等间距的点。`ys`是`xs`的平方加上一些随机噪音。
 - en: '[PRE25]'
   id: totrans-132
   prefs: []
@@ -754,6 +801,7 @@
   id: totrans-133
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是`xs`和`ys`的散点图。
 - en: '[PRE26]'
   id: totrans-134
   prefs: []
@@ -763,11 +811,13 @@
   id: totrans-135
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/09_relationships_71_0.png](../Images/3eb9eba5d2edcc6a663377454c0140c9.png)'
 - en: 'It’s clear that this is a strong relationship; if you are given `x`, you can
     make a much better guess about `y`. But here’s the correlation matrix:'
   id: totrans-136
   prefs: []
   type: TYPE_NORMAL
+  zh: 很明显这是一个强关系；如果给定`x`，你可以更好地猜测`y`。但是这里的相关矩阵是这样的：
 - en: '[PRE27]'
   id: totrans-137
   prefs: []
@@ -783,6 +833,7 @@
   id: totrans-139
   prefs: []
   type: TYPE_NORMAL
+  zh: 尽管存在强烈的非线性关系，但计算出的相关性接近`0`。
 - en: In general, if correlation is high – that is, close to `1` or `-1` – you can
     conclude that there is a strong linear relationship. But if correlation is close
     to `0`, that doesn’t mean there is no relationship; there might be a non-linear
@@ -790,6 +841,7 @@
   id: totrans-140
   prefs: []
   type: TYPE_NORMAL
+  zh: 一般来说，如果相关性很高——即接近`1`或`-1`——你可以得出结论认为有强烈的线性关系。但如果相关性接近`0`，这并不意味着没有关系；可能存在非线性关系。
 - en: This is one of the reasons I think correlation is not such a great statistic.
     There’s another reason to be careful with correlation; it doesn’t mean what people
     take it to mean. Specifically, correlation says nothing about slope. If we say
@@ -798,6 +850,7 @@
   id: totrans-141
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是我认为相关性不是一个很好的统计量的原因之一。还有一个需要小心的相关性原因；它并不意味着人们认为的意思。具体来说，相关性对斜率没有任何说明。如果我们说两个变量相关，那意味着我们可以用一个变量来预测另一个变量。但这可能不是我们关心的。
 - en: For example, suppose we are concerned about the health effects of weight gain,
     so we plot weight versus age from 20 to 50 years old. I’ll generate two fake datasets
     to demonstrate the point. In each dataset, `xs` represents age and `ys` represents
@@ -805,6 +858,7 @@
   id: totrans-142
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，假设我们关心体重增加的健康影响，所以我们绘制20到50岁之间的年龄与体重的关系。我将生成两组虚假数据来说明这一点。在每个数据集中，`xs`代表年龄，`ys`代表体重。
 - en: '[PRE29]'
   id: totrans-143
   prefs: []
