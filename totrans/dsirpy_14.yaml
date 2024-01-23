@@ -3,25 +3,30 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 优先队列和堆
 - en: 原文：[https://allendowney.github.io/DSIRP/heap.html](https://allendowney.github.io/DSIRP/heap.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/DSIRP/heap.html](https://allendowney.github.io/DSIRP/heap.html)
 - en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/heap.ipynb)'
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: '[单击此处在Colab上运行本章](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/heap.ipynb)'
 - en: The `heapq` module
   id: totrans-3
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: '`heapq`模块'
 - en: The `heapq` module provides functions for adding and removing elements to and
     from a heap.
   id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: '`heapq`模块提供了向堆中添加和删除元素的函数。'
 - en: '[PRE0]'
   id: totrans-5
   prefs: []
@@ -32,6 +37,7 @@
   id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 堆本身实际上是一个列表，因此如果创建一个空列表，可以将其视为没有元素的堆。
 - en: '[PRE1]'
   id: totrans-7
   prefs: []
@@ -41,6 +47,7 @@
   id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后，您可以使用`heappush`逐个添加一个元素。
 - en: '[PRE2]'
   id: totrans-9
   prefs: []
@@ -56,41 +63,49 @@
   id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个表示树的列表。以下是列表表示和树表示之间的对应关系：
 - en: The first element (index 0) is the root.
   id: totrans-12
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 第一个元素（索引0）是根。
 - en: The next two elements are the children of the root.
   id: totrans-13
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 接下来的两个元素是根的子节点。
 - en: The next four element are the grandchildren of the root.
   id: totrans-14
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 接下来的四个元素是根的孙子。
 - en: And so on.
   id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 等等。
 - en: In general, if the index of an element is `i`, its parent is `(i-1)//2` and
     its children are `2*i + 1` and `2*i + 2`.
   id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 一般来说，如果一个元素的索引是`i`，其父元素是`(i-1)//2`，其子元素是`2*i + 1`和`2*i + 2`。
 - en: Drawing the Tree
   id: totrans-17
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 绘制树
 - en: To generate the tree representation of the heap, the following function iterates
     through the heap and makes a NetworkX graph with an edge between each node and
     its parent.
   id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了生成堆的树表示，以下函数遍历堆并创建一个NetworkX图，其中每个节点与其父节点之间都有一条边。
 - en: '[PRE4]'
   id: totrans-19
   prefs: []
@@ -106,12 +121,14 @@
   id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 要绘制树，我们将使用一个名为`EoN`的模块，它提供了一个名为[hierarchy_pos](https://epidemicsonnetworks.readthedocs.io/en/latest/functions/EoN.hierarchy_pos.html#EoN.hierarchy_pos)的函数。
 - en: It takes as a parameter a NetworkX graph that represents a tree, and it returns
     a dictionary that maps from each node to a position in the Cartesian plane. If
     we pass this dictionary to `nx.draw`, it lays the tree out accordingly.
   id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 它以一个表示树的NetworkX图作为参数，并返回一个将每个节点映射到笛卡尔平面上的位置的字典。如果我们将此字典传递给`nx.draw`，它会相应地布置树。
 - en: '[PRE6]'
   id: totrans-23
   prefs: []
@@ -131,6 +148,7 @@
   id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是树表示的样子。
 - en: '[PRE9]'
   id: totrans-27
   prefs: []
@@ -145,34 +163,41 @@
   id: totrans-29
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/heap_17_1.png](../Images/c20dd2af8eed3f1003d17ac6ede89134.png)'
 - en: The Heap Property
   id: totrans-30
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 堆属性
 - en: 'If the list is a heap, the tree should have the heap property:'
   id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果列表是一个堆，树应该具有堆属性：
 - en: Every parent is less than or equal to its children.
   id: totrans-32
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 每个父节点都小于或等于其子节点。
 - en: 'Or more formally:'
   id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: 或者更正式地说：
 - en: For all pairs of nodes P and C, where P is the parent of C, the value of P must
     be less than or equal to the value of C.
   id: totrans-34
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 对于所有节点P和C的对，其中P是C的父节点，P的值必须小于或等于C的值。
 - en: The following function checks whether this property is true for all nodes.
   id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数检查所有节点是否满足此属性。
 - en: '[PRE11]'
   id: totrans-36
   prefs: []
@@ -182,6 +207,7 @@
   id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 正如我们所希望的那样，`heap`是一个堆。
 - en: '[PRE12]'
   id: totrans-38
   prefs: []
@@ -197,6 +223,7 @@
   id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是一个无特定顺序的整数列表，正如您所期望的那样，它没有堆属性。
 - en: '[PRE14]'
   id: totrans-41
   prefs: []
@@ -212,14 +239,17 @@
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 使用堆进行排序
 - en: Given a heap, we can implement a sort algorithm called [heapsort](https://en.wikipedia.org/wiki/Heapsort).
   id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: 给定一个堆，我们可以实现一个称为[heapsort](https://en.wikipedia.org/wiki/Heapsort)的排序算法。
 - en: 'Let’s start again with a fresh heap:'
   id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们从一个新的堆开始：
 - en: '[PRE16]'
   id: totrans-46
   prefs: []
@@ -230,6 +260,7 @@
   id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们知道列表是一个堆，我们可以使用`heappop`来查找并删除最小的元素。
 - en: '[PRE17]'
   id: totrans-48
   prefs: []
@@ -245,6 +276,7 @@
   id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: '`heappop`重新排列列表的剩余元素以恢复堆属性（我们很快就会看到如何实现）。'
 - en: '[PRE19]'
   id: totrans-51
   prefs: []
@@ -270,6 +302,7 @@
   id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: 这意味着我们可以再次使用`heappop`来获取原始堆的第二个最小元素：
 - en: '[PRE23]'
   id: totrans-56
   prefs: []
@@ -284,71 +317,85 @@
   id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 这意味着我们可以使用堆来对列表进行排序。
 - en: '**Exercise:** Write a generator function called `heapsort` that takes an iterable
     and yields the elements of the iterable in increasing order.'
   id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**编写一个名为`heapsort`的生成器函数，它接受一个可迭代对象，并以递增顺序产生可迭代对象的元素。'
 - en: Now let’s see how a heap is implemented. The two key methods are `push` and
     `pop`.
   id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们看看堆是如何实现的。两个关键方法是`push`和`pop`。
 - en: Push
   id: totrans-61
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 推
 - en: To insert an element in a heap, you start by appending it to the list.
   id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: 要在堆中插入一个元素，您首先将其附加到列表中。
 - en: 'The result is generally not a heap, so you have to do some work to restore
     the heap property:'
   id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 通常结果不是一个堆，因此您必须做一些工作来恢复堆属性：
 - en: If the new element is greater than or equal to its parent, you are done.
   id: totrans-64
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果新元素大于或等于其父元素，则完成。
 - en: Otherwise swap the new element with its parent.
   id: totrans-65
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 否则，将新元素与其父元素交换。
 - en: If the new element is greater than or equal to the parent’s parent, you are
     done.
   id: totrans-66
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果新元素大于或等于父元素的父元素，则完成。
 - en: Otherwise swap the new element with its parent’s parent.
   id: totrans-67
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 否则，将新元素与其父元素的父元素交换。
 - en: And repeat, working your way up the tree, until you’re done or you reach the
     root.
   id: totrans-68
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 并重复，一直向上工作，直到完成或达到根。
 - en: This process is called “sift-up” or sometimes [swim](https://en.wikipedia.org/wiki/Heap_(data_structure)#Implementation).
   id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个过程称为“sift-up”或有时称为[swim](https://en.wikipedia.org/wiki/Heap_(data_structure)#Implementation)。
 - en: '**Exercise:** Write a function called `push` that does the same thing as `heappush`:
     it should take as parameters a list (which should be a heap) and a new element;
     it should add the new element to the list and restore the heap property.'
   id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**编写一个名为`push`的函数，它与`heappush`执行相同的操作：它应该接受一个列表（应该是一个堆）和一个新元素作为参数；它应该将新元素添加到列表中并恢复堆属性。'
 - en: 'You can use this example to test your code:'
   id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: 您可以使用此示例来测试您的代码：
 - en: '[PRE25]'
   id: totrans-72
   prefs: []
@@ -374,20 +421,24 @@
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 弹出
 - en: 'To remove an element from the heap, you:'
   id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: 要从堆中删除一个元素，您需要：
 - en: Make a copy of the root element,
   id: totrans-78
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 复制根元素，
 - en: Pop the *last* element off the list and store it at the root.
   id: totrans-79
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 从列表中弹出*最后*一个元素，并将其存储在根处。
 - en: Then you have to restore the heap property. If the new root is less than or
     equal to both of its children, you are done.
   id: totrans-80

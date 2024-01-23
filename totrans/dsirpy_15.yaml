@@ -1,17 +1,21 @@
 - en: Huffman Code
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
 - en: 原文：[https://allendowney.github.io/DSIRP/huffman.html](https://allendowney.github.io/DSIRP/huffman.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/huffman.ipynb)'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
 - en: 'A [Huffman code](https://en.wikipedia.org/wiki/Huffman_coding) is a “type of
     optimal prefix code that is commonly used for lossless data compression”. There
     are three parts of that definition we have to unpack: “code”, “prefix”, and “optimal”.'
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
 - en: In this context, a “code” is a mapping from symbols to bit strings. For example,
@@ -19,24 +23,29 @@
     from characters (like letters, numbers, and punctuation) to seven-bit integers.
     Since all ASCII bit strings are the same length, it is a “fixed-length code”,
     as contrasted with Huffman codes, which are “variable-length codes”.
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
 - en: 'In order to decode something encoded in a variable-length code, there has to
     be some way to figure out where one bit string ends and the next begins. In general,
     there are three ways to solve this problem:'
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
 - en: One option is to begin each bit string with a special sequence that indicates
     its length. This is [how Unicode works](https://stackoverflow.com/questions/1543613/how-does-utf-8-variable-width-encoding-work).
+  id: totrans-6
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Another option is to end each bit string with a special sequence that marks
     the end.
+  id: totrans-7
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: The third option is to use a “prefix code”, which is how Huffman codes work.
+  id: totrans-8
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -45,294 +54,444 @@
     bits one at a time and checking to see whether we have completed a valid bit string.
     If so, we know we are at the end of the bit string, because it cannot be the prefix
     of another bit string.
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
 - en: 'For example, the following is a prefix code with only three symbols:'
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE0]'
+  id: totrans-11
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: In this code, we can encode the string `xyz` with the bit string `101001`, and
     we can decode the result without ambiguity.
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
 - en: So that’s what it means to say that a Huffman code is a prefix code; finally,
     Huffman codes are “optimal” in the sense that they give short codes to the most
     common symbols and longer codes to the least common symbols. The result is that
     they minimize the average number of bits needed to encode a sequence of symbols.
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
 - en: However, in order to achieve this feat, we have to know the relative frequencies
     of the symbols. One way to do that is to start with a “corpus”, which is a text
     that contains the symbols in the proportions we expect for the text we will encode.
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
 - en: As an example, I’ll use the text from the [Huffman code Wikipedia page](https://en.wikipedia.org/wiki/Huffman_coding).
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE1]'
+  id: totrans-16
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: We can use a `Counter` to count the number of times each symbol appears in this
     text.
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE2]'
+  id: totrans-18
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '[PRE3]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: Now let’s see how we can use these counts to build a Huffman code. The first
     step is to build a Huffman tree, which is a binary tree where every node contains
     a count and some nodes contain symbols.
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
 - en: To make a Huffman tree, we start with a sequence of nodes, one for each symbol.
     To represent nodes, I’ll use a `namedtuple`.
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE4]'
+  id: totrans-22
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: For example, here’s a node that represents the symbol `a` with count `4`. Since
     this node has no children, it is a leaf node.
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE5]'
+  id: totrans-24
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '[PRE6]'
+  id: totrans-25
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: And here’s another leaf node that represents the symbol `n` and its count.
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE7]'
+  id: totrans-27
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '[PRE8]'
+  id: totrans-28
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: One reason we’re using a namedtuple is that it behaves like a tuple, so if we
     compare two `Node` objects, we get a tuple-like sorting order.
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE9]'
+  id: totrans-30
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '[PRE10]'
+  id: totrans-31
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: If two nodes have the same `count`, they get sorted in alphabetical order by
     `letter`.
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
 - en: Making trees
+  id: totrans-33
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: 'Given these two leaf nodes, we can make a tree like this:'
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE11]'
+  id: totrans-35
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: '[PRE12]'
+  id: totrans-36
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: Because `root` has children, it is not a leaf node; it is an interior node.
     In a Huffman tree, the interior nodes do not represent symbols, so I have set
     `letter` to the null character `\0`. The count of an interior node is the sum
     of the count of its children.
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
 - en: 'Now, to build a Huffman tree, we’ll start with a collection of nodes, one for
     each symbol, and build the tree “bottom up” by following these steps:'
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，要构建一棵赫夫曼树，我们将从一个节点集合开始，每个符号一个节点，并通过以下步骤“自下而上”构建树：
 - en: Remove the node with the lowest count.
+  id: totrans-39
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 移除具有最低计数的节点。
 - en: Remove the node with the next lowest count.
+  id: totrans-40
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 移除具有下一个最低计数的节点。
 - en: Make a new node with the nodes we just removed as children.
+  id: totrans-41
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 创建一个新节点，将刚刚移除的节点作为子节点。
 - en: Put the new node back into the collection.
+  id: totrans-42
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 将新节点放回集合中。
 - en: If there’s only one node in the collection, it’s the Huffman tree, and we’re
     done.
+  id: totrans-43
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如果集合中只有一个节点，则它就是赫夫曼树，我们完成了。
 - en: In general, we could use any kind of collection, but if we look at the operations
     required by this algorithm, the most efficient option is a heap.
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: 一般来说，我们可以使用任何类型的集合，但是如果我们看一下此算法所需的操作，最有效的选项是堆。
 - en: But we’ll start by iterating through the `Counter` and making a list of `Node`
     objects,
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是我们将首先通过迭代`Counter`并制作`Node`对象的列表，
 - en: '[PRE13]'
+  id: totrans-46
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: '[PRE14]'
+  id: totrans-47
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: Next we’ll use the heap module to convert the list to a heap.
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 接下来我们将使用堆模块将列表转换为堆。
 - en: '[PRE15]'
+  id: totrans-49
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '[PRE16]'
+  id: totrans-50
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: Now we can use the heap to make a tree.
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以使用堆来构建一棵树。
 - en: '**Exercise:** Write a function called `make_tree` that takes a heap of `Node`
     objects and uses the algorithm I described to make and return a Huffman tree.
     In other words, it should join up the nodes into a tree and return the root node.'
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**编写一个名为`make_tree`的函数，该函数接受`Node`对象的堆，并使用我描述的算法制作并返回一棵赫夫曼树。换句话说，它应该将节点连接成一棵树并返回根节点。'
 - en: Use this code to test it.
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用此代码进行测试。
 - en: '[PRE17]'
+  id: totrans-54
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: Drawing the Tree
+  id: totrans-55
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 绘制树
 - en: To see what it looks like, we’ll use NetworkX and a library called EoN.
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了查看它的样子，我们将使用NetworkX和一个名为EoN的库。
 - en: '[PRE18]'
+  id: totrans-57
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: The following function traverses the Huffman tree and makes a NetworkX `DiGraph`.
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数遍历赫夫曼树并创建一个NetworkX `DiGraph`。
 - en: '[PRE19]'
+  id: totrans-59
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '[PRE20]'
+  id: totrans-60
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: The following function traverses the tree again and collects the node labels
     in a dictionary.
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数再次遍历树，并在字典中收集节点标签。
 - en: '[PRE21]'
+  id: totrans-62
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: '[PRE22]'
+  id: totrans-63
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: '[PRE23]'
+  id: totrans-64
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: '[PRE24]'
+  id: totrans-65
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: '[PRE25]'
+  id: totrans-66
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: Now we’re ready to draw.
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们准备好画图了。
 - en: '[PRE26]'
+  id: totrans-68
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: '[PRE27]'
+  id: totrans-69
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: '![_images/huffman_39_0.png](../Images/4a7702b28bb07530b390c6085ebb1eac.png)'
+  id: totrans-70
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/huffman_39_0.png](../Images/4a7702b28bb07530b390c6085ebb1eac.png)'
 - en: The result might not be identical to the tree on [the Wikipedia page](https://en.wikipedia.org/wiki/Huffman_coding),
     but a letter in our tree should be on the same level as the same letter in their
     tree.
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果可能与[维基百科页面](https://en.wikipedia.org/wiki/Huffman_coding)上的树不完全相同，但是我们树中的一个字母应该与他们树中相同字母处于相同的层级。
 - en: Making the Table
+  id: totrans-72
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 制作表
 - en: The following function traverses the tree, keeping track of the path as it goes.
     When it finds a leaf node, it makes an entry in the table.
+  id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数遍历树，跟踪路径。当它找到叶节点时，在表中进行记录。
 - en: '[PRE28]'
+  id: totrans-74
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: '[PRE29]'
+  id: totrans-75
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: '[PRE30]'
+  id: totrans-76
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: '[PRE31]'
+  id: totrans-77
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: Encoding
+  id: totrans-78
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 编码
 - en: We can use the table to encode a string by looking up each symbol in the string
     and joining the results into a bit string.
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用表来对字符串进行编码，通过查找字符串中的每个符号并将结果连接成一个位字符串。
 - en: '[PRE32]'
+  id: totrans-80
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: Here’s an example, noting that we can encode strings other than the corpus we
     started with, provided that it contains no symbols that were not in the corpus.
+  id: totrans-81
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个例子，需要注意的是，我们可以对除了我们开始的语料库之外的字符串进行编码，只要它不包含语料库中没有的符号。
 - en: '[PRE33]'
+  id: totrans-82
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: '[PRE34]'
+  id: totrans-83
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: Decoding
+  id: totrans-84
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 解码
 - en: To decode the bit string, we start at the top of the tree and follow the path,
     turning left when we see a `0` and right when we see a `1`. If we get to a leaf
     node, we have decoded a symbol, so we should record it and then jump back to the
     top of the tree to start decoding the next symbol.
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: 要解码位字符串，我们从树的顶部开始并跟随路径，在看到`0`时向左转，在看到`1`时向右转。如果我们到达叶节点，我们已经解码了一个符号，因此我们应该记录它，然后跳回树的顶部开始解码下一个符号。
 - en: '**Exercise:** Write a function called `decode` that takes as parameters a string
     on 0s and 1s and a Huffman tree. It should decode the message and return it as
     a string.'
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**编写一个名为`decode`的函数，该函数以0和1组成的字符串和一个赫夫曼树作为参数。它应该解码消息并将其作为字符串返回。'
 - en: '[PRE35]'
+  id: totrans-87
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: '[PRE36]'
+  id: totrans-88
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: '*Data Structures and Information Retrieval in Python*'
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: '*Python中的数据结构和信息检索*'
 - en: Copyright 2021 Allen Downey
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: 版权所有 2021 年 Allen Downey
 - en: 'License: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: 许可证：[知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议](https://creativecommons.org/licenses/by-nc-sa/4.0/)
