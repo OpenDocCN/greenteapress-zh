@@ -3,24 +3,29 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 图
 - en: 原文：[https://allendowney.github.io/DSIRP/graph.html](https://allendowney.github.io/DSIRP/graph.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/DSIRP/graph.html](https://allendowney.github.io/DSIRP/graph.html)
 - en: This notebook is adapted from Chapter 2 of [Think Complexity](https://greenteapress.com/wp/think-complexity-2e/).
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个笔记本是从[Think Complexity](https://greenteapress.com/wp/think-complexity-2e/)的第2章改编的。
 - en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/graph.ipynb)'
   id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: '[点击这里在Colab上运行本章](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/graph.ipynb)'
 - en: Graph
   id: totrans-4
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 图
 - en: A graph is a collection of nodes and edges, where nodes often represent objects
     or ideas, and edges represent relationships among them. For example, in a graph
     that represents a social network, nodes might represent people and edges might
@@ -28,16 +33,19 @@
   id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 图是一个节点和边的集合，其中节点通常表示对象或想法，边表示它们之间的关系。例如，在表示社交网络的图中，节点可以表示人，边可以表示他们之间的友谊。
 - en: NetworkX provides data structures to represent graphs and function that implement
     graph algorithms. To show how it works, we’ll make a small graph that represents
     a social network.
   id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: NetworkX提供了用于表示图形的数据结构和实现图形算法的函数。为了展示它是如何工作的，我们将创建一个代表社交网络的小图。
 - en: Here’s how we make a graph and add nodes.
   id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是我们如何创建一个图并添加节点。
 - en: '[PRE0]'
   id: totrans-8
   prefs: []
@@ -53,10 +61,12 @@
   id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 可选地，您可以提供与节点关联的属性。在这个例子中，Bob有一个`age`属性，Carol有一只猫。
 - en: Here’s how we add edges between nodes.
   id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是我们如何在节点之间添加边。
 - en: '[PRE2]'
   id: totrans-12
   prefs: []
@@ -73,10 +83,12 @@
   id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 可选地，您可以提供与边关联的属性。在这个例子中，第二条边有一个名为`type`的属性，表示关系的性质。
 - en: Here’s how to draw the graph.
   id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是如何绘制图形的。
 - en: '[PRE4]'
   id: totrans-16
   prefs: []
@@ -91,27 +103,32 @@
   id: totrans-18
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/graph_8_0.png](../Images/c49ed2f55f4457ed70f5eb1affcbfacb.png)'
 - en: '**Exercise:** Suppose Alice introduces Bob and Carol, and they become frenemies.
     Update the social network by adding an edge between Bob and Carol with an appropriate
     attribute, then draw the graph again.'
   id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**假设Alice介绍了Bob和Carol，他们成为了好朋友。通过在Bob和Carol之间添加一个适当的属性的边来更新社交网络，然后再次绘制图形。'
 - en: Graph Representation
   id: totrans-20
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 图表示
 - en: NetworkX represents graphs using a dictionary that maps from each node to a
     dictionary that maps from nodes to edges.
   id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: NetworkX使用一个从每个节点映射到从节点到边的字典来表示图形。
 - en: If we select an element from the top-level dictionary, the result is a dictionary-like
     object.
   id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们从顶层字典中选择一个元素，结果将是一个类似字典的对象。
 - en: '[PRE6]'
   id: totrans-23
   prefs: []
@@ -126,6 +143,7 @@
   id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 所以我们可以像这样遍历节点的邻居：
 - en: '[PRE8]'
   id: totrans-26
   prefs: []
@@ -140,6 +158,7 @@
   id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: '或者像这样枚举邻居和边:'
 - en: '[PRE10]'
   id: totrans-29
   prefs: []
@@ -155,10 +174,12 @@
   id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 边由属性字典表示。在这个例子中，第一条边没有属性，第二条边有一个名为`type`的属性。
 - en: 'We can select an edge like this:'
   id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以像这样选择一条边：
 - en: '[PRE12]'
   id: totrans-33
   prefs: []
@@ -174,6 +195,7 @@
   id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 要检查是否有从一个节点到另一个节点的边，我们可以使用`in`运算符：
 - en: '[PRE14]'
   id: totrans-36
   prefs: []
@@ -193,6 +215,7 @@
   id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是有一个可以做同样事情的方法。
 - en: '[PRE17]'
   id: totrans-40
   prefs: []
@@ -208,12 +231,14 @@
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 完全图
 - en: In a complete graph, all nodes are connected to each other. To make a complete
     graph, we’ll use the following generator function, iterates through all pairs
     of nodes.
   id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 在完全图中，所有节点彼此相连。为了创建一个完全图，我们将使用以下生成器函数，遍历所有节点对。
 - en: '[PRE19]'
   id: totrans-44
   prefs: []
@@ -223,6 +248,7 @@
   id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个有10个节点的完全图：
 - en: '[PRE20]'
   id: totrans-46
   prefs: []
@@ -237,6 +263,7 @@
   id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是它的样子。
 - en: '[PRE22]'
   id: totrans-49
   prefs: []
@@ -246,21 +273,25 @@
   id: totrans-50
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/graph_30_0.png](../Images/99a22bf9b80d782319f6e10b903ce54d.png)'
 - en: Random graphs
   id: totrans-51
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 随机图
 - en: Next we’ll make an Erdos-Renyi graph, which is a random graph where the probability
     of an edge between each pair of nodes is \(p\).
   id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: 接下来我们将创建一个Erdos-Renyi图，这是一个随机图，其中每对节点之间的边的概率是\(p\)。
 - en: The helper function `flip` returns `True` with probability `p` and `False` with
     probability `1-p`
   id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: 辅助函数`flip`以概率`p`返回`True`，以概率`1-p`返回`False`
 - en: '[PRE23]'
   id: totrans-54
   prefs: []
@@ -271,6 +302,7 @@
   id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: '`random_pairs`是一个生成器函数，它枚举所有可能的节点对，并以概率`p`产生每一个。'
 - en: '[PRE24]'
   id: totrans-56
   prefs: []
@@ -281,6 +313,7 @@
   id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: '`make_random_graph`创建一个ER图，其中每对节点之间的边的概率是`p`。'
 - en: '[PRE25]'
   id: totrans-58
   prefs: []
@@ -290,6 +323,7 @@
   id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个`n=10`和`p=0.3`的例子
 - en: '[PRE26]'
   id: totrans-60
   prefs: []
@@ -304,6 +338,7 @@
   id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是它的样子：
 - en: '[PRE28]'
   id: totrans-63
   prefs: []
@@ -313,22 +348,26 @@
   id: totrans-64
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/graph_40_0.png](../Images/ca45c09f50cfe71ff8330b86ab8c57b3.png)'
 - en: Connectivity
   id: totrans-65
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 连通性
 - en: A graph is **connected** if you can start from any node and follow a sequence
     of edges to reach any other node.
   id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果您可以从任何节点开始并沿着一系列边到达任何其他节点，则图形是**连接**的。
 - en: To check whether a graph is connected, we’ll use a version of a depth-first
     search. First, let’s see what goes wrong with a basic DFS; then we’ll fix the
     problem.
   id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: 要检查图是否连通，我们将使用深度优先搜索的一个版本。首先，让我们看看基本DFS出了什么问题；然后我们将解决问题。
 - en: '[PRE29]'
   id: totrans-68
   prefs: []
@@ -345,20 +384,24 @@
   id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于大多数图形，基本版本的DFS永远运行，因为它一遍又一遍地访问相同的节点。解决方法是跟踪我们见过的节点，并避免多次访问它们。
 - en: '**Exercise:** Write a function called `reachable_nodes` that takes a graph
     and a starting node, uses DFS to find all nodes that can be reached from the starting
     node, and returns a collection that contains them.'
   id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**编写一个名为`reachable_nodes`的函数，它接受一个图和一个起始节点，使用DFS找到可以从起始节点到达的所有节点，并返回一个包含它们的集合。'
 - en: 'Hint: Think about what kind of collection to use.'
   id: totrans-72
   prefs: []
   type: TYPE_NORMAL
+  zh: 提示：考虑使用什么样的集合。
 - en: 'In the complete graph, starting from node 0, we can reach all nodes:'
   id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: 在完全图中，从节点0开始，我们可以到达所有节点：
 - en: '[PRE31]'
   id: totrans-74
   prefs: []
