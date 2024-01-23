@@ -1,847 +1,1245 @@
 - en: Bayes’s Theorem
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 贝叶斯定理
 - en: 原文：[https://allendowney.github.io/ThinkBayes2/chap02.html](https://allendowney.github.io/ThinkBayes2/chap02.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ThinkBayes2/chap02.html](https://allendowney.github.io/ThinkBayes2/chap02.html)
 - en: 'In the previous chapter, we derived Bayes’s Theorem:'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 在上一章中，我们推导了贝叶斯定理：
 - en: \[P(A|B) = \frac{P(A) P(B|A)}{P(B)}\]
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: \[P(A|B) = \frac{P(A) P(B|A)}{P(B)}\]
 - en: As an example, we used data from the General Social Survey and Bayes’s Theorem
     to compute conditional probabilities. But since we had the complete dataset, we
     didn’t really need Bayes’s Theorem. It was easy enough to compute the left side
     of the equation directly, and no easier to compute the right side.
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，我们使用了来自普查总体社会调查的数据和贝叶斯定理来计算条件概率。但由于我们有完整的数据集，我们实际上并不需要贝叶斯定理。直接计算等式的左侧足够容易，计算右侧也不容易。
 - en: But often we don’t have a complete dataset, and in that case Bayes’s Theorem
     is more useful. In this chapter, we’ll use it to solve several more challenging
     problems related to conditional probability.
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 但通常我们没有完整的数据集，在这种情况下，贝叶斯定理更有用。在本章中，我们将使用它来解决与条件概率相关的几个更具挑战性的问题。
 - en: The Cookie Problem
+  id: totrans-6
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 饼干问题
 - en: 'We’ll start with a thinly disguised version of an [urn problem](https://en.wikipedia.org/wiki/Urn_problem):'
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将从一个轻微伪装的[urn problem](https://en.wikipedia.org/wiki/Urn_problem)开始：
 - en: Suppose there are two bowls of cookies.
+  id: totrans-8
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 假设有两个碗装着饼干。
 - en: ''
+  id: totrans-9
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: Bowl 1 contains 30 vanilla cookies and 10 chocolate cookies.
+  id: totrans-10
   prefs:
   - PREF_BQ
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 碗1中有30个香草饼干和10个巧克力饼干。
 - en: ''
+  id: totrans-11
   prefs:
   - PREF_BQ
   - PREF_IND
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-12
   prefs:
   - PREF_BQ
   - PREF_IND
   type: TYPE_NORMAL
 - en: Bowl 2 contains 20 vanilla cookies and 20 chocolate cookies.
+  id: totrans-13
   prefs:
   - PREF_BQ
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 碗2中有20个香草饼干和20个巧克力饼干。
 - en: ''
+  id: totrans-14
   prefs:
   - PREF_BQ
   - PREF_IND
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-15
   prefs:
   - PREF_BQ
   - PREF_IND
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-16
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: Now suppose you choose one of the bowls at random and, without looking, choose
     a cookie at random. If the cookie is vanilla, what is the probability that it
     came from Bowl 1?
+  id: totrans-17
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 现在假设你随机选择一个碗，并且在不看的情况下随机选择一个饼干。如果饼干是香草味的，那么它来自碗1的概率是多少？
 - en: What we want is the conditional probability that we chose from Bowl 1 given
     that we got a vanilla cookie, \(P(B_1 | V)\).
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们想要的是在我们得到一个香草饼干的情况下，我们从碗1中选择的条件概率，\(P(B_1 | V)\)。
 - en: 'But what we get from the statement of the problem is:'
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是我们从问题的陈述中得到的是：
 - en: The conditional probability of getting a vanilla cookie, given that we chose
     from Bowl 1, \(P(V | B_1)\) and
+  id: totrans-20
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 得到香草饼干的条件概率，假设我们从碗1中选择，\(P(V | B_1)\)和
 - en: The conditional probability of getting a vanilla cookie, given that we chose
     from Bowl 2, \(P(V | B_2)\).
+  id: totrans-21
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 得到香草饼干的条件概率，假设我们从碗2中选择，\(P(V | B_2)\)。
 - en: 'Bayes’s Theorem tells us how they are related:'
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 贝叶斯定理告诉我们它们是如何相关的：
 - en: \[P(B_1|V) = \frac{P(B_1)~P(V|B_1)}{P(V)}\]
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: \[P(B_1|V) = \frac{P(B_1)~P(V|B_1)}{P(V)}\]
 - en: 'The term on the left is what we want. The terms on the right are:'
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 左边的项是我们想要的。右边的项是：
 - en: \(P(B_1)\), the probability that we chose Bowl 1, unconditioned by what kind
     of cookie we got. Since the problem says we chose a bowl at random, we assume
     \(P(B_1) = 1/2\).
+  id: totrans-25
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: \(P(B_1)\)，我们选择碗1的概率，不受我们得到什么样的饼干的影响。由于问题说我们随机选择了一个碗，我们假设\(P(B_1) = 1/2\)。
 - en: \(P(V|B_1)\), the probability of getting a vanilla cookie from Bowl 1, which
     is 3/4.
+  id: totrans-26
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: \(P(V|B_1)\)，从碗1中取出香草饼干的概率，为3/4。
 - en: \(P(V)\), the probability of drawing a vanilla cookie from either bowl.
+  id: totrans-27
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: \(P(V)\)，从任一碗中取出香草饼干的概率。
 - en: 'To compute \(P(V)\), we can use the law of total probability:'
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: 要计算\(P(V)\)，我们可以使用总概率定律：
 - en: \[P(V) = P(B_1)~P(V|B_1) ~+~ P(B_2)~P(V|B_2)\]
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: \[P(V) = P(B_1)~P(V|B_1) ~+~ P(B_2)~P(V|B_2)\]
 - en: Plugging in the numbers from the statement of the problem, we have
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: 从问题陈述中的数字中插入，我们有
 - en: \[P(V) = (1/2)~(3/4) ~+~ (1/2)~(1/2) = 5/8\]
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: \[P(V) = (1/2)~(3/4) ~+~ (1/2)~(1/2) = 5/8\]
 - en: 'We can also compute this result directly, like this:'
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们也可以直接计算这个结果，如下所示：
 - en: Since we had an equal chance of choosing either bowl and the bowls contain the
     same number of cookies, we had the same chance of choosing any cookie.
+  id: totrans-33
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 由于我们有同样的机会选择任何一个碗，并且碗中包含相同数量的饼干，我们选择任何一块饼干的机会是一样的。
 - en: Between the two bowls there are 50 vanilla and 30 chocolate cookies, so \(P(V)
     = 5/8\).
+  id: totrans-34
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 两个碗之间有50个香草饼干和30个巧克力饼干，所以\(P(V) = 5/8\)。
 - en: 'Finally, we can apply Bayes’s Theorem to compute the posterior probability
     of Bowl 1:'
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，我们可以应用贝叶斯定理来计算碗1的后验概率：
 - en: \[P(B_1|V) = (1/2)~(3/4)~/~(5/8) = 3/5\]
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: \[P(B_1|V) = (1/2)~(3/4)~/~(5/8) = 3/5\]
 - en: 'This example demonstrates one use of Bayes’s theorem: it provides a way to
     get from \(P(B|A)\) to \(P(A|B)\). This strategy is useful in cases like this
     where it is easier to compute the terms on the right side than the term on the
     left.'
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个例子演示了贝叶斯定理的一个用途：它提供了一种从\(P(B|A)\)到\(P(A|B)\)的方法。这种策略在这样的情况下很有用，其中计算右侧的项比计算左侧的项更容易。
 - en: Diachronic Bayes
+  id: totrans-38
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 历时贝叶斯
 - en: 'There is another way to think of Bayes’s theorem: it gives us a way to update
     the probability of a hypothesis, \(H\), given some body of data, \(D\).'
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 还有另一种思考贝叶斯定理的方法：它给了我们一种更新假设\(H\)的概率的方法，给定一些数据\(D\)。
 - en: This interpretation is “diachronic”, which means “related to change over time”;
     in this case, the probability of the hypotheses changes as we see new data.
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: 这种解释是“历时的”，意思是“与时间变化有关”；在这种情况下，随着我们看到新数据，假设的概率会发生变化。
 - en: 'Rewriting Bayes’s theorem with \(H\) and \(D\) yields:'
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: 用\(H\)和\(D\)重写贝叶斯定理得到：
 - en: \[P(H|D) = \frac{P(H)~P(D|H)}{P(D)}\]
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: \[P(H|D) = \frac{P(H)~P(D|H)}{P(D)}\]
 - en: 'In this interpretation, each term has a name:'
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这种解释中，每个术语都有一个名称：
 - en: \(P(H)\) is the probability of the hypothesis before we see the data, called
     the prior probability, or just **prior**.
+  id: totrans-44
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: \(P(H)\)是我们看到数据之前的假设概率，称为先验概率，或者**先验**。
 - en: \(P(H|D)\) is the probability of the hypothesis after we see the data, called
     the **posterior**.
+  id: totrans-45
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: \(P(H|D)\)是我们看到数据后的假设概率，称为**后验**。
 - en: \(P(D|H)\) is the probability of the data under the hypothesis, called the **likelihood**.
+  id: totrans-46
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: \(P(D|H)\)是假设下数据的概率，称为**似然**。
 - en: \(P(D)\) is the **total probability of the data**, under any hypothesis.
+  id: totrans-47
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: \(P(D)\)是任何假设下数据的**总概率**。
 - en: Sometimes we can compute the prior based on background information. For example,
     the cookie problem specifies that we choose a bowl at random with equal probability.
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 有时我们可以根据背景信息计算先验。例如，饼干问题规定我们以相等的概率随机选择一个碗。
 - en: In other cases the prior is subjective; that is, reasonable people might disagree,
     either because they use different background information or because they interpret
     the same information differently.
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: 在其他情况下，先验是主观的；也就是说，理性的人可能会有不同意见，要么是因为他们使用了不同的背景信息，要么是因为他们对相同的信息有不同的解释。
 - en: The likelihood is usually the easiest part to compute. In the cookie problem,
     we are given the number of cookies in each bowl, so we can compute the probability
     of the data under each hypothesis.
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 似然性通常是最容易计算的部分。在饼干问题中，我们已经知道了每个碗中饼干的数量，因此我们可以计算每个假设下数据的概率。
 - en: Computing the total probability of the data can be tricky. It is supposed to
     be the probability of seeing the data under any hypothesis at all, but it can
     be hard to nail down what that means.
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: 计算数据的总概率可能会很棘手。它应该是在任何假设下看到数据的概率，但很难确定这意味着什么。
 - en: 'Most often we simplify things by specifying a set of hypotheses that are:'
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: 通常我们通过指定一组假设来简化事情，这些假设是：
 - en: Mutually exclusive, which means that only one of them can be true, and
+  id: totrans-53
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 互斥的，这意味着它们中只有一个可以为真，以及
 - en: Collectively exhaustive, which means one of them must be true.
+  id: totrans-54
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 集体穷尽的，这意味着其中一个必须为真。
 - en: 'When these conditions apply, we can compute \(P(D)\) using the law of total
     probability. For example, with two hypotheses, \(H_1\) and \(H_2\):'
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: 当这些条件适用时，我们可以使用全概率法则计算\(P(D)\)。例如，对于两个假设\(H_1\)和\(H_2\)：
 - en: \[P(D) = P(H_1)~P(D|H_1) + P(H_2)~P(D|H_2)\]
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: \[P(D) = P(H_1)~P(D|H_1) + P(H_2)~P(D|H_2)\]
 - en: 'And more generally, with any number of hypotheses:'
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 以及更一般地，对于任意数量的假设：
 - en: \[P(D) = \sum_i P(H_i)~P(D|H_i)\]
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: \[P(D) = \sum_i P(H_i)~P(D|H_i)\]
 - en: The process in this section, using data and a prior probability to compute a
     posterior probability, is called a **Bayesian update**.
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本节中，使用数据和先验概率计算后验概率的过程称为**贝叶斯更新**。
 - en: Bayes Tables
+  id: totrans-60
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 贝叶斯表
 - en: A convenient tool for doing a Bayesian update is a Bayes table. You can write
     a Bayes table on paper or use a spreadsheet, but in this section I’ll use a Pandas
     `DataFrame`.
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: 进行贝叶斯更新的一个方便工具是贝叶斯表。您可以在纸上编写贝叶斯表，也可以使用电子表格，但在本节中我将使用Pandas的`DataFrame`。
 - en: 'First I’ll make empty `DataFrame` with one row for each hypothesis:'
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: 首先，我将创建一个空的`DataFrame`，每个假设占一行：
 - en: '[PRE0]'
+  id: totrans-63
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: 'Now I’ll add a column to represent the priors:'
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我将添加一列来表示先验：
 - en: '[PRE1]'
+  id: totrans-65
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '|  | prior |'
+  id: totrans-66
   prefs: []
   type: TYPE_TB
+  zh: '|  | 先验 |'
 - en: '| --- | --- |'
+  id: totrans-67
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| Bowl 1 | 0.5 |'
+  id: totrans-68
   prefs: []
   type: TYPE_TB
+  zh: '| 碗1 | 0.5 |'
 - en: '| Bowl 2 | 0.5 |'
+  id: totrans-69
   prefs: []
   type: TYPE_TB
+  zh: '| 碗2 | 0.5 |'
 - en: 'And a column for the likelihoods:'
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: 以及一个列来表示似然性：
 - en: '[PRE2]'
+  id: totrans-71
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '|  | prior | likelihood |'
+  id: totrans-72
   prefs: []
   type: TYPE_TB
+  zh: '|  | 先验 | 似然性 |'
 - en: '| --- | --- | --- |'
+  id: totrans-73
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- |'
 - en: '| Bowl 1 | 0.5 | 0.75 |'
+  id: totrans-74
   prefs: []
   type: TYPE_TB
+  zh: '| 碗1 | 0.5 | 0.75 |'
 - en: '| Bowl 2 | 0.5 | 0.50 |'
+  id: totrans-75
   prefs: []
   type: TYPE_TB
+  zh: '| 碗2 | 0.5 | 0.50 |'
 - en: 'Here we see a difference from the previous method: we compute likelihoods for
     both hypotheses, not just Bowl 1:'
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这里，我们看到与以前的方法的不同之处：我们为两个假设计算了似然性，而不仅仅是碗1：
 - en: The chance of getting a vanilla cookie from Bowl 1 is 3/4.
+  id: totrans-77
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 从碗1中得到香草饼干的机会是3/4。
 - en: The chance of getting a vanilla cookie from Bowl 2 is 1/2.
+  id: totrans-78
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 从碗2中得到香草饼干的机会是1/2。
 - en: You might notice that the likelihoods don’t add up to 1\. That’s OK; each of
     them is a probability conditioned on a different hypothesis. There’s no reason
     they should add up to 1 and no problem if they don’t.
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: 您可能会注意到，似然性不会相加为1。没关系；每个似然性都是在不同假设条件下的概率。它们不应该相加为1，如果不相加也没有问题。
 - en: 'The next step is similar to what we did with Bayes’s Theorem; we multiply the
     priors by the likelihoods:'
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 下一步与我们使用贝叶斯定理时类似；我们将先验乘以似然性：
 - en: '[PRE3]'
+  id: totrans-81
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '|  | prior | likelihood | unnorm |'
+  id: totrans-82
   prefs: []
   type: TYPE_TB
+  zh: '|  | 先验 | 似然性 | 未归一化 |'
 - en: '| --- | --- | --- | --- |'
+  id: totrans-83
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- |'
 - en: '| Bowl 1 | 0.5 | 0.75 | 0.375 |'
+  id: totrans-84
   prefs: []
   type: TYPE_TB
+  zh: '| 碗1 | 0.5 | 0.75 | 0.375 |'
 - en: '| Bowl 2 | 0.5 | 0.50 | 0.250 |'
+  id: totrans-85
   prefs: []
   type: TYPE_TB
+  zh: '| 碗2 | 0.5 | 0.50 | 0.250 |'
 - en: 'I call the result `unnorm` because these values are the “unnormalized posteriors”.
     Each of them is the product of a prior and a likelihood:'
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: 我称结果为`unnorm`，因为这些值是“未归一化的后验概率”。它们每个都是先验和似然性的乘积：
 - en: \[P(H_i)~P(D|H_i)\]
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: \[P(H_i)~P(D|H_i)\]
 - en: which is the numerator of Bayes’s Theorem. If we add them up, we have
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是贝叶斯定理的分子。如果我们将它们相加，就有
 - en: \[P(H_1)~P(D|H_1) + P(H_2)~P(D|H_2)\]
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: \[P(H_1)~P(D|H_1) + P(H_2)~P(D|H_2)\]
 - en: which is the denominator of Bayes’s Theorem, \(P(D)\).
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是贝叶斯定理的分母，\(P(D)\)。
 - en: 'So we can compute the total probability of the data like this:'
+  id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，我们可以这样计算数据的总概率：
 - en: '[PRE4]'
+  id: totrans-92
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '[PRE5]'
+  id: totrans-93
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: Notice that we get 5/8, which is what we got by computing \(P(D)\) directly.
+  id: totrans-94
   prefs: []
   type: TYPE_NORMAL
+  zh: 请注意，我们得到了5/8，这是我们直接计算\(P(D)\)得到的结果。
 - en: 'And we can compute the posterior probabilities like this:'
+  id: totrans-95
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以这样计算后验概率：
 - en: '[PRE6]'
+  id: totrans-96
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '|  | prior | likelihood | unnorm | posterior |'
+  id: totrans-97
   prefs: []
   type: TYPE_TB
+  zh: '|  | 先验 | 似然性 | 未归一化 | 后验 |'
 - en: '| --- | --- | --- | --- | --- |'
+  id: totrans-98
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- |'
 - en: '| Bowl 1 | 0.5 | 0.75 | 0.375 | 0.6 |'
+  id: totrans-99
   prefs: []
   type: TYPE_TB
+  zh: '| 碗1 | 0.5 | 0.75 | 0.375 | 0.6 |'
 - en: '| Bowl 2 | 0.5 | 0.50 | 0.250 | 0.4 |'
+  id: totrans-100
   prefs: []
   type: TYPE_TB
+  zh: '| 碗2 | 0.5 | 0.50 | 0.250 | 0.4 |'
 - en: The posterior probability for Bowl 1 is 0.6, which is what we got using Bayes’s
     Theorem explicitly. As a bonus, we also get the posterior probability of Bowl
     2, which is 0.4.
+  id: totrans-101
   prefs: []
   type: TYPE_NORMAL
+  zh: 碗1的后验概率为0.6，这是我们明确使用贝叶斯定理得到的结果。作为奖励，我们还得到了碗2的后验概率，为0.4。
 - en: When we add up the unnormalized posteriors and divide through, we force the
     posteriors to add up to 1\. This process is called “normalization”, which is why
     the total probability of the data is also called the “normalizing constant”.
+  id: totrans-102
   prefs: []
   type: TYPE_NORMAL
+  zh: 当我们将未归一化的后验相加并进行除法运算时，我们强制后验相加为1。这个过程称为“归一化”，这就是为什么数据的总概率也被称为“归一化常数”。
 - en: The Dice Problem
+  id: totrans-103
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 骰子问题
 - en: 'A Bayes table can also solve problems with more than two hypotheses. For example:'
+  id: totrans-104
   prefs: []
   type: TYPE_NORMAL
+  zh: 贝叶斯表也可以解决超过两个假设的问题。例如：
 - en: Suppose I have a box with a 6-sided die, an 8-sided die, and a 12-sided die.
     I choose one of the dice at random, roll it, and report that the outcome is a
     1\. What is the probability that I chose the 6-sided die?
+  id: totrans-105
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 假设我有一个盒子，里面有一个6面骰子，一个8面骰子和一个12面骰子。我随机选择一个骰子，掷出1，那么我选择了6面骰子的概率是多少？
 - en: In this example, there are three hypotheses with equal prior probabilities.
     The data is my report that the outcome is a 1.
+  id: totrans-106
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个例子中，有三个假设具有相等的先验概率。数据是我报告结果是1。
 - en: If I chose the 6-sided die, the probability of the data is 1/6\. If I chose
     the 8-sided die, the probability is 1/8, and if I chose the 12-sided die, it’s
     1/12.
+  id: totrans-107
   prefs: []
   type: TYPE_NORMAL
 - en: 'Here’s a Bayes table that uses integers to represent the hypotheses:'
+  id: totrans-108
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE7]'
+  id: totrans-109
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: I’ll use fractions to represent the prior probabilities and the likelihoods.
     That way they don’t get rounded off to floating-point numbers.
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE8]'
+  id: totrans-111
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '|  | prior | likelihood |'
+  id: totrans-112
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- |'
+  id: totrans-113
   prefs: []
   type: TYPE_TB
 - en: '| 6 | 1/3 | 1/6 |'
+  id: totrans-114
   prefs: []
   type: TYPE_TB
 - en: '| 8 | 1/3 | 1/8 |'
+  id: totrans-115
   prefs: []
   type: TYPE_TB
 - en: '| 12 | 1/3 | 1/12 |'
+  id: totrans-116
   prefs: []
   type: TYPE_TB
 - en: 'Once you have priors and likelhoods, the remaining steps are always the same,
     so I’ll put them in a function:'
+  id: totrans-117
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE9]'
+  id: totrans-118
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: And call it like this.
+  id: totrans-119
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE10]'
+  id: totrans-120
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: 'Here is the final Bayes table:'
+  id: totrans-121
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE11]'
+  id: totrans-122
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: '|  | prior | likelihood | unnorm | posterior |'
+  id: totrans-123
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- | --- | --- |'
+  id: totrans-124
   prefs: []
   type: TYPE_TB
 - en: '| 6 | 1/3 | 1/6 | 1/18 | 4/9 |'
+  id: totrans-125
   prefs: []
   type: TYPE_TB
 - en: '| 8 | 1/3 | 1/8 | 1/24 | 1/3 |'
+  id: totrans-126
   prefs: []
   type: TYPE_TB
 - en: '| 12 | 1/3 | 1/12 | 1/36 | 2/9 |'
+  id: totrans-127
   prefs: []
   type: TYPE_TB
 - en: The posterior probability of the 6-sided die is 4/9, which is a little more
     than the probabilities for the other dice, 3/9 and 2/9. Intuitively, the 6-sided
     die is the most likely because it had the highest likelihood of producing the
     outcome we saw.
+  id: totrans-128
   prefs: []
   type: TYPE_NORMAL
 - en: The Monty Hall Problem
+  id: totrans-129
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: Next we’ll use a Bayes table to solve one of the most contentious problems in
     probability.
+  id: totrans-130
   prefs: []
   type: TYPE_NORMAL
 - en: 'The Monty Hall problem is based on a game show called *Let’s Make a Deal*.
     If you are a contestant on the show, here’s how the game works:'
+  id: totrans-131
   prefs: []
   type: TYPE_NORMAL
 - en: The host, Monty Hall, shows you three closed doors – numbered 1, 2, and 3 –
     and tells you that there is a prize behind each door.
+  id: totrans-132
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: One prize is valuable (traditionally a car), the other two are less valuable
     (traditionally goats).
+  id: totrans-133
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: The object of the game is to guess which door has the car. If you guess right,
     you get to keep the car.
+  id: totrans-134
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Suppose you pick Door 1\. Before opening the door you chose, Monty opens Door
     3 and reveals a goat. Then Monty offers you the option to stick with your original
     choice or switch to the remaining unopened door.
+  id: totrans-135
   prefs: []
   type: TYPE_NORMAL
 - en: To maximize your chance of winning the car, should you stick with Door 1 or
     switch to Door 2?
+  id: totrans-136
   prefs: []
   type: TYPE_NORMAL
 - en: 'To answer this question, we have to make some assumptions about the behavior
     of the host:'
+  id: totrans-137
   prefs: []
   type: TYPE_NORMAL
 - en: Monty always opens a door and offers you the option to switch.
+  id: totrans-138
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: He never opens the door you picked or the door with the car.
+  id: totrans-139
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: If you choose the door with the car, he chooses one of the other doors at random.
+  id: totrans-140
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: Under these assumptions, you are better off switching. If you stick, you win
     \(1/3\) of the time. If you switch, you win \(2/3\) of the time.
+  id: totrans-141
   prefs: []
   type: TYPE_NORMAL
 - en: If you have not encountered this problem before, you might find that answer
     surprising. You would not be alone; many people have the strong intuition that
     it doesn’t matter if you stick or switch. There are two doors left, they reason,
     so the chance that the car is behind Door A is 50%. But that is wrong.
+  id: totrans-142
   prefs: []
   type: TYPE_NORMAL
 - en: 'To see why, it can help to use a Bayes table. We start with three hypotheses:
     the car might be behind Door 1, 2, or 3\. According to the statement of the problem,
     the prior probability for each door is 1/3.'
+  id: totrans-143
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE12]'
+  id: totrans-144
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '|  | prior |'
+  id: totrans-145
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- |'
+  id: totrans-146
   prefs: []
   type: TYPE_TB
 - en: '| Door 1 | 1/3 |'
+  id: totrans-147
   prefs: []
   type: TYPE_TB
 - en: '| Door 2 | 1/3 |'
+  id: totrans-148
   prefs: []
   type: TYPE_TB
 - en: '| Door 3 | 1/3 |'
+  id: totrans-149
   prefs: []
   type: TYPE_TB
 - en: 'The data is that Monty opened Door 3 and revealed a goat. So let’s consider
     the probability of the data under each hypothesis:'
+  id: totrans-150
   prefs: []
   type: TYPE_NORMAL
 - en: If the car is behind Door 1, Monty chooses Door 2 or 3 at random, so the probability
     he opens Door 3 is \(1/2\).
+  id: totrans-151
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: If the car is behind Door 2, Monty has to open Door 3, so the probability of
     the data under this hypothesis is 1.
+  id: totrans-152
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: If the car is behind Door 3, Monty does not open it, so the probability of the
     data under this hypothesis is 0.
+  id: totrans-153
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Here are the likelihoods.
+  id: totrans-154
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE13]'
+  id: totrans-155
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: '|  | prior | likelihood |'
+  id: totrans-156
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- |'
+  id: totrans-157
   prefs: []
   type: TYPE_TB
 - en: '| Door 1 | 1/3 | 1/2 |'
+  id: totrans-158
   prefs: []
   type: TYPE_TB
 - en: '| Door 2 | 1/3 | 1 |'
+  id: totrans-159
   prefs: []
   type: TYPE_TB
 - en: '| Door 3 | 1/3 | 0 |'
+  id: totrans-160
   prefs: []
   type: TYPE_TB
 - en: Now that we have priors and likelihoods, we can use `update` to compute the
     posterior probabilities.
+  id: totrans-161
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE14]'
+  id: totrans-162
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '|  | prior | likelihood | unnorm | posterior |'
+  id: totrans-163
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- | --- | --- |'
+  id: totrans-164
   prefs: []
   type: TYPE_TB
 - en: '| Door 1 | 1/3 | 1/2 | 1/6 | 1/3 |'
+  id: totrans-165
   prefs: []
   type: TYPE_TB
 - en: '| Door 2 | 1/3 | 1 | 1/3 | 2/3 |'
+  id: totrans-166
   prefs: []
   type: TYPE_TB
 - en: '| Door 3 | 1/3 | 0 | 0 | 0 |'
+  id: totrans-167
   prefs: []
   type: TYPE_TB
 - en: After Monty opens Door 3, the posterior probability of Door 1 is \(1/3\); the
     posterior probability of Door 2 is \(2/3\). So you are better off switching from
     Door 1 to Door 2.
+  id: totrans-168
   prefs: []
   type: TYPE_NORMAL
+  zh: 蒙蒂打开门3后，门1的后验概率是\(1/3\)；门2的后验概率是\(2/3\)。所以你最好从门1换到门2。
 - en: 'As this example shows, our intuition for probability is not always reliable.
     Bayes’s Theorem can help by providing a divide-and-conquer strategy:'
+  id: totrans-169
   prefs: []
   type: TYPE_NORMAL
+  zh: 正如这个例子所示，我们对概率的直觉并不总是可靠的。贝叶斯定理可以通过提供分而治之的策略来帮助：
 - en: First, write down the hypotheses and the data.
+  id: totrans-170
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 首先，写下假设和数据。
 - en: Next, figure out the prior probabilities.
+  id: totrans-171
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，找出先验概率。
 - en: Finally, compute the likelihood of the data under each hypothesis.
+  id: totrans-172
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 最后，计算每个假设下数据的可能性。
 - en: The Bayes table does the rest.
+  id: totrans-173
   prefs: []
   type: TYPE_NORMAL
+  zh: 贝叶斯表格会完成剩下的工作。
 - en: Summary
+  id: totrans-174
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 总结
 - en: In this chapter we solved the Cookie Problem using Bayes’s theorem explicitly
     and using a Bayes table. There’s no real difference between these methods, but
     the Bayes table can make it easier to compute the total probability of the data,
     especially for problems with more than two hypotheses.
+  id: totrans-175
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本章中，我们使用贝叶斯定理明确解决了饼干问题，并使用了贝叶斯表格。这些方法之间没有真正的区别，但是对于具有两个以上假设的问题，贝叶斯表格可以更容易地计算数据的总概率。
 - en: Then we solved the Dice Problem, which we will see again in the next chapter,
     and the Monty Hall problem, which you might hope you never see again.
+  id: totrans-176
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后我们解决了骰子问题，我们将在下一章再次看到，以及蒙蒂霍尔问题，你可能希望永远不再见到。
 - en: If the Monty Hall problem makes your head hurt, you are not alone. But I think
     it demonstrates the power of Bayes’s Theorem as a divide-and-conquer strategy
     for solving tricky problems. And I hope it provides some insight into *why* the
     answer is what it is.
+  id: totrans-177
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果蒙蒂霍尔问题让你头疼，你并不孤单。但我认为它展示了贝叶斯定理作为解决棘手问题的分而治之策略的力量。我希望它能够解释答案为什么是这样的一些见解。
 - en: When Monty opens a door, he provides information we can use to update our belief
     about the location of the car. Part of the information is obvious. If he opens
     Door 3, we know the car is not behind Door 3\. But part of the information is
     more subtle. Opening Door 3 is more likely if the car is behind Door 2, and less
     likely if it is behind Door 1\. So the data is evidence in favor of Door 2\. We
     will come back to this notion of evidence in future chapters.
+  id: totrans-178
   prefs: []
   type: TYPE_NORMAL
+  zh: 当蒙蒂打开一扇门时，他提供了我们可以用来更新对汽车位置的信念的信息。部分信息是显而易见的。如果他打开门3，我们知道汽车不在门3后面。但部分信息更微妙。如果汽车在门2后面，打开门3更有可能，如果汽车在门1后面，打开门3更不可能。因此，数据支持门2。我们将在未来章节中回到这个证据的概念。
 - en: In the next chapter we’ll extend the Cookie Problem and the Dice Problem, and
     take the next step from basic probability to Bayesian statistics.
+  id: totrans-179
   prefs: []
   type: TYPE_NORMAL
+  zh: 在下一章中，我们将扩展饼干问题和骰子问题，并从基本概率迈向贝叶斯统计的下一步。
 - en: But first, you might want to work on the exercises.
+  id: totrans-180
   prefs: []
   type: TYPE_NORMAL
+  zh: 但首先，你可能想要做练习。
 - en: Exercises
+  id: totrans-181
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 练习
 - en: '**Exercise:** Suppose you have two coins in a box. One is a normal coin with
     heads on one side and tails on the other, and one is a trick coin with heads on
     both sides. You choose a coin at random and see that one of the sides is heads.
     What is the probability that you chose the trick coin?'
+  id: totrans-182
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**假设你在盒子里有两枚硬币。一枚是普通硬币，一面是正面，一面是反面，另一枚是特殊硬币，两面都是正面。你随机选择一枚硬币，看到一面是正面。你选择了特殊硬币的概率是多少？'
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-183
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
 - en: '[PRE15]'
+  id: totrans-184
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '|  | prior | likelihood | unnorm | posterior |'
+  id: totrans-185
   prefs: []
   type: TYPE_TB
+  zh: '|  | 先验 | 似然 | 未归一化 | 后验 |'
 - en: '| --- | --- | --- | --- | --- |'
+  id: totrans-186
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- |'
 - en: '| Normal | 0.5 | 0.5 | 0.25 | 0.333333 |'
+  id: totrans-187
   prefs: []
   type: TYPE_TB
+  zh: '| 普通 | 0.5 | 0.5 | 0.25 | 0.333333 |'
 - en: '| Trick | 0.5 | 1.0 | 0.50 | 0.666667 |</details>'
+  id: totrans-188
   prefs: []
   type: TYPE_NORMAL
+  zh: '| 技巧 | 0.5 | 1.0 | 0.50 | 0.666667 |</details>'
 - en: '**Exercise:** Suppose you meet someone and learn that they have two children.
     You ask if either child is a girl and they say yes. What is the probability that
     both children are girls?'
+  id: totrans-189
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**假设你遇到一个人，得知他们有两个孩子。你问其中一个孩子是女孩的概率，他们说是。那么两个孩子都是女孩的概率是多少？'
 - en: 'Hint: Start with four equally likely hypotheses.'
+  id: totrans-190
   prefs: []
   type: TYPE_NORMAL
+  zh: 提示：从四个同样可能的假设开始。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-191
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
 - en: '[PRE16]'
+  id: totrans-192
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '|  | prior | likelihood | unnorm | posterior |'
+  id: totrans-193
   prefs: []
   type: TYPE_TB
+  zh: '|  | 先验 | 似然 | 未归一化 | 后验 |'
 - en: '| --- | --- | --- | --- | --- |'
+  id: totrans-194
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- |'
 - en: '| GG | 0.25 | 1 | 0.25 | 0.333333 |'
+  id: totrans-195
   prefs: []
   type: TYPE_TB
+  zh: '| GG | 0.25 | 1 | 0.25 | 0.333333 |'
 - en: '| GB | 0.25 | 1 | 0.25 | 0.333333 |'
+  id: totrans-196
   prefs: []
   type: TYPE_TB
+  zh: '| GB | 0.25 | 1 | 0.25 | 0.333333 |'
 - en: '| BG | 0.25 | 1 | 0.25 | 0.333333 |'
+  id: totrans-197
   prefs: []
   type: TYPE_TB
+  zh: '| BG | 0.25 | 1 | 0.25 | 0.333333 |'
 - en: '| BB | 0.25 | 0 | 0.00 | 0.000000 |</details>'
+  id: totrans-198
   prefs: []
   type: TYPE_NORMAL
+  zh: '| BB | 0.25 | 0 | 0.00 | 0.000000 |</details>'
 - en: '**Exercise:** There are many variations of the [Monty Hall problem](https://en.wikipedia.org/wiki/Monty_Hall_problem).'
+  id: totrans-199
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**有许多变种的[蒙蒂霍尔问题](https://en.wikipedia.org/wiki/Monty_Hall_problem)。'
 - en: For example, suppose Monty always chooses Door 2 if he can, and only chooses
     Door 3 if he has to (because the car is behind Door 2).
+  id: totrans-200
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，假设蒙蒂总是在可以的情况下选择门2，只有在必须时才选择门3（因为汽车在门2后面）。
 - en: If you choose Door 1 and Monty opens Door 2, what is the probability the car
     is behind Door 3?
+  id: totrans-201
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你选择门1，蒙蒂打开门2，汽车在门3的概率是多少？
 - en: If you choose Door 1 and Monty opens Door 3, what is the probability the car
     is behind Door 2?
+  id: totrans-202
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你选择门1，蒙蒂打开门3，汽车在门2的概率是多少？
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-203
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
 - en: '[PRE17]'
+  id: totrans-204
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: '|  | prior | likelihood | unnorm | posterior |'
+  id: totrans-205
   prefs: []
   type: TYPE_TB
+  zh: '|  | 先验 | 似然 | 未归一化 | 后验 |'
 - en: '| --- | --- | --- | --- | --- |'
+  id: totrans-206
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- |'
 - en: '| Door 1 | 0.333333 | 1 | 0.333333 | 0.5 |'
+  id: totrans-207
   prefs: []
   type: TYPE_TB
+  zh: '| 门1 | 0.333333 | 1 | 0.333333 | 0.5 |'
 - en: '| Door 2 | 0.333333 | 0 | 0.000000 | 0.0 |'
+  id: totrans-208
   prefs: []
   type: TYPE_TB
+  zh: '| 门2 | 0.333333 | 0 | 0.000000 | 0.0 |'
 - en: '| Door 3 | 0.333333 | 1 | 0.333333 | 0.5 |</details> <details class="hide above-input"><summary
     aria-label="Toggle hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-209
   prefs: []
   type: TYPE_NORMAL
+  zh: '| 门3 | 0.333333 | 1 | 0.333333 | 0.5 |</details> <details class="hide above-input"><summary
+    aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE18]'
+  id: totrans-210
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: '|  | prior | likelihood | unnorm | posterior |'
+  id: totrans-211
   prefs: []
   type: TYPE_TB
+  zh: '|  | 先验 | 似然 | 未归一化 | 后验 |'
 - en: '| --- | --- | --- | --- | --- |'
+  id: totrans-212
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- |'
 - en: '| Door 1 | 0.333333 | 0 | 0.000000 | 0.0 |'
+  id: totrans-213
   prefs: []
   type: TYPE_TB
+  zh: '| 门1 | 0.333333 | 0 | 0.000000 | 0.0 |'
 - en: '| Door 2 | 0.333333 | 1 | 0.333333 | 1.0 |'
+  id: totrans-214
   prefs: []
   type: TYPE_TB
+  zh: '| 门2 | 0.333333 | 1 | 0.333333 | 1.0 |'
 - en: '| Door 3 | 0.333333 | 0 | 0.000000 | 0.0 |</details>'
+  id: totrans-215
   prefs: []
   type: TYPE_NORMAL
+  zh: '| 门3 | 0.333333 | 0 | 0.000000 | 0.0 |</details>'
 - en: '**Exercise:** M&M’s are small candy-coated chocolates that come in a variety
     of colors.'
+  id: totrans-216
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** M&M巧克力豆是一种小巧的糖衣巧克力，有各种颜色。'
 - en: Mars, Inc., which makes M&M’s, changes the mixture of colors from time to time.
     In 1995, they introduced blue M&M’s.
+  id: totrans-217
   prefs: []
   type: TYPE_NORMAL
+  zh: 制造M&M巧克力豆的 Mars 公司不时地改变颜色的混合比例。1995年，他们推出了蓝色M&M巧克力豆。
 - en: In 1994, the color mix in a bag of plain M&M’s was 30% Brown, 20% Yellow, 20%
     Red, 10% Green, 10% Orange, 10% Tan.
+  id: totrans-218
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 1994年，一袋普通M&M巧克力豆的颜色混合比例为30%棕色，20%黄色，20%红色，10%绿色，10%橙色，10%米色。
 - en: In 1996, it was 24% Blue , 20% Green, 16% Orange, 14% Yellow, 13% Red, 13% Brown.
+  id: totrans-219
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 1996年，蓝色占24%，绿色占20%，橙色占16%，黄色占14%，红色占13%，棕色占13%。
 - en: Suppose a friend of mine has two bags of M&M’s, and he tells me that one is
     from 1994 and one from 1996\. He won’t tell me which is which, but he gives me
     one M&M from each bag. One is yellow and one is green. What is the probability
     that the yellow one came from the 1994 bag?
+  id: totrans-220
   prefs: []
   type: TYPE_NORMAL
+  zh: '假设我的一个朋友有两袋M&M巧克力豆，他告诉我一袋是1994年的，一袋是1996年的。他不告诉我哪一袋是哪一袋，但他给我每袋各给了一个M&M。一个是黄色的，一个是绿色的。黄色的来自1994年的袋子的概率是多少？ '
 - en: 'Hint: The trick to this question is to define the hypotheses and the data carefully.'
+  id: totrans-221
   prefs: []
   type: TYPE_NORMAL
+  zh: 提示：这个问题的诀窍是要仔细定义假设和数据。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-222
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
 - en: '[PRE19]'
+  id: totrans-223
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '|  | prior | likelihood | unnorm | posterior |'
+  id: totrans-224
   prefs: []
   type: TYPE_TB
+  zh: '|  | 先验 | 似然 | 未归一化 | 后验 |'
 - en: '| --- | --- | --- | --- | --- |'
+  id: totrans-225
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- |'
 - en: '| A | 0.5 | 0.040 | 0.020 | 0.740741 |'
+  id: totrans-226
   prefs: []
   type: TYPE_TB
+  zh: '| A | 0.5 | 0.040 | 0.020 | 0.740741 |'
 - en: '| B | 0.5 | 0.014 | 0.007 | 0.259259 |</details>'
+  id: totrans-227
   prefs: []
   type: TYPE_NORMAL
+  zh: '| B | 0.5 | 0.014 | 0.007 | 0.259259 |</details>'
