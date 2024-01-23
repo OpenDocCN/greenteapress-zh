@@ -1,35 +1,43 @@
 - en: Chapter 14  Analytic methods
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
 - en: 原文：[https://greenteapress.com/thinkstats2/html/thinkstats2015.html](https://greenteapress.com/thinkstats2/html/thinkstats2015.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: This book has focused on computational methods like simulation and resampling,
     but some of the problems we solved have analytic solutions that can be much faster.
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
 - en: I present some of these methods in this chapter, and explain how they work.
     At the end of the chapter, I make suggestions for integrating computational and
     analytic methods for exploratory data analysis.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
 - en: The code in this chapter is in `normal.py`. For information about downloading
     and working with this code, see Section [0.2](thinkstats2001.html#code).
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
 - en: 14.1  Normal distributions
+  id: totrans-5
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: 'As a motivating example, let’s review the problem from Section [8.3](thinkstats2009.html#gorilla):'
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
 - en: Suppose you are a scientist studying gorillas in a wildlife preserve. Having
     weighed 9 gorillas, you find sample mean x=90 kg and sample standard deviation,
     S=7.5 kg. If you use x to estimate the population mean, what is the standard error
     of the estimate?
+  id: totrans-7
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
@@ -37,14 +45,17 @@
     we approximated this distribution by simulating the experiment (weighing 9 gorillas),
     computing x for each simulated experiment, and accumulating the distribution of
     estimates.
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
 - en: 'The result is an approximation of the sampling distribution. Then we use the
     sampling distribution to compute standard errors and confidence intervals:'
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
 - en: The standard deviation of the sampling distribution is the standard error of
     the estimate; in the example, it is about 2.5 kg.
+  id: totrans-10
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
@@ -52,6 +63,7 @@
     is a 90% confidence interval. If we run the experiment many times, we expect the
     estimate to fall in this interval 90% of the time. In the example, the 90% CI
     is (86, 94) kg.
+  id: totrans-11
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
@@ -60,279 +72,383 @@
     distributions have two properties that make them amenable for analysis: they are
     “closed” under linear transformation and addition. To explain what that means,
     I need some notation.'
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
 - en: If the distribution of a quantity, X, is normal with parameters µ and σ, you
     can write
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
 - en: '| X ∼ N (µ, σ²) |'
+  id: totrans-14
   prefs: []
   type: TYPE_TB
 - en: where the symbol ∼ means “is distributed” and the script letter N stands for
     “normal.”
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
 - en: A linear transformation of X is something like X′ = a X + b, where a and b are
     real numbers. A family of distributions is closed under linear transformation
     if X′ is in the same family as X. The normal distribution has this property; if
     X ∼ N (µ, σ²),
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
 - en: '| X′ ∼ N (a µ + b, a² σ²)   |'
+  id: totrans-17
   prefs: []
   type: TYPE_TB
 - en: Normal distributions are also closed under addition. If Z = X + Y and X ∼ N (µ[X],
     σ[X]²) and Y ∼ N (µ[Y], σ[Y]²) then
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
 - en: '| Z ∼ N (µ[X] + µ[Y], σ[X]² + σ[Y]²)   |'
+  id: totrans-19
   prefs: []
   type: TYPE_TB
 - en: In the special case Z = X + X, we have
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
 - en: '| Z ∼ N (2 µ[X], 2 σ[X]²)  |'
+  id: totrans-21
   prefs: []
   type: TYPE_TB
 - en: and in general if we draw n values of X and add them up, we have
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
 - en: '| Z ∼ N (n µ[X], n σ[X]²)   |'
+  id: totrans-23
   prefs: []
   type: TYPE_TB
 - en: 14.2  Sampling distributions
+  id: totrans-24
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: Now we have everything we need to compute the sampling distribution of x. Remember
     that we compute x by weighing n gorillas, adding up the total weight, and dividing
     by n.
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
 - en: 'Assume that the distribution of gorilla weights, X, is approximately normal:'
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
 - en: '| X ∼ N (µ, σ²) |'
+  id: totrans-27
   prefs: []
   type: TYPE_TB
 - en: If we weigh n gorillas, the total weight, Y, is distributed
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
 - en: '| Y ∼ N (n µ, n σ²)  |'
+  id: totrans-29
   prefs: []
   type: TYPE_TB
 - en: using Equation 3\. And if we divide by n, the sample mean, Z, is distributed
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
 - en: '| Z ∼ N (µ, σ²/n)  |'
+  id: totrans-31
   prefs: []
   type: TYPE_TB
 - en: using Equation 1 with a = 1/n.
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
 - en: The distribution of Z is the sampling distribution of x. The mean of Z is µ,
     which shows that x is an unbiased estimate of µ. The variance of the sampling
     distribution is σ² / n.
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
 - en: So the standard deviation of the sampling distribution, which is the standard
     error of the estimate, is σ / √n. In the example, σ is 7.5 kg and n is 9, so the
     standard error is 2.5 kg. That result is consistent with what we estimated by
     simulation, but much faster to compute!
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
 - en: We can also use the sampling distribution to compute confidence intervals. A
     90% confidence interval for x is the interval between the 5th and 95th percentiles
     of Z. Since Z is normally distributed, we can compute percentiles by evaluating
     the inverse CDF.
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们还可以使用抽样分布来计算置信区间。x的90%置信区间是Z的第5和第95百分位之间的区间。由于Z服从正态分布，我们可以通过评估逆CDF来计算百分位数。
 - en: 'There is no closed form for the CDF of the normal distribution or its inverse,
     but there are fast numerical methods and they are implemented in SciPy, as we
     saw in Section [5.2](thinkstats2006.html#normal). `thinkstats2` provides a wrapper
     function that makes the SciPy function a little easier to use:'
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 正态分布或其逆的CDF没有封闭形式，但有快速的数值方法，并且它们在SciPy中实现，正如我们在第5.2节中看到的那样。`thinkstats2`提供了一个包装函数，使得SciPy函数更容易使用：
 - en: '[PRE0]'
+  id: totrans-37
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: 'Given a probability, `p`, it returns the corresponding percentile from a normal
     distribution with parameters `mu` and `sigma`. For the 90% confidence interval
     of x, we compute the 5th and 95th percentiles like this:'
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 给定概率`p`，它返回具有参数`mu`和`sigma`的正态分布的相应百分位数。对于x的90%置信区间，我们可以这样计算第5和第95百分位数：
 - en: '[PRE1]'
+  id: totrans-39
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: So if we run the experiment many times, we expect the estimate, x, to fall in
     the range (85.9, 94.1) about 90% of the time. Again, this is consistent with the
     result we got by simulation.
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，如果我们多次运行实验，我们期望估计值x在（85.9, 94.1）的范围内约90%的时间。同样，这与我们通过模拟得到的结果一致。
 - en: 14.3  Representing normal distributions
+  id: totrans-41
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 14.3 表示正态分布
 - en: 'To make these calculations easier, I have defined a class called `Normal` that
     represents a normal distribution and encodes the equations in the previous sections.
     Here’s what it looks like:'
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了使这些计算更容易，我定义了一个名为`Normal`的类，表示正态分布，并对前几节中的方程进行了编码。它看起来是这样的：
 - en: '[PRE2]'
+  id: totrans-43
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: 'So we can instantiate a Normal that represents the distribution of gorilla
     weights:'
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，我们可以实例化一个代表大猩猩体重分布的正态分布：
 - en: '[PRE3]'
+  id: totrans-45
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '`Normal` provides `Sum`, which takes a sample size, `n`, and returns the distribution
     of the sum of `n` values, using Equation 3:'
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: '`Normal`提供了`Sum`，它接受样本大小`n`，并使用方程3返回`n`个值的总和的分布：'
 - en: '[PRE4]'
+  id: totrans-47
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: 'Normal also knows how to multiply and divide using Equation 1:'
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 正态分布也知道如何使用方程式1进行乘法和除法：
 - en: '[PRE5]'
+  id: totrans-49
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: 'So we can compute the sampling distribution of the mean with sample size 9:'
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，我们可以计算样本大小为9的均值的抽样分布：
 - en: '[PRE6]'
+  id: totrans-51
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: 'The standard deviation of the sampling distribution is 2.5 kg, as we saw in
     the previous section. Finally, Normal provides `Percentile`, which we can use
     to compute a confidence interval:'
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: 抽样分布的标准差为2.5千克，正如我们在前一节中看到的。最后，Normal提供了`Percentile`，我们可以用它来计算置信区间：
 - en: '[PRE7]'
+  id: totrans-53
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: And that’s the same answer we got before. We’ll use the Normal class again later,
     but before we go on, we need one more bit of analysis.
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: 这与我们之前得到的答案相同。我们稍后将再次使用Normal类，但在继续之前，我们需要进行更多的分析。
 - en: 14.4  Central limit theorem
+  id: totrans-55
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 14.4 中心极限定理
 - en: As we saw in the previous sections, if we add values drawn from normal distributions,
     the distribution of the sum is normal. Most other distributions don’t have this
     property; if we add values drawn from other distributions, the sum does not generally
     have an analytic distribution.
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: 正如我们在前面的部分中看到的，如果我们添加从正态分布中抽取的值，总和的分布是正态的。大多数其他分布都没有这种特性；如果我们添加从其他分布中抽取的值，总和通常没有解析分布。
 - en: But if we add up `n` values from almost any distribution, the distribution of
     the sum converges to normal as `n` increases.
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是，如果我们从几乎任何分布中添加`n`个值，随着`n`的增加，总和的分布将收敛为正态分布。
 - en: More specifically, if the distribution of the values has mean and standard deviation
     µ and σ, the distribution of the sum is approximately N(n µ, n σ²).
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 更具体地说，如果值的分布具有均值和标准差µ和σ，则总和的分布大约为N(n µ, n σ²)。
 - en: 'This result is the Central Limit Theorem (CLT). It is one of the most useful
     tools for statistical analysis, but it comes with caveats:'
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个结果就是中心极限定理（CLT）。这是统计分析中最有用的工具之一，但它也有一些警告：
 - en: The values have to be drawn independently. If they are correlated, the CLT doesn’t
     apply (although this is seldom a problem in practice).
+  id: totrans-60
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 这些值必须是独立绘制的。如果它们相关，中心极限定理不适用（尽管在实践中这很少是一个问题）。
 - en: The values have to come from the same distribution (although this requirement
     can be relaxed).
+  id: totrans-61
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 这些值必须来自相同的分布（尽管可以放宽此要求）。
 - en: The values have to be drawn from a distribution with finite mean and variance.
     So most Pareto distributions are out.
+  id: totrans-62
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 这些值必须来自具有有限均值和方差的分布。因此，大多数帕累托分布都不合适。
 - en: The rate of convergence depends on the skewness of the distribution. Sums from
     an exponential distribution converge for small `n`. Sums from a lognormal distribution
     require larger sizes.
+  id: totrans-63
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 收敛速度取决于分布的偏斜度。来自指数分布的总和对于小的`n`收敛。来自对数正态分布的总和需要更大的样本量。
 - en: The Central Limit Theorem explains the prevalence of normal distributions in
     the natural world. Many characteristics of living things are affected by genetic
     and environmental factors whose effect is additive. The characteristics we measure
     are the sum of a large number of small effects, so their distribution tends to
     be normal.
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: 中心极限定理解释了自然界中正态分布的普遍性。许多生物特征受到遗传和环境因素的影响，其效果是可加的。我们测量的特征是许多小效应的总和，因此它们的分布倾向于正态分布。
 - en: 14.5  Testing the CLT
+  id: totrans-65
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 14.5 测试中心极限定理
 - en: 'To see how the Central Limit Theorem works, and when it doesn’t, let’s try
     some experiments. First, we’ll try an exponential distribution:'
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了了解中心极限定理的工作原理以及何时不适用，让我们进行一些实验。首先，我们将尝试指数分布：
 - en: '[PRE8]'
+  id: totrans-67
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '`MakeExpoSamples` generates samples of sums of exponential values (I use “exponential
     values” as shorthand for “values from an exponential distribution”). `beta` is
     the parameter of the distribution; `iters` is the number of sums to generate.'
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: '`MakeExpoSamples`生成指数值总和的样本（我使用“指数值”作为“来自指数分布的值”的简称）。`beta`是分布的参数；`iters`是要生成的总和数量。'
 - en: To explain this function, I’ll start from the inside and work my way out. Each
     time we call `np.random.exponential`, we get a sequence of `n` exponential values
     and compute its sum. `sample` is a list of these sums, with length `iters`.
+  id: totrans-69
   prefs: []
   type: TYPE_NORMAL
 - en: 'It is easy to get `n` and `iters` confused: `n` is the number of terms in each
     sum; `iters` is the number of sums we compute in order to characterize the distribution
     of sums.'
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
 - en: 'The return value is a list of `(n, sample)` pairs. For each pair, we make a
     normal probability plot:'
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE9]'
+  id: totrans-72
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '`NormalPlotSamples` takes the list of pairs from `MakeExpoSamples` and generates
     a row of normal probability plots.'
+  id: totrans-73
   prefs: []
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-74
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-75
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/b74dd72457286381841c0493623eddb1.png)'
+  id: totrans-76
   prefs:
   - PREF_BQ
   type: TYPE_IMG
 - en: ''
+  id: totrans-77
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 14.1: Distributions of sums of exponential values (top row) and lognormal
     values (bottom row). |'
+  id: totrans-78
   prefs:
   - PREF_BQ
   type: TYPE_TB
 - en: ''
+  id: totrans-79
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-80
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
@@ -340,40 +456,49 @@
     of the sum is still exponential, so the normal probability plot is not a straight
     line. But with `n=10` the distribution of the sum is approximately normal, and
     with `n=100` it is all but indistinguishable from normal.
+  id: totrans-81
   prefs: []
   type: TYPE_NORMAL
 - en: Figure [14.1](#normal1) (bottom row) shows similar results for a lognormal distribution.
     Lognormal distributions are generally more skewed than exponential distributions,
     so the distribution of sums takes longer to converge. With `n=10` the normal probability
     plot is nowhere near straight, but with `n=100` it is approximately normal.
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-83
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-84
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/1457d7c5281433f404de9c992a6758fb.png)'
+  id: totrans-85
   prefs:
   - PREF_BQ
   type: TYPE_IMG
 - en: ''
+  id: totrans-86
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 14.2: Distributions of sums of Pareto values (top row) and correlated
     exponential values (bottom row). |'
+  id: totrans-87
   prefs:
   - PREF_BQ
   type: TYPE_TB
 - en: ''
+  id: totrans-88
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-89
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
@@ -382,6 +507,7 @@
     Central Limit Theorem does not apply. Figure [14.2](#normal2) (top row) shows
     distributions of sums of Pareto values. Even with `n=100` the normal probability
     plot is far from straight.
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
 - en: I also mentioned that CLT does not apply if the values are correlated. To test
@@ -389,32 +515,41 @@
     for generating correlated values is (1) generate correlated normal values, (2)
     use the normal CDF to transform the values to uniform, and (3) use the inverse
     exponential CDF to transform the uniform values to exponential.
+  id: totrans-91
   prefs: []
   type: TYPE_NORMAL
 - en: '`GenerateCorrelated` returns an iterator of `n` normal values with serial correlation
     `rho`:'
+  id: totrans-92
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE10]'
+  id: totrans-93
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: 'The first value is a standard normal value. Each subsequent value depends on
     its predecessor: if the previous value is `x`, the mean of the next value is `x*rho`,
     with variance `1-rho**2`. Note that `random.gauss` takes the standard deviation
     as the second argument, not variance.'
+  id: totrans-94
   prefs: []
   type: TYPE_NORMAL
 - en: '`GenerateExpoCorrelated` takes the resulting sequence and transforms it to
     exponential:'
+  id: totrans-95
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE11]'
+  id: totrans-96
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: '`normal` is a list of correlated normal values. `uniform` is a sequence of
     uniform values between 0 and 1\. `expo` is a correlated sequence of exponential
     values. `ppf` stands for “percent point function,” which is another name for the
     inverse CDF.'
+  id: totrans-97
   prefs: []
   type: TYPE_NORMAL
 - en: Figure [14.2](#normal2) (bottom row) shows distributions of sums of correlated
@@ -422,13 +557,16 @@
     nevertheless, with `n=100` the normal probability plot is nearly straight. So
     even though CLT does not strictly apply when the values are correlated, moderate
     correlations are seldom a problem in practice.
+  id: totrans-98
   prefs: []
   type: TYPE_NORMAL
 - en: These experiments are meant to show how the Central Limit Theorem works, and
     what happens when it doesn’t. Now let’s see how we can use it.
+  id: totrans-99
   prefs: []
   type: TYPE_NORMAL
 - en: 14.6  Applying the CLT
+  id: totrans-100
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -436,190 +574,247 @@
     in Section [9.3](thinkstats2010.html#testdiff): testing the apparent difference
     in mean pregnancy length for first babies and others. As we’ve seen, the apparent
     difference is about 0.078 weeks:'
+  id: totrans-101
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE12]'
+  id: totrans-102
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: 'Remember the logic of hypothesis testing: we compute a p-value, which is the
     probability of the observed difference under the null hypothesis; if it is small,
     we conclude that the observed difference is unlikely to be due to chance.'
+  id: totrans-103
   prefs: []
   type: TYPE_NORMAL
 - en: 'In this example, the null hypothesis is that the distribution of pregnancy
     lengths is the same for first babies and others. So we can compute the sampling
     distribution of the mean like this:'
+  id: totrans-104
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE13]'
+  id: totrans-105
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: 'Both sampling distributions are based on the same population, which is the
     pool of all live births. `SamplingDistMean` takes this sequence of values and
     the sample size, and returns a Normal object representing the sampling distribution:'
+  id: totrans-106
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE14]'
+  id: totrans-107
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '`mean` and `var` are the mean and variance of `data`. We approximate the distribution
     of the data with a normal distribution, `dist`.'
+  id: totrans-108
   prefs: []
   type: TYPE_NORMAL
 - en: In this example, the data are not normally distributed, so this approximation
     is not very good. But then we compute `dist.Sum(n) / n`, which is the sampling
     distribution of the mean of `n` values. Even if the data are not normally distributed,
     the sampling distribution of the mean is, by the Central Limit Theorem.
+  id: totrans-109
   prefs: []
   type: TYPE_NORMAL
 - en: 'Next, we compute the sampling distribution of the difference in the means.
     The `Normal` class knows how to perform subtraction using Equation 2:'
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE15]'
+  id: totrans-111
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: 'So we can compute the sampling distribution of the difference like this:'
+  id: totrans-112
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE16]'
+  id: totrans-113
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: The mean is 0, which makes sense because we expect two samples from the same
     distribution to have the same mean, on average. The variance of the sampling distribution
     is 0.0032.
+  id: totrans-114
   prefs: []
   type: TYPE_NORMAL
 - en: '`Normal` provides `Prob`, which evaluates the normal CDF. We can use `Prob`
     to compute the probability of a difference as large as `delta` under the null
     hypothesis:'
+  id: totrans-115
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE17]'
+  id: totrans-116
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: Which means that the p-value for a one-sided test is 0.084\. For a two-sided
     test we would also compute
+  id: totrans-117
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE18]'
+  id: totrans-118
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: Which is the same because the normal distribution is symmetric. The sum of the
     tails is 0.168, which is consistent with the estimate in Section [9.3](thinkstats2010.html#testdiff),
     which was 0.17.
+  id: totrans-119
   prefs: []
   type: TYPE_NORMAL
 - en: 14.7  Correlation test
+  id: totrans-120
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: In Section [9.5](thinkstats2010.html#corrtest) we used a permutation test for
     the correlation between birth weight and mother’s age, and found that it is statistically
     significant, with p-value less than 0.001.
+  id: totrans-121
   prefs: []
   type: TYPE_NORMAL
 - en: 'Now we can do the same thing analytically. The method is based on this mathematical
     result: given two variables that are normally distributed and uncorrelated, if
     we generate a sample with size n, compute Pearson’s correlation, r, and then compute
     the transformed correlation'
+  id: totrans-122
   prefs: []
   type: TYPE_NORMAL
 - en: '| t = r  |'
+  id: totrans-123
   prefs: []
   type: TYPE_TB
 - en: '&#124;  &#124;'
+  id: totrans-124
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124; √ &#124;'
+  id: totrans-125
   prefs: []
   type: TYPE_NORMAL
 - en: '|'
+  id: totrans-126
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124;  &#124;'
+  id: totrans-127
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124;'
+  id: totrans-128
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124; n−2 &#124;'
+  id: totrans-129
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124;  &#124;'
+  id: totrans-130
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124; 1−r² &#124;'
+  id: totrans-131
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124;'
+  id: totrans-132
   prefs: []
   type: TYPE_NORMAL
 - en: '|   |'
+  id: totrans-133
   prefs: []
   type: TYPE_TB
 - en: the distribution of t is Student’s t-distribution with parameter n−2\. The t-distribution
     is an analytic distribution; the CDF can be computed efficiently using gamma functions.
+  id: totrans-134
   prefs: []
   type: TYPE_NORMAL
 - en: 'We can use this result to compute the sampling distribution of correlation
     under the null hypothesis; that is, if we generate uncorrelated sequences of normal
     values, what is the distribution of their correlation? `StudentCdf` takes the
     sample size, `n`, and returns the sampling distribution of correlation:'
+  id: totrans-135
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE19]'
+  id: totrans-136
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '`ts` is a NumPy array of values for t, the transformed correlation. `ps` contains
     the corresponding probabilities, computed using the CDF of the Student’s t-distribution
     implemented in SciPy. The parameter of the t-distribution, `df`, stands for “degrees
     of freedom.” I won’t explain that term, but you can read about it at [http://en.wikipedia.org/wiki/Degrees_of_freedom_(statistics)](http://en.wikipedia.org/wiki/Degrees_of_freedom_(statistics)).'
+  id: totrans-137
   prefs: []
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-138
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-139
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/68f4bc50e89cc9086bc78620b0b37e6d.png)'
+  id: totrans-140
   prefs:
   - PREF_BQ
   type: TYPE_IMG
 - en: ''
+  id: totrans-141
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 14.3: Sampling distribution of correlations for uncorrelated normal
     variables. |'
+  id: totrans-142
   prefs:
   - PREF_BQ
   type: TYPE_TB
 - en: ''
+  id: totrans-143
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-144
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: To get from `ts` to the correlation coefficients, `rs`, we apply the inverse
     transform,
+  id: totrans-145
   prefs: []
   type: TYPE_NORMAL
 - en: '| r = t /  | √ |'
+  id: totrans-146
   prefs: []
   type: TYPE_TB
 - en: '&#124;  &#124;'
+  id: totrans-147
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124; n − 2 + t² &#124;'
+  id: totrans-148
   prefs: []
   type: TYPE_NORMAL
 - en: '|   |'
+  id: totrans-149
   prefs: []
   type: TYPE_TB
 - en: The result is the sampling distribution of r under the null hypothesis. Figure [14.3](#normal4)
@@ -628,274 +823,398 @@
     not normal, Pearson’s coefficient of correlation is based on sample means and
     variances. By the Central Limit Theorem, these moment-based statistics are normally
     distributed even if the data are not.
+  id: totrans-150
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是在零假设下r的抽样分布。图[14.3](#normal4)显示了这个分布以及我们在第9.5节中通过重新采样生成的分布。它们几乎是相同的。尽管实际分布不是正态的，皮尔逊相关系数是基于样本均值和方差的。根据中心极限定理，即使数据不是正态分布，这些基于矩的统计量也是正态分布的。
 - en: 'From Figure [14.3](#normal4), we can see that the observed correlation, 0.07,
     is unlikely to occur if the variables are actually uncorrelated. Using the analytic
     distribution, we can compute just how unlikely:'
+  id: totrans-151
   prefs: []
   type: TYPE_NORMAL
+  zh: 从图[14.3](#normal4)可以看出，观察到的相关性0.07，如果变量实际上是不相关的，这是不太可能发生的。使用分析分布，我们可以计算出有多大的可能性：
 - en: '[PRE20]'
+  id: totrans-152
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: 'We compute the value of `t` that corresponds to `r=0.07`, and then evaluate
     the t-distribution at `t`. The result is `2.9e-11`. This example demonstrates
     an advantage of the analytic method: we can compute very small p-values. But in
     practice it usually doesn’t matter.'
+  id: totrans-153
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们计算与`r=0.07`相对应的`t`的值，然后评估`t`的t分布。结果是`2.9e-11`。这个例子展示了分析方法的一个优点：我们可以计算非常小的p值。但在实践中，这通常并不重要。
 - en: 14.8  Chi-squared test
+  id: totrans-154
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 14.8 卡方检验
 - en: 'In Section [9.7](thinkstats2010.html#casino2) we used the chi-squared statistic
     to test whether a die is crooked. The chi-squared statistic measures the total
     normalized deviation from the expected values in a table:'
+  id: totrans-155
   prefs: []
   type: TYPE_NORMAL
+  zh: 在第9.7节中，我们使用卡方统计量来测试骰子是否不公正。卡方统计量衡量了表中期望值的总归一化偏差：
 - en: '| χ² =  |'
+  id: totrans-156
   prefs: []
   type: TYPE_TB
+  zh: '| χ² =  |'
 - en: '&#124;   &#124;'
+  id: totrans-157
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124;   &#124;'
 - en: '&#124; ∑ &#124;'
+  id: totrans-158
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124; ∑ &#124;'
 - en: '&#124; i &#124;'
+  id: totrans-159
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124; i &#124;'
 - en: '|   |'
+  id: totrans-160
   prefs: []
   type: TYPE_TB
+  zh: '|   |'
 - en: '&#124; (O[i] − E[i])² &#124;'
+  id: totrans-161
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124; (O[i] − E[i])² &#124;'
 - en: '&#124;  &#124;'
+  id: totrans-162
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124;  &#124;'
 - en: '&#124; E[i] &#124;'
+  id: totrans-163
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124; E[i] &#124;'
 - en: '|   |'
+  id: totrans-164
   prefs: []
   type: TYPE_TB
+  zh: '|   |'
 - en: One reason the chi-squared statistic is widely used is that its sampling distribution
     under the null hypothesis is analytic; by a remarkable coincidence^([1](#note6)),
     it is called the chi-squared distribution. Like the t-distribution, the chi-squared
     CDF can be computed efficiently using gamma functions.
+  id: totrans-165
   prefs: []
   type: TYPE_NORMAL
+  zh: 卡方统计量被广泛使用的一个原因是，在零假设下它的抽样分布是分析的；出乎意料的是^([1](#note6))，它被称为卡方分布。与t分布一样，可以使用gamma函数有效地计算卡方CDF。
 - en: '* * *'
+  id: totrans-166
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
+  id: totrans-167
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/38e9408cdc96abeac6481e2a9675524c.png)'
+  id: totrans-168
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/38e9408cdc96abeac6481e2a9675524c.png)'
 - en: ''
+  id: totrans-169
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 14.4: Sampling distribution of chi-squared statistics for a fair six-sided
     die. |'
+  id: totrans-170
   prefs:
   - PREF_BQ
   type: TYPE_TB
+  zh: '| 图14.4：公平的六面骰子的卡方统计的抽样分布。 |'
 - en: ''
+  id: totrans-171
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-172
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: 'SciPy provides an implementation of the chi-squared distribution, which we
     use to compute the sampling distribution of the chi-squared statistic:'
+  id: totrans-173
   prefs: []
   type: TYPE_NORMAL
+  zh: SciPy提供了卡方分布的实现，我们用它来计算卡方统计的抽样分布：
 - en: '[PRE21]'
+  id: totrans-174
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: Figure [14.4](#normal5) shows the analytic result along with the distribution
     we got by resampling. They are very similar, especially in the tail, which is
     the part we usually care most about.
+  id: totrans-175
   prefs: []
   type: TYPE_NORMAL
+  zh: 图[14.4](#normal5)显示了分析结果以及我们通过重新采样得到的分布。它们非常相似，尤其是在尾部，这通常是我们最关心的部分。
 - en: 'We can use this distribution to compute the p-value of the observed test statistic,
     `chi2`:'
+  id: totrans-176
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用这个分布来计算观察到的检验统计量`chi2`的p值：
 - en: '[PRE22]'
+  id: totrans-177
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: The result is 0.041, which is consistent with the result from Section [9.7](thinkstats2010.html#casino2).
+  id: totrans-178
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是0.041，这与第9.7节的结果一致。
 - en: The parameter of the chi-squared distribution is “degrees of freedom” again.
     In this case the correct parameter is `n-1`, where `n` is the size of the table,
     6\. Choosing this parameter can be tricky; to be honest, I am never confident
     that I have it right until I generate something like Figure [14.4](#normal5) to
     compare the analytic results to the resampling results.
+  id: totrans-179
   prefs: []
   type: TYPE_NORMAL
+  zh: 卡方分布的参数再次是“自由度”。在这种情况下，正确的参数是`n-1`，其中`n`是表的大小，为6。选择这个参数可能会很棘手；老实说，直到我生成了类似图[14.4](#normal5)的东西，将分析结果与重新采样结果进行比较，我才能确信我是正确的。
 - en: 14.9  Discussion
+  id: totrans-180
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 14.9 讨论
 - en: 'This book focuses on computational methods like resampling and permutation.
     These methods have several advantages over analysis:'
+  id: totrans-181
   prefs: []
   type: TYPE_NORMAL
+  zh: 本书侧重于重新采样和排列等计算方法。这些方法比分析有几个优点：
 - en: They are easier to explain and understand. For example, one of the most difficult
     topics in an introductory statistics class is hypothesis testing. Many students
     don’t really understand what p-values are. I think the approach I presented in
     Chapter [9](thinkstats2010.html#testing)—simulating the null hypothesis and computing
     test statistics—makes the fundamental idea clearer.
+  id: totrans-182
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 它们更容易解释和理解。例如，在初级统计课程中最困难的话题之一是假设检验。许多学生并不真正理解p值是什么。我认为我在第9章中提出的方法——模拟零假设并计算检验统计量——使基本思想更清晰。
 - en: They are robust and versatile. Analytic methods are often based on assumptions
     that might not hold in practice. Computational methods require fewer assumptions,
     and can be adapted and extended more easily.
+  id: totrans-183
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 它们是健壮且多功能的。分析方法通常基于实际情况可能不成立的假设。计算方法需要更少的假设，并且可以更容易地进行调整和扩展。
 - en: 'They are debuggable. Analytic methods are often like a black box: you plug
     in numbers and they spit out results. But it’s easy to make subtle errors, hard
     to be confident that the results are right, and hard to find the problem if they
     are not. Computational methods lend themselves to incremental development and
     testing, which fosters confidence in the results.'
+  id: totrans-184
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 它们是可调试的。分析方法通常就像一个黑匣子：你输入数字，它们输出结果。但很容易出现细微错误，很难确信结果是正确的，如果结果不正确，很难找到问题所在。计算方法更适合增量开发和测试，这有助于增强结果的信心。
 - en: 'But there is one drawback: computational methods can be slow. Taking into account
     these pros and cons, I recommend the following process:'
+  id: totrans-185
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是有一个缺点：计算方法可能会很慢。考虑到这些优缺点，我建议采用以下流程：
 - en: Use computational methods during exploration. If you find a satisfactory answer
     and the run time is acceptable, you can stop.
+  id: totrans-186
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 在探索过程中使用计算方法。如果找到了满意的答案并且运行时间可接受，那么可以停止。
 - en: If run time is not acceptable, look for opportunities to optimize. Using analytic
     methods is one of several methods of optimization.
+  id: totrans-187
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如果运行时间不可接受，就寻找优化的机会。使用解析方法是优化的几种方法之一。
 - en: If replacing a computational method with an analytic method is appropriate,
     use the computational method as a basis of comparison, providing mutual validation
     between the computational and analytic results.
+  id: totrans-188
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如果用解析方法替换计算方法是合适的，那么可以将计算方法作为比较的基础，提供计算和解析结果之间的相互验证。
 - en: For the vast majority of problems I have worked on, I didn’t have to go past
     Step 1.
+  id: totrans-189
   prefs: []
   type: TYPE_NORMAL
+  zh: 对我所处理的绝大多数问题来说，我不需要超出第一步。
 - en: 14.10  Exercises
+  id: totrans-190
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 14.10  练习
 - en: A solution to these exercises is in `chap14soln.py`
+  id: totrans-191
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些练习的解决方案在`chap14soln.py`中。
 - en: Exercise 1 *In Section *[*5.4*](thinkstats2006.html#lognormal)*, we saw that
     the distribution of adult weights is approximately lognormal. One possible explanation
     is that the weight a person gains each year is proportional to their current weight.
     In that case, adult weight is the product of a large number of multiplicative
     factors:*
+  id: totrans-192
   prefs: []
   type: TYPE_NORMAL
+  zh: 练习1 *在第5.4节中，我们看到成年人体重的分布大致是对数正态分布。一个可能的解释是一个人每年增加的体重与他们当前的体重成比例。在这种情况下，成年体重是多个乘法因子的乘积：*
 - en: '| w = w[0] f[1] f[2] … f[n]   |'
+  id: totrans-193
   prefs: []
   type: TYPE_TB
+  zh: '| w = w[0] f[1] f[2] … f[n]   |'
 - en: '*where* w *is adult weight,* w[0] *is birth weight, and* f[i] *is the weight
     gain factor for year* i*.*'
+  id: totrans-194
   prefs: []
   type: TYPE_NORMAL
+  zh: '*其中* w *是成年体重，* w[0] *是出生体重，* f[i] *是第* i *年的体重增加因子。*'
 - en: '*The log of a product is the sum of the logs of the factors:*'
+  id: totrans-195
   prefs: []
   type: TYPE_NORMAL
+  zh: '*一个产品的对数是因子的对数之和：*'
 - en: '| logw = logw[0] + logf[1] + logf[2] + ⋯ + logf[n]  |'
+  id: totrans-196
   prefs: []
   type: TYPE_TB
+  zh: '| logw = logw[0] + logf[1] + logf[2] + ⋯ + logf[n]  |'
 - en: '*So by the Central Limit Theorem, the distribution of* logw *is approximately
     normal for large* n*, which implies that the distribution of* w *is lognormal.*'
+  id: totrans-197
   prefs: []
   type: TYPE_NORMAL
+  zh: '*因此，根据中心极限定理，对数* w *的分布对于大* n *来说近似正态，这意味着* w *的分布是对数正态的。*'
 - en: '*To model this phenomenon, choose a distribution for* f *that seems reasonable,
     then generate a sample of adult weights by choosing a random value from the distribution
     of birth weights, choosing a sequence of factors from the distribution of* f*,
     and computing the product. What value of* n *is needed to converge to a lognormal
     distribution?*'
+  id: totrans-198
   prefs: []
   type: TYPE_NORMAL
+  zh: '*为了模拟这种现象，选择一个看起来合理的* f *分布，然后通过从出生体重分布中选择一个随机值，从* f *分布中选择一系列因子，并计算乘积来生成成年体重的样本。需要多少*
+    n *值才能收敛到对数正态分布？*'
 - en: Exercise 2   *In Section*[*14.6*](#usingCLT) *we used the Central Limit Theorem
     to find the sampling distribution of the difference in means,* δ*, under the null
     hypothesis that both samples are drawn from the same population.*
+  id: totrans-199
   prefs: []
   type: TYPE_NORMAL
+  zh: 练习2 *在第14.6节中，我们使用中心极限定理找到了平均值之差* δ *的抽样分布，假设两个样本都来自同一总体的零假设。*
 - en: '*We can also use this distribution to find the standard error of the estimate
     and confidence intervals, but that would only be approximately correct. To be
     more precise, we should compute the sampling distribution of* δ *under the alternate
     hypothesis that the samples are drawn from different populations.*'
+  id: totrans-200
   prefs: []
   type: TYPE_NORMAL
+  zh: '*我们还可以使用这个分布来找到估计的标准误差和置信区间，但这只是近似正确的。为了更精确，我们应该计算* δ *在备择假设下的抽样分布，即样本来自不同总体的假设。*'
 - en: '*Compute this distribution and use it to calculate the standard error and a
     90% confidence interval for the difference in means.*'
+  id: totrans-201
   prefs: []
   type: TYPE_NORMAL
+  zh: '*计算这个分布并用它来计算平均值之差的标准误差和90%置信区间。*'
 - en: Exercise 3   *In a recent paper*^([*2*](#note7))*, Stein et al. investigate
     the effects of an intervention intended to mitigate gender-stereotypical task
     allocation within student engineering teams.*
+  id: totrans-202
   prefs: []
   type: TYPE_NORMAL
+  zh: 练习3 *在最近的一篇论文中*^([*2*](#note7))*, Stein等人调查了一项旨在减轻学生工程团队中性别刻板任务分配影响的干预效果。*
 - en: '*Before and after the intervention, students responded to a survey that asked
     them to rate their contribution to each aspect of class projects on a 7-point
     scale.*'
+  id: totrans-203
   prefs: []
   type: TYPE_NORMAL
+  zh: '*在干预前后，学生们回答了一项调查，要求他们对课堂项目的每个方面进行评分，评分采用7分制。*'
 - en: '*Before the intervention, male students reported higher scores for the programming
     aspect of the project than female students; on average men reported a score of
     3.57 with standard error 0.28\. Women reported 1.91, on average, with standard
     error 0.32.*'
+  id: totrans-204
   prefs: []
   type: TYPE_NORMAL
+  zh: '*干预前，男性学生报告的项目编程方面的分数高于女性学生；男性平均报告得分为3.57，标准误差为0.28。女性平均报告得分为1.91，标准误差为0.32。*'
 - en: '*Compute the sampling distribution of the gender gap (the difference in means),
     and test whether it is statistically significant. Because you are given standard
     errors for the estimated means, you don’t need to know the sample size to figure
     out the sampling distributions.*'
+  id: totrans-205
   prefs: []
   type: TYPE_NORMAL
+  zh: '*计算性别差距（平均值之差）的抽样分布，并测试其是否具有统计学意义。因为你已经得到了估计平均值的标准误差，所以你不需要知道样本大小来计算抽样分布。*'
 - en: '*After the intervention, the gender gap was smaller: the average score for
     men was 3.44 (SE 0.16); the average score for women was 3.18 (SE 0.16). Again,
     compute the sampling distribution of the gender gap and test it.*'
+  id: totrans-206
   prefs: []
   type: TYPE_NORMAL
+  zh: '*干预后，性别差距变小了：男性的平均分数为3.44（标准误差0.16）；女性的平均分数为3.18（标准误差0.16）。再次计算性别差距的抽样分布并进行测试。*'
 - en: '*Finally, estimate the change in gender gap; what is the sampling distribution
     of this change, and is it statistically significant?*'
+  id: totrans-207
   prefs: []
   type: TYPE_NORMAL
+  zh: '*最后，估计性别差距的变化；这种变化的抽样分布是什么，它是否具有统计学意义？*'
 - en: '* * *'
+  id: totrans-208
   prefs: []
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: '[1](#text6)'
+  id: totrans-209
   prefs: []
   type: TYPE_NORMAL
+  zh: '[1](#text6)'
 - en: Not really.
+  id: totrans-210
   prefs: []
   type: TYPE_NORMAL
+  zh: 不是真的。
 - en: '[2](#text7)'
+  id: totrans-211
   prefs: []
   type: TYPE_NORMAL
+  zh: '[2](#text7)'
 - en: “Evidence for the persistent effects of an intervention to mitigate gender-sterotypical
     task allocation within student engineering teams,” Proceedings of the IEEE Frontiers
     in Education Conference, 2014.
+  id: totrans-212
   prefs: []
   type: TYPE_NORMAL
+  zh: “证据表明减轻学生工程团队中性别刻板任务分配影响的干预效果持久存在”，IEEE教育前沿会议论文集，2014年。

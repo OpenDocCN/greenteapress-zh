@@ -653,16 +653,19 @@
   id: totrans-106
   prefs: []
   type: TYPE_NORMAL
+  zh: Kaplan-Meier分析产生了生存曲线的单一估计，但量化估计的不确定性也很重要。通常，有三种可能的错误来源：测量误差、抽样误差和建模误差。
 - en: In this example, measurement error is probably small. People generally know
     when they were born, whether they’ve been married, and when. And they can be expected
     to report this information accurately.
   id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个例子中，测量误差可能很小。人们通常知道自己的出生日期，是否结婚以及何时结婚。并且可以预期他们会准确报告这些信息。
 - en: 'We can quantify sampling error by resampling. Here’s the code:'
   id: totrans-108
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以通过重新抽样来量化抽样误差。以下是代码：
 - en: '[PRE15]'
   id: totrans-109
   prefs: []
@@ -674,37 +677,44 @@
   id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: '`ResampleSurvival`获取`resp`，受访者的DataFrame，和`iters`，重新抽样的次数。它计算`ts`，这是我们将评估生存曲线的年龄序列。'
 - en: 'Inside the loop, `ResampleSurvival`:'
   id: totrans-111
   prefs: []
   type: TYPE_NORMAL
+  zh: 在循环内，`ResampleSurvival`：
 - en: Resamples the respondents using `ResampleRowsWeighted`, which we saw in Section [10.7](thinkstats2011.html#weighted).
   id: totrans-112
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 使用`ResampleRowsWeighted`对受访者进行重新抽样，我们在第[10.7](thinkstats2011.html#weighted)节中看到过。
 - en: Calls `EstimateSurvival`, which uses the process in the previous sections to
     estimate the hazard and survival curves, and
   id: totrans-113
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 调用`EstimateSurvival`，它使用前几节中的过程来估计危险和生存曲线，以及
 - en: Evaluates the survival curve at each age in `ts`.
   id: totrans-114
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 评估`ts`中每个年龄的生存曲线。
 - en: '`ss_seq` is a sequence of evaluated survival curves. `PercentileRows` takes
     this sequence and computes the 5th and 95th percentiles, returning a 90% confidence
     interval for the survival curve.'
   id: totrans-115
   prefs: []
   type: TYPE_NORMAL
+  zh: '`ss_seq`是评估的生存曲线序列。`PercentileRows`获取此序列并计算第5和第95百分位数，返回生存曲线的90%置信区间。'
 - en: '* * *'
   id: totrans-116
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
   id: totrans-117
   prefs:
@@ -715,6 +725,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/92878845eb42d820b753106a008dd5c1.png)'
 - en: ''
   id: totrans-119
   prefs:
@@ -726,6 +737,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_TB
+  zh: '| 图13.3：首次婚姻年龄的生存曲线（深色线）和基于加权重新抽样的90%置信区间（灰色线）。 |'
 - en: ''
   id: totrans-121
   prefs:
@@ -736,6 +748,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: Figure [13.3](#survival3) shows the result along with the survival curve we
     estimated in the previous section. The confidence interval takes into account
     the sampling weights, unlike the estimated curve. The discrepancy between them
@@ -744,11 +757,13 @@
   id: totrans-123
   prefs: []
   type: TYPE_NORMAL
+  zh: 图[13.3](#survival3)显示了我们在上一节中估计的生存曲线以及结果。置信区间考虑了抽样权重，而估计曲线没有。它们之间的差异表明抽样权重对估计有实质影响——我们必须记住这一点。
 - en: 13.8  Cohort effects
   id: totrans-124
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 13.8  队列效应
 - en: One of the challenges of survival analysis is that different parts of the estimated
     curve are based on different groups of respondents. The part of the curve at time
     `t` is based on respondents whose age was at least `t` when they were interviewed.
@@ -757,6 +772,7 @@
   id: totrans-125
   prefs: []
   type: TYPE_NORMAL
+  zh: 生存分析的一个挑战是估计曲线的不同部分基于不同的受访者群体。曲线在时间`t`的部分基于受访者的年龄至少为`t`时进行了访谈。因此曲线的最左侧部分包括所有受访者的数据，但最右侧部分只包括最年长的受访者。
 - en: If the relevant characteristics of the respondents are not changing over time,
     that’s fine, but in this case it seems likely that marriage patterns are different
     for women born in different generations. We can investigate this effect by grouping
@@ -766,6 +782,7 @@
   id: totrans-126
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果受访者的相关特征随时间不发生变化，那就没问题，但在这种情况下，似乎不同年代出生的女性的婚姻模式可能是不同的。我们可以通过根据受访者的出生年代对其进行分组来研究这种影响。像这样由出生日期或类似事件定义的群体称为队列，群体之间的差异称为队列效应。
 - en: To investigate cohort effects in the NSFG marriage data, I gathered the Cycle
     6 data from 2002 used throughout this book; the Cycle 7 data from 2006–2010 used
     in Section [9.11](thinkstats2010.html#replication); and the Cycle 5 data from
@@ -773,6 +790,7 @@
   id: totrans-127
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了研究NSFG婚姻数据中的队列效应，我收集了2002年使用的第6周期数据，这些数据在本书中使用；2006年至2010年在第[9.11](thinkstats2010.html#replication)节中使用的第7周期数据；以及1995年的第5周期数据。总共这些数据集包括30769名受访者。
 - en: '[PRE16]'
   id: totrans-128
   prefs: []
@@ -783,6 +801,7 @@
   id: totrans-129
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于每个DataFrame，`resp`，我使用`cmbirth`计算每个受访者的出生年代：
 - en: '[PRE17]'
   id: totrans-130
   prefs: []
@@ -796,12 +815,14 @@
   id: totrans-131
   prefs: []
   type: TYPE_NORMAL
+  zh: '`cmbirth`编码为自1899年12月以来的整数月数；`month0`将该日期表示为Timestamp对象。对于每个出生日期，我们实例化一个包含世纪月份的`DateOffset`并将其添加到`month0`；结果是一个Timestamp序列，它被转换为`DateTimeIndex`。最后，我们提取`year`并计算十年。'
 - en: 'To take into account the sampling weights, and also to show variability due
     to sampling error, I resample the data, group respondents by decade, and plot
     survival curves:'
   id: totrans-132
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了考虑抽样权重，并且显示由于抽样误差而产生的变异性，我重新对数据进行抽样，按十年龄段分组受访者，并绘制生存曲线：
 - en: '[PRE18]'
   id: totrans-133
   prefs: []
@@ -814,10 +835,12 @@
   id: totrans-134
   prefs: []
   type: TYPE_NORMAL
+  zh: 来自三个NSFG周期的数据使用不同的抽样权重，因此我分别对它们进行重新抽样，然后使用`concat`将它们合并成一个DataFrame。参数`ignore_index`告诉`concat`不要通过索引匹配受访者；而是创建一个从0到30768的新索引。
 - en: '`EstimateSurvivalByDecade` plots survival curves for each cohort:'
   id: totrans-135
   prefs: []
   type: TYPE_NORMAL
+  zh: '`EstimateSurvivalByDecade`为每个队列绘制生存曲线：'
 - en: '[PRE19]'
   id: totrans-136
   prefs: []
@@ -828,6 +851,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
   id: totrans-138
   prefs:
@@ -838,6 +862,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/3b27a833c0d7ebce0e83f5d13a54d9ce.png)'
 - en: ''
   id: totrans-140
   prefs:
