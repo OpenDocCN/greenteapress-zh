@@ -1,13 +1,16 @@
 - en: Loops and Files
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
 - en: 原文：[https://allendowney.github.io/ElementsOfDataScience/04_loops.html](https://allendowney.github.io/ElementsOfDataScience/04_loops.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/04_loops.ipynb)
     or [click here to download it](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/04_loops.ipynb).'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
 - en: This chapter presents loops, which are used to represent repeated computation,
@@ -15,432 +18,585 @@
     book *War and Peace* from Project Gutenberg and write a loop that reads the book
     and counts the words. This example presents some new computational tools; it is
     also an introduction to working with textual data.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
 - en: Loops
+  id: totrans-4
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: 'One of the most important elements of computation is repetition, and the most
     common way to represent repetition is a `for` loop. As a simple example, suppose
     we want to display the elements of a tuple. Here’s a tuple of three integers:'
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE0]'
+  id: totrans-6
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: And here’s a `for` loop that prints the elements.
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE1]'
+  id: totrans-8
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '[PRE2]'
+  id: totrans-9
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: The first line of the loop is a **header** that specifies the tuple, `t`, and
     a variable name, `x`. The tuple already exists, but `x` does not; the loop will
     create it. Note that the header ends with a colon, `:`.
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
 - en: Inside the loop is a `print` statement, which displays the value of `x`.
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
 - en: 'So here’s what happens:'
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
 - en: When the loop starts, it gets the first element of `t`, which is `1`, and assigns
     it to `x`. It executes the `print` statement, which displays the value `1`.
+  id: totrans-13
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: Then it gets the second element of `t`, which is `2`, and displays it.
+  id: totrans-14
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: Then it gets the third element of `t`, which is `3`, and displays it.
+  id: totrans-15
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: After printing the last element of the tuple, the loop ends.
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
 - en: 'We can also loop through the letters in a string:'
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE3]'
+  id: totrans-18
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '[PRE4]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: When the loop begins, `word` already exists, but `letter` does not. Again, the
     loop creates `letter` and assigns values to it.
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
 - en: The variable created by the loop is called the **loop variable**. You can give
     it any name you like; in this example, I chose `letter` to remind me what kind
     of value it contains.
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
 - en: After the loop ends, the loop variable contains the last value.
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE5]'
+  id: totrans-23
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '[PRE6]'
+  id: totrans-24
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '**Exercise:** Create a list, called `sequence` with four elements of any type.
     Write a `for` loop that prints the elements. Call the loop variable `element`.'
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
 - en: 'You might wonder why I didn’t call the list `list`. I avoided it because Python
     has a function named `list` that makes new lists. For example, if you have a string,
     you can make a list of letters, like this:'
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE7]'
+  id: totrans-27
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '[PRE8]'
+  id: totrans-28
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: If you create a variable named `list`, you can’t use the function any more.
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
 - en: Counting with Loops
+  id: totrans-30
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: '*War and Peace* is a famously long book; let’s see how long it is. To count
     the words we need two elements: looping through the words in a text, and counting.
     We’ll start with counting.'
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
 - en: 'We’ve already seen that you can create a variable and give it a value, like
     this:'
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE9]'
+  id: totrans-33
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '[PRE10]'
+  id: totrans-34
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: If you assign a different value to the same variable, the new value replaces
     the old one.
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE11]'
+  id: totrans-36
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: '[PRE12]'
+  id: totrans-37
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: You can increase the value of a variable by reading the old value, adding `1`,
     and assigning the result back to the original variable.
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE13]'
+  id: totrans-39
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: '[PRE14]'
+  id: totrans-40
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: Increasing the value of a variable is called **incrementing**; decreasing the
     value is called **decrementing**. These operations are so common that there are
     special operators for them.
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE15]'
+  id: totrans-42
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '[PRE16]'
+  id: totrans-43
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: In this example, the `+=` operator reads the value of `count`, adds `1`, and
     assigns the result back to `count`. Python also provides `-=` and other update
     operators like `*=` and `/=`.
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
 - en: '**Exercise:** The following is a number trick from *Learn With Math Games*
     at [https://www.learn-with-math-games.com/math-number-tricks.html](https://www.learn-with-math-games.com/math-number-tricks.html):'
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
 - en: '*Finding Someone’s Age*'
+  id: totrans-46
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-47
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: Ask the person to multiply the first number of their age by 5.
+  id: totrans-48
   prefs:
   - PREF_BQ
   - PREF_UL
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-49
   prefs:
   - PREF_BQ
   - PREF_IND
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-50
   prefs:
   - PREF_BQ
   - PREF_IND
   type: TYPE_NORMAL
 - en: Tell them to add 3.
+  id: totrans-51
   prefs:
   - PREF_BQ
   - PREF_UL
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-52
   prefs:
   - PREF_BQ
   - PREF_IND
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-53
   prefs:
   - PREF_BQ
   - PREF_IND
   type: TYPE_NORMAL
 - en: Now tell them to double this figure.
+  id: totrans-54
   prefs:
   - PREF_BQ
   - PREF_UL
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-55
   prefs:
   - PREF_BQ
   - PREF_IND
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-56
   prefs:
   - PREF_BQ
   - PREF_IND
   type: TYPE_NORMAL
 - en: Finally, have the person add the second number of their age to the figure and
     have them tell you the answer.
+  id: totrans-57
   prefs:
   - PREF_BQ
   - PREF_UL
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-58
   prefs:
   - PREF_BQ
   - PREF_IND
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-59
   prefs:
   - PREF_BQ
   - PREF_IND
   type: TYPE_NORMAL
 - en: Deduct 6 and you will have their age.
+  id: totrans-60
   prefs:
   - PREF_BQ
   - PREF_UL
   type: TYPE_NORMAL
 - en: Test this algorithm using your age. Use a single variable and update it using
     `+=` and other update operators.
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
 - en: Files
+  id: totrans-62
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: Now that we know how to count, let’s see how we can read words from a file.
     We can download *War and Peace* from Project Gutenberg, which is a repository
     of free books at [https://www.gutenberg.org](https://www.gutenberg.org).
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
 - en: In order to read the contents of the file, you have to **open** it, which you
     can do with the `open` function.
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE17]'
+  id: totrans-65
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: '[PRE18]'
+  id: totrans-66
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: The result is a `TextIOWrapper`, which is a type of **file pointer**. It contains
     the name of the file, the mode (which is `r` for “reading”) and the encoding (which
     is `UTF` for “Unicode Transformation Format”). A file pointer is like a bookmark;
     it keeps track of which parts of the file you have read.
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
 - en: 'If you use a file pointer in a `for` loop, it loops through the lines in the
     file. So we can count the number of lines like this:'
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE19]'
+  id: totrans-69
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: And then display the result.
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE20]'
+  id: totrans-71
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '[PRE21]'
+  id: totrans-72
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: There are about 66,000 lines in this file.
+  id: totrans-73
   prefs: []
   type: TYPE_NORMAL
 - en: if Statements
+  id: totrans-74
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: 'We’ve already see comparison operators, like `>` and `<`, which compare values
     and produce a Boolean result, `True` or `False`. For example, we can compare the
     final value of `count` to a number:'
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE22]'
+  id: totrans-76
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: '[PRE23]'
+  id: totrans-77
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: We can use a comparison operator in an `if` statement to check for a condition
     and take action accordingly.
+  id: totrans-78
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE24]'
+  id: totrans-79
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: '[PRE25]'
+  id: totrans-80
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: The first line of the `if` statement specifies the condition we’re checking
     for. Like the header of a `for` statement, the first line of an `if` statement
     has to end with a colon.
+  id: totrans-81
   prefs: []
   type: TYPE_NORMAL
 - en: If the condition is true, the indented statement runs; otherwise, it doesn’t.
     In the previous example, the condition is true, so the `print` statement runs.
     In the following example, the condition is false, so the `print` statement doesn’t
     run.
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE26]'
+  id: totrans-83
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: We can put a `print` statement inside a `for` loop. In this example, we only
     print a line from the book when `count` is `1`. The other lines are read, but
     not displayed.
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE27]'
+  id: totrans-85
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: '[PRE28]'
+  id: totrans-86
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: 'Notice the indentation in this example:'
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
 - en: Statements inside the `for` loop are indented.
+  id: totrans-88
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: The statement inside the `if` statement is indented.
+  id: totrans-89
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: The statement `count += 1` is **outdented** from the previous line, so it ends
     the `if` statement. But it is still inside the `for` loop.
+  id: totrans-90
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: It is legal in Python to use spaces or tabs for indentation, but the most common
     convention is to use four spaces, never tabs. That’s what I’ll do in my code and
     I strongly suggest you follow the convention.
+  id: totrans-91
   prefs: []
   type: TYPE_NORMAL
 - en: The break Statement
+  id: totrans-92
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: 'If we display the final value of `count`, we see that the loop reads the entire
     file, but only prints one line:'
+  id: totrans-93
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE29]'
+  id: totrans-94
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: '[PRE30]'
+  id: totrans-95
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: 'We can avoid reading the whole file by using a `break` statement, like this:'
+  id: totrans-96
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE31]'
+  id: totrans-97
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: '[PRE32]'
+  id: totrans-98
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: 'The `break` statement ends the loop immediately, skipping the rest of the file.
     We can confirm that by checking the last value of `count`:'
+  id: totrans-99
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE33]'
+  id: totrans-100
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: '[PRE34]'
+  id: totrans-101
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: '**Exercise:** Write a loop that prints the first 5 lines of the file and then
     breaks out of the loop.'
+  id: totrans-102
   prefs: []
   type: TYPE_NORMAL
 - en: Whitespace
+  id: totrans-103
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: If we run the loop again and display the final value of `line`, we see the special
     sequence `\n` at the end.
+  id: totrans-104
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE35]'
+  id: totrans-105
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: '[PRE36]'
+  id: totrans-106
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: This sequence represents a single character, called a **newline**, that puts
     vertical space between lines. If we use a `print` statement to display `line`,
     we don’t see the special sequence, but we do see extra space after the line.
+  id: totrans-107
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE37]'
+  id: totrans-108
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE37]'
 - en: '[PRE38]'
+  id: totrans-109
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: In other strings, you might see the sequence `\t`, which represents a “tab”
     character. When you print a tab character, it adds enough space to make the next
     character appear in a column that is a multiple of 8.
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE39]'
+  id: totrans-111
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: '[PRE40]'
+  id: totrans-112
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE40]'
 - en: Newline characters, tabs, and spaces are called **whitespace** because when
     they are printed they leave white space on the page (assuming that the background
     color is white).
+  id: totrans-113
   prefs: []
   type: TYPE_NORMAL
 - en: Counting Words
+  id: totrans-114
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -448,128 +604,188 @@
     words. To split a line into words, we can use a function called `split` that returns
     a list of words. To be more precise, `split` doesn’t actually know what a word
     is; it just splits the line wherever there’s a space or other whitespace character.
+  id: totrans-115
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE41]'
+  id: totrans-116
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE41]'
 - en: '[PRE42]'
+  id: totrans-117
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE42]'
 - en: Notice that the syntax for `split` is different from other functions we have
     seen. Normally when we call a function, we name the function and provide values
     in parentheses. So you might have expected to write `split(line)`. Sadly, that
     doesn’t work.
+  id: totrans-118
   prefs: []
   type: TYPE_NORMAL
+  zh: 请注意，`split`的语法与我们见过的其他函数不同。通常当我们调用一个函数时，我们会命名函数并在括号中提供值。所以你可能期望写成`split(line)`。遗憾的是，这样不起作用。
 - en: The problem is that the `split` function belongs to the string `line`; in a
     sense, the function is attached to the string, so we can only refer to it using
     the string and the **dot operator** (the period between `line` and `split`). For
     historical reasons, functions like this are called **methods**.
+  id: totrans-119
   prefs: []
   type: TYPE_NORMAL
+  zh: 问题在于`split`函数属于字符串`line`；在某种意义上，该函数附加到字符串上，因此我们只能使用字符串和**点运算符**（`line`和`split`之间的句号）来引用它。出于历史原因，这样的函数被称为**方法**。
 - en: Now that we can split a line into a list of words, we can use `len` to get the
     number of words in each list, and increment `count` accordingly.
+  id: totrans-120
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以将一行拆分成一个单词列表，我们可以使用`len`来获取每个列表中的单词数，并相应地增加`count`。
 - en: '[PRE43]'
+  id: totrans-121
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE43]'
 - en: '[PRE44]'
+  id: totrans-122
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE44]'
 - en: '[PRE45]'
+  id: totrans-123
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE45]'
 - en: By this count, there are more than half a million words in *War and Peace*.
+  id: totrans-124
   prefs: []
   type: TYPE_NORMAL
+  zh: 按照这个计算，*战争与和平*中有超过50万个单词。
 - en: Actually, there aren’t quite that many, because the file we got from Project
     Gutenberg has some introductory text and a table of contents before the text.
     And it has some license information at the end. To skip this “front matter”, we
     can use one loop to read lines until we get to `CHAPTER I`, and then a second
     loop to count the words in the remaining lines.
+  id: totrans-125
   prefs: []
   type: TYPE_NORMAL
+  zh: 实际上，并不是有那么多单词，因为我们从古腾堡计划得到的文件在文本之前有一些介绍性文字和目录。并且在结尾有一些许可信息。为了跳过这些“前言”，我们可以使用一个循环读取行，直到我们到达`CHAPTER
+    I`，然后使用第二个循环计算剩余行中的单词数。
 - en: The file pointer, `fp`, keeps track of where it is in the file, so the second
     loop picks up where the first loop leaves off. In the second loop, we check for
     the end of the book and stop, so we ignore the “back matter” at the end of the
     file.
+  id: totrans-126
   prefs: []
   type: TYPE_NORMAL
+  zh: 文件指针`fp`跟踪文件中的位置，因此第二个循环从第一个循环结束的地方开始。在第二个循环中，我们检查书的结尾并停止，因此我们忽略文件末尾的“后事”。
 - en: '[PRE46]'
+  id: totrans-127
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE46]'
 - en: '[PRE47]'
+  id: totrans-128
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE47]'
 - en: '[PRE48]'
+  id: totrans-129
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE48]'
 - en: '[PRE49]'
+  id: totrans-130
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE49]'
 - en: 'Two things to notice about this program:'
+  id: totrans-131
   prefs: []
   type: TYPE_NORMAL
+  zh: 关于这个程序有两件事需要注意：
 - en: When we compare two values to see if they are equal, we use the `==` operator,
     not to be confused with `=`, which is the assignment operator.
+  id: totrans-132
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 当我们比较两个值是否相等时，我们使用`==`运算符，不要与赋值运算符`=`混淆。
 - en: The string we compare `line` to has a newline at the end. If we leave that out,
     it doesn’t work.
+  id: totrans-133
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 我们将`line`与之进行比较的字符串末尾有一个换行符。如果我们去掉它，程序就无法正常工作。
 - en: '**Exercise:**'
+  id: totrans-134
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**'
 - en: In the previous program, replace `==` with `=` and see what happens. This is
     a common error, so it is good to see what the error message looks like.
+  id: totrans-135
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 在前一个程序中，用`=`替换`==`，看看会发生什么。这是一个常见的错误，所以看看错误消息是什么样子是很好的。
 - en: Correct the previous error, then remove the newline character after `CHAPTER
     I`, and see what happens.
+  id: totrans-136
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 纠正前面的错误，然后删除`CHAPTER I`后面的换行符，看看会发生什么。
 - en: The first error is a **syntax error**, which means that the program violates
     the rules of Python. If your program has a syntax error, the Python interpreter
     prints an error message, and the program never runs.
+  id: totrans-137
   prefs: []
   type: TYPE_NORMAL
+  zh: 第一个错误是**语法错误**，这意味着程序违反了Python的规则。如果程序有语法错误，Python解释器会打印错误消息，程序将无法运行。
 - en: The second error is a **logic error**, which means that there is something wrong
     with the logic of the program. The syntax is legal, and the program runs, but
     it doesn’t do what we wanted. Logic errors can be hard to find because we don’t
     get any error messages.
+  id: totrans-138
   prefs: []
   type: TYPE_NORMAL
+  zh: 第二个错误是**逻辑错误**，这意味着程序的逻辑有问题。语法是合法的，程序可以运行，但它并不符合我们的预期。逻辑错误很难找到，因为我们不会收到任何错误消息。
 - en: 'If you have a logic error, here are two strategies for debugging:'
+  id: totrans-139
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你有逻辑错误，以下是两种调试策略：
 - en: Add print statements so the program displays additional information while it
     runs.
+  id: totrans-140
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 在程序运行时添加打印语句，以便显示额外的信息。
 - en: Simplify the program until it does what you expect, and then gradually add more
     code, testing as you go.
+  id: totrans-141
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 简化程序，直到它符合预期，然后逐渐添加更多代码，一边测试一边进行。
 - en: Summary
+  id: totrans-142
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 总结
 - en: This chapter presents loops, `if` statements, and the `break` statement. It
     also introduces tools for working with letters and words, and a simple kind of
     textual analysis, word counting.
+  id: totrans-143
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章介绍了循环、`if`语句和`break`语句。它还介绍了处理字母和单词的工具，以及一种简单的文本分析方法，即单词计数。
 - en: In the next chapter we’ll continue this example, counting the number of unique
     words in a text and the number of times each word appears. And we’ll see one more
     way to represent a collection of values, a Python dictionary.
+  id: totrans-144
   prefs: []
   type: TYPE_NORMAL
+  zh: 在下一章中，我们将继续这个例子，统计文本中独特单词的数量以及每个单词出现的次数。我们还将看到另一种表示值集合的方法，即Python字典。
