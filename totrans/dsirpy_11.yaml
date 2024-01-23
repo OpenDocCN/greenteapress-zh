@@ -1,484 +1,768 @@
 - en: Search
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 搜索
 - en: 原文：[https://allendowney.github.io/DSIRP/searching.html](https://allendowney.github.io/DSIRP/searching.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/DSIRP/searching.html](https://allendowney.github.io/DSIRP/searching.html)
 - en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/searching.ipynb)'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: '[点击这里在Colab上运行这一章节](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/searching.ipynb)'
 - en: Linear Search
+  id: totrans-3
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 线性搜索
 - en: Suppose you have a list.
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设你有一个列表。
 - en: '[PRE0]'
+  id: totrans-5
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: And you want to know whether an element appears in the list. You can use the
     `in` operator, which returns `True` or `False`.
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 而且你想知道一个元素是否出现在列表中。你可以使用`in`运算符，它返回`True`或`False`。
 - en: '[PRE1]'
+  id: totrans-7
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '[PRE2]'
+  id: totrans-8
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: If you want to know where in the list it is, you can use `index`, which returns
     the index of the element if it appears.
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你想知道它在列表中的位置，你可以使用`index`，它返回元素的索引。
 - en: '[PRE3]'
+  id: totrans-10
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '[PRE4]'
+  id: totrans-11
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: Or raises a `ValueError` otherwise.
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 或者否则引发`ValueError`。
 - en: '[PRE5]'
+  id: totrans-13
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '[PRE6]'
+  id: totrans-14
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: 'The following function does the same thing as `string.index`:'
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数做的事情与`string.index`相同：
 - en: '[PRE7]'
+  id: totrans-16
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '[PRE8]'
+  id: totrans-17
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '[PRE9]'
+  id: totrans-18
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '[PRE10]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '[PRE11]'
+  id: totrans-20
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: The runtime of this kind of search is in `O(n)`, where `n` is the length of
     the list, because
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 这种搜索的运行时间是`O(n)`，其中`n`是列表的长度，因为
 - en: If the target is not in the list, you have to check every element in the list.
+  id: totrans-22
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如果目标不在列表中，你必须检查列表中的每个元素。
 - en: If the target is in a random location, you have to check half the list on average.
+  id: totrans-23
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如果目标在一个随机位置，你平均需要检查列表的一半。
 - en: As an exception, if you know that the target is within the first `k` elements,
     for a value of `k` that does not depend on `n`, you can consider this search `O(1)`.
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为一个例外，如果你知道目标在前`k`个元素内，对于一个不依赖于`n`的`k`值，你可以认为这个搜索是`O(1)`。
 - en: Bisection
+  id: totrans-25
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 二分
 - en: If we know that the elements of the list are in order, we can do better.
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们知道列表的元素是有序的，我们可以做得更好。
 - en: The `bisect` module provides an implementation of a “bisection search”, which
     works by
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: '`bisect`模块提供了一个“二分搜索”的实现，它的工作原理是'
 - en: Checking the element in the middle of the list. If it’s the target, we’re done.
+  id: totrans-28
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 检查列表中间的元素。如果它是目标，我们完成了。
 - en: If the middle element is larger than the target, we search the left half.
+  id: totrans-29
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如果中间元素大于目标，我们搜索左半部分。
 - en: If the middle element is smaller than the target, we search the right half.
+  id: totrans-30
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如果中间元素小于目标，我们搜索右半部分。
 - en: '[Here is the documentation of the bisect modle](https://docs.python.org/3/library/bisect.html).'
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: '[这是bisect模块的文档](https://docs.python.org/3/library/bisect.html)。'
 - en: To test it, we’ll start with a sorted list.
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了测试它，我们将从一个有序列表开始。
 - en: '[PRE12]'
+  id: totrans-33
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '[PRE13]'
+  id: totrans-34
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: '`bisect_left` is similar to `index`'
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: '`bisect_left`类似于`index`'
 - en: '[PRE14]'
+  id: totrans-36
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '[PRE15]'
+  id: totrans-37
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: But with elements that are not in the list, it returns their insertion point,
     that is, the place where you would put the target to keep the list sorted.
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是对于不在列表中的元素，它返回它们的插入点，也就是你将目标放置在列表中保持排序的位置。
 - en: '[PRE16]'
+  id: totrans-39
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '[PRE17]'
+  id: totrans-40
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: 'We can use `bisect_left` to implement `index`, like this:'
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用`bisect_left`来实现`index`，就像这样：
 - en: '[PRE18]'
+  id: totrans-42
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: '[PRE19]'
+  id: totrans-43
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '[PRE20]'
+  id: totrans-44
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '[PRE21]'
+  id: totrans-45
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: '[PRE22]'
+  id: totrans-46
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: '**Exercise:** Write your own version of `bisect_left`. You can do it iteratively
     or recursively.'
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**编写你自己的`bisect_left`版本。你可以迭代或递归地完成。'
 - en: Each time through the loop, we cut the search region in half, so if we start
     with `n` elements, we have `n/2` during the next loop, `n/4` during the second
     loop, and so on. When we get to 1 element, we’re done.
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 每次循环，我们将搜索区域减半，所以如果我们从`n`个元素开始，下一个循环时有`n/2`个元素，第二个循环时有`n/4`个元素，依此类推。当我们到达1个元素时，我们完成了。
 - en: '[See this animation](https://blog.penjee.com/binary-vs-linear-search-animated-gifs/)'
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: '[看这个动画](https://blog.penjee.com/binary-vs-linear-search-animated-gifs/)'
 - en: So how many steps does that take? Thinking about it in reverse, starting with
     1, how many times do we have to double it before we get to `n`? In math notation,
     the question is
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 那需要多少步骤呢？反过来想，从1开始，我们需要翻倍多少次才能得到`n`？用数学符号表示，问题是
 - en: \[2^x = n\]
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: \[2^x = n\]
 - en: 'Where `x` is the unknown number of steps. Taking the log of both sides, base
     2:'
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: 其中`x`是未知的步数。取对数的两边，底数为2：
 - en: \[x = log_2 n\]
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: \[x = log_2 n\]
 - en: In terms of order of growth, bisection search is in `O(log n)`. Notice that
     we don’t bother to specify the base of the logarithm, because a log in one base
     is a constant multiple of a log in any other base.
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: 就增长的顺序而言，二分搜索是`O(log n)`。注意我们不必指定对数的底数，因为一个底数的对数是另一个底数的对数的常数倍。
 - en: '`bisect` also provides methods to insert elements while maintaining sorted
     order.'
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: '`bisect`还提供了在保持排序顺序的同时插入元素的方法。'
 - en: '[PRE23]'
+  id: totrans-56
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: '[PRE24]'
+  id: totrans-57
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: However, as the documentation explains, “Keep in mind that the O(log n) search
     is dominated by the slow O(n) insertion step.”
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 然而，正如文档所解释的，“请记住，O(log n)的搜索被慢的O(n)插入步骤所支配。”
 - en: Binary search tree
+  id: totrans-59
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 二叉搜索树
 - en: Using a sorted array to support log-time search is a reasonable choice if we
     don’t have to add or remove elements very often.
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用有序数组支持对数时间搜索是一个合理的选择，如果我们不经常添加或删除元素。
 - en: But if the number of add/remove operations is similar to the number of searches,
     the overall performance would be linear.
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是如果添加/删除操作的次数与搜索次数相似，整体性能将是线性的。
 - en: We can solve that problem with a [binary search tree](https://en.wikipedia.org/wiki/Binary_search_tree).
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以用[二叉搜索树](https://en.wikipedia.org/wiki/Binary_search_tree)来解决这个问题。
 - en: To implement a tree, I’ll define a new class that represents a `Node`. Each
     node contains data and a reference to two “children” called `left` and `right`.
     (It’s called a binary tree because every node has two children).
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了实现一个树，我将定义一个表示`Node`的新类。每个节点包含数据和指向两个称为`left`和`right`的“子节点”的引用。（它被称为二叉树，因为每个节点都有两个子节点）。
 - en: '[PRE25]'
+  id: totrans-64
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: Here’s how we can instantiate two nodes.
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是我们如何实例化两个节点的方法。
 - en: '[PRE26]'
+  id: totrans-66
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: Because `Node` provides `__repr__`, we can display a node like this.
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: 因为`Node`提供了`__repr__`，我们可以这样显示一个节点。
 - en: '[PRE27]'
+  id: totrans-68
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: '[PRE28]'
+  id: totrans-69
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: Now we’ll make a parent node that has the first two nodes as children.
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们将创建一个父节点，它有前两个节点作为子节点。
 - en: '[PRE29]'
+  id: totrans-71
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: '[PRE30]'
+  id: totrans-72
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: I’ll define another class to represent the tree. The only thing it contains
     is a reference to the top of the tree, which is confusingly called the root node.
+  id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将定义另一个类来表示树。它唯一包含的是对树顶的引用，这个引用令人困惑地被称为根节点。
 - en: '[PRE31]'
+  id: totrans-74
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: Here’s tree with a reference to `node8`, so it implicitly contains `node3` and
     `node10` as well.
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个带有对`node8`的引用的树，所以它隐含地包含了`node3`和`node10`。
 - en: '[PRE32]'
+  id: totrans-76
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: '[PRE33]'
+  id: totrans-77
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: A binary tree is a binary search tree if for every node (1) the value of the
     left child is lower and (2) the value of the right child is higher. Let’s assume
     for now that there are no duplicates.
+  id: totrans-78
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果对于每个节点（1）左子节点的值较低且（2）右子节点的值较高，则二叉树是二叉搜索树。现在暂时假设没有重复值。
 - en: 'We can check whether a tree is a BST like this:'
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以这样检查树是否是BST：
 - en: '[PRE34]'
+  id: totrans-80
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: '[PRE35]'
+  id: totrans-81
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: '[PRE36]'
+  id: totrans-82
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: And let’s see an example where it’s not true.
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们看一个不成立的例子。
 - en: '[PRE37]'
+  id: totrans-84
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE37]'
 - en: '[PRE38]'
+  id: totrans-85
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: '[PRE39]'
+  id: totrans-86
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: '[PRE40]'
+  id: totrans-87
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE40]'
 - en: Draw the Tree
+  id: totrans-88
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 绘制树
 - en: One of the better functions for drawing trees is part of a package called `EoN`,
     for “Epidemics on Networks”, which provides “tools to study the spread of SIS
     and SIR diseases in networks”.
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: 绘制树的较好函数之一是`EoN`包的一部分，用于“网络上的流行病”，提供“研究网络中SIS和SIR疾病传播的工具”。
 - en: The function we’ll use is called [hierarchy_pos](https://epidemicsonnetworks.readthedocs.io/en/latest/functions/EoN.hierarchy_pos.html#EoN.hierarchy_pos).
     It takes as a parameter a NetworkX graph that represents a tree, and it returns
     a dictionary that maps from each node to a position in the Cartesian plane. If
     we pass this dictionary to `nx.draw`, it lays the tree out accordingly.
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将使用的函数称为[hierarchy_pos](https://epidemicsonnetworks.readthedocs.io/en/latest/functions/EoN.hierarchy_pos.html#EoN.hierarchy_pos)。它以表示树的NetworkX图作为参数，并返回一个将每个节点映射到笛卡尔平面位置的字典。如果我们将此字典传递给`nx.draw`，它将相应地布置树。
 - en: '[PRE41]'
+  id: totrans-91
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE41]'
 - en: '[PRE42]'
+  id: totrans-92
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE42]'
 - en: '[PRE43]'
+  id: totrans-93
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE43]'
 - en: '[PRE44]'
+  id: totrans-94
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE44]'
 - en: '[PRE45]'
+  id: totrans-95
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE45]'
 - en: '[PRE46]'
+  id: totrans-96
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE46]'
 - en: '[PRE47]'
+  id: totrans-97
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE47]'
 - en: '[PRE48]'
+  id: totrans-98
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE48]'
 - en: '![_images/searching_55_0.png](../Images/9d6d47f61e3369792a9fc819d51bef10.png)'
+  id: totrans-99
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/searching_55_0.png](../Images/9d6d47f61e3369792a9fc819d51bef10.png)'
 - en: Search
+  id: totrans-100
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 搜索
 - en: Given a tree and a target value, how do we determine whether the target is in
     the tree?
+  id: totrans-101
   prefs: []
   type: TYPE_NORMAL
+  zh: 给定一棵树和一个目标值，我们如何确定目标是否在树中？
 - en: Start at the root. If you find the target, stop.
+  id: totrans-102
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 从根开始。如果找到目标，请停止。
 - en: If the target is less than the value at the root, go left.
+  id: totrans-103
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如果目标小于根处的值，则向左移动。
 - en: If the target is greater than the value at the root, go right.
+  id: totrans-104
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如果目标大于根处的值，则向右移动。
 - en: If you get to a non-existent node, stop.
+  id: totrans-105
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如果到达不存在的节点，请停止。
 - en: '**Exercise:** Write a function called `search` that takes a `BSTree` and a
     target value and returns `True` if the target value appears in the tree.'
+  id: totrans-106
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**编写一个名为`search`的函数，该函数接受`BSTree`和目标值，并在树中出现目标值时返回`True`。'
 - en: '**Exercise:** Many tree operations lend themselves to recursive implementations.
     Write a function called `search_rec` that searches the tree recursively.'
+  id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**许多树操作适合递归实现。编写一个名为`search_rec`的函数，该函数递归搜索树。'
 - en: 'Hint: Start with a copy of `is_bst`.'
+  id: totrans-108
   prefs: []
   type: TYPE_NORMAL
+  zh: 提示：从`is_bst`的副本开始。
 - en: Insert
+  id: totrans-109
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 插入
 - en: The point of the BST is that we can add and remove elements efficiently, compared
     to a sorted array.
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: BST的重点是，与排序数组相比，我们可以高效地添加和删除元素。
 - en: So let’s see what that looks like.
+  id: totrans-111
   prefs: []
   type: TYPE_NORMAL
+  zh: 所以让我们看看那是什么样子。
 - en: '[PRE49]'
+  id: totrans-112
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE49]'
 - en: We’ll test it by starting with an empty tree and adding elements one at a time.
+  id: totrans-113
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将通过从空树开始，逐个添加元素来进行测试。
 - en: '[PRE50]'
+  id: totrans-114
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE50]'
 - en: '[PRE51]'
+  id: totrans-115
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE51]'
 - en: '[PRE52]'
+  id: totrans-116
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE52]'
 - en: '![_images/searching_66_0.png](../Images/4d383453189a15eaac3c690933afc89e.png)'
+  id: totrans-117
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/searching_66_0.png](../Images/4d383453189a15eaac3c690933afc89e.png)'
 - en: If things have gone according to plan, the result should be a BST.
+  id: totrans-118
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果一切按计划进行，结果应该是一棵二叉搜索树。
 - en: '[PRE53]'
+  id: totrans-119
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE53]'
 - en: '[PRE54]'
+  id: totrans-120
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE54]'
 - en: Sorting
+  id: totrans-121
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 排序
 - en: If we traverse the tree recursively and print the elements as we go, we get
     the values in sorted order.
+  id: totrans-122
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们递归遍历树并在遍历过程中打印元素，则可以按顺序获取值。
 - en: '[PRE55]'
+  id: totrans-123
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE55]'
 - en: '[PRE56]'
+  id: totrans-124
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE56]'
 - en: '[PRE57]'
+  id: totrans-125
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE57]'
 - en: '**Exercise:** Write a generator method called `iterate_tree` that traverses
     the tree and yields the elements in order.'
+  id: totrans-126
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**编写一个名为`iterate_tree`的生成器方法，遍历树并按顺序产生元素。'
 - en: You can do this iteratively or recursively.
+  id: totrans-127
   prefs: []
   type: TYPE_NORMAL
+  zh: 您可以迭代或递归地执行此操作。
 - en: Badness 10000
+  id: totrans-128
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 糟糕程度10000
 - en: If the tree is reasonably well balanced, the height is proportional to `log
     n`, where `n` is the number of elements.
+  id: totrans-129
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果树相当平衡，则高度与`log n`成比例，其中`n`是元素的数量。
 - en: But let’s see what happens if we add elements in sorted order.
+  id: totrans-130
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是，让我们看看如果按顺序添加元素会发生什么。
 - en: '[PRE58]'
+  id: totrans-131
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE58]'
 - en: '[PRE59]'
+  id: totrans-132
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE59]'
 - en: '![_images/searching_77_0.png](../Images/c2f4fb64046b6a248a879b4562acac7a.png)'
+  id: totrans-133
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/searching_77_0.png](../Images/c2f4fb64046b6a248a879b4562acac7a.png)'
 - en: Now traversing the tree takes linear time. To avoid this problem, there are
     variations of BST that are [self-balancing](https://en.wikipedia.org/wiki/Self-balancing_binary_search_tree).
+  id: totrans-134
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在遍历树需要线性时间。为了避免这个问题，有一些变体的BST是[自平衡的](https://en.wikipedia.org/wiki/Self-balancing_binary_search_tree)。
 - en: Most are based on [tree rotation](https://en.wikipedia.org/wiki/Tree_rotation)
     operations. For example, the following is a function that rotates a tree to the
     left (following Wikipedia’s nomenclature for what “left” and “right” mean).
+  id: totrans-135
   prefs: []
   type: TYPE_NORMAL
+  zh: 大多数基于[树旋转](https://en.wikipedia.org/wiki/Tree_rotation)操作。例如，以下是一个将树向左旋转的函数（遵循维基百科对“左”和“右”的命名约定）。
 - en: '[PRE60]'
+  id: totrans-136
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE60]'
 - en: '[PRE61]'
+  id: totrans-137
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE61]'
 - en: '![_images/searching_80_0.png](../Images/68bf18fefd43aff35b62729052f13887.png)'
+  id: totrans-138
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/searching_80_0.png](../Images/68bf18fefd43aff35b62729052f13887.png)'
 - en: '*Data Structures and Information Retrieval in Python*'
+  id: totrans-139
   prefs: []
   type: TYPE_NORMAL
+  zh: '*Python中的数据结构和信息检索*'
 - en: Copyright 2021 Allen Downey
+  id: totrans-140
   prefs: []
   type: TYPE_NORMAL
+  zh: 版权所有 2021 Allen Downey
 - en: 'License: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  id: totrans-141
   prefs: []
   type: TYPE_NORMAL
+  zh: 许可：[知识共享署名-非商业性使用-相同方式共享4.0国际许可协议](https://creativecommons.org/licenses/by-nc-sa/4.0/)
