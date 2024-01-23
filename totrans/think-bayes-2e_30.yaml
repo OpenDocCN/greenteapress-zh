@@ -3,24 +3,29 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 发射器-探测器问题
 - en: 原文：[https://allendowney.github.io/ThinkBayes2/radiation.html](https://allendowney.github.io/ThinkBayes2/radiation.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ThinkBayes2/radiation.html](https://allendowney.github.io/ThinkBayes2/radiation.html)
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ThinkBayes2/blob/master/examples/radiation.ipynb)'
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: '[单击此处在Colab上运行此笔记本](https://colab.research.google.com/github/AllenDowney/ThinkBayes2/blob/master/examples/radiation.ipynb)'
 - en: Modeling a radiation sensor
   id: totrans-3
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 建模辐射传感器
 - en: 'Here’s an example from Jaynes, *Probability Theory*, page 168:'
   id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是Jaynes在《概率论》第168页的一个例子：
 - en: We have a radioactive source … which is emitting particles of some sort … There
     is a rate \(p\), in particles per second, at which a radioactive nucleus sends
     particles through our counter; and each particle passing through produces counts
@@ -31,6 +36,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 我们有一个放射源...发射某种粒子...有一个速率\(p\)，即每秒发射的粒子数，放射性核通过我们的计数器发送粒子；每个通过的粒子以速率\(\theta\)产生计数。通过测量不同秒数内的计数{c1，c2，...}，我们能对每秒通过计数器的粒子数{n1，n2，...}和源的强度有什么样的结论？
 - en: I presented a [version of this problem](https://www.greenteapress.com/thinkbayes/html/thinkbayes015.html#sec130)
     in the first edition of *Think Bayes*, but I don’t think I explained it well,
     and my solution was a bit of a mess. In the second edition, I use more NumPy and
@@ -39,6 +45,7 @@
   id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 我在第一版的《Bayes定理》中提出了一个[版本的这个问题](https://www.greenteapress.com/thinkbayes/html/thinkbayes015.html#sec130)，但我认为我解释得不好，我的解决方案有点混乱。在第二版中，我使用了更多的NumPy和SciPy，这使得可以更清晰、更简洁地表达解决方案，所以让我再试一次。
 - en: As a model of the radioactive source, Jaynes suggests we imagine “\(N\) nuclei,
     each of which has independently the probability \(r\) of sending a particle through
     our counter in any one second”. If \(N\) is large and \(r\) is small, the number
@@ -47,6 +54,8 @@
   id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为放射源的模型，Jaynes建议我们想象“\(N\)个核，每个核在任何一个秒内独立地具有概率\(r\)通过我们的计数器发送一个粒子”。如果\(N\)很大，\(r\)很小，那么在给定的一秒内发射的粒子数很好地由参数\(s
+    = N r\)的泊松分布模拟，其中\(s\)是源的强度。
 - en: As a model of the sensor, we’ll assume that “each particle passing through the
     counter has independently the probability \(\phi\) of making a count”. So if we
     know the actual number of particles, \(n\), and the efficiency of the sensor,
@@ -54,6 +63,8 @@
   id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为传感器的模型，我们假设“通过计数器的每个粒子独立地具有概率\(\phi\)进行计数”。因此，如果我们知道粒子的实际数量\(n\)和传感器的效率\(\phi\)，则计数的分布是\(\mathrm{Binomial}(n,
+    \phi)\)。
 - en: 'With that, we are ready to solve the problem, but first, an aside: I am not
     sure why Jaynes states the problem in terms of \(p\) and \(\theta\), and then
     solves it in terms of \(s\) and \(\phi\). It might have been an oversight, or
@@ -63,12 +74,14 @@
   id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 有了这个，我们就准备好解决问题了，但首先，我不确定为什么Jaynes用\(p\)和\(\theta\)来陈述问题，然后用\(s\)和\(\phi\)来解决问题。这可能是一个疏忽，或者他可能想要引起读者注意的微妙区别。这本书充满了对这样的区别的严重警告，但在这种情况下，我看不到解释。
 - en: Anyway, following Jaynes, I’ll start with a uniform prior for \(s\), over a
     range of values wide enough to cover the region where the likelihood of the data
     is non-negligible.
   id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 无论如何，遵循Jaynes，我将从一个均匀的先验开始，覆盖足够广泛的值范围，以覆盖数据可能非常重要的区域。
 - en: '[PRE0]'
   id: totrans-11
   prefs: []
@@ -78,22 +91,27 @@
   id: totrans-12
   prefs: []
   type: TYPE_TB
+  zh: '|  | probs |'
 - en: '| --- | --- |'
   id: totrans-13
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| 0.0 | 1 |'
   id: totrans-14
   prefs: []
   type: TYPE_TB
+  zh: '| 0.0 | 1 |'
 - en: '| 3.5 | 1 |'
   id: totrans-15
   prefs: []
   type: TYPE_TB
+  zh: '| 3.5 | 1 |'
 - en: '| 7.0 | 1 |'
   id: totrans-16
   prefs: []
   type: TYPE_TB
+  zh: '| 7.0 | 1 |'
 - en: For each value of \(s\), the distribution of \(n\) is Poisson, so we can form
     the joint prior of \(s\) and \(n\) using the `poisson` function from SciPy. I’ll
     use a range of values for \(n\) that, again, covers the region where the likelihood
@@ -101,6 +119,7 @@
   id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于每个\(s\)的值，\(n\)的分布是泊松分布，因此我们可以使用SciPy的`poisson`函数形成\(s\)和\(n\)的联合先验。我将使用一系列值来表示\(n\)，再次覆盖数据可能非常重要的区域。
 - en: '[PRE1]'
   id: totrans-18
   prefs: []
@@ -119,6 +138,7 @@
   id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个数组，每个\(n\)的值对应一行，每个\(s\)的值对应一列。为了得到每对的先验概率，我们将每行乘以\(s\)的先验概率。以下函数封装了这个计算，并将结果放入一个代表联合先验的Pandas`DataFrame`中。
 - en: '[PRE3]'
   id: totrans-21
   prefs: []
@@ -128,6 +148,7 @@
   id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是联合先验：
 - en: '[PRE4]'
   id: totrans-23
   prefs: []
@@ -139,20 +160,28 @@
   id: totrans-24
   prefs: []
   type: TYPE_TB
+  zh: '| s | 0.0 | 3.5 | 7.0 | 10.5 | 14.0 | 17.5 | 21.0 | 24.5 | 28.0 | 31.5 | ...
+    | 318.5 | 322.0 | 325.5 | 329.0 | 332.5 | 336.0 | 339.5 | 343.0 | 346.5 | 350.0
+    |'
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
     | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
   id: totrans-25
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+    | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
 - en: '| n |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |'
   id: totrans-26
   prefs: []
   type: TYPE_TB
+  zh: '| n |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |'
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
     | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
   id: totrans-27
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+    | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
 - en: '| 0 | 1.0 | 0.030197 | 0.000912 | 0.000028 | 8.315287e-07 | 2.510999e-08 |
     7.582560e-10 | 2.289735e-11 | 6.914400e-13 | 2.087968e-14 | ... | 4.755624e-139
     | 1.436074e-140 | 4.336568e-142 | 1.309530e-143 | 3.954438e-145 | 1.194137e-146
@@ -606,6 +635,7 @@
   id: totrans-108
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于A来说，“不同的间隔在逻辑上是独立的”，因此`c2 = 16`的更新从相同的先验开始。
 - en: '[PRE25]'
   id: totrans-109
   prefs: []
@@ -615,6 +645,7 @@
   id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是`n2`的后验边际分布。
 - en: '[PRE26]'
   id: totrans-111
   prefs: []
@@ -629,6 +660,7 @@
   id: totrans-113
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/08e991dae10108d2fbefe797ad82aaba68f40c89ab3c91309740f4f0bd085ed7.png](../Images/4d62953b9997f3f8f0be05fd93c7f5d5.png)'
 - en: '[PRE28]'
   id: totrans-114
   prefs: []
@@ -644,11 +676,13 @@
   id: totrans-116
   prefs: []
   type: TYPE_NORMAL
+  zh: 后验均值接近169，这与方程6.124的结果一致。 MAP是160，这与6.123一致。
 - en: Robot B
   id: totrans-117
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 机器人B
 - en: 'For B, the “logical situation” is different. If we consider \(s\) to be constant,
     we can – and should! – take the information from the first update into account
     when we perform the second update. We can do that by using the posterior distribution
@@ -657,6 +691,7 @@
   id: totrans-118
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于B来说，“逻辑情况”是不同的。如果我们认为\(s\)是恒定的，我们可以 - 而且应该！ - 在进行第二次更新时考虑第一次更新的信息。我们可以通过使用第一次更新的\(s\)的后验分布来形成第二次更新的联合先验，就像这样：
 - en: '[PRE30]'
   id: totrans-119
   prefs: []
@@ -671,12 +706,14 @@
   id: totrans-121
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/4b50d9a60cf899178330dfb1199ffb2945f405006de59bcf8dc1cc49cf943f2e.png](../Images/d351fa149f9d84d4c70083fda32a1562.png)'
 - en: The posterior mean of \(n\) is close to 137.5, which is consistent with Equation
     6.134. The MAP is 132, which is one less than the analytic result, 133. But again,
     there are two values with the same probability except for floating-point errors.
   id: totrans-122
   prefs: []
   type: TYPE_NORMAL
+  zh: \(n\)的后验均值接近137.5，这与方程6.134一致。 MAP是132，比解析结果133少1。但同样，除了浮点错误外，有两个相同概率的值。
 - en: '[PRE32]'
   id: totrans-123
   prefs: []
@@ -702,11 +739,13 @@
   id: totrans-127
   prefs: []
   type: TYPE_NORMAL
+  zh: 在B的模型下，第一个间隔的数据更新了我们对\(s\)的信念，这影响了我们对`n2`的信念。
 - en: Going the other way
   id: totrans-128
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 另一种方式
 - en: 'That might not seem surprising, but there is an additional point Jaynes makes
     with this example, which is that it also works the other way around: Having seen
     `c2`, we have more information about \(s\), which means we can – and should! –
@@ -714,35 +753,43 @@
   id: totrans-129
   prefs: []
   type: TYPE_NORMAL
+  zh: 这可能看起来并不令人惊讶，但杰恩斯在这个例子中还有一个额外的观点，那就是它也可以反过来运作：看到`c2`后，我们对\(s\)有更多的信息，这意味着我们可以
+    - 而且应该！ - 回过头重新考虑我们对`n1`的结论。
 - en: We can do that by imagining we did the experiments in the opposite order, so
   id: totrans-130
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以通过想象以相反的顺序进行实验来做到这一点，所以
 - en: We’ll start again with a joint prior based on a uniform distribution for \(s\),
   id: totrans-131
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 我们将再次从基于\(s\)的均匀分布的联合先验开始，
 - en: Update it based on `c2`,
   id: totrans-132
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 基于`c2`进行更新，
 - en: Use the posterior distribution of \(s\) to form a new joint prior,
   id: totrans-133
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 使用\(s\)的后验分布形成一个新的联合先验，
 - en: Update it based on `c1`, and
   id: totrans-134
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 基于`c1`进行更新，和
 - en: Extract the marginal posterior for `n1`.
   id: totrans-135
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 提取`n1`的边际后验。
 - en: '[PRE36]'
   id: totrans-136
   prefs: []
@@ -769,6 +816,7 @@
   id: totrans-140
   prefs: []
   type: TYPE_NORMAL
+  zh: 后验均值接近131.5，这与方程6.133一致。 MAP是126，这比方程6.132的结果少1，同样是由于浮点错误。
 - en: '[PRE40]'
   id: totrans-141
   prefs: []
@@ -794,6 +842,7 @@
   id: totrans-145
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是`n1`的新分布与仅基于`c1`的原始分布的比较。
 - en: '[PRE44]'
   id: totrans-146
   prefs: []
@@ -808,22 +857,26 @@
   id: totrans-148
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/2293d73b99596e9fda0e513eab50d159e0e4e484ce95a38d399835f483c2c60e.png](../Images/88d23094b3b21dddeee94fb48d444b50.png)'
 - en: 'With the additional information from `c2`:'
   id: totrans-149
   prefs: []
   type: TYPE_NORMAL
+  zh: 有了`c2`的额外信息：
 - en: We give higher probability to large values of \(s\), so we also give higher
     probability to large values of `n1`, and
   id: totrans-150
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 我们更有可能给\(s\)的大值，因此我们也更有可能给`n1`的大值，
 - en: The width of the distribution is narrower, which shows that with more information
     about \(s\), we have more information about `n1`.
   id: totrans-151
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 分布的宽度更窄，这表明有关\(s\)的更多信息意味着我们对`n1`有更多信息。
 - en: 'This is one of several examples Jaynes uses to distinguish between “logical
     and causal dependence.” In this example, causal dependence only goes in the forward
     direction: “\(s\) is the physical cause which partially determines \(n\); and
@@ -831,12 +884,14 @@
   id: totrans-152
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是杰恩斯用来区分“逻辑和因果依赖”的几个例子之一。在这个例子中，因果依赖只朝前方向进行：“\(s\)是部分决定\(n\)的物理原因；然后\(n\)反过来是部分决定\(c\)的物理原因”。
 - en: 'Therefore, `c1` and `c2` are causally independent: if the number of particles
     counted in one interval is unusually high (or low), that does not cause the number
     of particles during any other interval to be higher or lower.'
   id: totrans-153
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，`c1`和`c2`在因果上是独立的：如果一个间隔内计数的粒子数异常高（或低），那并不会导致任何其他间隔内的粒子数更高或更低。
 - en: But if \(s\) is unknown, they are not *logically* independent. For example,
     if `c1` is lower than expected, that implies that lower values of \(s\) are more
     likely, which implies that lower values of `n2` are more likely, which implies
@@ -844,15 +899,18 @@
   id: totrans-154
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是如果\(s\)是未知的，它们在*逻辑上*并不是独立的。例如，如果`c1`低于预期，这意味着更低的\(s\)更有可能，这意味着更低的`n2`更有可能，这意味着更低的`c2`更有可能。
 - en: And, as we’ve seen, it works the other way, too. For example, if `c2` is higher
     than expected, that implies that higher values of \(s\), `n1`, and `c1` are more
     likely.
   id: totrans-155
   prefs: []
   type: TYPE_NORMAL
+  zh: 而且，正如我们所看到的，它也可以反过来。例如，如果`c2`高于预期，这意味着更高的\(s\)，`n1`和`c1`更有可能。
 - en: If you find the second result more surprising – that is, if you think it’s weird
     that `c2` changes what we believe about `n1` – that implies that you are not (yet)
     distinguishing between logical and causal dependence.
   id: totrans-156
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果您发现第二个结果更令人惊讶 - 也就是说，如果您认为`c2`改变了我们对`n1`的信念是奇怪的 - 那就意味着您（还）没有区分逻辑和因果依赖。
