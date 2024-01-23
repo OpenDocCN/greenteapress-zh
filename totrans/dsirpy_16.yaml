@@ -1,321 +1,493 @@
 - en: Getting to Philosophy
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 到达哲学
 - en: 原文：[https://allendowney.github.io/DSIRP/philosophy.html](https://allendowney.github.io/DSIRP/philosophy.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/DSIRP/philosophy.html](https://allendowney.github.io/DSIRP/philosophy.html)
 - en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/philosophy.ipynb)'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: '[单击此处在Colab上运行本章](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/philosophy.ipynb)'
 - en: Getting to Philosophy
+  id: totrans-3
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 到达哲学
 - en: 'The goal of this notebook is to develop a Web crawler that tests the “Getting
     to Philosophy” conjecture. As explained on [this Wikipedia page](https://en.wikipedia.org/wiki/Wikipedia:Getting_to_Philosophy):'
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 本笔记本的目标是开发一个Web爬虫，测试“到达哲学”猜想。如[维基百科页面](https://en.wikipedia.org/wiki/Wikipedia:Getting_to_Philosophy)上所解释的：
 - en: Clicking on the first link in the main text of an English Wikipedia article,
     and then repeating the process for subsequent articles, usually leads to the Philosophy
     article. In February 2016, this was true for 97% of all articles in Wikipedia…
+  id: totrans-5
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 单击英文维基百科文章的主文本中的第一个链接，然后重复这个过程以获取后续文章，通常会导航到哲学文章。2016年2月，这对维基百科所有文章的97%都成立……
 - en: More specifically, the link can’t be in parentheses or italics, and it can’t
     be an external link, a link to the current page, or a link to a non-existent page.
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 更具体地说，链接不能在括号或斜体中，并且不能是外部链接，指向当前页面的链接或指向不存在页面的链接。
 - en: We’ll use the `urllib` library to download Wikipedia pages and BeautifulSoup
     to parse HTML text and navigate the Document Object Model (DOM).
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将使用`urllib`库下载维基百科页面，并使用BeautifulSoup解析HTML文本并导航文档对象模型（DOM）。
 - en: Before we start working with Wikipedia pages, let’s warm up with a minimal HTML
     document, which I’ve adapted from the BeautifulSoup documentation.
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 在开始处理维基百科页面之前，让我们先用一个最小的HTML文档热身，我从BeautifulSoup文档中改编而来。
 - en: '[PRE0]'
+  id: totrans-9
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: This document contains three links, but the first one is in parentheses and
     the second is in italics, so the third is the link we would follow to get to philosophy.
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个文档包含三个链接，但第一个在括号中，第二个是斜体，所以第三个是我们将要跟随的链接，以到达哲学。
 - en: Here’s how we parse this document and make a `BeautifulSoup` object.
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是我们如何解析这个文档并制作一个`BeautifulSoup`对象。
 - en: '[PRE1]'
+  id: totrans-12
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '[PRE2]'
+  id: totrans-13
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: 'To iterate through the elements in the DOM, we can write our own implementation
     of depth first search, like this:'
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 要遍历DOM中的元素，我们可以编写自己的深度优先搜索实现，就像这样：
 - en: '[PRE3]'
+  id: totrans-15
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: 'For example, we can iterate through the elements and print all `NavigableString`
     elements:'
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，我们可以遍历元素并打印所有`NavigableString`元素：
 - en: '[PRE4]'
+  id: totrans-17
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '[PRE5]'
+  id: totrans-18
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: But we can also use `descendants`, which does the same thing.
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 但我们也可以使用`descendants`，它的功能相同。
 - en: '[PRE6]'
+  id: totrans-20
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '[PRE7]'
+  id: totrans-21
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: Checking for Parentheses
+  id: totrans-22
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 检查括号
 - en: One theory of software development suggests you should tackle the hardest problem
     first, because it will drive the design. Then you can figure out how to handle
     the easier problems.
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: 软件开发的一个理论认为，你应该先解决最难的问题，因为它会推动设计。然后你可以想出如何处理更容易的问题。
 - en: For “Getting to Philosophy”, one of the harder problems is to figure out whether
     a link is in parentheses. If you have a link, you could work your way outward
     looking for enclosing parentheses, but in a tree, that could get complicated.
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于“到达哲学”，其中一个更难的问题是弄清楚链接是否在括号中。如果你有一个链接，你可以一直向外寻找括号，但在树中，这可能会变得复杂。
 - en: The alternative I chose is to iterate through the text in order, counting open
     and close parentheses, and yield links only if they are not enclosed.
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 我选择的另一种方法是按顺序遍历文本，计算开放和关闭括号，并仅在它们没有被包含时产生链接。
 - en: '[PRE8]'
+  id: totrans-26
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: Now we can iterate through the links that are not in parentheses.
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以遍历不在括号中的链接。
 - en: '[PRE9]'
+  id: totrans-28
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '[PRE10]'
+  id: totrans-29
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: Checking for Italics
+  id: totrans-30
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 检查斜体
 - en: 'To see whether a link is in italics, we can:'
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 要查看链接是否为斜体，我们可以：
 - en: If its parent is a `Tag` with name `a`, it’s in italics.
+  id: totrans-32
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如果其父级是名称为`a`的`Tag`，它就是斜体。
 - en: Otherwise we have to check the parent of the parent, and so on.
+  id: totrans-33
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 否则，我们必须检查父级的父级，依此类推。
 - en: If we get to the root without finding an italics tag, it’s not in italics.
+  id: totrans-34
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如果我们到达根节点而没有找到斜体标签，那么它就不是斜体。
 - en: For example, here’s the first link from `link_generator`.
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，这是从`link_generator`中获取的第一个链接。
 - en: '[PRE11]'
+  id: totrans-36
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: '[PRE12]'
+  id: totrans-37
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: Its parent is an italics tag.
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 它的父标签是斜体标签。
 - en: '[PRE13]'
+  id: totrans-39
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: '[PRE14]'
+  id: totrans-40
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '[PRE15]'
+  id: totrans-41
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '[PRE16]'
+  id: totrans-42
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '**Exercise:** Write a function called `in_italics` that takes an element and
     returns `True` if it is in italics.'
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**编写一个名为`in_italics`的函数，它接受一个元素并在它是斜体时返回`True`。'
 - en: 'Then write a more general function called `in_bad_element` that takes an element
     and returns `True` if:'
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后编写一个更通用的函数，名为`in_bad_element`，它接受一个元素并在以下情况下返回`True`：
 - en: The element or one of its ancestors has a “bad” tag name, like `i`, or
+  id: totrans-45
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 元素或其祖先之一具有“不良”标签名称，如`i`，或
 - en: The element or one of its ancestors is a `div` whose `class` attribute contains
     a “bad” class name.
+  id: totrans-46
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 元素或其祖先之一是一个`div`，其`class`属性包含“不良”类名。
 - en: We will need the general version of this function to exclude invalid links on
     Wikipedia pages.
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将需要这个函数的一般版本来排除维基百科页面上的无效链接。
 - en: Working with Wikipedia Pages
+  id: totrans-48
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 与维基百科页面一起工作
 - en: Actual Wikipedia pages are more complicated that the simple example, so it will
     take some effort to understand their structure and make sure we select the right
     “first link”.
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: 实际的维基百科页面比简单的示例更复杂，因此需要一些努力来理解它们的结构，并确保我们选择正确的“第一个链接”。
 - en: The following cell downloads the Wikipedia page on Python.
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下单元格下载了Python的维基百科页面。
 - en: '[PRE17]'
+  id: totrans-51
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: '[PRE18]'
+  id: totrans-52
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: Now we can parse it and make `soup`.
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以解析它并制作`soup`。
 - en: '[PRE19]'
+  id: totrans-54
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: If you use a web browser to view this page, and use the Inspect Element tool
     to explore the structure, you’ll see that the body of the article is in a `div`
     element with the class name `mw-body-content`.
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果您使用Web浏览器查看此页面，并使用检查元素工具来探索结构，您会看到文章的正文部分在一个带有类名`mw-body-content`的`div`元素中。
 - en: We can use `find` to get this element, and we’ll use it as the root for our
     searches.
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用`find`来获取这个元素，并将其用作我们搜索的根。
 - en: '[PRE20]'
+  id: totrans-57
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '**Exercise:** Write a generator function called `valid_link_generator` that
     uses `link_generator` to find links that are not in parentheses; then it should
     filter out links that are not valid, including links that are in italics, links
     to external pages, etc.'
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**编写一个名为“valid_link_generator”的生成器函数，它使用“link_generator”来查找不在括号中的链接；然后它应该过滤掉无效的链接，包括斜体链接，外部页面的链接等。'
 - en: Test your function with a few different pages until it reliably finds the “first
     link” that seems most consistent with the spirit of the rules.
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用不同的页面测试您的函数，直到它可靠地找到似乎最符合规则精神的“第一个链接”。
 - en: '`WikiFetcher`'
+  id: totrans-60
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: '`WikiFetcher`'
 - en: 'When you write a Web crawler, it is easy to download too many pages too fast,
     which might violate the terms of service for the server you are downloading from.
     To avoid that, we’ll use an object called `WikiFetcher` that does two things:'
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: 当您编写Web爬虫时，很容易下载太多的页面太快，这可能违反您正在下载的服务器的服务条款。为了避免这种情况，我们将使用一个名为“WikiFetcher”的对象，它有两个作用：
 - en: It encapsulates the code for downloading and parsing web pages.
+  id: totrans-62
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 它封装了下载和解析网页的代码。
 - en: It measures the time between requests and, if we don’t leave enough time between
     requests, it sleeps until a reasonable interval has elapsed. By default, the interval
     is one second.
+  id: totrans-63
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 它测量请求之间的时间，如果我们在请求之间没有留足够的时间，它会休眠，直到合理的间隔时间过去。默认情况下，间隔是一秒。
 - en: 'Here’s the definition of `WikiFetcher`:'
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是“WikiFetcher”的定义：
 - en: '[PRE21]'
+  id: totrans-65
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: '`fetch_wikipedia` takes a URL as a `String` and returns a BeautifulSoup object
     that represents the contents of the page.'
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: '`fetch_wikipedia`接受一个URL作为`String`，并返回一个代表页面内容的BeautifulSoup对象。'
 - en: '`sleep_if_needed` checks the time since the last request and sleeps if the
     elapsed time is less than `min_interval`.'
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: '`sleep_if_needed`检查自上次请求以来的时间，并在经过的时间少于`min_interval`时休眠。'
 - en: 'Here’s an example that demonstrates how it’s used:'
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是一个演示它如何使用的示例：
 - en: '[PRE22]'
+  id: totrans-69
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: '[PRE23]'
+  id: totrans-70
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: 'If things have gone according to plan, the three timestamps should be no less
     than 1 second apart, which is consistent with the terms in Wikipedia’s [robots.txt](https://en.wikipedia.org/robots.txt):'
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果一切按计划进行，三个时间戳的间隔不应少于1秒，这与维基百科的[robots.txt](https://en.wikipedia.org/robots.txt)中的条款一致：
 - en: Friendly, low-speed bots are welcome viewing article pages, but not dynamically-generated
     pages please.
+  id: totrans-72
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 欢迎友好、低速的机器人查看文章页面，但请勿查看动态生成的页面。
 - en: '**Exercise:** Now let’s pull it all together. Write a function called `get_to_philosophy`
     that takes as a parameter the URL of a Wikipedia page. It should:'
+  id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**现在让我们把所有东西都整合起来。编写一个名为“get_to_philosophy”的函数，它以维基百科页面的URL作为参数。它应该：'
 - en: Use the `WikiFetcher` object we just created to download and parse the page.
+  id: totrans-74
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 使用我们刚刚创建的“WikiFetcher”对象来下载和解析页面。
 - en: Traverse the resulting `BeautifulSoup` object to find the first valid link according
     to the spirit of the rules.
+  id: totrans-75
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 遍历生成的“BeautifulSoup”对象，以找到符合规则精神的第一个有效链接。
 - en: If the page has no links, or if the first link is a page we have already seen,
     the program should indicate failure and exit.
+  id: totrans-76
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如果页面没有链接，或者第一个链接是我们已经看过的页面，程序应该指示失败并退出。
 - en: If the link matches the URL of the Wikipedia page on philosophy, the program
     should indicate success and exit.
+  id: totrans-77
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如果链接与维基百科哲学页面的URL匹配，程序应该指示成功并退出。
 - en: Otherwise it should go back to Step 1 (although you might want to put a limit
     on the number of hops).
+  id: totrans-78
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 否则，它应该回到步骤1（尽管您可能希望对跳数设置限制）。
 - en: The program should build a list of the URLs it visits and display the results
     at the end (whether it succeeds or fails).
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: 程序应该构建一个它访问的URL列表，并在最后显示结果（无论成功与否）。
 - en: 'Since the links you find are relative, you might find the `urljoin` function
     helpful:'
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 由于您找到的链接是相对的，您可能会发现“urljoin”函数有用：
 - en: '[PRE24]'
+  id: totrans-81
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: '[PRE25]'
+  id: totrans-82
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: '[PRE26]'
+  id: totrans-83
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: '[PRE27]'
+  id: totrans-84
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: '[PRE28]'
+  id: totrans-85
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'

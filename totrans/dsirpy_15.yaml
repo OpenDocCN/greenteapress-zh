@@ -3,21 +3,25 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 哈夫曼编码
 - en: 原文：[https://allendowney.github.io/DSIRP/huffman.html](https://allendowney.github.io/DSIRP/huffman.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/DSIRP/huffman.html](https://allendowney.github.io/DSIRP/huffman.html)
 - en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/huffman.ipynb)'
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: '[点击此处在Colab上运行本章](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/huffman.ipynb)'
 - en: 'A [Huffman code](https://en.wikipedia.org/wiki/Huffman_coding) is a “type of
     optimal prefix code that is commonly used for lossless data compression”. There
     are three parts of that definition we have to unpack: “code”, “prefix”, and “optimal”.'
   id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 哈夫曼编码是一种“常用于无损数据压缩的最佳前缀编码”。“代码”，“前缀”和“最佳”是该定义的三个部分，我们必须解开。
 - en: In this context, a “code” is a mapping from symbols to bit strings. For example,
     [ASCII](https://en.wikipedia.org/wiki/ASCII) is a character encoding that maps
     from characters (like letters, numbers, and punctuation) to seven-bit integers.
@@ -26,29 +30,34 @@
   id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这种情况下，“代码”是从符号到比特串的映射。例如，[ASCII](https://en.wikipedia.org/wiki/ASCII)是一种字符编码，将字符（如字母、数字和标点符号）映射到七位整数。由于所有ASCII比特串的长度相同，它是一个“固定长度代码”，与哈夫曼代码相对应的是“可变长度代码”。
 - en: 'In order to decode something encoded in a variable-length code, there has to
     be some way to figure out where one bit string ends and the next begins. In general,
     there are three ways to solve this problem:'
   id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了解码使用可变长度代码编码的内容，必须有一种方法来确定一个比特串的结束和下一个比特串的开始。一般来说，有三种解决这个问题的方法：
 - en: One option is to begin each bit string with a special sequence that indicates
     its length. This is [how Unicode works](https://stackoverflow.com/questions/1543613/how-does-utf-8-variable-width-encoding-work).
   id: totrans-6
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 一个选择是在每个比特串的开头使用一个特殊的序列来指示其长度。这是[Unicode的工作原理](https://stackoverflow.com/questions/1543613/how-does-utf-8-variable-width-encoding-work)。
 - en: Another option is to end each bit string with a special sequence that marks
     the end.
   id: totrans-7
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 另一个选择是在每个比特串的末尾使用一个特殊的序列来标记结束。
 - en: The third option is to use a “prefix code”, which is how Huffman codes work.
   id: totrans-8
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 第三种选择是使用“前缀码”，这就是哈夫曼编码的工作原理。
 - en: A prefix code is a code where no whole bit string in the code is a prefix of
     any bit string in the code. If a code has this property, we can decode it by reading
     bits one at a time and checking to see whether we have completed a valid bit string.
@@ -57,10 +66,12 @@
   id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 前缀码是一种代码，其中代码中的整个比特串不是代码中任何比特串的前缀。如果一个代码具有这个属性，我们可以逐位读取比特并检查是否已经完成了有效的比特串。如果是这样，我们知道我们已经到达了比特串的末尾，因为它不能是另一个比特串的前缀。
 - en: 'For example, the following is a prefix code with only three symbols:'
   id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，以下是一个只有三个符号的前缀码：
 - en: '[PRE0]'
   id: totrans-11
   prefs: []
@@ -71,6 +82,7 @@
   id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个代码中，我们可以使用比特串`101001`对字符串`xyz`进行编码，并且我们可以在没有歧义的情况下解码结果。
 - en: So that’s what it means to say that a Huffman code is a prefix code; finally,
     Huffman codes are “optimal” in the sense that they give short codes to the most
     common symbols and longer codes to the least common symbols. The result is that
@@ -78,16 +90,19 @@
   id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是说哈夫曼编码是前缀码的含义；最后，哈夫曼编码在这样的意义上是“最佳的”，它为最常见的符号提供了短代码，为最不常见的符号提供了长代码。结果是，它最小化了编码一系列符号所需的平均比特数。
 - en: However, in order to achieve this feat, we have to know the relative frequencies
     of the symbols. One way to do that is to start with a “corpus”, which is a text
     that contains the symbols in the proportions we expect for the text we will encode.
   id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 然而，为了实现这一壮举，我们必须知道符号的相对频率。做到这一点的一种方法是从一个“语料库”开始，这是一个包含我们期望的文本中的符号比例的文本。
 - en: As an example, I’ll use the text from the [Huffman code Wikipedia page](https://en.wikipedia.org/wiki/Huffman_coding).
   id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 举个例子，我将使用来自[Huffman code Wikipedia page](https://en.wikipedia.org/wiki/Huffman_coding)的文本。
 - en: '[PRE1]'
   id: totrans-16
   prefs: []
@@ -98,6 +113,7 @@
   id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用`Counter`来计算文本中每个符号出现的次数。
 - en: '[PRE2]'
   id: totrans-18
   prefs: []
@@ -114,11 +130,13 @@
   id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们看看如何使用这些计数来构建一个哈夫曼编码。第一步是构建一个哈夫曼树，这是一棵二叉树，其中每个节点都包含一个计数，有些节点包含符号。
 - en: To make a Huffman tree, we start with a sequence of nodes, one for each symbol.
     To represent nodes, I’ll use a `namedtuple`.
   id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 要制作一个哈夫曼树，我们从一个节点序列开始，每个符号一个节点。为了表示节点，我将使用一个`namedtuple`。
 - en: '[PRE4]'
   id: totrans-22
   prefs: []
@@ -129,6 +147,7 @@
   id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，这是一个代表符号`a`的节点，计数为`4`。由于这个节点没有子节点，它是一个叶节点。
 - en: '[PRE5]'
   id: totrans-24
   prefs: []
@@ -143,6 +162,7 @@
   id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是另一个代表符号`n`及其计数的叶节点。
 - en: '[PRE7]'
   id: totrans-27
   prefs: []
@@ -158,6 +178,7 @@
   id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们使用`namedtuple`的一个原因是它的行为类似于元组，因此如果我们比较两个`Node`对象，我们会得到类似元组的排序顺序。
 - en: '[PRE9]'
   id: totrans-30
   prefs: []
@@ -173,15 +194,18 @@
   id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果两个节点具有相同的`count`，它们将按字母顺序排序。
 - en: Making trees
   id: totrans-33
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 制作树
 - en: 'Given these two leaf nodes, we can make a tree like this:'
   id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 给定这两个叶节点，我们可以制作这样的树：
 - en: '[PRE11]'
   id: totrans-35
   prefs: []
@@ -199,6 +223,7 @@
   id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 因为`root`有子节点，它不是一个叶节点；它是一个内部节点。在哈夫曼树中，内部节点不代表符号，所以我将`letter`设置为空字符`\0`。内部节点的计数是其子节点的计数之和。
 - en: 'Now, to build a Huffman tree, we’ll start with a collection of nodes, one for
     each symbol, and build the tree “bottom up” by following these steps:'
   id: totrans-38
