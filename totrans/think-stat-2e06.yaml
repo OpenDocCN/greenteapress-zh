@@ -1,13 +1,16 @@
 - en: Chapter 5  Modeling distributions
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
 - en: 原文：[https://greenteapress.com/thinkstats2/html/thinkstats2006.html](https://greenteapress.com/thinkstats2/html/thinkstats2006.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: The distributions we have used so far are called empirical distributions because
     they are based on empirical observations, which are necessarily finite samples.
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
 - en: The alternative is an analytic distribution, which is characterized by a CDF
@@ -15,101 +18,126 @@
     distributions. In this context, a model is a simplification that leaves out unneeded
     details. This chapter presents common analytic distributions and uses them to
     model data from a variety of sources.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
 - en: The code for this chapter is in `analytic.py`. For information about downloading
     and working with this code, see Section [0.2](thinkstats2001.html#code).
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
 - en: 5.1  The exponential distribution
+  id: totrans-5
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-6
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-7
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/309868cbc0a1f2504792e668b09a6b49.png)'
+  id: totrans-8
   prefs:
   - PREF_BQ
   type: TYPE_IMG
 - en: ''
+  id: totrans-9
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 5.1: CDFs of exponential distributions with various parameters. |'
+  id: totrans-10
   prefs:
   - PREF_BQ
   type: TYPE_TB
 - en: ''
+  id: totrans-11
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-12
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: I’ll start with the exponential distribution because it is relatively simple.
     The CDF of the exponential distribution is
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
 - en: '| CDF(x) = 1 − e^(−λ x)  |'
+  id: totrans-14
   prefs: []
   type: TYPE_TB
 - en: The parameter, λ, determines the shape of the distribution. Figure [5.1](#analytic_expo_cdf)
     shows what this CDF looks like with λ = 0.5, 1, and 2.
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
 - en: In the real world, exponential distributions come up when we look at a series
     of events and measure the times between events, called interarrival times. If
     the events are equally likely to occur at any time, the distribution of interarrival
     times tends to look like an exponential distribution.
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
 - en: As an example, we will look at the interarrival time of births. On December
     18, 1997, 44 babies were born in a hospital in Brisbane, Australia.^([1](#note1))
     The time of birth for all 44 babies was reported in the local paper; the complete
     dataset is in a file called `babyboom.dat`, in the `ThinkStats2` repository.
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE0]'
+  id: totrans-18
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '`ReadBabyBoom` reads the data file and returns a DataFrame with columns `time`,
     `sex`, `weight_g`, and `minutes`, where `minutes` is time of birth converted to
     minutes since midnight.'
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-20
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-21
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/fa0286875c3a1a7b8215c1ff627d9171.png)'
+  id: totrans-22
   prefs:
   - PREF_BQ
   type: TYPE_IMG
 - en: ''
+  id: totrans-23
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 5.2: CDF of interarrival times (left) and CCDF on a log-y scale (right).
     |'
+  id: totrans-24
   prefs:
   - PREF_BQ
   type: TYPE_TB
 - en: ''
+  id: totrans-25
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-26
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
@@ -117,36 +145,46 @@
     distribution of these interarrival times. Figure [5.2](#analytic_interarrival_cdf)
     (left) shows the CDF. It seems to have the general shape of an exponential distribution,
     but how can we tell?'
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
 - en: One way is to plot the complementary CDF, which is 1 − CDF(x), on a log-y scale.
     For data from an exponential distribution, the result is a straight line. Let’s
     see why that works.
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
 - en: 'If you plot the complementary CDF (CCDF) of a dataset that you think is exponential,
     you expect to see a function like:'
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
 - en: '| y ≈ e^(−λ x)  |'
+  id: totrans-30
   prefs: []
   type: TYPE_TB
 - en: 'Taking the log of both sides yields:'
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
 - en: '| logy ≈ −λ x |'
+  id: totrans-32
   prefs: []
   type: TYPE_TB
 - en: 'So on a log-y scale the CCDF is a straight line with slope −λ. Here’s how we
     can generate a plot like that:'
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE1]'
+  id: totrans-34
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: With the argument `complement=True`, `thinkplot.Cdf` computes the complementary
     CDF before plotting. And with `yscale='log'`, `thinkplot.Show` sets the `y` axis
     to a logarithmic scale.
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
 - en: Figure [5.2](#analytic_interarrival_cdf) (right) shows the result. It is not
@@ -155,51 +193,68 @@
     likely at any time of day—is not exactly true. Nevertheless, it might be reasonable
     to model this dataset with an exponential distribution. With that simplification,
     we can summarize the distribution with a single parameter.
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
 - en: The parameter, λ, can be interpreted as a rate; that is, the number of events
     that occur, on average, in a unit of time. In this example, 44 babies are born
     in 24 hours, so the rate is λ = 0.0306 births per minute. The mean of an exponential
     distribution is 1/λ, so the mean time between births is 32.7 minutes.
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
 - en: 5.2  The normal distribution
+  id: totrans-38
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 5.2 正态分布
 - en: The normal distribution, also called Gaussian, is commonly used because it describes
     many phenomena, at least approximately. It turns out that there is a good reason
     for its ubiquity, which we will get to in Section [14.4](thinkstats2015.html#CLT).
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 正态分布，也称为高斯分布，通常被使用，因为它至少近似地描述了许多现象。事实证明，它之所以如此普遍，是有充分的理由的，我们将在第[14.4](thinkstats2015.html#CLT)节中讨论。
 - en: '* * *'
+  id: totrans-40
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
+  id: totrans-41
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/f6d2a67a8fedb8bc39d853942c502bfc.png)'
+  id: totrans-42
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/f6d2a67a8fedb8bc39d853942c502bfc.png)'
 - en: ''
+  id: totrans-43
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 5.3: CDF of normal distributions with a range of parameters. |'
+  id: totrans-44
   prefs:
   - PREF_BQ
   type: TYPE_TB
+  zh: '| 图5.3：具有一系列参数的正态分布的CDF。|'
 - en: ''
+  id: totrans-45
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-46
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: 'The normal distribution is characterized by two parameters: the mean, µ, and
     standard deviation σ. The normal distribution with µ=0 and σ=1 is called the standard
     normal distribution. Its CDF is defined by an integral that does not have a closed
@@ -207,200 +262,274 @@
     is provided by SciPy: `scipy.stats.norm` is an object that represents a normal
     distribution; it provides a method, `cdf`, that evaluates the standard normal
     CDF:'
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 正态分布由两个参数来表征：均值µ和标准差σ。当µ=0且σ=1时的正态分布称为标准正态分布。它的CDF由一个没有封闭形式解的积分定义，但有一些能够有效评估的算法。其中一个由SciPy提供：`scipy.stats.norm`是表示正态分布的对象；它提供一个方法`cdf`来评估标准正态分布的CDF：
 - en: '[PRE2]'
+  id: totrans-48
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: 'This result is correct: the median of the standard normal distribution is 0
     (the same as the mean), and half of the values fall below the median, so CDF(0)
     is 0.5.'
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个结果是正确的：标准正态分布的中位数是0（与均值相同），一半的值落在中位数以下，所以CDF(0)是0.5。
 - en: '`norm.cdf` takes optional parameters: `loc`, which specifies the mean, and
     `scale`, which specifies the standard deviation.'
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: '`norm.cdf`接受可选参数：`loc`，指定均值，和`scale`，指定标准差。'
 - en: '`thinkstats2` makes this function a little easier to use by providing `EvalNormalCdf`,
     which takes parameters `mu` and `sigma` and evaluates the CDF at `x`:'
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: '`thinkstats2`通过提供`EvalNormalCdf`函数使这个函数更容易使用，它接受参数`mu`和`sigma`并在`x`处评估CDF：'
 - en: '[PRE3]'
+  id: totrans-52
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: Figure [5.3](#analytic_gaussian_cdf) shows CDFs for normal distributions with
     a range of parameters. The sigmoid shape of these curves is a recognizable characteristic
     of a normal distribution.
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: 图[5.3](#analytic_gaussian_cdf)显示了具有一系列参数的正态分布的CDF。这些曲线的S形是正态分布的一个可识别的特征。
 - en: In the previous chapter we looked at the distribution of birth weights in the
     NSFG. Figure [5.4](#analytic_birthwgt_model) shows the empirical CDF of weights
     for all live births and the CDF of a normal distribution with the same mean and
     variance.
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: 在前一章中，我们看了NSFG中出生体重的分布。图[5.4](#analytic_birthwgt_model)显示了所有活产婴儿体重的经验CDF和具有相同均值和方差的正态分布的CDF。
 - en: '* * *'
+  id: totrans-55
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
+  id: totrans-56
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/7598133038205b0f9e8e58c098a6e89e.png)'
+  id: totrans-57
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/7598133038205b0f9e8e58c098a6e89e.png)'
 - en: ''
+  id: totrans-58
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 5.4: CDF of birth weights with a normal model. |'
+  id: totrans-59
   prefs:
   - PREF_BQ
   type: TYPE_TB
+  zh: '| 图5.4：具有正态模型的出生体重的CDF。|'
 - en: ''
+  id: totrans-60
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-61
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: The normal distribution is a good model for this dataset, so if we summarize
     the distribution with the parameters µ = 7.28 and σ = 1.24, the resulting error
     (difference between the model and the data) is small.
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: 正态分布是这个数据集的一个很好的模型，所以如果我们用参数µ = 7.28和σ = 1.24来总结分布，得到的误差（模型和数据之间的差异）很小。
 - en: Below the 10th percentile there is a discrepancy between the data and the model;
     there are more light babies than we would expect in a normal distribution. If
     we are specifically interested in preterm babies, it would be important to get
     this part of the distribution right, so it might not be appropriate to use the
     normal model.
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 在第10个百分位以下，数据和模型之间存在差异；在正态分布中，有比我们预期更多的轻体重婴儿。如果我们特别关注早产婴儿，准确把握分布的这一部分将是很重要的，因此使用正态模型可能不合适。
 - en: 5.3  Normal probability plot
+  id: totrans-64
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 5.3 正态概率图
 - en: For the exponential distribution, and a few others, there are simple transformations
     we can use to test whether an analytic distribution is a good model for a dataset.
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于指数分布和其他一些分布，我们可以使用简单的转换来测试解析分布是否是数据集的一个好模型。
 - en: 'For the normal distribution there is no such transformation, but there is an
     alternative called a normal probability plot. There are two ways to generate a
     normal probability plot: the hard way and the easy way. If you are interested
     in the hard way, you can read about it at [https://en.wikipedia.org/wiki/Normal_probability_plot](https://en.wikipedia.org/wiki/Normal_probability_plot).
     Here’s the easy way:'
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于正态分布，没有这样的转换，但有一种叫做正态概率图的替代方法。生成正态概率图有两种方法：困难的方法和简单的方法。如果你对困难的方法感兴趣，可以在[https://en.wikipedia.org/wiki/Normal_probability_plot](https://en.wikipedia.org/wiki/Normal_probability_plot)上阅读相关内容。以下是简单的方法：
 - en: Sort the values in the sample.
+  id: totrans-67
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 对样本中的值进行排序。
 - en: From a standard normal distribution (µ=0 and σ=1), generate a random sample
     with the same size as the sample, and sort it.
+  id: totrans-68
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 从标准正态分布（µ=0且σ=1）中生成一个与样本大小相同的随机样本，并对其进行排序。
 - en: Plot the sorted values from the sample versus the random values.
+  id: totrans-69
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 绘制样本中排序后的值与随机值的图。
 - en: 'If the distribution of the sample is approximately normal, the result is a
     straight line with intercept `mu` and slope `sigma`. `thinkstats2` provides `NormalProbability`,
     which takes a sample and returns two NumPy arrays:'
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果样本的分布近似正态，结果将是一条具有截距`mu`和斜率`sigma`的直线。`thinkstats2`提供了`NormalProbability`，它接受一个样本并返回两个NumPy数组：
 - en: '[PRE4]'
+  id: totrans-71
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '* * *'
+  id: totrans-72
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
+  id: totrans-73
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/80cc141dcbf185aad2e625bd21eae50a.png)'
+  id: totrans-74
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/80cc141dcbf185aad2e625bd21eae50a.png)'
 - en: ''
+  id: totrans-75
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 5.5: Normal probability plot for random samples from normal distributions.
     |'
+  id: totrans-76
   prefs:
   - PREF_BQ
   type: TYPE_TB
+  zh: '| 图5.5：来自正态分布的随机样本的正态概率图。|'
 - en: ''
+  id: totrans-77
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-78
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: '`ys` contains the sorted values from `sample`; `xs` contains the random values
     from the standard normal distribution.'
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: '`ys`包含了从`sample`中排序后的值；`xs`包含了来自标准正态分布的随机值。'
 - en: To test `NormalProbability` I generated some fake samples that were actually
     drawn from normal distributions with various parameters. Figure [5.5](#analytic_normal_prob_example)
     shows the results. The lines are approximately straight, with values in the tails
     deviating more than values near the mean.
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
 - en: Now let’s try it with real data. Here’s code to generate a normal probability
     plot for the birth weight data from the previous section. It plots a gray line
     that represents the model and a blue line that represents the data.
+  id: totrans-81
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE5]'
+  id: totrans-82
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '`weights` is a pandas Series of birth weights; `mean` and `std` are the mean
     and standard deviation.'
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
 - en: '`FitLine` takes a sequence of `xs`, an intercept, and a slope; it returns `fxs`
     and `fys` that represent a line with the given parameters, evaluated at the values
     in `xs`.'
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
 - en: '`NormalProbability` returns `xs` and `ys` that contain values from the standard
     normal distribution and values from `weights`. If the distribution of weights
     is normal, the data should match the model.'
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-86
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-87
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/28feaf05f70cf87a3dfe8f06180ddf9d.png)'
+  id: totrans-88
   prefs:
   - PREF_BQ
   type: TYPE_IMG
 - en: ''
+  id: totrans-89
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 5.6: Normal probability plot of birth weights. |'
+  id: totrans-90
   prefs:
   - PREF_BQ
   type: TYPE_TB
 - en: ''
+  id: totrans-91
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-92
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
@@ -408,61 +537,75 @@
     and also for full term births (pregnancy length greater than 36 weeks). Both curves
     match the model near the mean and deviate in the tails. The heaviest babies are
     heavier than what the model expects, and the lightest babies are lighter.
+  id: totrans-93
   prefs: []
   type: TYPE_NORMAL
 - en: When we select only full term births, we remove some of the lightest weights,
     which reduces the discrepancy in the lower tail of the distribution.
+  id: totrans-94
   prefs: []
   type: TYPE_NORMAL
 - en: This plot suggests that the normal model describes the distribution well within
     a few standard deviations from the mean, but not in the tails. Whether it is good
     enough for practical purposes depends on the purposes.
+  id: totrans-95
   prefs: []
   type: TYPE_NORMAL
 - en: 5.4  The lognormal distribution
+  id: totrans-96
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: If the logarithms of a set of values have a normal distribution, the values
     have a lognormal distribution. The CDF of the lognormal distribution is the same
     as the CDF of the normal distribution, with logx substituted for x.
+  id: totrans-97
   prefs: []
   type: TYPE_NORMAL
 - en: '| CDF[lognormal](x) = CDF[normal](logx) |'
+  id: totrans-98
   prefs: []
   type: TYPE_TB
 - en: The parameters of the lognormal distribution are usually denoted µ and σ. But
     remember that these parameters are *not* the mean and standard deviation; the
     mean of a lognormal distribution is exp(µ +σ²/2) and the standard deviation is
     ugly (see [http://wikipedia.org/wiki/Log-normal_distribution](http://wikipedia.org/wiki/Log-normal_distribution)).
+  id: totrans-99
   prefs: []
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-100
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-101
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/fabbcf82db90a3bd3f8ef108aa7836ef.png)'
+  id: totrans-102
   prefs:
   - PREF_BQ
   type: TYPE_IMG
 - en: ''
+  id: totrans-103
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 5.7: CDF of adult weights (left); CDF of logarithms adult weights
     (right). |'
+  id: totrans-104
   prefs:
   - PREF_BQ
   type: TYPE_TB
 - en: ''
+  id: totrans-105
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-106
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
@@ -470,10 +613,12 @@
     the result will have the characteristic shape of a normal distribution. To test
     how well the sample fits a lognormal model, you can make a normal probability
     plot using the log of the values in the sample.
+  id: totrans-107
   prefs: []
   type: TYPE_NORMAL
 - en: As an example, let’s look at the distribution of adult weights, which is approximately
     lognormal.^([2](#note2))
+  id: totrans-108
   prefs: []
   type: TYPE_NORMAL
 - en: The National Center for Chronic Disease Prevention and Health Promotion conducts
@@ -481,39 +626,48 @@
     In 2008, they interviewed 414,509 respondents and asked about their demographics,
     health, and health risks. Among the data they collected are the weights in kilograms
     of 398,484 respondents.
+  id: totrans-109
   prefs: []
   type: TYPE_NORMAL
 - en: The repository for this book contains `CDBRFS08.ASC.gz`, a fixed-width ASCII
     file that contains data from the BRFSS, and `brfss.py`, which reads the file and
     analyzes the data.
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-111
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-112
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/50957af740795a75877b0522e4657b69.png)'
+  id: totrans-113
   prefs:
   - PREF_BQ
   type: TYPE_IMG
 - en: ''
+  id: totrans-114
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 5.8: Normal probability plots for adult weight on a linear scale (left)
     and log scale (right). |'
+  id: totrans-115
   prefs:
   - PREF_BQ
   type: TYPE_TB
 - en: ''
+  id: totrans-116
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-117
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
@@ -522,15 +676,18 @@
     same distribution on a log scale with a lognormal model. The lognormal model is
     a better fit, but this representation of the data does not make the difference
     particularly dramatic.
+  id: totrans-118
   prefs: []
   type: TYPE_NORMAL
 - en: Figure [5.8](#brfss_weight_normal) shows normal probability plots for adult
     weights, w, and for their logarithms, log[10] w. Now it is apparent that the data
     deviate substantially from the normal model. On the other hand, the lognormal
     model is a good match for the data.
+  id: totrans-119
   prefs: []
   type: TYPE_NORMAL
 - en: 5.5  The Pareto distribution
+  id: totrans-120
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -539,171 +696,220 @@
     Since then, it has been used to describe phenomena in the natural and social sciences
     including sizes of cities and towns, sand particles and meteorites, forest fires
     and earthquakes.
+  id: totrans-121
   prefs: []
   type: TYPE_NORMAL
 - en: 'The CDF of the Pareto distribution is:'
+  id: totrans-122
   prefs: []
   type: TYPE_NORMAL
 - en: '| CDF(x) = 1 −  | ⎛ ⎜'
+  id: totrans-123
   prefs: []
   type: TYPE_NORMAL
 - en: ⎜
+  id: totrans-124
   prefs: []
   type: TYPE_NORMAL
 - en: ⎝ |
+  id: totrans-125
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124; x &#124;'
+  id: totrans-126
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124;  &#124;'
+  id: totrans-127
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124; x[m] &#124;'
+  id: totrans-128
   prefs: []
   type: TYPE_NORMAL
 - en: '|   | ⎞ ⎟'
+  id: totrans-129
   prefs: []
   type: TYPE_NORMAL
 - en: ⎟
+  id: totrans-130
   prefs: []
   type: TYPE_NORMAL
 - en: ⎠ |
+  id: totrans-131
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124; −α &#124;'
+  id: totrans-132
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124;    &#124;'
+  id: totrans-133
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124;   &#124;'
+  id: totrans-134
   prefs: []
   type: TYPE_NORMAL
 - en: '|   |'
+  id: totrans-135
   prefs: []
   type: TYPE_TB
 - en: The parameters x[m] and α determine the location and shape of the distribution.
     x[m] is the minimum possible value. Figure[5.9](#analytic_pareto_cdf) shows CDFs
     of Pareto distributions with x[m] = 0.5 and different values of α.
+  id: totrans-136
   prefs: []
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-137
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-138
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/5c0072d316d2a3827927d1332b6b918e.png)'
+  id: totrans-139
   prefs:
   - PREF_BQ
   type: TYPE_IMG
 - en: ''
+  id: totrans-140
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 5.9: CDFs of Pareto distributions with different parameters. |'
+  id: totrans-141
   prefs:
   - PREF_BQ
   type: TYPE_TB
 - en: ''
+  id: totrans-142
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-143
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: 'There is a simple visual test that indicates whether an empirical distribution
     fits a Pareto distribution: on a log-log scale, the CCDF looks like a straight
     line. Let’s see why that works.'
+  id: totrans-144
   prefs: []
   type: TYPE_NORMAL
 - en: 'If you plot the CCDF of a sample from a Pareto distribution on a linear scale,
     you expect to see a function like:'
+  id: totrans-145
   prefs: []
   type: TYPE_NORMAL
 - en: '| y ≈  | ⎛ ⎜'
+  id: totrans-146
   prefs: []
   type: TYPE_NORMAL
 - en: ⎜
+  id: totrans-147
   prefs: []
   type: TYPE_NORMAL
 - en: ⎝ |
+  id: totrans-148
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124; x &#124;'
+  id: totrans-149
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124;  &#124;'
+  id: totrans-150
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124; x[m] &#124;'
+  id: totrans-151
   prefs: []
   type: TYPE_NORMAL
 - en: '|   | ⎞ ⎟'
+  id: totrans-152
   prefs: []
   type: TYPE_NORMAL
 - en: ⎟
+  id: totrans-153
   prefs: []
   type: TYPE_NORMAL
 - en: ⎠ |
+  id: totrans-154
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124; −α &#124;'
+  id: totrans-155
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124;    &#124;'
+  id: totrans-156
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124;   &#124;'
+  id: totrans-157
   prefs: []
   type: TYPE_NORMAL
 - en: '|   |'
+  id: totrans-158
   prefs: []
   type: TYPE_TB
 - en: 'Taking the log of both sides yields:'
+  id: totrans-159
   prefs: []
   type: TYPE_NORMAL
 - en: '| logy ≈ −α (logx − logx[m]) |'
+  id: totrans-160
   prefs: []
   type: TYPE_TB
 - en: So if you plot logy versus logx, it should look like a straight line with slope
     −α and intercept α logx[m].
+  id: totrans-161
   prefs: []
   type: TYPE_NORMAL
 - en: As an example, let’s look at the sizes of cities and towns. The U.S. Census
     Bureau publishes the population of every incorporated city and town in the United
     States.
+  id: totrans-162
   prefs: []
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-163
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-164
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/a6c989f2234d4c920b42e41c0b8c3566.png)'
+  id: totrans-165
   prefs:
   - PREF_BQ
   type: TYPE_IMG
 - en: ''
+  id: totrans-166
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 5.10: CCDFs of city and town populations, on a log-log scale. |'
+  id: totrans-167
   prefs:
   - PREF_BQ
   type: TYPE_TB
 - en: ''
+  id: totrans-168
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-169
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
@@ -711,55 +917,67 @@
     it is in the repository for this book in a file named `PEP_2012_PEPANNRES_with_ann.csv`.
     The repository also contains `populations.py`, which reads the file and plots
     the distribution of populations.
+  id: totrans-170
   prefs: []
   type: TYPE_NORMAL
 - en: Figure [5.10](#populations_pareto) shows the CCDF of populations on a log-log
     scale. The largest 1% of cities and towns, below 10^(−2), fall along a straight
     line. So we could conclude, as some researchers have, that the tail of this distribution
     fits a Pareto model.
+  id: totrans-171
   prefs: []
   type: TYPE_NORMAL
 - en: On the other hand, a lognormal distribution also models the data well. Figure [5.11](#populations_normal)
     shows the CDF of populations and a lognormal model (left), and a normal probability
     plot (right). Both plots show good agreement between the data and the model.
+  id: totrans-172
   prefs: []
   type: TYPE_NORMAL
 - en: Neither model is perfect. The Pareto model only applies to the largest 1% of
     cities, but it is a better fit for that part of the distribution. The lognormal
     model is a better fit for the other 99%. Which model is appropriate depends on
     which part of the distribution is relevant.
+  id: totrans-173
   prefs: []
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-174
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-175
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/cd2a66429b5d11f9907a9c3937ac8c70.png)'
+  id: totrans-176
   prefs:
   - PREF_BQ
   type: TYPE_IMG
 - en: ''
+  id: totrans-177
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 5.11: CDF of city and town populations on a log-x scale (left), and
     normal probability plot of log-transformed populations (right). |'
+  id: totrans-178
   prefs:
   - PREF_BQ
   type: TYPE_TB
 - en: ''
+  id: totrans-179
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-180
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: 5.6  Generating random numbers
+  id: totrans-181
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -767,131 +985,187 @@
     function, p = CDF(x). If there is an efficient way to compute the inverse CDF,
     we can generate random values with the appropriate distribution by choosing p
     from a uniform distribution between 0 and 1, then choosing x = ICDF(p).
+  id: totrans-182
   prefs: []
   type: TYPE_NORMAL
+  zh: 分析CDF可以用来生成具有给定分布函数的随机数，p = CDF(x)。如果有一种有效的方法来计算逆CDF，我们可以通过从0到1之间的均匀分布中选择p，然后选择x
+    = ICDF(p)来生成具有适当分布的随机值。
 - en: For example, the CDF of the exponential distribution is
+  id: totrans-183
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，指数分布的CDF是
 - en: '| p = 1 − e^(−λ x)  |'
+  id: totrans-184
   prefs: []
   type: TYPE_TB
+  zh: '| p = 1 − e^(−λ x) |'
 - en: 'Solving for x yields:'
+  id: totrans-185
   prefs: []
   type: TYPE_NORMAL
+  zh: 求解x得到：
 - en: '| x = −log(1 − p) / λ  |'
+  id: totrans-186
   prefs: []
   type: TYPE_TB
+  zh: '| x = −log(1 − p) / λ |'
 - en: So in Python we can write
+  id: totrans-187
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，在Python中我们可以写成
 - en: '[PRE6]'
+  id: totrans-188
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '`expovariate` takes `lam` and returns a random value chosen from the exponential
     distribution with parameter `lam`.'
+  id: totrans-189
   prefs: []
   type: TYPE_NORMAL
+  zh: '`expovariate`接受`lam`并返回从参数为`lam`的指数分布中选择的随机值。'
 - en: 'Two notes about this implementation: I called the parameter `lam` because `lambda`
     is a Python keyword. Also, since log0 is undefined, we have to be a little careful.
     The implementation of `random.random` can return 0 but not 1, so 1 − p can be
     1 but not 0, so `log(1-p)` is always defined.'
+  id: totrans-190
   prefs: []
   type: TYPE_NORMAL
+  zh: 关于这个实现有两点需要注意：我将参数称为`lam`，因为`lambda`是Python的关键字。另外，由于log0是未定义的，我们必须小心一点。`random.random`的实现可以返回0但不返回1，所以1
+    − p可以是1但不是0，所以`log(1-p)`总是被定义的。
 - en: 5.7  Why model?
+  id: totrans-191
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 5.7 为什么建模？
 - en: At the beginning of this chapter, I said that many real world phenomena can
     be modeled with analytic distributions. “So,” you might ask, “what?”
+  id: totrans-192
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本章的开头，我说许多真实世界的现象可以用分析分布来建模。“那么，”你可能会问，“是什么？”
 - en: Like all models, analytic distributions are abstractions, which means they leave
     out details that are considered irrelevant. For example, an observed distribution
     might have measurement errors or quirks that are specific to the sample; analytic
     models smooth out these idiosyncrasies.
+  id: totrans-193
   prefs: []
   type: TYPE_NORMAL
+  zh: 像所有模型一样，分析分布是一种抽象，这意味着它们省略了被认为是不相关的细节。例如，观察到的分布可能存在测量误差或特定于样本的怪癖；分析模型消除了这些特殊性。
 - en: Analytic models are also a form of data compression. When a model fits a dataset
     well, a small set of parameters can summarize a large amount of data.
+  id: totrans-194
   prefs: []
   type: TYPE_NORMAL
+  zh: 分析模型也是一种数据压缩形式。当一个模型很好地适合数据集时，一小组参数可以总结大量数据。
 - en: 'It is sometimes surprising when data from a natural phenomenon fit an analytic
     distribution, but these observations can provide insight into physical systems.
     Sometimes we can explain why an observed distribution has a particular form. For
     example, Pareto distributions are often the result of generative processes with
     positive feedback (so-called preferential attachment processes: see [http://wikipedia.org/wiki/Preferential_attachment](http://wikipedia.org/wiki/Preferential_attachment).).'
+  id: totrans-195
   prefs: []
   type: TYPE_NORMAL
+  zh: 有时候，当自然现象的数据符合分析分布时，会让人感到惊讶，但这些观察可以揭示物理系统的内在规律。有时我们可以解释为什么观察到的分布具有特定的形式。例如，帕累托分布经常是具有正反馈的生成过程的结果（即所谓的优先附着过程：参见[http://wikipedia.org/wiki/Preferential_attachment](http://wikipedia.org/wiki/Preferential_attachment)）。
 - en: Also, analytic distributions lend themselves to mathematical analysis, as we
     will see in Chapter [14](thinkstats2015.html#analysis).
+  id: totrans-196
   prefs: []
   type: TYPE_NORMAL
+  zh: 此外，分析分布适合进行数学分析，正如我们将在第14章中看到的那样。
 - en: But it is important to remember that all models are imperfect. Data from the
     real world never fit an analytic distribution perfectly. People sometimes talk
     as if data are generated by models; for example, they might say that the distribution
     of human heights is normal, or the distribution of income is lognormal. Taken
     literally, these claims cannot be true; there are always differences between the
     real world and mathematical models.
+  id: totrans-197
   prefs: []
   type: TYPE_NORMAL
+  zh: 但重要的是要记住，所有模型都是不完美的。真实世界的数据从来不完全符合分析分布。人们有时会说数据是由模型生成的；例如，他们可能会说人类身高的分布是正态的，或者收入的分布是对数正态的。从字面上讲，这些说法是不正确的；真实世界和数学模型之间总是存在差异。
 - en: Models are useful if they capture the relevant aspects of the real world and
     leave out unneeded details. But what is “relevant” or “unneeded” depends on what
     you are planning to use the model for.
+  id: totrans-198
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果模型捕捉了真实世界的相关方面并且省略了不需要的细节，那么模型就是有用的。但“相关”或“不需要”取决于你打算使用模型的用途。
 - en: 5.8  Exercises
+  id: totrans-199
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 5.8 练习
 - en: For the following exercises, you can start with `chap05ex.ipynb`. My solution
     is in `chap05soln.ipynb`.
+  id: totrans-200
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于以下练习，你可以从`chap05ex.ipynb`开始。我的解决方案在`chap05soln.ipynb`中。
 - en: Exercise 1   *In the BRFSS (see Section*[*5.4*](#lognormal)*), the distribution
     of heights is roughly normal with parameters* µ = 178 *cm and* σ = 7.7 *cm for
     men, and* µ = 163 *cm and* σ = 7.3 *cm for women.*
+  id: totrans-201
   prefs: []
   type: TYPE_NORMAL
+  zh: 练习1 *在BRFSS（参见第5.4节），身高的分布大致上是具有参数* µ = 178 *cm 和* σ = 7.7 *cm 的男性正态分布，以及* µ
+    = 163 *cm 和* σ = 7.3 *cm 的女性正态分布。*
 - en: '*In order to join Blue Man Group, you have to be male between 5’10” and 6’1”
     (see* [*http://bluemancasting.com*](http://bluemancasting.com)*). What percentage
     of the U.S. male population is in this range? Hint: use `scipy.stats.norm.cdf`.*'
+  id: totrans-202
   prefs: []
   type: TYPE_NORMAL
+  zh: '*为了加入蓝人组，你必须是男性，身高在5''10"到6''1"之间（参见* [*http://bluemancasting.com*](http://bluemancasting.com)*）。美国男性人口中有多少百分比在这个范围内？提示：使用`scipy.stats.norm.cdf`。*'
 - en: Exercise 2   *To get a feel for the Pareto distribution, let’s see how different
     the world would be if the distribution of human height were Pareto. With the parameters*
     x[m] = 1 *m and* α = 1.7*, we get a distribution with a reasonable minimum, 1
     m, and median, 1.5 m.*
+  id: totrans-203
   prefs: []
   type: TYPE_NORMAL
+  zh: 练习2 *为了了解帕累托分布，让我们看看如果人类身高的分布是帕累托分布，世界会有多大不同。使用参数* x[m] = 1 *m 和* α = 1.7*，我们得到一个具有合理最小值1米和中位数1.5米的分布。*
 - en: '*Plot this distribution. What is the mean human height in Pareto world? What
     fraction of the population is shorter than the mean? If there are 7 billion people
     in Pareto world, how many do we expect to be taller than 1 km? How tall do we
     expect the tallest person to be?*'
+  id: totrans-204
   prefs: []
   type: TYPE_NORMAL
+  zh: '*绘制这个分布。在帕累托世界中，人类的平均身高是多少？人口中有多少比平均身高矮？如果帕累托世界有70亿人口，我们预计有多少人的身高会超过1公里？我们预计最高的人的身高会是多少？*'
 - en: Exercise 3
+  id: totrans-205
   prefs: []
   type: TYPE_NORMAL
+  zh: 练习3
 - en: '*The Weibull distribution is a generalization of the exponential distribution
     that comes up in failure analysis (see* [*http://wikipedia.org/wiki/Weibull_distribution*](http://wikipedia.org/wiki/Weibull_distribution)*).
     Its CDF is*'
+  id: totrans-206
   prefs: []
   type: TYPE_NORMAL
 - en: '| CDF(x) = 1 − e^(−(x / λ)^k)  |'
+  id: totrans-207
   prefs: []
   type: TYPE_TB
 - en: '*Can you find a transformation that makes a Weibull distribution look like
     a straight line? What do the slope and intercept of the line indicate?*'
+  id: totrans-208
   prefs: []
   type: TYPE_NORMAL
 - en: '*Use `random.weibullvariate` to generate a sample from a Weibull distribution
     and use it to test your transformation.*'
+  id: totrans-209
   prefs: []
   type: TYPE_NORMAL
 - en: Exercise 4   *For small values of* n*, we don’t expect an empirical distribution
     to fit an analytic distribution exactly. One way to evaluate the quality of fit
     is to generate a sample from an analytic distribution and see how well it matches
     the data.*
+  id: totrans-210
   prefs: []
   type: TYPE_NORMAL
 - en: '*For example, in Section *[*5.1*](#exponential) *we plotted the distribution
@@ -899,34 +1173,43 @@
     is based on only 44 data points. To see whether the data might have come from
     an exponential distribution, generate 44 values from an exponential distribution
     with the same mean as the data, about 33 minutes between births.*'
+  id: totrans-211
   prefs: []
   type: TYPE_NORMAL
 - en: '*Plot the distribution of the random values and compare it to the actual distribution.
     You can use `random.expovariate` to generate the values.*'
+  id: totrans-212
   prefs: []
   type: TYPE_NORMAL
 - en: Exercise 5   *In the repository for this book, you’ll find a set of data files
     called `mystery0.dat`, `mystery1.dat`, and so on. Each contains a sequence of
     random numbers generated from an analytic distribution.*
+  id: totrans-213
   prefs: []
   type: TYPE_NORMAL
 - en: '*You will also find `test_models.py`, a script that reads data from a file
     and plots the CDF under a variety of transforms. You can run it like this:*'
+  id: totrans-214
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE7]'
+  id: totrans-215
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '*Based on these plots, you should be able to infer what kind of distribution
     generated each file. If you are stumped, you can look in `mystery.py`, which contains
     the code that generated the files.*'
+  id: totrans-216
   prefs: []
   type: TYPE_NORMAL
 - en: Exercise 6
+  id: totrans-217
   prefs: []
   type: TYPE_NORMAL
 - en: '*The distributions of wealth and income are sometimes modeled using lognormal
     and Pareto distributions. To see which is better, let’s look at some data.*'
+  id: totrans-218
   prefs: []
   type: TYPE_NORMAL
 - en: '*The Current Population Survey (CPS) is a joint effort of the Bureau of Labor
@@ -935,61 +1218,75 @@
     I downloaded `hinc06.xls`, which is an Excel spreadsheet with information about
     household income, and converted it to `hinc06.csv`, a CSV file you will find in
     the repository for this book. You will also find `hinc.py`, which reads this file.*'
+  id: totrans-219
   prefs: []
   type: TYPE_NORMAL
 - en: '*Extract the distribution of incomes from this dataset. Are any of the analytic
     distributions in this chapter a good model of the data? A solution to this exercise
     is in `hinc_soln.py`.*'
+  id: totrans-220
   prefs: []
   type: TYPE_NORMAL
 - en: 5.9  Glossary
+  id: totrans-221
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: 'empirical distribution: The distribution of values in a sample.'
+  id: totrans-222
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'analytic distribution: A distribution whose CDF is an analytic function.'
+  id: totrans-223
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'model: A useful simplification. Analytic distributions are often good models
     of more complex empirical distributions.'
+  id: totrans-224
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'interarrival time: The elapsed time between two events.'
+  id: totrans-225
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'complementary CDF: A function that maps from a value, x, to the fraction of
     values that exceed x, which is 1 − CDF(x).'
+  id: totrans-226
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'standard normal distribution: The normal distribution with mean 0 and standard
     deviation 1.'
+  id: totrans-227
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'normal probability plot: A plot of the values in a sample versus random values
     from a standard normal distribution.'
+  id: totrans-228
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-229
   prefs: []
   type: TYPE_NORMAL
 - en: '[1](#text1)'
+  id: totrans-230
   prefs: []
   type: TYPE_NORMAL
 - en: This example is based on information and data from Dunn, “A Simple Dataset for
     Demonstrating Common Distributions,” Journal of Statistics Education v.7, n.3
     (1999).
+  id: totrans-231
   prefs: []
   type: TYPE_NORMAL
 - en: '[2](#text2)'
+  id: totrans-232
   prefs: []
   type: TYPE_NORMAL
 - en: 'I was tipped off to this possibility by a comment (without citation) at [http://mathworld.wolfram.com/LogNormalDistribution.html](http://mathworld.wolfram.com/LogNormalDistribution.html).
@@ -997,13 +1294,21 @@
     Penman and Johnson, “The Changing Shape of the Body Mass Index Distribution Curve
     in the Population,” Preventing Chronic Disease, 2006 July; 3(3): A74\. Online
     at [http://www.ncbi.nlm.nih.gov/pmc/articles/PMC1636707](http://www.ncbi.nlm.nih.gov/pmc/articles/PMC1636707).'
+  id: totrans-233
   prefs: []
   type: TYPE_NORMAL
+  zh: '我是通过[http://mathworld.wolfram.com/LogNormalDistribution.html](http://mathworld.wolfram.com/LogNormalDistribution.html)上的一条评论（没有引用）得知了这种可能性。随后，我找到了一篇提出对数变换并提出原因的论文：Penman
+    and Johnson, “The Changing Shape of the Body Mass Index Distribution Curve in
+    the Population,” Preventing Chronic Disease, 2006 July; 3(3): A74。在线链接：[http://www.ncbi.nlm.nih.gov/pmc/articles/PMC1636707](http://www.ncbi.nlm.nih.gov/pmc/articles/PMC1636707)。'
 - en: '[3](#text3)'
+  id: totrans-234
   prefs: []
   type: TYPE_NORMAL
+  zh: '[3](#text3)'
 - en: 'Centers for Disease Control and Prevention (CDC). Behavioral Risk Factor Surveillance
     System Survey Data. Atlanta, Georgia: U.S. Department of Health and Human Services,
     Centers for Disease Control and Prevention, 2008.'
+  id: totrans-235
   prefs: []
   type: TYPE_NORMAL
+  zh: 疾病控制和预防中心（CDC）。行为风险因素监测系统调查数据。乔治亚州亚特兰大：美国卫生和公众服务部，疾病控制和预防中心，2008年。
