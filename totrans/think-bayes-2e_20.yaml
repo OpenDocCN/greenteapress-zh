@@ -1,26 +1,32 @@
 - en: Regression
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
 - en: 原文：[https://allendowney.github.io/ThinkBayes2/chap17.html](https://allendowney.github.io/ThinkBayes2/chap17.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: In the previous chapter we saw several examples of logistic regression, which
     is based on the assumption that the likelihood of an outcome, expressed in the
     form of log odds, is a linear function of some quantity (continuous or discrete).
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
 - en: In this chapter we’ll work on examples of simple linear regression, which models
     the relationship between two quantities. Specifically, we’ll look at changes over
     time in snowfall and the marathon world record.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
 - en: The models we’ll use have three parameters, so you might want to review the
     tools we used for the three-parameter model in <<_MarkandRecapture>>.
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
 - en: More Snow?
+  id: totrans-5
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -29,575 +35,812 @@
     up, and currently live. And by “used to” I mean compared to when I was young,
     like in 1978 when we got [27 inches of snow](https://en.wikipedia.org/wiki/Northeastern_United_States_blizzard_of_1978)
     and I didn’t have to go to school for a couple of weeks.
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
 - en: Fortunately, we can test my conjecture with data. Norfolk County happens to
     be the location of the [Blue Hill Meteorological Observatory](https://en.wikipedia.org/wiki/Blue_Hill_Meteorological_Observatory),
     which keeps the oldest continuous weather record in North America.
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
 - en: Data from this and many other weather stations is available from the [National
     Oceanic and Atmospheric Administration](https://www.ncdc.noaa.gov/cdo-web/search)
     (NOAA). I collected data from the Blue Hill Observatory from May 11, 1967 to May
     11, 2020.
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
 - en: The following cell downloads the data as a CSV file.
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE0]</details>'
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
 - en: 'We can use Pandas to read the data into `DataFrame`:'
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE1]'
+  id: totrans-13
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: Here’s what the last few rows look like.
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE2]'
+  id: totrans-16
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '|  | STATION | NAME | DATE | PRCP | SNOW | SNWD | TMAX | TMIN | TOBS | WESD
     | WT01 | WT03 | WT04 | WT05 | WT06 | WT08 | WT09 | WT11 | WT16 | WT18 |'
+  id: totrans-17
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
     | --- | --- | --- | --- | --- | --- | --- | --- |'
+  id: totrans-18
   prefs: []
   type: TYPE_TB
 - en: '| 20452 | USC00190736 | BLUE HILL COOP, MA US | 2023-05-09 | 0.0 | 0.0 | 0.0
     | 75 | 45.0 | 51.0 | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN
     | NaN |'
+  id: totrans-19
   prefs: []
   type: TYPE_TB
 - en: '| 20453 | USC00190736 | BLUE HILL COOP, MA US | 2023-05-10 | 0.0 | 0.0 | 0.0
     | 60 | 42.0 | 51.0 | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN
     | NaN |'
+  id: totrans-20
   prefs: []
   type: TYPE_TB
 - en: '| 20454 | USC00190736 | BLUE HILL COOP, MA US | 2023-05-11 | 0.0 | 0.0 | 0.0
     | 72 | 51.0 | 59.0 | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN
     | NaN |</details>'
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
 - en: 'The columns we’ll use are:'
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
 - en: '`DATE`, which is the date of each observation,'
+  id: totrans-23
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: '`SNOW`, which is the total snowfall in inches.'
+  id: totrans-24
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: I’ll add a column that contains just the year part of the dates.
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE3]'
+  id: totrans-26
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: And use `groupby` to add up the total snowfall in each year.
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE4]'
+  id: totrans-28
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: The first and last years are not complete, so I’ll drop them.
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE5]'
+  id: totrans-31
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '[PRE6]</details>'
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
 - en: The following figure shows total snowfall during each of the complete years
     in my lifetime.
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE7]</details> ![_images/a18b7ac97e8129afa56f1cc415d2c5d0e3cf9c07dd90c3fcc04552fe5632ef46.png](../Images/76639d0aa2b4e61f7774c9cff6eaac42.png)'
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
 - en: Looking at this plot, it’s hard to say whether snowfall is increasing, decreasing,
     or unchanged. In the last decade, we’ve had several years with more snow than
     1978, including 2015, which was the snowiest winter in the Boston area in modern
     history, with a total of 141 inches.
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
 - en: This kind of question – looking at noisy data and wondering whether it is going
     up or down – is precisely the question we can answer with Bayesian regression.
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE8]'
+  id: totrans-39
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '[PRE9]</details>'
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
 - en: Regression Model
+  id: totrans-41
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: 'The foundation of regression (Bayesian or not) is the assumption that a time
     series like this is the sum of two parts:'
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
 - en: A linear function of time, and
+  id: totrans-43
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: A series of random values drawn from a distribution that is not changing over
     time.
+  id: totrans-44
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: Mathematically, the regression model is
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
 - en: \[y = a x + b + \epsilon\]
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
 - en: where \(y\) is the series of measurements (snowfall in this example), \(x\)
     is the series of times (years) and \(\epsilon\) is the series of random values.
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
 - en: \(a\) and \(b\) are the slope and intercept of the line through the data. They
     are unknown parameters, so we will use the data to estimate them.
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
 - en: We don’t know the distribution of \(\epsilon\), so we’ll make the additional
     assumption that it is a normal distribution with mean 0 and unknown standard deviation,
     \(\sigma\).
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
 - en: To see whether this assumption is reasonable, I’ll plot the distribution of
     total snowfall and a normal model with the same mean and standard deviation.
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
 - en: Here’s a `Pmf` object that represents the distribution of snowfall.
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE10]'
+  id: totrans-52
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: And here are the mean and standard deviation of the data.
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE11]'
+  id: totrans-54
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: '[PRE12]'
+  id: totrans-55
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: I’ll use the `norm` object from SciPy to compute the CDF of a normal distribution
     with the same mean and standard deviation.
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE13]'
+  id: totrans-57
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: Here’s what the distribution of the data looks like compared to the normal model.
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE14]</details> ![_images/d7b23964f610a03df17062f571da04796b630b921052f6c1b3cf18f64557c2f6.png](../Images/2290d5efd2871e877a0afa00b0c79968.png)'
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
 - en: We’ve had more winters below the mean than expected, but overall this looks
     like a reasonable model.
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
 - en: Least Squares Regression
+  id: totrans-62
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: 'Our regression model has three parameters: slope, intercept, and standard deviation
     of \(\epsilon\). Before we can estimate them, we have to choose priors. To help
     with that, I’ll use StatsModel to fit a line to the data by [least squares regression](https://en.wikipedia.org/wiki/Least_squares).'
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
 - en: First, I’ll use `reset_index` to convert `snow`, which is a `Series`, to a `DataFrame`.
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE15]'
+  id: totrans-65
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '|  | YEAR | SNOW |'
+  id: totrans-66
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- |'
+  id: totrans-67
   prefs: []
   type: TYPE_TB
 - en: '| 0 | 1968 | 44.7 |'
+  id: totrans-68
   prefs: []
   type: TYPE_TB
 - en: '| 1 | 1969 | 99.2 |'
+  id: totrans-69
   prefs: []
   type: TYPE_TB
 - en: '| 2 | 1970 | 66.8 |'
+  id: totrans-70
   prefs: []
   type: TYPE_TB
 - en: The result is a `DataFrame` with two columns, `YEAR` and `SNOW`, in a format
     we can use with StatsModels.
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
 - en: As we did in the previous chapter, I’ll center the data by subtracting off the
     mean.
+  id: totrans-72
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE16]'
+  id: totrans-73
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '[PRE17]'
+  id: totrans-74
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: And I’ll add a column to `data` so the dependent variable has a standard name.
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE18]'
+  id: totrans-76
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: Now, we can use StatsModels to compute the least squares fit to the data and
     estimate `slope` and `intercept`.
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE19]'
+  id: totrans-78
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '[PRE20]'
+  id: totrans-79
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: The intercept, about 64 inches, is the expected snowfall when `x=0`, which is
     the beginning of 1994. The estimated slope indicates that total snowfall is increasing
     at a rate of about 0.5 inches per year.
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
 - en: '`results` also provides `resid`, which is an array of residuals, that is, the
     differences between the data and the fitted line. The standard deviation of the
     residuals is an estimate of `sigma`.'
+  id: totrans-81
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE21]'
+  id: totrans-82
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: '[PRE22]'
+  id: totrans-83
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: We’ll use these estimates to choose prior distributions for the parameters.
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
 - en: Priors
+  id: totrans-85
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: I’ll use uniform distributions for all three parameters.
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE23]'
+  id: totrans-87
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: '[PRE24]'
+  id: totrans-88
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: '[PRE25]'
+  id: totrans-89
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: I made the prior distributions different lengths for two reasons. First, if
     we make a mistake and use the wrong distribution, it will be easier to catch the
     error if they are all different lengths.
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
 - en: Second, it provides more precision for the most important parameter, `slope`,
     and spends less computational effort on the least important, `sigma`.
+  id: totrans-91
   prefs: []
   type: TYPE_NORMAL
 - en: 'In <<_ThreeParameterModel>> we made a joint distribution with three parameters.
     I’ll wrap that process in a function:'
+  id: totrans-92
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE26]'
+  id: totrans-93
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: And use it to make a `Pmf` that represents the joint distribution of the three
     parameters.
+  id: totrans-94
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE27]'
+  id: totrans-95
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: '|  |  |  | probs |'
+  id: totrans-96
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- | --- |'
+  id: totrans-97
   prefs: []
   type: TYPE_TB
 - en: '| Slope | Intercept | Sigma |  |'
+  id: totrans-98
   prefs: []
   type: TYPE_TB
+  zh: '| 斜率 | 截距 | Sigma |  |'
 - en: '| --- | --- | --- | --- |'
+  id: totrans-99
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- |'
 - en: '| -0.5 | 54.0 | 20.0 | 0.000015 |'
+  id: totrans-100
   prefs: []
   type: TYPE_TB
+  zh: '| -0.5 | 54.0 | 20.0 | 0.000015 |'
 - en: '| 20.5 | 0.000015 |'
+  id: totrans-101
   prefs: []
   type: TYPE_TB
+  zh: '| 20.5 | 0.000015 |'
 - en: '| 21.0 | 0.000015 |'
+  id: totrans-102
   prefs: []
   type: TYPE_TB
+  zh: '| 21.0 | 0.000015 |'
 - en: The index of `Pmf` has three columns, containing values of `slope`, `inter`,
     and `sigma`, in that order.
+  id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: '`Pmf`的索引有三列，依次包含`slope`，`inter`和`sigma`的值。'
 - en: With three parameters, the size of the joint distribution starts to get big.
     Specifically, it is the product of the lengths of the prior distributions. In
     this example, the prior distributions have 51, 41, and 31 values, so the length
     of the joint prior is 64,821.
+  id: totrans-104
   prefs: []
   type: TYPE_NORMAL
+  zh: 有了三个参数，联合分布的大小开始变得很大。具体来说，它是先验分布长度的乘积。在这个例子中，先验分布有51、41和31个值，因此联合先验的长度为64,821。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE28]'
+  id: totrans-106
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: '[PRE29]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE29]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE30]'
+  id: totrans-108
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: '[PRE31]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-109
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE31]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE32]'
+  id: totrans-110
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: '[PRE33]</details>'
+  id: totrans-111
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE33]</details>'
 - en: Likelihood
+  id: totrans-112
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 可能性
 - en: Now we’ll compute the likelihood of the data. To demonstrate the process, let’s
     assume temporarily that the parameters are known.
+  id: totrans-113
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们将计算数据的可能性。为了演示这个过程，让我们暂时假设参数是已知的。
 - en: '[PRE34]'
+  id: totrans-114
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: 'I’ll extract the `xs` and `ys` from `data` as `Series` objects:'
+  id: totrans-115
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将从`data`中提取`xs`和`ys`作为`Series`对象：
 - en: '[PRE35]'
+  id: totrans-116
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: And compute the “residuals”, which are the differences between the actual values,
     `ys`, and the values we expect based on `slope` and `inter`.
+  id: totrans-117
   prefs: []
   type: TYPE_NORMAL
+  zh: 并计算“残差”，即实际值`ys`与基于`slope`和`inter`的期望值之间的差异。
 - en: '[PRE36]'
+  id: totrans-118
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: According to the model, the residuals should follow a normal distribution with
     mean 0 and standard deviation `sigma`. So we can compute the likelihood of each
     residual value using `norm` from SciPy.
+  id: totrans-119
   prefs: []
   type: TYPE_NORMAL
+  zh: 根据模型，残差应该遵循均值为0，标准差为`sigma`的正态分布。因此，我们可以使用SciPy中的`norm`来计算每个残差值的可能性。
 - en: '[PRE37]'
+  id: totrans-120
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE37]'
 - en: The result is an array of probability densities, one for each element of the
     dataset; their product is the likelihood of the data.
+  id: totrans-121
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个概率密度数组，每个元素对应数据集的一个元素；它们的乘积就是数据的可能性。
 - en: '[PRE38]'
+  id: totrans-122
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: '[PRE39]'
+  id: totrans-123
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: As we saw in the previous chapter, the likelihood of any particular dataset
     tends to be small. If it’s too small, we might exceed the limits of floating-point
     arithmetic. When that happens, we can avoid the problem by computing likelihoods
     under a log transform. But in this example that’s not necessary.
+  id: totrans-124
   prefs: []
   type: TYPE_NORMAL
+  zh: 正如我们在上一章中看到的，任何特定数据集的可能性往往很小。如果太小，我们可能会超出浮点运算的限制。当发生这种情况时，我们可以通过对数变换来计算可能性来避免问题。但在这个例子中，这是不必要的。
 - en: The Update
+  id: totrans-125
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 更新
 - en: Now we’re ready to do the update. First, we need to compute the likelihood of
     the data for each possible set of parameters.
+  id: totrans-126
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们准备进行更新。首先，我们需要计算每组可能参数的数据的可能性。
 - en: '[PRE40]'
+  id: totrans-127
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE40]'
 - en: This computation takes longer than many of the previous examples. We are approaching
     the limit of what we can do with grid approximations.
+  id: totrans-128
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个计算比以前的许多例子要长。我们正在接近使用网格逼近所能做到的极限。
 - en: 'Nevertheless, we can do the update in the usual way:'
+  id: totrans-129
   prefs: []
   type: TYPE_NORMAL
+  zh: 然而，我们可以以通常的方式进行更新：
 - en: '[PRE41]'
+  id: totrans-130
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE41]'
 - en: <details class="hide below-input"><summary aria-label="Toggle hidden content">Show
     code cell output Hide code cell output</summary>
+  id: totrans-131
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide below-input"><summary aria-label="Toggle hidden content">显示代码单元格输出
+    隐藏代码单元格输出</summary>
 - en: '[PRE42]</details>'
+  id: totrans-132
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE42]</details>'
 - en: The result is a `Pmf` with a three-level index containing values of `slope`,
     `inter`, and `sigma`. To get the marginal distributions from the joint posterior,
     we can use `Pmf.marginal`, which we saw in <<_ThreeParameterModel>>.
+  id: totrans-133
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个带有三级索引的`Pmf`，包含`slope`，`inter`和`sigma`的值。要从联合后验中获取边际分布，我们可以使用`Pmf.marginal`，我们在<<_ThreeParameterModel>>中看到了。
 - en: '[PRE43]'
+  id: totrans-134
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE43]'
 - en: 'Here’s the posterior distribution for `sigma`:'
+  id: totrans-135
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是`sigma`的后验分布：
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-136
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE44]</details> ![_images/18d3bdf36ae9903d0c61bcf4256b0dc0929fbf4aa4caa9f8d899abefaa3ab113.png](../Images/b7d97ab697f1a05fa6e6eee325fd0b10.png)'
+  id: totrans-137
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE44]</details> ![_images/18d3bdf36ae9903d0c61bcf4256b0dc0929fbf4aa4caa9f8d899abefaa3ab113.png](../Images/b7d97ab697f1a05fa6e6eee325fd0b10.png)'
 - en: The most likely values for `sigma` are near 26 inches, which is consistent with
     our estimate based on the standard deviation of the data.
+  id: totrans-138
   prefs: []
   type: TYPE_NORMAL
+  zh: '`sigma`的最可能值接近26英寸，这与我们基于数据标准差的估计一致。'
 - en: However, to say whether snowfall is increasing or decreasing, we don’t really
     care about `sigma`. It is a “nuisance parameter”, so-called because we have to
     estimate it as part of the model, but we don’t need it to answer the questions
     we are interested in.
+  id: totrans-139
   prefs: []
   type: TYPE_NORMAL
+  zh: 然而，要说雪量是增加还是减少，我们并不真的关心`sigma`。这是一个“干扰参数”，所谓的是因为我们必须在模型的一部分中对其进行估计，但我们不需要它来回答我们感兴趣的问题。
 - en: Nevertheless, it is good to check the marginal distributions to make sure
+  id: totrans-140
   prefs: []
   type: TYPE_NORMAL
+  zh: 然而，检查边际分布是很好的，以确保
 - en: The location is consistent with our expectations, and
+  id: totrans-141
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 位置与我们的预期一致，而
 - en: The posterior probabilities are near 0 at the extremes of the range, which indicates
     that the prior distribution covers all parameters with non-negligible probability.
+  id: totrans-142
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 后验概率在范围的极端处接近0，这表明先验分布覆盖了所有具有非零概率的参数。
 - en: In this example, the posterior distribution of `sigma` looks fine.
+  id: totrans-143
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个例子中，`sigma`的后验分布看起来不错。
 - en: 'Here’s the posterior distribution of `inter`:'
+  id: totrans-144
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是`inter`的后验分布：
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-145
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE45]</details> ![_images/aa89f6dfaa595a9b8213690daa48a4b91af587d81ee8fb38e34bda398382d7db.png](../Images/d36f90212593df07fd9cedae5ef00b29.png)<details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-146
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE46]'
+  id: totrans-147
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE46]'
 - en: '[PRE47]</details>'
+  id: totrans-148
   prefs: []
   type: TYPE_NORMAL
 - en: The posterior mean is about 64 inches, which is the expected amount of snow
     during the year at the midpoint of the range, 1994.
+  id: totrans-149
   prefs: []
   type: TYPE_NORMAL
 - en: 'And finally, here’s the posterior distribution of `slope`:'
+  id: totrans-150
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-151
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE48]</details> ![_images/f3b98cd68b7ad121771619d3ad4c437ac7247f6618221ce47119409853c25c97.png](../Images/49c8db0b17f56932da348d787fc72807.png)<details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-152
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE49]'
+  id: totrans-153
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE49]'
 - en: '[PRE50]</details>'
+  id: totrans-154
   prefs: []
   type: TYPE_NORMAL
 - en: The posterior mean is about 0.51 inches, which is consistent with the estimate
     we got from least squared regression.
+  id: totrans-155
   prefs: []
   type: TYPE_NORMAL
 - en: The 90% credible interval is from 0.1 to 0.9, which indicates that our uncertainty
     about this estimate is pretty high. In fact, there is still a small posterior
     probability (about 2%) that the slope is negative.
+  id: totrans-156
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-157
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE51]'
+  id: totrans-158
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE51]'
 - en: '[PRE52]</details>'
+  id: totrans-159
   prefs: []
   type: TYPE_NORMAL
 - en: 'However, it is more likely that my conjecture was wrong: we are actually getting
     more snow around here than we used to, increasing at a rate of about a half-inch
     per year, which is substantial. On average, we get an additional 25 inches of
     snow per year than we did when I was young.'
+  id: totrans-160
   prefs: []
   type: TYPE_NORMAL
 - en: This example shows that with slow-moving trends and noisy data, your instincts
     can be misleading.
+  id: totrans-161
   prefs: []
   type: TYPE_NORMAL
 - en: Now, you might suspect that I overestimate the amount of snow when I was young
     because I enjoyed it, and underestimate it now because I don’t. But you would
     be mistaken.
+  id: totrans-162
   prefs: []
   type: TYPE_NORMAL
 - en: During the Blizzard of 1978, we did not have a snowblower and my brother and
@@ -606,1082 +849,1730 @@
     driveway, too, for which we were not allowed to accept payment. Furthermore, as
     I recall it was during this excavation that I accidentally hit my brother with
     a shovel on the head, and it bled a lot because, you know, scalp wounds.
+  id: totrans-163
   prefs: []
   type: TYPE_NORMAL
 - en: Anyway, the point is that I don’t think I overestimate the amount of snow when
     I was young because I have fond memories of it.
+  id: totrans-164
   prefs: []
   type: TYPE_NORMAL
 - en: Optimization
+  id: totrans-165
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: The way we computed the likelihood in the previous section was pretty slow.
     The problem is that we looped through every possible set of parameters in the
     prior distribution, and there were more than 60,000 of them.
+  id: totrans-166
   prefs: []
   type: TYPE_NORMAL
 - en: If we can do more work per iteration, and run the loop fewer times, we expect
     it to go faster.
+  id: totrans-167
   prefs: []
   type: TYPE_NORMAL
 - en: 'In order to do that, I’ll unstack the prior distribution:'
+  id: totrans-168
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-169
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE53]'
+  id: totrans-170
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE53]'
 - en: '|  | Sigma | 20.0 | 20.5 | 21.0 | 21.5 | 22.0 | 22.5 | 23.0 | 23.5 | 24.0 |
     24.5 | ... | 30.5 | 31.0 | 31.5 | 32.0 | 32.5 | 33.0 | 33.5 | 34.0 | 34.5 | 35.0
     |'
+  id: totrans-171
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
     | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  id: totrans-172
   prefs: []
   type: TYPE_TB
 - en: '| Slope | Intercept |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |'
+  id: totrans-173
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
     | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  id: totrans-174
   prefs: []
   type: TYPE_TB
 - en: '| -0.5 | 54.000 | 0.000015 | 0.000015 | 0.000015 | 0.000015 | 0.000015 | 0.000015
     | 0.000015 | 0.000015 | 0.000015 | 0.000015 | ... | 0.000015 | 0.000015 | 0.000015
     | 0.000015 | 0.000015 | 0.000015 | 0.000015 | 0.000015 | 0.000015 | 0.000015 |'
+  id: totrans-175
   prefs: []
   type: TYPE_TB
 - en: '| 54.525 | 0.000015 | 0.000015 | 0.000015 | 0.000015 | 0.000015 | 0.000015
     | 0.000015 | 0.000015 | 0.000015 | 0.000015 | ... | 0.000015 | 0.000015 | 0.000015
     | 0.000015 | 0.000015 | 0.000015 | 0.000015 | 0.000015 | 0.000015 | 0.000015 |'
+  id: totrans-176
   prefs: []
   type: TYPE_TB
+  zh: '| 54.525 | 0.000015 | 0.000015 | 0.000015 | 0.000015 | 0.000015 | 0.000015
+    | 0.000015 | 0.000015 | 0.000015 | 0.000015 | ... | 0.000015 | 0.000015 | 0.000015
+    | 0.000015 | 0.000015 | 0.000015 | 0.000015 | 0.000015 | 0.000015 | 0.000015 |'
 - en: '| 55.050 | 0.000015 | 0.000015 | 0.000015 | 0.000015 | 0.000015 | 0.000015
     | 0.000015 | 0.000015 | 0.000015 | 0.000015 | ... | 0.000015 | 0.000015 | 0.000015
     | 0.000015 | 0.000015 | 0.000015 | 0.000015 | 0.000015 | 0.000015 | 0.000015 |'
+  id: totrans-177
   prefs: []
   type: TYPE_TB
+  zh: '| 55.050 | 0.000015 | 0.000015 | 0.000015 | 0.000015 | 0.000015 | 0.000015
+    | 0.000015 | 0.000015 | 0.000015 | 0.000015 | ... | 0.000015 | 0.000015 | 0.000015
+    | 0.000015 | 0.000015 | 0.000015 | 0.000015 | 0.000015 | 0.000015 | 0.000015 |'
 - en: 3 rows × 31 columns</details>
+  id: totrans-178
   prefs: []
   type: TYPE_NORMAL
+  zh: 3行×31列</details>
 - en: The result is a `DataFrame` with `slope` and `intercept` down the rows and `sigmas`
     across the columns.
+  id: totrans-179
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个带有`斜率`和`截距`的`DataFrame`，行中有`sigmas`，列中有`sigmas`。
 - en: The following is a version of `likelihood_regression` that takes the joint prior
     distribution in this form and returns the posterior distribution in the same form.
+  id: totrans-180
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是`likelihood_regression`的一个版本，它以这种形式获取联合先验分布，并以相同的形式返回后验分布。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-181
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
 - en: '[PRE54]</details>'
+  id: totrans-182
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE54]</details>'
 - en: This version loops through all possible pairs of `slope` and `inter`, so the
     loop runs about 2000 times.
+  id: totrans-183
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个版本循环遍历所有可能的`斜率`和`截距`对，所以循环运行大约2000次。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-184
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
 - en: '[PRE55]'
+  id: totrans-185
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE55]'
 - en: '[PRE56]</details>'
+  id: totrans-186
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE56]</details>'
 - en: Each time through the loop, it uses a grid mesh to compute the likelihood of
     the data for all values of `sigma`. The result is an array with one column for
     each data point and one row for each value of `sigma`. Taking the product across
     the columns (`axis=1`) yields the probability of the data for each value of sigma,
     which we assign as a row in `likelihood`.
+  id: totrans-187
   prefs: []
   type: TYPE_NORMAL
+  zh: 每次循环时，它使用网格网格计算所有`sigma`值的数据的可能性。结果是一个数组，每个数据点都有一列，每个`sigma`值都有一行。沿着列(`axis=1`)取乘积得到每个`sigma`值的数据概率，我们将其分配为`likelihood`中的一行。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-188
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
 - en: '[PRE57]'
+  id: totrans-189
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE57]'
 - en: '[PRE58]</details>'
+  id: totrans-190
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE58]</details>'
 - en: We get the same result either way.
+  id: totrans-191
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们以任何方式都会得到相同的结果。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-192
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
 - en: '[PRE59]'
+  id: totrans-193
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE59]'
 - en: '[PRE60]</details>'
+  id: totrans-194
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE60]</details>'
 - en: But this version is about 25 times faster than the previous version.
+  id: totrans-195
   prefs: []
   type: TYPE_NORMAL
+  zh: 但这个版本比上一个版本快大约25倍。
 - en: This optimization works because many functions in NumPy and SciPy are written
     in C, so they run fast compared to Python. If you can do more work each time you
     call these functions, and less time running the loop in Python, your code will
     often run substantially faster.
+  id: totrans-196
   prefs: []
   type: TYPE_NORMAL
+  zh: 这种优化的原因是，NumPy和SciPy中的许多函数都是用C编写的，因此它们运行速度比Python快。如果每次调用这些函数时都可以做更多的工作，并且在Python中运行循环的时间更少，那么您的代码通常会运行得更快。
 - en: In this version of the posterior distribution, `slope` and `inter` run down
     the rows and `sigma` runs across the columns. So we can use `marginal` to get
     the posterior joint distribution of `slope` and `intercept`.
+  id: totrans-197
   prefs: []
   type: TYPE_NORMAL
+  zh: 在后验分布的这个版本中，`斜率`和`截距`在行中，`sigma`在列中。因此，我们可以使用`marginal`来获得`斜率`和`截距`的后验联合分布。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-198
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
 - en: '[PRE61]'
+  id: totrans-199
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE61]'
 - en: '|  |  | probs |'
+  id: totrans-200
   prefs: []
   type: TYPE_TB
+  zh: '|  |  | 概率 |'
 - en: '| --- | --- | --- |'
+  id: totrans-201
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- |'
 - en: '| Slope | Intercept |  |'
+  id: totrans-202
   prefs: []
   type: TYPE_TB
+  zh: '| 斜率 | 截距 |  |'
 - en: '| --- | --- | --- |'
+  id: totrans-203
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- |'
 - en: '| -0.5 | 54.000 | 1.681717e-07 |'
+  id: totrans-204
   prefs: []
   type: TYPE_TB
+  zh: '| -0.5 | 54.000 | 1.681717e-07 |'
 - en: '| 54.525 | 2.268085e-07 |'
+  id: totrans-205
   prefs: []
   type: TYPE_TB
+  zh: '| 54.525 | 2.268085e-07 |'
 - en: '| 55.050 | 3.015062e-07 |</details>'
+  id: totrans-206
   prefs: []
   type: TYPE_NORMAL
+  zh: '| 55.050 | 3.015062e-07 |</details>'
 - en: The result is a `Pmf` with two columns in the index. To plot it, we have to
     unstack it.
+  id: totrans-207
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个带有两列的`Pmf`，索引中有两列。要绘制它，我们必须将其解压缩。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-208
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
 - en: '[PRE62]'
+  id: totrans-209
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE62]'
 - en: '| Slope | -0.50 | -0.46 | -0.42 | -0.38 | -0.34 | -0.30 | -0.26 | -0.22 | -0.18
     | -0.14 | ... | 1.14 | 1.18 | 1.22 | 1.26 | 1.30 | 1.34 | 1.38 | 1.42 | 1.46 |
     1.50 |'
+  id: totrans-210
   prefs: []
   type: TYPE_TB
+  zh: '| 斜率 | -0.50 | -0.46 | -0.42 | -0.38 | -0.34 | -0.30 | -0.26 | -0.22 | -0.18
+    | -0.14 | ... | 1.14 | 1.18 | 1.22 | 1.26 | 1.30 | 1.34 | 1.38 | 1.42 | 1.46 |
+    1.50 |'
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
     | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  id: totrans-211
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+    | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
 - en: '| Intercept |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |'
+  id: totrans-212
   prefs: []
   type: TYPE_TB
+  zh: '| 截距 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |'
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
     | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  id: totrans-213
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+    | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
 - en: '| 54.000 | 1.681717e-07 | 2.848880e-07 | 4.744292e-07 | 7.761707e-07 | 0.000001
     | 0.000002 | 0.000003 | 0.000005 | 0.000007 | 0.000010 | ... | 7.116789e-07 |
     4.336070e-07 | 2.595674e-07 | 1.527668e-07 | 8.844849e-08 | 5.040388e-08 | 2.828465e-08
     | 1.563589e-08 | 8.517697e-09 | 4.573661e-09 |'
+  id: totrans-214
   prefs: []
   type: TYPE_TB
+  zh: '| 54.000 | 1.681717e-07 | 2.848880e-07 | 4.744292e-07 | 7.761707e-07 | 0.000001
+    | 0.000002 | 0.000003 | 0.000005 | 0.000007 | 0.000010 | ... | 7.116789e-07 |
+    4.336070e-07 | 2.595674e-07 | 1.527668e-07 | 8.844849e-08 | 5.040388e-08 | 2.828465e-08
+    | 1.563589e-08 | 8.517697e-09 | 4.573661e-09 |'
 - en: '| 54.525 | 2.268085e-07 | 3.859703e-07 | 6.457296e-07 | 1.061331e-06 | 0.000002
     | 0.000003 | 0.000004 | 0.000006 | 0.000009 | 0.000014 | ... | 9.723366e-07 |
     5.896799e-07 | 3.513780e-07 | 2.058667e-07 | 1.186640e-07 | 6.733065e-08 | 3.762506e-08
     | 2.071531e-08 | 1.124098e-08 | 6.013601e-09 |'
+  id: totrans-215
   prefs: []
   type: TYPE_TB
+  zh: '| 54.525 | 2.268085e-07 | 3.859703e-07 | 6.457296e-07 | 1.061331e-06 | 0.000002
+    | 0.000003 | 0.000004 | 0.000006 | 0.000009 | 0.000014 | ... | 9.723366e-07 |
+    5.896799e-07 | 3.513780e-07 | 2.058667e-07 | 1.186640e-07 | 6.733065e-08 | 3.762506e-08
+    | 2.071531e-08 | 1.124098e-08 | 6.013601e-09 |'
 - en: '| 55.050 | 3.015062e-07 | 5.153700e-07 | 8.661024e-07 | 1.430000e-06 | 0.000002
     | 0.000004 | 0.000006 | 0.000009 | 0.000013 | 0.000019 | ... | 1.309030e-06 |
     7.902856e-07 | 4.688054e-07 | 2.734522e-07 | 1.569383e-07 | 8.867160e-08 | 4.934762e-08
     | 2.706205e-08 | 1.462927e-08 | 7.797870e-09 |'
+  id: totrans-216
   prefs: []
   type: TYPE_TB
+  zh: '| 55.050 | 3.015062e-07 | 5.153700e-07 | 8.661024e-07 | 1.430000e-06 | 0.000002
+    | 0.000004 | 0.000006 | 0.000009 | 0.000013 | 0.000019 | ... | 1.309030e-06 |
+    7.902856e-07 | 4.688054e-07 | 2.734522e-07 | 1.569383e-07 | 8.867160e-08 | 4.934762e-08
+    | 2.706205e-08 | 1.462927e-08 | 7.797870e-09 |'
 - en: 3 rows × 51 columns</details>
+  id: totrans-217
   prefs: []
   type: TYPE_NORMAL
+  zh: 3行×51列</details>
 - en: Here’s what it looks like.
+  id: totrans-218
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是它的样子。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-219
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE63]'
+  id: totrans-220
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE63]'
 - en: '![_images/15787b4f5a09974c96d607a7735574d05c4332a7269c0f61e14282dbe1dfcf5c.png](../Images/762fd6734178df8934202c7576b1d061.png)</details>'
+  id: totrans-221
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/15787b4f5a09974c96d607a7735574d05c4332a7269c0f61e14282dbe1dfcf5c.png](../Images/762fd6734178df8934202c7576b1d061.png)</details>'
 - en: The ovals in the contour plot are aligned with the axes, which indicates that
     there is no correlation between `slope` and `inter` in the posterior distribution,
     which is what we expect since we centered the values.
+  id: totrans-222
   prefs: []
   type: TYPE_NORMAL
+  zh: 等高线图中的椭圆与坐标轴对齐，这表明后验分布中的`slope`和`inter`之间没有相关性，这是我们预期的，因为我们对值进行了居中处理。
 - en: In this example, the motivating question is about the slope of the line, so
     we answered it by looking at the posterior distribution of slope.
+  id: totrans-223
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个例子中，激励问题是关于线的斜率，所以我们通过查看斜率的后验分布来回答它。
 - en: In the next example, the motivating question is about prediction, so we’ll use
     the joint posterior distribution to generate predictive distributions.
+  id: totrans-224
   prefs: []
   type: TYPE_NORMAL
+  zh: 在下一个例子中，激励问题是关于预测的，所以我们将使用联合后验分布来生成预测分布。
 - en: Marathon World Record
+  id: totrans-225
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 马拉松世界纪录
 - en: For many running events, if you plot the world record pace over time, the result
     is a remarkably straight line. People, [including me](http://allendowney.blogspot.com/2011/04/two-hour-marathon-in-2045.html),
     have speculated about possible reasons for this phenomenon.
+  id: totrans-226
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于许多跑步比赛来说，如果你绘制世界纪录的配速随时间的变化，结果会是一条非常直的线。人们，[包括我](http://allendowney.blogspot.com/2011/04/two-hour-marathon-in-2045.html)，已经对这种现象可能的原因进行了推测。
 - en: 'People have also speculated about when, if ever, the world record time for
     the marathon will be less than two hours. (Note: In 2019 Eliud Kipchoge ran the
     marathon distance in under two hours, which is an astonishing achievement that
     I fully appreciate, but for several reasons it did not count as a world record).'
+  id: totrans-227
   prefs: []
   type: TYPE_NORMAL
+  zh: 人们也对马拉松的世界纪录何时能否低于两小时进行了推测。（注：2019年Eliud Kipchoge在两小时内完成了马拉松比赛，这是一个令人惊讶的成就，我非常欣赏，但由于几个原因，这并没有被视为世界纪录）。
 - en: So, as a second example of Bayesian regression, we’ll consider the world record
     progression for the marathon (for male runners), estimate the parameters of a
     linear model, and use the model to predict when a runner will break the two-hour
     barrier.
+  id: totrans-228
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，作为贝叶斯回归的第二个例子，我们将考虑马拉松（男子选手）的世界纪录进展，估计线性模型的参数，并使用该模型来预测何时选手将突破两小时的壁垒。
 - en: The following cell downloads a web page from Wikipedia that includes a table
     of marathon world records, and uses Pandas to put the data in a `DataFrame`.
+  id: totrans-229
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下单元格下载了维基百科的一个网页，其中包括马拉松世界纪录表，并使用Pandas将数据放入`DataFrame`。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-230
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE64]'
+  id: totrans-231
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE64]'
 - en: '[PRE65]</details>'
+  id: totrans-232
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE65]</details>'
 - en: If that doesn’t work, I have made a copy of this page available. The following
     cell downloads and parses it.
+  id: totrans-233
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果这样不起作用，我已经复制了这个页面。以下单元格下载并解析它。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-234
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE66]</details>'
+  id: totrans-235
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE66]</details>'
 - en: The first table is the one we want.
+  id: totrans-236
   prefs: []
   type: TYPE_NORMAL
+  zh: 第一张表是我们想要的。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-237
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE67]'
+  id: totrans-238
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE67]'
 - en: '|  | Time | Name | Nationality | Date | Event/Place | Source | Notes |'
+  id: totrans-239
   prefs: []
   type: TYPE_TB
+  zh: '|  | 时间 | 名字 | 国籍 | 日期 | 事件/地点 | 来源 | 注释 |'
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- |'
+  id: totrans-240
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- | --- | --- | --- |'
 - en: '| 48 | 2:02:57 | Dennis Kimetto | Kenya | September 28, 2014 | Berlin Marathon
     | IAAF[86][87] ARRS[83] | The ARRS notes Kimetto''s extended time as 2:02... |'
+  id: totrans-241
   prefs: []
   type: TYPE_TB
+  zh: '| 48 | 2:02:57 | Dennis Kimetto | 肯尼亚 | 2014年9月28日 | 柏林马拉松 | IAAF[86][87] ARRS[83]
+    | ARRS指出Kimetto的延长时间为2:02... |'
 - en: '| 49 | 2:01:39 | Eliud Kipchoge | Kenya | September 16, 2018 | Berlin Marathon
     | IAAF[1] | NaN |'
+  id: totrans-242
   prefs: []
   type: TYPE_TB
+  zh: '| 49 | 2:01:39 | Eliud Kipchoge | 肯尼亚 | 2018年9月16日 | 柏林马拉松 | IAAF[1] | NaN
+    |'
 - en: '| 50 | 2:01:09 | Eliud Kipchoge | Kenya | September 25, 2022 | Berlin Marathon
     | IAAF[88] | NaN |</details>'
+  id: totrans-243
   prefs: []
   type: TYPE_NORMAL
+  zh: '| 50 | 2:01:09 | Eliud Kipchoge | 肯尼亚 | 2022年9月25日 | 柏林马拉松 | IAAF[88] | NaN
+    |</details>'
 - en: We can use Pandas to parse the dates. A few of them include notes that cause
     parsing problems, but the argument `errors='coerce'` tells Pandas to fill invalid
     dates with `NaT`, which is a version of `NaN` that represents “not a time”.
+  id: totrans-244
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用Pandas来解析日期。其中一些日期包括导致解析问题的注释，但参数`errors='coerce'`告诉Pandas用`NaT`填充无效日期，`NaT`是`NaN`的一种表示，表示“不是时间”。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-245
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE68]'
+  id: totrans-246
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE68]'
 - en: '[PRE69]</details>'
+  id: totrans-247
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE69]</details>'
 - en: We can also use Pandas to parse the record times.
+  id: totrans-248
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们还可以使用Pandas来解析纪录时间。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-249
   prefs: []
   type: TYPE_NORMAL
+  zh: 显示代码单元格内容 隐藏代码单元格内容
 - en: '[PRE70]</details>'
+  id: totrans-250
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE70]</details>'
 - en: And convert the times to paces in miles per hour.
+  id: totrans-251
   prefs: []
   type: TYPE_NORMAL
+  zh: 并将时间转换为每小时的速度。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-252
   prefs: []
   type: TYPE_NORMAL
+  zh: 显示代码单元格内容 隐藏代码单元格内容
 - en: '[PRE71]'
+  id: totrans-253
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE71]'
 - en: '[PRE72]</details>'
+  id: totrans-254
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE72]</details>'
 - en: The following function plots the results.
+  id: totrans-255
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数绘制了结果。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-256
   prefs: []
   type: TYPE_NORMAL
+  zh: 显示代码单元格内容 隐藏代码单元格内容
 - en: '[PRE73]</details>'
+  id: totrans-257
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE73]</details>'
 - en: Here’s what the results look like. The dashed line shows the speed required
     for a two-hour marathon, 13.1 miles per hour.
+  id: totrans-258
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是结果的样子。虚线显示了完成两小时马拉松所需的速度，每小时13.1英里。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-259
   prefs: []
   type: TYPE_NORMAL
+  zh: 显示代码单元格内容 隐藏代码单元格内容
 - en: '[PRE74]'
+  id: totrans-260
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE74]'
 - en: '![_images/cb9e2e797f7dd42dc78fccce00cc7fe74a07543923eb9891be8a7f6f4b5189b6.png](../Images/3ac8bc56e972880506b01bec3fc14893.png)</details>'
+  id: totrans-261
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/cb9e2e797f7dd42dc78fccce00cc7fe74a07543923eb9891be8a7f6f4b5189b6.png](../Images/3ac8bc56e972880506b01bec3fc14893.png)</details>'
 - en: It’s not a perfectly straight line. In the early years of the marathon, the
     record speed increased quickly; since about 1970, it has been increasing more
     slowly.
+  id: totrans-262
   prefs: []
   type: TYPE_NORMAL
+  zh: 这不是一个完全的直线。在马拉松比赛的早期，记录速度迅速增加；自大约1970年以来，增速放缓了。
 - en: For our analysis, let’s focus on the recent progression, starting in 1970.
+  id: totrans-263
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于我们的分析，让我们关注最近的进展，从1970年开始。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-264
   prefs: []
   type: TYPE_NORMAL
+  zh: 显示代码单元格内容 隐藏代码单元格内容
 - en: '[PRE75]'
+  id: totrans-265
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE75]'
 - en: '|  | Time | Name | Nationality | Date | Event/Place | Source | Notes | date
     | time | y |'
+  id: totrans-266
   prefs: []
   type: TYPE_TB
+  zh: '|  | 时间 | 姓名 | 国籍 | 日期 | 事件/地点 | 来源 | 注释 | 日期 | 时间 | y |'
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  id: totrans-267
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
 - en: '| 32 | 2:09:28.8 | Ron Hill | United Kingdom | July 23, 1970 | Edinburgh, Scotland
     | ARRS[9] | NaN | 1970-07-23 | 0 days 02:09:28.800000 | 12.140871 |'
+  id: totrans-268
   prefs: []
   type: TYPE_TB
+  zh: '| 32 | 2:09:28.8 | Ron Hill | 英国 | 1970年7月23日 | 苏格兰爱丁堡 | ARRS[9] | NaN | 1970-07-23
+    | 0天 02:09:28.800000 | 12.140871 |'
 - en: '| 33 | 2:09:12 | Ian Thompson | United Kingdom | January 31, 1974 | Christchurch,
     New Zealand | ARRS[9] | NaN | 1974-01-31 | 0 days 02:09:12 | 12.167183 |'
+  id: totrans-269
   prefs: []
   type: TYPE_TB
+  zh: '| 33 | 2:09:12 | Ian Thompson | 英国 | 1974年1月31日 | 新西兰基督城 | ARRS[9] | NaN |
+    1974-01-31 | 0天 02:09:12 | 12.167183 |'
 - en: '| 34 | 2:09:05.6 | Shigeru So | Japan | February 5, 1978 | Beppu-Ōita Marathon
     | ARRS[9] | NaN | 1978-02-05 | 0 days 02:09:05.600000 | 12.177236 |'
+  id: totrans-270
   prefs: []
   type: TYPE_TB
+  zh: '| 34 | 2:09:05.6 | Shigeru So | 日本 | 1978年2月5日 | 别府大分马拉松 | ARRS[9] | NaN |
+    1978-02-05 | 0天 02:09:05.600000 | 12.177236 |'
 - en: '| 35 | 2:09:01 | Gerard Nijboer | Netherlands | April 26, 1980 | Amsterdam
     Marathon | ARRS[9] | NaN | 1980-04-26 | 0 days 02:09:01 | 12.184472 |'
+  id: totrans-271
   prefs: []
   type: TYPE_TB
+  zh: '| 35 | 2:09:01 | Gerard Nijboer | 荷兰 | 1980年4月26日 | 阿姆斯特丹马拉松 | ARRS[9] | NaN
+    | 1980-04-26 | 0天 02:09:01 | 12.184472 |'
 - en: '| 36 | 2:08:18 | Robert De Castella | Australia | December 6, 1981 | Fukuoka
     Marathon | IAAF,[53] ARRS[9] | NaN | 1981-12-06 | 0 days 02:08:18 | 12.252533
     |</details>'
+  id: totrans-272
   prefs: []
   type: TYPE_NORMAL
+  zh: '| 36 | 2:08:18 | Robert De Castella | 澳大利亚 | 1981年12月6日 | 福冈马拉松 | IAAF,[53]
+    ARRS[9] | NaN | 1981-12-06 | 0天 02:08:18 | 12.252533 |</details>'
 - en: 'In the notebook for this chapter, you can see how I loaded and cleaned the
     data. The result is a `DataFrame` that contains the following columns (and additional
     information we won’t use):'
+  id: totrans-273
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本章的笔记本中，您可以看到我如何加载和清理数据。结果是一个包含以下列（和我们不会使用的其他信息）的`DataFrame`：
 - en: '`date`, which is a Pandas `Timestamp` representing the date when the world
     record was broken, and'
+  id: totrans-274
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`日期`，这是一个代表世界纪录被打破的日期的Pandas `Timestamp`，和'
 - en: '`speed`, which records the record-breaking pace in mph.'
+  id: totrans-275
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`速度`，记录了以英里/小时为单位的创纪录配速。'
 - en: 'Here’s what the results look like, starting in 1970:'
+  id: totrans-276
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是结果的样子，从1970年开始：
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-277
   prefs: []
   type: TYPE_NORMAL
+  zh: 显示代码单元格源代码 隐藏代码单元格源代码
 - en: '[PRE76]</details> ![_images/e0e47c76527482395e93a96135d115eca888e0ad44e1dea1a7ba82dfd6d4b5d2.png](../Images/4097d8cf3e5b87f7fbf86c4f0676bcfd.png)'
+  id: totrans-278
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE76]</details> ![_images/e0e47c76527482395e93a96135d115eca888e0ad44e1dea1a7ba82dfd6d4b5d2.png](../Images/4097d8cf3e5b87f7fbf86c4f0676bcfd.png)'
 - en: The data points fall approximately on a line, although it’s possible that the
     slope is increasing.
+  id: totrans-279
   prefs: []
   type: TYPE_NORMAL
+  zh: 数据点大致落在一条直线上，尽管斜率可能在增加。
 - en: To prepare the data for regression, I’ll subtract away the approximate midpoint
     of the time interval, 1995.
+  id: totrans-280
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了准备回归的数据，我将减去时间间隔的近似中点，1995年。
 - en: '[PRE77]'
+  id: totrans-281
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE77]'
 - en: When we subtract two `Timestamp` objects, the result is a “time delta”, which
     we can convert to seconds and then to years.
+  id: totrans-282
   prefs: []
   type: TYPE_NORMAL
+  zh: 当我们减去两个`Timestamp`对象时，结果是一个“时间差”，我们可以将其转换为秒，然后转换为年。
 - en: '[PRE78]'
+  id: totrans-283
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE78]'
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-284
   prefs: []
   type: TYPE_NORMAL
+  zh: 显示代码单元格内容 隐藏代码单元格内容
 - en: '[PRE79]'
+  id: totrans-285
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE79]'
 - en: '[PRE80]</details>'
+  id: totrans-286
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE80]'
 - en: As in the previous example, I’ll use least squares regression to compute point
     estimates for the parameters, which will help with choosing priors.
+  id: totrans-287
   prefs: []
   type: TYPE_NORMAL
+  zh: 与前面的例子一样，我将使用最小二乘回归来计算参数的点估计，这将有助于选择先验。
 - en: '[PRE81]'
+  id: totrans-288
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE81]'
 - en: '[PRE82]'
+  id: totrans-289
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE82]'
 - en: The estimated intercept is about 12.5 mph, which is the interpolated world record
     pace for 1995\. The estimated slope is about 0.015 mph per year, which is the
     rate the world record pace is increasing, according to the model.
+  id: totrans-290
   prefs: []
   type: TYPE_NORMAL
+  zh: 估计的截距约为12.5英里/小时，这是1995年的插值世界纪录配速。估计的斜率约为每年0.015英里/小时，这是世界纪录配速根据模型的增长速度。
 - en: Again, we can use the standard deviation of the residuals as a point estimate
     for `sigma`.
+  id: totrans-291
   prefs: []
   type: TYPE_NORMAL
+  zh: 同样，我们可以使用残差的标准差作为`sigma`的点估计。
 - en: '[PRE83]'
+  id: totrans-292
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE83]'
 - en: '[PRE84]'
+  id: totrans-293
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE84]'
 - en: These parameters give us a good idea where we should put the prior distributions.
+  id: totrans-294
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些参数让我们很好地了解了我们应该放置先验分布的位置。
 - en: The Priors
+  id: totrans-295
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 先验
 - en: Here are the prior distributions I chose for `slope`, `intercept`, and `sigma`.
+  id: totrans-296
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是我为`斜率`、`截距`和`西格玛`选择的先验分布。
 - en: '[PRE85]'
+  id: totrans-297
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE85]'
 - en: '[PRE86]'
+  id: totrans-298
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE86]'
 - en: '[PRE87]'
+  id: totrans-299
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE87]'
 - en: And here’s the joint prior distribution.
+  id: totrans-300
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是联合先验分布。
 - en: '[PRE88]'
+  id: totrans-301
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE88]'
 - en: '|  |  |  | probs |'
+  id: totrans-302
   prefs: []
   type: TYPE_TB
+  zh: '|  |  |  | 概率 |'
 - en: '| --- | --- | --- | --- |'
+  id: totrans-303
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- |'
 - en: '| Slope | Intercept | Sigma |  |'
+  id: totrans-304
   prefs: []
   type: TYPE_TB
+  zh: '| 斜率 | 截距 | 西格玛 |  |'
 - en: '| --- | --- | --- | --- |'
+  id: totrans-305
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- |'
 - en: '| 0.012 | 12.4 | 0.010000 | 0.000015 |'
+  id: totrans-306
   prefs: []
   type: TYPE_TB
+  zh: '| 0.012 | 12.4 | 0.010000 | 0.000015 |'
 - en: '| 0.016667 | 0.000015 |'
+  id: totrans-307
   prefs: []
   type: TYPE_TB
+  zh: '| 0.016667 | 0.000015 |'
 - en: '| 0.023333 | 0.000015 |'
+  id: totrans-308
   prefs: []
   type: TYPE_TB
+  zh: '| 0.023333 | 0.000015 |'
 - en: 'Now we can compute likelihoods as in the previous example:'
+  id: totrans-309
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以像前面的例子一样计算可能性：
 - en: '[PRE89]'
+  id: totrans-310
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE89]'
 - en: Now we can do the update in the usual way.
+  id: totrans-311
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以按照通常的方式进行更新。
 - en: '[PRE90]'
+  id: totrans-312
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE90]'
 - en: <details class="hide below-input"><summary aria-label="Toggle hidden content">Show
     code cell output Hide code cell output</summary>
+  id: totrans-313
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide below-input"><summary aria-label="Toggle hidden content">显示代码单元格输出
+    隐藏代码单元格输出</summary>
 - en: '[PRE91]</details>'
+  id: totrans-314
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE91]</details>'
 - en: 'And unpack the marginals:'
+  id: totrans-315
   prefs: []
   type: TYPE_NORMAL
+  zh: 并解包边际：
 - en: '[PRE92]'
+  id: totrans-316
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE92]'
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-317
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE93]'
+  id: totrans-318
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE93]'
 - en: '![_images/b8117b8b548af3c0044dd2cfca4737b200745242572c4ddd4c6c4bb358acbe8d.png](../Images/b50426fb2214eb48118bb145ce4ecc37.png)</details>'
+  id: totrans-319
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/b8117b8b548af3c0044dd2cfca4737b200745242572c4ddd4c6c4bb358acbe8d.png](../Images/b50426fb2214eb48118bb145ce4ecc37.png)</details>'
 - en: 'Here’s the posterior distribution of `inter`:'
+  id: totrans-320
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是`inter`的后验分布：
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-321
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE94]</details> ![_images/0672371f2c001a21e11016942fe04bcb4761581494d3b6bec0bb5d585b516904.png](../Images/7465fd7a9d1ae74eaf19d34594d109d1.png)<details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-322
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE94]</details> ![_images/0672371f2c001a21e11016942fe04bcb4761581494d3b6bec0bb5d585b516904.png](../Images/7465fd7a9d1ae74eaf19d34594d109d1.png)<details
+    class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE95]'
+  id: totrans-323
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE95]'
 - en: '[PRE96]</details>'
+  id: totrans-324
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE96]</details>'
 - en: The posterior mean is about 12.5 mph, which is the world record marathon pace
     the model predicts for the midpoint of the date range, 1994.
+  id: totrans-325
   prefs: []
   type: TYPE_NORMAL
+  zh: 后验均值约为12.5英里，这是模型预测的日期范围中点的世界纪录马拉松配速，即1994年。
 - en: And here’s the posterior distribution of `slope`.
+  id: totrans-326
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是`斜率`的后验分布。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-327
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE97]</details> ![_images/7109d0d15b11012912c742b75e4e4c39cd5dfb2818b8a301ce029d65ac800228.png](../Images/93f87be8f78847458d7bf30cf4edbf5a.png)<details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-328
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE97]</details> ![_images/7109d0d15b11012912c742b75e4e4c39cd5dfb2818b8a301ce029d65ac800228.png](../Images/93f87be8f78847458d7bf30cf4edbf5a.png)<details
+    class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE98]'
+  id: totrans-329
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE98]'
 - en: '[PRE99]</details>'
+  id: totrans-330
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE99]</details>'
 - en: The posterior mean is about 0.015 mph per year, or 0.15 mph per decade.
+  id: totrans-331
   prefs: []
   type: TYPE_NORMAL
+  zh: 后验均值约为每年0.015英里，或每十年0.15英里。
 - en: 'That’s interesting, but it doesn’t answer the question we’re interested in:
     When will there be a two-hour marathon? To answer that, we have to make predictions.'
+  id: totrans-332
   prefs: []
   type: TYPE_NORMAL
+  zh: 这很有趣，但它没有回答我们感兴趣的问题：何时会有两小时的马拉松？要回答这个问题，我们必须进行预测。
 - en: Prediction
+  id: totrans-333
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 预测
 - en: To generate predictions, I’ll draw a sample from the posterior distribution
     of parameters, then use the regression equation to combine the parameters with
     the data.
+  id: totrans-334
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了生成预测，我将从参数的后验分布中抽取一个样本，然后使用回归方程将参数与数据结合起来。
 - en: '`Pmf` provides `choice`, which we can use to draw a random sample with replacement,
     using the posterior probabilities as weights.'
+  id: totrans-335
   prefs: []
   type: TYPE_NORMAL
+  zh: '`Pmf`提供了`choice`，我们可以使用它以后验概率作为权重进行有放回地随机抽样。'
 - en: '[PRE100]'
+  id: totrans-336
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE100]'
 - en: The result is an array of tuples. Looping through the sample, we can use the
     regression equation to generate predictions for a range of `xs`.
+  id: totrans-337
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个元组数组。遍历样本，我们可以使用回归方程来生成一系列`xs`的预测。
 - en: '[PRE101]'
+  id: totrans-338
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE101]'
 - en: Each prediction is an array with the same length as `xs`, which I store as a
     row in `pred`. So the result has one row for each sample and one column for each
     value of `x`.
+  id: totrans-339
   prefs: []
   type: TYPE_NORMAL
+  zh: 每个预测都是一个与`xs`长度相同的数组，我将其存储为`pred`中的一行。因此结果对于每个样本有一行，对于每个`x`的值有一列。
 - en: We can use `percentile` to compute the 5th, 50th, and 95th percentiles in each
     column.
+  id: totrans-340
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用`percentile`来计算每列的第5、50和95百分位数。
 - en: '[PRE102]'
+  id: totrans-341
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE102]'
 - en: To show the results, I’ll plot the median of the predictions as a line and the
     90% credible interval as a shaded area.
+  id: totrans-342
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了展示结果，我将以线的形式绘制预测的中位数，并以阴影区域表示90%的可信区间。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-343
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE103]</details> ![_images/da26aaa0faaca034b92e93a2aa91612ff8cef66bda7d869e32bd0f48698d039a.png](../Images/0a5ed315e6da6677b8e4dbdb57e42ba9.png)'
+  id: totrans-344
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE103]</details> ![_images/da26aaa0faaca034b92e93a2aa91612ff8cef66bda7d869e32bd0f48698d039a.png](../Images/0a5ed315e6da6677b8e4dbdb57e42ba9.png)'
 - en: The dashed line shows the two-hour marathon pace, which is 13.1 miles per hour.
     Visually we can estimate that the prediction line hits the target pace between
     2030 and 2040.
+  id: totrans-345
   prefs: []
   type: TYPE_NORMAL
+  zh: 虚线显示了两小时马拉松配速，即每小时13.1英里。从视觉上，我们可以估计预测线在2030年到2040年之间达到目标配速。
 - en: To make this more precise, we can use interpolation to see when the predictions
     cross the finish line. SciPy provides `interp1d`, which does linear interpolation
     by default.
+  id: totrans-346
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了使这更加精确，我们可以使用插值来查看预测何时到达终点。SciPy提供了`interp1d`，默认情况下进行线性插值。
 - en: '[PRE104]'
+  id: totrans-347
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE104]'
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-348
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE105]'
+  id: totrans-349
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE105]'
 - en: '|  | datetime |'
+  id: totrans-350
   prefs: []
   type: TYPE_TB
+  zh: '|  | 日期时间 |'
 - en: '| --- | --- |'
+  id: totrans-351
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| early | 2028-03-24 16:47:21.722121600 |'
+  id: totrans-352
   prefs: []
   type: TYPE_TB
+  zh: '| 早期 | 2028-03-24 16:47:21.722121600 |'
 - en: '| median | 2035-03-10 14:59:51.082915200 |'
+  id: totrans-353
   prefs: []
   type: TYPE_TB
+  zh: '| 中位数 | 2035-03-10 14:59:51.082915200 |'
 - en: '| late | 2040-12-29 22:53:36.679804800 |</details>'
+  id: totrans-354
   prefs: []
   type: TYPE_NORMAL
+  zh: '| 晚期 | 2040-12-29 22:53:36.679804800 |</details>'
 - en: The median prediction is 2036, with a 90% credible interval from 2032 to 2043\.
     So there is about a 5% chance we’ll see a two-hour marathon before 2032.
+  id: totrans-355
   prefs: []
   type: TYPE_NORMAL
+  zh: 中位数预测为2036年，90%的可信区间为2032年至2043年。因此，在2032年之前，我们有大约5%的机会看到两小时的马拉松比赛。
 - en: Summary
+  id: totrans-356
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 摘要
 - en: This chapter introduces Bayesian regression, which is based on the same model
     as least squares regression; the difference is that it produces a posterior distribution
     for the parameters rather than point estimates.
+  id: totrans-357
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章介绍了贝叶斯回归，它基于与最小二乘回归相同的模型；不同之处在于它为参数生成后验分布，而不是点估计。
 - en: In the first example, we looked at changes in snowfall in Norfolk County, Massachusetts,
     and concluded that we get more snowfall now than when I was young, contrary to
     my expectation.
+  id: totrans-358
   prefs: []
   type: TYPE_NORMAL
+  zh: 在第一个示例中，我们研究了马萨诸塞州诺福克县降雪量的变化，并得出结论：现在的降雪量比我年轻时更多，与我的预期相反。
 - en: In the second example, we looked at the progression of world record pace for
     the men’s marathon, computed the joint posterior distribution of the regression
     parameters, and used it to generate predictions for the next 20 years.
+  id: totrans-359
   prefs: []
   type: TYPE_NORMAL
+  zh: 在第二个示例中，我们研究了男子马拉松世界纪录速度的进展，计算了回归参数的联合后验分布，并用它来预测未来20年的情况。
 - en: These examples have three parameters, so it takes a little longer to compute
     the likelihood of the data. With more than three parameters, it becomes impractical
     to use grid algorithms.
+  id: totrans-360
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些示例有三个参数，因此计算数据的可能性需要更长的时间。当参数超过三个时，使用网格算法变得不切实际。
 - en: In the next few chapters, we’ll explore other algorithms that reduce the amount
     of computation we need to do a Bayesian update, which makes it possible to use
     models with more parameters.
+  id: totrans-361
   prefs: []
   type: TYPE_NORMAL
+  zh: 在接下来的几章中，我们将探讨其他算法，这些算法可以减少我们需要进行贝叶斯更新的计算量，从而使得使用具有更多参数的模型成为可能。
 - en: But first, you might want to work on these exercises.
+  id: totrans-362
   prefs: []
   type: TYPE_NORMAL
+  zh: 但首先，您可能想要解决这些练习。
 - en: Exercises
+  id: totrans-363
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 练习
 - en: '**Exercise:** I am under the impression that it is warmer around here than
     it used to be. In this exercise, you can put my conjecture to the test.'
+  id: totrans-364
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** 我的印象是这里的气温比过去更暖和。在这个练习中，您可以对我的猜测进行测试。'
 - en: We’ll use the same dataset we used to model snowfall; it also includes daily
     low and high temperatures in Norfolk County, Massachusetts during my lifetime.
+  id: totrans-365
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将使用与建模降雪量相同的数据集；它还包括了我有生之年内马萨诸塞州诺福克县的每日最低和最高温度。
 - en: Here’s the data.
+  id: totrans-366
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是数据。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-367
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE106]'
+  id: totrans-368
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE106]'
 - en: '|  | STATION | NAME | DATE | PRCP | SNOW | SNWD | TMAX | TMIN | TOBS | WESD
     | WT01 | WT03 | WT04 | WT05 | WT06 | WT08 | WT09 | WT11 | WT16 | WT18 |'
+  id: totrans-369
   prefs: []
   type: TYPE_TB
+  zh: '|  | STATION | NAME | DATE | PRCP | SNOW | SNWD | TMAX | TMIN | TOBS | WESD
+    | WT01 | WT03 | WT04 | WT05 | WT06 | WT08 | WT09 | WT11 | WT16 | WT18 |'
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
     | --- | --- | --- | --- | --- | --- | --- | --- |'
+  id: totrans-370
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+    | --- | --- | --- | --- | --- | --- | --- | --- |'
 - en: '| 0 | USC00190736 | BLUE HILL COOP, MA US | 1967-05-11 | 0.43 | 0.0 | 0.0 |
     57 | 36.0 | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN |
     NaN |'
+  id: totrans-371
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | USC00190736 | BLUE HILL COOP, MA US | 1967-05-11 | 0.43 | 0.0 | 0.0 |
+    57 | 36.0 | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN |
+    NaN |'
 - en: '| 1 | USC00190736 | BLUE HILL COOP, MA US | 1967-05-12 | 0.00 | 0.0 | 0.0 |
     58 | 39.0 | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN |
     NaN |'
+  id: totrans-372
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | USC00190736 | BLUE HILL COOP, MA US | 1967-05-12 | 0.00 | 0.0 | 0.0 |
+    58 | 39.0 | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN |
+    NaN |'
 - en: '| 2 | USC00190736 | BLUE HILL COOP, MA US | 1967-05-13 | 0.00 | 0.0 | 0.0 |
     64 | 38.0 | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN |
     NaN |</details>'
+  id: totrans-373
   prefs: []
   type: TYPE_NORMAL
+  zh: '| 2 | USC00190736 | BLUE HILL COOP, MA US | 1967-05-13 | 0.00 | 0.0 | 0.0 |
+    64 | 38.0 | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN |
+    NaN |</details>'
 - en: Again, I’ll create a column that contains the year part of the dates.
+  id: totrans-374
   prefs: []
   type: TYPE_NORMAL
+  zh: 同样，我将创建一个包含日期年份部分的列。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-375
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE107]</details>'
+  id: totrans-376
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE107]</details>'
 - en: This dataset includes `TMIN` and `TMAX`, which are the daily low and high temperatures
     in degrees F. I’ll create a new column with the daily midpoint of the low and
     high temperatures.
+  id: totrans-377
   prefs: []
   type: TYPE_NORMAL
+  zh: 该数据集包括`TMIN`和`TMAX`，它们是以华氏度为单位的每日最低和最高温度。我将创建一个新的列，其中包含每日最低和最高温度的中点。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-378
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE108]</details>'
+  id: totrans-379
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE108]</details>'
 - en: Now we can group by year and compute the mean of these daily temperatures.
+  id: totrans-380
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以按年份分组，并计算这些每日温度的平均值。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-381
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE109]'
+  id: totrans-382
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE109]'
 - en: '[PRE110]</details>'
+  id: totrans-383
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE110]</details>'
 - en: Again, I’ll drop the first and last years, which are incomplete.
+  id: totrans-384
   prefs: []
   type: TYPE_NORMAL
+  zh: 同样，我将删除第一年和最后一年，因为它们是不完整的。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-385
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE111]'
+  id: totrans-386
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE111]'
 - en: '[PRE112]</details>'
+  id: totrans-387
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE112]</details>'
 - en: Here’s what the time series looks like.
+  id: totrans-388
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是时间序列的样子。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-389
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE113]'
+  id: totrans-390
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE113]'
 - en: '![_images/0e5ea057cb23c55ddc0b8a9551bf81914c7a1271975cbe0cd1a12a0f5608fd9a.png](../Images/cc713ba51afbcbadb9aa2696cf810cc3.png)</details>'
+  id: totrans-391
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/0e5ea057cb23c55ddc0b8a9551bf81914c7a1271975cbe0cd1a12a0f5608fd9a.png](../Images/cc713ba51afbcbadb9aa2696cf810cc3.png)</details>'
 - en: As we did with the snow data, I’ll convert the `Series` to a `DataFrame` to
     prepare it for regression.
+  id: totrans-392
   prefs: []
   type: TYPE_NORMAL
+  zh: 与雪数据一样，我将把`Series`转换为`DataFrame`，以便为回归做准备。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-393
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE114]'
+  id: totrans-394
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE114]'
 - en: '|  | YEAR | TMID |'
+  id: totrans-395
   prefs: []
   type: TYPE_TB
+  zh: '|  | 年份 | TMID |'
 - en: '| --- | --- | --- |'
+  id: totrans-396
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- |'
 - en: '| 0 | 1968 | 48.071038 |'
+  id: totrans-397
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 1968 | 48.071038 |'
 - en: '| 1 | 1969 | 48.687671 |'
+  id: totrans-398
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 1969 | 48.687671 |'
 - en: '| 2 | 1970 | 48.258904 |'
+  id: totrans-399
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 1970 | 48.258904 |'
 - en: '| 3 | 1971 | 48.804110 |'
+  id: totrans-400
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 1971 | 48.804110 |'
 - en: '| 4 | 1972 | 47.112022 |</details> <details class="hide above-input"><summary
     aria-label="Toggle hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-401
   prefs: []
   type: TYPE_NORMAL
+  zh: '| 4 | 1972 | 47.112022 |</details> <details class="hide above-input"><summary
+    aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE115]'
+  id: totrans-402
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE115]'
 - en: '[PRE116]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-403
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE116]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE117]'
+  id: totrans-404
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE117]'
 - en: '[PRE118]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-405
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE118]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE119]'
+  id: totrans-406
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE119]'
 - en: '[PRE120]</details>'
+  id: totrans-407
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE120]</details>'
 - en: Now we can use StatsModels to estimate the parameters.
+  id: totrans-408
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以使用StatsModels来估计参数。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-409
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
 - en: '[PRE121]'
+  id: totrans-410
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE121]'
 - en: '[PRE122]</details>'
+  id: totrans-411
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE122]</details>'
 - en: And compute the standard deviation of the parameters.
+  id: totrans-412
   prefs: []
   type: TYPE_NORMAL
+  zh: 并计算参数的标准差。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-413
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
 - en: '[PRE123]'
+  id: totrans-414
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE123]'
 - en: '[PRE124]</details>'
+  id: totrans-415
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE124]</details>'
 - en: According to the least squares regression model, annual average temperature
     is increasing by about 0.044 degrees F per year.
+  id: totrans-416
   prefs: []
   type: TYPE_NORMAL
+  zh: 根据最小二乘回归模型，年均气温每年大约增加0.044华氏度。
 - en: To quantify the uncertainty of these parameters and generate predictions for
     the future, we can use Bayesian regression.
+  id: totrans-417
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了量化这些参数的不确定性并为未来生成预测，我们可以使用贝叶斯回归。
 - en: Use StatsModels to generate point estimates for the regression parameters.
+  id: totrans-418
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 使用StatsModels生成回归参数的点估计。
 - en: Choose priors for `slope`, `intercept`, and `sigma` based on these estimates,
     and use `make_joint3` to make a joint prior distribution.
+  id: totrans-419
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 根据这些估计值为`slope`、`intercept`和`sigma`选择先验，并使用`make_joint3`生成联合先验分布。
 - en: Compute the likelihood of the data and compute the posterior distribution of
     the parameters.
+  id: totrans-420
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 计算数据的似然性并计算参数的后验分布。
 - en: Extract the posterior distribution of `slope`. How confident are we that temperature
     is increasing?
+  id: totrans-421
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 提取`slope`的后验分布。我们对气温正在上升有多大的信心？
 - en: Draw a sample of parameters from the posterior distribution and use it to generate
     predictions up to 2067.
+  id: totrans-422
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 从后验分布中抽取参数样本，并用它生成直到2067年的预测。
 - en: Plot the median of the predictions and a 90% credible interval along with the
     observed data.
+  id: totrans-423
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 绘制预测的中位数和90%的可信区间，以及观察到的数据。
 - en: Does the model fit the data well? How much do we expect annual average temperatures
     to increase over my (expected) lifetime?
+  id: totrans-424
   prefs: []
   type: TYPE_NORMAL
+  zh: 模型是否很好地拟合了数据？我们预计年均气温在我的（预期的）寿命内会增加多少？
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-425
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
 - en: '[PRE125]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-426
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE125]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE126]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-427
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE126]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE127]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-428
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE127]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE128]'
+  id: totrans-429
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE128]'
 - en: '|  |  |  | probs |'
+  id: totrans-430
   prefs: []
   type: TYPE_TB
+  zh: '|  |  |  | 概率 |'
 - en: '| --- | --- | --- | --- |'
+  id: totrans-431
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- |'
 - en: '| Slope | Intercept | Sigma |  |'
+  id: totrans-432
   prefs: []
   type: TYPE_TB
+  zh: '| 斜率 | 截距 | Sigma |  |'
 - en: '| --- | --- | --- | --- |'
+  id: totrans-433
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- |'
 - en: '| 0.0 | 48.0 | 0.50 | 0.000015 |'
+  id: totrans-434
   prefs: []
   type: TYPE_TB
+  zh: '| 0.0 | 48.0 | 0.50 | 0.000015 |'
 - en: '| 0.55 | 0.000015 |'
+  id: totrans-435
   prefs: []
   type: TYPE_TB
+  zh: '| 0.55 | 0.000015 |'
 - en: '| 0.60 | 0.000015 |</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-436
   prefs: []
   type: TYPE_NORMAL
+  zh: '| 0.60 | 0.000015 |</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE129]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-437
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE129]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE130]'
+  id: totrans-438
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE130]'
 - en: '[PRE131]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-439
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE131]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE132]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-440
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE132]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE133]'
+  id: totrans-441
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE133]'
 - en: '![_images/054f69a47e9ef703628b29cf2f4fd988c96f0bb1a491cc09466b1b9771c66b89.png](../Images/4425c7509d8ee059fefb1ba760871d5f.png)</details><details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-442
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/054f69a47e9ef703628b29cf2f4fd988c96f0bb1a491cc09466b1b9771c66b89.png](../Images/4425c7509d8ee059fefb1ba760871d5f.png)</details><details
+    class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE134]'
+  id: totrans-443
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE134]'
 - en: '[PRE135]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-444
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE135]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE136]'
+  id: totrans-445
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE136]'
 - en: '![_images/dffebad935e040a0b8e1518068d909cd9c0c279b39379da7ac73886a6f06c868.png](../Images/12509a60abc499373cc5ae997ec78d71.png)</details><details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-446
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/dffebad935e040a0b8e1518068d909cd9c0c279b39379da7ac73886a6f06c868.png](../Images/12509a60abc499373cc5ae997ec78d71.png)</details><details
+    class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE137]'
+  id: totrans-447
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE137]'
 - en: '[PRE138]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-448
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE138]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE139]'
+  id: totrans-449
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE139]'
 - en: '[PRE140]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-450
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE140]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE141]'
+  id: totrans-451
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE141]'
 - en: '[PRE142]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-452
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE142]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE143]'
+  id: totrans-453
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE143]'
 - en: '![_images/f27dd76332fb1aa0347f6e1df0062a78e9ca00c7849dedcb79c9eb5a58b09c7c.png](../Images/5371d9034130a94f222c88435b41e495.png)</details><details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-454
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/f27dd76332fb1aa0347f6e1df0062a78e9ca00c7849dedcb79c9eb5a58b09c7c.png](../Images/5371d9034130a94f222c88435b41e495.png)</details><details
+    class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE144]'
+  id: totrans-455
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE144]'
 - en: '[PRE145]</details>'
+  id: totrans-456
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE145]</details>'
