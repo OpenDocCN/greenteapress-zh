@@ -3,11 +3,13 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 概率全知魔方
 - en: 原文：[https://allendowney.github.io/ThinkBayes2/beta_binomial.html](https://allendowney.github.io/ThinkBayes2/beta_binomial.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ThinkBayes2/beta_binomial.html](https://allendowney.github.io/ThinkBayes2/beta_binomial.html)
 - en: This example uses array computations to explore the concept of conjugate distributions.
     It is an extension of *[Think Bayes](https://greenteapress.com/wp/think-bayes/)*,
     [Chapter 18](https://allendowney.github.io/ThinkBayes2/chap18.html), which explains
@@ -16,11 +18,14 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 这个例子使用数组计算来探索共轭分布的概念。它是 *[Think Bayes](https://greenteapress.com/wp/think-bayes/)*
+    的扩展，[第18章](https://allendowney.github.io/ThinkBayes2/chap18.html)，解释了如何使用共轭先验进行贝叶斯更新，计算量很小。
 - en: The all-knowing cube of probability is an 3-D array that contains the past,
     the present, and the probabilistic future.
   id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 概率全知魔方是一个包含过去、现在和概率未来的三维数组。
 - en: At first, the cube appears to be a collection of binomial PMFs, but if we turn
     it sideways, we see that it is also a collection of negative binomial PMFs, and
     if we turn it sideways again, it is also a collection of grid-approximated beta
@@ -28,11 +33,13 @@
   id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 起初，魔方似乎是一组二项分布的 PMF，但如果我们把它横过来，我们会发现它也是一组负二项分布的 PMF，如果我们再次把它横过来，它也是一组网格近似的贝塔分布。
 - en: This tripartite nature is the source of its uncanny ability to perform Bayesian
     updates, which I will demonstrate.
   id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 这种三部分的性质是它具有执行贝叶斯更新的神奇能力的根源，我将进行演示。
 - en: '[PRE0]'
   id: totrans-6
   prefs: []
@@ -43,16 +50,19 @@
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 制作魔方
 - en: Suppose you run \(n\) trials where the probability of success is \(p\). To compute
     the probability of \(k\) successes, we can use the binomial distribution.
   id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设你进行了 \(n\) 次试验，成功的概率是 \(p\)。要计算 \(k\) 次成功的概率，我们可以使用二项分布。
 - en: For example, here’s a range of values for \(k\) and \(n\), and a discrete grid
     of values for \(p\).
   id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，这里是 \(k\) 和 \(n\) 的一系列值，以及 \(p\) 的离散网格值。
 - en: '[PRE1]'
   id: totrans-10
   prefs: []
@@ -63,6 +73,7 @@
   id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用 `meshgrid` 制作一个 \(k\)、\(n\) 和 \(p\) 的三维网格，使用 `binom` 在每个点上评估二项分布的 PMF。
 - en: '[PRE2]'
   id: totrans-12
   prefs: []
@@ -78,17 +89,20 @@
   id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是**概率全知魔方**，因为它可以回答我们关于伯努利试验的所有问题。让我来演示一下。
 - en: The binomial distribution
   id: totrans-15
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 二项分布
 - en: Suppose we are given \(n\) and \(p\), and we would like to know the distribution
     of \(k\). We can answer that question by selecting a vector from the cube along
     the \(k\) axis.
   id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设我们已知 \(n\) 和 \(p\)，我们想知道 \(k\) 的分布。我们可以通过沿着 \(k\) 轴从魔方中选择一个向量来回答这个问题。
 - en: '[PRE4]'
   id: totrans-17
   prefs: []
@@ -98,6 +112,7 @@
   id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个归一化的 PMF。
 - en: '[PRE5]'
   id: totrans-19
   prefs: []
@@ -112,6 +127,7 @@
   id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 它看起来是这样的。
 - en: '[PRE7]'
   id: totrans-22
   prefs: []
@@ -121,12 +137,14 @@
   id: totrans-23
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/1dbbe565464b50915e694c1adcba74a56d1cbc3079226148517aa86de13d54f4.png](../Images/3ed8c9d7a44cc89c336bdae1c955d04d.png)'
 - en: Because we used `binom` to compute the cube, we should not be surprised to find
     that this slice from the cube is a binomial PMF. But just to make sure, we can
     use `binom` again to confirm it.
   id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 因为我们使用 `binom` 计算魔方，所以不应该感到惊讶，发现这个魔方的切片是一个二项分布的 PMF。但为了确保，我们可以再次使用 `binom` 来确认。
 - en: '[PRE8]'
   id: totrans-25
   prefs: []
@@ -136,6 +154,7 @@
   id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以检查结果是否一致。
 - en: '[PRE9]'
   id: totrans-27
   prefs: []
@@ -152,21 +171,26 @@
   id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，我们可以将魔方看作一组二项分布的 PMF。但我们也可以将其看作 \(k\)、\(n\) 和 \(p\) 的联合分布，这引发了一个问题：如果我们沿着
+    \(n\) 和 \(p\) 轴选择一个向量，我们会得到什么？
 - en: The negative binomial distribution
   id: totrans-30
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 负二项分布
 - en: Suppose we plan to run Bernoulli trials with probability \(p\) until we see
     \(k\) successes. How many trials will it take?
   id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设我们计划以概率 \(p\) 进行伯努利试验，直到看到 \(k\) 次成功。需要多少次试验？
 - en: We can answer this question by selecting a vector from the cube along the \(n\)
     axis.
   id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以通过沿着 \(n\) 轴从魔方中选择一个向量来回答这个问题。
 - en: '[PRE11]'
   id: totrans-33
   prefs: []
@@ -178,10 +202,12 @@
   id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果接近我们想要的答案，但有一些问题需要解决。记住，魔方中的值来自二项分布的 PMF，看起来是这样的。
 - en: \[Pr(k; n, p) = \binom{n}{k} p^{k} (1-p)^{n-k}\]
   id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: \[Pr(k; n, p) = \binom{n}{k} p^{k} (1-p)^{n-k}\]
 - en: The first term is the binomial coefficient, which indicates that there are \(n\)
     places we could find \(k\) successes. But if we keep running trials until we see
     \(k\) successes, we know the last trial will be a success, which means there are
@@ -189,10 +215,13 @@
   id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 第一项是二项式系数，表示我们可以找到 \(k\) 次成功的 \(n\) 个位置。但如果我们一直进行试验，直到看到 \(k\) 次成功，我们知道最后一次试验会成功，这意味着我们只能找到其他
+    \(k-1\) 次成功的 \(n-1\) 个位置。
 - en: So we have to adjust the values from the cube by dividing the elements by \(n/k\).
   id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 所以我们必须通过将元素除以 \(n/k\) 来调整魔方中的值。
 - en: '[PRE12]'
   id: totrans-38
   prefs: []
@@ -202,6 +231,7 @@
   id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 并且对结果进行归一化，得到一个合适的 PMF。
 - en: '[PRE13]'
   id: totrans-40
   prefs: []
@@ -211,6 +241,7 @@
   id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: 它看起来是这样的。
 - en: '[PRE14]'
   id: totrans-42
   prefs: []
@@ -220,10 +251,12 @@
   id: totrans-43
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/51edcd12a1bc05b69931e2780914f6188edca778ea322bda187b49025823c225.png](../Images/4a176a0d1a4ac8dd63525dccd0402620.png)'
 - en: This is a negative binomial distribution, which we can confirm using `scipy.stats.nbinom`.
   id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个负二项分布，我们可以使用 `scipy.stats.nbinom` 来确认。
 - en: '[PRE15]'
   id: totrans-45
   prefs: []
@@ -249,19 +282,23 @@
   id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了看清这是如何工作的，我们可以比较二项分布的 PMF，它是一个以 \(n\) 和 \(p\) 为参数的分布，\(k\) 为变量：
 - en: \[Pr(k; n, p) = \binom{n}{k} p^{k} (1-p)^{n-k}\]
   id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: \[Pr(k; n, p) = \binom{n}{k} p^{k} (1-p)^{n-k}\]
 - en: 'And the negative binomial PMF, which I’ve written as a distribution over \(n\)
     with \(k\) and \(p\) as parameters:'
   id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: 以及负二项分布的 PMF，我将其写成了以 \(n\) 为参数的分布，\(k\) 和 \(p\) 为参数：
 - en: \[Pr(n; k, p) = \binom{n-1}{k-1} p^k (1-p)^{n-k}\]
   id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: \[Pr(n; k, p) = \binom{n-1}{k-1} p^k (1-p)^{n-k}\]
 - en: This is not the most common way to parameterize the negative binomial distribution,
     but it shows that the only difference is in the binomial coefficient, because
     we know that the last trial is a success.
