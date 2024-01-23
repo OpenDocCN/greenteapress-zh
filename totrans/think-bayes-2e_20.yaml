@@ -3,33 +3,39 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 回归
 - en: 原文：[https://allendowney.github.io/ThinkBayes2/chap17.html](https://allendowney.github.io/ThinkBayes2/chap17.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ThinkBayes2/chap17.html](https://allendowney.github.io/ThinkBayes2/chap17.html)
 - en: In the previous chapter we saw several examples of logistic regression, which
     is based on the assumption that the likelihood of an outcome, expressed in the
     form of log odds, is a linear function of some quantity (continuous or discrete).
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 在上一章中，我们看到了几个逻辑回归的例子，它基于这样一个假设，即结果的可能性，以对数几率的形式表达，是某个数量（连续或离散）的线性函数。
 - en: In this chapter we’ll work on examples of simple linear regression, which models
     the relationship between two quantities. Specifically, we’ll look at changes over
     time in snowfall and the marathon world record.
   id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本章中，我们将处理简单线性回归的示例，它模拟了两个量之间的关系。具体来说，我们将研究降雪量和马拉松世界纪录随时间的变化。
 - en: The models we’ll use have three parameters, so you might want to review the
     tools we used for the three-parameter model in <<_MarkandRecapture>>.
   id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将使用的模型有三个参数，所以你可能想回顾一下我们在<<_MarkandRecapture>>中使用的三参数模型的工具。
 - en: More Snow?
   id: totrans-5
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 更多的雪？
 - en: I am under the impression that we don’t get as much snow around here as we used
     to. By “around here” I mean Norfolk County, Massachusetts, where I was born, grew
     up, and currently live. And by “used to” I mean compared to when I was young,
@@ -38,12 +44,14 @@
   id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 我印象中我们这里的雪不像过去那么多。我所说的“这里”是指我出生、长大和目前居住的马萨诸塞州诺福克县。我所说的“过去”是指与我年轻时相比，比如1978年我们得到了[27英寸的雪](https://en.wikipedia.org/wiki/Northeastern_United_States_blizzard_of_1978)，我不得不在家呆了几个星期。
 - en: Fortunately, we can test my conjecture with data. Norfolk County happens to
     be the location of the [Blue Hill Meteorological Observatory](https://en.wikipedia.org/wiki/Blue_Hill_Meteorological_Observatory),
     which keeps the oldest continuous weather record in North America.
   id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 幸运的是，我们可以用数据来测试我的猜测。诺福克县碰巧是[蓝山气象观测站](https://en.wikipedia.org/wiki/Blue_Hill_Meteorological_Observatory)的所在地，该观测站保持着北美最古老的连续气象记录。
 - en: Data from this and many other weather stations is available from the [National
     Oceanic and Atmospheric Administration](https://www.ncdc.noaa.gov/cdo-web/search)
     (NOAA). I collected data from the Blue Hill Observatory from May 11, 1967 to May
@@ -51,23 +59,29 @@
   id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 来自这个和许多其他气象站的数据可以从[国家海洋和大气管理局](https://www.ncdc.noaa.gov/cdo-web/search)（NOAA）获取。我收集了从1967年5月11日到2020年5月11日的蓝山天文台的数据。
 - en: The following cell downloads the data as a CSV file.
   id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下单元格将数据下载为CSV文件。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE0]</details>'
   id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE0]</details>'
 - en: 'We can use Pandas to read the data into `DataFrame`:'
   id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用Pandas将数据读入`DataFrame`：
 - en: '[PRE1]'
   id: totrans-13
   prefs: []
@@ -77,11 +91,14 @@
   id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是最后几行的样子。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE2]'
   id: totrans-16
   prefs: []
@@ -92,47 +109,64 @@
   id: totrans-17
   prefs: []
   type: TYPE_TB
+  zh: '|  | STATION | NAME | DATE | PRCP | SNOW | SNWD | TMAX | TMIN | TOBS | WESD
+    | WT01 | WT03 | WT04 | WT05 | WT06 | WT08 | WT09 | WT11 | WT16 | WT18 |'
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
     | --- | --- | --- | --- | --- | --- | --- | --- |'
   id: totrans-18
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+    | --- | --- | --- | --- | --- | --- | --- | --- |'
 - en: '| 20452 | USC00190736 | BLUE HILL COOP, MA US | 2023-05-09 | 0.0 | 0.0 | 0.0
     | 75 | 45.0 | 51.0 | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN
     | NaN |'
   id: totrans-19
   prefs: []
   type: TYPE_TB
+  zh: '| 20452 | USC00190736 | BLUE HILL COOP, MA US | 2023-05-09 | 0.0 | 0.0 | 0.0
+    | 75 | 45.0 | 51.0 | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN
+    | NaN |'
 - en: '| 20453 | USC00190736 | BLUE HILL COOP, MA US | 2023-05-10 | 0.0 | 0.0 | 0.0
     | 60 | 42.0 | 51.0 | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN
     | NaN |'
   id: totrans-20
   prefs: []
   type: TYPE_TB
+  zh: '| 20453 | USC00190736 | BLUE HILL COOP, MA US | 2023-05-10 | 0.0 | 0.0 | 0.0
+    | 60 | 42.0 | 51.0 | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN
+    | NaN |'
 - en: '| 20454 | USC00190736 | BLUE HILL COOP, MA US | 2023-05-11 | 0.0 | 0.0 | 0.0
     | 72 | 51.0 | 59.0 | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN
     | NaN |</details>'
   id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: '| 20454 | USC00190736 | BLUE HILL COOP, MA US | 2023-05-11 | 0.0 | 0.0 | 0.0
+    | 72 | 51.0 | 59.0 | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN | NaN
+    | NaN |</details>'
 - en: 'The columns we’ll use are:'
   id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将使用的列是：
 - en: '`DATE`, which is the date of each observation,'
   id: totrans-23
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`DATE`，即每次观测的日期，'
 - en: '`SNOW`, which is the total snowfall in inches.'
   id: totrans-24
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`SNOW`，即以英寸为单位的总降雪量。'
 - en: I’ll add a column that contains just the year part of the dates.
   id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将添加一个只包含日期年份部分的列。
 - en: '[PRE3]'
   id: totrans-26
   prefs: []
@@ -142,6 +176,7 @@
   id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 并使用`groupby`来累加每年的总降雪量。
 - en: '[PRE4]'
   id: totrans-28
   prefs: []
@@ -151,11 +186,14 @@
   id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 第一年和最后一年不完整，所以我会删除它们。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE5]'
   id: totrans-31
   prefs: []
@@ -165,20 +203,25 @@
   id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE6]</details>'
 - en: The following figure shows total snowfall during each of the complete years
     in my lifetime.
   id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: 下图显示了我一生中每个完整年份的总降雪量。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
   id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE7]</details> ![_images/a18b7ac97e8129afa56f1cc415d2c5d0e3cf9c07dd90c3fcc04552fe5632ef46.png](../Images/76639d0aa2b4e61f7774c9cff6eaac42.png)'
   id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE7]</details> ![_images/a18b7ac97e8129afa56f1cc415d2c5d0e3cf9c07dd90c3fcc04552fe5632ef46.png](../Images/76639d0aa2b4e61f7774c9cff6eaac42.png)'
 - en: Looking at this plot, it’s hard to say whether snowfall is increasing, decreasing,
     or unchanged. In the last decade, we’ve had several years with more snow than
     1978, including 2015, which was the snowiest winter in the Boston area in modern
@@ -186,6 +229,7 @@
   id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 从这个图表来看，很难说降雪量是在增加、减少还是不变。在过去的十年中，我们有几年的降雪量比1978年多，包括2015年，这是波士顿地区现代历史上降雪最多的冬天，总降雪量达到141英寸。
 - en: This kind of question – looking at noisy data and wondering whether it is going
     up or down – is precisely the question we can answer with Bayesian regression.
   id: totrans-37
@@ -762,6 +806,9 @@
   id: totrans-146
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE45]</details> ![_images/aa89f6dfaa595a9b8213690daa48a4b91af587d81ee8fb38e34bda398382d7db.png](../Images/d36f90212593df07fd9cedae5ef00b29.png)<details
+    class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE46]'
   id: totrans-147
   prefs: []
@@ -771,26 +818,34 @@
   id: totrans-148
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE47]</details>'
 - en: The posterior mean is about 64 inches, which is the expected amount of snow
     during the year at the midpoint of the range, 1994.
   id: totrans-149
   prefs: []
   type: TYPE_NORMAL
+  zh: 后验均值约为64英寸，这是在范围的中点1994年的年度降雪量。
 - en: 'And finally, here’s the posterior distribution of `slope`:'
   id: totrans-150
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，这是`slope`的后验分布：
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
   id: totrans-151
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE48]</details> ![_images/f3b98cd68b7ad121771619d3ad4c437ac7247f6618221ce47119409853c25c97.png](../Images/49c8db0b17f56932da348d787fc72807.png)<details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
   id: totrans-152
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE48]</details> ![_images/f3b98cd68b7ad121771619d3ad4c437ac7247f6618221ce47119409853c25c97.png](../Images/49c8db0b17f56932da348d787fc72807.png)<details
+    class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE49]'
   id: totrans-153
   prefs: []
@@ -800,22 +855,27 @@
   id: totrans-154
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE50]</details>'
 - en: The posterior mean is about 0.51 inches, which is consistent with the estimate
     we got from least squared regression.
   id: totrans-155
   prefs: []
   type: TYPE_NORMAL
+  zh: 后验均值约为0.51英寸，这与我们从最小二乘回归得到的估计值一致。
 - en: The 90% credible interval is from 0.1 to 0.9, which indicates that our uncertainty
     about this estimate is pretty high. In fact, there is still a small posterior
     probability (about 2%) that the slope is negative.
   id: totrans-156
   prefs: []
   type: TYPE_NORMAL
+  zh: 90%的可信区间是从0.1到0.9，这表明我们对这个估计的不确定性非常高。事实上，仍然有一个很小的后验概率（约2%）表明斜率是负的。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-157
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE51]'
   id: totrans-158
   prefs: []
@@ -825,6 +885,7 @@
   id: totrans-159
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE52]</details>'
 - en: 'However, it is more likely that my conjecture was wrong: we are actually getting
     more snow around here than we used to, increasing at a rate of about a half-inch
     per year, which is substantial. On average, we get an additional 25 inches of
@@ -832,17 +893,20 @@
   id: totrans-160
   prefs: []
   type: TYPE_NORMAL
+  zh: 然而，更有可能的是我的推测是错误的：我们实际上这里的降雪量比过去更多，每年增加约半英寸，这是相当可观的。平均而言，我们每年的降雪量比我年轻时多25英寸。
 - en: This example shows that with slow-moving trends and noisy data, your instincts
     can be misleading.
   id: totrans-161
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个例子表明，随着缓慢的趋势和嘈杂的数据，你的直觉可能会误导你。
 - en: Now, you might suspect that I overestimate the amount of snow when I was young
     because I enjoyed it, and underestimate it now because I don’t. But you would
     be mistaken.
   id: totrans-162
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，你可能会怀疑我年轻时高估了雪的数量，因为我喜欢它，而现在低估了，因为我不喜欢。但你会错的。
 - en: During the Blizzard of 1978, we did not have a snowblower and my brother and
     I had to shovel. My sister got a pass for no good reason. Our driveway was about
     60 feet long and three cars wide near the garage. And we had to shovel Mr. Crocker’s
@@ -852,36 +916,44 @@
   id: totrans-163
   prefs: []
   type: TYPE_NORMAL
+  zh: 在1978年的暴风雪期间，我们没有除雪机，我和我哥哥不得不铲雪。我妹妹却不知道什么原因就逃过了。我们的车道大约有60英尺长，靠近车库处宽三辆车。我们还不得不铲克罗克先生的车道，但我们不允许收费。此外，我记得在这次挖掘中我不小心用铲子打到了我哥哥的头，因为头皮伤口出了很多血。
 - en: Anyway, the point is that I don’t think I overestimate the amount of snow when
     I was young because I have fond memories of it.
   id: totrans-164
   prefs: []
   type: TYPE_NORMAL
+  zh: 无论如何，重点是我不认为我年轻时高估了雪的数量，因为我对此有美好的回忆。
 - en: Optimization
   id: totrans-165
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 优化
 - en: The way we computed the likelihood in the previous section was pretty slow.
     The problem is that we looped through every possible set of parameters in the
     prior distribution, and there were more than 60,000 of them.
   id: totrans-166
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们在上一节中计算似然的方式非常慢。问题在于我们循环遍历了先验分布中的每一组可能的参数，而这些参数超过了60000个。
 - en: If we can do more work per iteration, and run the loop fewer times, we expect
     it to go faster.
   id: totrans-167
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们每次迭代可以做更多的工作，并且循环次数更少，我们期望它会更快。
 - en: 'In order to do that, I’ll unstack the prior distribution:'
   id: totrans-168
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了做到这一点，我将解开先验分布：
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-169
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE53]'
   id: totrans-170
   prefs: []
@@ -893,26 +965,37 @@
   id: totrans-171
   prefs: []
   type: TYPE_TB
+  zh: '|  | Sigma | 20.0 | 20.5 | 21.0 | 21.5 | 22.0 | 22.5 | 23.0 | 23.5 | 24.0 |
+    24.5 | ... | 30.5 | 31.0 | 31.5 | 32.0 | 32.5 | 33.0 | 33.5 | 34.0 | 34.5 | 35.0
+    |'
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
     | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
   id: totrans-172
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+    | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
 - en: '| Slope | Intercept |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |'
   id: totrans-173
   prefs: []
   type: TYPE_TB
+  zh: '| 斜率 | 截距 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |'
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
     | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
   id: totrans-174
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+    | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
 - en: '| -0.5 | 54.000 | 0.000015 | 0.000015 | 0.000015 | 0.000015 | 0.000015 | 0.000015
     | 0.000015 | 0.000015 | 0.000015 | 0.000015 | ... | 0.000015 | 0.000015 | 0.000015
     | 0.000015 | 0.000015 | 0.000015 | 0.000015 | 0.000015 | 0.000015 | 0.000015 |'
   id: totrans-175
   prefs: []
   type: TYPE_TB
+  zh: '| -0.5 | 54.000 | 0.000015 | 0.000015 | 0.000015 | 0.000015 | 0.000015 | 0.000015
+    | 0.000015 | 0.000015 | 0.000015 | 0.000015 | ... | 0.000015 | 0.000015 | 0.000015
+    | 0.000015 | 0.000015 | 0.000015 | 0.000015 | 0.000015 | 0.000015 | 0.000015 |'
 - en: '| 54.525 | 0.000015 | 0.000015 | 0.000015 | 0.000015 | 0.000015 | 0.000015
     | 0.000015 | 0.000015 | 0.000015 | 0.000015 | ... | 0.000015 | 0.000015 | 0.000015
     | 0.000015 | 0.000015 | 0.000015 | 0.000015 | 0.000015 | 0.000015 | 0.000015 |'
