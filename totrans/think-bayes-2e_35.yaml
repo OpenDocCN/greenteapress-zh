@@ -268,28 +268,33 @@
   id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: 这不是参数化负二项分布最常见的方式，但它表明唯一的区别在于二项式系数，因为我们知道最后一次试验是成功的。
 - en: The beta distribution
   id: totrans-54
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: beta分布
 - en: Suppose we have 101 devices that perform Bernoulli trials with different probabilities.
     The first device has \(p=0\), the second has \(p=0.01\), and so on up to the last
     device with \(p=1\).
   id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设我们有101个设备，这些设备以不同的概率进行伯努利试验。第一个设备的p=0，第二个设备的p=0.01，依此类推，直到最后一个设备的p=1。
 - en: Now suppose we choose one of the devices so that all values of \(p\) are equally
     likely. If we run \(n\) trials and see \(k\) successes, what is the distribution
     of \(p\)?
   id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在假设我们选择其中一个设备，使得所有的p值都是同样可能的。如果我们进行n次试验并观察到k次成功，那么p的分布是什么？
 - en: We can answer this question by selecting a vector from the cube along the \(p\)
     axis.
   id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以通过沿着p轴从立方体中选择一个向量来回答这个问题。
 - en: '[PRE19]'
   id: totrans-58
   prefs: []
@@ -299,6 +304,7 @@
   id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果没有被归一化。
 - en: '[PRE20]'
   id: totrans-60
   prefs: []
@@ -313,6 +319,7 @@
   id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: 但我们可以这样归一化。
 - en: '[PRE22]'
   id: totrans-63
   prefs: []
@@ -322,6 +329,7 @@
   id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是它的样子。
 - en: '[PRE23]'
   id: totrans-65
   prefs: []
@@ -331,11 +339,13 @@
   id: totrans-66
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/1e2f223d24ce1e9e25ec684e3a964abe687315c7cf0abbccc146146a9d09dc10.png](../Images/4fdb4cb254e7f9ffae0b960858df03b6.png)'
 - en: This is a beta distribution, which we can confirm by running `scipy.stats.beta`
     with a change of variables, \(a = k+1\) and \(b = n-k+1\).
   id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个beta分布，我们可以通过使用变量的改变来确认，\(a = k+1\) and \(b = n-k+1\)，来运行`scipy.stats.beta`。
 - en: '[PRE24]'
   id: totrans-68
   prefs: []
@@ -365,28 +375,34 @@
   id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了看清楚这是如何工作的，让我们比较一下beta分布的概率密度函数
 - en: \[f(p, a, b) = \frac{1}{B(a, b)} p^{a-1} (1-p)^{b-1} \]
   id: totrans-74
   prefs: []
   type: TYPE_NORMAL
+  zh: \[f(p, a, b) = \frac{1}{B(a, b)} p^{a-1} (1-p)^{b-1} \]
 - en: And the PMF of the binomial distribution.
   id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: 以及二项式分布的概率质量函数。
 - en: \[Pr(k; n, p) = \binom{n}{k} p^{k} (1-p)^{n-k}\]
   id: totrans-76
   prefs: []
   type: TYPE_NORMAL
+  zh: \[Pr(k; n, p) = \binom{n}{k} p^{k} (1-p)^{n-k}\]
 - en: With the change of variables, they are identical except for the first term,
     which normalizes the distributions.
   id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: 通过变量的改变，它们是相同的，除了第一项，它对分布进行了归一化。
 - en: Conjugate priors
   id: totrans-78
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 共轭先验
 - en: 'This similarity is the reason the beta and binomial are conjugate distributions,
     which means they are joined together. This relationship has a useful property
     for Bayesian statistics: if the prior distribution of \(p\) is beta and the likelihood
@@ -394,53 +410,64 @@
   id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: 这种相似性是beta和二项式是共轭分布的原因，这意味着它们是相互关联的。这种关系对贝叶斯统计有一个有用的特性：如果p的先验分布是beta，数据的似然性是二项式，后验分布也是beta。
 - en: To see how that works, here is the PDF of the a beta prior distribution with
     parameters \(a\) and \(b\).
   id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了看清楚这是如何工作的，这是具有参数\(a\)和\(b\)的beta先验分布的概率密度函数。
 - en: \[p^{a-1} (1-p)^{b-1}\]
   id: totrans-81
   prefs: []
   type: TYPE_NORMAL
+  zh: \[p^{a-1} (1-p)^{b-1}\]
 - en: I have omitted the normalizing factor – we don’t need it because we are going
     to normalize the distribution after the update.
   id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: 我省略了归一化因子-因为我们将在更新后对分布进行归一化，所以我们不需要它。
 - en: Now suppose we see \(k\) successes in \(n\) trials. The likelihood of this data
     is given by the binomial distribution, which has this PMF.
   id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在假设我们在n次试验中看到k次成功。这个数据的似然性由二项式分布给出，它有这个PMF。
 - en: \[p^{k} (1-p)^{n-k}\]
   id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: \[p^{k} (1-p)^{n-k}\]
 - en: Again, I have omitted the normalizing factor. Now to get the unnormalized posterior,
     we multiply the beta prior and the binomial likelihood. The result is
   id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: 同样，我省略了归一化因子。现在要得到未归一化的后验，我们将beta先验和二项式似然性相乘。结果是
 - en: \[p^{a-1+k} (1-p)^{b-1+n-k}\]
   id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: \[p^{a-1+k} (1-p)^{b-1+n-k}\]
 - en: which we recognize as an unnormalized beta distribution with parameters \(a+k\)
     and \(b+n-k\).
   id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将其识别为具有参数\(a+k\)和\(b+n-k\)的未归一化的beta分布。
 - en: So if we observe \(k\) successes in \(n\) trials, we can do the update by making
     a beta posterior with parameters \(a+k\) and \(b+n-k\).
   id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: 所以如果我们观察到n次试验中有k次成功，我们可以通过使用参数为a+k和b+n-k的beta后验来进行更新。
 - en: As an example, suppose the prior is a beta distribution with parameters \(a=2\)
     and \(b=3\).
   id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，假设先验是具有参数\(a=2\)和\(b=3\)的beta分布。
 - en: '[PRE29]'
   id: totrans-90
   prefs: []
@@ -450,6 +477,7 @@
   id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: 并假设我们在10次尝试中看到了5次成功。
 - en: '[PRE30]'
   id: totrans-92
   prefs: []
@@ -460,6 +488,7 @@
   id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以通过将先验和似然性相乘，然后对结果进行归一化来计算后验。
 - en: '[PRE31]'
   id: totrans-94
   prefs: []
@@ -469,6 +498,7 @@
   id: totrans-95
   prefs: []
   type: TYPE_NORMAL
+  zh: 或者我们可以用更新后的参数计算beta分布。
 - en: '[PRE32]'
   id: totrans-96
   prefs: []
@@ -478,6 +508,7 @@
   id: totrans-97
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果无论哪种方式都是相同的。
 - en: '[PRE33]'
   id: totrans-98
   prefs: []
@@ -494,11 +525,13 @@
   id: totrans-100
   prefs: []
   type: TYPE_NORMAL
+  zh: 但我们不必通过进行显式更新或计算beta分布来计算后验，因为全知的概率立方体已经知道了答案-我们只需要问。
 - en: The following function takes the parameters \(a\) and \(b\) and looks up the
     corresponding beta distribution already computed in the cube.
   id: totrans-101
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数使用参数\(a\)和\(b\)，并查找在立方体中已经计算的相应的beta分布。
 - en: '[PRE35]'
   id: totrans-102
   prefs: []
@@ -508,6 +541,7 @@
   id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用它从立方体中得到\(p\)的后验分布。
 - en: '[PRE36]'
   id: totrans-104
   prefs: []
@@ -517,6 +551,7 @@
   id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: 并确认我们得到了相同的结果。
 - en: '[PRE37]'
   id: totrans-106
   prefs: []
@@ -531,6 +566,7 @@
   id: totrans-108
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是它的样子。
 - en: '[PRE39]'
   id: totrans-109
   prefs: []
@@ -540,21 +576,25 @@
   id: totrans-110
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/2b4e629151043e7f5d3a22dbba5ac9a8705b3ae0cd6a79ae6e9e462eb2e876a0.png](../Images/b5d64572157bf5ac1ff45eda06e05204.png)'
 - en: Update with nbinom
   id: totrans-111
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 使用nbinom进行更新
 - en: Now suppose that instead of running \(n\) trials, we keep running trials until
     we see \(k\) successes – and suppose it takes \(n\) trials.
   id: totrans-112
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在假设我们不是进行n次试验，而是一直进行试验，直到我们看到k次成功-假设这需要n次试验。
 - en: In this case, we can use the negative binomial distribution to compute the likelihood
     of the data.
   id: totrans-113
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这种情况下，我们可以使用负二项分布来计算数据的似然性。
 - en: '[PRE40]'
   id: totrans-114
   prefs: []
@@ -564,6 +604,7 @@
   id: totrans-115
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以以通常的方式进行更新。
 - en: '[PRE41]'
   id: totrans-116
   prefs: []
@@ -573,16 +614,19 @@
   id: totrans-117
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果在两种情况下是相同的：
 - en: If we decide ahead of time to run \(n\) trials, and see \(k\) successes, or
   id: totrans-118
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果我们事先决定要进行n次试验，并观察到k次成功，或者
 - en: If we run until we see \(k\) successes, and it takes \(n\) trials.
   id: totrans-119
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果我们一直进行试验，直到我们看到k次成功，并且这需要n次试验。
 - en: '[PRE42]'
   id: totrans-120
   prefs: []
