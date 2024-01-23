@@ -1,708 +1,1064 @@
 - en: Testing
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 测试
 - en: 原文：[https://allendowney.github.io/ThinkBayes2/chap10.html](https://allendowney.github.io/ThinkBayes2/chap10.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ThinkBayes2/chap10.html](https://allendowney.github.io/ThinkBayes2/chap10.html)
 - en: 'In <<_TheEuroProblem>> I presented a problem from David MacKay’s book, [*Information
     Theory, Inference, and Learning Algorithms*](http://www.inference.org.uk/mackay/itila/p0.html):'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 在<<_TheEuroProblem>>中，我提出了David MacKay的书中的一个问题，[*信息理论、推理和学习算法*](http://www.inference.org.uk/mackay/itila/p0.html)：
 - en: '“A statistical statement appeared in *The Guardian* on Friday January 4, 2002:'
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 《卫报》于2002年1月4日星期五刊登了一份统计报告：
 - en: When spun on edge 250 times, a Belgian one-euro coin came up heads 140 times
     and tails 110\. `It looks very suspicious to me,’ said Barry Blight, a statistics
     lecturer at the London School of Economics. `If the coin were unbiased, the chance
     of getting a result as extreme as that would be less than 7%.’
+  id: totrans-4
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 当比利时一欧元硬币被竖着转动250次时，正面出现了140次，反面出现了110次。伦敦政治经济学院的统计学讲师巴里·布莱特说：“这对我来说看起来非常可疑。如果硬币是公平的，得到这样极端结果的机会将低于7%。”
 - en: “But [MacKay asks] do these data give evidence that the coin is biased rather
     than fair?”
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: “但[MacKay问道]这些数据是否证明了硬币有偏而不是公平？”
 - en: 'We started to answer this question in <<_EstimatingProportions>>; to review,
     our answer was based on these modeling decisions:'
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们在<<_EstimatingProportions>>中开始回答这个问题；回顾一下，我们的答案是基于这些建模决策：
 - en: If you spin a coin on edge, there is some probability, \(x\), that it will land
     heads up.
+  id: totrans-7
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果你把一枚硬币竖着转动，有一定的概率\(x\)，它会正面朝上。
 - en: The value of \(x\) varies from one coin to the next, depending on how the coin
     is balanced and possibly other factors.
+  id: totrans-8
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: \(x\)的值因硬币的平衡和可能的其他因素而异。
 - en: Starting with a uniform prior distribution for \(x\), we updated it with the
     given data, 140 heads and 110 tails. Then we used the posterior distribution to
     compute the most likely value of \(x\), the posterior mean, and a credible interval.
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 从一个均匀的先验分布开始，我们用给定的数据更新了它，140枚正面和110枚反面。然后我们使用后验分布来计算\(x\)的最可能值，后验均值和一个可信区间。
 - en: 'But we never really answered MacKay’s question: “Do these data give evidence
     that the coin is biased rather than fair?”'
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 但我们从未真正回答过MacKay的问题：“这些数据是否证明了硬币有偏向而不是公平的？”
 - en: In this chapter, finally, we will.
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这一章中，最后，我们将。
 - en: Estimation
+  id: totrans-12
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 估计
 - en: Let’s review the solution to the Euro problem from <<_TheBinomialLikelihoodFunction>>.
     We started with a uniform prior.
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们回顾一下<<_TheBinomialLikelihoodFunction>>中欧元问题的解决方案。我们从一个均匀的先验开始。
 - en: '[PRE0]'
+  id: totrans-14
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: And we used the binomial distribution to compute the probability of the data
     for each possible value of \(x\).
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们使用二项分布来计算每个可能的\(x\)值的数据概率。
 - en: '[PRE1]'
+  id: totrans-16
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: We computed the posterior distribution in the usual way.
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们以通常的方式计算了后验分布。
 - en: '[PRE2]'
+  id: totrans-18
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: And here’s what it looks like.
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是它的样子。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码隐藏代码单元格源代码</summary>
 - en: '[PRE3]</details> ![_images/d2164f5205e6d919479cdbbc6ada601ed81c32de4774fca532169fb4e140d36b.png](../Images/cff6b0a6ffb873c1f1ca6afedfa221b3.png)'
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE3]</details> ![_images/d2164f5205e6d919479cdbbc6ada601ed81c32de4774fca532169fb4e140d36b.png](../Images/cff6b0a6ffb873c1f1ca6afedfa221b3.png)'
 - en: Again, the posterior mean is about 0.56, with a 90% credible interval from 0.51
     to 0.61.
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 此外，后验均值约为0.56，90%的可信区间为0.51到0.61。
 - en: '[PRE4]'
+  id: totrans-23
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '[PRE5]'
+  id: totrans-24
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: The prior mean was 0.5, and the posterior mean is 0.56, so it seems like the
     data is evidence that the coin is biased.
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 先验均值为0.5，后验均值为0.56，所以数据似乎证明了硬币有偏。
 - en: But, it turns out not to be that simple.
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 但事实证明并不是那么简单。
 - en: Evidence
+  id: totrans-27
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 证据
 - en: In <<_OliversBlood>>, I said that data are considered evidence in favor of a
     hypothesis, \(A\), if the data are more likely under \(A\) than under the alternative,
     \(B\); that is if
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: 在<<_OliversBlood>>中，我说数据被认为是支持假设\(A\)的证据，如果数据在\(A\)下比在备选假设\(B\)下更有可能；也就是说如果
 - en: \[P(D|A) > P(D|B)\]
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: \[P(D|A) > P(D|B)\]
 - en: 'Furthermore, we can quantify the strength of the evidence by computing the
     ratio of these likelihoods, which is known as the [Bayes factor](https://en.wikipedia.org/wiki/Bayes_factor)
     and often denoted \(K\):'
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: 此外，我们可以通过计算这些可能性的比值来量化证据的强度，这被称为[贝叶斯因子](https://en.wikipedia.org/wiki/Bayes_factor)，通常表示为\(K\)：
 - en: \[K = \frac{P(D|A)}{P(D|B)}\]
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: \[K = \frac{P(D|A)}{P(D|B)}\]
 - en: So, for the Euro problem, let’s consider two hypotheses, `fair` and `biased`,
     and compute the likelihood of the data under each hypothesis.
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，对于欧元问题，让我们考虑两个假设，`公平`和`有偏`，并计算每个假设下数据的可能性。
 - en: 'If the coin is fair, the probability of heads is 50%, and we can compute the
     probability of the data (140 heads out of 250 spins) using the binomial distribution:'
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果硬币是公平的，正面的概率是50%，我们可以使用二项分布计算数据的概率（250次转动中的140次正面）：
 - en: '[PRE6]'
+  id: totrans-34
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '[PRE7]'
+  id: totrans-35
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: That’s the probability of the data, given that the coin is fair.
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是数据在硬币是公平的情况下的概率。
 - en: 'But if the coin is biased, what’s the probability of the data? That depends
     on what “biased” means. If we know ahead of time that “biased” means the probability
     of heads is 56%, we can use the binomial distribution again:'
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 但如果硬币有偏，数据的概率是多少？这取决于“有偏”的含义。如果我们事先知道“有偏”意味着正面的概率是56%，我们可以再次使用二项分布：
 - en: '[PRE8]'
+  id: totrans-38
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '[PRE9]'
+  id: totrans-39
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: 'Now we can compute the likelihood ratio:'
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以计算可能性比：
 - en: '[PRE10]'
+  id: totrans-41
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '[PRE11]'
+  id: totrans-42
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: The data are about 6 times more likely if the coin is biased, by this definition,
     than if it is fair.
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果硬币有偏，根据这个定义，数据大约有6倍的可能性，而如果硬币是公平的。
 - en: But we used the data to define the hypothesis, which seems like cheating. To
     be fair, we should define “biased” before we see the data.
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: 但我们使用数据来定义假设，这似乎有些欺骗。公平起见，我们应该在看到数据之前定义“有偏”。
 - en: Uniformly Distributed Bias
+  id: totrans-45
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 均匀分布的偏差
 - en: Suppose “biased” means that the probability of heads is anything except 50%,
     and all other values are equally likely.
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设“有偏”意味着正面的概率除了50%之外的任何值，而其他所有值都是同等可能的。
 - en: We can represent that definition by making a uniform distribution and removing
     50%.
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以通过制作一个均匀分布并去掉50%来表示这个定义。
 - en: '[PRE12]'
+  id: totrans-48
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: To compute the total probability of the data under this hypothesis, we compute
     the conditional probability of the data for each value of \(x\).
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了计算数据在这个假设下的总概率，我们计算每个\(x\)值的数据的条件概率。
 - en: '[PRE13]'
+  id: totrans-50
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: 'Then multiply by the prior probabilities and add up the products:'
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后乘以先验概率并加总乘积：
 - en: '[PRE14]'
+  id: totrans-52
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '[PRE15]'
+  id: totrans-53
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: So that’s the probability of the data under the “biased uniform” hypothesis.
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是在“偏置均匀”假设下的数据概率。
 - en: 'Now we can compute the likelihood ratio of the data under the `fair` and `biased
     uniform` hypotheses:'
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以计算数据在“公平”和“偏置均匀”假设下的似然比：
 - en: '[PRE16]'
+  id: totrans-56
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '[PRE17]'
+  id: totrans-57
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: The data are about two times more likely if the coin is fair than if it is biased,
     by this definition of “biased”.
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果按照这种“偏置”的定义，如果硬币是公平的话，数据大约是有偏的两倍。
 - en: To get a sense of how strong that evidence is, we can apply Bayes’s rule. For
     example, if the prior probability is 50% that the coin is biased, the prior odds
     are 1, so the posterior odds are about 2.1 to 1 and the posterior probability
     is about 68%.
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了了解证据的强度，我们可以应用贝叶斯定理。例如，如果硬币偏置的先验概率为50％，则先验几率为1，因此后验几率约为2.1比1，后验概率约为68％。
 - en: '[PRE18]'
+  id: totrans-60
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: '[PRE19]'
+  id: totrans-61
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '[PRE20]'
+  id: totrans-62
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '[PRE21]'
+  id: totrans-63
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: '[PRE22]'
+  id: totrans-64
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: Evidence that “moves the needle” from 50% to 68% is not very strong.
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: 将证据从50％移动到68％并不是很强有力的。
 - en: 'Now suppose “biased” doesn’t mean every value of \(x\) is equally likely. Maybe
     values near 50% are more likely and values near the extremes are less likely.
     We could use a triangle-shaped distribution to represent this alternative definition
     of “biased”:'
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在假设“偏置”并不意味着每个\(x\)值都是同等可能的。也许接近50％的值更可能，而接近极端的值则不太可能。我们可以使用三角形分布来表示这种“偏置”的替代定义：
 - en: '[PRE23]'
+  id: totrans-67
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: As we did with the uniform distribution, we can remove 50% as a possible value
     of \(x\) (but it doesn’t make much difference if we skip this detail).
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: 就像我们对均匀分布所做的那样，我们可以将50%作为\(x\)的可能值排除（但是如果我们跳过这个细节也不会有太大差别）。
 - en: '[PRE24]'
+  id: totrans-69
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: Here’s what the triangle prior looks like, compared to the uniform prior.
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是三角形先验与均匀先验的比较。
 - en: '[PRE25]'
+  id: totrans-71
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: '![_images/6830561f7133fda6957c4ae75d18bdd7f080e7e4e9ea0816073ac15253a8bbd8.png](../Images/323e88d01bc75218ed781a3bb0e371b0.png)'
+  id: totrans-72
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/6830561f7133fda6957c4ae75d18bdd7f080e7e4e9ea0816073ac15253a8bbd8.png](../Images/323e88d01bc75218ed781a3bb0e371b0.png)'
 - en: '**Exercise:** Now compute the total probability of the data under this definition
     of “biased” and compute the Bayes factor, compared with the fair hypothesis. Is
     the data evidence that the coin is biased?'
+  id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**现在计算在这种“偏置”的定义下数据的总概率，并计算贝叶斯因子，与公平假设相比。数据证据表明硬币是有偏的吗？'
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-74
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
 - en: '[PRE26]'
+  id: totrans-75
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: '[PRE27]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE27] <details class="hide above-input"><summary aria-label="Toggle hidden
+    content">显示代码单元格内容隐藏代码单元格内容</summary>'
 - en: '[PRE28]'
+  id: totrans-77
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: '[PRE29]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-78
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE29] <details class="hide above-input"><summary aria-label="Toggle hidden
+    content">显示代码单元格内容隐藏代码单元格内容</summary>'
 - en: '[PRE30]</details>'
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE30]</details>'
 - en: Bayesian Hypothesis Testing
+  id: totrans-80
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 贝叶斯假设检验
 - en: What we’ve done so far in this chapter is sometimes called “Bayesian hypothesis
     testing” in contrast with [statistical hypothesis testing](https://en.wikipedia.org/wiki/Statistical_hypothesis_testing).
+  id: totrans-81
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本章中，我们迄今所做的有时被称为“贝叶斯假设检验”，与[统计假设检验](https://en.wikipedia.org/wiki/Statistical_hypothesis_testing)相对。
 - en: In statistical hypothesis testing, we compute a p-value, which is hard to define
     concisely, and use it to determine whether the results are “statistically significant”,
     which is also hard to define concisely.
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: 在统计假设检验中，我们计算一个难以简洁定义的p值，并用它来确定结果是否“统计显著”，这也很难简洁定义。
 - en: The Bayesian alternative is to report the Bayes factor, \(K\), which summarizes
     the strength of the evidence in favor of one hypothesis or the other.
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: 贝叶斯的替代方法是报告贝叶斯因子\(K\)，它总结了支持一个假设或另一个假设的证据的强度。
 - en: Some people think it is better to report \(K\) than a posterior probability
     because \(K\) does not depend on a prior probability. But as we saw in this example,
     \(K\) often depends on a precise definition of the hypotheses, which can be just
     as controversial as a prior probability.
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: 有些人认为报告\(K\)比后验概率更好，因为\(K\)不依赖于先验概率。但正如我们在这个例子中看到的，\(K\)通常取决于假设的精确定义，这可能与先验概率一样有争议。
 - en: In my opinion, Bayesian hypothesis testing is better because it measures the
     strength of the evidence on a continuum, rather that trying to make a binary determination.
     But it doesn’t solve what I think is the fundamental problem, which is that hypothesis
     testing is not asking the question we really care about.
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: 在我看来，贝叶斯假设检验更好，因为它可以衡量证据的强度，而不是试图做出二元决定。但它并没有解决我认为的根本问题，即假设检验并没有问出我们真正关心的问题。
 - en: 'To see why, suppose you test the coin and decide that it is biased after all.
     What can you do with this answer? In my opinion, not much. In contrast, there
     are two questions I think are more useful (and therefore more meaningful):'
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: 要了解为什么，假设你测试了硬币并决定它实际上是有偏的。你可以用这个答案做什么？在我看来，没有太多。相比之下，我认为更有用（因此更有意义）的是两个问题：
 - en: 'Prediction: Based on what we know about the coin, what should we expect to
     happen in the future?'
+  id: totrans-87
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 预测：根据我们对硬币的了解，我们应该期待未来会发生什么？
 - en: 'Decision-making: Can we use those predictions to make better decisions?'
+  id: totrans-88
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 决策：我们能否利用这些预测做出更好的决策？
 - en: At this point, we’ve seen a few examples of prediction. For example, in <<_PoissonProcesses>>
     we used the posterior distribution of goal-scoring rates to predict the outcome
     of soccer games.
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: 到目前为止，我们已经看到了一些预测的例子。例如，在<<_PoissonProcesses>>中，我们使用了进球率的后验分布来预测足球比赛的结果。
 - en: 'And we’ve seen one previous example of decision analysis: In <<_DecisionAnalysis>>
     we used the distribution of prices to choose an optimal bid on *The Price is Right*.'
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们之前已经看到了一个决策分析的例子：在<<_DecisionAnalysis>>中，我们使用价格分布来选择*价格对了*上的最佳出价。
 - en: So let’s finish this chapter with another example of Bayesian decision analysis,
     the Bayesian Bandit strategy.
+  id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: 所以让我们用另一个贝叶斯决策分析的例子结束这一章，贝叶斯老虎机策略。
 - en: Bayesian Bandits
+  id: totrans-92
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 贝叶斯老虎机
 - en: If you have ever been to a casino, you have probably seen a slot machine, which
     is sometimes called a “one-armed bandit” because it has a handle like an arm and
     the ability to take money like a bandit.
+  id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你去过赌场，你可能见过老虎机，有时被称为“单臂老虎机”，因为它有一个像手臂一样的把手，还有像强盗一样拿钱的能力。
 - en: The Bayesian Bandit strategy is named after one-armed bandits because it solves
     a problem based on a simplified version of a slot machine.
+  id: totrans-94
   prefs: []
   type: TYPE_NORMAL
+  zh: 贝叶斯老虎机策略是以单臂老虎机命名的，因为它解决了一个基于老虎机简化版本的问题。
 - en: Suppose that each time you play a slot machine, there is a fixed probability
     that you win. And suppose that different machines give you different probabilities
     of winning, but you don’t know what the probabilities are.
+  id: totrans-95
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设每次你玩老虎机，都有固定的赢的概率。假设不同的老虎机给你不同的赢的概率，但你不知道这些概率是多少。
 - en: Initially, you have the same prior belief about each of the machines, so you
     have no reason to prefer one over the others. But if you play each machine a few
     times, you can use the results to estimate the probabilities. And you can use
     the estimated probabilities to decide which machine to play next.
+  id: totrans-96
   prefs: []
   type: TYPE_NORMAL
+  zh: 最初，你对每台机器有相同的先验信念，所以你没有理由偏好其中一台。但如果你玩了每台机器几次，你可以用结果来估计概率。你可以用估计的概率来决定下一次玩哪台机器。
 - en: At a high level, that’s the Bayesian bandit strategy. Now let’s see the details.
+  id: totrans-97
   prefs: []
   type: TYPE_NORMAL
+  zh: 在高层次上，这就是贝叶斯老虎机策略。现在让我们看看细节。
 - en: Prior Beliefs
+  id: totrans-98
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 先验信念
 - en: If we know nothing about the probability of winning, we can start with a uniform
     prior.
+  id: totrans-99
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们对赢的概率一无所知，我们可以从均匀先验开始。
 - en: '[PRE31]'
+  id: totrans-100
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: Supposing we are choosing from four slot machines, I’ll make four copies of
     the prior, one for each machine.
+  id: totrans-101
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设我们从四台老虎机中选择，我会为每台机器做一个先验的副本。
 - en: '[PRE32]'
+  id: totrans-102
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: This function displays four distributions in a grid.
+  id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个函数在一个网格中显示四个分布。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-104
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE33]</details>'
+  id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE33]</details>'
 - en: Here’s what the prior distributions look like for the four machines.
+  id: totrans-106
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里是四台机器的先验分布。
 - en: '[PRE34]'
+  id: totrans-107
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: '![_images/43ebe13555409fdcc3d9acef81fa8485ba3f0a8f7490aa37ea915670b64820f1.png](../Images/925b50e2cc67d57c25d7f88b6cd1cb96.png)'
+  id: totrans-108
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/43ebe13555409fdcc3d9acef81fa8485ba3f0a8f7490aa37ea915670b64820f1.png](../Images/925b50e2cc67d57c25d7f88b6cd1cb96.png)'
 - en: The Update
+  id: totrans-109
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 更新
 - en: Each time we play a machine, we can use the outcome to update our beliefs. The
     following function does the update.
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: 每次我们玩老虎机，我们可以利用结果来更新我们的信念。以下函数进行更新。
 - en: '[PRE35]'
+  id: totrans-111
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: '[PRE36]'
+  id: totrans-112
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: This function updates the prior distribution in place. `pmf` is a `Pmf` that
     represents the prior distribution of `x`, which is the probability of winning.
+  id: totrans-113
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个函数直接更新先验分布。`pmf`是一个代表`x`的先验分布的`Pmf`，`x`是赢的概率。
 - en: '`data` is a string, either `W` if the outcome is a win or `L` if the outcome
     is a loss.'
+  id: totrans-114
   prefs: []
   type: TYPE_NORMAL
+  zh: '`data`是一个字符串，要么是`W`，表示赢，要么是`L`，表示输。'
 - en: The likelihood of the data is either `xs` or `1-xs`, depending on the outcome.
+  id: totrans-115
   prefs: []
   type: TYPE_NORMAL
+  zh: 数据的似然性要么是`xs`，要么是`1-xs`，取决于结果。
 - en: 'Suppose we choose a machine, play 10 times, and win once. We can compute the
     posterior distribution of `x`, based on this outcome, like this:'
+  id: totrans-116
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设我们选择一台机器，玩10次，赢了一次。我们可以根据这个结果计算`x`的后验分布，如下所示：
 - en: '[PRE37]'
+  id: totrans-117
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE37]'
 - en: Here’s what the posterior looks like.
+  id: totrans-118
   prefs: []
   type: TYPE_NORMAL
+  zh: 后验分布如下。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-119
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE38]</details> ![_images/cf5bcaaeed0a5e04ea726bd4023cf9330e5eebd0aef3ccd5681283ffc4d340ad.png](../Images/ba74321490b0e13ca4e86ff4d790ef8b.png)'
+  id: totrans-120
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE38]</details> ![_images/cf5bcaaeed0a5e04ea726bd4023cf9330e5eebd0aef3ccd5681283ffc4d340ad.png](../Images/ba74321490b0e13ca4e86ff4d790ef8b.png)'
 - en: Multiple Bandits
+  id: totrans-121
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 多个老虎机
 - en: 'Now suppose we have four machines with these probabilities:'
+  id: totrans-122
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在假设我们有四台机器，它们的概率如下：
 - en: '[PRE39]'
+  id: totrans-123
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: Remember that as a player, we don’t know these probabilities.
+  id: totrans-124
   prefs: []
   type: TYPE_NORMAL
+  zh: 记住，作为玩家，我们不知道这些概率。
 - en: The following function takes the index of a machine, simulates playing the machine
     once, and returns the outcome, `W` or `L`.
+  id: totrans-125
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数接受一个机器的索引，模拟玩一次机器，并返回结果，`W`表示赢，`L`表示输。
 - en: '[PRE40]'
+  id: totrans-126
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE40]'
 - en: '`counter` is a `Counter`, which is a kind of dictionary we’ll use to keep track
     of how many times each machine is played.'
+  id: totrans-127
   prefs: []
   type: TYPE_NORMAL
+  zh: '`counter`是一个`Counter`，它是一种我们将用来跟踪每台机器被玩的次数的字典。'
 - en: Here’s a test that plays each machine 10 times.
+  id: totrans-128
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里有一个测试，每台机器玩10次。
 - en: '[PRE41]'
+  id: totrans-129
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE41]'
 - en: Each time through the inner loop, we play one machine and update our beliefs.
+  id: totrans-130
   prefs: []
   type: TYPE_NORMAL
+  zh: 每次通过内循环，我们玩一台机器并更新我们的信念。
 - en: Here’s what our posterior beliefs look like.
+  id: totrans-131
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们的后验信念如下。
 - en: '[PRE42]'
+  id: totrans-132
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE42]'
 - en: '![_images/c371b33d36f081b1acdcca982a0ad66e8ba54ad96f3502be77eadef8aff83ee7.png](../Images/f3c7983b850e6c56a22d66053871b310.png)'
+  id: totrans-133
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/c371b33d36f081b1acdcca982a0ad66e8ba54ad96f3502be77eadef8aff83ee7.png](../Images/f3c7983b850e6c56a22d66053871b310.png)'
 - en: Here are the actual probabilities, posterior means, and 90% credible intervals.
+  id: totrans-134
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里是实际概率、后验均值和90%的可信区间。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-135
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE43]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell source Hide code cell source</summary>'
+  id: totrans-136
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE43]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>'
 - en: '[PRE44]</details>'
+  id: totrans-137
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE44]</details>'
 - en: '|  | Actual P(win) | Posterior mean | Credible interval |'
+  id: totrans-138
   prefs: []
   type: TYPE_TB
+  zh: '|  | 实际赢的概率 | 后验均值 | 可信区间 |'
 - en: '| --- | --- | --- | --- |'
+  id: totrans-139
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- |'
 - en: '| 0 | 0.1 | 0.250 | [0.08, 0.47] |'
+  id: totrans-140
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 0.1 | 0.250 | [0.08, 0.47] |'
 - en: '| 1 | 0.2 | 0.250 | [0.08, 0.47] |'
+  id: totrans-141
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 0.2 | 0.250 | [0.08, 0.47] |'
 - en: '| 2 | 0.3 | 0.500 | [0.27, 0.73] |'
+  id: totrans-142
   prefs: []
   type: TYPE_TB
 - en: '| 3 | 0.4 | 0.417 | [0.2, 0.65] |'
+  id: totrans-143
   prefs: []
   type: TYPE_TB
 - en: We expect the credible intervals to contain the actual probabilities most of
     the time.
+  id: totrans-144
   prefs: []
   type: TYPE_NORMAL
 - en: Explore and Exploit
+  id: totrans-145
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: Based on these posterior distributions, which machine do you think we should
     play next? One option would be to choose the machine with the highest posterior
     mean.
+  id: totrans-146
   prefs: []
   type: TYPE_NORMAL
 - en: 'That would not be a bad idea, but it has a drawback: since we have only played
     each machine a few times, the posterior distributions are wide and overlapping,
     which means we are not sure which machine is the best; if we focus on one machine
     too soon, we might choose the wrong machine and play it more than we should.'
+  id: totrans-147
   prefs: []
   type: TYPE_NORMAL
 - en: To avoid that problem, we could go to the other extreme and play all machines
     equally until we are confident we have identified the best machine, and then play
     it exclusively.
+  id: totrans-148
   prefs: []
   type: TYPE_NORMAL
 - en: 'That’s not a bad idea either, but it has a drawback: while we are gathering
     data, we are not making good use of it; until we’re sure which machine is the
     best, we are playing the others more than we should.'
+  id: totrans-149
   prefs: []
   type: TYPE_NORMAL
 - en: The Bayesian Bandits strategy avoids both drawbacks by gathering and using data
     at the same time. In other words, it balances exploration and exploitation.
+  id: totrans-150
   prefs: []
   type: TYPE_NORMAL
 - en: 'The kernel of the idea is called [Thompson sampling](https://en.wikipedia.org/wiki/Thompson_sampling):
     when we choose a machine, we choose at random so that the probability of choosing
     each machine is proportional to the probability that it is the best.'
+  id: totrans-151
   prefs: []
   type: TYPE_NORMAL
 - en: Given the posterior distributions, we can compute the “probability of superiority”
     for each machine.
+  id: totrans-152
   prefs: []
   type: TYPE_NORMAL
 - en: 'Here’s one way to do it. We can draw a sample of 1000 values from each posterior
     distribution, like this:'
+  id: totrans-153
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE45]'
+  id: totrans-154
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE45]'
 - en: '[PRE46]'
+  id: totrans-155
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE46]'
 - en: 'The result has 4 rows and 1000 columns. We can use `argmax` to find the index
     of the largest value in each column:'
+  id: totrans-156
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE47]'
+  id: totrans-157
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE47]'
 - en: '[PRE48]'
+  id: totrans-158
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE48]'
 - en: The `Pmf` of these indices is the fraction of times each machine yielded the
     highest values.
+  id: totrans-159
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE49]'
+  id: totrans-160
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE49]'
 - en: '|  | probs |'
+  id: totrans-161
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- |'
+  id: totrans-162
   prefs: []
   type: TYPE_TB
 - en: '| 0 | 0.048 |'
+  id: totrans-163
   prefs: []
   type: TYPE_TB
 - en: '| 1 | 0.043 |'
+  id: totrans-164
   prefs: []
   type: TYPE_TB
 - en: '| 2 | 0.625 |'
+  id: totrans-165
   prefs: []
   type: TYPE_TB
 - en: '| 3 | 0.284 |'
+  id: totrans-166
   prefs: []
   type: TYPE_TB
 - en: These fractions approximate the probability of superiority for each machine.
     So we could choose the next machine by choosing a value from this `Pmf`.
+  id: totrans-167
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE50]'
+  id: totrans-168
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE50]'
 - en: '[PRE51]'
+  id: totrans-169
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE51]'
 - en: But that’s a lot of work to choose a single value, and it’s not really necessary,
     because there’s a shortcut.
+  id: totrans-170
   prefs: []
   type: TYPE_NORMAL
 - en: If we draw a single random value from each posterior distribution and select
     the machine that yields the highest value, it turns out that we’ll select each
     machine in proportion to its probability of superiority.
+  id: totrans-171
   prefs: []
   type: TYPE_NORMAL
 - en: That’s what the following function does.
+  id: totrans-172
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE52]'
+  id: totrans-173
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE52]'
 - en: This function chooses one value from the posterior distribution of each machine
     and then uses `argmax` to find the index of the machine that yielded the highest
     value.
+  id: totrans-174
   prefs: []
   type: TYPE_NORMAL
 - en: Here’s an example.
+  id: totrans-175
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE53]'
+  id: totrans-176
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE53]'
 - en: '[PRE54]'
+  id: totrans-177
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE54]'
 - en: The Strategy
+  id: totrans-178
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: 'Putting it all together, the following function chooses a machine, plays once,
     and updates `beliefs`:'
+  id: totrans-179
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE55]'
+  id: totrans-180
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE55]'
 - en: To test it out, let’s start again with a fresh set of beliefs and an empty `Counter`.
+  id: totrans-181
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE56]'
+  id: totrans-182
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE56]'
 - en: 'If we run the bandit algorithm 100 times, we can see how `beliefs` gets updated:'
+  id: totrans-183
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE57]'
+  id: totrans-184
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE57]'
 - en: '![_images/020ff49d90aa605dcced01aefa1c2cfa99d6e29e2be17d4a4d8fa486bcb918b3.png](../Images/3dcd9ae63fc1320012c3f0ddfd24960d.png)'
+  id: totrans-185
   prefs: []
   type: TYPE_IMG
 - en: The following table summarizes the results.
+  id: totrans-186
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-187
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE58]</details>'
+  id: totrans-188
   prefs: []
   type: TYPE_NORMAL
 - en: '|  | Actual P(win) | Posterior mean | Credible interval |'
+  id: totrans-189
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- | --- |'
+  id: totrans-190
   prefs: []
   type: TYPE_TB
 - en: '| 0 | 0.1 | 0.107 | [0.0, 0.31] |'
+  id: totrans-191
   prefs: []
   type: TYPE_TB
 - en: '| 1 | 0.2 | 0.269 | [0.14, 0.42] |'
+  id: totrans-192
   prefs: []
   type: TYPE_TB
 - en: '| 2 | 0.3 | 0.293 | [0.18, 0.41] |'
+  id: totrans-193
   prefs: []
   type: TYPE_TB
 - en: '| 3 | 0.4 | 0.438 | [0.3, 0.58] |'
+  id: totrans-194
   prefs: []
   type: TYPE_TB
 - en: 'The credible intervals usually contain the actual probabilities of winning.
@@ -710,401 +1066,591 @@
     But that’s a feature, not a bug: the goal is to play the high-probability machines
     most often. Making the estimates more precise is a means to that end, but not
     an end itself.'
+  id: totrans-195
   prefs: []
   type: TYPE_NORMAL
 - en: More importantly, let’s see how many times each machine got played.
+  id: totrans-196
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-197
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
 - en: '[PRE59]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell source Hide code cell source</summary>'
+  id: totrans-198
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE59]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格源隐藏代码单元格源</summary>'
 - en: '[PRE60]</details>'
+  id: totrans-199
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE60]</details>'
 - en: '|  | Actual P(win) | Times played |'
+  id: totrans-200
   prefs: []
   type: TYPE_TB
+  zh: '|  | 实际获胜概率 | 游戏次数 |'
 - en: '| --- | --- | --- |'
+  id: totrans-201
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- |'
 - en: '| 0 | 0.1 | 7 |'
+  id: totrans-202
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 0.1 | 7 |'
 - en: '| 1 | 0.2 | 24 |'
+  id: totrans-203
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 0.2 | 24 |'
 - en: '| 2 | 0.3 | 39 |'
+  id: totrans-204
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 0.3 | 39 |'
 - en: '| 3 | 0.4 | 30 |'
+  id: totrans-205
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 0.4 | 30 |'
 - en: If things go according to plan, the machines with higher probabilities should
     get played more often.
+  id: totrans-206
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果一切按计划进行，概率较高的机器应该更频繁地被玩。
 - en: Summary
+  id: totrans-207
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 总结
 - en: In this chapter we finally solved the Euro problem, determining whether the
     data support the hypothesis that the coin is fair or biased. We found that the
     answer depends on how we define “biased”. And we summarized the results using
     a Bayes factor, which quantifies the strength of the evidence.
+  id: totrans-208
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本章中，我们最终解决了欧元问题，确定了数据是否支持硬币公平还是有偏见的假设。我们发现答案取决于我们如何定义“有偏见”。我们使用贝叶斯因子对结果进行了总结，该因子量化了证据的强度。
 - en: But the answer wasn’t satisfying because, in my opinion, the question wasn’t
     interesting. Knowing whether the coin is biased is not useful unless it helps
     us make better predictions and better decisions.
+  id: totrans-209
   prefs: []
   type: TYPE_NORMAL
+  zh: 但答案并不令人满意，因为在我看来，这个问题并不有趣。知道硬币是否有偏见并没有用，除非它能帮助我们做出更好的预测和更好的决策。
 - en: As an example of a more interesting question, we looked at the “one-armed bandit”
     problem and a strategy for solving it, the Bayesian bandit algorithm, which tries
     to balance exploration and exploitation, that is, gathering more information and
     making the best use of the information we have.
+  id: totrans-210
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为一个更有趣问题的例子，我们研究了“单臂老虎机”问题以及解决它的策略，即贝叶斯老虎机算法，该算法试图平衡探索和开发，即收集更多信息并充分利用我们已有的信息。
 - en: As an exercise, you’ll have a chance to explore adaptive strategies for standardized
     testing.
+  id: totrans-211
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为练习，你将有机会探索标准化测试的自适应策略。
 - en: Bayesian bandits and adaptive testing are examples of [Bayesian decision theory](https://wiki.lesswrong.com/wiki/Bayesian_decision_theory),
     which is the idea of using a posterior distribution as part of a decision-making
     process, often by choosing an action that minimizes the costs we expect on average
     (or maximizes a benefit).
+  id: totrans-212
   prefs: []
   type: TYPE_NORMAL
+  zh: 贝叶斯老虎机和自适应测试是[贝叶斯决策理论](https://wiki.lesswrong.com/wiki/Bayesian_decision_theory)的例子，这是使用后验分布作为决策过程的一部分的想法，通常是通过选择最小化我们预期成本的行动（或最大化利益）。
 - en: The strategy we used in <<_MaximizingExpectedGain>> to bid on *The Price is
     Right* is another example.
+  id: totrans-213
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们在<<_MaximizingExpectedGain>>中用于竞猜《物价合适》的策略就是另一个例子。
 - en: These strategies demonstrate what I think is the biggest advantage of Bayesian
     methods over classical statistics. When we represent knowledge in the form of
     probability distributions, Bayes’s theorem tells us how to change our beliefs
     as we get more data, and Bayesian decision theory tells us how to make that knowledge
     actionable.
+  id: totrans-214
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些策略展示了我认为贝叶斯方法胜过经典统计学的最大优势。当我们以概率分布的形式表示知识时，贝叶斯定理告诉我们如何随着获取更多数据而改变我们的信念，而贝叶斯决策理论告诉我们如何使这些知识可行。
 - en: Exercises
+  id: totrans-215
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 练习
 - en: '**Exercise:** Standardized tests like the [SAT](https://en.wikipedia.org/wiki/SAT)
     are often used as part of the admission process at colleges and universities.
     The goal of the SAT is to measure the academic preparation of the test-takers;
     if it is accurate, their scores should reflect their actual ability in the domain
     of the test.'
+  id: totrans-216
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**像[SAT](https://en.wikipedia.org/wiki/SAT)这样的标准化测试经常作为大学入学过程的一部分。SAT的目标是衡量考试者的学术准备情况；如果准确的话，他们的分数应该反映出他们在测试领域的实际能力。'
 - en: Until recently, tests like the SAT were taken with paper and pencil, but now
     students have the option of taking the test online. In the online format, it is
     possible for the test to be “adaptive”, which means that it can [choose each question
     based on responses to previous questions](https://www.nytimes.com/2018/04/05/education/learning/tests-act-sat.html).
+  id: totrans-217
   prefs: []
   type: TYPE_NORMAL
+  zh: 直到最近，像SAT这样的测试是用纸和铅笔进行的，但现在学生可以选择在线测试。在在线格式中，测试可以是“自适应的”，这意味着它可以[根据先前问题的回答选择每个问题](https://www.nytimes.com/2018/04/05/education/learning/tests-act-sat.html)。
 - en: If a student gets the first few questions right, the test can challenge them
     with harder questions. If they are struggling, it can give them easier questions.
     Adaptive testing has the potential to be more “efficient”, meaning that with the
     same number of questions an adaptive test could measure the ability of a tester
     more precisely.
+  id: totrans-218
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果学生前几个问题答对了，测试可以用更难的问题来挑战他们。如果他们在挣扎，测试可以给他们更容易的问题。自适应测试有可能更“高效”，这意味着在相同数量的问题下，自适应测试可以更精确地测量测试者的能力。
 - en: To see whether this is true, we will develop a model of an adaptive test and
     quantify the precision of its measurements.
+  id: totrans-219
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了验证这一点，我们将开发一个自适应测试模型，并量化其测量的精度。
 - en: Details of this exercise are in the notebook.
+  id: totrans-220
   prefs: []
   type: TYPE_NORMAL
+  zh: 此练习的详细信息在笔记本中。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-221
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
 - en: '[PRE61]</details>'
+  id: totrans-222
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE61]</details>'
 - en: I chose `a` to make the range of scores comparable to the SAT, which reports
     scores from 200 to 800.
+  id: totrans-223
   prefs: []
   type: TYPE_NORMAL
+  zh: 我选择了`a`，使得分数范围可以与SAT可比，SAT报告的分数范围是200到800。
 - en: Here’s what the logistic curve looks like for a question with difficulty 500
     and a range of abilities.
+  id: totrans-224
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个难度为500，能力范围的逻辑曲线是什么样子。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-225
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
 - en: '[PRE62]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-226
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE62]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE63]'
+  id: totrans-227
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE63]'
 - en: '![_images/4056a18b35ba87b9cbfdf040678438925cbb5840b7dedc0ce76f95a6eb6b150b.png](../Images/3d44a6c66ae13372de3e4cdb9efda095.png)</details>'
+  id: totrans-228
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/4056a18b35ba87b9cbfdf040678438925cbb5840b7dedc0ce76f95a6eb6b150b.png](../Images/3d44a6c66ae13372de3e4cdb9efda095.png)</details>'
 - en: Someone with `ability=900` is nearly certain to get the right answer. Someone
     with `ability=100` has about a 25% change of getting the right answer by guessing.
+  id: totrans-229
   prefs: []
   type: TYPE_NORMAL
+  zh: '`ability=900`的人几乎可以肯定会得到正确答案。`ability=100`的人猜对的概率约为25%。'
 - en: Simulating the Test
+  id: totrans-230
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 模拟测试
 - en: 'To simulate the test, we’ll use the same structure we used for the bandit strategy:'
+  id: totrans-231
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了模拟测试，我们将使用与赌徒策略相同的结构：
 - en: A function called `play` that simulates a test-taker answering one question.
+  id: totrans-232
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 一个名为`play`的函数，用于模拟考试者回答一个问题。
 - en: A function called `choose` that chooses the next question to pose.
+  id: totrans-233
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 一个名为`choose`的函数，用于选择下一个要提出的问题。
 - en: A function called `update` that uses the outcome (a correct response or not)
     to update the estimate of the test-taker’s ability.
+  id: totrans-234
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 一个名为`update`的函数，它使用结果（正确回答或否）来更新考试者能力的估计。
 - en: Here’s `play`, which takes `ability` and `difficulty` as parameters.
+  id: totrans-235
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是`play`，它以`ability`和`difficulty`作为参数。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-236
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE64]</details>'
+  id: totrans-237
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE64]</details>'
 - en: '`play` uses `prob_correct` to compute the probability of a correct answer and
     `np.random.random` to generate a random value between 0 and 1\. The return value
     is `True` for a correct response and `False` otherwise.'
+  id: totrans-238
   prefs: []
   type: TYPE_NORMAL
+  zh: '`play`使用`prob_correct`来计算正确答案的概率，使用`np.random.random`生成0到1之间的随机值。返回值为`True`表示回答正确，否则为`False`。'
 - en: As a test, let’s simulate a test-taker with `ability=600` answering a question
     with `difficulty=500`. The probability of a correct response is about 80%.
+  id: totrans-239
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为测试，让我们模拟一个`ability=600`的考试者回答一个`difficulty=500`的问题。正确回答的概率约为80%。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-240
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE65]'
+  id: totrans-241
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE65]'
 - en: '[PRE66]</details>'
+  id: totrans-242
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE66]</details>'
 - en: Suppose this person takes a test with 51 questions, all with the same difficulty,
     `500`. We expect them to get about 80% of the questions correct.
+  id: totrans-243
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设这个人参加了一个有51个问题的测试，所有问题的难度都相同，为`500`。我们期望他们能对大约80%的问题做出正确回答。
 - en: Here’s the result of one simulation.
+  id: totrans-244
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一次模拟的结果。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-245
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE67]'
+  id: totrans-246
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE67]'
 - en: '[PRE68]</details>'
+  id: totrans-247
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE68]</details>'
 - en: We expect them to get about 80% of the questions right.
+  id: totrans-248
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们期望他们能对大约80%的问题做出正确回答。
 - en: Now let’s suppose we don’t know the test-taker’s ability. We can use the data
     we just generated to estimate it. And that’s what we’ll do next.
+  id: totrans-249
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在假设我们不知道考试者的能力。我们可以使用刚刚生成的数据来估计。这就是我们接下来要做的。
 - en: The Prior
+  id: totrans-250
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 先验
 - en: The SAT is designed so the distribution of scores is roughly normal, with mean
     500 and standard deviation 100. So the lowest score, 200, is three standard deviations
     below the mean, and the highest score, 800, is three standard deviations above.
+  id: totrans-251
   prefs: []
   type: TYPE_NORMAL
+  zh: SAT的设计是使得分数的分布大致呈正态分布，均值为500，标准差为100。因此，最低分200是均值的三个标准差以下，最高分800是均值的三个标准差以上。
 - en: We could use that distribution as a prior, but it would tend to cut off the
     low and high ends of the distribution. Instead, I’ll inflate the standard deviation
     to 300, to leave open the possibility that `ability` can be less than 200 or more
     than 800.
+  id: totrans-252
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用该分布作为先验，但它倾向于截断分布的低端和高端。相反，我会将标准差膨胀到300，以保留`ability`可能小于200或大于800的可能性。
 - en: Here’s a `Pmf` that represents the prior distribution.
+  id: totrans-253
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是代表先验分布的`Pmf`。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-254
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE69]</details>'
+  id: totrans-255
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE69]</details>'
 - en: And here’s what it looks like.
+  id: totrans-256
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是它的样子。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-257
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE70]'
+  id: totrans-258
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE70]'
 - en: '![_images/f6ff46cbaef200d7e887b81758d28ab084b928962a3b5f9a698c824c1e36dd72.png](../Images/6b094033244393276b1d1a97d6adb274.png)</details>'
+  id: totrans-259
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/f6ff46cbaef200d7e887b81758d28ab084b928962a3b5f9a698c824c1e36dd72.png](../Images/6b094033244393276b1d1a97d6adb274.png)</details>'
 - en: The Update
+  id: totrans-260
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 更新
 - en: The following function takes a prior `Pmf` and the outcome of a single question,
     and updates the `Pmf` in place.
+  id: totrans-261
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数接受一个先验`Pmf`和单个问题的结果，并就地更新`Pmf`。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-262
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE71]</details>'
+  id: totrans-263
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE71]</details>'
 - en: '`data` is a tuple that contains the difficulty of a question and the outcome:
     `True` if the response was correct and `False` otherwise.'
+  id: totrans-264
   prefs: []
   type: TYPE_NORMAL
+  zh: '`data`是一个包含问题难度和结果的元组：如果回答正确则为`True`，否则为`False`。'
 - en: As a test, let’s do an update based on the outcomes we simulated previously,
     based on a person with `ability=600` answering 51 questions with `difficulty=500`.
+  id: totrans-265
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为测试，让我们根据先前模拟的结果进行更新，基于一个`ability=600`的人回答了51个`difficulty=500`的问题。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-266
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE72]</details>'
+  id: totrans-267
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE72]</details>'
 - en: Here’s what the posterior distribution looks like.
+  id: totrans-268
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是后验分布的样子。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-269
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE73]'
+  id: totrans-270
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE73]'
 - en: '![_images/553368a9dc3a4c555472e4f17489bf9253f43d3f3ee2101c3b304bcba13e6c6f.png](../Images/63249dd4cc939a3f7d16ff724b2f40f2.png)</details>'
+  id: totrans-271
   prefs: []
   type: TYPE_NORMAL
 - en: The posterior mean is pretty close to the test-taker’s actual ability, which
     is 600.
+  id: totrans-272
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-273
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE74]'
+  id: totrans-274
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE74]'
 - en: '[PRE75]</details>'
+  id: totrans-275
   prefs: []
   type: TYPE_NORMAL
 - en: If we run this simulation again, we’ll get different results.
+  id: totrans-276
   prefs: []
   type: TYPE_NORMAL
 - en: Adaptation
+  id: totrans-277
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: 'Now let’s simulate an adaptive test. I’ll use the following function to choose
     questions, starting with the simplest strategy: all questions have the same difficulty.'
+  id: totrans-278
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-279
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE76]</details>'
+  id: totrans-280
   prefs: []
   type: TYPE_NORMAL
 - en: As parameters, `choose` takes `i`, which is the index of the question, and `belief`,
     which is a `Pmf` representing the posterior distribution of `ability`, based on
     responses to previous questions.
+  id: totrans-281
   prefs: []
   type: TYPE_NORMAL
 - en: This version of `choose` doesn’t use these parameters; they are there so we
     can test other strategies (see the exercises at the end of the chapter).
+  id: totrans-282
   prefs: []
   type: TYPE_NORMAL
 - en: The following function simulates a person taking a test, given that we know
     their actual ability.
+  id: totrans-283
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-284
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE77]</details>'
+  id: totrans-285
   prefs: []
   type: TYPE_NORMAL
 - en: The return values are a `Pmf` representing the posterior distribution of ability
     and a `DataFrame` containing the difficulty of the questions and the outcomes.
+  id: totrans-286
   prefs: []
   type: TYPE_NORMAL
 - en: Here’s an example, again for a test-taker with `ability=600`.
+  id: totrans-287
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-288
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE78]</details>'
+  id: totrans-289
   prefs: []
   type: TYPE_NORMAL
 - en: We can use the trace to see how many responses were correct.
+  id: totrans-290
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-291
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE79]'
+  id: totrans-292
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE79]'
 - en: '[PRE80]</details>'
+  id: totrans-293
   prefs: []
   type: TYPE_NORMAL
 - en: And here’s what the posterior looks like.
+  id: totrans-294
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-295
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE81]'
+  id: totrans-296
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE81]'
 - en: '![_images/6fecd64a2fbf0f61eb5419cb676798c9831a102903ea96ca668ee184f4da95f6.png](../Images/06dc60e1e59865d48a2f8ee79cd5816c.png)</details>'
+  id: totrans-297
   prefs: []
   type: TYPE_NORMAL
 - en: Again, the posterior distribution represents a pretty good estimate of the test-taker’s
     actual ability.
+  id: totrans-298
   prefs: []
   type: TYPE_NORMAL
 - en: Quantifying Precision
+  id: totrans-299
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -1112,72 +1658,92 @@
     of the posterior distribution. The standard deviation measures the spread of the
     distribution, so higher value indicates more uncertainty about the ability of
     the test-taker.
+  id: totrans-300
   prefs: []
   type: TYPE_NORMAL
 - en: In the previous example, the standard deviation of the posterior distribution
     is about 40.
+  id: totrans-301
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-302
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE82]'
+  id: totrans-303
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE82]'
 - en: '[PRE83]</details>'
+  id: totrans-304
   prefs: []
   type: TYPE_NORMAL
 - en: For an exam where all questions have the same difficulty, the precision of the
     estimate depends strongly on the ability of the test-taker. To show that, I’ll
     loop through a range of abilities and simulate a test using the version of `choice`
     that always returns `difficulty=500`.
+  id: totrans-305
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-306
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE84]</details>'
+  id: totrans-307
   prefs: []
   type: TYPE_NORMAL
 - en: The following plot shows the standard deviation of the posterior distribution
     for one simulation at each level of ability.
+  id: totrans-308
   prefs: []
   type: TYPE_NORMAL
 - en: The results are noisy, so I also plot a curve fitted to the data by [local regression](https://en.wikipedia.org/wiki/Local_regression).
+  id: totrans-309
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-310
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE85]'
+  id: totrans-311
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE85]'
 - en: '![_images/49fcae9333f76f35c854dcd4b654625f8dd41b8415ea903a5c3434780d2ea9fb.png](../Images/d29aa0df7d3b18ac9daca492b6efe4b9.png)</details>'
+  id: totrans-312
   prefs: []
   type: TYPE_NORMAL
 - en: The test is most precise for people with ability between `500` and `600`, less
     precise for people at the high end of the range, and even worse for people at
     the low end.
+  id: totrans-313
   prefs: []
   type: TYPE_NORMAL
 - en: When all the questions have difficulty `500`, a person with `ability=800` has
     a high probability of getting them right. So when they do, we don’t learn very
     much about them.
+  id: totrans-314
   prefs: []
   type: TYPE_NORMAL
 - en: If the test includes questions with a range of difficulty, it provides more
     information about people at the high and low ends of the range.
+  id: totrans-315
   prefs: []
   type: TYPE_NORMAL
 - en: As an exercise at the end of the chapter, you’ll have a chance to try out other
     strategies, including adaptive strategies that choose each question based on previous
     outcomes.
+  id: totrans-316
   prefs: []
   type: TYPE_NORMAL
 - en: Discriminatory Power
+  id: totrans-317
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -1186,147 +1752,199 @@
     of the test (as opposed to the performance of the test-takers) is to measure “discriminatory
     power”, which is the ability of the test to distinguish correctly between test-takers
     with different ability.
+  id: totrans-318
   prefs: []
   type: TYPE_NORMAL
 - en: To measure discriminatory power, I’ll simulate a person taking the test 100
     times; after each simulation, I’ll use the mean of the posterior distribution
     as their “score”.
+  id: totrans-319
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-320
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE86]</details>'
+  id: totrans-321
   prefs: []
   type: TYPE_NORMAL
 - en: Here are samples of scores for people with several levels of ability.
+  id: totrans-322
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-323
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE87]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-324
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE88]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-325
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE89]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-326
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE90]</details>'
+  id: totrans-327
   prefs: []
   type: TYPE_NORMAL
 - en: Here’s what the distributions of scores look like.
+  id: totrans-328
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-329
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE91]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-330
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE92]'
+  id: totrans-331
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE92]'
 - en: '![_images/e2f80922b8b9560c88074262e5b71df8c9b98feb9d33b222084ab78f75b14f93.png](../Images/0a2712bec0950fe312afd311635edd84.png)</details>'
+  id: totrans-332
   prefs: []
   type: TYPE_NORMAL
 - en: On average, people with higher ability get higher scores, but anyone can have
     a bad day, or a good day, so there is some overlap between the distributions.
+  id: totrans-333
   prefs: []
   type: TYPE_NORMAL
 - en: For people with ability between `500` and `600`, where the precision of the
     test is highest, the discriminatory power of the test is also high.
+  id: totrans-334
   prefs: []
   type: TYPE_NORMAL
 - en: If people with abilities `500` and `600` take the test, it is almost certain
     that the person with higher ability will get a higher score.
+  id: totrans-335
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-336
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE93]'
+  id: totrans-337
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE93]'
 - en: '[PRE94]</details>'
+  id: totrans-338
   prefs: []
   type: TYPE_NORMAL
 - en: Between people with abilities `600` and `700`, it is less certain.
+  id: totrans-339
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-340
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE95]'
+  id: totrans-341
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE95]'
 - en: '[PRE96]</details>'
+  id: totrans-342
   prefs: []
   type: TYPE_NORMAL
 - en: And between people with abilities `700` and `800`, it is not certain at all.
+  id: totrans-343
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-344
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE97]'
+  id: totrans-345
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE97]'
 - en: '[PRE98]</details>'
+  id: totrans-346
   prefs: []
   type: TYPE_NORMAL
 - en: But remember that these results are based on a test where all questions are
     equally difficult. If you do the exercises at the end of the chapter, you’ll see
     that the performance of the test is better if it includes questions with a range
     of difficulties, and even better if the test it is adaptive.
+  id: totrans-347
   prefs: []
   type: TYPE_NORMAL
 - en: Go back and modify `choose`, which is the function that chooses the difficulty
     of the next question.
+  id: totrans-348
   prefs: []
   type: TYPE_NORMAL
 - en: Write a version of `choose` that returns a range of difficulties by using `i`
     as an index into a sequence of difficulties.
+  id: totrans-349
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 编写一个“choose”的版本，通过使用“i”作为难度序列的索引，返回一系列难度。
 - en: Write a version of `choose` that is adaptive, so it choose the difficulty of
     the next question based `belief`, which is the posterior distribution of the test-taker’s
     ability, based on the outcome of previous responses.
+  id: totrans-350
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 编写一个自适应的“choose”版本，它根据“belief”选择下一个问题的难度，这是测试者能力的后验分布，基于先前回答的结果。
 - en: For both new versions, run the simulations again to quantify the precision of
     the test and its discriminatory power.
+  id: totrans-351
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于两个新版本，再次运行模拟以量化测试的精度和区分能力。
 - en: For the first version of `choose`, what is the ideal distribution of difficulties?
+  id: totrans-352
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于“choose”的第一个版本，困难程度的理想分布是什么？
 - en: For the second version, what is the adaptive strategy that maximizes the precision
     of the test over the range of abilities?
+  id: totrans-353
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于第二个版本，什么是最大化测试在能力范围内精度的自适应策略？
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-354
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
 - en: '[PRE99]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-355
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE99]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容隐藏代码单元格内容</summary>'
 - en: '[PRE100]</details>'
+  id: totrans-356
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE100]</details>'
