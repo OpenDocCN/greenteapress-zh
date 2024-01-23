@@ -561,17 +561,20 @@
   id: totrans-95
   prefs: []
   type: TYPE_TB
+  zh: Gentoo 0.000551
 - en: As we saw in the CDFs, flipper length does not distinguish strongly between
     Adélie and Chinstrap penguins.
   id: totrans-96
   prefs: []
   type: TYPE_NORMAL
+  zh: 正如我们在CDF中看到的，鳍长并不能很好地区分Adélie和Chinstrap企鹅。
 - en: 'But culmen length *can* make this distinction, so let’s use it to do a second
     round of classification. First we estimate distributions of culmen length for
     each species like this:'
   id: totrans-97
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是冠长*可以*做出这种区分，所以让我们使用它进行第二轮分类。首先我们估计每个物种的冠长分布如下：
 - en: '[PRE20]'
   id: totrans-98
   prefs: []
@@ -582,6 +585,7 @@
   id: totrans-99
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在假设我们看到一只冠长为48毫米的企鹅。我们可以使用这些数据来更新先验。
 - en: '[PRE21]'
   id: totrans-100
   prefs: []
@@ -591,44 +595,53 @@
   id: totrans-101
   prefs: []
   type: TYPE_TB
+  zh: '|  | 概率 |'
 - en: '| --- | --- |'
   id: totrans-102
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| Adelie | 0.001557 |'
   id: totrans-103
   prefs: []
   type: TYPE_TB
+  zh: '| Adelie | 0.001557 |'
 - en: '| Chinstrap | 0.474658 |'
   id: totrans-104
   prefs: []
   type: TYPE_TB
+  zh: '| Chinstrap | 0.474658 |'
 - en: '| Gentoo | 0.523785 |'
   id: totrans-105
   prefs: []
   type: TYPE_TB
+  zh: Gentoo 0.523785
 - en: A penguin with culmen length 48 mm is about equally likely to be a Chinstrap
     or Gentoo.
   id: totrans-106
   prefs: []
   type: TYPE_NORMAL
+  zh: 一只冠长为48毫米的企鹅几乎同样有可能是Chinstrap或Gentoo。
 - en: Using one feature at a time, we can often rule out one species or another, but
     we generally can’t identify species with confidence. We can do better using multiple
     features.
   id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: 一次使用一个特征，我们通常可以排除一种或另一种物种，但通常无法确定物种。使用多个特征可以做得更好。
 - en: Naive Bayesian Classification
   id: totrans-108
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 朴素贝叶斯分类
 - en: To make it easier to do multiple updates, I’ll use the following function, which
     takes a prior `Pmf`, a sequence of measurements and a corresponding sequence of
     dictionaries containing estimated distributions.
   id: totrans-109
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了更容易进行多次更新，我将使用以下函数，它接受一个先验`Pmf`、一系列测量和相应的一系列包含估计分布的字典。
 - en: '[PRE22]'
   id: totrans-110
   prefs: []
@@ -639,11 +652,13 @@
   id: totrans-111
   prefs: []
   type: TYPE_NORMAL
+  zh: 它执行一系列更新，一次使用一个变量，并返回后验`Pmf`。
 - en: 'To test it, I’ll use the same features we looked at in the previous section:
     culmen length and flipper length.'
   id: totrans-112
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了测试它，我将使用我们在上一节中看到的相同特征：冠长和鳍长。
 - en: '[PRE23]'
   id: totrans-113
   prefs: []
@@ -654,6 +669,7 @@
   id: totrans-114
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在假设我们找到一只鳍长为193毫米，冠长为48毫米的企鹅。这是更新：
 - en: '[PRE24]'
   id: totrans-115
   prefs: []
@@ -663,26 +679,32 @@
   id: totrans-116
   prefs: []
   type: TYPE_TB
+  zh: '|  | 概率 |'
 - en: '| --- | --- |'
   id: totrans-117
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| Adelie | 0.003455 |'
   id: totrans-118
   prefs: []
   type: TYPE_TB
+  zh: Adelie 0.003455
 - en: '| Chinstrap | 0.995299 |'
   id: totrans-119
   prefs: []
   type: TYPE_TB
+  zh: Chinstrap 0.995299
 - en: '| Gentoo | 0.001246 |'
   id: totrans-120
   prefs: []
   type: TYPE_TB
+  zh: Gentoo 0.001246
 - en: It is almost certain to be a Chinstrap.
   id: totrans-121
   prefs: []
   type: TYPE_NORMAL
+  zh: 它几乎肯定是Chinstrap。
 - en: '[PRE25]'
   id: totrans-122
   prefs: []
@@ -697,6 +719,7 @@
   id: totrans-124
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以循环遍历数据集，并使用这两个特征对每只企鹅进行分类。
 - en: '[PRE27]'
   id: totrans-125
   prefs: []
@@ -707,15 +730,19 @@
   id: totrans-126
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个循环向`DataFrame`添加了一个名为`Classification`的列；它包含了每只企鹅的最大后验概率的物种。
 - en: So let’s see how many we got right.
   id: totrans-127
   prefs: []
   type: TYPE_NORMAL
+  zh: 所以让我们看看我们有多少是正确的。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-128
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE28]'
   id: totrans-129
   prefs: []
@@ -725,6 +752,7 @@
   id: totrans-130
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE29]</details>'
 - en: '[PRE30]'
   id: totrans-131
   prefs: []
@@ -751,6 +779,7 @@
   id: totrans-135
   prefs: []
   type: TYPE_NORMAL
+  zh: 数据集中有344只企鹅，但其中两只企鹅的测量值丢失了，所以我们有342个有效案例。其中，有324个被正确分类，几乎是95%。
 - en: '[PRE34]'
   id: totrans-136
   prefs: []
@@ -765,6 +794,7 @@
   id: totrans-138
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数封装了这些步骤。
 - en: '[PRE36]'
   id: totrans-139
   prefs: []
@@ -776,15 +806,18 @@
   id: totrans-140
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们在本节中使用的分类器被称为“朴素”，因为它忽略了特征之间的相关性。为了看到这为什么重要，我将制作一个不那么朴素的分类器：一个考虑特征的联合分布的分类器。
 - en: Joint Distributions
   id: totrans-141
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 联合分布
 - en: I’ll start by making a scatter plot of the data.
   id: totrans-142
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将从制作数据的散点图开始。
 - en: '[PRE37]'
   id: totrans-143
   prefs: []
@@ -794,6 +827,7 @@
   id: totrans-144
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是三种物种的冠长和鳍长的散点图。
 - en: '[PRE38]'
   id: totrans-145
   prefs: []
@@ -803,22 +837,26 @@
   id: totrans-146
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/d96a227c04944a1a0218d1fa9e149290f1b76c465aed44f063e014a885c7da90.png](../Images/05e910ded4f9a2362d822d7dd7c7567e.png)'
 - en: Within each species, the joint distribution of these measurements forms an oval
     shape, at least roughly. The orientation of the ovals is along a diagonal, which
     indicates that there is a correlation between culmen length and flipper length.
   id: totrans-147
   prefs: []
   type: TYPE_NORMAL
+  zh: 在每个物种内，这些测量的联合分布形成椭圆形，至少大致如此。椭圆的方向沿对角线，这表明冠长和鳍长之间存在相关性。
 - en: If we ignore these correlations, we are assuming that the features are independent.
     To see what that looks like, I’ll make a joint distribution for each species assuming
     independence.
   id: totrans-148
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们忽略这些相关性，我们假设这些特征是独立的。为了看看这是什么样子，我将假设每个物种的联合分布是独立的。
 - en: The following function makes a discrete `Pmf` that approximates a normal distribution.
   id: totrans-149
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数制作了一个近似正态分布的离散`Pmf`。
 - en: '[PRE39]'
   id: totrans-150
   prefs: []
@@ -829,6 +867,7 @@
   id: totrans-151
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用它和`make_joint`来为每个物种制作冠长和鳍长的联合分布。
 - en: '[PRE40]'
   id: totrans-152
   prefs: []
@@ -839,6 +878,7 @@
   id: totrans-153
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下图比较了数据的散点图和联合分布的轮廓，假设它们是独立的。
 - en: '[PRE41]'
   id: totrans-154
   prefs: []
@@ -848,27 +888,32 @@
   id: totrans-155
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/0e26242ba1711182e3b00a74d762ad21182ab3b9d34bde74b0516a1e48f57d75.png](../Images/3852694f6babd3aaccf3151fc6949f89.png)'
 - en: The contours of a joint normal distribution form ellipses. In this example,
     because the features are uncorrelated, the ellipses are aligned with the axes.
     But they are not well aligned with the data.
   id: totrans-156
   prefs: []
   type: TYPE_NORMAL
+  zh: 联合正态分布的轮廓形成椭圆。在这个例子中，因为特征是不相关的，椭圆与坐标轴对齐。但它们与数据不太对齐。
 - en: We can make a better model of the data, and use it to compute better likelihoods,
     with a multivariate normal distribution.
   id: totrans-157
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以对数据进行更好的建模，并使用多元正态分布来计算更好的似然。
 - en: Multivariate Normal Distribution
   id: totrans-158
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 多元正态分布
 - en: As we have seen, a univariate normal distribution is characterized by its mean
     and standard deviation.
   id: totrans-159
   prefs: []
   type: TYPE_NORMAL
+  zh: 正如我们所见，单变量正态分布的特征是由其均值和标准差来表征的。
 - en: A multivariate normal distribution is characterized by the means of the features
     and the **covariance matrix**, which contains **variances**, which quantify the
     spread of the features, and the **covariances**, which quantify the relationships
