@@ -3,39 +3,47 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 列表和数组
 - en: 原文：[https://allendowney.github.io/ElementsOfDataScience/03_arrays.html](https://allendowney.github.io/ElementsOfDataScience/03_arrays.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ElementsOfDataScience/03_arrays.html](https://allendowney.github.io/ElementsOfDataScience/03_arrays.html)
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/03_arrays.ipynb)
     or [click here to download it](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/03_arrays.ipynb).'
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: '[单击此处在Colab上运行此笔记本](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/03_arrays.ipynb)
+    或 [单击此处下载](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/03_arrays.ipynb)。'
 - en: 'In the previous chapter we used tuples to represent latitude and longitude.
     In this chapter, you’ll see how to use tuples more generally to represent a sequence
     of values. And we’ll see two more ways to represent sequences: lists and arrays.'
   id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 在上一章中，我们使用元组表示纬度和经度。在本章中，您将看到如何更一般地使用元组表示一系列值。我们还将看到另外两种表示序列的方法：列表和数组。
 - en: You might wonder why we need three ways to represent the same thing. Most of
     the time we don’t, but each of them has different capabilities. For work with
     data, we will use arrays most of the time.
   id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 您可能会想知道为什么我们需要三种方式来表示相同的事物。大多数情况下我们不需要，但它们每个都有不同的功能。在处理数据时，我们大多数时候会使用数组。
 - en: As an example, we will use a small dataset from an article in *The Economist*
     about the price of sandwiches. It’s a silly example, but I’ll use it to introduce
     the idea of relative differences and different ways to summarize them.
   id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，我们将使用《经济学人》一篇关于三明治价格的文章中的一个小数据集。这是一个愚蠢的例子，但我会用它来介绍相对差异和不同的总结方法。
 - en: Tuples
   id: totrans-6
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 元组
 - en: 'A tuple is a sequence of elements. When we use a tuple to represent latitude
     and longitude, the sequence only contains two elements, and they are both floating-point
     numbers. But in general a tuple can contain any number of elements, and the elements
@@ -43,6 +51,7 @@
   id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 元组是一系列元素。当我们使用元组表示纬度和经度时，序列只包含两个元素，它们都是浮点数。但一般来说，元组可以包含任意数量的元素，并且元素可以是任何类型的值。以下是一个包含三个整数的元组：
 - en: '[PRE0]'
   id: totrans-8
   prefs: []
@@ -59,10 +68,12 @@
   id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 请注意，当Python显示一个元组时，它会将元素放在括号中。当您输入一个元组时，如果您认为这样更容易阅读，可以将其放在括号中，但不是必须的。
 - en: 'The elements can be any type. Here’s a tuple of strings:'
   id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 元素可以是任何类型。这是一个字符串元组：
 - en: '[PRE2]'
   id: totrans-12
   prefs: []
@@ -78,6 +89,7 @@
   id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 元素不必是相同的类型。这是一个包含字符串、整数和浮点数的元组。
 - en: '[PRE4]'
   id: totrans-15
   prefs: []
@@ -92,6 +104,7 @@
   id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果您有一个字符串，可以使用`tuple`函数将其转换为元组：
 - en: '[PRE6]'
   id: totrans-18
   prefs: []
@@ -106,12 +119,14 @@
   id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个单字符字符串的元组。
 - en: 'When you create a tuple, the parentheses are optional, but the commas are required.
     So how do you think you create a tuple with a single element? You might be tempted
     to write:'
   id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 创建元组时，括号是可选的，但逗号是必需的。那么您如何创建一个只有一个元素的元组呢？您可能会想要写：
 - en: '[PRE8]'
   id: totrans-22
   prefs: []
@@ -127,6 +142,7 @@
   id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 但您会发现结果只是一个数字，而不是一个元组。要创建一个只有一个元素的元组，您需要一个逗号：
 - en: '[PRE10]'
   id: totrans-25
   prefs: []
@@ -141,19 +157,23 @@
   id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 这可能看起来有点滑稽，但它确实能胜任。
 - en: Lists
   id: totrans-28
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 列表
 - en: 'Python provides another way to store a sequence of elements: a **list**.'
   id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: Python提供了另一种存储一系列元素的方式：**列表**。
 - en: To create a list, you put a sequence of elements in square brackets.
   id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: 要创建一个列表，您需要将一系列元素放在方括号中。
 - en: '[PRE12]'
   id: totrans-31
   prefs: []
@@ -171,11 +191,13 @@
   id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: 列表和元组非常相似。它们可以包含任意数量的元素，元素可以是任何类型，并且元素不必是相同的类型。不同之处在于您可以修改列表；元组是**不可变的**（无法修改）。这种差异以后会很重要，但现在我们可以忽略它。
 - en: 'When you make a list, the brackets are required, but if there is a single element,
     you don’t need a comma. So you can make a list like this:'
   id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 当您创建一个列表时，方括号是必需的，但如果只有一个元素，您不需要逗号。所以您可以创建一个像这样的列表：
 - en: '[PRE14]'
   id: totrans-35
   prefs: []
@@ -185,6 +207,7 @@
   id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 也可以创建一个没有元素的列表，就像这样：
 - en: '[PRE15]'
   id: totrans-37
   prefs: []
@@ -194,6 +217,7 @@
   id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: '`len`函数返回列表或元组中的长度（元素数量）。'
 - en: '[PRE16]'
   id: totrans-39
   prefs: []
@@ -209,30 +233,37 @@
   id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**创建一个包含4个元素的列表；然后使用`type`确认它是一个列表，使用`len`确认它有4个元素。'
 - en: There’s a lot more we could do with lists, but that’s enough to get started.
     In the next section, we’ll use lists to store data about sandwich prices.
   id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以用列表做更多的事情，但这已经足够开始了。在下一节中，我们将使用列表来存储有关三明治价格的数据。
 - en: Sandwich Prices
   id: totrans-43
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 三明治价格
 - en: 'In September 2019, *The Economist* published an article comparing sandwich
     prices in Boston and London: “[Why Americans pay more for lunch than Britons do](https://www.economist.com/finance-and-economics/2019/09/07/why-americans-pay-more-for-lunch-than-britons-do)”.
     It includes this graph showing prices of several sandwiches in the two cities:'
   id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: 2019年9月，《经济学人》发表了一篇比较波士顿和伦敦三明治价格的文章：“[为什么美国人午餐比英国人贵](https://www.economist.com/finance-and-economics/2019/09/07/why-americans-pay-more-for-lunch-than-britons-do)”
+    。其中包括这张图，显示了两个城市的几种三明治的价格：
 - en: '![](../Images/5feb03c573c0b858be44a006b68b3324.png)'
   id: totrans-45
   prefs: []
   type: TYPE_IMG
+  zh: '![](../Images/5feb03c573c0b858be44a006b68b3324.png)'
 - en: Here are the sandwich names from the graph, as a list of strings.
   id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是图表中的三明治名称，作为字符串列表。
 - en: '[PRE18]'
   id: totrans-47
   prefs: []
@@ -244,6 +275,7 @@
   id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 我联系了《经济学人》，要求他们提供用于创建该图表的数据，他们很友好地与我分享了。以下是波士顿的三明治价格：
 - en: '[PRE19]'
   id: totrans-49
   prefs: []
