@@ -3,11 +3,13 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 红线问题
 - en: 原文：[https://allendowney.github.io/ThinkBayes2/redline.html](https://allendowney.github.io/ThinkBayes2/redline.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ThinkBayes2/redline.html](https://allendowney.github.io/ThinkBayes2/redline.html)
 - en: The Red Line is a subway that connects Cambridge and Boston, Massachusetts.
     When I was working in Cambridge I took the Red Line from Kendall Square to South
     Station and caught the commuter rail to Needham. During rush hour Red Line trains
@@ -15,6 +17,7 @@
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 红线是马萨诸塞州剑桥和波士顿之间的地铁。当我在剑桥工作时，我从肯德尔广场乘坐红线到南站，然后搭乘通勤列车到尼德姆。在高峰时间，红线列车平均每7-8分钟运行一次。
 - en: When I arrived at the subway stop, I could estimate the time until the next
     train based on the number of passengers on the platform. If there were only a
     few people, I inferred that I just missed a train and expected to wait about 7
@@ -24,21 +27,25 @@
   id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 当我到达地铁站时，我可以根据站台上的乘客数量估计下一班火车的时间。如果只有几个人，我推断我刚错过了一班火车，预计要等大约7分钟。如果有更多的乘客，我预计火车会更快到达。但如果有很多乘客，我怀疑火车没有按时运行，所以我会离开地铁站，打车。
 - en: While I was waiting for trains, I thought about how Bayesian estimation could
     help predict my wait time and decide when I should give up and take a taxi. This
     chapter presents the analysis I came up with.
   id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 当我在等火车的时候，我想到了贝叶斯估计如何帮助预测我的等待时间，并决定何时放弃，乘坐出租车。本章介绍了我想出的分析。
 - en: This example is based on a project by Brendan Ritter and Kai Austin, who took
     a class with me at Olin College.
   id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个例子是基于布兰登·里特和凯·奥斯汀的一个项目，他们在奥林学院和我一起上课。
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ThinkBayes2/blob/master/notebooks/redline.ipynb)'
   id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: '[单击此处在Colab上运行此笔记本](https://colab.research.google.com/github/AllenDowney/ThinkBayes2/blob/master/notebooks/redline.ipynb)'
 - en: Before we get to the analysis, we have to make some modeling decisions. First,
     I will treat passenger arrivals as a Poisson process, which means I assume that
     passengers are equally likely to arrive at any time, and that they arrive at a
@@ -47,6 +54,7 @@
   id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 在我们进行分析之前，我们必须做出一些建模决策。首先，我将把乘客到达视为泊松过程，这意味着我假设乘客在任何时间到达的可能性都是相等的，并且以每分钟到达的速率λ来到达。由于我在短时间内观察到乘客，并且每天都在同一时间观察到乘客，我假设λ是恒定的。
 - en: On the other hand, the arrival process for trains is not Poisson. Trains to
     Boston are supposed to leave from the end of the line (Alewife station) every
     7–8 minutes during peak times, but by the time they get to Kendall Square, the
@@ -54,6 +62,7 @@
   id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 另一方面，火车的到达过程不是泊松过程。到波士顿的火车应该在高峰时段每7-8分钟从终点站（阿尔维夫站）出发，但是当它们到达肯德尔广场时，列车之间的时间在3到12分钟之间变化。
 - en: To gather data on the time between trains, I wrote a script that downloads real-time
     data from the [MBTA](http://www.mbta.com/rider_tools/developers/), selects south-bound
     trains arriving at Kendall square, and records their arrival times in a database.
@@ -63,6 +72,7 @@
   id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了收集有关列车之间的时间的数据，我编写了一个脚本，从[MBTA](http://www.mbta.com/rider_tools/developers/)下载实时数据，选择到达肯德尔广场的南行列车，并记录它们的到达时间在数据库中。我每个工作日下午4点到6点运行脚本5天，并记录每天约15次到达。然后我计算了连续到达之间的时间间隔。这是我记录的间隔时间，以秒为单位。
 - en: '[PRE0]'
   id: totrans-10
   prefs: []
@@ -72,6 +82,7 @@
   id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将把它们转换成分钟，并使用`kde_from_sample`来估计分布。
 - en: '[PRE1]'
   id: totrans-12
   prefs: []
@@ -86,6 +97,7 @@
   id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是它的样子。
 - en: '[PRE3]'
   id: totrans-15
   prefs: []
@@ -95,45 +107,53 @@
   id: totrans-16
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/7e5c60a70c0bba8a0b8e1436228eb7b6.png)'
 - en: The Update
   id: totrans-17
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 更新
 - en: At this point we have an estimate for the distribution of time between trains.
     Now let’s suppose I arrive at the station and see 10 passengers on the platform.
     What distribution of wait times should I expect?
   id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这一点上，我们已经对列车之间的时间分布有了估计。现在假设我到达车站，看到站台上有10名乘客。我应该期望什么等待时间的分布？
 - en: We’ll answer this question in two steps.
   id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将分两步回答这个问题。
 - en: First, we’ll derive the distribution of gap times as observed by a random arrival
     (me).
   id: totrans-20
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 首先，我们将推导出作为随机到达（我）观察到的间隔时间的分布。
 - en: Then we’ll derive the distribution of wait times, conditioned on the number
     of passengers.
   id: totrans-21
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 然后我们将推导出等待时间的分布，条件是乘客的数量。
 - en: When I arrive at the station, I am more likely to arrive during a long gap than
     a short one. In fact, the probability that I arrive during any interval is proportional
     to its duration.
   id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 当我到达车站时，我更有可能在较长的间隔期间到达，而不是在较短的间隔期间到达。实际上，我在任何间隔期间到达的概率与其持续时间成正比。
 - en: 'If we think of `pmf_z` as the prior distribution of gap time, we can do a Bayesian
     update to compute the posterior. The likelihood of my arrival during each gap
     is the duration of the gap:'
   id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们把`pmf_z`看作是间隔时间的先验分布，我们可以进行贝叶斯更新来计算后验分布。我在每个间隔期间到达的可能性是间隔的持续时间：
 - en: '[PRE4]'
   id: totrans-24
   prefs: []
@@ -143,6 +163,7 @@
   id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 所以这是第一个更新。
 - en: '[PRE5]'
   id: totrans-26
   prefs: []
@@ -157,6 +178,7 @@
   id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是后验分布的样子。
 - en: '[PRE7]'
   id: totrans-29
   prefs: []
@@ -166,12 +188,14 @@
   id: totrans-30
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/f151fe5e310d26189b4c0ccf0015adea.png)'
 - en: Because I am more likely to arrive during a longer gap, the distribution is
     shifted to the right. The prior mean is about 7.8 minutes; the posterior mean
     is about 8.9 minutes.
   id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 因为我更有可能在较长的间隔期间到达，所以分布向右移。先验均值约为7.8分钟；后验均值约为8.9分钟。
 - en: '[PRE8]'
   id: totrans-32
   prefs: []
