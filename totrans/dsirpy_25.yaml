@@ -3,20 +3,24 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 广度优先搜索
 - en: 原文：[https://allendowney.github.io/DSIRP/bfs.html](https://allendowney.github.io/DSIRP/bfs.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/DSIRP/bfs.html](https://allendowney.github.io/DSIRP/bfs.html)
 - en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/bfs.ipynb)'
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: '[单击此处在Colab上运行本章](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/bfs.ipynb)'
 - en: In the previous notebook, we constructed an Erdos-Renyi graph and wrote a version
     of depth-first search (DFS) that works for graphs.
   id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 在之前的笔记本中，我们构建了一个Erdos-Renyi图，并编写了一个适用于图的深度优先搜索（DFS）版本。
 - en: When we did DFS in a tree, there was only one path from the root to any other
     node, so we never discovered the same node twice. In a graph, there might be multiple
     paths to the same node. To avoid discovering the same node over and over, we have
@@ -24,6 +28,7 @@
   id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 当我们在树中进行DFS时，从根到任何其他节点只有一条路径，因此我们永远不会发现相同的节点两次。在图中，可能有多条通往相同节点的路径。为了避免一遍又一遍地发现相同的节点，我们必须跟踪我们已经看到的节点。
 - en: In this notebook, we’ll adapt the level-order traversal in the same way; the
     result is a breadth-first search (BFS). Then we’ll adapt BFS to implement Dijkstra’s
     algorithm, which computes the shortest path from a starting node to every other
@@ -31,32 +36,38 @@
   id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个笔记本中，我们将以相同的方式调整层次遍历；结果是广度优先搜索（BFS）。然后我们将调整BFS以实现Dijkstra算法，该算法计算从起始节点到每个其他节点的最短路径（如果可达）。
 - en: We’ll test these functions with a Watts-Strogatz graph, then replicate part
     of an experiment from a [well-known paper](https://github.com/AllenDowney/ThinkComplexity2/blob/master/papers/watts98collective.pdf).
   id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将使用Watts-Strogatz图测试这些函数，然后复制一部分来自[著名论文](https://github.com/AllenDowney/ThinkComplexity2/blob/master/papers/watts98collective.pdf)的实验。
 - en: Watts-Strogatz graphs
   id: totrans-7
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: Watts-Strogatz图
 - en: A Watts-Strogatz (WS) graph is a random graph, like an Erdos-Renyi graph, but
     the construction process is different. A WS graph starts with a ring lattice and
     randomly “rewires” some of the edges.
   id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: Watts-Strogatz（WS）图是一个随机图，类似于Erdos-Renyi图，但构建过程不同。WS图从一个环形晶格开始，然后随机“重连”一些边。
 - en: NetworkX provides [a function that makes a WS graph](https://networkx.org/documentation/stable/reference/generated/networkx.generators.random_graphs.watts_strogatz_graph.html),
     so we can see what it looks like.
   id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: NetworkX提供了[一个创建WS图的函数](https://networkx.org/documentation/stable/reference/generated/networkx.generators.random_graphs.watts_strogatz_graph.html)，因此我们可以看看它的样子。
 - en: Here’s an example with `n=10` nodes, each connected to `k=2` neighbors, with
     probability `p=0` of rewiring each edge.
   id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个示例，其中`n=10`个节点，每个节点连接到`k=2`个邻居，每条边重连的概率为`p=0`。
 - en: '[PRE0]'
   id: totrans-11
   prefs: []
@@ -71,6 +82,7 @@
   id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个环，其中每个节点与其直接邻居手牵手。
 - en: '[PRE2]'
   id: totrans-14
   prefs: []
@@ -85,25 +97,30 @@
   id: totrans-16
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/bfs_7_0.png](../Images/02628b594b42d544ccb2dc0e46921919.png)'
 - en: '**Exercise:** Run this code again with different values of `k` and `p` to see
     what the effect is.'
   id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**使用不同的`k`和`p`值再次运行此代码，看看效果如何。'
 - en: 'Note: If `k` is odd, it gets “rounded down” to an even number.'
   id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 注意：如果`k`是奇数，则会“向下取整”为偶数。
 - en: Breadth-first search
   id: totrans-19
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 广度优先搜索
 - en: Here’s the function from the previous notebook that implements depth-first search
     in a graph.
   id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是前一个笔记本中实现图的深度优先搜索的函数。
 - en: '[PRE4]'
   id: totrans-21
   prefs: []
@@ -124,10 +141,12 @@
   id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**制作一个名为`reachable_nodes_bfs`的此函数版本，使用广度优先搜索完成相同的操作。'
 - en: You can use this example to test your code.
   id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 您可以使用此示例来测试您的代码。
 - en: '[PRE7]'
   id: totrans-26
   prefs: []
@@ -143,12 +162,14 @@
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 快速BFS
 - en: 'NetworkX provides a simple, fast implementation of BFS, available from [the
     NetworkX repository on GitHub](https://github.com/networkx/networkx/blob/master/networkx/algorithms/components/connected.py).
     Here is a version I modified to return a set of nodes:'
   id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: NetworkX提供了BFS的简单快速实现，可从[GitHub上的NetworkX存储库](https://github.com/networkx/networkx/blob/master/networkx/algorithms/components/connected.py)中获得。这是我修改后返回节点集的一个版本：
 - en: '[PRE9]'
   id: totrans-30
   prefs: []
@@ -158,6 +179,7 @@
   id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们将这个函数与`reachable_nodes_bfs`进行比较，看看哪个更快。
 - en: '[PRE10]'
   id: totrans-32
   prefs: []
@@ -188,22 +210,26 @@
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: Dijkstra算法
 - en: During a breadth-first search, whenever we discover a new node, the path we
     took must be the shortest. That’s necessarily true because, if there had been
     a shorter path, we would have discovered the node sooner.
   id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 在广度优先搜索期间，每当我们发现一个新节点时，我们所走的路径必须是最短的。这是必然的，因为如果有更短的路径，我们会更早地发现该节点。
 - en: This insight is the basis of Dijkstra’s algorithm, which computes the shortest
     path from a give “source” node to all other (reachable) nodes.
   id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个洞察力是Dijkstra算法的基础，它计算从给定的“源”节点到所有其他（可达）节点的最短路径。
 - en: The general version of Dijkstra’s algorithm works on graphs where the edges
     have different lengths, like the distance between cities, for example.
   id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: Dijkstra算法的一般版本适用于边长不同的图，例如城市之间的距离。
 - en: 'We’ll start with a simpler version where all edges have length `1`. This version
     is similar to BFS, with one change: instead of keeping a set of nodes that have
     already been seen, we keep a dictionary that maps from each discovered node to
@@ -211,20 +237,24 @@
   id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将从一个更简单的版本开始，其中所有边的长度都为`1`。这个版本类似于BFS，只有一个变化：我们不再保留已经看到的节点的集合，而是保留一个字典，将每个发现的节点映射到其与源节点的距离。
 - en: '**Exercise:** Write a version of `reachable_nodes_bfs` called `shortest_path_dijkstra`.
     It should take a graph and a source node as parameters and return a dictionary
     that maps from each reachable node to its distance from the source.'
   id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**编写一个名为`shortest_path_dijkstra`的`reachable_nodes_bfs`版本。它应该接受图和源节点作为参数，并返回一个字典，将每个可达节点映射到其与源节点的距离。'
 - en: 'Hint: Start with a dictionary that maps from the source node to distance `0`.'
   id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 提示：从源节点到距离`0`开始一个映射的字典。
 - en: We’ll test it on a ring lattice.
   id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将在一个环形晶格上进行测试。
 - en: '[PRE15]'
   id: totrans-45
   prefs: []
@@ -239,6 +269,7 @@
   id: totrans-47
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/bfs_28_0.png](../Images/9e8445f8be9746ea2aa649995a307532.png)'
 - en: '[PRE17]'
   id: totrans-48
   prefs: []
