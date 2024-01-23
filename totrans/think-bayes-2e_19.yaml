@@ -1,246 +1,377 @@
 - en: Logistic Regression
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 逻辑回归
 - en: 原文：[https://allendowney.github.io/ThinkBayes2/chap16.html](https://allendowney.github.io/ThinkBayes2/chap16.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ThinkBayes2/chap16.html](https://allendowney.github.io/ThinkBayes2/chap16.html)
 - en: 'This chapter introduces two related topics: log odds and logistic regression.'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章介绍了两个相关主题：对数几率和逻辑回归。
 - en: In <<_BayessRule>>, we rewrote Bayes’s Theorem in terms of odds and derived
     Bayes’s Rule, which can be a convenient way to do a Bayesian update on paper or
     in your head. In this chapter, we’ll look at Bayes’s Rule on a logarithmic scale,
     which provides insight into how we accumulate evidence through successive updates.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 在<<_BayessRule>>中，我们将贝叶斯定理重写为赔率的形式，并推导出贝叶斯定理，这可以是在纸上或心中进行贝叶斯更新的一种便捷方式。在本章中，我们将在对数刻度上研究贝叶斯定理，这可以揭示我们如何通过连续的更新积累证据。
 - en: That leads directly to logistic regression, which is based on a linear model
     of the relationship between evidence and the log odds of a hypothesis. As an example,
     we’ll use data from the Space Shuttle to explore the relationship between temperature
     and the probability of damage to the O-rings.
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 这直接导致了逻辑回归，它基于证据与假设的对数几率之间的线性模型。作为例子，我们将使用航天飞机的数据来探索温度与O形密封圈损坏概率之间的关系。
 - en: As an exercise, you’ll have a chance to model the relationship between a child’s
     age when they start school and their probability of being diagnosed with Attention
     Deficit Hyperactivity Disorder (ADHD).
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为练习，你将有机会模拟孩子上学时的年龄与被诊断为注意力缺陷多动障碍（ADHD）的概率之间的关系。
 - en: Log Odds
+  id: totrans-6
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 对数几率
 - en: When I was in grad school, I signed up for a class on the Theory of Computation.
     On the first day of class, I was the first to arrive. A few minutes later, another
     student arrived.
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 当我在研究生学校时，我报名了一门关于计算理论的课程。在上课的第一天，我是第一个到达的。几分钟后，另一个学生到达了。
 - en: At the time, about 83% of the students in the computer science program [were
     male](https://www.aps.org/programs/education/statistics/fraction-phd.cfm), so
     I was mildly surprised to note that the other student was female.
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 当时，计算机科学专业的学生中约83%是男性，所以我对另一个学生是女性感到有些惊讶。
 - en: When another female student arrived a few minutes later, I started to think
     I was in the wrong room. When third female student arrived, I was confident I
     was in the wrong room. And as it turned out, I was.
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 当另一个女学生几分钟后到达时，我开始觉得我可能在错误的房间里。当第三个女学生到达时，我确信我在错误的房间里。事实证明，我是对的。
 - en: I’ll use this anecdote to demonstrate Bayes’s Rule on a logarithmic scale and
     show how it relates to logistic regression.
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将利用这个轶事来演示贝叶斯定理在对数刻度上的应用，并展示它与逻辑回归的关系。
 - en: 'Using \(H\) to represent the hypothesis that I was in the right room, and \(F\)
     to represent the observation that the first other student was female, we can write
     Bayes’s Rule like this:'
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用\(H\)代表我在正确的房间的假设，\(F\)代表第一个其他学生是女性的观察，我们可以这样写贝叶斯定理：
 - en: \[O(H|F) = O(H) \frac{P(F|H)}{P(F|not H)}\]
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: \[O(H|F) = O(H) \frac{P(F|H)}{P(F|not H)}\]
 - en: 'Before I saw the other students, I was confident I was in the right room, so
     I might assign prior odds of 10:1 in favor:'
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 在看到其他学生之前，我确信我在正确的房间里，所以我可能会分配10:1的先验赔率：
 - en: \[O(H) = 10\]
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: \[O(H) = 10\]
 - en: If I was in the right room, the likelihood of the first female student was about
     17%. If I was not in the right room, the likelihood of the first female student
     was more like 50%,
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我在正确的房间里，第一个女学生的可能性约为17%。如果我不在正确的房间里，第一个女学生的可能性更接近50%，
 - en: \[\frac{P(F|H)}{P(F|not H)} = 17 / 50\]
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\frac{P(F|H)}{P(F|not H)} = 17 / 50\]
 - en: So the likelihood ratio is close to 1/3\. Applying Bayes’s Rule, the posterior
     odds were
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，似然比接近1/3。应用贝叶斯定理，后验赔率为
 - en: \[O(H|F) = 10 / 3\]
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: \[O(H|F) = 10 / 3\]
 - en: After two students, the posterior odds were
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 两名学生之后，后验赔率为
 - en: \[O(H|FF) = 10 / 9\]
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: \[O(H|FF) = 10 / 9\]
 - en: 'And after three students:'
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 三名学生之后：
 - en: \[O(H|FFF) = 10 / 27\]
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: \[O(H|FFF) = 10 / 27\]
 - en: At that point, I was right to suspect I was in the wrong room.
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: 在那时，我怀疑我可能在错误的房间里是正确的。
 - en: The following table shows the odds after each update, the corresponding probabilities,
     and the change in probability after each step, expressed in percentage points.
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下表格显示了每次更新后的赔率、相应的概率以及每个步骤后的概率变化，以百分点表示。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
 - en: '[PRE0]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell source Hide code cell source</summary>'
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE0]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell source Hide code cell source</summary>'
 - en: '[PRE1]</details>'
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE1]</details>'
 - en: '|  | odds | prob | prob diff |'
+  id: totrans-28
   prefs: []
   type: TYPE_TB
+  zh: '|  | 奇数 | 概率 | 概率差 |'
 - en: '| --- | --- | --- | --- |'
+  id: totrans-29
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- |'
 - en: '| prior | 10.000000 | 0.909091 | -- |'
+  id: totrans-30
   prefs: []
   type: TYPE_TB
+  zh: '| 先验 | 10.000000 | 0.909091 | -- |'
 - en: '| 1 student | 3.333333 | 0.769231 | -13.986014 |'
+  id: totrans-31
   prefs: []
   type: TYPE_TB
+  zh: '| 1名学生 | 3.333333 | 0.769231 | -13.986014 |'
 - en: '| 2 students | 1.111111 | 0.526316 | -24.291498 |'
+  id: totrans-32
   prefs: []
   type: TYPE_TB
+  zh: '| 2名学生 | 1.111111 | 0.526316 | -24.291498 |'
 - en: '| 3 students | 0.370370 | 0.270270 | -25.604552 |'
+  id: totrans-33
   prefs: []
   type: TYPE_TB
+  zh: '| 3名学生 | 0.370370 | 0.270270 | -25.604552 |'
 - en: Each update uses the same likelihood, but the changes in probability are not
     the same. The first update decreases the probability by about 14 percentage points,
     the second by 24, and the third by 26. That’s normal for this kind of update,
     and in fact it’s necessary; if the changes were the same size, we would quickly
     get into negative probabilities.
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 每次更新使用相同的似然度，但概率的变化并不相同。第一次更新将概率减少了大约14个百分点，第二次减少了24个百分点，第三次减少了26个百分点。这对于这种更新是正常的，事实上是必要的；如果变化是相同大小的，我们很快就会得到负概率。
 - en: 'The odds follow a more obvious pattern. Because each update multiplies the
     odds by the same likelihood ratio, the odds form a geometric sequence. And that
     brings us to consider another way to represent uncertainty: **log odds**, which
     is the logarithm of odds, usually expressed using the natural log (base \(e\)).'
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 几率遵循更明显的模式。因为每次更新都将几率乘以相同的似然比，所以几率形成一个几何序列。这让我们考虑另一种表示不确定性的方式：**对数几率**，它是几率的对数，通常使用自然对数（以\(e\)为底）表示。
 - en: 'Adding log odds to the table:'
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 将对数几率添加到表中：
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE2]</details>'
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE2]</details>'
 - en: '|  | odds | prob | prob diff | log odds | log odds diff |'
+  id: totrans-39
   prefs: []
   type: TYPE_TB
+  zh: '|  | 几率 | 概率 | 概率差 | 对数几率 | 对数几率差 |'
 - en: '| --- | --- | --- | --- | --- | --- |'
+  id: totrans-40
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- | --- |'
 - en: '| prior | 10.000000 | 0.909091 | -- | 2.302585 | -- |'
+  id: totrans-41
   prefs: []
   type: TYPE_TB
+  zh: '| 先验 | 10.000000 | 0.909091 | -- | 2.302585 | -- |'
 - en: '| 1 student | 3.333333 | 0.769231 | -13.986014 | 1.203973 | -1.098612 |'
+  id: totrans-42
   prefs: []
   type: TYPE_TB
+  zh: '| 1名学生 | 3.333333 | 0.769231 | -13.986014 | 1.203973 | -1.098612 |'
 - en: '| 2 students | 1.111111 | 0.526316 | -24.291498 | 0.105361 | -1.098612 |'
+  id: totrans-43
   prefs: []
   type: TYPE_TB
+  zh: '| 2名学生 | 1.111111 | 0.526316 | -24.291498 | 0.105361 | -1.098612 |'
 - en: '| 3 students | 0.370370 | 0.270270 | -25.604552 | -0.993252 | -1.098612 |'
+  id: totrans-44
   prefs: []
   type: TYPE_TB
+  zh: '| 3名学生 | 0.370370 | 0.270270 | -25.604552 | -0.993252 | -1.098612 |'
 - en: 'You might notice:'
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 你可能会注意到：
 - en: When probability is greater than 0.5, odds are greater than 1, and log odds
     are positive.
+  id: totrans-46
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 当概率大于0.5时，几率大于1，对数几率为正。
 - en: When probability is less than 0.5, odds are less than 1, and log odds are negative.
+  id: totrans-47
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 当概率小于0.5时，几率小于1，对数几率为负数。
 - en: You might also notice that the log odds are equally spaced. The change in log
     odds after each update is the logarithm of the likelihood ratio.
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 你可能还会注意到对数几率是等间距的。每次更新后对数几率的变化是似然比的对数。
 - en: '[PRE3]'
+  id: totrans-49
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '[PRE4]'
+  id: totrans-50
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: That’s true in this example, and we can show that it’s true in general by taking
     the log of both sides of Bayes’s Rule.
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个例子中是正确的，我们可以通过对Bayes定理的两边取对数来证明这一点。
 - en: \[\log O(H|F) = \log O(H) + \log \frac{P(F|H)}{P(F|not H)}\]
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\log O(H|F) = \log O(H) + \log \frac{P(F|H)}{P(F|not H)}\]
 - en: 'On a log odds scale, a Bayesian update is additive. So if \(F^x\) means that
     \(x\) female students arrive while I am waiting, the posterior log odds that I
     am in the right room are:'
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: 在对数几率尺度上，贝叶斯更新是可加的。因此，如果\(F^x\)表示我在等待时到达\(x\)名女学生，那么我在正确房间的后验对数几率为：
 - en: \[\log O(H|F^x) = \log O(H) + x \log \frac{P(F|H)}{P(F|not H)}\]
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\log O(H|F^x) = \log O(H) + x \log \frac{P(F|H)}{P(F|not H)}\]
 - en: This equation represents a linear relationship between the log likelihood ratio
     and the posterior log odds.
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个方程表示对数似然比和后验对数几率之间的线性关系。
 - en: 'In this example the linear equation is exact, but even when it’s not, it is
     common to use a linear function to model the relationship between an explanatory
     variable, \(x\), and a dependent variable expressed in log odds, like this:'
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个例子中，线性方程是精确的，但即使不是，通常也可以使用线性函数来模拟解释变量\(x\)与以对数几率表示的因变量之间的关系，如下所示：
 - en: \[\log O(H | x) = \beta_0 + \beta_1 x\]
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\log O(H | x) = \beta_0 + \beta_1 x\]
 - en: 'where \(\beta_0\) and \(\beta_1\) are unknown parameters:'
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 其中\(\beta_0\)和\(\beta_1\)是未知参数：
 - en: The intercept, \(\beta_0\), is the log odds of the hypothesis when \(x\) is
     0.
+  id: totrans-59
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 截距\(\beta_0\)是当\(x\)为0时的假设对数几率。
 - en: The slope, \(\beta_1\), is the log of the likelihood ratio.
+  id: totrans-60
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 斜率\(\beta_1\)是似然比的对数。
 - en: This equation is the basis of logistic regression.
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个方程是逻辑回归的基础。
 - en: The Space Shuttle Problem
+  id: totrans-62
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 航天飞机问题
 - en: 'As an example of logistic regression, I’ll solve a problem from Cameron Davidson-Pilon’s
     book, [*Bayesian Methods for Hackers*](http://nbviewer.jupyter.org/github/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers/blob/master/Chapter2_MorePyMC/Ch2_MorePyMC_PyMC2.ipynb).
     He writes:'
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为逻辑回归的一个例子，我将解决Cameron Davidson-Pilon的书[*Bayesian Methods for Hackers*](http://nbviewer.jupyter.org/github/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers/blob/master/Chapter2_MorePyMC/Ch2_MorePyMC_PyMC2.ipynb)中的一个问题。他写道：
 - en: “On January 28, 1986, the twenty-fifth flight of the U.S. space shuttle program
     ended in disaster when one of the rocket boosters of the Shuttle Challenger exploded
     shortly after lift-off, killing all seven crew members. The presidential commission
@@ -252,902 +383,1423 @@
     the Challenger launch, but unfortunately only the data corresponding to the 7
     flights on which there was a damage incident were considered important and these
     were thought to show no obvious trend.”
+  id: totrans-64
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: “1986年1月28日，美国航天飞机计划的第25次飞行在发射后不久，航天飞机挑战者号的火箭助推器之一爆炸，导致全部七名机组人员遇难。事故调查委员会得出的结论是，事故是由火箭助推器上的一个O形圈失效引起的，而这种失效是由于一个有缺陷的设计，使得O形圈对包括外部温度在内的多种因素敏感。在之前的24次飞行中，有23次（一次在海上丢失）有O形圈失效的数据可用，并且这些数据在挑战者号发射前的晚上进行了讨论，但不幸的是，只有7次飞行中发生损坏事件的数据被认为是重要的，而且这些数据被认为没有明显的趋势。”
 - en: The dataset is originally from [this paper](https://amstat.tandfonline.com/doi/abs/10.1080/01621459.1989.10478858),
     but also available from [Davidson-Pilon](https://raw.githubusercontent.com/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers/master/Chapter2_MorePyMC/data/challenger_data.csv).
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: 该数据集最初来自[这篇论文](https://amstat.tandfonline.com/doi/abs/10.1080/01621459.1989.10478858)，也可以从[Davidson-Pilon](https://raw.githubusercontent.com/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers/master/Chapter2_MorePyMC/data/challenger_data.csv)获取。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE5]</details>'
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE5]</details>'
 - en: I’ll read the data and do some cleaning.
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将读取数据并进行一些清理。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
 - en: '[PRE6]'
+  id: totrans-70
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '|  | Date | Temperature | Damage |'
+  id: totrans-71
   prefs: []
   type: TYPE_TB
+  zh: '|  | 日期 | 温度 | 损坏 |'
 - en: '| --- | --- | --- | --- |'
+  id: totrans-72
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- |'
 - en: '| 0 | 1981-04-12 | 66 | 0 |'
+  id: totrans-73
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 1981-04-12 | 66 | 0 |'
 - en: '| 1 | 1981-11-12 | 70 | 1 |'
+  id: totrans-74
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 1981-11-12 | 70 | 1 |'
 - en: '| 2 | 1982-03-22 | 69 | 0 |'
+  id: totrans-75
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 1982-03-22 | 69 | 0 |'
 - en: '| 4 | 1982-01-11 | 68 | 0 |'
+  id: totrans-76
   prefs: []
   type: TYPE_TB
+  zh: '| 4 | 1982-01-11 | 68 | 0 |'
 - en: '| 5 | 1983-04-04 | 67 | 0 |'
+  id: totrans-77
   prefs: []
   type: TYPE_TB
+  zh: '| 5 | 1983-04-04 | 67 | 0 |'
 - en: '| 6 | 1983-06-18 | 72 | 0 |'
+  id: totrans-78
   prefs: []
   type: TYPE_TB
+  zh: '| 6 | 1983-06-18 | 72 | 0 |'
 - en: '| 7 | 1983-08-30 | 73 | 0 |'
+  id: totrans-79
   prefs: []
   type: TYPE_TB
+  zh: '| 7 | 1983-08-30 | 73 | 0 |'
 - en: '| 8 | 1983-11-28 | 70 | 0 |'
+  id: totrans-80
   prefs: []
   type: TYPE_TB
+  zh: '| 8 | 1983-11-28 | 70 | 0 |'
 - en: '| 9 | 1984-02-03 | 57 | 1 |'
+  id: totrans-81
   prefs: []
   type: TYPE_TB
+  zh: '| 9 | 1984-02-03 | 57 | 1 |'
 - en: '| 10 | 1984-04-06 | 63 | 1 |'
+  id: totrans-82
   prefs: []
   type: TYPE_TB
+  zh: '| 10 | 1984-04-06 | 63 | 1 |'
 - en: '| 11 | 1984-08-30 | 70 | 1 |'
+  id: totrans-83
   prefs: []
   type: TYPE_TB
+  zh: '| 11 | 1984-08-30 | 70 | 1 |'
 - en: '| 12 | 1984-10-05 | 78 | 0 |'
+  id: totrans-84
   prefs: []
   type: TYPE_TB
+  zh: '| 12 | 1984-10-05 | 78 | 0 |'
 - en: '| 13 | 1984-11-08 | 67 | 0 |'
+  id: totrans-85
   prefs: []
   type: TYPE_TB
+  zh: '| 13 | 1984-11-08 | 67 | 0 |'
 - en: '| 14 | 1985-01-24 | 53 | 1 |'
+  id: totrans-86
   prefs: []
   type: TYPE_TB
+  zh: '| 14 | 1985-01-24 | 53 | 1 |'
 - en: '| 15 | 1985-04-12 | 67 | 0 |'
+  id: totrans-87
   prefs: []
   type: TYPE_TB
+  zh: '| 15 | 1985-04-12 | 67 | 0 |'
 - en: '| 16 | 1985-04-29 | 75 | 0 |'
+  id: totrans-88
   prefs: []
   type: TYPE_TB
+  zh: '| 16 | 1985-04-29 | 75 | 0 |'
 - en: '| 17 | 1985-06-17 | 70 | 0 |'
+  id: totrans-89
   prefs: []
   type: TYPE_TB
+  zh: '| 17 | 1985-06-17 | 70 | 0 |'
 - en: '| 18 | 1985-07-29 | 81 | 0 |'
+  id: totrans-90
   prefs: []
   type: TYPE_TB
+  zh: '| 18 | 1985-07-29 | 81 | 0 |'
 - en: '| 19 | 1985-08-27 | 76 | 0 |'
+  id: totrans-91
   prefs: []
   type: TYPE_TB
+  zh: '| 19 | 1985-08-27 | 76 | 0 |'
 - en: '| 20 | 1985-10-03 | 79 | 0 |'
+  id: totrans-92
   prefs: []
   type: TYPE_TB
+  zh: '| 20 | 1985-10-03 | 79 | 0 |'
 - en: '| 21 | 1985-10-30 | 75 | 1 |'
+  id: totrans-93
   prefs: []
   type: TYPE_TB
+  zh: '| 21 | 1985-10-30 | 75 | 1 |'
 - en: '| 22 | 1985-11-26 | 76 | 0 |'
+  id: totrans-94
   prefs: []
   type: TYPE_TB
+  zh: '| 22 | 1985-11-26 | 76 | 0 |'
 - en: '| 23 | 1986-01-12 | 58 | 1 |</details>'
+  id: totrans-95
   prefs: []
   type: TYPE_NORMAL
+  zh: '| 23 | 1986-01-12 | 58 | 1 |</details>'
 - en: 'Here are the first few rows:'
+  id: totrans-96
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是前几行：
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-97
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码隐藏代码单元格源代码</summary>
 - en: '[PRE7]</details>'
+  id: totrans-98
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE7]</details>'
 - en: '|  | Date | Temperature | Damage |'
+  id: totrans-99
   prefs: []
   type: TYPE_TB
+  zh: '|  | 日期 | 温度 | 损坏 |'
 - en: '| --- | --- | --- | --- |'
+  id: totrans-100
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- |'
 - en: '| 0 | 1981-04-12 | 66 | 0 |'
+  id: totrans-101
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 1981-04-12 | 66 | 0 |'
 - en: '| 1 | 1981-11-12 | 70 | 1 |'
+  id: totrans-102
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 1981-11-12 | 70 | 1 |'
 - en: '| 2 | 1982-03-22 | 69 | 0 |'
+  id: totrans-103
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 1982-03-22 | 69 | 0 |'
 - en: '| 4 | 1982-01-11 | 68 | 0 |'
+  id: totrans-104
   prefs: []
   type: TYPE_TB
+  zh: '| 4 | 1982-01-11 | 68 | 0 |'
 - en: '| 5 | 1983-04-04 | 67 | 0 |'
+  id: totrans-105
   prefs: []
   type: TYPE_TB
+  zh: '| 5 | 1983-04-04 | 67 | 0 |'
 - en: 'The columns are:'
+  id: totrans-106
   prefs: []
   type: TYPE_NORMAL
+  zh: 列如下：
 - en: '`Date`: The date of launch,'
+  id: totrans-107
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`日期`：发射日期，'
 - en: '`Temperature`: Outside temperature in Fahrenheit, and'
+  id: totrans-108
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`温度`：华氏温度，'
 - en: '`Damage`: `1` if there was a damage incident and `0` otherwise.'
+  id: totrans-109
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`损坏`：如果发生损坏事件，则为`1`，否则为`0`。'
 - en: There are 23 launches in the dataset, 7 with damage incidents.
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: 数据集中有23次发射，其中7次发生了损坏事件。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-111
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
 - en: '[PRE8]'
+  id: totrans-112
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '[PRE9]</details>'
+  id: totrans-113
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE9]</details>'
 - en: The following figure shows the relationship between damage and temperature.
+  id: totrans-114
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下图显示了损坏和温度之间的关系。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-115
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码隐藏代码单元格源代码</summary>
 - en: '[PRE10]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell source Hide code cell source</summary>'
+  id: totrans-116
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE10]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格源代码隐藏代码单元格源代码</summary>'
 - en: '[PRE11]</details> ![_images/9c176560b9752003e2f6e6e100518c13a4375e65aa388ab988866eb61c444569.png](../Images/d4d696fb17142eb2541d5857df0c70b9.png)'
+  id: totrans-117
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE11]</details> ![_images/9c176560b9752003e2f6e6e100518c13a4375e65aa388ab988866eb61c444569.png](../Images/d4d696fb17142eb2541d5857df0c70b9.png)'
 - en: When the outside temperature was below 65 degrees, there was always damage to
     the O-rings. When the temperature was above 65 degrees, there was usually no damage.
+  id: totrans-118
   prefs: []
   type: TYPE_NORMAL
+  zh: 当室外温度低于65度时，O形圈总是会受损。当温度高于65度时，通常不会受损。
 - en: 'Based on this figure, it seems plausible that the probability of damage is
     related to temperature. If we assume this probability follows a logistic model,
     we can write:'
+  id: totrans-119
   prefs: []
   type: TYPE_NORMAL
+  zh: 根据这个图，似乎有理由认为损坏的概率与温度有关。如果我们假设这个概率遵循逻辑模型，我们可以写成：
 - en: \[\log O(H | x) = \beta_0 + \beta_1 x\]
+  id: totrans-120
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\log O(H | x) = \beta_0 + \beta_1 x\]
 - en: where \(H\) is the hypothesis that the O-rings will be damaged, \(x\) is temperature,
     and \(\beta_0\) and \(\beta_1\) are the parameters we will estimate. For reasons
     I’ll explain soon, I’ll define \(x\) to be temperature shifted by an offset so
     its mean is 0.
+  id: totrans-121
   prefs: []
   type: TYPE_NORMAL
+  zh: 其中\(H\)是O形圈将受损的假设，\(x\)是温度，\(\beta_0\)和\(\beta_1\)是我们将要估计的参数。出于我很快会解释的原因，我将定义\(x\)为温度，通过一个偏移量进行了平移，使其平均值为0。
 - en: '[PRE12]'
+  id: totrans-122
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '[PRE13]'
+  id: totrans-123
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: And for consistency I’ll create a copy of the `Damage` columns called `y`.
+  id: totrans-124
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了保持一致，我将创建一个名为`y`的`Damage`列的副本。
 - en: '[PRE14]'
+  id: totrans-125
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: Before doing a Bayesian update, I’ll use `statsmodels` to run a conventional
     (non-Bayesian) logistic regression.
+  id: totrans-126
   prefs: []
   type: TYPE_NORMAL
+  zh: 在进行贝叶斯更新之前，我将使用`statsmodels`来运行传统（非贝叶斯）逻辑回归。
 - en: '[PRE15]'
+  id: totrans-127
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '[PRE16]'
+  id: totrans-128
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '`results` contains a “point estimate” for each parameter, that is, a single
     value rather than a posterior distribution.'
+  id: totrans-129
   prefs: []
   type: TYPE_NORMAL
+  zh: '`results`包含每个参数的“点估计”，即单个值而不是后验分布。'
 - en: 'The intercept is about -1.2, and the estimated slope is about -0.23. To see
     what these parameters mean, I’ll use them to compute probabilities for a range
     of temperatures. Here’s the range:'
+  id: totrans-130
   prefs: []
   type: TYPE_NORMAL
+  zh: 截距约为-1.2，估计斜率约为-0.23。为了查看这些参数的含义，我将使用它们来计算一系列温度的概率。以下是范围：
 - en: '[PRE17]'
+  id: totrans-131
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: 'We can use the logistic regression equation to compute log odds:'
+  id: totrans-132
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用逻辑回归方程来计算对数几率：
 - en: '[PRE18]'
+  id: totrans-133
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: And then convert to probabilities.
+  id: totrans-134
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后转换为概率。
 - en: '[PRE19]'
+  id: totrans-135
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-136
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
 - en: '[PRE20]'
+  id: totrans-137
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '[PRE21]</details>'
+  id: totrans-138
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE21]</details>'
 - en: Converting log odds to probabilities is a common enough operation that it has
     a name, `expit`, and SciPy provides a function that computes it.
+  id: totrans-139
   prefs: []
   type: TYPE_NORMAL
+  zh: 将对数几率转换为概率是一个很常见的操作，它有一个名字，`expit`，SciPy提供了一个计算它的函数。
 - en: '[PRE22]'
+  id: totrans-140
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-141
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
 - en: '[PRE23]'
+  id: totrans-142
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: '[PRE24]</details>'
+  id: totrans-143
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE24]</details>'
 - en: Here’s what the logistic model looks like with these estimated parameters.
+  id: totrans-144
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是具有这些估计参数的逻辑模型的样子。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-145
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE25]</details> ![_images/184359ae741869c825727d898cd709c7876cb15a30627a4ac069ec7a766dda27.png](../Images/02337f43c9bd6ff6ed033cb5db254145.png)'
+  id: totrans-146
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE25]</details> ![_images/184359ae741869c825727d898cd709c7876cb15a30627a4ac069ec7a766dda27.png](../Images/02337f43c9bd6ff6ed033cb5db254145.png)'
 - en: At low temperatures, the probability of damage is high; at high temperatures,
     it drops off to near 0.
+  id: totrans-147
   prefs: []
   type: TYPE_NORMAL
+  zh: 在低温下，损坏的概率很高；在高温下，它接近于0。
 - en: But that’s based on conventional logistic regression. Now we’ll do the Bayesian
     version.
+  id: totrans-148
   prefs: []
   type: TYPE_NORMAL
+  zh: 但这是基于传统的逻辑回归。现在我们将进行贝叶斯版本。
 - en: Prior Distribution
+  id: totrans-149
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 先验分布
 - en: I’ll use uniform distributions for both parameters, using the point estimates
     from the previous section to help me choose the upper and lower bounds.
+  id: totrans-150
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将为两个参数使用均匀分布，使用上一节的点估计来帮助我选择上限和下限。
 - en: '[PRE26]'
+  id: totrans-151
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: '[PRE27]'
+  id: totrans-152
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: We can use `make_joint` to construct the joint prior distribution.
+  id: totrans-153
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用`make_joint`来构建联合先验分布。
 - en: '[PRE28]'
+  id: totrans-154
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: The values of `intercept` run across the columns, the values of `slope` run
     down the rows.
+  id: totrans-155
   prefs: []
   type: TYPE_NORMAL
+  zh: '`intercept`的值沿着列进行，`slope`的值沿着行进行。'
 - en: For this problem, it will be convenient to “stack” the prior so the parameters
     are levels in a `MultiIndex`, and put the result in a `Pmf`.
+  id: totrans-156
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于这个问题，将先验“堆叠”起来，使参数成为`MultiIndex`中的级别，并将结果放入`Pmf`中会很方便。
 - en: '[PRE29]'
+  id: totrans-157
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: '|  |  | probs |'
+  id: totrans-158
   prefs: []
   type: TYPE_TB
+  zh: '|  |  | 概率 |'
 - en: '| --- | --- | --- |'
+  id: totrans-159
   prefs: []
   type: TYPE_TB
+  zh: '--- | --- | --- '
 - en: '| Slope | Intercept |  |'
+  id: totrans-160
   prefs: []
   type: TYPE_TB
+  zh: '斜率 | 截距 | '
 - en: '| --- | --- | --- |'
+  id: totrans-161
   prefs: []
   type: TYPE_TB
+  zh: '--- | --- | --- '
 - en: '| -0.8 | -5.00 | 0.000098 |'
+  id: totrans-162
   prefs: []
   type: TYPE_TB
+  zh: -0.8 | -5.00 | 0.000098
 - en: '| -4.94 | 0.000098 |'
+  id: totrans-163
   prefs: []
   type: TYPE_TB
+  zh: -4.94 | 0.000098
 - en: '| -4.88 | 0.000098 |'
+  id: totrans-164
   prefs: []
   type: TYPE_TB
+  zh: -4.88 | 0.000098
 - en: '`joint_pmf` is a `Pmf` with two levels in the index, one for each parameter.
     That makes it easy to loop through possible pairs of parameters, as we’ll see
     in the next section.'
+  id: totrans-165
   prefs: []
   type: TYPE_NORMAL
+  zh: '`joint_pmf`是一个具有索引中的两个级别的`Pmf`，一个用于每个参数。这使得很容易循环遍历可能的参数对，正如我们将在下一节中看到的那样。'
 - en: Likelihood
+  id: totrans-166
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 可能性
 - en: To do the update, we have to compute the likelihood of the data for each possible
     pair of parameters.
+  id: totrans-167
   prefs: []
   type: TYPE_NORMAL
+  zh: 要进行更新，我们必须计算每对参数的数据的可能性。
 - en: To make that easier, I’m going to group the data by temperature, `x`, and count
     the number of launches and damage incidents at each temperature.
+  id: totrans-168
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了使这更容易，我将按温度`x`对数据进行分组，并计算每个温度的发射次数和损坏事件的次数。
 - en: '[PRE30]'
+  id: totrans-169
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: '|  | count | sum |'
+  id: totrans-170
   prefs: []
   type: TYPE_TB
+  zh: '|  | 计数 | 总和 |'
 - en: '| --- | --- | --- |'
+  id: totrans-171
   prefs: []
   type: TYPE_TB
+  zh: '--- | --- | --- '
 - en: '| x |  |  |'
+  id: totrans-172
   prefs: []
   type: TYPE_TB
+  zh: 'x |  | '
 - en: '| --- | --- | --- |'
+  id: totrans-173
   prefs: []
   type: TYPE_TB
+  zh: '--- | --- | --- '
 - en: '| -17.0 | 1 | 1 |'
+  id: totrans-174
   prefs: []
   type: TYPE_TB
+  zh: -17.0 | 1 | 1
 - en: '| -13.0 | 1 | 1 |'
+  id: totrans-175
   prefs: []
   type: TYPE_TB
+  zh: -13.0 | 1 | 1
 - en: '| -12.0 | 1 | 1 |'
+  id: totrans-176
   prefs: []
   type: TYPE_TB
+  zh: -12.0 | 1 | 1
 - en: '| -7.0 | 1 | 1 |'
+  id: totrans-177
   prefs: []
   type: TYPE_TB
+  zh: -7.0 | 1 | 1
 - en: '| -4.0 | 1 | 0 |'
+  id: totrans-178
   prefs: []
   type: TYPE_TB
+  zh: -4.0 | 1 | 0
 - en: 'The result is a `DataFrame` with two columns: `count` is the number of launches
     at each temperature; `sum` is the number of damage incidents. To be consistent
     with the parameters of the binomial distributions, I’ll assign them to variables
     named `ns` and `ks`.'
+  id: totrans-179
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个`DataFrame`，有两列：`count`是每个温度的发射次数；`sum`是损坏事件的次数。为了与二项分布的参数一致，我将它们分配给名为`ns`和`ks`的变量。
 - en: '[PRE31]'
+  id: totrans-180
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: To compute the likelihood of the data, let’s assume temporarily that the parameters
     we just estimated, `slope` and `inter`, are correct.
+  id: totrans-181
   prefs: []
   type: TYPE_NORMAL
+  zh: 要计算数据的可能性，让我们暂时假设我们刚刚估计的参数`slope`和`inter`是正确的。
 - en: 'We can use them to compute the probability of damage at each launch temperature,
     like this:'
+  id: totrans-182
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用它们来计算每次发射温度的损坏概率，如下所示：
 - en: '[PRE32]'
+  id: totrans-183
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: '`ps` contains the probability of damage for each launch temperature, according
     to the model.'
+  id: totrans-184
   prefs: []
   type: TYPE_NORMAL
+  zh: '`ps`包含根据模型每次发射温度的损坏概率。'
 - en: Now, for each temperature we have `ns`, `ps`, and `ks`; we can use the binomial
     distribution to compute the likelihood of the data.
+  id: totrans-185
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，对于每个温度，我们有`ns`，`ps`和`ks`；我们可以使用二项分布来计算数据的可能性。
 - en: '[PRE33]'
+  id: totrans-186
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: '[PRE34]'
+  id: totrans-187
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: Each element of `likes` is the probability of seeing `k` damage incidents in
     `n` launches if the probability of damage is `p`. The likelihood of the whole
     dataset is the product of this array.
+  id: totrans-188
   prefs: []
   type: TYPE_NORMAL
+  zh: '`likes`的每个元素是在`n`次发射中看到`k`次损坏事件的概率，如果损坏的概率是`p`。整个数据集的可能性是该数组的乘积。'
 - en: '[PRE35]'
+  id: totrans-189
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: '[PRE36]'
+  id: totrans-190
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: 'That’s how we compute the likelihood of the data for a particular pair of parameters.
     Now we can compute the likelihood of the data for all possible pairs:'
+  id: totrans-191
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是我们如何计算特定参数对的数据可能性。现在我们可以计算所有可能对的数据可能性：
 - en: '[PRE37]'
+  id: totrans-192
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE37]'
 - en: To initialize `likelihood`, we make a copy of `joint_pmf`, which is a convenient
     way to make sure that `likelihood` has the same type, index, and data type as
     `joint_pmf`.
+  id: totrans-193
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了初始化`likelihood`，我们复制`joint_pmf`，这是一种确保`likelihood`具有与`joint_pmf`相同的类型、索引和数据类型的便捷方式。
 - en: The loop iterates through the parameters. For each possible pair, it uses the
     logistic model to compute `ps`, computes the likelihood of the data, and assigns
     the result to a row in `likelihood`.
+  id: totrans-194
   prefs: []
   type: TYPE_NORMAL
+  zh: 循环迭代参数。对于每个可能的对，它使用逻辑模型计算`ps`，计算数据的可能性，并将结果分配给`likelihood`中的一行。
 - en: The Update
+  id: totrans-195
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 更新
 - en: Now we can compute the posterior distribution in the usual way.
+  id: totrans-196
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以以通常的方式计算后验分布。
 - en: '[PRE38]'
+  id: totrans-197
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: 'Because we used a uniform prior, the parameter pair with the highest likelihood
     is also the pair with maximum posterior probability:'
+  id: totrans-198
   prefs: []
   type: TYPE_NORMAL
+  zh: 因为我们使用了均匀先验，具有最高可能性的参数对也是具有最大后验概率的参数对：
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-199
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE39]'
+  id: totrans-200
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: '[PRE40]</details>'
+  id: totrans-201
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE40]</details>'
 - en: 'So we can confirm that the results of the Bayesian update are consistent with
     the maximum likelihood estimate computed by StatsModels:'
+  id: totrans-202
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，我们可以确认贝叶斯更新的结果与StatsModels计算的最大似然估计一致：
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-203
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE41]'
+  id: totrans-204
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE41]'
 - en: '[PRE42]</details>'
+  id: totrans-205
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE42]</details>'
 - en: They are approximately the same, within the precision of the grid we’re using.
+  id: totrans-206
   prefs: []
   type: TYPE_NORMAL
+  zh: 它们大致相同，在我们使用的网格的精度范围内。
 - en: If we unstack the posterior `Pmf` we can make a contour plot of the joint posterior
     distribution.
+  id: totrans-207
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们取消堆叠后验`Pmf`，我们可以绘制联合后验分布的轮廓图。
 - en: '[PRE43]'
+  id: totrans-208
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE43]'
 - en: '![_images/6fa00d5595996c520a41b3e76de338d79c39c384f930bc01ba19b7604f32c850.png](../Images/fb6869a9be510eeca3c1389df899ec45.png)'
+  id: totrans-209
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/6fa00d5595996c520a41b3e76de338d79c39c384f930bc01ba19b7604f32c850.png](../Images/fb6869a9be510eeca3c1389df899ec45.png)'
 - en: The ovals in the contour plot are aligned along a diagonal, which indicates
     that there is some correlation between `slope` and `inter` in the posterior distribution.
+  id: totrans-210
   prefs: []
   type: TYPE_NORMAL
+  zh: 等高线图中的椭圆沿对角线排列，这表明后验分布中的`slope`和`inter`之间存在一定的相关性。
 - en: But the correlation is weak, which is one of the reasons we subtracted off the
     mean launch temperature when we computed `x`; centering the data minimizes the
     correlation between the parameters.
+  id: totrans-211
   prefs: []
   type: TYPE_NORMAL
+  zh: 但相关性很弱，这也是我们在计算`x`时减去平均发射温度的原因之一；居中数据最小化了参数之间的相关性。
 - en: '**Exercise:** To see why this matters, go back and set `offset=60` and run
     the analysis again. The slope should be the same, but the intercept will be different.
     And if you plot the joint distribution, the contours you get will be elongated,
     indicating stronger correlation between the estimated parameters.'
+  id: totrans-212
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** 为了了解为什么这很重要，回去将`offset=60`并再次运行分析。斜率应该是相同的，但截距将会不同。如果绘制联合分布，得到的等高线将会被拉长，表明估计参数之间的相关性更强。'
 - en: In theory, this correlation is not a problem, but in practice it is. With uncentered
     data, the posterior distribution is more spread out, so it’s harder to cover with
     the joint prior distribution. Centering the data maximizes the precision of the
     estimates; with uncentered data, we have to do more computation to get the same
     precision.
+  id: totrans-213
   prefs: []
   type: TYPE_NORMAL
+  zh: 理论上，这种相关性并不是问题，但在实践中是问题。对于未居中的数据，后验分布更加分散，因此更难以覆盖联合先验分布。居中数据最大化了估计的精度；对于未居中的数据，我们需要进行更多的计算才能获得相同的精度。
 - en: Marginal Distributions
+  id: totrans-214
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 边际分布
 - en: Finally, we can extract the marginal distributions.
+  id: totrans-215
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，我们可以提取边际分布。
 - en: '[PRE44]'
+  id: totrans-216
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE44]'
 - en: Here’s the posterior distribution of `inter`.
+  id: totrans-217
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是`inter`的后验分布。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-218
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE45]</details> ![_images/b06adb0eb4e2bec88511c82b4d847ba57ba32ad397ab1b2c6a8c77dad4aba9f0.png](../Images/f3b94b3f1bc46134208bdb54c255ad3c.png)'
+  id: totrans-219
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE45]</details> ![_images/b06adb0eb4e2bec88511c82b4d847ba57ba32ad397ab1b2c6a8c77dad4aba9f0.png](../Images/f3b94b3f1bc46134208bdb54c255ad3c.png)'
 - en: And here’s the posterior distribution of `slope`.
+  id: totrans-220
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是`slope`的后验分布。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-221
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE46]</details> ![_images/282201b1bee504c51b0c181166c0dedfe417f37e44ca3fad23e76f8a5865a3ef.png](../Images/8efbc3f30e4e6f76a7e2dbe86d5e7d88.png)'
+  id: totrans-222
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE46]</details> ![_images/282201b1bee504c51b0c181166c0dedfe417f37e44ca3fad23e76f8a5865a3ef.png](../Images/8efbc3f30e4e6f76a7e2dbe86d5e7d88.png)'
 - en: Here are the posterior means.
+  id: totrans-223
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是后验均值。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-224
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE47]'
+  id: totrans-225
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE47]'
 - en: '[PRE48]</details>'
+  id: totrans-226
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE48]</details>'
 - en: Both marginal distributions are moderately skewed, so the posterior means are
     somewhat different from the point estimates.
+  id: totrans-227
   prefs: []
   type: TYPE_NORMAL
+  zh: 两个边际分布都有适度的偏斜，因此后验均值与点估计略有不同。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-228
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE49]'
+  id: totrans-229
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE49]'
 - en: '[PRE50]</details>'
+  id: totrans-230
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE50]</details>'
 - en: Transforming Distributions
+  id: totrans-231
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 转换分布
 - en: Let’s interpret these parameters. Recall that the intercept is the log odds
     of the hypothesis when \(x\) is 0, which is when temperature is about 70 degrees
     F (the value of `offset`). So we can interpret the quantities in `marginal_inter`
     as log odds.
+  id: totrans-232
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们解释这些参数。回想一下，当 \(x\) 为0 时，也就是温度约为70华氏度（`offset`的值）时，截距是假设的对数几率。因此，我们可以将`marginal_inter`中的数量解释为对数几率。
 - en: 'To convert them to probabilities, I’ll use the following function, which transforms
     the quantities in a `Pmf` by applying a given function:'
+  id: totrans-233
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了将它们转换为概率，我将使用以下函数，该函数通过应用给定的函数来转换`Pmf`中的数量：
 - en: '[PRE51]'
+  id: totrans-234
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE51]'
 - en: If we call `transform` and pass `expit` as a parameter, it transforms the log
     odds in `marginal_inter` into probabilities and returns the posterior distribution
     of `inter` expressed in terms of probabilities.
+  id: totrans-235
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们调用`transform`并将`expit`作为参数传递，它将把`marginal_inter`中的对数几率转换为概率，并返回用概率表示的`inter`的后验分布。
 - en: '[PRE52]'
+  id: totrans-236
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE52]'
 - en: '`Pmf` provides a `transform` method that does the same thing.'
+  id: totrans-237
   prefs: []
   type: TYPE_NORMAL
+  zh: '`Pmf`提供了一个`transform`方法，可以做同样的事情。'
 - en: '[PRE53]'
+  id: totrans-238
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE53]'
 - en: Here’s the posterior distribution for the probability of damage at 70 degrees
     F.
+  id: totrans-239
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是温度为70华氏度时损坏概率的后验分布。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-240
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE54]</details> ![_images/d4a0ba125f94c8d8a1007b700d5bdd5bab05c13b7e0b00f8e94c59eb068ef384.png](../Images/c7e489fb2ab8b75a9ae3383449fff948.png)'
+  id: totrans-241
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE54]</details> ![_images/d4a0ba125f94c8d8a1007b700d5bdd5bab05c13b7e0b00f8e94c59eb068ef384.png](../Images/c7e489fb2ab8b75a9ae3383449fff948.png)'
 - en: The mean of this distribution is about 22%, which is the probability of damage
     at 70 degrees F, according to the model.
+  id: totrans-242
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个分布的均值约为22%，这是根据模型在70华氏度时的损坏概率。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-243
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE55]'
+  id: totrans-244
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE55]'
 - en: '[PRE56]</details>'
+  id: totrans-245
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE56]</details>'
 - en: This result shows the second reason I defined `x` to be zero when temperature
     is 70 degrees F; this way, the intercept corresponds to the probability of damage
     at a relevant temperature, rather than 0 degrees F.
+  id: totrans-246
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个结果显示了我将`x`定义为温度为70华氏度时为零的第二个原因；这样，截距对应于相关温度下的损坏概率，而不是0华氏度。
 - en: Now let’s look more closely at the estimated slope. In the logistic model, the
     parameter \(\beta_1\) is the log of the likelihood ratio.
+  id: totrans-247
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们更仔细地看一下估计的斜率。在逻辑模型中，参数 \(\beta_1\) 是似然比的对数。
 - en: So we can interpret the quantities in `marginal_slope` as log likelihood ratios,
     and we can use `exp` to transform them to likelihood ratios (also known as Bayes
     factors).
+  id: totrans-248
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，我们可以将`marginal_slope`中的数量解释为对数似然比，并且我们可以使用`exp`将它们转换为似然比（也称为贝叶斯因子）。
 - en: '[PRE57]'
+  id: totrans-249
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE57]'
 - en: The result is the posterior distribution of likelihood ratios; here’s what it
     looks like.
+  id: totrans-250
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是似然比的后验分布；这是它的样子。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-251
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE58]</details> ![_images/027bce9b65abb343c2f6a22dba21f4090f49d688afdcf61bf519088cf5b30dc8.png](../Images/384df6dd201224fcbc4e303e60ee143f.png)<details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-252
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE58]</details> ![_images/027bce9b65abb343c2f6a22dba21f4090f49d688afdcf61bf519088cf5b30dc8.png](../Images/384df6dd201224fcbc4e303e60ee143f.png)<details
+    class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE59]'
+  id: totrans-253
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE59]'
 - en: '[PRE60]</details>'
+  id: totrans-254
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE60]</details>'
 - en: The mean of this distribution is about 0.75, which means that each additional
     degree Fahrenheit provides evidence against the possibility of damage, with a
     likelihood ratio (Bayes factor) of 0.75.
+  id: totrans-255
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个分布的均值约为0.75，这意味着每增加一华氏度都会提供反对损坏可能性的证据，似然比（贝叶斯因子）为0.75。
 - en: 'Notice:'
+  id: totrans-256
   prefs: []
   type: TYPE_NORMAL
+  zh: 注意：
 - en: I computed the posterior mean of the probability of damage at 70 deg F by transforming
     the marginal distribution of the intercept to the marginal distribution of probability,
     and then computing the mean.
+  id: totrans-257
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 我通过将截距的边际分布转换为概率的边际分布，然后计算均值，计算了70华氏度下损坏概率的后验均值。
 - en: I computed the posterior mean of the likelihood ratio by transforming the marginal
     distribution of slope to the marginal distribution of likelihood ratios, and then
     computing the mean.
+  id: totrans-258
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 我通过将斜率的边际分布转换为似然比的边际分布，然后计算均值，计算了似然比的后验均值。
 - en: This is the correct order of operations, as opposed to computing the posterior
     means first and then transforming them.
+  id: totrans-259
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是正确的操作顺序，而不是首先计算后验均值，然后再进行转换。
 - en: To see the difference, let’s compute both values the other way around. Here’s
     the posterior mean of `marginal_inter`, transformed to a probability, compared
     to the mean of `marginal_probs`.
+  id: totrans-260
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了看到区别，让我们以另一种方式计算这两个值。这是`marginal_inter`的后验均值，转换为概率，与`marginal_probs`的均值进行比较。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-261
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE61]'
+  id: totrans-262
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE61]'
 - en: '[PRE62]</details>'
+  id: totrans-263
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE62]</details>'
 - en: And here’s the posterior mean of `marginal_slope`, transformed to a likelihood
     ratio, compared to the mean `marginal_lr`.
+  id: totrans-264
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是`marginal_slope`的后验均值，转换为似然比，与`marginal_lr`的均值进行比较。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-265
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE63]'
+  id: totrans-266
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE63]'
 - en: '[PRE64]</details>'
+  id: totrans-267
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE64]</details>'
 - en: In this example, the differences are not huge, but they can be. As a general
     rule, transform first, then compute summary statistics.
+  id: totrans-268
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个例子中，差异并不是很大，但有时可能会很大。作为一般规则，首先进行转换，然后计算摘要统计。
 - en: Predictive Distributions
+  id: totrans-269
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 预测分布
 - en: In the logistic model, the parameters are interpretable, at least after transformation.
     But often what we care about are predictions, not parameters. In the Space Shuttle
     problem, the most important prediction is, “What is the probability of O-ring
     damage if the outside temperature is 31 degrees F?”
+  id: totrans-270
   prefs: []
   type: TYPE_NORMAL
+  zh: 在逻辑模型中，参数是可以解释的，至少在转换之后是这样。但通常我们关心的是预测，而不是参数。在航天飞机的问题中，最重要的预测是：“如果室外温度为31华氏度，O形圈损坏的概率是多少？”
 - en: To make that prediction, I’ll draw a sample of parameter pairs from the posterior
     distribution.
+  id: totrans-271
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了进行这种预测，我将从后验分布中抽取参数对的样本。
 - en: '[PRE65]'
+  id: totrans-272
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE65]'
 - en: The result is an array of 101 tuples, each representing a possible pair of parameters.
     I chose this sample size to make the computation fast. Increasing it would not
     change the results much, but they would be a little more precise.
+  id: totrans-273
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个包含101个元组的数组，每个元组代表一对可能的参数。我选择这个样本大小是为了加快计算速度。增加样本大小不会改变结果太多，但会更加精确一些。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-274
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE66]'
+  id: totrans-275
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE66]'
 - en: '[PRE67]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-276
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE67]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE68]'
+  id: totrans-277
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE68]'
 - en: '[PRE69]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-278
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE69]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE70]'
+  id: totrans-279
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE70]'
 - en: '[PRE71]</details>'
+  id: totrans-280
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE71]</details>'
 - en: To generate predictions, I’ll use a range of temperatures from 31 degrees F
     (the temperature when the Challenger launched) to 82 degrees F (the highest observed
     temperature).
+  id: totrans-281
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了生成预测，我将使用从31华氏度（挑战者号发射时的温度）到82华氏度（观测到的最高温度）的一系列温度。
 - en: '[PRE72]'
+  id: totrans-282
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE72]'
 - en: The following loop uses `xs` and the sample of parameters to construct an array
     of predicted probabilities.
+  id: totrans-283
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下循环使用`xs`和参数样本来构建预测概率数组。
 - en: '[PRE73]'
+  id: totrans-284
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE73]'
 - en: The result has one column for each value in `xs` and one row for each element
     of `sample`.
+  id: totrans-285
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果每个`xs`值对应一列，每个`sample`元素对应一行。
 - en: To get a quick sense of what the predictions look like, we can loop through
     the rows and plot them.
+  id: totrans-286
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了快速了解预测的样子，我们可以循环遍历行并绘制它们。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-287
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE74]'
+  id: totrans-288
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE74]'
 - en: '![_images/21874fcd51b6d4d7c1877c9f9dd8744832e07b62154132a31ee4e2c8f92428f7.png](../Images/a85a52adc5748136290ed7fd06400b61.png)</details>'
+  id: totrans-289
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/21874fcd51b6d4d7c1877c9f9dd8744832e07b62154132a31ee4e2c8f92428f7.png](../Images/a85a52adc5748136290ed7fd06400b61.png)</details>'
 - en: The overlapping lines in this figure give a sense of the most likely value at
     each temperature and the degree of uncertainty.
+  id: totrans-290
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个图中重叠的线条给出了每个温度下最可能的值和不确定性程度。
 - en: In each column, I’ll compute the median to quantify the central tendency and
     a 90% credible interval to quantify the uncertainty.
+  id: totrans-291
   prefs: []
   type: TYPE_NORMAL
+  zh: 在每一列中，我将计算中位数来量化中心趋势，并计算90%的可信区间来量化不确定性。
 - en: '`np.percentile` computes the given percentiles; with the argument `axis=0`,
     it computes them for each column.'
+  id: totrans-292
   prefs: []
   type: TYPE_NORMAL
+  zh: '`np.percentile`计算给定百分位数；使用参数`axis=0`，它会为每一列计算百分位数。'
 - en: '[PRE75]'
+  id: totrans-293
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE75]'
 - en: The results are arrays containing predicted probabilities for the lower bound
     of the 90% CI, the median, and the upper bound of the CI.
+  id: totrans-294
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是包含了90% CI下限、中位数和CI上限的预测概率的数组。
 - en: 'Here’s what they look like:'
+  id: totrans-295
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是它们的样子：
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-296
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格源代码 隐藏代码单元格源代码</summary>
 - en: '[PRE76]</details> ![_images/d6ed2327e5042d3ea7f9418465186f43a7bc1122f9fce65442c9b565564a6cfc.png](../Images/9941ea28a2708ac4f8d37322e5d6aa7e.png)'
+  id: totrans-297
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE76]</details> ![_images/d6ed2327e5042d3ea7f9418465186f43a7bc1122f9fce65442c9b565564a6cfc.png](../Images/9941ea28a2708ac4f8d37322e5d6aa7e.png)'
 - en: According to these results, the probability of damage to the O-rings at 80 degrees
     F is near 2%, but there is some uncertainty about that prediction; the upper bound
     of the CI is around 10%.
+  id: totrans-298
   prefs: []
   type: TYPE_NORMAL
+  zh: 根据这些结果，80华氏度时O形圈损坏的概率接近2%，但对于该预测存在一些不确定性；CI的上限约为10%。
 - en: At 60 degrees, the probability of damage is near 80%, but the CI is even wider,
     from 48% to 97%.
+  id: totrans-299
   prefs: []
   type: TYPE_NORMAL
+  zh: 在60度时，损坏的概率接近80%，但CI甚至更宽，从48%到97%。
 - en: But the primary goal of the model is to predict the probability of damage at
     31 degrees F, and the answer is at least 97%, and more likely to be more than
     99.9%.
+  id: totrans-300
   prefs: []
   type: TYPE_NORMAL
+  zh: 但模型的主要目标是预测31华氏度时损坏的概率，答案至少为97%，更可能超过99.9%。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-301
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
 - en: '[PRE77]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-302
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE77]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE78]'
+  id: totrans-303
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE78]'
 - en: '[PRE79]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-304
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE79]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE80]'
+  id: totrans-305
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE80]'
 - en: '[PRE81]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-306
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE81]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE82]'
+  id: totrans-307
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE82]'
 - en: '[PRE83]</details>'
+  id: totrans-308
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE83]</details>'
 - en: 'One conclusion we might draw is this: If the people responsible for the Challenger
     launch had taken into account all of the data, and not just the seven damage incidents,
     they could have predicted that the probability of damage at 31 degrees F was nearly
     certain. If they had, it seems likely they would have postponed the launch.'
+  id: totrans-309
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可能得出的一个结论是：如果负责挑战者号发射的人考虑了所有的数据，而不仅仅是七次损坏事件，他们本来可以预测到31华氏度时损坏的概率几乎是确定的。如果他们这样做了，很可能会推迟发射。
 - en: At the same time, if they considered the previous figure, they might have realized
     that the model makes predictions that extend far beyond the data. When we extrapolate
     like that, we have to remember not just the uncertainty quantified by the model,
     which we expressed as a credible interval; we also have to consider the possibility
     that the model itself is unreliable.
+  id: totrans-310
   prefs: []
   type: TYPE_NORMAL
+  zh: 同时，如果他们考虑了前面的图表，他们可能会意识到模型做出的预测远远超出了数据范围。当我们这样外推时，我们不仅要记住模型量化的不确定性，即我们表达为可信区间的不确定性；我们还必须考虑模型本身可能不可靠的可能性。
 - en: This example is based on a logistic model, which assumes that each additional
     degree of temperature contributes the same amount of evidence in favor of (or
     against) the possibility of damage. Within a narrow range of temperatures, that
     might be a reasonable assumption, especially if it is supported by data. But over
     a wider range, and beyond the bounds of the data, reality has no obligation to
     stick to the model.
+  id: totrans-311
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个例子是基于一个逻辑模型，假设每增加一度温度都会对损坏的可能性提供相同数量的证据。在一个狭窄的温度范围内，这可能是一个合理的假设，特别是如果有数据支持。但在更广泛的范围内，以及超出数据范围之外，现实没有义务遵循模型。
 - en: Empirical Bayes
+  id: totrans-312
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 经验贝叶斯
 - en: In this chapter I used StatsModels to compute the parameters that maximize the
     probability of the data, and then used those estimates to choose the bounds of
     the uniform prior distributions. It might have occurred to you that this process
@@ -1155,142 +1807,198 @@
     that bothers you, you are not alone. The process I used is an example of what’s
     called the [Empirical Bayes method](https://en.wikipedia.org/wiki/Empirical_Bayes_method),
     although I don’t think that’s a particularly good name for it.
+  id: totrans-313
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本章中，我使用StatsModels来计算最大化数据概率的参数，然后使用这些估计值来选择均匀先验分布的边界。你可能已经意识到，这个过程使用了数据两次，一次是选择先验，一次是进行更新。如果这让你感到不安，你并不孤单。我使用的这个过程是所谓的[经验贝叶斯方法](https://en.wikipedia.org/wiki/Empirical_Bayes_method)的一个例子，尽管我认为这不是一个特别好的名字。
 - en: 'Although it might seem problematic to use the data twice, in these examples,
     it is not. To see why, consider an alternative: instead of using the estimated
     parameters to choose the bounds of the prior distribution, I could have used uniform
     distributions with much wider ranges. In that case, the results would be the same;
     the only difference is that I would spend more time computing likelihoods for
     parameters where the posterior probabilities are negligibly small.'
+  id: totrans-314
   prefs: []
   type: TYPE_NORMAL
+  zh: 虽然使用数据两次可能看起来有问题，在这些例子中并不是。要明白为什么，考虑一个替代方案：而不是使用估计的参数来选择先验分布的边界，我可以使用范围更广的均匀分布。在这种情况下，结果将是一样的；唯一的区别是我会花更多的时间计算后验概率极小的参数的似然。
 - en: So you can think of this version of Empirical Bayes as an optimization that
     minimizes computation by putting the prior distributions where the likelihood
     of the data is worth computing. This optimization doesn’t affect the results,
     so it doesn’t “double-count” the data.
+  id: totrans-315
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，你可以将这个版本的经验贝叶斯视为一种优化，通过将先验分布放在值得计算数据的似然处，从而最小化计算。这种优化不会影响结果，因此不会“双重计算”数据。
 - en: Summary
+  id: totrans-316
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 总结
 - en: 'So far we have seen three ways to represent degrees of confidence in a hypothesis:
     probability, odds, and log odds. When we write Bayes’s Rule in terms of log odds,
     a Bayesian update is the sum of the prior and the likelihood; in this sense, Bayesian
     statistics is the arithmetic of hypotheses and evidence.'
+  id: totrans-317
   prefs: []
   type: TYPE_NORMAL
+  zh: 到目前为止，我们已经看到了三种表示对假设信心程度的方法：概率、几率和对数几率。当我们用对数几率来写贝叶斯定理时，贝叶斯更新是先验和似然的总和；在这个意义上，贝叶斯统计是假设和证据的算术。
 - en: This form of Bayes’s Theorem is also the foundation of logistic regression,
     which we used to infer parameters and make predictions. In the Space Shuttle problem,
     we modeled the relationship between temperature and the probability of damage,
     and showed that the Challenger disaster might have been predictable. But this
     example is also a warning about the hazards of using a model to extrapolate far
     beyond the data.
+  id: totrans-318
   prefs: []
   type: TYPE_NORMAL
+  zh: 这种形式的贝叶斯定理也是逻辑回归的基础，我们用它来推断参数和做预测。在航天飞机问题中，我们建立了温度和损坏概率之间的关系，并表明挑战者号灾难可能是可以预测的。但这个例子也警示了使用模型远超出数据范围的危险。
 - en: In the exercises below you’ll have a chance to practice the material in this
     chapter, using log odds to evaluate a political pundit and using logistic regression
     to model diagnosis rates for Attention Deficit Hyperactivity Disorder (ADHD).
+  id: totrans-319
   prefs: []
   type: TYPE_NORMAL
+  zh: 在下面的练习中，你将有机会练习本章的材料，使用对数几率来评估政治专家，并使用逻辑回归来模拟注意力缺陷多动障碍（ADHD）的诊断率。
 - en: In the next chapter we’ll move from logistic regression to linear regression,
     which we will use to model changes over time in temperature, snowfall, and the
     marathon world record.
+  id: totrans-320
   prefs: []
   type: TYPE_NORMAL
+  zh: 在下一章中，我们将从逻辑回归转向线性回归，我们将用它来模拟温度、降雪和马拉松世界纪录的时间变化。
 - en: Exercises
+  id: totrans-321
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 练习
 - en: '**Exercise:** Suppose a political pundit claims to be able to predict the outcome
     of elections, but instead of picking a winner, they give each candidate a probability
     of winning. With that kind of prediction, it can be hard to say whether it is
     right or wrong.'
+  id: totrans-322
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**假设一个政治专家声称能够预测选举结果，但他并不是选择赢家，而是给每个候选人一个获胜的概率。对于这种预测，很难说它是对还是错。'
 - en: For example, suppose the pundit says that Alice has a 70% chance of beating
     Bob, and then Bob wins the election. Does that mean the pundit was wrong?
+  id: totrans-323
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，假设专家说爱丽丝有70%的机会击败鲍勃，然后鲍勃赢得了选举。这是否意味着专家是错误的？
 - en: 'One way to answer this question is to consider two hypotheses:'
+  id: totrans-324
   prefs: []
   type: TYPE_NORMAL
+  zh: 回答这个问题的一种方法是考虑两种假设：
 - en: '`H`: The pundit’s algorithm is legitimate; the probabilities it produces are
     correct in the sense that they accurately reflect the candidates’ probabilities
     of winning.'
+  id: totrans-325
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`H`：专家的算法是合法的；它产生的概率在某种意义上正确地反映了候选人获胜的概率。'
 - en: '`not H`: The pundit’s algorithm is bogus; the probabilities it produces are
     random values with a mean of 50%.'
+  id: totrans-326
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`not H`：专家的算法是虚假的；它产生的概率是平均为50%的随机值。'
 - en: If the pundit says Alice has a 70% chance of winning, and she does, that provides
     evidence in favor of `H` with likelihood ratio 70/50.
+  id: totrans-327
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果专家说爱丽丝有70%的获胜机会，她确实获胜了，这提供了支持`H`的证据，其似然比为70/50。
 - en: If the pundit says Alice has a 70% chance of winning, and she loses, that’s
     evidence against `H` with a likelihood ratio of 50/30.
+  id: totrans-328
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果专家说爱丽丝有70%的获胜机会，她输了，这是反对`H`的证据，其似然比为50/30。
 - en: 'Suppose we start with some confidence in the algorithm, so the prior odds are
     4 to 1\. And suppose the pundit generates predictions for three elections:'
+  id: totrans-329
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设我们对算法有一些信心，所以先验几率是4比1。并且假设专家对三次选举进行了预测：
 - en: In the first election, the pundit says Alice has a 70% chance of winning and
     she does.
+  id: totrans-330
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 在第一次选举中，专家说爱丽丝有70%的获胜机会，她确实获胜了。
 - en: In the second election, the pundit says Bob has a 30% chance of winning and
     he does.
+  id: totrans-331
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 在第二次选举中，专家说鲍勃有30%的获胜机会，他确实获胜了。
 - en: In the third election, the pundit says Carol has an 90% chance of winning and
     she does.
+  id: totrans-332
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 在第三次选举中，专家说卡罗尔有90%的获胜机会，她确实获胜了。
 - en: What is the log likelihood ratio for each of these outcomes? Use the log-odds
     form of Bayes’s Rule to compute the posterior log odds for `H` after these outcomes.
     In total, do these outcomes increase or decrease your confidence in the pundit?
+  id: totrans-333
   prefs: []
   type: TYPE_NORMAL
+  zh: 每个结果的对数似然比是多少？使用贝叶斯定理的对数几率形式来计算这些结果后的后验对数几率。总的来说，这些结果增加还是减少了你对专家的信心？
 - en: If you are interested in this topic, you can [read more about it in this blog
     post](http://allendowney.blogspot.com/2016/11/why-are-we-so-surprised.html).
+  id: totrans-334
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你对这个话题感兴趣，你可以[在这篇博客文章中阅读更多内容](http://allendowney.blogspot.com/2016/11/why-are-we-so-surprised.html)。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-335
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
 - en: '[PRE84]'
+  id: totrans-336
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE84]'
 - en: '[PRE85]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-337
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE86]'
+  id: totrans-338
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE86]'
 - en: '[PRE87]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-339
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE88]'
+  id: totrans-340
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE88]'
 - en: '[PRE89]</details>'
+  id: totrans-341
   prefs: []
   type: TYPE_NORMAL
 - en: '**Exercise:** An article in the *New England Journal of Medicine* reports results
     from a study that looked at the diagnosis rate of Attention Deficit Hyperactivity
     Disorder (ADHD) as a function of birth month: [“Attention Deficit–Hyperactivity
     Disorder and Month of School Enrollment”](https://www.nejm.org/doi/10.1056/NEJMoa1806828).'
+  id: totrans-342
   prefs: []
   type: TYPE_NORMAL
 - en: They found that children born in June, July, and August were substantially more
@@ -1300,129 +2008,168 @@
     children born in September. The authors of the study suggest that the cause is
     “age-based variation in behavior that may be attributed to ADHD rather than to
     the younger age of the children”.
+  id: totrans-343
   prefs: []
   type: TYPE_NORMAL
 - en: Use the methods in this chapter to estimate the probability of diagnosis as
     a function of birth month. The notebook for this chapter provides the data and
     some suggestions for getting started.
+  id: totrans-344
   prefs: []
   type: TYPE_NORMAL
 - en: 'The paper includes this figure:'
+  id: totrans-345
   prefs: []
   type: TYPE_NORMAL
 - en: '[![https://www.nejm.org/na101/home/literatum/publisher/mms/journals/content/nejm/2018/nejm_2018.379.issue-22/nejmoa1806828/20190131/images/img_xlarge/nejmoa1806828_f1.jpeg](../Images/f46c09554caa11c0e698e9d4112e95b1.png)](https://www.nejm.org/na101/home/literatum/publisher/mms/journals/content/nejm/2018/nejm_2018.379.issue-22/nejmoa1806828/20190131/images/img_xlarge/nejmoa1806828_f1.jpeg)'
+  id: totrans-346
   prefs: []
   type: TYPE_NORMAL
 - en: In my opinion, this representation of the data does not show the effect as clearly
     as it could.
+  id: totrans-347
   prefs: []
   type: TYPE_NORMAL
 - en: But the figure includes the raw data, so we can analyze it ourselves.
+  id: totrans-348
   prefs: []
   type: TYPE_NORMAL
 - en: 'Note: there is an error in the figure, confirmed by personal correspondence:'
+  id: totrans-349
   prefs: []
   type: TYPE_NORMAL
 - en: The May and June [diagnoses] are reversed. May should be 317 (not 287) and June
     should be 287 (not 317).
+  id: totrans-350
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: So here is the corrected data, where `n` is the number of children born in each
     month, starting with January, and `k` is the number of children diagnosed with
     ADHD.
+  id: totrans-351
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-352
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE90]</details>'
+  id: totrans-353
   prefs: []
   type: TYPE_NORMAL
 - en: First, I’m going to “roll” the data so it starts in September rather than January.
+  id: totrans-354
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-355
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE91]</details>'
+  id: totrans-356
   prefs: []
   type: TYPE_NORMAL
 - en: And I’ll put it in a `DataFrame` with one row for each month and the diagnosis
     rate per 10,000.
+  id: totrans-357
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-358
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE92]'
+  id: totrans-359
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE92]'
 - en: '|  | x | k | n | rate |'
+  id: totrans-360
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- | --- | --- |'
+  id: totrans-361
   prefs: []
   type: TYPE_TB
 - en: '| 0 | 0 | 225 | 35353 | 63.643821 |'
+  id: totrans-362
   prefs: []
   type: TYPE_TB
 - en: '| 1 | 1 | 240 | 34405 | 69.757303 |'
+  id: totrans-363
   prefs: []
   type: TYPE_TB
 - en: '| 2 | 2 | 232 | 31285 | 74.156944 |'
+  id: totrans-364
   prefs: []
   type: TYPE_TB
 - en: '| 3 | 3 | 243 | 31617 | 76.857387 |'
+  id: totrans-365
   prefs: []
   type: TYPE_TB
 - en: '| 4 | 4 | 265 | 32690 | 81.064546 |'
+  id: totrans-366
   prefs: []
   type: TYPE_TB
 - en: '| 5 | 5 | 280 | 31238 | 89.634420 |'
+  id: totrans-367
   prefs: []
   type: TYPE_TB
 - en: '| 6 | 6 | 307 | 34405 | 89.231216 |'
+  id: totrans-368
   prefs: []
   type: TYPE_TB
 - en: '| 7 | 7 | 312 | 34565 | 90.264719 |'
+  id: totrans-369
   prefs: []
   type: TYPE_TB
 - en: '| 8 | 8 | 317 | 34977 | 90.630986 |'
+  id: totrans-370
   prefs: []
   type: TYPE_TB
 - en: '| 9 | 9 | 287 | 34415 | 83.393869 |'
+  id: totrans-371
   prefs: []
   type: TYPE_TB
 - en: '| 10 | 10 | 320 | 36577 | 87.486672 |'
+  id: totrans-372
   prefs: []
   type: TYPE_TB
 - en: '| 11 | 11 | 309 | 36319 | 85.079435 |</details>'
+  id: totrans-373
   prefs: []
   type: TYPE_NORMAL
 - en: Here’s what the diagnosis rates look like.
+  id: totrans-374
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-375
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE93]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-376
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE94]'
+  id: totrans-377
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE94]'
 - en: '![_images/f7fcadfc675c91a1017eeedc3aceabe80e38f562484fb583b6ae2dc2712a8110.png](../Images/fc55cb668a66d64a73295c05ec30c03e.png)</details>'
+  id: totrans-378
   prefs: []
   type: TYPE_NORMAL
 - en: For the first 9 months, from September to May, we see what we would expect if
     some of the excess diagnoses are due to “age-based variation in behavior”. For
     each month of difference in age, we see an increase in the number of diagnoses.
+  id: totrans-379
   prefs: []
   type: TYPE_NORMAL
 - en: This pattern breaks down for the last three months, June, July, and August.
@@ -1430,268 +2177,358 @@
     manipulation; if some parents hold back children born near the deadline, the observations
     for these month would include a mixture of children who are relatively old for
     their grade and therefore less likely to be diagnosed.
+  id: totrans-380
   prefs: []
   type: TYPE_NORMAL
 - en: Unfortunately, the dataset includes only month of birth, not year, so we don’t
     know the actual ages of these students when they started school. However, we can
     use the first nine months to estimate the effect of age on diagnosis rate; then
     we can think about what to do with the other three months.
+  id: totrans-381
   prefs: []
   type: TYPE_NORMAL
 - en: Use the methods in this chapter to estimate the probability of diagnosis as
     a function of birth month. Start with the following prior distributions.
+  id: totrans-382
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-383
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE95]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-384
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE96]</details>'
+  id: totrans-385
   prefs: []
   type: TYPE_NORMAL
 - en: Make a joint prior distribution and update it using the data for the first nine
     months.
+  id: totrans-386
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: Then draw a sample from the posterior distribution and use it to compute the
     median probability of diagnosis for each month and a 90% credible interval.
+  id: totrans-387
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: As a bonus exercise, do a second update using the data from the last three months,
     but treating the observed number of diagnoses as a lower bound on the number of
     diagnoses there would be if no children were kept back.
+  id: totrans-388
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-389
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE97]'
+  id: totrans-390
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE97]'
 - en: '| Intercept | -5.200 | -5.188 | -5.176 | -5.164 | -5.152 | -5.140 | -5.128
     | -5.116 | -5.104 | -5.092 | ... | -4.708 | -4.696 | -4.684 | -4.672 | -4.660
     | -4.648 | -4.636 | -4.624 | -4.612 | -4.600 |'
+  id: totrans-391
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
     | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  id: totrans-392
   prefs: []
   type: TYPE_TB
 - en: '| Slope |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |'
+  id: totrans-393
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
     | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  id: totrans-394
   prefs: []
   type: TYPE_TB
 - en: '| 0.0000 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384
     | 0.000384 | 0.000384 | 0.000384 | 0.000384 | ... | 0.000384 | 0.000384 | 0.000384
     | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 |'
+  id: totrans-395
   prefs: []
   type: TYPE_TB
 - en: '| 0.0016 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384
     | 0.000384 | 0.000384 | 0.000384 | 0.000384 | ... | 0.000384 | 0.000384 | 0.000384
     | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 |'
+  id: totrans-396
   prefs: []
   type: TYPE_TB
 - en: '| 0.0032 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384
     | 0.000384 | 0.000384 | 0.000384 | 0.000384 | ... | 0.000384 | 0.000384 | 0.000384
     | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 |'
+  id: totrans-397
   prefs: []
   type: TYPE_TB
 - en: '| 0.0048 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384
     | 0.000384 | 0.000384 | 0.000384 | 0.000384 | ... | 0.000384 | 0.000384 | 0.000384
     | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 |'
+  id: totrans-398
   prefs: []
   type: TYPE_TB
 - en: '| 0.0064 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384
     | 0.000384 | 0.000384 | 0.000384 | 0.000384 | ... | 0.000384 | 0.000384 | 0.000384
     | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 |'
+  id: totrans-399
   prefs: []
   type: TYPE_TB
 - en: 5 rows × 51 columns</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>
+  id: totrans-400
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE98]'
+  id: totrans-401
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE98]'
 - en: '|  |  | probs |'
+  id: totrans-402
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- |'
+  id: totrans-403
   prefs: []
   type: TYPE_TB
 - en: '| Slope | Intercept |  |'
+  id: totrans-404
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- |'
+  id: totrans-405
   prefs: []
   type: TYPE_TB
 - en: '| 0.0 | -5.200 | 0.000384 |'
+  id: totrans-406
   prefs: []
   type: TYPE_TB
 - en: '| -5.188 | 0.000384 |'
+  id: totrans-407
   prefs: []
   type: TYPE_TB
 - en: '| -5.176 | 0.000384 |</details> <details class="hide above-input"><summary
     aria-label="Toggle hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-408
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE99]'
+  id: totrans-409
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE99]'
 - en: '|  | x | k | n | rate |'
+  id: totrans-410
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- | --- | --- |'
+  id: totrans-411
   prefs: []
   type: TYPE_TB
 - en: '| 0 | 0 | 225 | 35353 | 63.643821 |'
+  id: totrans-412
   prefs: []
   type: TYPE_TB
 - en: '| 1 | 1 | 240 | 34405 | 69.757303 |'
+  id: totrans-413
   prefs: []
   type: TYPE_TB
 - en: '| 2 | 2 | 232 | 31285 | 74.156944 |'
+  id: totrans-414
   prefs: []
   type: TYPE_TB
 - en: '| 3 | 3 | 243 | 31617 | 76.857387 |'
+  id: totrans-415
   prefs: []
   type: TYPE_TB
 - en: '| 4 | 4 | 265 | 32690 | 81.064546 |'
+  id: totrans-416
   prefs: []
   type: TYPE_TB
 - en: '| 5 | 5 | 280 | 31238 | 89.634420 |'
+  id: totrans-417
   prefs: []
   type: TYPE_TB
 - en: '| 6 | 6 | 307 | 34405 | 89.231216 |'
+  id: totrans-418
   prefs: []
   type: TYPE_TB
 - en: '| 7 | 7 | 312 | 34565 | 90.264719 |'
+  id: totrans-419
   prefs: []
   type: TYPE_TB
 - en: '| 8 | 8 | 317 | 34977 | 90.630986 |</details> <details class="hide above-input"><summary
     aria-label="Toggle hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-420
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE100]'
+  id: totrans-421
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE100]'
 - en: '|  | x | k | n | rate |'
+  id: totrans-422
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- | --- | --- |'
+  id: totrans-423
   prefs: []
   type: TYPE_TB
 - en: '| 9 | 9 | 287 | 34415 | 83.393869 |'
+  id: totrans-424
   prefs: []
   type: TYPE_TB
 - en: '| 10 | 10 | 320 | 36577 | 87.486672 |'
+  id: totrans-425
   prefs: []
   type: TYPE_TB
 - en: '| 11 | 11 | 309 | 36319 | 85.079435 |</details> <details class="hide above-input"><summary
     aria-label="Toggle hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-426
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE101]'
+  id: totrans-427
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE101]'
 - en: '[PRE102]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-428
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE103]'
+  id: totrans-429
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE103]'
 - en: '[PRE104]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-430
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE105]'
+  id: totrans-431
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE105]'
 - en: '[PRE106]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-432
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE107]'
+  id: totrans-433
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE107]'
 - en: '[PRE108]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-434
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE109]'
+  id: totrans-435
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE109]'
 - en: '[PRE110]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-436
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE111]'
+  id: totrans-437
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE111]'
 - en: '[PRE112]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-438
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE113]'
+  id: totrans-439
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE113]'
 - en: '![_images/8d4f98743b92db5422c7fe2b019ad6b7803f2191347c176038fa4c9c488d08f3.png](../Images/877768dbfe81bcaf9a2987e3c6c619c1.png)</details><details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-440
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE114]'
+  id: totrans-441
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE114]'
 - en: '[PRE115]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-442
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE116]'
+  id: totrans-443
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE116]'
 - en: '![_images/b337e10727df99215bb86fa06d97261ab7c199eae928d7a36397babd31f2df3d.png](../Images/1e3b0ee906d6865b47751784829dc3ac.png)</details><details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-444
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE117]'
+  id: totrans-445
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE117]'
 - en: '![_images/516901f5e13958d8a6c10717e88d32e21a505a54720c437b42eb3f97fdebb5b8.png](../Images/6bf5df4ebf404b58a2db1ed8ee8d60db.png)</details><details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-446
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE118]'
+  id: totrans-447
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE118]'
 - en: '[PRE119]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-448
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE120]'
+  id: totrans-449
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE120]'
 - en: '[PRE121]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-450
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE122]'
+  id: totrans-451
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE122]'
 - en: '![_images/168f84e18b3338f4328e277a388b22e3d4da7f79745b6dcaa9369aeaadfde554.png](../Images/b128cc3045bc131b17f67874087d5b22.png)</details>'
+  id: totrans-452
   prefs: []
   type: TYPE_NORMAL
