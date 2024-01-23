@@ -1,294 +1,429 @@
 - en: Breadth First Search
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
 - en: 原文：[https://allendowney.github.io/DSIRP/bfs.html](https://allendowney.github.io/DSIRP/bfs.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/bfs.ipynb)'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
 - en: In the previous notebook, we constructed an Erdos-Renyi graph and wrote a version
     of depth-first search (DFS) that works for graphs.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
 - en: When we did DFS in a tree, there was only one path from the root to any other
     node, so we never discovered the same node twice. In a graph, there might be multiple
     paths to the same node. To avoid discovering the same node over and over, we have
     to keep track of the nodes we’ve seen.
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
 - en: In this notebook, we’ll adapt the level-order traversal in the same way; the
     result is a breadth-first search (BFS). Then we’ll adapt BFS to implement Dijkstra’s
     algorithm, which computes the shortest path from a starting node to every other
     node (provided it is reachable).
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
 - en: We’ll test these functions with a Watts-Strogatz graph, then replicate part
     of an experiment from a [well-known paper](https://github.com/AllenDowney/ThinkComplexity2/blob/master/papers/watts98collective.pdf).
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
 - en: Watts-Strogatz graphs
+  id: totrans-7
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: A Watts-Strogatz (WS) graph is a random graph, like an Erdos-Renyi graph, but
     the construction process is different. A WS graph starts with a ring lattice and
     randomly “rewires” some of the edges.
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
 - en: NetworkX provides [a function that makes a WS graph](https://networkx.org/documentation/stable/reference/generated/networkx.generators.random_graphs.watts_strogatz_graph.html),
     so we can see what it looks like.
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
 - en: Here’s an example with `n=10` nodes, each connected to `k=2` neighbors, with
     probability `p=0` of rewiring each edge.
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE0]'
+  id: totrans-11
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '[PRE1]'
+  id: totrans-12
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: The result is a ring where each node holds hands with its immediate neighbors.
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE2]'
+  id: totrans-14
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '[PRE3]'
+  id: totrans-15
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '![_images/bfs_7_0.png](../Images/02628b594b42d544ccb2dc0e46921919.png)'
+  id: totrans-16
   prefs: []
   type: TYPE_IMG
 - en: '**Exercise:** Run this code again with different values of `k` and `p` to see
     what the effect is.'
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
 - en: 'Note: If `k` is odd, it gets “rounded down” to an even number.'
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
 - en: Breadth-first search
+  id: totrans-19
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: Here’s the function from the previous notebook that implements depth-first search
     in a graph.
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE4]'
+  id: totrans-21
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '[PRE5]'
+  id: totrans-22
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '[PRE6]'
+  id: totrans-23
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '**Exercise:** Make a version of this function called `reachable_nodes_bfs`
     that does the same thing using breadth-first search.'
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
 - en: You can use this example to test your code.
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE7]'
+  id: totrans-26
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '[PRE8]'
+  id: totrans-27
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: Fast BFS
+  id: totrans-28
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: 'NetworkX provides a simple, fast implementation of BFS, available from [the
     NetworkX repository on GitHub](https://github.com/networkx/networkx/blob/master/networkx/algorithms/components/connected.py).
     Here is a version I modified to return a set of nodes:'
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE9]'
+  id: totrans-30
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: Let’s compare this function to `reachable_nodes_bfs` and see which is faster.
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE10]'
+  id: totrans-32
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '[PRE11]'
+  id: totrans-33
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: '[PRE12]'
+  id: totrans-34
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '[PRE13]'
+  id: totrans-35
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: '[PRE14]'
+  id: totrans-36
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: Dijkstra’s algorithm
+  id: totrans-37
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: During a breadth-first search, whenever we discover a new node, the path we
     took must be the shortest. That’s necessarily true because, if there had been
     a shorter path, we would have discovered the node sooner.
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
 - en: This insight is the basis of Dijkstra’s algorithm, which computes the shortest
     path from a give “source” node to all other (reachable) nodes.
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
 - en: The general version of Dijkstra’s algorithm works on graphs where the edges
     have different lengths, like the distance between cities, for example.
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
 - en: 'We’ll start with a simpler version where all edges have length `1`. This version
     is similar to BFS, with one change: instead of keeping a set of nodes that have
     already been seen, we keep a dictionary that maps from each discovered node to
     its distance from the source.'
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
 - en: '**Exercise:** Write a version of `reachable_nodes_bfs` called `shortest_path_dijkstra`.
     It should take a graph and a source node as parameters and return a dictionary
     that maps from each reachable node to its distance from the source.'
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
 - en: 'Hint: Start with a dictionary that maps from the source node to distance `0`.'
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
 - en: We’ll test it on a ring lattice.
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE15]'
+  id: totrans-45
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '[PRE16]'
+  id: totrans-46
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '![_images/bfs_28_0.png](../Images/9e8445f8be9746ea2aa649995a307532.png)'
+  id: totrans-47
   prefs: []
   type: TYPE_IMG
 - en: '[PRE17]'
+  id: totrans-48
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: '[PRE18]'
+  id: totrans-49
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: '**Exercise:** Starting with `plain_bfs` write a (possibly faster) implementation
     of Dijkstra’s algorithm that returns a dictionary that maps from each reachable
     node to its distance from a given source node.'
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**从`plain_bfs`开始编写Dijkstra算法的（可能更快的）实现，该实现返回一个字典，将每个可达节点映射到给定源节点的距离。'
 - en: You can use the following example to test it.
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: 您可以使用以下示例进行测试。
 - en: '[PRE19]'
+  id: totrans-52
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '[PRE20]'
+  id: totrans-53
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: And let’s see which version is faster.
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们看看哪个版本更快。
 - en: '[PRE21]'
+  id: totrans-55
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: '[PRE22]'
+  id: totrans-56
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: '[PRE23]'
+  id: totrans-57
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: '[PRE24]'
+  id: totrans-58
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: We can also compare it to the NetworkX function that does the same thing.
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们还可以将其与执行相同操作的NetworkX函数进行比较。
 - en: '[PRE25]'
+  id: totrans-60
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: '[PRE26]'
+  id: totrans-61
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: The WS Experiment
+  id: totrans-62
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: WS实验
 - en: The original purpose of the Watts-Strogatz graph is to explore the structure
     of social networks, particularly the “small world” phenomenon, also known as “six
     degrees of separation”.
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: Watts-Strogatz图的原始目的是探索社交网络的结构，特别是“小世界”现象，也称为“六度分隔”。
 - en: 'The observation is that path lengths in social networks are shorter than you
     might expect: the distance between any two people on earth might be six connections
     (or less) on average.'
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: 观察结果是社交网络中的路径长度比您预期的要短：地球上任何两个人之间的距离平均可能是六个连接（或更少）。
 - en: The random edges in a WS graph often connect people in parts of the graph that
     would otherwise be far apart. Even a small number of these “long links” can greatly
     reduce the average path length.
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: WS图中的随机边通常连接图中本来相距很远的部分的人。即使只有少量这样的“长链接”，也可以大大减少平均路径长度。
 - en: To replicate part of their original experiment, I’ll use `nx.average_shortest_path_length`,
     which takes a graph, uses the unweighted version of Dijkstra’s algorithm to compute
     the shortest path from each node to all of the others, and returns the average
     of the shortest path lengths.
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了复制他们原始实验的一部分，我将使用`nx.average_shortest_path_length`，它接受一个图，使用Dijkstra算法的无权重版本来计算从每个节点到其他所有节点的最短路径，并返回最短路径长度的平均值。
 - en: '[PRE27]'
+  id: totrans-67
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: '[PRE28]'
+  id: totrans-68
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: '[PRE29]'
+  id: totrans-69
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: '[PRE30]'
+  id: totrans-70
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: We’ll run this function for WS graphs with a range of values for `p`.
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将对具有一系列`p`值的WS图运行此函数。
 - en: '[PRE31]'
+  id: totrans-72
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: '[PRE32]'
+  id: totrans-73
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: '[PRE33]'
+  id: totrans-74
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: '[PRE34]'
+  id: totrans-75
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: Here’s what the result looks like.
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是结果的样子。
 - en: '[PRE35]'
+  id: totrans-77
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: '![_images/bfs_46_0.png](../Images/856a843336cc914e90590941a316e471.png)'
+  id: totrans-78
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/bfs_46_0.png](../Images/856a843336cc914e90590941a316e471.png)'
 - en: With `p=0.01`, we’re only rewiring 1% of the edges, but the average path length
     is already down about as low as it will go.
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: '当`p=0.01`时，我们只重新连接1%的边，但平均路径长度已经降到了它可能达到的最低水平。 '
 - en: '*Data Structures and Information Retrieval in Python*'
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: '*Python中的数据结构和信息检索*'
 - en: Copyright 2021 Allen Downey
+  id: totrans-81
   prefs: []
   type: TYPE_NORMAL
+  zh: 版权所有 2021 Allen Downey
 - en: 'License: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: 许可证：[知识共享署名-非商业性使用-相同方式共享4.0国际许可协议](https://creativecommons.org/licenses/by-nc-sa/4.0/)
