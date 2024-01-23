@@ -1,8 +1,10 @@
 - en: Survival Analysis
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
 - en: 原文：[https://allendowney.github.io/ThinkBayes2/chap14.html](https://allendowney.github.io/ThinkBayes2/chap14.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
@@ -10,26 +12,31 @@
     used to answer questions about the time until an event. In the context of medicine
     it is literally about survival, but it can be applied to the time until any kind
     of event, or instead of time it can be about space or other dimensions.
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
 - en: Survival analysis is challenging because the data we have are often incomplete.
     But as we’ll see, Bayesian methods are particularly good at working with incomplete
     data.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
 - en: 'As examples, we’ll consider two applications that are a little less serious
     than life and death: the time until light bulbs fail and the time until dogs in
     a shelter are adopted. To describe these “survival times”, we’ll use the Weibull
     distribution.'
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
 - en: The Weibull Distribution
+  id: totrans-5
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: The [Weibull distribution](https://en.wikipedia.org/wiki/Weibull_distribution)
     is often used in survival analysis because it is a good model for the distribution
     of lifetimes for manufactured products, at least over some parts of the range.
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
 - en: SciPy provides several versions of the Weibull distribution; the one we’ll use
@@ -37,1213 +44,1810 @@
     wrap it in a function that takes as parameters \(\lambda\), which mostly affects
     the location or “central tendency” of the distribution, and \(k\), which affects
     the shape.
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE0]'
+  id: totrans-8
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: As an example, here’s a Weibull distribution with parameters \(\lambda=3\) and
     \(k=0.8\).
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE1]'
+  id: totrans-10
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: The result is an object that represents the distribution. Here’s what the Weibull
     CDF looks like with those parameters.
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE2]'
+  id: totrans-12
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '![_images/165e4472a2e421796fed341383b2f25a0686b6223380934e1bf7a4af385005e3.png](../Images/c1545ba3997e2de3459ff8d07fd1a504.png)'
+  id: totrans-13
   prefs: []
   type: TYPE_IMG
 - en: '`actual_dist` provides `rvs`, which we can use to generate a random sample
     from this distribution.'
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE3]'
+  id: totrans-15
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '[PRE4]'
+  id: totrans-16
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: 'So, given the parameters of the distribution, we can generate a sample. Now
     let’s see if we can go the other way: given the sample, we’ll estimate the parameters.'
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
 - en: 'Here’s a uniform prior distribution for \(\lambda\):'
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE5]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: 'And a uniform prior for \(k\):'
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE6]'
+  id: totrans-21
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: I’ll use `make_joint` to make a joint prior distribution for the two parameters.
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE7]'
+  id: totrans-23
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: The result is a `DataFrame` that represents the joint prior, with possible values
     of \(\lambda\) across the columns and values of \(k\) down the rows.
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
 - en: Now I’ll use `meshgrid` to make a 3-D mesh with \(\lambda\) on the first axis
     (`axis=0`), \(k\) on the second axis (`axis=1`), and the data on the third axis
     (`axis=2`).
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE8]'
+  id: totrans-26
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: Now we can use `weibull_dist` to compute the PDF of the Weibull distribution
     for each pair of parameters and each data point.
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE9]'
+  id: totrans-28
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '[PRE10]'
+  id: totrans-29
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: The likelihood of the data is the product of the probability densities along
     `axis=2`.
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE11]'
+  id: totrans-31
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: '[PRE12]'
+  id: totrans-32
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: Now we can compute the posterior distribution in the usual way.
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE13]'
+  id: totrans-34
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: <details class="hide below-input"><summary aria-label="Toggle hidden content">Show
     code cell output Hide code cell output</summary>
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE14]</details>'
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
 - en: The following function encapsulates these steps. It takes a joint prior distribution
     and the data, and returns a joint posterior distribution.
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE15]'
+  id: totrans-38
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: Here’s how we use it.
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE16]'
+  id: totrans-40
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: And here’s a contour plot of the joint posterior distribution.
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE17]</details> ![_images/77fcd1c56c2f0ce10efa56dbabec2d9b197d606003e4f5968c14f2f0cb4ed13f.png](../Images/c7172a47752cdfa035c49f16e0ef490f.png)'
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
 - en: It looks like the range of likely values for \(\lambda\) is about 1 to 4, which
     contains the actual value we used to generate the data, 3. And the range for \(k\)
     is about 0.5 to 1.5, which contains the actual value, 0.8.
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
 - en: Marginal Distributions
+  id: totrans-45
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: 'To be more precise about these ranges, we can extract the marginal distributions:'
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE18]</details>'
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
 - en: And compute the posterior means and 90% credible intervals.
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: 并计算后验均值和90%的可信区间。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
 - en: '[PRE19]'
+  id: totrans-51
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '![_images/4eab37f50de519d5098ae53189c5334a625a4117a40b09fa40489e916fa2bf0b.png](../Images/6821cba075bd877a9906a1bdafa5afea.png)</details>'
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/4eab37f50de519d5098ae53189c5334a625a4117a40b09fa40489e916fa2bf0b.png](../Images/6821cba075bd877a9906a1bdafa5afea.png)</details>'
 - en: The vertical gray line show the actual value of \(\lambda\).
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: 垂直灰线显示了\(\lambda\)的实际值。
 - en: Here’s the marginal posterior distribution for \(k\).
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是\(k\)的边际后验分布。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
 - en: '[PRE20]'
+  id: totrans-56
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '![_images/146ab0f8b11ab9ec51aea0fdfe7339761a6115fa77b3ac7fe71c80aa0d760090.png](../Images/77c29eef78e70659c88fd4a9a9a1f816.png)</details>'
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/146ab0f8b11ab9ec51aea0fdfe7339761a6115fa77b3ac7fe71c80aa0d760090.png](../Images/77c29eef78e70659c88fd4a9a9a1f816.png)</details>'
 - en: The posterior distributions are wide, which means that with only 10 data points
     we can’t estimated the parameters precisely. But for both parameters, the actual
     value falls in the credible interval.
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 后验分布很宽，这意味着只有10个数据点，我们无法精确估计参数。但对于两个参数，实际值都在可信区间内。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
 - en: '[PRE21]'
+  id: totrans-60
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: '[PRE22]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE22]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
 - en: '[PRE23]'
+  id: totrans-62
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: '[PRE24]</details>'
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE24]</details>'
 - en: Incomplete Data
+  id: totrans-64
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 不完整的数据
 - en: In the previous example we were given 10 random values from a Weibull distribution,
     and we used them to estimate the parameters (which we pretended we didn’t know).
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: 在前面的例子中，我们得到了来自Weibull分布的10个随机值，并且我们使用它们来估计参数（假装我们不知道）。
 - en: But in many real-world scenarios, we don’t have complete data; in particular,
     when we observe a system at a point in time, we generally have information about
     the past, but not the future.
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: 但在许多现实世界的情况下，我们并没有完整的数据；特别是当我们在某个时间点观察系统时，通常我们对过去有信息，但对未来没有。
 - en: As an example, suppose you work at a dog shelter and you are interested in the
     time between the arrival of a new dog and when it is adopted. Some dogs might
     be snapped up immediately; others might have to wait longer. The people who operate
     the shelter might want to make inferences about the distribution of these residence
     times.
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，假设您在一家狗收容所工作，您对新狗到达和被领养之间的时间感兴趣。有些狗可能会立即被领养；其他狗可能需要等待更长时间。经营收容所的人可能希望推断这些居住时间的分布。
 - en: Suppose you monitor arrivals and departures over 8 weeks and 10 dogs arrive
     during that interval. I’ll assume that their arrival times are distributed uniformly,
     so I’ll generate random values like this.
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设您在8周内监测到到达和离开，并且在该间隔期间有10只狗到达。我假设它们的到达时间是均匀分布的，所以我会生成这样的随机值。
 - en: '[PRE25]'
+  id: totrans-69
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: '[PRE26]'
+  id: totrans-70
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: 'Now let’s suppose that the residence times follow the Weibull distribution
     we used in the previous example. We can generate a sample from that distribution
     like this:'
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在假设居住时间遵循我们在前面例子中使用的Weibull分布。我们可以这样从该分布中生成样本：
 - en: '[PRE27]'
+  id: totrans-72
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: '[PRE28]'
+  id: totrans-73
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: I’ll use these values to construct a `DataFrame` that contains the arrival and
     departure times for each dog, called `start` and `end`.
+  id: totrans-74
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将使用这些值构建一个包含每只狗的到达和离开时间的`DataFrame`，称为`start`和`end`。
 - en: '[PRE29]'
+  id: totrans-75
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: For display purposes, I’ll sort the rows of the `DataFrame` by arrival time.
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
+  zh: 出于显示目的，我将按到达时间对`DataFrame`的行进行排序。
 - en: '[PRE30]'
+  id: totrans-77
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: '|  | start | end |'
+  id: totrans-78
   prefs: []
   type: TYPE_TB
+  zh: '|  | start | end |'
 - en: '| --- | --- | --- |'
+  id: totrans-79
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- |'
 - en: '| 0 | 0.663997 | 3.921447 |'
+  id: totrans-80
   prefs: []
   type: TYPE_TB
+  zh: "0\t0.663997\t3.921447"
 - en: '| 1 | 0.780269 | 1.585242 |'
+  id: totrans-81
   prefs: []
   type: TYPE_TB
+  zh: "1\t0.780269\t1.585242"
 - en: '| 2 | 1.105053 | 1.213680 |'
+  id: totrans-82
   prefs: []
   type: TYPE_TB
+  zh: "2\t1.105053\t1.213680"
 - en: '| 3 | 1.975504 | 2.408592 |'
+  id: totrans-83
   prefs: []
   type: TYPE_TB
+  zh: "3\t1.975504\t2.408592"
 - en: '| 4 | 2.651573 | 7.824921 |'
+  id: totrans-84
   prefs: []
   type: TYPE_TB
+  zh: "4\t2.651573\t7.824921"
 - en: '| 5 | 5.085286 | 6.169150 |'
+  id: totrans-85
   prefs: []
   type: TYPE_TB
+  zh: '| 5 | 5.085286 | 6.169150 |'
 - en: '| 6 | 5.375817 | 8.431375 |'
+  id: totrans-86
   prefs: []
   type: TYPE_TB
+  zh: "6\t5.375817\t8.431375"
 - en: '| 7 | 6.089998 | 8.205769 |'
+  id: totrans-87
   prefs: []
   type: TYPE_TB
+  zh: '| 7 | 6.089998 | 8.205769 |'
 - en: '| 8 | 6.452750 | 8.926761 |'
+  id: totrans-88
   prefs: []
   type: TYPE_TB
+  zh: "8\t6.452750\t8.926761"
 - en: '| 9 | 7.861935 | 7.915343 |'
+  id: totrans-89
   prefs: []
   type: TYPE_TB
+  zh: "9\t7.861935\t7.915343"
 - en: Notice that several of the lifelines extend past the observation window of 8
     weeks. So if we observed this system at the beginning of Week 8, we would have
     incomplete information. Specifically, we would not know the future adoption times
     for Dogs 6, 7, and 8.
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: 请注意，几条寿命线延伸到8周的观察窗口之外。因此，如果我们在第8周初观察到这个系统，我们将得到不完整的信息。具体来说，我们将不知道狗6、7和8的未来领养时间。
 - en: 'I’ll simulate this incomplete data by identifying the lifelines that extend
     past the observation window:'
+  id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将通过识别延伸到观察窗口之外的寿命来模拟这些不完整的数据：
 - en: '[PRE31]'
+  id: totrans-92
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: '`censored` is a Boolean Series that is `True` for lifelines that extend past
     Week 8.'
+  id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: '`censored`是一个布尔Series，对于延伸到第8周之后的寿命线为`True`。'
 - en: Data that is not available is sometimes called “censored” in the sense that
     it is hidden from us. But in this case it is hidden because we don’t know the
     future, not because someone is censoring it.
+  id: totrans-94
   prefs: []
   type: TYPE_NORMAL
+  zh: 有时称为“被审查”的数据是因为它对我们是隐藏的。但在这种情况下，它是因为我们不知道未来而隐藏的，而不是因为有人在审查它。
 - en: For the lifelines that are censored, I’ll modify `end` to indicate when they
     are last observed and `status` to indicate that the observation is incomplete.
+  id: totrans-95
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于被审查的寿命线，我将修改`end`以指示它们最后被观察到的时间，并修改`status`以指示观察是不完整的。
 - en: '[PRE32]'
+  id: totrans-96
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: Now we can plot a “lifeline” for each dog, showing the arrival and departure
     times on a time line.
+  id: totrans-97
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以为每只狗绘制一个“寿命线”，显示时间线上的到达和离开时间。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-98
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
 - en: '[PRE33]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell source Hide code cell source</summary>'
+  id: totrans-99
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE33]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>'
 - en: '[PRE34]</details> ![_images/d6dd919f6937358b5da512f2b078083de2cd5500b7118f9665579ec6044373f6.png](../Images/787750d8f0dc88a9ac6c41b9e548ca3c.png)'
+  id: totrans-100
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE34]</details> ![_images/d6dd919f6937358b5da512f2b078083de2cd5500b7118f9665579ec6044373f6.png](../Images/787750d8f0dc88a9ac6c41b9e548ca3c.png)'
 - en: And I’ll add one more column to the table, which contains the duration of the
     observed parts of the lifelines.
+  id: totrans-101
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将在表中再添加一列，其中包含寿命线的观察部分的持续时间。
 - en: '[PRE35]'
+  id: totrans-102
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: What we have simulated is the data that would be available at the beginning
     of Week 8.
+  id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们模拟的是在第8周开始时可用的数据。
 - en: Using Incomplete Data
+  id: totrans-104
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 使用不完整的数据
 - en: Now, let’s see how we can use both kinds of data, complete and incomplete, to
     infer the parameters of the distribution of residence times.
+  id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，让我们看看如何同时使用完整和不完整的数据来推断居住时间分布的参数。
 - en: 'First I’ll split the data into two sets: `data1` contains residence times for
     dogs whose arrival and departure times are known; `data2` contains incomplete
     residence times for dogs who were not adopted during the observation interval.'
+  id: totrans-106
   prefs: []
   type: TYPE_NORMAL
+  zh: 首先，我将数据分成两组：`data1`包含已知到达和离开时间的狗的居住时间；`data2`包含在观察间隔内未被领养的狗的不完整居住时间。
 - en: '[PRE36]'
+  id: totrans-107
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-108
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE37]'
+  id: totrans-109
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE37]'
 - en: '[PRE38]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE38]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE39]'
+  id: totrans-111
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: '[PRE40]</details>'
+  id: totrans-112
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE40]</details>'
 - en: For the complete data, we can use `update_weibull`, which uses the PDF of the
     Weibull distribution to compute the likelihood of the data.
+  id: totrans-113
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于完整数据，我们可以使用`update_weibull`，它使用Weibull分布的概率密度函数来计算数据的似然。
 - en: '[PRE41]'
+  id: totrans-114
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE41]'
 - en: For the incomplete data, we have to think a little harder. At the end of the
     observation interval, we don’t know what the residence time will be, but we can
     put a lower bound on it; that is, we can say that the residence time will be greater
     than `T`.
+  id: totrans-115
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于不完整的数据，我们需要更加深入地思考。在观察间隔结束时，我们不知道居住时间会是多少，但我们可以设定一个下限；也就是说，我们可以说居住时间将大于`T`。
 - en: And that means that we can compute the likelihood of the data using the survival
     function, which is the probability that a value from the distribution exceeds
     `T`.
+  id: totrans-116
   prefs: []
   type: TYPE_NORMAL
+  zh: 这意味着我们可以使用生存函数来计算数据的似然，生存函数是分布中值大于`T`的概率。
 - en: The following function is identical to `update_weibull` except that it uses
     `sf`, which computes the survival function, rather than `pdf`.
+  id: totrans-117
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数与`update_weibull`相同，只是它使用`sf`来计算生存函数，而不是`pdf`。
 - en: '[PRE42]'
+  id: totrans-118
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE42]'
 - en: Here’s the update with the incomplete data.
+  id: totrans-119
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是使用不完整数据进行的更新。
 - en: '[PRE43]'
+  id: totrans-120
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE43]'
 - en: And here’s what the joint posterior distribution looks like after both updates.
+  id: totrans-121
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是两次更新后的联合后验分布的样子。
 - en: '[PRE44]'
+  id: totrans-122
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE44]'
 - en: '![_images/c7ee32a715f0f7f5eede80659e6afa17a007adbe93236237580dcfeb4d59e17d.png](../Images/300e9829c4f3c0af8a75c148fd5d2b39.png)'
+  id: totrans-123
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/c7ee32a715f0f7f5eede80659e6afa17a007adbe93236237580dcfeb4d59e17d.png](../Images/300e9829c4f3c0af8a75c148fd5d2b39.png)'
 - en: Compared to the previous contour plot, it looks like the range of likely values
     for \(\lambda\) is substantially wider. We can see that more clearly by looking
     at the marginal distributions.
+  id: totrans-124
   prefs: []
   type: TYPE_NORMAL
+  zh: 与之前的等高线图相比，看起来\(\lambda\)的可能值范围显著更宽。通过观察边际分布，我们可以更清楚地看到这一点。
 - en: '[PRE45]'
+  id: totrans-125
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE45]'
 - en: Here’s the posterior marginal distribution for \(\lambda\) compared to the distribution
     we got using all complete data.
+  id: totrans-126
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是\(\lambda\)的后验边际分布，与我们使用所有完整数据得到的分布进行比较。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-127
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE46]</details> ![_images/b27b0a38dde380c88b64bce34905027ef43332cd5ddff47b9eba6b2c56dc22af.png](../Images/39d2895a1cd7517c6572e797e506d326.png)'
+  id: totrans-128
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE46]</details> ![_images/b27b0a38dde380c88b64bce34905027ef43332cd5ddff47b9eba6b2c56dc22af.png](../Images/39d2895a1cd7517c6572e797e506d326.png)'
 - en: The distribution with some incomplete data is substantially wider.
+  id: totrans-129
   prefs: []
   type: TYPE_NORMAL
+  zh: 一些不完整数据的分布显著更宽。
 - en: As an aside, notice that the posterior distribution does not come all the way
     to 0 on the right side. That suggests that the range of the prior distribution
     is not wide enough to cover the most likely values for this parameter. If I were
     concerned about making this distribution more accurate, I would go back and run
     the update again with a wider prior.
+  id: totrans-130
   prefs: []
   type: TYPE_NORMAL
+  zh: 另外，请注意后验分布在右侧并没有完全趋近于0。这表明先验分布的范围不足以覆盖该参数的最可能值。如果我担心使这个分布更准确，我会回去用更宽的先验再次运行更新。
 - en: 'Here’s the posterior marginal distribution for \(k\):'
+  id: totrans-131
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是\(k\)的后验边际分布：
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-132
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE47]</details> ![_images/0d5cf63e8cd6276770a088ce33f36cb3c83eefd722368f1143e949dd9f55322b.png](../Images/26afec247feb6f72467c13c89205d16c.png)'
+  id: totrans-133
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE47]</details> ![_images/0d5cf63e8cd6276770a088ce33f36cb3c83eefd722368f1143e949dd9f55322b.png](../Images/26afec247feb6f72467c13c89205d16c.png)'
 - en: In this example, the marginal distribution is shifted to the left when we have
     incomplete data, but it is not substantially wider.
+  id: totrans-134
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个例子中，当我们有不完整的数据时，边际分布向左移动，但宽度并没有显著增加。
 - en: In summary, we have seen how to combine complete and incomplete data to estimate
     the parameters of a Weibull distribution, which is useful in many real-world scenarios
     where some of the data are censored.
+  id: totrans-135
   prefs: []
   type: TYPE_NORMAL
+  zh: 总之，我们已经看到如何结合完整和不完整的数据来估计Weibull分布的参数，在许多现实场景中，这是非常有用的，因为其中一些数据是被截尾的。
 - en: In general, the posterior distributions are wider when we have incomplete data,
     because less information leads to more uncertainty.
+  id: totrans-136
   prefs: []
   type: TYPE_NORMAL
+  zh: 一般来说，当我们有不完整数据时，后验分布会更宽，因为信息较少会导致更多的不确定性。
 - en: This example is based on data I generated; in the next section we’ll do a similar
     analysis with real data.
+  id: totrans-137
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个例子是基于我生成的数据；在下一节中，我们将用真实数据进行类似的分析。
 - en: Light Bulbs
+  id: totrans-138
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 灯泡
 - en: 'In 2007 [researchers ran an experiment](https://www.researchgate.net/publication/225450325_Renewal_Rate_of_Filament_Lamps_Theory_and_Experiment)
     to characterize the distribution of lifetimes for light bulbs. Here is their description
     of the experiment:'
+  id: totrans-139
   prefs: []
   type: TYPE_NORMAL
+  zh: 2007年，研究人员进行了一项实验，以表征灯泡寿命的分布。以下是他们对实验的描述：
 - en: An assembly of 50 new Philips (India) lamps with the rating 40 W, 220 V (AC)
     was taken and installed in the horizontal orientation and uniformly distributed
     over a lab area 11 m x 7 m.
+  id: totrans-140
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 取了50个新的飞利浦（印度）灯泡，额定功率为40瓦，220伏特（交流），并安装在水平方向上，均匀分布在一个11米x7米的实验室区域内。
 - en: ''
+  id: totrans-141
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: The assembly was monitored at regular intervals of 12 h to look for failures.
     The instants of recorded failures were [recorded] and a total of 32 data points
     were obtained such that even the last bulb failed.
+  id: totrans-142
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 组件每隔12小时监视一次以寻找故障。记录的故障时刻是[记录的]，共获得了32个数据点，以至于最后一个灯泡也失败了。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-143
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE48]</details>'
+  id: totrans-144
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE48]</details>'
 - en: 'We can load the data into a `DataFrame` like this:'
+  id: totrans-145
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以像这样将数据加载到`DataFrame`中：
 - en: '[PRE49]'
+  id: totrans-146
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE49]'
 - en: '|  | h | f | K |'
+  id: totrans-147
   prefs: []
   type: TYPE_TB
+  zh: '|  | h | f | K |'
 - en: '| --- | --- | --- | --- |'
+  id: totrans-148
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- |'
 - en: '| i |  |  |  |'
+  id: totrans-149
   prefs: []
   type: TYPE_TB
+  zh: '| i |  |  |  |'
 - en: '| --- | --- | --- | --- |'
+  id: totrans-150
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- |'
 - en: '| 0 | 0 | 0 | 50 |'
+  id: totrans-151
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 0 | 0 | 50 |'
 - en: '| 1 | 840 | 2 | 48 |'
+  id: totrans-152
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 840 | 2 | 48 |'
 - en: '| 2 | 852 | 1 | 47 |'
+  id: totrans-153
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 852 | 1 | 47 |'
 - en: '| 3 | 936 | 1 | 46 |'
+  id: totrans-154
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 936 | 1 | 46 |'
 - en: '| 4 | 960 | 1 | 45 |'
+  id: totrans-155
   prefs: []
   type: TYPE_TB
+  zh: '| 4 | 960 | 1 | 45 |'
 - en: 'Column `h` contains the times when bulbs failed in hours; Column `f` contains
     the number of bulbs that failed at each time. We can represent these values and
     frequencies using a `Pmf`, like this:'
+  id: totrans-156
   prefs: []
   type: TYPE_NORMAL
+  zh: 列`h`包含灯泡故障的时间（小时）；列`f`包含每个时间点故障的灯泡数量。我们可以使用`Pmf`来表示这些值和频率，如下所示：
 - en: '[PRE50]'
+  id: totrans-157
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE50]'
 - en: '[PRE51]'
+  id: totrans-158
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE51]'
 - en: Because of the design of this experiment, we can consider the data to be a representative
     sample from the distribution of lifetimes, at least for light bulbs that are lit
     continuously.
+  id: totrans-159
   prefs: []
   type: TYPE_NORMAL
+  zh: 由于这个实验的设计，我们可以认为数据是寿命分布的代表样本，至少对于连续点亮的灯泡来说。
 - en: The average lifetime is about 1400 h.
+  id: totrans-160
   prefs: []
   type: TYPE_NORMAL
+  zh: 平均寿命约为1400小时。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-161
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE52]'
+  id: totrans-162
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE52]'
 - en: '[PRE53]</details>'
+  id: totrans-163
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE53]</details>'
 - en: 'Assuming that these data are well modeled by a Weibull distribution, let’s
     estimate the parameters that fit the data. Again, I’ll start with uniform priors
     for \(\lambda\) and \(k\):'
+  id: totrans-164
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设这些数据很好地符合Weibull分布，让我们估计适合数据的参数。同样，我将从\(\lambda\)和\(k\)的均匀先验开始：
 - en: '[PRE54]'
+  id: totrans-165
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE54]'
 - en: '[PRE55]'
+  id: totrans-166
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE55]'
 - en: For this example, there are 51 values in the prior distribution, rather than
     the usual 101\. That’s because we are going to use the posterior distributions
     to do some computationally-intensive calculations. They will run faster with fewer
     values, but the results will be less precise.
+  id: totrans-167
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于这个例子，先验分布中有51个值，而不是通常的101个。这是因为我们将使用后验分布进行一些计算密集型的计算。它们将以更少的值运行得更快，但结果将不太精确。
 - en: As usual, we can use `make_joint` to make the prior joint distribution.
+  id: totrans-168
   prefs: []
   type: TYPE_NORMAL
+  zh: 像往常一样，我们可以使用`make_joint`来制作先验联合分布。
 - en: '[PRE56]'
+  id: totrans-169
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE56]'
 - en: Although we have data for 50 light bulbs, there are only 32 unique lifetimes
     in the dataset. For the update, it is convenient to express the data in the form
     of 50 lifetimes, with each lifetime repeated the given number of times. We can
     use `np.repeat` to transform the data.
+  id: totrans-170
   prefs: []
   type: TYPE_NORMAL
+  zh: 虽然我们有50个灯泡的数据，但数据集中只有32个唯一的寿命。为了更新，方便起见，可以将数据表示为50个寿命，每个寿命重复给定的次数。我们可以使用`np.repeat`来转换数据。
 - en: '[PRE57]'
+  id: totrans-171
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE57]'
 - en: '[PRE58]'
+  id: totrans-172
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE58]'
 - en: Now we can use `update_weibull` to do the update.
+  id: totrans-173
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以使用`update_weibull`来进行更新。
 - en: '[PRE59]'
+  id: totrans-174
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE59]'
 - en: 'Here’s what the posterior joint distribution looks like:'
+  id: totrans-175
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是后验联合分布的样子：
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-176
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE60]</details> ![_images/c045d0c012c5c3280ab43869032f47b98c77b0ad79fef4e376c00d3b6dc6e990.png](../Images/2f2a91dee647f354e9561ed85b32f958.png)'
+  id: totrans-177
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE60]</details> ![_images/c045d0c012c5c3280ab43869032f47b98c77b0ad79fef4e376c00d3b6dc6e990.png](../Images/2f2a91dee647f354e9561ed85b32f958.png)'
 - en: To summarize this joint posterior distribution, we’ll compute the posterior
     mean lifetime.
+  id: totrans-178
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了总结这个联合后验分布，我们将计算后验均值寿命。
 - en: Posterior Means
+  id: totrans-179
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 后验均值
 - en: To compute the posterior mean of a joint distribution, we’ll make a mesh that
     contains the values of \(\lambda\) and \(k\).
+  id: totrans-180
   prefs: []
   type: TYPE_NORMAL
+  zh: 要计算联合分布的后验均值，我们将制作一个包含\(\lambda\)和\(k\)的值的网格。
 - en: '[PRE61]'
+  id: totrans-181
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE61]'
 - en: Now for each pair of parameters we’ll use `weibull_dist` to compute the mean.
+  id: totrans-182
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在对于每一对参数，我们将使用`weibull_dist`来计算均值。
 - en: '[PRE62]'
+  id: totrans-183
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE62]'
 - en: '[PRE63]'
+  id: totrans-184
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE63]'
 - en: The result is an array with the same dimensions as the joint distribution.
+  id: totrans-185
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个与联合分布具有相同维度的数组。
 - en: Now we need to weight each mean with the corresponding probability from the
     joint posterior.
+  id: totrans-186
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们需要用联合后验的相应概率对每个均值进行加权。
 - en: '[PRE64]'
+  id: totrans-187
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE64]'
 - en: Finally we compute the sum of the weighted means.
+  id: totrans-188
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，我们计算加权平均值的总和。
 - en: '[PRE65]'
+  id: totrans-189
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE65]'
 - en: '[PRE66]'
+  id: totrans-190
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE66]'
 - en: Based on the posterior distribution, we think the mean lifetime is about 1413
     hours.
+  id: totrans-191
   prefs: []
   type: TYPE_NORMAL
+  zh: 根据后验分布，我们认为平均寿命约为1413小时。
 - en: 'The following function encapsulates these steps:'
+  id: totrans-192
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数封装了这些步骤：
 - en: '[PRE67]'
+  id: totrans-193
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE67]'
 - en: Incomplete Information
+  id: totrans-194
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 不完整信息
 - en: The previous update was not quite right, because it assumed each light bulb
     died at the instant we observed it.
+  id: totrans-195
   prefs: []
   type: TYPE_NORMAL
+  zh: 之前的更新不太正确，因为它假设每个灯泡在我们观察到它的瞬间就死了。
 - en: According to the report, the researchers only checked the bulbs every 12 hours.
     So if they see that a bulb has died, they know only that it died during the 12
     hours since the last check.
+  id: totrans-196
   prefs: []
   type: TYPE_NORMAL
+  zh: 根据报告，研究人员每12小时只检查一次灯泡。因此，如果他们发现一个灯泡已经坏了，他们只知道它在上次检查后的12小时内坏掉了。
 - en: It is more strictly correct to use the following update function, which uses
     the CDF of the Weibull distribution to compute the probability that a bulb dies
     during a given 12 hour interval.
+  id: totrans-197
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-198
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE68]</details>'
+  id: totrans-199
   prefs: []
   type: TYPE_NORMAL
 - en: The probability that a value falls in an interval is the difference between
     the CDF at the beginning and end of the interval.
+  id: totrans-200
   prefs: []
   type: TYPE_NORMAL
 - en: Here’s how we run the update.
+  id: totrans-201
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-202
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE69]</details>'
+  id: totrans-203
   prefs: []
   type: TYPE_NORMAL
 - en: And here are the results.
+  id: totrans-204
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-205
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE70]'
+  id: totrans-206
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE70]'
 - en: '![_images/a01f57da5382dd9ebeae9b3de1f7f0bbd3e8431a6486f4c3b2d63dadc7312526.png](../Images/f292f51d98ec07dfc930576ab8a3de1b.png)</details>'
+  id: totrans-207
   prefs: []
   type: TYPE_NORMAL
 - en: Visually this result is almost identical to what we got using the PDF. And that’s
     good news, because it suggests that using the PDF can be a good approximation
     even if it’s not strictly correct.
+  id: totrans-208
   prefs: []
   type: TYPE_NORMAL
 - en: To see whether it makes any difference at all, let’s check the posterior means.
+  id: totrans-209
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-210
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE71]'
+  id: totrans-211
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE71]'
 - en: '[PRE72]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-212
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE73]'
+  id: totrans-213
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE73]'
 - en: '[PRE74]</details>'
+  id: totrans-214
   prefs: []
   type: TYPE_NORMAL
 - en: 'When we take into account the 12-hour interval between observations, the posterior
     mean is about 6 hours less. And that makes sense: if we assume that a bulb is
     equally likely to expire at any point in the interval, the average would be the
     midpoint of the interval.'
+  id: totrans-215
   prefs: []
   type: TYPE_NORMAL
 - en: Posterior Predictive Distribution
+  id: totrans-216
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: Suppose you install 100 light bulbs of the kind in the previous section, and
     you come back to check on them after 1000 hours. Based on the posterior distribution
     we just computed, what is the distribution of the number of bulbs you find dead?
+  id: totrans-217
   prefs: []
   type: TYPE_NORMAL
 - en: If we knew the parameters of the Weibull distribution for sure, the answer would
     be a binomial distribution.
+  id: totrans-218
   prefs: []
   type: TYPE_NORMAL
 - en: 'For example, if we know that \(\lambda=1550\) and \(k=4.25\), we can use `weibull_dist`
     to compute the probability that a bulb dies before you return:'
+  id: totrans-219
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE75]'
+  id: totrans-220
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE75]'
 - en: '[PRE76]'
+  id: totrans-221
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE76]'
 - en: If there are 100 bulbs and each has this probability of dying, the number of
     dead bulbs follows a binomial distribution.
+  id: totrans-222
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE77]'
+  id: totrans-223
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE77]'
 - en: And here’s what it looks like.
+  id: totrans-224
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-225
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE78]'
+  id: totrans-226
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE78]'
 - en: '![_images/42e12ef3e54e221fa4ede683f0bbf06d0c501a4eb94e1bc5da2cab501e520592.png](../Images/2a5755e75a3a3a6f94354ace263259b5.png)</details>'
+  id: totrans-227
   prefs: []
   type: TYPE_NORMAL
 - en: But that’s based on the assumption that we know \(\lambda\) and \(k\), and we
     don’t. Instead, we have a posterior distribution that contains possible values
     of these parameters and their probabilities.
+  id: totrans-228
   prefs: []
   type: TYPE_NORMAL
 - en: So the posterior predictive distribution is not a single binomial; instead it
     is a mixture of binomials, weighted with the posterior probabilities.
+  id: totrans-229
   prefs: []
   type: TYPE_NORMAL
 - en: We can use `make_mixture` to compute the posterior predictive distribution.
+  id: totrans-230
   prefs: []
   type: TYPE_NORMAL
 - en: 'It doesn’t work with joint distributions, but we can convert the `DataFrame`
     that represents a joint distribution to a `Series`, like this:'
+  id: totrans-231
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE79]'
+  id: totrans-232
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE79]'
 - en: '[PRE80]'
+  id: totrans-233
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE80]'
 - en: 'The result is a `Series` with a `MultiIndex` that contains two “levels”: the
     first level contains the values of `k`; the second contains the values of `lam`.'
+  id: totrans-234
   prefs: []
   type: TYPE_NORMAL
 - en: With the posterior in this form, we can iterate through the possible parameters
     and compute a predictive distribution for each pair.
+  id: totrans-235
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE81]'
+  id: totrans-236
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE81]'
 - en: Now we can use `make_mixture`, passing as parameters the posterior probabilities
     in `posterior_series` and the sequence of binomial distributions in `pmf_seq`.
+  id: totrans-237
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE82]'
+  id: totrans-238
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE82]'
 - en: Here’s what the posterior predictive distribution looks like, compared to the
     binomial distribution we computed with known parameters.
+  id: totrans-239
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-240
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE83]</details> ![_images/43a987be520fd3d9c1db443a0138114292fb696c4ef951ab46ac6e015469a169.png](../Images/8d5760f4032ecc5652e6a804c7e27405.png)'
+  id: totrans-241
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE83]</details> ![_images/43a987be520fd3d9c1db443a0138114292fb696c4ef951ab46ac6e015469a169.png](../Images/8d5760f4032ecc5652e6a804c7e27405.png)'
 - en: The posterior predictive distribution is wider because it represents our uncertainty
     about the parameters as well as our uncertainty about the number of dead bulbs.
+  id: totrans-242
   prefs: []
   type: TYPE_NORMAL
+  zh: 后验预测分布更宽，因为它代表了我们对参数以及死灯泡数量的不确定性。
 - en: Summary
+  id: totrans-243
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 总结
 - en: This chapter introduces survival analysis, which is used to answer questions
     about the time until an event, and the Weibull distribution, which is a good model
     for “lifetimes” (broadly interpreted) in a number of domains.
+  id: totrans-244
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章介绍了生存分析，用于回答关于事件发生时间的问题，以及Weibull分布，它是许多领域中“寿命”（广义解释）的良好模型。
 - en: 'We used joint distributions to represent prior probabilities for the parameters
     of the Weibull distribution, and we updated them three ways: knowing the exact
     duration of a lifetime, knowing a lower bound, and knowing that a lifetime fell
     in a given interval.'
+  id: totrans-245
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们使用联合分布来表示Weibull分布的参数的先验概率，并以三种方式更新它们：知道寿命的确切持续时间，知道下限，以及知道寿命落在给定区间内。
 - en: 'These examples demonstrate a feature of Bayesian methods: they can be adapted
     to handle incomplete, or “censored”, data with only small changes. As an exercise,
     you’ll have a chance to work with one more type of censored data, when we are
     given an upper bound on a lifetime.'
+  id: totrans-246
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些例子展示了贝叶斯方法的一个特点：它们可以适应处理不完整或“被审查”的数据，只需进行小的改动。作为练习，您将有机会处理另一种类型的被审查数据，当我们给出寿命的上限时。
 - en: The methods in this chapter work with any distribution with two parameters.
     In the exercises, you’ll have a chance to estimate the parameters of a two-parameter
     gamma distribution, which is used to describe a variety of natural phenomena.
+  id: totrans-247
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章中的方法适用于具有两个参数的任何分布。在练习中，您将有机会估计用于描述各种自然现象的两参数gamma分布的参数。
 - en: And in the next chapter we’ll move on to models with three parameters!
+  id: totrans-248
   prefs: []
   type: TYPE_NORMAL
+  zh: 在下一章中，我们将继续使用三参数模型！
 - en: Exercises
+  id: totrans-249
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 练习
 - en: '**Exercise:** Using data about the lifetimes of light bulbs, we computed the
     posterior distribution from the parameters of a Weibull distribution, \(\lambda\)
     and \(k\), and the posterior predictive distribution for the number of dead bulbs,
     out of 100, after 1000 hours.'
+  id: totrans-250
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**使用关于灯泡寿命的数据，我们计算了Weibull分布的参数\(\lambda\)和\(k\)的后验分布，以及1000小时后100个灯泡中死亡灯泡的后验预测分布。'
 - en: 'Now suppose you do the experiment: You install 100 light bulbs, come back after
     1000 hours, and find 20 dead light bulbs. Update the posterior distribution based
     on this data. How much does it change the posterior mean?'
+  id: totrans-251
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在假设您进行实验：您安装了100个灯泡，1000小时后回来，发现20个灯泡坏了。根据这些数据更新后验分布。后验均值变化多少？
 - en: 'Suggestions:'
+  id: totrans-252
   prefs: []
   type: TYPE_NORMAL
+  zh: 建议：
 - en: Use a mesh grid to compute the probability of finding a bulb dead after 1000
     hours for each pair of parameters.
+  id: totrans-253
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 使用网格来计算每对参数中在1000小时后找到一个灯泡死亡的概率。
 - en: For each of those probabilities, compute the likelihood of finding 20 dead bulbs
     out of 100.
+  id: totrans-254
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 对于这些概率中的每一个，计算在100个灯泡中找到20个死灯泡的可能性。
 - en: Use those likelihoods to update the posterior distribution.
+  id: totrans-255
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 使用这些可能性来更新后验分布。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-256
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE84]'
+  id: totrans-257
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE84]'
 - en: '[PRE85]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-258
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE85]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE86]'
+  id: totrans-259
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE86]'
 - en: '[PRE87]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-260
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE87]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE88]'
+  id: totrans-261
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE88]'
 - en: '![_images/e5e76b96bcdb981d51b473a995694931c9ec47affcc8c1f3dfb73d7172794803.png](../Images/0b6b415805edbf392947106d859da61c.png)</details><details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-262
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/e5e76b96bcdb981d51b473a995694931c9ec47affcc8c1f3dfb73d7172794803.png](../Images/0b6b415805edbf392947106d859da61c.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE89]'
+  id: totrans-263
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE89]'
 - en: '[PRE90]</details>'
+  id: totrans-264
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE90]</details>'
 - en: '**Exercise:** In this exercise, we’ll use one month of data to estimate the
     parameters of a distribution that describes daily rainfall in Seattle. Then we’ll
     compute the posterior predictive distribution for daily rainfall and use it to
     estimate the probability of a rare event, like more than 1.5 inches of rain in
     a day.'
+  id: totrans-265
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**在这个练习中，我们将使用一个月的数据来估计描述西雅图日降雨量的分布的参数。然后我们将计算每日降雨的后验预测分布，并用它来估计罕见事件的概率，比如一天内降雨超过1.5英寸。'
 - en: According to hydrologists, the distribution of total daily rainfall (for days
     with rain) is well modeled by a two-parameter gamma distribution.
+  id: totrans-266
   prefs: []
   type: TYPE_NORMAL
+  zh: 根据水文学家的说法，总日降雨量（有雨的日子）的分布很好地由两参数gamma分布建模。
 - en: When we worked with the one-parameter gamma distribution in <<_TheGammaDistribution>>,
     we used the Greek letter \(\alpha\) for the parameter.
+  id: totrans-267
   prefs: []
   type: TYPE_NORMAL
+  zh: 当我们在<<_TheGammaDistribution>>中使用一参数gamma分布时，我们使用希腊字母\(\alpha\)表示参数。
 - en: For the two-parameter gamma distribution, we will use \(k\) for the “shape parameter”,
     which determines the shape of the distribution, and the Greek letter \(\theta\)
     or `theta` for the “scale parameter”.
+  id: totrans-268
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于两参数gamma分布，我们将使用\(k\)表示“形状参数”，它决定了分布的形状，希腊字母\(\theta\)或`theta`表示“比例参数”。
 - en: The following function takes these parameters and returns a `gamma` object from
     SciPy.
+  id: totrans-269
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数接受这些参数，并从SciPy返回一个`gamma`对象。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-270
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE91]</details>'
+  id: totrans-271
   prefs: []
   type: TYPE_NORMAL
 - en: Now we need some data. The following cell downloads data I collected from the
     National Oceanic and Atmospheric Administration ([NOAA](http://www.ncdc.noaa.gov/cdo-web/search))
     for Seattle, Washington in May 2020.
+  id: totrans-272
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-273
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE92]</details>'
+  id: totrans-274
   prefs: []
   type: TYPE_NORMAL
 - en: 'Now we can load it into a `DataFrame`:'
+  id: totrans-275
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-276
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE93]'
+  id: totrans-277
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE93]'
 - en: '|  | STATION | NAME | DATE | AWND | PRCP | TMAX | TMIN | WT01 | WT03 | WT08
     |'
+  id: totrans-278
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  id: totrans-279
   prefs: []
   type: TYPE_TB
 - en: '| 0 | USW00024233 | SEATTLE TACOMA AIRPORT, WA US | 2020-05-01 | 4.47 | 0.00
     | 66 | 43 | NaN | NaN | NaN |'
+  id: totrans-280
   prefs: []
   type: TYPE_TB
 - en: '| 1 | USW00024233 | SEATTLE TACOMA AIRPORT, WA US | 2020-05-02 | 9.40 | 0.24
     | 58 | 47 | 1.0 | NaN | NaN |'
+  id: totrans-281
   prefs: []
   type: TYPE_TB
 - en: '| 2 | USW00024233 | SEATTLE TACOMA AIRPORT, WA US | 2020-05-03 | 11.63 | 0.06
     | 57 | 44 | 1.0 | NaN | NaN |'
+  id: totrans-282
   prefs: []
   type: TYPE_TB
 - en: '| 3 | USW00024233 | SEATTLE TACOMA AIRPORT, WA US | 2020-05-04 | 4.47 | 0.00
     | 65 | 39 | NaN | NaN | NaN |'
+  id: totrans-283
   prefs: []
   type: TYPE_TB
 - en: '| 4 | USW00024233 | SEATTLE TACOMA AIRPORT, WA US | 2020-05-05 | 7.83 | 0.00
     | 71 | 49 | NaN | NaN | NaN |</details>'
+  id: totrans-284
   prefs: []
   type: TYPE_NORMAL
 - en: I’ll make a Boolean Series to indicate which days it rained.
+  id: totrans-285
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-286
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE94]'
+  id: totrans-287
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE94]'
 - en: '[PRE95]</details>'
+  id: totrans-288
   prefs: []
   type: TYPE_NORMAL
 - en: And select the total rainfall on the days it rained.
+  id: totrans-289
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-290
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE96]'
+  id: totrans-291
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE96]'
 - en: '[PRE97]</details>'
+  id: totrans-292
   prefs: []
   type: TYPE_NORMAL
 - en: Here’s what the CDF of the data looks like.
+  id: totrans-293
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-294
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE98]'
+  id: totrans-295
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE98]'
 - en: '![_images/5c588671547b5c94db2a6883cc4aad1ee78cc18cbcac03f2d597ef510b5cc19c.png](../Images/c2c9a7a935206223c754315c7c3cd064.png)</details>'
+  id: totrans-296
   prefs: []
   type: TYPE_NORMAL
 - en: The maximum is 1.14 inches of rain is one day. To estimate the probability of
     more than 1.5 inches, we need to extrapolate from the data we have, so our estimate
     will depend on whether the gamma distribution is really a good model.
+  id: totrans-297
   prefs: []
   type: TYPE_NORMAL
 - en: 'I suggest you proceed in the following steps:'
+  id: totrans-298
   prefs: []
   type: TYPE_NORMAL
 - en: Construct a prior distribution for the parameters of the gamma distribution.
     Note that \(k\) and \(\theta\) must be greater than 0.
+  id: totrans-299
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: Use the observed rainfalls to update the distribution of parameters.
+  id: totrans-300
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: Compute the posterior predictive distribution of rainfall, and use it to estimate
     the probability of getting more than 1.5 inches of rain in one day.
+  id: totrans-301
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-302
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE99]'
+  id: totrans-303
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE99]'
 - en: '[PRE100]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-304
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE101]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-305
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE102]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-306
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE103]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-307
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE104]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-308
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE105]'
+  id: totrans-309
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE105]'
 - en: '[PRE106]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-310
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE107]'
+  id: totrans-311
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE107]'
 - en: '[PRE108]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-312
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE109]'
+  id: totrans-313
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE109]'
 - en: '[PRE110]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-314
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE110]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE111]'
+  id: totrans-315
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE111]'
 - en: '![_images/569775f8c7a7fb0df6c9658876198997230b9dae8712f38ff26f0629929d9e47.png](../Images/c9cff7f85ebe7c29f68f398ee9db6037.png)</details><details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-316
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/569775f8c7a7fb0df6c9658876198997230b9dae8712f38ff26f0629929d9e47.png](../Images/c9cff7f85ebe7c29f68f398ee9db6037.png)</details><details
+    class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE112]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-317
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE112]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE113]'
+  id: totrans-318
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE113]'
 - en: '![_images/69409935354138ed39afaf3aaa5ada3ff5bc77d6f005ab27429bf478d8d0946b.png](../Images/31f021b58c59b854d34d7ee6e3fe26dc.png)</details><details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-319
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/69409935354138ed39afaf3aaa5ada3ff5bc77d6f005ab27429bf478d8d0946b.png](../Images/31f021b58c59b854d34d7ee6e3fe26dc.png)</details><details
+    class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE114]'
+  id: totrans-320
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE114]'
 - en: '[PRE115]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-321
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE115]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE116]'
+  id: totrans-322
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE116]'
 - en: '![_images/1dd3578256b42f046ac84921ad312dfbfaf9c27a70cd8f865948011b66d08eca.png](../Images/a1799bf48426a5ce41de2b2405b65d59.png)</details><details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-323
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/1dd3578256b42f046ac84921ad312dfbfaf9c27a70cd8f865948011b66d08eca.png](../Images/a1799bf48426a5ce41de2b2405b65d59.png)</details><details
+    class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE117]'
+  id: totrans-324
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE117]'
 - en: '[PRE118]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-325
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE118]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE119]'
+  id: totrans-326
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE119]'
 - en: '[PRE120]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-327
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE120]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE121]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-328
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE121]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE122]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-329
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE122]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE123]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-330
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE123]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE124]'
+  id: totrans-331
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE124]'
 - en: '![_images/91c9c0543eef83e3308033e1fb3a26f62b4651f1f1b4e9f5d72ddea583069bf2.png](../Images/a05f4682fda21bd2b00fb2dffd541cec.png)</details><details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-332
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/91c9c0543eef83e3308033e1fb3a26f62b4651f1f1b4e9f5d72ddea583069bf2.png](../Images/a05f4682fda21bd2b00fb2dffd541cec.png)</details><details
+    class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE125]'
+  id: totrans-333
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE125]'
 - en: '[PRE126]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-334
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE126]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE127]'
+  id: totrans-335
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE127]'
 - en: '[PRE128]</details>'
+  id: totrans-336
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE128]</details>'

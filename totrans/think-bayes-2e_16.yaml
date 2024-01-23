@@ -3,11 +3,13 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 推断
 - en: 原文：[https://allendowney.github.io/ThinkBayes2/chap13.html](https://allendowney.github.io/ThinkBayes2/chap13.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ThinkBayes2/chap13.html](https://allendowney.github.io/ThinkBayes2/chap13.html)
 - en: Whenever people compare Bayesian inference with conventional approaches, one
     of the questions that comes up most often is something like, “What about p-values?”
     And one of the most common examples is the comparison of two groups to see if
@@ -15,6 +17,7 @@
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 每当人们将贝叶斯推断与传统方法进行比较时，最常见的问题之一是：“p值呢？”其中最常见的例子之一是比较两组，看看它们的平均值是否有差异。
 - en: In classical statistical inference, the usual tool for this scenario is a [Student’s
     *t*-test](https://en.wikipedia.org/wiki/Student%27s_t-test), and the result is
     a [p-value](https://en.wikipedia.org/wiki/P-value). This process is an example
@@ -22,6 +25,7 @@
   id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 在经典统计推断中，这种情况的常用工具是[学生的*t*检验](https://en.wikipedia.org/wiki/Student%27s_t-test)，结果是[p值](https://en.wikipedia.org/wiki/P-value)。这个过程是[零假设显著性检验](https://en.wikipedia.org/wiki/Statistical_hypothesis_testing)的一个例子。
 - en: A Bayesian alternative is to compute the posterior distribution of the difference
     between the groups. Then we can use that distribution to answer whatever questions
     we are interested in, including the most likely size of the difference, a credible
@@ -30,16 +34,19 @@
   id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 贝叶斯的替代方法是计算两组之间差异的后验分布。然后我们可以使用该分布来回答我们感兴趣的任何问题，包括差异的最可能大小，可能包含真实差异的可信区间，优越性的概率，或者差异超过某个阈值的概率。
 - en: 'To demonstrate this process, I’ll solve a problem borrowed from a statistical
     textbook: evaluating the effect of an educational “treatment” compared to a control.'
   id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了演示这个过程，我将解决一个从统计教科书借来的问题：评估教育“治疗”与对照组的效果。
 - en: Improving Reading Ability
   id: totrans-6
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 提高阅读能力
 - en: We’ll use data from a [Ph.D. dissertation in educational psychology](https://docs.lib.purdue.edu/dissertations/AAI8807671/)
     written in 1987, which was used as an example in a [statistics textbook](https://books.google.com/books/about/Introduction_to_the_practice_of_statisti.html?id=pGBNhajABlUC)
     from 1989 and published on [DASL](https://web.archive.org/web/20000603124754/http://lib.stat.cmu.edu/DASL/Datafiles/DRPScores.html),
@@ -47,10 +54,12 @@
   id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将使用1987年[教育心理学博士论文](https://docs.lib.purdue.edu/dissertations/AAI8807671/)中的数据，该论文被用作1989年[统计教科书](https://books.google.com/books/about/Introduction_to_the_practice_of_statisti.html?id=pGBNhajABlUC)的例子，并在[DASL](https://web.archive.org/web/20000603124754/http://lib.stat.cmu.edu/DASL/Datafiles/DRPScores.html)上发布，这是一个收集数据故事的网页。
 - en: 'Here’s the description from DASL:'
   id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是DASL的描述：
 - en: An educator conducted an experiment to test whether new directed reading activities
     in the classroom will help elementary school pupils improve some aspects of their
     reading ability. She arranged for a third grade class of 21 students to follow
@@ -62,14 +71,17 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 一位教育工作者进行了一个实验，测试课堂上的新定向阅读活动是否会帮助小学生提高阅读能力的某些方面。她安排了一个由21名学生组成的三年级班级，在8周的时间里进行这些活动。一个由23名三年级学生组成的对照班级在没有这些活动的情况下遵循相同的课程。在8周结束时，所有学生参加了一个度量阅读能力的测试，该测试衡量了治疗旨在改善的阅读能力方面。
 - en: The [dataset is available here](https://web.archive.org/web/20000603124754/http://lib.stat.cmu.edu/DASL/Datafiles/DRPScores.html).
   id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: '[数据集在这里可用](https://web.archive.org/web/20000603124754/http://lib.stat.cmu.edu/DASL/Datafiles/DRPScores.html)。'
 - en: I’ll use Pandas to load the data into a `DataFrame`.
   id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将使用Pandas将数据加载到`DataFrame`中。
 - en: '[PRE0]'
   id: totrans-12
   prefs: []
@@ -79,31 +91,38 @@
   id: totrans-13
   prefs: []
   type: TYPE_TB
+  zh: '|  | 治疗 | 反应 |'
 - en: '| --- | --- | --- |'
   id: totrans-14
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- |'
 - en: '| 0 | Treated | 24 |'
   id: totrans-15
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | Treated | 24 |'
 - en: '| 1 | Treated | 43 |'
   id: totrans-16
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | Treated | 43 |'
 - en: '| 2 | Treated | 58 |'
   id: totrans-17
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | Treated | 58 |'
 - en: The `Treatment` column indicates whether each student was in the treated or
     control group. The `Response` is their score on the test.
   id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: '`Treatment`列指示每个学生是在治疗组还是对照组。`Response`是他们在测试中的得分。'
 - en: 'I’ll use `groupby` to separate the data for the `Treated` and `Control` groups:'
   id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将使用`groupby`来分离`Treated`和`Control`组的数据：
 - en: '[PRE1]'
   id: totrans-20
   prefs: []
@@ -113,6 +132,7 @@
   id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是两组分数的CDF和摘要统计信息。
 - en: '[PRE2]'
   id: totrans-22
   prefs: []
@@ -122,6 +142,7 @@
   id: totrans-23
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/4b872e5331cd510f2d09a3ab3ffa581f909ebe5a20e51f12a90a42002577fae9.png](../Images/1ee292db46c8c0909e0451626f93c8dd.png)'
 - en: There is overlap between the distributions, but it looks like the scores are
     higher in the treated group. The distribution of scores is not exactly normal
     for either group, but it is close enough that the normal model is a reasonable
@@ -129,6 +150,7 @@
   id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 这两个分布之间存在重叠，但看起来治疗组的分数更高。两组的分数分布都不完全符合正态分布，但足够接近，正态模型是一个合理的选择。
 - en: So I’ll assume that in the entire population of students (not just the ones
     in the experiment), the distribution of scores is well modeled by a normal distribution
     with unknown mean and standard deviation. I’ll use `mu` and `sigma` to denote
@@ -137,17 +159,20 @@
   id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，我将假设在整个学生群体中（不仅仅是实验中的学生），分数的分布可以很好地由未知均值和标准差的正态分布模拟。我将使用`mu`和`sigma`来表示这些未知参数，并且我们将进行贝叶斯更新来估计它们。
 - en: Estimating Parameters
   id: totrans-26
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 估计参数
 - en: As always, we need a prior distribution for the parameters. Since there are
     two parameters, it will be a joint distribution. I’ll construct it by choosing
     marginal distributions for each parameter and computing their outer product.
   id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 和往常一样，我们需要参数的先验分布。由于有两个参数，它将是一个联合分布。我将通过为每个参数选择边际分布并计算它们的外积来构造它。
 - en: As a simple starting place, I’ll assume that the prior distributions for `mu`
     and `sigma` are uniform. The following function makes a `Pmf` object that represents
     a uniform distribution.
