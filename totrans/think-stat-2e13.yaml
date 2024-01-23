@@ -3,17 +3,20 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 第12章 时间序列分析
 - en: 原文：[https://greenteapress.com/thinkstats2/html/thinkstats2013.html](https://greenteapress.com/thinkstats2/html/thinkstats2013.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://greenteapress.com/thinkstats2/html/thinkstats2013.html](https://greenteapress.com/thinkstats2/html/thinkstats2013.html)
 - en: A time series is a sequence of measurements from a system that varies in time.
     One famous example is the “hockey stick graph” that shows global average temperature
     over time (see [https://en.wikipedia.org/wiki/Hockey_stick_graph](https://en.wikipedia.org/wiki/Hockey_stick_graph)).
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 时间序列是系统随时间变化的一系列测量。一个著名的例子是显示全球平均温度随时间变化的“曲棍球杆图”（参见[https://en.wikipedia.org/wiki/Hockey_stick_graph](https://en.wikipedia.org/wiki/Hockey_stick_graph)）。
 - en: The example I work with in this chapter comes from Zachary M. Jones, a researcher
     in political science who studies the black market for cannabis in the U.S. ([http://zmjones.com/marijuana](http://zmjones.com/marijuana)).
     He collected data from a web site called “Price of Weed” that crowdsources market
@@ -25,6 +28,7 @@
   id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 我在本章中使用的例子来自政治科学研究人员扎卡里·M·琼斯（Zachary M. Jones），他研究美国大麻黑市（[http://zmjones.com/marijuana](http://zmjones.com/marijuana)）。他从一个名为“大麻价格”的网站收集了数据，该网站通过要求参与者报告大麻交易的价格、数量、质量和地点来众包市场信息（[http://www.priceofweed.com/](http://www.priceofweed.com/)）。他的项目目标是调查政策决定（如合法化）对市场的影响。我觉得这个项目很有吸引力，因为它是一个使用数据来解决重要政治问题（如毒品政策）的例子。
 - en: I hope you will find this chapter interesting, but I’ll take this opportunity
     to reiterate the importance of maintaining a professional attitude to data analysis.
     Whether and which drugs should be illegal are important and difficult public policy
@@ -32,21 +36,25 @@
   id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 我希望您会发现本章有趣，但我要借此机会重申保持专业的数据分析态度的重要性。毒品是否应该非法化是重要且困难的公共政策问题；我们的决定应该基于诚实报告的准确数据。
 - en: The code for this chapter is in `timeseries.py`. For information about downloading
     and working with this code, see Section [0.2](thinkstats2001.html#code).
   id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章的代码在`timeseries.py`中。有关下载和使用此代码的信息，请参见第[0.2](thinkstats2001.html#code)节。
 - en: 12.1  Importing and cleaning
   id: totrans-6
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 12.1  导入和清理
 - en: 'The data I downloaded from Mr. Jones’s site is in the repository for this book.
     The following code reads it into a pandas DataFrame:'
   id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 我从琼斯先生的网站下载的数据在本书的存储库中。以下代码将其读入pandas DataFrame：
 - en: '[PRE0]'
   id: totrans-8
   prefs: []
@@ -57,60 +65,72 @@
   id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: '`parse_dates`告诉`read_csv`将第5列的值解释为日期并将其转换为NumPy `datetime64`对象。'
 - en: 'The DataFrame has a row for each reported transaction and the following columns:'
   id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: DataFrame中每个报告的交易都有一行，以下是列：
 - en: 'city: string city name.'
   id: totrans-11
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: city：字符串城市名。
 - en: 'state: two-letter state abbreviation.'
   id: totrans-12
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: state：两个字母的州缩写。
 - en: 'price: price paid in dollars.'
   id: totrans-13
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: price：以美元支付的价格。
 - en: 'amount: quantity purchased in grams.'
   id: totrans-14
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: amount：以克为单位购买的数量。
 - en: 'quality: high, medium, or low quality, as reported by the purchaser.'
   id: totrans-15
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: quality：购买者报告的高、中、低质量。
 - en: 'date: date of report, presumed to be shortly after date of purchase.'
   id: totrans-16
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: date：报告日期，假定为购买日期后不久。
 - en: 'ppg: price per gram, in dollars.'
   id: totrans-17
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: ppg：每克的价格，以美元计价。
 - en: 'state.name: string state name.'
   id: totrans-18
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: state.name：字符串州名。
 - en: 'lat: approximate latitude of the transaction, based on city name.'
   id: totrans-19
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: lat：基于城市名称的交易的大致纬度。
 - en: 'lon: approximate longitude of the transaction.'
   id: totrans-20
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: lon：交易的大致经度。
 - en: Each transaction is an event in time, so we could treat this dataset as a time
     series. But the events are not equally spaced in time; the number of transactions
     reported each day varies from 0 to several hundred. Many methods used to analyze
@@ -119,12 +139,14 @@
   id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 每个交易都是时间中的一个事件，所以我们可以将这个数据集视为时间序列。但是这些事件在时间上并不是等间隔的；每天报告的交易数量从0到几百不等。许多用于分析时间序列的方法要求测量值是等间隔的，或者至少如果它们是等间隔的话，事情会更简单。
 - en: In order to demonstrate these methods, I divide the dataset into groups by reported
     quality, and then transform each group into an equally spaced series by computing
     the mean daily price per gram.
   id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了演示这些方法，我将数据集按报告的质量分组，然后通过计算每日平均每克价格来将每个组转换为等间隔系列。
 - en: '[PRE1]'
   id: totrans-23
   prefs: []
@@ -137,11 +159,13 @@
   id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: '`groupby`是一个返回GroupBy对象`groups`的DataFrame方法；在for循环中使用，它遍历组的名称和代表它们的DataFrame。由于`quality`的值是`low`、`medium`和`high`，我们得到了这些名称的三个组。'
 - en: 'The loop iterates through the groups and calls `GroupByDay`, which computes
     the daily average price and returns a new DataFrame:'
   id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 循环遍历组并调用`GroupByDay`，它计算每日平均价格并返回一个新的DataFrame：
 - en: '[PRE2]'
   id: totrans-26
   prefs: []
@@ -152,6 +176,7 @@
   id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 参数`transactions`是一个包含`date`和`ppg`列的DataFrame。我们选择这两列，然后按`date`分组。
 - en: The result, `grouped`, is a map from each date to a DataFrame that contains
     prices reported on that date. `aggregate` is a GroupBy method that iterates through
     the groups and applies a function to each column of the group; in this case there
@@ -160,6 +185,7 @@
   id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果`grouped`是从每个日期到包含在该日期报告的价格的DataFrame的映射。`aggregate`是一个GroupBy方法，它遍历组并对每个组的列应用函数；在这种情况下只有一列，`ppg`。因此，`aggregate`的结果是一个每个日期一行、一列`ppg`的DataFrame。
 - en: Dates in these DataFrames are stored as NumPy `datetime64` objects, which are
     represented as 64-bit integers in nanoseconds. For some of the analyses coming
     up, it will be convenient to work with time in more human-friendly units, like
@@ -169,20 +195,24 @@
   id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些DataFrame中的日期存储为NumPy `datetime64`对象，它们表示为纳秒的64位整数。对于即将进行的一些分析，使用更人性化的单位（如年）来处理时间将更加方便。因此，`GroupByDay`添加了一个名为`date`的列，通过复制`index`，然后添加`years`，其中包含自第一笔交易以来的年数作为浮点数。
 - en: The resulting DataFrame has columns `ppg`, `date`, and `years`.
   id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: 生成的DataFrame具有`ppg`、`date`和`years`列。
 - en: 12.2  Plotting
   id: totrans-31
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 12.2 绘图
 - en: 'The result from `GroupByQualityAndDay` is a map from each quality to a DataFrame
     of daily prices. Here’s the code I use to plot the three time series:'
   id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: '`GroupByQualityAndDay`的结果是从每种质量到每日价格的DataFrame的映射。以下是我用来绘制三个时间序列的代码：'
 - en: '[PRE3]'
   id: totrans-33
   prefs: []
@@ -196,16 +226,19 @@
   id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: '`PrePlot`与`rows=3`表示我们打算制作三个按三行布局的子图。循环遍历DataFrame并为每个创建散点图。通常情况下，会使用线段在点之间绘制时间序列，但在这种情况下，有许多数据点且价格变动很大，因此添加线条并没有帮助。'
 - en: Since the labels on the x-axis are dates, I use `pyplot.xticks` to rotate the
     “ticks” 30 degrees, making them more readable.
   id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 由于x轴上的标签是日期，我使用`pyplot.xticks`将“刻度”旋转30度，使其更易读。
 - en: '* * *'
   id: totrans-36
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
   id: totrans-37
   prefs:
@@ -216,6 +249,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/e245484870275fc7969f0dbbdfe2da66.png)'
 - en: ''
   id: totrans-39
   prefs:
@@ -227,6 +261,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_TB
+  zh: '| 图12.1：高、中、低质量大麻每克每日价格的时间序列。 |'
 - en: ''
   id: totrans-41
   prefs:
@@ -237,6 +272,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: Figure [12.1](#timeseries1) shows the result. One apparent feature in these
     plots is a gap around November 2013\. It’s possible that data collection was not
     active during this time, or the data might not be available. We will consider
@@ -244,6 +280,7 @@
   id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 图[12.1](#timeseries1)显示了结果。这些图中一个明显的特征是在2013年11月左右有一个间隙。可能是在这段时间内数据收集不活跃，或者数据可能不可用。我们将考虑如何处理这些缺失数据。
 - en: Visually, it looks like the price of high quality cannabis is declining during
     this period, and the price of medium quality is increasing. The price of low quality
     might also be increasing, but it is harder to tell, since it seems to be more
@@ -252,11 +289,13 @@
   id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: 从视觉上看，高质量大麻的价格在这段时间内似乎在下降，而中等质量的价格在上升。低质量的价格也可能在上升，但很难说，因为它似乎更加波动。请记住，质量数据是由志愿者报告的，因此随时间的趋势可能反映了参与者如何应用这些标签的变化。
 - en: 12.3  Linear regression
   id: totrans-45
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 12.3 线性回归
 - en: 'Although there are methods specific to time series analysis, for many problems
     a simple way to get started is by applying general-purpose tools like linear regression.
     The following function takes a DataFrame of daily prices and computes a least
@@ -264,6 +303,7 @@
   id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: 尽管有一些特定于时间序列分析的方法，但对于许多问题，一个简单的入门方法是应用线性回归等通用工具。以下函数接受每日价格的DataFrame并计算最小二乘拟合，返回StatsModels的模型和结果对象：
 - en: '[PRE4]'
   id: totrans-47
   prefs: []
@@ -273,6 +313,7 @@
   id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后我们可以遍历质量并为每个拟合模型：
 - en: '[PRE5]'
   id: totrans-49
   prefs: []
@@ -282,22 +323,27 @@
   id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是结果：
 - en: '| quality | intercept | slope | R² |'
   id: totrans-51
   prefs: []
   type: TYPE_TB
+  zh: '| 质量 | 截距 | 斜率 | R² |'
 - en: '| high | 13.450 | -0.708 | 0.444 |'
   id: totrans-52
   prefs: []
   type: TYPE_TB
+  zh: '| 高质量 | 13.450 | -0.708 | 0.444 |'
 - en: '| medium | 8.879 | 0.283 | 0.050 |'
   id: totrans-53
   prefs: []
   type: TYPE_TB
+  zh: '| 中等 | 8.879 | 0.283 | 0.050 |'
 - en: '| low | 5.362 | 0.568 | 0.030 |'
   id: totrans-54
   prefs: []
   type: TYPE_TB
+  zh: '| 低 | 5.362 | 0.568 | 0.030 |'
 - en: The estimated slopes indicate that the price of high quality cannabis dropped
     by about 71 cents per year during the observed interval; for medium quality it
     increased by 28 cents per year, and for low quality it increased by 57 cents per
@@ -305,6 +351,7 @@
   id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: 估计的斜率表明，观察期间高质量大麻的价格每年下降约71美分；中等质量的价格每年增加28美分，低质量的价格每年增加57美分。这些估计都具有非常小的p值，是统计上显著的。
 - en: The R² value for high quality cannabis is 0.44, which means that time as an
     explanatory variable accounts for 44% of the observed variability in price. For
     the other qualities, the change in price is smaller, and variability in prices
@@ -312,10 +359,12 @@
   id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: 高质量大麻的R²值为0.44，这意味着时间作为解释变量解释了价格观察变异性的44%。对于其他质量，价格变化较小，价格变动性较大，因此R²的值较小（但仍具有统计学意义）。
 - en: 'The following code plots the observed prices and the fitted values:'
   id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下代码绘制了观察到的价格和拟合值：
 - en: '[PRE6]'
   id: totrans-58
   prefs: []
@@ -327,11 +376,13 @@
   id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 正如我们在第[11.8]节中看到的那样，`model`包含`exog`和`endog`，它们是NumPy数组，其中包含外生（解释性）和内生（依赖性）变量。
 - en: '* * *'
   id: totrans-60
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
   id: totrans-61
   prefs:
@@ -342,6 +393,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/cda31d85c4970c02086678b0bd995185.png)'
 - en: ''
   id: totrans-63
   prefs:
@@ -353,6 +405,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_TB
+  zh: '| 图12.2：高质量大麻每克每日价格的时间序列，以及线性最小二乘拟合。 |'
 - en: ''
   id: totrans-65
   prefs:
@@ -363,6 +416,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: '`PlotFittedValues` makes a scatter plot of the data points and a line plot
     of the fitted values. Figure [12.2](#timeseries2) shows the results for high quality
     cannabis. The model seems like a good linear fit for the data; nevertheless, linear
@@ -370,6 +424,7 @@
   id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: '`PlotFittedValues`绘制了数据点的散点图和拟合值的线图。图[12.2](#timeseries2)显示了高质量大麻的结果。该模型似乎是数据的良好线性拟合；然而，线性回归并不是这些数据的最合适选择：'
 - en: First, there is no reason to expect the long-term trend to be a line or any
     other simple function. In general, prices are determined by supply and demand,
     both of which vary over time in unpredictable ways.
@@ -794,12 +849,14 @@
   id: totrans-134
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你认为一个系列可能存在一些串行相关性，但你不知道要测试哪些滞后期，你可以测试它们全部！自相关函数是一个将滞后期映射到给定滞后期的串行相关性的函数。“自相关”是串行相关的另一个名称，当滞后期不是1时更常用。
 - en: 'StatsModels, which we used for linear regression in Section [11.1](thinkstats2012.html#statsmodels),
     also provides functions for time series analysis, including `acf`, which computes
     the autocorrelation function:'
   id: totrans-135
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们在第[11.1](thinkstats2012.html#statsmodels)节中用于线性回归的StatsModels还提供了用于时间序列分析的函数，包括`acf`，它计算自相关函数：
 - en: '[PRE15]'
   id: totrans-136
   prefs: []
@@ -813,6 +870,7 @@
   id: totrans-137
   prefs: []
   type: TYPE_NORMAL
+  zh: '`acf`计算从0到`nlags`的滞后期的串行相关性。`unbiased`标志告诉`acf`对样本大小进行估计校正。结果是一系列相关性。如果我们选择高质量的每日价格，并提取滞后期为1、7、30和365的相关性，我们可以确认`acf`和`SerialCorr`产生大致相同的结果：'
 - en: '[PRE16]'
   id: totrans-138
   prefs: []
@@ -823,11 +881,13 @@
   id: totrans-139
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于`lag=0`，`acf`计算系列与自身的相关性，这总是1。
 - en: '* * *'
   id: totrans-140
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
   id: totrans-141
   prefs:
@@ -838,6 +898,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/5973817390cd5f7934138e22767cc8dd.png)'
 - en: ''
   id: totrans-143
   prefs:
@@ -849,6 +910,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_TB
+  zh: '| 图12.5：每日价格的自相关函数（左）和具有模拟每周季节性的每日价格（右）。 |'
 - en: ''
   id: totrans-145
   prefs:
@@ -859,6 +921,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: Figure [12.5](#timeseries9) (left) shows autocorrelation functions for the three
     quality categories, with `nlags=40`. The gray region shows the normal variability
     we would expect if there is no actual autocorrelation; anything that falls outside
@@ -870,11 +933,13 @@
   id: totrans-147
   prefs: []
   type: TYPE_NORMAL
+  zh: 图[12.5](#timeseries9)（左）显示了三个质量类别的自相关函数，其中`nlags=40`。灰色区域显示了我们在没有实际自相关性时预期的正常变异性；任何落在此范围之外的都具有统计显著性，p值小于5%。由于误报率为5%，我们正在计算120个相关性（3个时间序列的每个40个滞后期），我们预计会看到大约6个点在此范围之外。实际上有7个。我们得出结论，这些系列中没有自相关性，这种自相关性不能用偶然解释。
 - en: I computed the gray regions by resampling the residuals. You can see my code
     in `timeseries.py`; the function is called `SimulateAutocorrelation`.
   id: totrans-148
   prefs: []
   type: TYPE_NORMAL
+  zh: 我通过对残差重新采样来计算灰色区域。你可以在`timeseries.py`中看到我的代码；该函数名为`SimulateAutocorrelation`。
 - en: To see what the autocorrelation function looks like when there is a seasonal
     component, I generated simulated data by adding a weekly cycle. Assuming that
     demand for cannabis is higher on weekends, we might expect the price to be higher.
@@ -883,6 +948,7 @@
   id: totrans-149
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了看到存在季节性成分时自相关函数的样子，我通过添加一个每周循环来生成模拟数据。假设大麻的需求在周末更高，我们可能会预期价格更高。为了模拟这种效应，我选择落在星期五或星期六的日期，并向价格添加一个随机量，该随机量从0到2的均匀分布中选择。
 - en: '[PRE17]'
   id: totrans-150
   prefs: []
@@ -895,6 +961,7 @@
   id: totrans-151
   prefs: []
   type: TYPE_NORMAL
+  zh: '`frisat`是一个布尔Series，如果一周的某一天是星期五或星期六，则为`True`。`fake`是一个新的DataFrame，最初是`daily`的副本，我们通过向`ppg`添加随机值来修改它。`frisat.sum()`是星期五和星期六的总数，这就是我们需要生成的随机值的数量。'
 - en: Figure [12.5](#timeseries9) (right) shows autocorrelation functions for prices
     with this simulated seasonality. As expected, the correlations are highest when
     the lag is a multiple of 7\. For high and medium quality, the new correlations
@@ -904,16 +971,19 @@
   id: totrans-152
   prefs: []
   type: TYPE_NORMAL
+  zh: 图[12.5](#timeseries9)（右）显示了具有这种模拟季节性的价格的自相关函数。如预期的那样，当滞后期是7的倍数时，相关性最高。对于高和中等质量，新的相关性具有统计显著性。对于低质量，它们没有，因为该类别中的残差较大；效应必须更大才能通过噪音可见。
 - en: 12.8  Prediction
   id: totrans-153
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 12.8 预测
 - en: Time series analysis can be used to investigate, and sometimes explain, the
     behavior of systems that vary in time. It can also make predictions.
   id: totrans-154
   prefs: []
   type: TYPE_NORMAL
+  zh: 时间序列分析可用于研究并有时解释随时间变化的系统行为。它也可以进行预测。
 - en: 'The linear regressions we used in Section [12.3](#timeregress) can be used
     for prediction. The RegressionResults class provides `predict`, which takes a
     DataFrame containing the explanatory variables and returns a sequence of predictions.
@@ -921,6 +991,7 @@
   id: totrans-155
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们在第[12.3](#timeregress)节中使用的线性回归可以用于预测。RegressionResults类提供了`predict`，它接受包含解释变量的DataFrame并返回一系列预测。以下是代码：
 - en: '[PRE18]'
   id: totrans-156
   prefs: []
@@ -932,16 +1003,19 @@
   id: totrans-157
   prefs: []
   type: TYPE_NORMAL
+  zh: '`results`是一个RegressionResults对象；`years`是我们想要进行预测的时间值序列。该函数构建一个DataFrame，将其传递给`predict`，并返回结果。'
 - en: If all we want is a single, best-guess prediction, we’re done. But for most
     purposes it is important to quantify error. In other words, we want to know how
     accurate the prediction is likely to be.
   id: totrans-158
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们只想要一个单一的最佳预测，那么我们已经完成了。但是对于大多数目的来说，量化误差是很重要的。换句话说，我们想知道预测有多大可能是准确的。
 - en: 'There are three sources of error we should take into account:'
   id: totrans-159
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们应该考虑三种误差来源：
 - en: 'Sampling error: The prediction is based on estimated parameters, which depend
     on random variation in the sample. If we run the experiment again, we expect the
     estimates to vary.'
