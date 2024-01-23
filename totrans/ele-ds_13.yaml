@@ -1,13 +1,16 @@
 - en: Resampling
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
 - en: 原文：[https://allendowney.github.io/ElementsOfDataScience/11_resampling.html](https://allendowney.github.io/ElementsOfDataScience/11_resampling.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/11_resampling.ipynb)
     or [click here to download it](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/11_resampling.ipynb).'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
 - en: This chapter introduces **resampling methods**, which are used to quantify the
@@ -16,88 +19,120 @@
     Surveillance System to estimate the average height of men in the U.S., and data
     from the General Social Survey to see how support for gun control has changed
     over time.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
 - en: Vaccine Testing
+  id: totrans-4
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: Suppose you read a report about a new vaccine and the manufacturer says it is
     67% effective at preventing disease. You might wonder where that number comes
     from, what it means, and how confident we should be that it is correct.
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
 - en: 'Results like this often come from a randomized controlled trial (RCT), which
     works like this:'
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
 - en: 'You recruit a large group of volunteers and divide them into two groups at
     random: the “treatment group” receives the vaccine; the “control group” does not.'
+  id: totrans-7
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Then you follow both groups for a period of time and record the number of people
     in each group who are diagnosed with the disease.
+  id: totrans-8
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: As an example, suppose you recruit 43,783 participants and they are assigned
     to groups with approximately the same size.
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE0]'
+  id: totrans-10
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: 'During the observation period, 468 people are diagnosed with the disease: 352
     in the control group and 116 in the treatment group.'
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE1]'
+  id: totrans-12
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: We can use these results to compute the risk of getting the disease for each
     group, in cases per 1000 people
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE2]'
+  id: totrans-14
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '[PRE3]'
+  id: totrans-15
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '[PRE4]'
+  id: totrans-16
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '[PRE5]'
+  id: totrans-17
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: 'The risk is substantially lower in the treatment group – about 5 per 1000,
     compared to 16 – which suggests that the vaccine is effective. We can summarize
     these results by computing relative risk, which is the ratio of the two risks
     (see [https://en.wikipedia.org/wiki/Relative_risk](https://en.wikipedia.org/wiki/Relative_risk)):'
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE6]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '[PRE7]'
+  id: totrans-20
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: 'The relative risk in this example is about 0.33, which means that the risk
     of disease in the treatment group is 33% of the risk in the control group. Equivalently,
     we could report the complement of relative risk, which is **efficacy**:'
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE8]'
+  id: totrans-22
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '[PRE9]'
+  id: totrans-23
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: In this example the efficacy is `0.67`, which means that the vaccine reduces
     the risk of disease by 67%. That’s good news, but as skeptical data scientists,
     we should not assume that it is perfectly accurate. There are any number of things
     that might have gone wrong.
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
 - en: For example, if people in the treatment group know they have been vaccinated,
@@ -105,388 +140,553 @@
     group might be more careful. That would affect the estimated efficacy, which is
     why a lot of trials are “blinded”, meaning that the subjects don’t know which
     group they are in.
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
 - en: The estimate would also be less accurate if people in either group don’t follow
     the protocol. For example, someone in the treatment group might not complete treatment,
     or someone in the control group might receive treatment from another source.
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
 - en: And there are many other possible sources of error, including honest mistakes
     and deliberate fraud.
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
 - en: In general it is hard to know whether estimates like this are accurate; nevertheless,
     there are things we can do to assess their quality.
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
 - en: 'When estimates are reported in scientific journals, they almost always include
     one of two measurements of uncertainty: a standard error or a confidence interval.
     In the next section, I’ll explain what they mean and show how to compute them.'
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
 - en: Simulating One Group
+  id: totrans-30
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: In our hypothetical example, there are 21 911 people in the treatment group
     and 116 of them got the disease, so the estimated risk is about 5 cases per 1000
     people.
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE10]'
+  id: totrans-32
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '[PRE11]'
+  id: totrans-33
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: But it’s easy to imagine that there might have been a few more cases, or fewer,
     just by chance. For example, if there had been 10 more cases, the estimated risk
     would be 5.8 per 1000, and if there had been 10 fewer, it would be 4.8.
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 但很容易想象，由于偶然性可能会有更多或更少的病例。例如，如果有10个病例，估计风险将是每1000人中的5.8，如果有10个病例少，估计风险将是每1000人中的4.8。
 - en: '[PRE12]'
+  id: totrans-35
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '[PRE13]'
+  id: totrans-36
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: 'That’s a big enough difference that we should wonder how much variability there
     is in the estimate due to random variation. We’ll answer that question in three
     steps:'
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个差异很大，我们应该想知道由于随机变化而导致的估计值有多大的变异性。我们将在三个步骤中回答这个问题：
 - en: We’ll write a function that uses a random number generator to simulate the trial.
+  id: totrans-38
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 我们将编写一个使用随机数生成器来模拟试验的函数。
 - en: Then we’ll run the function 1000 times to see how much the estimate varies.
+  id: totrans-39
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 然后我们将运行这个函数1000次，看看估计值的变化程度。
 - en: And we’ll summarize the results.
+  id: totrans-40
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 然后我们将总结结果。
 - en: 'The following function takes two parameters: `n` is the number of people in
     the group (treatment or control) and `p` is the probability that any of them gets
     the disease.'
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数接受两个参数：`n`是组中的人数（治疗组或对照组），`p`是任何一个人患病的概率。
 - en: '[PRE14]'
+  id: totrans-42
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: The first line generates an array of `n` random values between 0 and 1. The
     values are distributed uniformly in this range, so the probability that each one
     is less than `p` is… `p`.
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 第一行生成一个介于0和1之间的`n`个随机值的数组。这些值在这个范围内均匀分布，因此每个值小于`p`的概率是... `p`。
 - en: The second line counts how many of the values are less than `p`, that is, how
     many people in the simulated group get the disease. Then the function returns
     the estimated risk.
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: 第二行计算了值中有多少小于`p`的值，也就是说，在模拟组中有多少人患病。然后函数返回估计风险。
 - en: 'Here’s how we call this function, passing as arguments the size of the treatment
     group and the estimated risk:'
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是我们调用这个函数的方式，将治疗组的大小和估计风险作为参数传递：
 - en: '[PRE15]'
+  id: totrans-46
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '[PRE16]'
+  id: totrans-47
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: The result is the estimated risk from a simulated trial. If we run this function
     1000 times, it’s like running the trial over and over.
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是从模拟试验中估计出的风险。如果我们运行这个函数1000次，就像一遍又一遍地运行试验。
 - en: '[PRE17]'
+  id: totrans-49
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: The result is a list of estimated risks that shows how much we expect the results
     of the trial to vary due to randomness. We can use a KDE plot to visualize the
     distribution of these estimates.
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个估计风险的列表，显示了由于随机性导致试验结果变化的程度。我们可以使用KDE图来可视化这些估计值的分布。
 - en: '[PRE18]'
+  id: totrans-51
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: '![_images/11_resampling_28_0.png](../Images/c2c36832d52ddf94beb0ceedc3a6b9b6.png)'
+  id: totrans-52
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/11_resampling_28_0.png](../Images/c2c36832d52ddf94beb0ceedc3a6b9b6.png)'
 - en: The mean of this distribution is about 5.3, which is close to the observed risk,
     as we should expect.
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个分布的平均值约为5.3，接近观察到的风险，这是我们应该期望的。
 - en: '[PRE19]'
+  id: totrans-54
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '[PRE20]'
+  id: totrans-55
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: The width of this distribution indicates how much variation there is in the
     estimate due to randomness. One way to quantify the width of the distribution
     is the standard deviation.
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个分布的宽度表示了由于随机性导致估计值的变化程度。量化分布宽度的一种方法是标准偏差。
 - en: '[PRE21]'
+  id: totrans-57
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: '[PRE22]'
+  id: totrans-58
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: This result is called the **standard error** (see [https://en.wikipedia.org/wiki/Standard_error](https://en.wikipedia.org/wiki/Standard_error)).
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个结果被称为**标准误差**（参见[https://en.wikipedia.org/wiki/Standard_error](https://en.wikipedia.org/wiki/Standard_error)）。
 - en: Another way to quantify the width of the distribution is an interval between
     two percentiles. For example, if we compute the 5th and 95th percentiles, the
     interval we get contains 90% of the simulated estimates.
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 另一种量化分布宽度的方法是两个百分位数之间的区间。例如，如果我们计算第5和第95百分位数，得到的区间包含了90%的模拟估计值。
 - en: '[PRE23]'
+  id: totrans-61
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: '[PRE24]'
+  id: totrans-62
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: This result is called a **confidence interval** ; specifically, this one is
     a “90% confidence interval”, or 90% CI (see [https://en.wikipedia.org/wiki/Confidence_interval](https://en.wikipedia.org/wiki/Confidence_interval)).
     If we assume that the observed risk is correct, and we run the same trial many
     times, we expect 90% of the estimates to fall in this interval.
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个结果被称为**置信区间**；具体来说，这个是“90%置信区间”，或者90% CI（参见[https://en.wikipedia.org/wiki/Confidence_interval](https://en.wikipedia.org/wiki/Confidence_interval)）。如果我们假设观察到的风险是正确的，并且我们多次运行相同的试验，我们期望90%的估计值落在这个区间内。
 - en: Standard errors and confidence intervals quantify our uncertainty about the
     estimate due to random variation from one trial to another.
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: 标准误差和置信区间量化了由于从一个试验到另一个试验的随机变化而对估计值的不确定性。
 - en: Simulating the Trial
+  id: totrans-65
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 模拟试验
 - en: If that’s not making sense yet, let’s try another example. In the previous section
     we simulated one group and estimated their risk. Now we’ll simulate both groups
     and estimate the efficacy of the vaccine.
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果这还不清楚，让我们试另一个例子。在前一节中，我们模拟了一组并估计了他们的风险。现在我们将模拟两组，并估计疫苗的功效。
 - en: 'The following function takes four parameters: the sizes of the two groups and
     their actual risks.'
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数接受四个参数：两组的大小和它们的实际风险。
 - en: '[PRE25]'
+  id: totrans-68
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: If we call this function once, it simulates both groups, computes the risks
     in each group, and uses the results to estimate the efficacy of the treatment
     (assuming that the first group is the control).
+  id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们调用这个函数一次，它会模拟两个组，计算每组的风险，并使用结果来估计治疗的功效（假设第一组是对照组）。
 - en: '[PRE26]'
+  id: totrans-70
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: '[PRE27]'
+  id: totrans-71
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: If we call it 1000 times, the result is a list of estimated efficacies from
     1000 simulated trials.
+  id: totrans-72
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们调用它1000次，结果将是从1000次模拟试验中估计出的功效的列表。
 - en: '[PRE28]'
+  id: totrans-73
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: We can use a KDE plot to visualize the distribution of these estimates.
+  id: totrans-74
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用KDE图来可视化这些估计值的分布。
 - en: '[PRE29]'
+  id: totrans-75
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: '![_images/11_resampling_43_0.png](../Images/95fdf8188db6b51293eedaee7b10a89c.png)'
+  id: totrans-76
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/11_resampling_43_0.png](../Images/95fdf8188db6b51293eedaee7b10a89c.png)'
 - en: The mean of this distribution is close to the efficacy we computed with the
     results of the actual trial.
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个分布的平均值接近我们用实际试验结果计算出的功效。
 - en: '[PRE30]'
+  id: totrans-78
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: '[PRE31]'
+  id: totrans-79
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: The standard deviation of this distribution is the standard error of the estimate.
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个分布的标准偏差就是估计值的标准误差。
 - en: '[PRE32]'
+  id: totrans-81
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: '[PRE33]'
+  id: totrans-82
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: In a scientific paper, we could report the estimated efficacy and standard error
     as 0.67 (SE 0.035). As an alternative, we can use percentiles to compute a 90%
     confidence interval.
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: 在科学论文中，我们可以报告估计的功效和标准误差为0.67（SE 0.035）。作为另一种选择，我们可以使用百分位数来计算90%的置信区间。
 - en: '[PRE34]'
+  id: totrans-84
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: '[PRE35]'
+  id: totrans-85
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: In a scientific paper, we could report these results as 0.67, 90% CI [0.61,
     0.72]”.
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
 - en: 'The standard error and confidence interval represent nearly the same information.
     In general, I prefer to report a confidence interval because it is easier to interpret:'
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
 - en: Formally, the confidence interval means that if we run the same experiment again,
     we expect 90% of the results to fall between 61% and 72% (assuming that the estimated
     risks are correct).
+  id: totrans-88
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: More casually, it means that it is plausible that the actually efficacy is as
     low as 61%, or as high as 72% (assuming there are no sources of error other than
     random variation).
+  id: totrans-89
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Estimating Means
+  id: totrans-90
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: In the previous examples, we’ve estimated risk, which is a proportion, and efficacy,
     which is a ratio of two proportions. As a third example, let’s estimate a mean.
+  id: totrans-91
   prefs: []
   type: TYPE_NORMAL
 - en: Suppose we want to estimate the average height of men in the United States.
     It would be impractical to measure everyone in the country, but if we choose a
     random sample of the population and measure the people in the sample, we can use
     the mean of the measurements to estimate the mean of the population.
+  id: totrans-92
   prefs: []
   type: TYPE_NORMAL
 - en: Ideally, the sample should be **representative**, which means that everyone
     in the population has an equal chance of appearing in the sample. In general,
     that’s not easy to do. Depending on how you recruit people, your sample might
     have too many tall people or too many short people.
+  id: totrans-93
   prefs: []
   type: TYPE_NORMAL
 - en: But let’s suppose we have a representative sample of 103 adult male residents
     of the United States, the average height in the sample is 177 cm, and the standard
     deviation is 8.4 cm.
+  id: totrans-94
   prefs: []
   type: TYPE_NORMAL
 - en: If someone asks for your best guess about the height of mean in the U.S., you
     would report 177 cm. But how accurate do you think this estimate is? If you only
     measure 103 people from a population of about 100 million adult males, it seems
     like the actual average in the population might be substantially higher or lower.
+  id: totrans-95
   prefs: []
   type: TYPE_NORMAL
 - en: Again, we can use random simulation to quantify the uncertainty of this estimate.
     As we did in the previous examples, we will assume for purposes of simulation
     that the estimates are correct, and simulate the sampling process 1000 times.
+  id: totrans-96
   prefs: []
   type: TYPE_NORMAL
 - en: The following function takes as parameters the size of the sample, `n`, the
     presumed average height in the population, `mu`, and the presumed standard deviation,
     `std`.
+  id: totrans-97
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE36]'
+  id: totrans-98
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: This function generates `n` random values from a normal distribution with the
     given mean and standard deviation, and returns their mean.
+  id: totrans-99
   prefs: []
   type: TYPE_NORMAL
 - en: We can run it like this, using the observed mean and standard deviation from
     the sample as the presumed mean and standard deviation of the population.
+  id: totrans-100
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE37]'
+  id: totrans-101
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE37]'
 - en: '[PRE38]'
+  id: totrans-102
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: If we run it 1000 times, it simulates the sampling and measurement process and
     returns a list of results from 1000 simulated experiments.
+  id: totrans-103
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE39]'
+  id: totrans-104
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: We can use a KDE plot to visualize the distribution of these values.
+  id: totrans-105
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE40]'
+  id: totrans-106
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE40]'
 - en: '![_images/11_resampling_58_0.png](../Images/d1f25af31549ffb2b7cb993207316ffc.png)'
+  id: totrans-107
   prefs: []
   type: TYPE_IMG
 - en: This distribution is called a **sampling distribution** because it represents
     the variation in the results due to the random sampling process. If we recruit
     100 people and compute the mean of their heights, the result might be as low as
     175 cm, or as high as 179 cm, due to chance.
+  id: totrans-108
   prefs: []
   type: TYPE_NORMAL
 - en: The average of the sampling distribution is close to the presumed mean of the
     population.
+  id: totrans-109
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE41]'
+  id: totrans-110
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE41]'
 - en: '[PRE42]'
+  id: totrans-111
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE42]'
 - en: The standard deviation of the sampling distribution is the standard error of
     the estimate.
+  id: totrans-112
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE43]'
+  id: totrans-113
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE43]'
 - en: '[PRE44]'
+  id: totrans-114
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE44]'
 - en: And we can use `percentile` to compute a 90% confidence interval.
+  id: totrans-115
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE45]'
+  id: totrans-116
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE45]'
 - en: '[PRE46]'
+  id: totrans-117
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE46]'
 - en: If I reported this result in a paper, I would say that the estimated height
     of adult male residents of the U.S. is 177 cm, 90% CI [176, 178] cm.
+  id: totrans-118
   prefs: []
   type: TYPE_NORMAL
 - en: Informally, that means that the estimate could plausibly be off by about a centimeter
     either way, just due to random sampling. But we should remember that there are
     other possible sources of error, so we might be off by more than that.
+  id: totrans-119
   prefs: []
   type: TYPE_NORMAL
 - en: The confidence interval puts a best-case bound on the precision of the estimate;
     in this example, the precision of the estimate is 1 cm at best, and might be worse.
+  id: totrans-120
   prefs: []
   type: TYPE_NORMAL
 - en: The Resampling Framework
+  id: totrans-121
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: 'The examples we’ve done so far fit into the framework shown in this diagram:'
+  id: totrans-122
   prefs: []
   type: TYPE_NORMAL
 - en: '![](../Images/3bae19c4186703c90aec13ae2c4e4eec.png)'
+  id: totrans-123
   prefs: []
   type: TYPE_IMG
 - en: Using data from an experiment, we compute a sample statistic. In the vaccine
     example, we computed risks for each group and efficacy. In the height example,
     we computed the average height in the sample.
+  id: totrans-124
   prefs: []
   type: TYPE_NORMAL
 - en: Then we build a model of the sampling process. In the vaccine example, the model
@@ -494,50 +694,65 @@
     and we use the data to choose the probability. In the height example, the model
     assumes that heights are drawn from a normal distribution, and we use the data
     to choose the parameters `mu` and `sigma`.
+  id: totrans-125
   prefs: []
   type: TYPE_NORMAL
 - en: We use the model to simulate the experiment many times. Each simulation generates
     a dataset which we use to compute the sample statistic.
+  id: totrans-126
   prefs: []
   type: TYPE_NORMAL
 - en: Finally, we collect the sample statistics from the simulations, plot the sampling
     distribution, and compute standard error and a confidence interval.
+  id: totrans-127
   prefs: []
   type: TYPE_NORMAL
 - en: I emphasize the role of the model in this framework because for a given experiment
     there might be several possible models, each including some elements of the real
     world and ignoring others.
+  id: totrans-128
   prefs: []
   type: TYPE_NORMAL
 - en: For example, our model of the vaccine experiment assumes that everyone in each
     group has the same risk, but that’s probably not true. Here’s another version
     of `simulate_group` that includes variation in risk within each group.
+  id: totrans-129
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE47]'
+  id: totrans-130
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE47]'
 - en: This version of the function assumes that each person has a different probability
     of getting sick, drawn from a uniform distribution between `0` and `2*p`. Of course,
     that’s just a guess about how the probabilities might be distributed in the group,
     but we can use it to get a sense of what effect this distribution has on the results.
+  id: totrans-131
   prefs: []
   type: TYPE_NORMAL
 - en: 'The rest of the function is the same as the previous version: it generates
     `xs`, which is an array of random values between `0` and `1`. Then it compares
     `xs` and `ps`, counting the number of times `p` exceeds `x`.'
+  id: totrans-132
   prefs: []
   type: TYPE_NORMAL
 - en: Here’s how we call this function, simulating the treatment group.
+  id: totrans-133
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE48]'
+  id: totrans-134
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE48]'
 - en: '[PRE49]'
+  id: totrans-135
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE49]'
 - en: The return value is the number of cases per 1000.
+  id: totrans-136
   prefs: []
   type: TYPE_NORMAL
 - en: '**Exercise:** Use this function to run 1000 simulations of the treatment group.
@@ -545,51 +760,67 @@
     To quantify the spread of the sampling distribution, compute the standard error.
     How does it compare to the standard error we computed with the original model,
     where everyone in the group has the same risk?'
+  id: totrans-137
   prefs: []
   type: TYPE_NORMAL
 - en: '**Exercise:** The following is a version of `simulate_trial` that uses `simulate_variable_group`,
     from the previous exercise, to simulate the vaccine trial using the modified model,
     with variation in risk within the groups.'
+  id: totrans-138
   prefs: []
   type: TYPE_NORMAL
 - en: Use this function to simulate 1000 trials. Compute the mean of the sampling
     distribution and confirm that it is close to the observed `efficacy`. Compute
     the standard error and compare it to the standard error we computed for the original
     model.
+  id: totrans-139
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE50]'
+  id: totrans-140
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE50]'
 - en: '**Exercise:** One nice thing about the resampling framework is that it is easy
     to compute the sampling distribution for other statistics.'
+  id: totrans-141
   prefs: []
   type: TYPE_NORMAL
 - en: For example, suppose we want to estimate the coefficient of variation (standard
     deviation as a fraction of the mean) for adult male height. Here’s how we can
     compute it.
+  id: totrans-142
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE51]'
+  id: totrans-143
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE51]'
 - en: '[PRE52]'
+  id: totrans-144
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE52]'
 - en: In this example, the standard deviation is about 4.5% of the mean. The following
     is a version of `simulate_sample` that generates a random sample of heights and
     returns the coefficient of variation, rather than the mean.
+  id: totrans-145
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE53]'
+  id: totrans-146
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE53]'
 - en: Use this function to simulate 1000 samples with size `n=103`, using `mean_height`
     for `mu` and `std_height` for `sigma`. Plot the sampling distribution of the coefficient
     of variation, and compute a 90% confidence interval.
+  id: totrans-147
   prefs: []
   type: TYPE_NORMAL
 - en: Support for Gun Control
+  id: totrans-148
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -597,155 +828,230 @@
     called `GUNLAW`, to describe support for a gun control law as a function of age,
     sex, and years of education. Now let’s come back to that dataset and see how the
     responses have changed over time.
+  id: totrans-149
   prefs: []
   type: TYPE_NORMAL
 - en: The following cell reloads the data.
+  id: totrans-150
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下单元格重新加载数据。
 - en: '[PRE54]'
+  id: totrans-151
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE54]'
 - en: The column named `GUNLAW` records responses to the question “Would you favor
     or oppose a law which would require a person to obtain a police permit before
     he or she could buy a gun?”
+  id: totrans-152
   prefs: []
   type: TYPE_NORMAL
+  zh: 名为`GUNLAW`的列记录了对问题“您是否赞成或反对法律要求一个人在购买枪支之前必须获得警察许可证？”的回答。
 - en: The response code `1` means yes; `2` means no. It will be easier to work with
     this variable if we recode it so `0` means no.
+  id: totrans-153
   prefs: []
   type: TYPE_NORMAL
+  zh: 响应代码`1`表示是；`2`表示否。如果我们重新编码，使`0`表示否，那么处理这个变量会更容易。
 - en: '[PRE55]'
+  id: totrans-154
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE55]'
 - en: '[PRE56]'
+  id: totrans-155
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE56]'
 - en: For each year of the survey, we’ll compute the number of respondents and the
     number who said they favor this law. We can use `groupby` to group the respondents
     by year of interview and `agg` to compute two aggregation functions, `sum` and
     `count`.
+  id: totrans-156
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于调查的每一年，我们将计算受访者人数和支持该法律的人数。我们可以使用`groupby`按访谈年份对受访者进行分组，并使用`agg`来计算两个聚合函数，`sum`和`count`。
 - en: '[PRE57]'
+  id: totrans-157
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE57]'
 - en: '|  | sum | count |'
+  id: totrans-158
   prefs: []
   type: TYPE_TB
+  zh: '|  | sum | count |'
 - en: '| --- | --- | --- |'
+  id: totrans-159
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- |'
 - en: '| YEAR |  |  |'
+  id: totrans-160
   prefs: []
   type: TYPE_TB
+  zh: '| 年份 |  |  |'
 - en: '| --- | --- | --- |'
+  id: totrans-161
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- |'
 - en: '| 1972 | 1131.0 | 1562 |'
+  id: totrans-162
   prefs: []
   type: TYPE_TB
+  zh: '| 1972 | 1131.0 | 1562 |'
 - en: '| 1973 | 1099.0 | 1470 |'
+  id: totrans-163
   prefs: []
   type: TYPE_TB
+  zh: '| 1973 | 1099.0 | 1470 |'
 - en: '| 1974 | 1112.0 | 1459 |'
+  id: totrans-164
   prefs: []
   type: TYPE_TB
+  zh: '| 1974 | 1112.0 | 1459 |'
 - en: '| 1975 | 1096.0 | 1450 |'
+  id: totrans-165
   prefs: []
   type: TYPE_TB
+  zh: '| 1975 | 1096.0 | 1450 |'
 - en: '| 1976 | 1068.0 | 1472 |'
+  id: totrans-166
   prefs: []
   type: TYPE_TB
+  zh: '| 1976 | 1068.0 | 1472 |'
 - en: 'The result is a `DataFrame` with two columns: `sum` is the number of respondents
     who said “yes”; `count` is the number of respondents who were asked the question.'
+  id: totrans-167
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个`DataFrame`，有两列：`sum`是回答“是”的受访者人数；`count`是被问及该问题的受访者人数。
 - en: In some years the question was not asked, so I’ll use `drop` to remove those
     rows.
+  id: totrans-168
   prefs: []
   type: TYPE_NORMAL
+  zh: 有些年份没有问这个问题，所以我将使用`drop`来删除这些行。
 - en: '[PRE58]'
+  id: totrans-169
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE58]'
 - en: Now we can plot the percentage of respondents who favor gun control (at least
     for this wording of the question) during each year.
+  id: totrans-170
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以绘制每年支持枪支管制的受访者百分比（至少对于这个问题的措辞）。
 - en: '[PRE59]'
+  id: totrans-171
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE59]'
 - en: '![_images/11_resampling_102_0.png](../Images/bef25f7550a26806a939358f77cde146.png)'
+  id: totrans-172
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/11_resampling_102_0.png](../Images/bef25f7550a26806a939358f77cde146.png)'
 - en: The results vary from year to year. It is hard to tell how much of this variation
     is due to real changes in opinion, and how much is due to random sampling. In
     the following exercise, you’ll answer that question by computing confidence intervals
     for each of these data points.
+  id: totrans-173
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果每年都有所不同。很难说这种变化有多少是由于舆论的真实变化，有多少是由于随机抽样造成的。在接下来的练习中，您将通过计算每个数据点的置信区间来回答这个问题。
 - en: '**Exercise:** Write a loop that goes through the rows in `agg` and computes
     a confidence interval for each year. You can use `itertuples` to iterate the rows,
     like this:'
+  id: totrans-174
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**编写一个循环，遍历`agg`中的行，并为每年计算一个置信区间。您可以使用`itertuples`来遍历行，就像这样：'
 - en: '[PRE60]'
+  id: totrans-175
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE60]'
 - en: For each row, compute a 90% confidence interval and plot it as a vertical line.
     Then plot the data points and label the axes. The result should give you a sense
     of how much variation we expect to see from year to year due to random sampling.
+  id: totrans-176
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于每一行，计算一个90%的置信区间，并将其绘制为垂直线。然后绘制数据点并标记坐标轴。结果应该让您了解我们由于随机抽样而预期在年度间看到的变化有多大。
 - en: You might want to use this version of `simulate_group`, which returns results
     as a percentage, rather than per 1000.
+  id: totrans-177
   prefs: []
   type: TYPE_NORMAL
+  zh: 您可能希望使用`simulate_group`的这个版本，它返回结果的百分比，而不是每1000个。
 - en: '[PRE61]'
+  id: totrans-178
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE61]'
 - en: Summary
+  id: totrans-179
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 总结
 - en: 'Let’s review the examples in this chapter:'
+  id: totrans-180
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们回顾本章中的例子：
 - en: We started with results from a vaccine trial. We estimated the effectiveness
     of the vaccine and used simulation to draw a random sample from the sampling distribution
     of effectiveness. We used that sample to compute a standard error and a 90% confidence
     interval, which measure the variability we would expect if we ran the experiment
     again (assuming that the observed efficacy is correct).
+  id: totrans-181
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 我们从疫苗试验的结果开始。我们估计了疫苗的有效性，并使用模拟从有效性的抽样分布中随机抽取了一个样本。我们使用该样本来计算标准误差和90%的置信区间，这些度量了我们在再次进行实验时预期的变异性（假设观察到的效力是正确的）。
 - en: As a second example, we estimated the height of adult males in the U.S. and
     used simulation based on a normal model to compute the sampling distribution of
     the mean, standard error, and a confidence interval.
+  id: totrans-182
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 作为第二个例子，我们估计了美国成年男性的身高，并使用基于正态模型的模拟来计算均值、标准误差和置信区间的抽样分布。
 - en: I presented the resampling framework, which shows what these examples have in
     common. We implemented a second model of the vaccine trial, based on the assumption
     that there is variation in risk within the treatment and control groups. The results
     from both models are similar, which suggests that the simple model is good enough
     for practical purposes.
+  id: totrans-183
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 我介绍了重新采样框架，展示了这些例子的共同之处。我们实施了疫苗试验的第二个模型，基于这样一个假设：在治疗组和对照组内存在风险的变化。两个模型的结果相似，这表明简单模型对于实际目的已经足够好了。
 - en: One of the advantages of resampling, compared to mathematical analysis, is that
     it is easy to compute the sampling distribution of almost any statistic. As an
     exercise, you computed the sampling distribution of the coefficient of variation.
+  id: totrans-184
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 与数学分析相比，重新抽样的一个优势是几乎可以计算任何统计量的抽样分布。作为练习，您计算了变异系数的抽样分布。
 - en: Finally, we used data from the General Social Survey to explore changes in support
     for gun control over time. We used resampling to compute and plot a confidence
     interval for the percentage of respondents in favor of a proposed law, for each
     year of the survey.
+  id: totrans-185
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 最后，我们使用了来自综合社会调查的数据，探讨了对枪支管制的支持在不同时间的变化。我们使用重新抽样来计算并绘制了每年调查中支持一项提案法律的受访者百分比的置信区间。
 - en: The next chapter presents bootstrap sampling, which is a kind of resampling
     particularly well suited for the kind of survey data we’ve been working with.
+  id: totrans-186
   prefs: []
   type: TYPE_NORMAL
+  zh: 下一章介绍了自举抽样，这是一种特别适合我们一直在处理的调查数据的重新抽样方法。
