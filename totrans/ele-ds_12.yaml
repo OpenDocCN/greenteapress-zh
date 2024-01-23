@@ -3,22 +3,27 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 回归
 - en: 原文：[https://allendowney.github.io/ElementsOfDataScience/10_regression.html](https://allendowney.github.io/ElementsOfDataScience/10_regression.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ElementsOfDataScience/10_regression.html](https://allendowney.github.io/ElementsOfDataScience/10_regression.html)
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/10_regression.ipynb)
     or [click here to download it](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/10_regression.ipynb).'
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: '[点击这里在Colab上运行这个笔记本](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/10_regression.ipynb)
+    或 [点击这里下载](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/10_regression.ipynb)。'
 - en: In the previous chapter we used simple linear regression to quantify the relationship
     between two variables. In this chapter we’ll get farther into regression, including
     multiple regression and one of my all-time favorite tools, logistic regression.
   id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 在上一章中，我们使用简单线性回归来量化两个变量之间的关系。在本章中，我们将更深入地研究回归，包括多元回归和我最喜欢的工具之一，逻辑回归。
 - en: These tools will allow us to explore relationships among sets of variables.
     As an example, we will use data from the General Social Survey (GSS) to explore
     the relationship between income, education, age, and sex. But first let’s understand
@@ -26,102 +31,122 @@
   id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些工具将允许我们探索变量集之间的关系。例如，我们将使用来自普通社会调查（GSS）的数据来探索收入、教育、年龄和性别之间的关系。但首先让我们了解简单回归的限制。
 - en: Limits of Simple Regression
   id: totrans-5
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 简单回归的限制
 - en: 'In a previous exercise, you made a scatter plot of vegetable consumption as
     a function of income, and plotted a line of best fit. Here’s what it looks like:'
   id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 在以前的练习中，你画了一个关于蔬菜消费与收入的散点图，并绘制了最佳拟合线。这就是它的样子：
 - en: '![](../Images/87d9d2b0287e9053ae7755d9809f8756.png)'
   id: totrans-7
   prefs: []
   type: TYPE_IMG
+  zh: '![](../Images/87d9d2b0287e9053ae7755d9809f8756.png)'
 - en: The slope of the line is 0.07, which means that the difference between the lowest
     and highest income brackets is about 0.49 servings per day. So that’s not a very
     big difference.
   id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 线的斜率是0.07，这意味着最低和最高收入档次之间的差异约为0.49份/天。所以这不是一个很大的差异。
 - en: But it was an arbitrary choice to plot vegetables as a function of income. We
     could have plotted it the other way around, like this.
   id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是将蔬菜的收入作为一个任意选择。我们可以把它画成另一种方式，就像这样。
 - en: '![](../Images/6c47c5ecca914eda960557904adc81f5.png)'
   id: totrans-10
   prefs: []
   type: TYPE_IMG
+  zh: '![](../Images/6c47c5ecca914eda960557904adc81f5.png)'
 - en: The slope of this line is about 0.2, which means that the difference between
     0 and 10 servings per day is about 2 income levels, roughly from level 5 to level
     7.
   id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 这条线的斜率约为0.2，这意味着每天0到10份之间的差异约为2个收入水平，大致从5级到7级。
 - en: And the difference between income levels 5 and 7 is about $30,000 per year,
     which is substantial.
   id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 而收入水平5和7之间的差异约为每年30,000美元，这是相当大的。
 - en: So if we use vegetable consumption to predict income, we see a big difference.
     But when we used income to predict vegetable consumption, we saw a small difference.
   id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，如果我们使用蔬菜消费来预测收入，我们会看到一个很大的差异。但是当我们使用收入来预测蔬菜消费时，我们看到了一个小的差异。
 - en: This example shows that regression is not symmetric; the regression of A onto
     B is not the same as the regression of B onto A.
   id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个例子表明，回归不是对称的；A对B的回归与B对A的回归不同。
 - en: We can see that more clearly by putting the two figures side by side and plotting
     both regression lines on both figures.
   id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以通过并排放置两个图形并在两个图形上绘制两条回归线来更清楚地看到这一点。
 - en: '![](../Images/cee1b89025f8abd15455316ed120bb5a.png)'
   id: totrans-16
   prefs: []
   type: TYPE_IMG
+  zh: '![](../Images/cee1b89025f8abd15455316ed120bb5a.png)'
 - en: They are different because they are based on different assumptions.
   id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: 它们是不同的，因为它们基于不同的假设。
 - en: On the left, we treat income as a known quantity and vegetable consumption as
     random.
   id: totrans-18
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 在左边，我们把收入视为已知数量，蔬菜消费为随机。
 - en: On the right, we treat vegetable consumption as known and income as random.
   id: totrans-19
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 在右边，我们将蔬菜消费视为已知，收入为随机。
 - en: When you run a regression model, you make decisions about how to treat the data,
     and those decisions affect the results you get.
   id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 当你运行回归模型时，你要做出关于如何处理数据的决定，这些决定会影响你得到的结果。
 - en: This example demonstrates another point, which is that regression doesn’t tell
     you much about causation.
   id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个例子展示了另一个观点，即回归并不能告诉你关于因果关系的太多信息。
 - en: If you think people with lower income can’t afford vegetables, you might look
     at the figure on the left and conclude that it doesn’t make much difference.
   id: totrans-22
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果你认为收入较低的人买不起蔬菜，你可能会看左边的图表，并得出结论说这并没有太大的差异。
 - en: If you think better diet increases income, the figure on the right might make
     you think it does.
   id: totrans-23
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果你认为更好的饮食会增加收入，右边的图表可能会让你认为它确实会。
 - en: But in general, regression can’t tell you what causes what. If you see a relationship
     between any two variables, A and B, the reason for the relationship might be that
     A causes B, or B causes A, or there might be other factors that cause both A and
@@ -129,21 +154,25 @@
   id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 但总的来说，回归不能告诉你是什么导致了什么。如果你看到两个变量A和B之间的关系，这种关系的原因可能是A导致B，或者B导致A，或者可能有其他因素导致A和B。单单通过回归不能告诉你它是怎么回事。
 - en: However, we have tools for quantifying relationships among multiple variables;
     one of the most important is multiple regression.
   id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 然而，我们有工具来量化多个变量之间的关系；其中最重要的之一是多元回归。
 - en: Regression with StatsModels
   id: totrans-26
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 使用StatsModels进行回归
 - en: SciPy doesn’t do multiple regression, so we’ll to switch to a new library, StatsModels.
     Here’s the import statement.
   id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: SciPy不进行多元回归，所以我们将转到一个新的库，StatsModels。这是导入语句。
 - en: '[PRE0]'
   id: totrans-28
   prefs: []
@@ -154,6 +183,7 @@
   id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于第一个例子，我们将加载来自行为风险因素监测调查（BRFSS）的数据，这是我们在上一章中看到的。
 - en: '[PRE1]'
   id: totrans-30
   prefs: []
