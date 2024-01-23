@@ -393,10 +393,12 @@
   id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: 由于我们不知道人口中µ和σ的实际值，我们将使用估计值x和S。所以我们要回答的问题是：“如果µ和σ的实际值分别为90公斤和7.5公斤，我们运行相同的实验多次，估计均值x会变化多少？”
 - en: 'The following function answers that question:'
   id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数回答了这个问题：
 - en: '[PRE4]'
   id: totrans-64
   prefs: []
@@ -408,11 +410,13 @@
   id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: '`mu`和`sigma`是参数的*假设*值。`n`是样本量，我们测量的大猩猩数量。`m`是我们运行模拟的次数。'
 - en: '* * *'
   id: totrans-66
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
   id: totrans-67
   prefs:
@@ -423,6 +427,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/27c11a2c428f41ee8725ae5850149ff7.png)'
 - en: ''
   id: totrans-69
   prefs:
@@ -433,6 +438,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_TB
+  zh: '| 图8.1：x的采样分布，带置信区间。|'
 - en: ''
   id: totrans-71
   prefs:
@@ -443,6 +449,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: In each iteration, we choose `n` values from a normal distribution with the
     given parameters, and compute the sample mean, `xbar`. We run 1000 simulations
     and then compute the distribution, `cdf`, of the estimates. The result is shown
@@ -452,6 +459,7 @@
   id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: 在每次迭代中，我们从具有给定参数的正态分布中选择`n`个值，并计算样本均值`xbar`。我们运行1000次模拟，然后计算估计值的分布`cdf`。结果显示在图[8.1](#estimation1)中。这个分布被称为估计量的采样分布。它显示了如果我们一遍又一遍地运行实验，估计值会变化多少。
 - en: The mean of the sampling distribution is pretty close to the hypothetical value
     of µ, which means that the experiment yields the right answer, on average. After
     1000 tries, the lowest result is 82 kg, and the highest is 98 kg. This range suggests
@@ -459,10 +467,12 @@
   id: totrans-74
   prefs: []
   type: TYPE_NORMAL
+  zh: 采样分布的均值与µ的假设值非常接近，这意味着实验平均得出了正确的答案。经过1000次尝试，最低的结果是82公斤，最高的是98公斤。这个范围表明估计值可能偏差多达8公斤。
 - en: 'There are two common ways to summarize the sampling distribution:'
   id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: 总结采样分布的两种常见方法：
 - en: Standard error (SE) is a measure of how far we expect the estimate to be off,
     on average. For each simulated experiment, we compute the error, x − µ, and then
     compute the root mean squared error (RMSE). In this example, it is roughly 2.5
@@ -471,6 +481,7 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 标准误差（SE）是我们预计估计值平均偏离的度量。对于每个模拟实验，我们计算误差x − µ，然后计算均方根误差（RMSE）。在这个例子中，大约是2.5公斤。
 - en: A confidence interval (CI) is a range that includes a given fraction of the
     sampling distribution. For example, the 90% confidence interval is the range from
     the 5th to the 95th percentile. In this example, the 90% CI is (86, 94) kg.
@@ -478,10 +489,12 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 置信区间（CI）是包括给定分数的采样分布的范围。例如，90%的置信区间是从第5到第95百分位数的范围。在这个例子中，90%的CI是（86，94）公斤。
 - en: 'Standard errors and confidence intervals are the source of much confusion:'
   id: totrans-78
   prefs: []
   type: TYPE_NORMAL
+  zh: 标准误差和置信区间是许多混淆的根源：
 - en: People often confuse standard error and standard deviation. Remember that standard
     deviation describes variability in a measured quantity; in this example, the standard
     deviation of gorilla weight is 7.5 kg. Standard error describes variability in
@@ -491,12 +504,14 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 人们经常混淆标准误差和标准偏差。记住标准偏差描述了测量数量的变异性；在这个例子中，大猩猩体重的标准偏差是7.5公斤。标准误差描述了估计的变异性。在这个例子中，基于9次测量的均值的标准误差是2.5公斤。
 - en: One way to remember the difference is that, as sample size increases, standard
     error gets smaller; standard deviation does not.
   id: totrans-80
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: 记住区别的一种方法是，随着样本量的增加，标准误差会变小；标准偏差不会。
 - en: People often think that there is a 90% probability that the actual parameter,
     µ, falls in the 90% confidence interval. Sadly, that is not true. If you want
     to make a claim like that, you have to use Bayesian methods (see my book, Think
@@ -505,6 +520,7 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 人们经常认为实际参数µ有90%的概率落在90%的置信区间内。遗憾的是，这并不是真的。如果你想要做出这样的断言，你必须使用贝叶斯方法（见我的书《Bayes思维》）。
 - en: 'The sampling distribution answers a different question: it gives you a sense
     of how reliable an estimate is by telling you how much it would vary if you ran
     the experiment again.'
@@ -512,6 +528,7 @@
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: 采样分布回答了一个不同的问题：通过告诉你如果你再次运行实验，估计值会变化多少，它让你对估计值的可靠性有了一个概念。
 - en: It is important to remember that confidence intervals and standard errors only
     quantify sampling error; that is, error due to measuring only part of the population.
     The sampling distribution does not account for other sources of error, notably
@@ -519,11 +536,13 @@
   id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: 重要的是要记住，置信区间和标准误差只量化了抽样误差；也就是说，由于只测量了人口的一部分而产生的误差。采样分布并没有考虑其他误差来源，尤其是抽样偏差和测量误差，这是下一节的主题。
 - en: 8.4  Sampling bias
   id: totrans-84
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 8.4 采样偏差
 - en: Suppose that instead of the weight of gorillas in a nature preserve, you want
     to know the average weight of women in the city where you live. It is unlikely
     that you would be allowed to choose a representative sample of women and weigh
@@ -531,12 +550,14 @@
   id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设你想知道你所在城市的女性的平均体重，而不是自然保护区大猩猩的体重。你不太可能被允许选择代表性的女性样本并称重。
 - en: A simple alternative would be “telephone sampling;” that is, you could choose
     random numbers from the phone book, call and ask to speak to an adult woman, and
     ask how much she weighs.
   id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: 一个简单的替代方法是“电话抽样”；也就是说，你可以从电话簿中随机选择号码，打电话询问成年女性的体重。
 - en: Telephone sampling has obvious limitations. For example, the sample is limited
     to people whose telephone numbers are listed, so it eliminates people without
     phones (who might be poorer than average) and people with unlisted numbers (who
