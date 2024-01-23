@@ -1,221 +1,347 @@
 - en: Algorithms
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 算法
 - en: 原文：[https://allendowney.github.io/DSIRP/algorithms.html](https://allendowney.github.io/DSIRP/algorithms.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/DSIRP/algorithms.html](https://allendowney.github.io/DSIRP/algorithms.html)
 - en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/algorithms.ipynb)'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: '[点击这里在Colab上运行本章](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/algorithms.ipynb)'
 - en: Searching for anagrams
+  id: totrans-3
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 搜索变位词
 - en: 'In this notebook we’ll implement algorithms for two tasks:'
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这本笔记本中，我们将实现两个任务的算法：
 - en: Testing a pair of words to see if they are anagrams of each other, that is,
     if you can rearrange the letters in one word to spell the other.
+  id: totrans-5
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 测试一对单词，看它们是否是彼此的变位词，也就是说，你是否可以重新排列一个单词的字母来拼写另一个单词。
 - en: Searching a list of words for all pairs that are anagrams of each other.
+  id: totrans-6
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 在单词列表中搜索所有彼此是变位词的对。
 - en: There is a point to these examples, which I will explain at the end.
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些例子有一个要点，我会在最后解释。
 - en: '**Exercise 1:** Write a function that takes two words and returns `True` if
     they are anagrams. Test your function with the examples below.'
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习1：**编写一个函数，它接受两个单词，并在它们是变位词时返回`True`。用下面的示例测试你的函数。'
 - en: '[PRE0]'
+  id: totrans-9
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '[PRE1]'
+  id: totrans-10
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '[PRE2]'
+  id: totrans-11
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '[PRE3]'
+  id: totrans-12
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '[PRE4]'
+  id: totrans-13
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '[PRE5]'
+  id: totrans-14
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '[PRE6]'
+  id: totrans-15
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '[PRE7]'
+  id: totrans-16
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '[PRE8]'
+  id: totrans-17
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '[PRE9]'
+  id: totrans-18
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '[PRE10]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '**Exercise 2:** Use `timeit` to see how fast your function is for these examples:'
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习2：**使用`timeit`来查看你的函数在这些示例中有多快：'
 - en: '[PRE11]'
+  id: totrans-21
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: '[PRE12]'
+  id: totrans-22
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '[PRE13]'
+  id: totrans-23
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: '[PRE14]'
+  id: totrans-24
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: How can we compare algorithms running on different computers?
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们如何比较在不同计算机上运行的算法？
 - en: Searching for anagram pairs
+  id: totrans-26
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 搜索变位词对
 - en: '**Exercise 3:** Write a function that takes a word list and returns a list
     of all anagram pairs.'
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习3：**编写一个函数，它接受一个单词列表，并返回所有变位词对的列表。'
 - en: '[PRE15]'
+  id: totrans-28
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '[PRE16]'
+  id: totrans-29
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '[PRE17]'
+  id: totrans-30
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: '[PRE18]'
+  id: totrans-31
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: The following cell downloads a file containing a list of English words.
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下单元格下载一个包含英语单词列表的文件。
 - en: '[PRE19]'
+  id: totrans-33
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: The following function reads a file and returns a set of words (I used a set
     because after we convert words to lower case, there are some repeats.)
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数读取一个文件并返回一组单词（我使用了一个集合，因为在我们将单词转换为小写后，有一些重复。）
 - en: '[PRE20]'
+  id: totrans-35
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '[PRE21]'
+  id: totrans-36
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: '[PRE22]'
+  id: totrans-37
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: '**Exercise 4:** Loop through the word list and print all words that are anagrams
     of `stop`.'
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习4：**循环遍历单词列表，并打印所有与`stop`是变位词的单词。'
 - en: 'Now run `all_anagram_pairs` with the full `word_list`:'
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在用完整的`word_list`运行`all_anagram_pairs`：
 - en: '[PRE23]'
+  id: totrans-40
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: '**Exercise 5:** While that’s running, let’s estimate how long it’s going to
     take.'
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习5：**当它正在运行时，让我们估计它要花多长时间。'
 - en: A better algorithm
+  id: totrans-42
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 更好的算法
 - en: '**Exercise 6:** Write a better algorithm! Hint: make a dictionary. How much
     faster is your algorithm?'
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习6：**编写一个更好的算法！提示：制作一个字典。你的算法快多少？'
 - en: '[PRE24]'
+  id: totrans-44
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: '[PRE25]'
+  id: totrans-45
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: '[PRE26]'
+  id: totrans-46
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: '[PRE27]'
+  id: totrans-47
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: '[PRE28]'
+  id: totrans-48
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: Summary
+  id: totrans-49
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 总结
 - en: What is the point of the examples in this notebook?
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 这本笔记本中的例子的要点是什么？
 - en: The different versions of `is_anagram` show that, when inputs are small, it
     is hard to say which algorithm will be the fastest. It often depends on details
     of the implementation. Anyway, the differences tend to be small, so it might not
     matter much in practice.
+  id: totrans-51
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`is_anagram`的不同版本表明，当输入很小时，很难说哪个算法会最快。这往往取决于实现的细节。无论如何，差异往往很小，所以在实践中可能并不重要。'
 - en: The different algorithms we used to search for anagram pairs show that, when
     inputs are large, we can often tell which algorithm will be fastest. And the difference
     between a fast algorithm and a slow one can be huge!
+  id: totrans-52
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 我们用来搜索变位词对的不同算法表明，当输入很大时，我们通常可以知道哪个算法会最快。快速算法和慢算法之间的差异可能是巨大的！
 - en: Exercises
+  id: totrans-53
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 练习
 - en: Before you work on these exercises, you might want to read the Python [Sorting
     How-To](https://docs.python.org/3/howto/sorting.html). It uses `lambda` to define
     an anonymous function, which [you can read about here](https://www.w3schools.com/python/python_lambda.asp).
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: 在你做这些练习之前，你可能想阅读Python的[排序指南](https://docs.python.org/3/howto/sorting.html)。它使用`lambda`来定义一个匿名函数，你可以在[这里](https://www.w3schools.com/python/python_lambda.asp)了解它。
 - en: '**Exercise 7:** Make a dictionary like `anagram_map` that contains only keys
     that map to a list with more than one element. You can use a `for` loop to make
     a new dictionary, or a [dictionary comprehension](https://www.freecodecamp.org/news/dictionary-comprehension-in-python-explained-with-examples/).'
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习7：**制作一个像`anagram_map`一样的字典，其中只包含映射到多于一个元素的列表的键。你可以使用一个`for`循环来制作一个新字典，或者使用[字典推导](https://www.freecodecamp.org/news/dictionary-comprehension-in-python-explained-with-examples/)。'
 - en: '**Exercise 8:** Find the longest word with at least one anagram. Suggestion:
     use the `key` argument of `sort` or `sorted` ([see here](https://stackoverflow.com/questions/8966538/syntax-behind-sortedkey-lambda)).'
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习8：**找到至少有一个变位词的最长单词。建议：使用`sort`或`sorted`的`key`参数（[见这里](https://stackoverflow.com/questions/8966538/syntax-behind-sortedkey-lambda)）。'
 - en: '**Exercise 9:** Find the largest list of words that are anagrams of each other.'
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习9：**找到最大的单词列表，这些单词是彼此的变位词。'
 - en: '**Exercise 10:** Write a function that takes an integer `word_length` and finds
     the longest list of words with the given length that are anagrams of each other.'
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习10：**编写一个函数，它接受一个整数`word_length`，并找到具有给定长度的最长单词列表，这些单词是彼此的变位词。'
 - en: '**Exercise 11:** At this point we have a data structure that contains lists
     of words that are anagrams, but we have not actually enumerated all pairs. Write
     a function that takes `anagram_map` and returns a list of all anagram pairs. How
     many are there?'
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习11：**到目前为止，我们有一个包含变位词列表的数据结构，但我们实际上还没有枚举所有的对。编写一个函数，它接受`anagram_map`并返回所有变位词对的列表。有多少个？'
 - en: '*Data Structures and Information Retrieval in Python*'
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: '*Python中的数据结构和信息检索*'
 - en: Copyright 2021 Allen Downey
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: 版权所有 2021 Allen Downey
 - en: 'License: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: 许可证：[知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议](https://creativecommons.org/licenses/by-nc-sa/4.0/)

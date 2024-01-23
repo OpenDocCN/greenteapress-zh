@@ -1,358 +1,535 @@
 - en: Introduction
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 介绍
 - en: 原文：[https://allendowney.github.io/DSIRP/](https://allendowney.github.io/DSIRP/)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/DSIRP/](https://allendowney.github.io/DSIRP/)
 - en: '*Data Structures and Information Retrieval in Python* is an introduction to
     data structures and algorithms using a web search engine as a motivating example.
     It is based in part on *[Think Data Structures](https://greenteapress.com/wp/think-data-structures/)*,
     which uses Java.'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: '*Python中的数据结构和信息检索*是使用Web搜索引擎作为引人注目的例子介绍数据结构和算法。它在一定程度上基于使用Java的*[Think Data
+    Structures](https://greenteapress.com/wp/think-data-structures/)*。'
 - en: 'The elements of the search engine are:'
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 搜索引擎的元素包括：
 - en: The Crawler, which downloads web pages and follows links to other pages,
+  id: totrans-4
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 爬虫，下载网页并跟踪到其他页面的链接，
 - en: The Indexer, which builds a map from each search term to the pages where it
     appears, and
+  id: totrans-5
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 索引器，它构建了从每个搜索词到出现的页面的映射，以及
 - en: The Retriever, which looks up search terms and finds relevant, high-quality
     pages.
+  id: totrans-6
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 检索器，查找搜索词并找到相关的高质量页面。
 - en: The index is stored in Redis, which is a data store that provides structures
     like sets, lists, and hashmaps. The book presents each data structure first in
     Python, then in Redis, which should help readers see which features are essential
     and which are implementation details.
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 索引存储在Redis中，它是一个提供集合、列表和哈希映射等结构的数据存储。该书首先用Python呈现每个数据结构，然后用Redis呈现，这应该有助于读者看到哪些功能是必要的，哪些是实现细节。
 - en: As I did with [*Think Bayes*](https://greenteapress.com/wp/think-bayes/), I
     wrote this book entirely in Jupyter notebooks, and used JupyterBook to translate
     them to HTML. The notebooks run on Colab, which is a service provided by Google
     that runs notebooks in a browser. So you can read the book, run the code, and
     work on exercises without installing anything.
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 就像我在[*Think Bayes*](https://greenteapress.com/wp/think-bayes/)中所做的那样，我完全是用Jupyter笔记本写的这本书，并使用JupyterBook将它们转换成HTML。笔记本在Colab上运行，这是谷歌提供的一个在浏览器中运行笔记本的服务。因此，您可以阅读这本书，运行代码，并在不安装任何东西的情况下进行练习。
 - en: This material is a work in progress, so your feedback is welcome. The best way
     to provide that feedback is to [click here and create an issue in this GitHub
     repository](https://github.com/AllenDowney/DSIRP/issues).
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个材料还在不断完善中，所以欢迎您的反馈。提供反馈的最佳方式是[点击这里，在GitHub存储库中创建一个问题](https://github.com/AllenDowney/DSIRP/issues)。
 - en: '[Overview slides](https://docs.google.com/presentation/d/e/2PACX-1vRFFocqlEH4YAbi8_xgZhfx9cvHFdMkhx_-yQ2aVVqc5quUQlm_mhuu7XoE9UOARsvwDe9X0kcA2DqS/pub)'
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: '[概述幻灯片](https://docs.google.com/presentation/d/e/2PACX-1vRFFocqlEH4YAbi8_xgZhfx9cvHFdMkhx_-yQ2aVVqc5quUQlm_mhuu7XoE9UOARsvwDe9X0kcA2DqS/pub)'
 - en: The notebooks
+  id: totrans-11
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 笔记本
 - en: Click on the links below to run the notebooks on Colab.
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 点击下面的链接在Colab上运行笔记本。
 - en: 'Algorithms: Day One activity checking for anagrams and finding anagram sets.'
+  id: totrans-13
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 算法：第一天的活动检查变位词和找到变位词集。
 - en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/algorithms.ipynb)'
+  id: totrans-14
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: '[笔记本](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/algorithms.ipynb)'
 - en: 'Analysis: Introduction to the analysis of algorithms and Big O notation.'
+  id: totrans-15
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 分析：算法分析和大O符号介绍。
 - en: '[Slides](https://docs.google.com/presentation/d/e/2PACX-1vQXYlOUlPPTE9GGR3UBugxYT8n_TcIGR5ttG7Rz_aA8lAFLTCeYUC1HFnQyDQBKPOv6PC7_PQ5Q-xz6/pub)'
+  id: totrans-16
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: '[幻灯片](https://docs.google.com/presentation/d/e/2PACX-1vQXYlOUlPPTE9GGR3UBugxYT8n_TcIGR5ttG7Rz_aA8lAFLTCeYUC1HFnQyDQBKPOv6PC7_PQ5Q-xz6/pub)'
 - en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/analysis.ipynb)'
+  id: totrans-17
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: '[笔记本](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/analysis.ipynb)'
 - en: 'Timing: Checking asymptotic behavior by measuring run time.'
+  id: totrans-18
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 时间：通过测量运行时间来检查渐近行为。
 - en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/timing.ipynb)'
+  id: totrans-19
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: '[笔记本](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/timing.ipynb)'
 - en: Quiz 1
+  id: totrans-20
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 测验1
 - en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/quiz01.ipynb)'
+  id: totrans-21
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: '[笔记本](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/quiz01.ipynb)'
 - en: 'Generator functions: Separate the iteration from the program logic'
+  id: totrans-22
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 生成器函数：将迭代与程序逻辑分开
 - en: '[Slides](https://docs.google.com/presentation/d/e/2PACX-1vTOxX01R5LNdEZDqSkiG5YOlJQieAO2bePigUnz6Fx5fiJqTMtpoOzn0ltpaeuWbfLl74vz6YqWUmZK/pub)'
+  id: totrans-23
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: '[幻灯片](https://docs.google.com/presentation/d/e/2PACX-1vTOxX01R5LNdEZDqSkiG5YOlJQieAO2bePigUnz6Fx5fiJqTMtpoOzn0ltpaeuWbfLl74vz6YqWUmZK/pub)'
 - en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/generator.ipynb)'
+  id: totrans-24
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: '[笔记本](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/generator.ipynb)'
 - en: 'Set: Using Python sets to cheat at word games.'
+  id: totrans-25
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 集合：使用Python集合在单词游戏中作弊。
 - en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/set.ipynb)'
+  id: totrans-26
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: '[笔记本](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/set.ipynb)'
 - en: 'Recursion: Practice recursive functions.'
+  id: totrans-27
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 递归：练习递归函数。
 - en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/recursion.ipynb)'
+  id: totrans-28
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: '[笔记本](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/recursion.ipynb)'
 - en: Quiz 2
+  id: totrans-29
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 测验2
 - en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/quiz02.ipynb)'
+  id: totrans-30
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: '[笔记本](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/quiz02.ipynb)'
 - en: 'Depth First Search: Tree traversal in BeautifulSoup.'
+  id: totrans-31
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 深度优先搜索：BeautifulSoup中的树遍历。
 - en: '[Slides](https://docs.google.com/presentation/d/e/2PACX-1vTQzIt8u_vdwhqeFjPIHUNDFlO0_2-GId567gTbSCtyfQM0nRWjlxbklUhWTGl4KDzVI4_JxcfYRfEa/pub)'
+  id: totrans-32
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: '[幻灯片](https://docs.google.com/presentation/d/e/2PACX-1vTQzIt8u_vdwhqeFjPIHUNDFlO0_2-GId567gTbSCtyfQM0nRWjlxbklUhWTGl4KDzVI4_JxcfYRfEa/pub)'
 - en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/dfs.ipynb)'
+  id: totrans-33
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: '[笔记本](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/dfs.ipynb)'
 - en: 'Search: Linear search, bisection, and binary search trees.'
+  id: totrans-34
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 搜索：线性搜索，二分法和二叉搜索树。
 - en: '[Slides](https://docs.google.com/presentation/d/e/2PACX-1vQItNQPqCoUITZggi-ML-OYZtecevxcsPVvbP1JvW55erx2tXaO3cibTrWE5E8myJ4wqRPLt7xby7ei/pub)'
+  id: totrans-35
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: '[幻灯片](https://docs.google.com/presentation/d/e/2PACX-1vQItNQPqCoUITZggi-ML-OYZtecevxcsPVvbP1JvW55erx2tXaO3cibTrWE5E8myJ4wqRPLt7xby7ei/pub)'
 - en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/searching.ipynb)'
+  id: totrans-36
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: '[笔记本](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/searching.ipynb)'
 - en: 'Hashmap: How the greatest of all data structures works.'
+  id: totrans-37
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 哈希映射：最伟大的数据结构如何工作。
 - en: '[Slides](https://docs.google.com/presentation/d/e/2PACX-1vQXOQd5jpi4eHfIg9iqPCOSLVFEnaAvAiFhBAGZECl0wZ2XKJdbMSnGZsym8CvVq-IsxvvKu1tB7e2L/pub)'
+  id: totrans-38
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: '[幻灯片](https://docs.google.com/presentation/d/e/2PACX-1vQXOQd5jpi4eHfIg9iqPCOSLVFEnaAvAiFhBAGZECl0wZ2XKJdbMSnGZsym8CvVq-IsxvvKu1tB7e2L/pub)'
 - en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/hashmap.ipynb)'
+  id: totrans-39
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: '[笔记本](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/hashmap.ipynb)'
 - en: Quiz 3
+  id: totrans-40
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 测验3
 - en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/quiz03.ipynb)'
+  id: totrans-41
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: '[笔记本](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/quiz03.ipynb)'
 - en: 'Heap: It’s an array, it’s a tree, it’s a PriorityQueue!'
+  id: totrans-42
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 堆：它是一个数组，它是一棵树，它是一个优先队列！
 - en: '[Slides](https://docs.google.com/presentation/d/e/2PACX-1vQTHKlq7pvrOCgqgPhLodGUtrcA3sFGco4r8O041WvmKLi-JFDfUPpb4X6txEn1qe2RR_xBfvXlXtSD/pub)'
+  id: totrans-43
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: '[幻灯片](https://docs.google.com/presentation/d/e/2PACX-1vQTHKlq7pvrOCgqgPhLodGUtrcA3sFGco4r8O041WvmKLi-JFDfUPpb4X6txEn1qe2RR_xBfvXlXtSD/pub)'
 - en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/heap.ipynb)'
+  id: totrans-44
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: '[笔记本](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/heap.ipynb)'
 - en: 'Huffman Code: Use the structures we’ve learned to make an optimal prefix code.'
+  id: totrans-45
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 赫夫曼编码：使用我们学到的结构制作最佳前缀代码。
 - en: '[Slides](https://docs.google.com/presentation/d/e/2PACX-1vQjk8Ko3u59qdandz-R_KfmQiHc2oIBk5RcJlWMXubdIMDxYuZpVHqn26jLylm0_eMf_ZJ-rOgnBjpi/pub)'
+  id: totrans-46
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: '[幻灯片](https://docs.google.com/presentation/d/e/2PACX-1vQjk8Ko3u59qdandz-R_KfmQiHc2oIBk5RcJlWMXubdIMDxYuZpVHqn26jLylm0_eMf_ZJ-rOgnBjpi/pub)'
 - en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/huffman.ipynb)'
+  id: totrans-47
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: '[笔记本](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/huffman.ipynb)'
 - en: 'Getting to Philosophy: Follow Wikipedia links until you get to Philosophy.'
+  id: totrans-48
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 到达哲学：跟随维基百科链接，直到到达哲学。
 - en: '[Slides](https://docs.google.com/presentation/d/e/2PACX-1vQKVxHQKnp4LoiDipCvMh6GFRhgdiNFG_fqJ6vOfFb-ai9S1jLLbFvR1Qp4ocaAMNGL2FSaUd3-3H62/pub)'
+  id: totrans-49
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: '[幻灯片](https://docs.google.com/presentation/d/e/2PACX-1vQKVxHQKnp4LoiDipCvMh6GFRhgdiNFG_fqJ6vOfFb-ai9S1jLLbFvR1Qp4ocaAMNGL2FSaUd3-3H62/pub)'
 - en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/philosophy.ipynb)'
+  id: totrans-50
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: '[笔记本](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/philosophy.ipynb)'
 - en: Quiz 4
+  id: totrans-51
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 测验4
 - en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/quiz04.ipynb)'
+  id: totrans-52
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: '[笔记本](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/quiz04.ipynb)'
 - en: 'Redis: Introduction to the Redis data store.'
+  id: totrans-53
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: Redis：介绍Redis数据存储。
 - en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/redis.ipynb)'
+  id: totrans-54
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: '[笔记本](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/redis.ipynb)'
 - en: 'Linked List: Trees before lists? Strange but true.'
+  id: totrans-55
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 链表：列表之前是树？奇怪但真实。
 - en: '[Slides](https://docs.google.com/presentation/d/e/2PACX-1vRSKmupEcVRXzH4jj31Zk5To6PrmIej58HviUrbN0a7wKTKBZwdoVHcGSFKvWac-L1w3Js9R6eD33fn/pub)'
+  id: totrans-56
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: '[幻灯片](https://docs.google.com/presentation/d/e/2PACX-1vRSKmupEcVRXzH4jj31Zk5To6PrmIej58HviUrbN0a7wKTKBZwdoVHcGSFKvWac-L1w3Js9R6eD33fn/pub)'
 - en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/linked_list.ipynb)'
+  id: totrans-57
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: '[笔记本](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/linked_list.ipynb)'
 - en: 'Indexer: Make a map of the internet for fast lookups.'
+  id: totrans-58
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 索引器：为快速查找制作互联网地图。
 - en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/indexer.ipynb)'
+  id: totrans-59
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: '[笔记本](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/indexer.ipynb)'
 - en: Quiz 5
+  id: totrans-60
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 测验5
 - en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/quiz05.ipynb)'
+  id: totrans-61
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: '[笔记本](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/quiz05.ipynb)'
 - en: 'Deque: Like a linked list, but more so.'
+  id: totrans-62
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 双端队列：像链表一样，但更多。
 - en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/deque.ipynb)'
+  id: totrans-63
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: '[笔记本](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/deque.ipynb)'
 - en: 'Graphs: Representing graphs with NetworkX.'
+  id: totrans-64
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 图：用NetworkX表示图。
 - en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/graph.ipynb)'
+  id: totrans-65
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: '[笔记本](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/graph.ipynb)'
 - en: 'Level Order Search: Use the `os` module to traverse a file system.'
+  id: totrans-66
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 层次遍历搜索：使用`os`模块遍历文件系统。
 - en: '[Slides](https://docs.google.com/presentation/d/e/2PACX-1vQT31xIq3pY-JF9J2RezS-i3528RM-NSpa67PN3wjfNF_6T0uUw_pV253lFKCB7pc_zXsnglXKOU2Pw/pub)'
+  id: totrans-67
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: '[幻灯片](https://docs.google.com/presentation/d/e/2PACX-1vQT31xIq3pY-JF9J2RezS-i3528RM-NSpa67PN3wjfNF_6T0uUw_pV253lFKCB7pc_zXsnglXKOU2Pw/pub)'
 - en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/level_order.ipynb)'
+  id: totrans-68
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: '[笔记本](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/level_order.ipynb)'
 - en: 'Breadth-First Search: The foundation of graph algorithms.'
+  id: totrans-69
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 广度优先搜索：图算法的基础。
 - en: '[Slides](https://docs.google.com/presentation/d/e/2PACX-1vRXakv4ZkGq648UwqRCXUkmqUFwGx4kJ4OskY6F9_busCH2aXPjZKKsQhGP4ESdJJNDq8bJowB9zLJb/pub)'
+  id: totrans-70
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: '[幻灯片](https://docs.google.com/presentation/d/e/2PACX-1vRXakv4ZkGq648UwqRCXUkmqUFwGx4kJ4OskY6F9_busCH2aXPjZKKsQhGP4ESdJJNDq8bJowB9zLJb/pub)'
 - en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/bfs.ipynb)'
+  id: totrans-71
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: '[笔记本](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/bfs.ipynb)'
 - en: Quiz 6
+  id: totrans-72
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 测验6
 - en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/quiz06.ipynb)'
+  id: totrans-73
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: '[笔记本](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/quiz06.ipynb)'
 - en: 'Crawler: Follow links and breadth-first search the internet.'
+  id: totrans-74
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 爬虫：跟踪链接并对互联网进行广度优先搜索。
 - en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/crawler.ipynb)'
+  id: totrans-75
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: '[笔记本](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/crawler.ipynb)'
 - en: 'Mergesort: Divide, conquer, and merge in linearithmic time.'
+  id: totrans-76
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 归并排序：分治和在线性对数时间内合并。
 - en: '[Slides](https://docs.google.com/presentation/d/e/2PACX-1vQbgVZohGR3tSm7LtnYVravKt_za_70Egy4hQwpGeLsjvhfmG16QfBjhph991EsIWsrfyABsRMmMAMk/pub)'
+  id: totrans-77
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: '[幻灯片](https://docs.google.com/presentation/d/e/2PACX-1vQbgVZohGR3tSm7LtnYVravKt_za_70Egy4hQwpGeLsjvhfmG16QfBjhph991EsIWsrfyABsRMmMAMk/pub)'
 - en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/mergesort.ipynb)'
+  id: totrans-78
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: '[笔记本](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/mergesort.ipynb)'
 - en: 'Fast Fourier Transform: It’s like mergesort, but with complex numbers.'
+  id: totrans-79
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 快速傅里叶变换：就像归并排序，但使用复数。
 - en: '[Slides](https://docs.google.com/presentation/d/e/2PACX-1vRuShFoETvJiCPAiM1xbxDBIM6MaXh2kMpjYB3FvRB4xzYsfi3vgZYgoQbxtGq8ODLjC8qhwn17f2_V/pub)'
+  id: totrans-80
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: '[幻灯片](https://docs.google.com/presentation/d/e/2PACX-1vRuShFoETvJiCPAiM1xbxDBIM6MaXh2kMpjYB3FvRB4xzYsfi3vgZYgoQbxtGq8ODLjC8qhwn17f2_V/pub)'
 - en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/fft.ipynb)'
+  id: totrans-81
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: '[笔记本](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/fft.ipynb)'
 - en: Quiz 7 [Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/quiz07.ipynb)
+  id: totrans-82
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 测验7 [笔记本](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/quiz07.ipynb)
 - en: 'PageRank: Random walks, adjacency matrices, and eigenvectors!'
+  id: totrans-83
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: PageRank：随机游走，邻接矩阵和特征向量！
 - en: '[Slides](https://docs.google.com/presentation/d/e/2PACX-1vTXdmLq-KdIVsm9dQVPUi5skj-hLDlYHuxMLmDimtvBF_qs1ZyRA6gy5SgsdINLf1baWppl6SsFL6OD/pub)'
+  id: totrans-84
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: 幻灯片
 - en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/pagerank.ipynb)'
+  id: totrans-85
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: '[笔记本](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/pagerank.ipynb)'
 - en: Copyright 2021 Allen B. Downey
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: 2021年艾伦B.唐尼版权所有
 - en: 'License: [Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA
     4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: 许可证：[署名-非商业性使用-相同方式共享4.0国际（CC BY-NC-SA 4.0）](https://creativecommons.org/licenses/by-nc-sa/4.0/)

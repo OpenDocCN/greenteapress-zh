@@ -1,34 +1,48 @@
 - en: Analysis of Algorithms
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 算法分析
 - en: 原文：[https://allendowney.github.io/DSIRP/analysis.html](https://allendowney.github.io/DSIRP/analysis.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/DSIRP/analysis.html](https://allendowney.github.io/DSIRP/analysis.html)
 - en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/analysis.ipynb)'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: '[点击这里在Colab上运行本章](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/analysis.ipynb)'
 - en: '**Analysis of algorithms** is a branch of computer science that studies the
     performance of algorithms, especially their run time and space requirements. See
     [http://en.wikipedia.org/wiki/Analysis_of_algorithms](http://en.wikipedia.org/wiki/Analysis_of_algorithms).'
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: '**算法分析**是计算机科学的一个分支，研究算法的性能，特别是它们的运行时间和空间需求。参见[http://en.wikipedia.org/wiki/Analysis_of_algorithms](http://en.wikipedia.org/wiki/Analysis_of_algorithms)。'
 - en: The practical goal of algorithm analysis is to predict the performance of different
     algorithms in order to guide design decisions.
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 算法分析的实际目标是预测不同算法的性能，以指导设计决策。
 - en: During the 2008 United States Presidential Campaign, candidate Barack Obama
     was asked to perform an impromptu analysis when he visited Google. Chief executive
     Eric Schmidt jokingly asked him for “the most efficient way to sort a million
     32-bit integers.” Obama had apparently been tipped off, because he quickly replied,
     “I think the bubble sort would be the wrong way to go.” See [http://www.youtube.com/watch?v=k4RRi_ntQc8](http://www.youtube.com/watch?v=k4RRi_ntQc8).
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 在2008年美国总统竞选期间，候选人巴拉克·奥巴马在访问谷歌时被要求进行即兴分析。首席执行官埃里克·施密特开玩笑地问他“对一百万个32位整数进行排序的最有效方法是什么。”奥巴马显然已经得到了消息，因为他很快回答说：“我认为冒泡排序不是正确的方法。”参见[http://www.youtube.com/watch?v=k4RRi_ntQc8](http://www.youtube.com/watch?v=k4RRi_ntQc8)。
 - en: 'This is true: bubble sort is conceptually simple but slow for large datasets.
     The answer Schmidt was probably looking for is “radix sort” ([http://en.wikipedia.org/wiki/Radix_sort](http://en.wikipedia.org/wiki/Radix_sort)).'
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是真的：冒泡排序在概念上简单，但对于大型数据集来说速度慢。Schmidt可能在寻找的答案是“基数排序”（[http://en.wikipedia.org/wiki/Radix_sort](http://en.wikipedia.org/wiki/Radix_sort)）。
 - en: But if you get a question like this in an interview, I think a better answer
     is, “The fastest way to sort a million integers is to use whatever sort function
     is provided by the language I’m using. Its performance is good enough for the
@@ -36,343 +50,507 @@
     slow, I would use a profiler to see where the time was being spent. If it looked
     like a faster sort algorithm would have a significant effect on performance, then
     I would look around for a good implementation of radix sort.”
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是，如果你在面试中遇到这样的问题，我认为更好的答案是：“对一百万个整数进行排序的最快方法是使用我正在使用的语言提供的任何排序函数。它的性能对于绝大多数应用来说已经足够好了，但如果我的应用程序运行太慢，我会使用性能分析工具来查看时间花在哪里。如果看起来更快的排序算法会对性能产生显著影响，那么我会寻找一个好的基数排序的实现。”
 - en: 'The goal of algorithm analysis is to make meaningful comparisons between algorithms,
     but there are some problems:'
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 算法分析的目标是对算法进行有意义的比较，但存在一些问题：
 - en: The relative performance of the algorithms might depend on characteristics of
     the hardware, so one algorithm might be faster on Machine A, another on Machine
     B. The usual solution to this problem is to specify a **machine model** and analyze
     the number of steps, or operations, an algorithm requires under a given model.
+  id: totrans-9
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 算法的相对性能可能取决于硬件的特性，因此一个算法在A机器上可能更快，另一个算法在B机器上可能更快。解决这个问题的常见方法是指定一个**机器模型**，并分析在给定模型下算法所需的步骤或操作数。
 - en: Relative performance might depend on the details of the dataset. For example,
     some sorting algorithms run faster if the data are already partially sorted; other
     algorithms run slower in this case. A common way to avoid this problem is to analyze
     the **worst case** scenario. It is sometimes useful to analyze average case performance,
     but that’s usually harder, and it might not be obvious what set of cases to average
     over.
+  id: totrans-10
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 相对性能可能取决于数据集的细节。例如，如果数据已经部分排序，某些排序算法可能运行得更快；在这种情况下，其他算法可能运行得更慢。避免这个问题的常见方法是分析**最坏情况**。有时分析平均情况的性能是有用的，但通常更难，可能不明显应该对哪组情况进行平均。
 - en: Relative performance also depends on the size of the problem. A sorting algorithm
     that is fast for small lists might be slow for long lists. The usual solution
     to this problem is to express run time (or number of operations) as a function
     of problem size, and group functions into categories depending on how quickly
     they grow as problem size increases.
+  id: totrans-11
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 相对性能还取决于问题的规模。对于小列表而言快速的排序算法可能对于长列表而言较慢。解决这个问题的常见方法是将运行时间（或操作次数）表示为问题规模的函数，并根据随着问题规模增加而增长的速度将函数分组到不同的类别中。
 - en: The good thing about this kind of comparison is that it lends itself to simple
     classification of algorithms. For example, if I know that the run time of Algorithm
     A tends to be proportional to the size of the input, \(n\), and Algorithm B tends
     to be proportional to \(n^2\), then I expect A to be faster than B, at least for
     large values of \(n\).
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 这种比较的好处是它适合于对算法进行简单的分类。例如，如果我知道算法A的运行时间倾向于与输入大小\(n\)成比例，而算法B倾向于与\(n^2\)成比例，那么我期望A比B更快，至少对于较大的\(n\)值来说是这样。
 - en: This kind of analysis comes with some caveats, but we’ll get to that later.
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 这种分析有一些注意事项，但我们稍后会讨论。
 - en: Order of growth
+  id: totrans-14
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 增长的顺序
 - en: 'Suppose you have analyzed two algorithms and expressed their run times in terms
     of the size of the input: Algorithm A takes \(100n+1\) steps to solve a problem
     with size \(n\); Algorithm B takes \(n^2 + n + 1\) steps.'
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设你已经分析了两个算法，并根据输入大小表达了它们的运行时间：算法A需要\(100n+1\)步来解决大小为\(n\)的问题；算法B需要\(n^2 + n
+    + 1\)步。
 - en: 'The following table shows the run time of these algorithms for different problem
     sizes:'
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下表格显示了这些算法在不同问题规模下的运行时间：
 - en: '[PRE0]'
+  id: totrans-17
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '|  | Algorithm A | Algorithm B | Ratio (B/A) |'
+  id: totrans-18
   prefs: []
   type: TYPE_TB
+  zh: '|  | 算法A | 算法B | 比率（B/A） |'
 - en: '| --- | --- | --- | --- |'
+  id: totrans-19
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- |'
 - en: '| 10 | 1001 | 111 | 0.110889 |'
+  id: totrans-20
   prefs: []
   type: TYPE_TB
+  zh: '| 10 | 1001 | 111 | 0.110889 |'
 - en: '| 100 | 10001 | 10101 | 1.009999 |'
+  id: totrans-21
   prefs: []
   type: TYPE_TB
+  zh: '| 100 | 10001 | 10101 | 1.009999 |'
 - en: '| 1000 | 100001 | 1001001 | 10.009910 |'
+  id: totrans-22
   prefs: []
   type: TYPE_TB
+  zh: '| 1000 | 100001 | 1001001 | 10.009910 |'
 - en: '| 10000 | 1000001 | 100010001 | 100.009901 |'
+  id: totrans-23
   prefs: []
   type: TYPE_TB
+  zh: '| 10000 | 1000001 | 100010001 | 100.009901 |'
 - en: At \(n=10\), Algorithm A looks pretty bad; it takes almost 10 times longer than
     Algorithm B. But for \(n=100\) they are about the same, and for larger values
     A is much better.
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 在\(n=10\)时，算法A看起来非常糟糕；它比算法B花费的时间几乎多了10倍。但对于\(n=100\)，它们大致相同，对于更大的值，A要好得多。
 - en: The fundamental reason is that for large values of \(n\), any function that
     contains an \(n^2\) term will grow faster than a function whose leading term is
     \(n\). The **leading term** is the term with the highest exponent.
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 根本原因是对于较大的\(n\)值，任何包含\(n^2\)项的函数都会比其主导项为\(n\)的函数增长更快。**主导项**是具有最高指数的项。
 - en: For Algorithm A, the leading term has a large coefficient, 100, which is why
     B does better than A for small \(n\). But regardless of the coefficients, there
     will always be some value of \(n\) where \(a n^2 > b n\), for any values of \(a\)
     and \(b\).
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于算法A，主导项有一个较大的系数100，这就是为什么对于较小的\(n\)，B比A做得更好。但无论系数如何，总会有一些值的\(n\)，其中\(a n^2
+    > b n\)，对于任何\(a\)和\(b\)的值。
 - en: The same argument applies to the non-leading terms. Suppose the run time of
     Algorithm C is \(n+1000000\); it would still be better than Algorithm B for sufficiently
     large \(n\).
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 相同的论点也适用于非主导项。假设算法C的运行时间是\(n+1000000\)；对于足够大的\(n\)，它仍然比算法B更好。
 - en: '[PRE1]'
+  id: totrans-28
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '|  | Algorithm C | Algorithm B | Ratio (C/B) |'
+  id: totrans-29
   prefs: []
   type: TYPE_TB
+  zh: '|  | 算法C | 算法B | 比率（C/B） |'
 - en: '| --- | --- | --- | --- |'
+  id: totrans-30
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- |'
 - en: '| 10 | 1000010 | 111 | 0.000111 |'
+  id: totrans-31
   prefs: []
   type: TYPE_TB
+  zh: '| 10 | 1000010 | 111 | 0.000111 |'
 - en: '| 100 | 1000100 | 10101 | 0.010100 |'
+  id: totrans-32
   prefs: []
   type: TYPE_TB
+  zh: '| 100 | 1000100 | 10101 | 0.010100 |'
 - en: '| 1000 | 1001000 | 1001001 | 1.000001 |'
+  id: totrans-33
   prefs: []
   type: TYPE_TB
+  zh: '| 1000 | 1001000 | 1001001 | 1.000001 |'
 - en: '| 10000 | 1010000 | 100010001 | 99.019803 |'
+  id: totrans-34
   prefs: []
   type: TYPE_TB
+  zh: '| 10000 | 1010000 | 100010001 | 99.019803 |'
 - en: In general, we expect an algorithm with a smaller leading term to be a better
     algorithm for large problems, but for smaller problems, there may be a **crossover
     point** where another algorithm is better.
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 一般来说，我们期望具有较小主导项的算法对于大问题来说是更好的算法，但对于较小的问题，可能存在另一个算法更好的**交叉点**。
 - en: The following figure shows the run times (in arbitrary units) for the three
     algorithms over a range of problems sizes. For small problem sizes, Algorithm
     B is the fastest, but for large problems sizes, it is the worst. In the figure,
     we can see where the crossover points are.
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下图表显示了三种算法在一系列问题规模下的运行时间（以任意单位表示）。对于较小的问题规模，算法B是最快的，但对于较大的问题规模，它是最差的。在图中，我们可以看到交叉点在哪里。
 - en: '[PRE2]'
+  id: totrans-37
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '![_images/analysis_11_0.png](../Images/799e645fad16a7816fc2729510aef8fd.png)'
+  id: totrans-38
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/analysis_11_0.png](../Images/799e645fad16a7816fc2729510aef8fd.png)'
 - en: The location of these crossover points depends on the details of the algorithms,
     the inputs, and the hardware, so it is usually ignored for purposes of algorithmic
     analysis. But that doesn’t mean you can forget about it.
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些交叉点的位置取决于算法、输入和硬件的细节，因此通常在算法分析中被忽略。但这并不意味着你可以忘记它。
 - en: Big O notation
+  id: totrans-40
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 大O符号
 - en: If two algorithms have the same leading order term, it is hard to say which
     is better; again, the answer depends on the details. So for algorithmic analysis,
     functions with the same leading term are considered equivalent, even if they have
     different coefficients.
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果两个算法具有相同的主导阶项，很难说哪个更好；同样，答案取决于细节。因此，在算法分析中，具有相同主导项的函数被认为是等价的，即使它们具有不同的系数。
 - en: An **order of growth** is a set of functions whose growth behavior is considered
     equivalent. For example, \(2n\), \(100n\) and \(n+1\) belong to the same order
     of growth, which is written \(O(n)\) in **Big-O notation** and often called **linear**
     because every function in the set grows linearly with \(n\).
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: '**增长顺序**是一组被认为是等价的增长行为的函数。例如，\(2n\)、\(100n\)和\(n+1\)属于相同的增长顺序，用**大O符号**写作\(O(n)\)，通常被称为**线性**，因为集合中的每个函数都随着\(n\)线性增长。'
 - en: All functions with the leading term \(n^2\) belong to \(O(n^2)\); they are called
     **quadratic**.
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 所有主导项为\(n^2\)的函数都属于\(O(n^2)\)；它们被称为**二次**。
 - en: The following table shows some of the orders of growth that appear most commonly
     in algorithmic analysis, in increasing order of badness.
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下表格显示了在算法分析中最常见的一些增长顺序，按糟糕程度递增排列。
 - en: '| Order of growth | Name |'
+  id: totrans-45
   prefs: []
   type: TYPE_TB
+  zh: '| 增长顺序 | 名称 |'
 - en: '| --- | --- |'
+  id: totrans-46
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| \(O(1)\) | constant |'
+  id: totrans-47
   prefs: []
   type: TYPE_TB
+  zh: '| \(O(1)\) | 常数 |'
 - en: '| \(O(\log_b n)\) | logarithmic (for any \(b\)) |'
+  id: totrans-48
   prefs: []
   type: TYPE_TB
+  zh: '| \(O(\log_b n)\) | 对数（对于任何\(b\)） |'
 - en: '| \(O(n)\) | linear |'
+  id: totrans-49
   prefs: []
   type: TYPE_TB
+  zh: '| \(O(n)\) | 线性 |'
 - en: '| \(O(n \log_b n)\) | linearithmic |'
+  id: totrans-50
   prefs: []
   type: TYPE_TB
+  zh: '| \(O(n \log_b n)\) | 线性对数 |'
 - en: '| \(O(n^2)\) | quadratic |'
+  id: totrans-51
   prefs: []
   type: TYPE_TB
+  zh: '| \(O(n^2)\) | 二次 |'
 - en: '| \(O(n^3)\) | cubic |'
+  id: totrans-52
   prefs: []
   type: TYPE_TB
+  zh: '| \(O(n^3)\) | 立方 |'
 - en: '| \(O(c^n)\) | exponential (for any \(c\)) |'
+  id: totrans-53
   prefs: []
   type: TYPE_TB
+  zh: '| \(O(c^n)\) | 指数（对于任何\(c\)） |'
 - en: For the logarithmic terms, the base of the logarithm doesn’t matter; changing
     bases is the equivalent of multiplying by a constant, which doesn’t change the
     order of growth. Similarly, all exponential functions belong to the same order
     of growth regardless of the base of the exponent. Exponential functions grow very
     quickly, so exponential algorithms are only useful for small problems.
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于对数项，对数的底数并不重要；改变底数相当于乘以一个常数，这不会改变增长顺序。同样，无论指数的底数是什么，所有指数函数都属于相同的增长顺序。指数函数增长非常快，因此指数算法只对小问题有用。
 - en: Exercise
+  id: totrans-55
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 练习
 - en: 'Read the Wikipedia page on Big-O notation at [http://en.wikipedia.org/wiki/Big_O_notation](http://en.wikipedia.org/wiki/Big_O_notation)
     and answer the following questions:'
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: 阅读维基百科关于大O符号的页面[http://en.wikipedia.org/wiki/Big_O_notation](http://en.wikipedia.org/wiki/Big_O_notation)，并回答以下问题：
 - en: What is the order of growth of \(n^3 + n^2\)? What about \(1000000 n^3 + n^2\)?
     What about \(n^3 + 1000000 n^2\)?
+  id: totrans-57
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: \(n^3 + n^2\)的增长顺序是多少？\(1000000 n^3 + n^2\)呢？\(n^3 + 1000000 n^2\)呢？
 - en: What is the order of growth of \((n^2 + n) \cdot (n + 1)\)? Before you start
     multiplying, remember that you only need the leading term.
+  id: totrans-58
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: \((n^2 + n) \cdot (n + 1)\)的增长顺序是多少？在开始乘法之前，记住你只需要主导项。
 - en: If \(f\) is in \(O(g)\), for some unspecified function \(g\), what can we say
     about \(af+b\), where \(a\) and \(b\) are constants?
+  id: totrans-59
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如果\(f\)在\(O(g)\)中，对于某些未指定的函数\(g\)，我们可以说什么关于\(af+b\)，其中\(a\)和\(b\)是常数？
 - en: If \(f_1\) and \(f_2\) are in \(O(g)\), what can we say about \(f_1 + f_2\)?
+  id: totrans-60
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如果\(f_1\)和\(f_2\)在\(O(g)\)中，我们对\(f_1 + f_2\)能说什么？
 - en: If \(f_1\) is in \(O(g)\) and \(f_2\) is in \(O(h)\), what can we say about
     \(f_1 + f_2\)?
+  id: totrans-61
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如果\(f_1\)在\(O(g)\)中，\(f_2\)在\(O(h)\)中，我们对\(f_1 + f_2\)能说什么？
 - en: If \(f_1\) is in \(O(g)\) and \(f_2\) is in \(O(h)\), what can we say about
     \(f_1 \cdot f_2\)?
+  id: totrans-62
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如果\(f_1\)在\(O(g)\)中，\(f_2\)在\(O(h)\)中，我们对\(f_1 \cdot f_2\)能说什么？
 - en: 'Programmers who care about performance often find this kind of analysis hard
     to swallow. They have a point: sometimes the coefficients and the non-leading
     terms make a real difference. Sometimes the details of the hardware, the programming
     language, and the characteristics of the input make a big difference. And for
     small problems, order of growth is irrelevant.'
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 关心性能的程序员通常觉得这种分析很难接受。他们有一点道理：有时系数和非主导项确实会产生真正的差异。有时硬件的细节、编程语言和输入的特性会产生很大的差异。对于小问题，增长顺序是无关紧要的。
 - en: But if you keep those caveats in mind, algorithmic analysis is a useful tool.
     At least for large problems, the “better” algorithm is usually better, and sometimes
     it is *much* better. The difference between two algorithms with the same order
     of growth is usually a constant factor, but the difference between a good algorithm
     and a bad algorithm is unbounded!
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是，如果您记住这些警告，算法分析是一个有用的工具。至少对于大问题来说，“更好”的算法通常更好，有时它甚至*好得多*。具有相同增长顺序的两个算法之间的差异通常是一个常数因子，但好算法和坏算法之间的差异是无限的！
 - en: 'Example: Adding the elements of a list'
+  id: totrans-65
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 示例：添加列表的元素
 - en: In Python, most arithmetic operations are constant time; multiplication usually
     takes longer than addition and subtraction, and division takes even longer, but
     these run times don’t depend on the magnitude of the operands. Very large integers
     are an exception; in that case the run time increases with the number of digits.
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: 在Python中，大多数算术运算都是常数时间；乘法通常比加法和减法花费更长的时间，而除法花费的时间更长，但这些运行时间不取决于操作数的大小。非常大的整数是一个例外；在这种情况下，运行时间随着数字的位数增加。
 - en: 'A `for` loop that iterates a list is linear, as long as all of the operations
     in the body of the loop are constant time. For example, adding up the elements
     of a list is linear:'
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: 迭代列表的`for`循环是线性的，只要循环体中的所有操作都是常数时间。例如，对列表的元素求和是线性的：
 - en: '[PRE3]'
+  id: totrans-68
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '[PRE4]'
+  id: totrans-69
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '[PRE5]'
+  id: totrans-70
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: The built-in function `sum` is also linear because it does the same thing, but
     it tends to be faster because it is a more efficient implementation; in the language
     of algorithmic analysis, it has a smaller leading coefficient.
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: 内置函数`sum`也是线性的，因为它做的事情相同，但它往往更快，因为它是一个更有效的实现；在算法分析的语言中，它有一个较小的主导系数。
 - en: '[PRE6]'
+  id: totrans-72
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '[PRE7]'
+  id: totrans-73
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '[PRE8]'
+  id: totrans-74
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: 'Example: Sorting'
+  id: totrans-75
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 示例：排序
 - en: Python provides a list method, `sort`, that modifies a list in place, and a
     function, `sorted` that makes a new list.
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
+  zh: Python提供了一个列表方法，`sort`，它可以就地修改列表，还有一个函数，`sorted`，可以创建一个新列表。
 - en: 'Read the Wikipedia page on sorting algorithms at [http://en.wikipedia.org/wiki/Sorting_algorithm](http://en.wikipedia.org/wiki/Sorting_algorithm)
     and answer the following questions:'
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: 阅读维基百科关于排序算法的页面[http://en.wikipedia.org/wiki/Sorting_algorithm](http://en.wikipedia.org/wiki/Sorting_algorithm)并回答以下问题：
 - en: What is a “comparison sort?” What is the best worst-case order of growth for
     a comparison sort? What is the best worst-case order of growth for any sort algorithm?
+  id: totrans-78
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: “比较排序”是什么？比较排序的最佳最坏情况增长顺序是什么？任何排序算法的最佳最坏情况增长顺序是什么？
 - en: What is the order of growth of bubble sort, and why does Barack Obama think
     it is “the wrong way to go?”
+  id: totrans-79
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 冒泡排序的增长顺序是多少，为什么巴拉克·奥巴马认为它是“错误的方式”？
 - en: What is the order of growth of radix sort? What preconditions do we need to
     use it?
+  id: totrans-80
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 基数排序的增长顺序是多少？我们需要什么前提条件来使用它？
 - en: What is a stable sort and why might it matter in practice?
+  id: totrans-81
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 什么是稳定排序，为什么在实践中可能很重要？
 - en: What is the worst sorting algorithm (that has a name)?
+  id: totrans-82
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 最糟糕的排序算法是什么（有名字的）？
 - en: What sort algorithm does the C library use? What sort algorithm does Python
     use? Are these algorithms stable? You might have to Google around to find these
     answers.
+  id: totrans-83
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: C库使用什么排序算法？Python使用什么排序算法？这些算法是稳定的吗？您可能需要在网上搜索找到这些答案。
 - en: Many of the non-comparison sorts are linear, so why does Python use an \(O(n
     \log n)\) comparison sort?
+  id: totrans-84
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 许多非比较排序都是线性的，那么为什么Python使用\(O(n \log n)\)的比较排序？
 - en: '*Data Structures and Information Retrieval in Python*'
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: '*Python中的数据结构和信息检索*'
 - en: Copyright 2021 Allen Downey
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: 版权所有 2021 Allen Downey
 - en: 'License: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: 许可证：[知识共享署名-非商业性使用-相同方式共享4.0国际许可协议](https://creativecommons.org/licenses/by-nc-sa/4.0/)
