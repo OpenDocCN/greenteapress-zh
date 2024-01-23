@@ -1,49 +1,61 @@
 - en: Index
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
 - en: 原文：[https://greenteapress.com/thinkstats2/html/thinkstats2016.html](https://greenteapress.com/thinkstats2/html/thinkstats2016.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '|'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
 - en: Adams, Cecil, [2.11](thinkstats2003.html#hevea_default156)
+  id: totrans-3
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Anaconda, [0.2](thinkstats2001.html#hevea_default15), [11.1](thinkstats2012.html#hevea_default1161)
+  id: totrans-4
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Australia, [5.1](thinkstats2006.html#hevea_default321)
+  id: totrans-5
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: abstraction, [5.7](thinkstats2006.html#hevea_default421)
+  id: totrans-6
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: accuracy, [11.9](thinkstats2012.html#hevea_default1332)
+  id: totrans-7
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: acf, [12.7](thinkstats2013.html#hevea_default1461)
+  id: totrans-8
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: addition, closed under, [14.1](thinkstats2015.html#hevea_default1659)
+  id: totrans-9
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: adult height, [7](thinkstats2008.html#hevea_default580)
+  id: totrans-10
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: adult weight, [5.4](thinkstats2006.html#hevea_default377), [5.4](thinkstats2006.html#hevea_default394),
     [7](thinkstats2008.html#hevea_default579), [8.4](thinkstats2009.html#hevea_default777),
     [14.10](thinkstats2015.html#hevea_default1795)
+  id: totrans-11
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -51,128 +63,157 @@
     [11.2](thinkstats2012.html#hevea_default1191), [11.3](thinkstats2012.html#hevea_default1226),
     [11.8](thinkstats2012.html#hevea_default1311), [11.8](thinkstats2012.html#hevea_default1322),
     [13.3](thinkstats2014.html#hevea_default1566), [13.5](thinkstats2014.html#hevea_default1577)
+  id: totrans-12
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: age group, [4.8](thinkstats2005.html#hevea_default295)
+  id: totrans-13
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: aggregate, [12.1](thinkstats2013.html#hevea_default1382)
+  id: totrans-14
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: alpha, [7.1](thinkstats2008.html#hevea_default599)
+  id: totrans-15
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: analysis, [5.7](thinkstats2006.html#hevea_default429), [14.1](thinkstats2015.html#hevea_default1657)
+  id: totrans-16
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: analytic distribution, [5](thinkstats2006.html#hevea_default311), [5.9](thinkstats2006.html#hevea_default458),
     [14.7](thinkstats2015.html#hevea_default1767)
+  id: totrans-17
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: analytic methods, [14](thinkstats2015.html#hevea_default1646)
+  id: totrans-18
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: anecdotal evidence, [1](thinkstats2002.html#hevea_default24), [1.10](thinkstats2002.html#hevea_default77)
+  id: totrans-19
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: apparent effect, [9.1](thinkstats2010.html#hevea_default833)
+  id: totrans-20
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: artifact, [7.1](thinkstats2008.html#hevea_default605)
+  id: totrans-21
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: at risk, [13.4](thinkstats2014.html#hevea_default1569)
+  id: totrans-22
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: autocorrelation function, [12.7](thinkstats2013.html#hevea_default1459), [12.11](thinkstats2013.html#hevea_default1533)
+  id: totrans-23
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: average, [2.7](thinkstats2003.html#hevea_default135)
+  id: totrans-24
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Bayesian inference, [9.1](thinkstats2010.html#hevea_default838)
+  id: totrans-25
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Bayesian statistics, [8.3](thinkstats2009.html#hevea_default774)
+  id: totrans-26
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Behavioral Risk Factor Surveillance System, [5.4](thinkstats2006.html#hevea_default383),
     [10.8](thinkstats2011.html#hevea_default1135)
+  id: totrans-27
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Blue Man Group, [5.8](thinkstats2006.html#hevea_default435)
+  id: totrans-28
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: BRFSS, [5.4](thinkstats2006.html#hevea_default384), [7.1](thinkstats2008.html#hevea_default583),
     [7.7](thinkstats2008.html#hevea_default674), [10.8](thinkstats2011.html#hevea_default1136)
+  id: totrans-29
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Brisbane, [5.1](thinkstats2006.html#hevea_default322)
+  id: totrans-30
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Bureau of Labor Statistics, [6.9](thinkstats2007.html#hevea_default562)
+  id: totrans-31
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: bar plot, [3.2](thinkstats2004.html#hevea_default192)
+  id: totrans-32
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: betting pool, [11.4](thinkstats2012.html#hevea_default1233), [11.4](thinkstats2012.html#hevea_default1238),
     [11.6](thinkstats2012.html#hevea_default1286), [11.10](thinkstats2012.html#hevea_default1338)
+  id: totrans-33
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: bias, [6.8](thinkstats2007.html#hevea_default540)
+  id: totrans-34
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: confirmation, [1](thinkstats2002.html#hevea_default29)
+  id: totrans-35
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
 - en: observer, [3.4](thinkstats2004.html#hevea_default212), [3.6](thinkstats2004.html#hevea_default222),
     [3.6](thinkstats2004.html#hevea_default231)
+  id: totrans-36
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
 - en: oversampling, [3.4](thinkstats2004.html#hevea_default214)
+  id: totrans-37
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
 - en: sampling, [8.4](thinkstats2009.html#hevea_default779), [10.4](thinkstats2011.html#hevea_default1057)
+  id: totrans-38
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
 - en: selection, [1](thinkstats2002.html#hevea_default27), [3.6](thinkstats2004.html#hevea_default228)
+  id: totrans-39
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
 - en: biased coin, [9.2](thinkstats2010.html#hevea_default857)
+  id: totrans-40
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -180,26 +221,35 @@
     [8.3](thinkstats2009.html#hevea_default761), [8.5](thinkstats2009.html#hevea_default800),
     [8.6](thinkstats2009.html#hevea_default813), [8.7](thinkstats2009.html#hevea_default824),
     [14.2](thinkstats2015.html#hevea_default1664)
+  id: totrans-41
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: binary, [11.8](thinkstats2012.html#hevea_default1310)
+  id: totrans-42
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 二进制，[11.8]（thinkstats2012.html#hevea_default1310）
 - en: binary search, [6.6](thinkstats2007.html#hevea_default526)
+  id: totrans-43
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 二分搜索，[6.6]（thinkstats2007.html#hevea_default526）
 - en: binning, [4.1](thinkstats2005.html#hevea_default244), [6.3](thinkstats2007.html#hevea_default513),
     [7.2](thinkstats2008.html#hevea_default606)
+  id: totrans-44
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 分箱，[4.1]（thinkstats2005.html#hevea_default244），[6.3]（thinkstats2007.html#hevea_default513），[7.2]（thinkstats2008.html#hevea_default606）
 - en: birth time, [5.1](thinkstats2006.html#hevea_default320)
+  id: totrans-45
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 出生时间，[5.1]（thinkstats2006.html#hevea_default320）
 - en: birth weight, [1.5](thinkstats2002.html#hevea_default55), [2.4](thinkstats2003.html#hevea_default114),
     [4.1](thinkstats2005.html#hevea_default242), [4.5](thinkstats2005.html#hevea_default264),
     [4.7](thinkstats2005.html#hevea_default283), [4.9](thinkstats2005.html#hevea_default296),
@@ -215,53 +265,69 @@
     [11.3](thinkstats2012.html#hevea_default1213), [11.4](thinkstats2012.html#hevea_default1228),
     [11.5](thinkstats2012.html#hevea_default1249), [11.5](thinkstats2012.html#hevea_default1257),
     [14.7](thinkstats2015.html#hevea_default1749), [14.10](thinkstats2015.html#hevea_default1791)
+  id: totrans-46
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 出生体重，[1.5]（thinkstats2002.html#hevea_default55），[2.4]（thinkstats2003.html#hevea_default114），[4.1]（thinkstats2005.html#hevea_default242），[4.5]（thinkstats2005.html#hevea_default264），[4.7]（thinkstats2005.html#hevea_default283），[4.9]（thinkstats2005.html#hevea_default296），[5.2]（thinkstats2006.html#hevea_default348），[5.3]（thinkstats2006.html#hevea_default363），[5.3]（thinkstats2006.html#hevea_default372），[7.9]（thinkstats2008.html#hevea_default696），[9.3]（thinkstats2010.html#hevea_default888），[9.5]（thinkstats2010.html#hevea_default908），[9.11]（thinkstats2010.html#hevea_default988），[9.12]（thinkstats2010.html#hevea_default1001），[10.2]（thinkstats2011.html#hevea_default1040），[10.2]（thinkstats2011.html#hevea_default1047），[10.5]（thinkstats2011.html#hevea_default1076），[10.6]（thinkstats2011.html#hevea_default1090），[10.7]（thinkstats2011.html#hevea_default1124），[11]（thinkstats2012.html#hevea_default1152），[11.1]（thinkstats2012.html#hevea_default1182），[11.2]（thinkstats2012.html#hevea_default1192），[11.2]（thinkstats2012.html#hevea_default1197），[11.2]（thinkstats2012.html#hevea_default1207），[11.3]（thinkstats2012.html#hevea_default1213），[11.4]（thinkstats2012.html#hevea_default1228），[11.5]（thinkstats2012.html#hevea_default1249），[11.5]（thinkstats2012.html#hevea_default1257），[14.7]（thinkstats2015.html#hevea_default1749），[14.10]（thinkstats2015.html#hevea_default1791）
 - en: boolean, [1.7](thinkstats2002.html#hevea_default69), [2.4](thinkstats2003.html#hevea_default109),
     [7.1](thinkstats2008.html#hevea_default587), [11.2](thinkstats2012.html#hevea_default1200),
     [11.5](thinkstats2012.html#hevea_default1267), [11.6](thinkstats2012.html#hevea_default1285),
     [11.8](thinkstats2012.html#hevea_default1309), [12.7](thinkstats2013.html#hevea_default1473),
     [13.1](thinkstats2014.html#hevea_default1546)
+  id: totrans-47
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 布尔，[1.7]（thinkstats2002.html#hevea_default69），[2.4]（thinkstats2003.html#hevea_default109），[7.1]（thinkstats2008.html#hevea_default587），[11.2]（thinkstats2012.html#hevea_default1200），[11.5]（thinkstats2012.html#hevea_default1267），[11.6]（thinkstats2012.html#hevea_default1285），[11.8]（thinkstats2012.html#hevea_default1309），[12.7]（thinkstats2013.html#hevea_default1473），[13.1]（thinkstats2014.html#hevea_default1546）
 - en: bracket operator, [2.2](thinkstats2003.html#hevea_default98), [2.4](thinkstats2003.html#hevea_default108),
     [3.1](thinkstats2004.html#hevea_default188), [4.4](thinkstats2005.html#hevea_default255)
+  id: totrans-48
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 括号运算符，[2.2]（thinkstats2003.html#hevea_default98），[2.4]（thinkstats2003.html#hevea_default108），[3.1]（thinkstats2004.html#hevea_default188），[4.4]（thinkstats2005.html#hevea_default255）
 - en: CCDF, [5.1](thinkstats2006.html#hevea_default327), [5.1](thinkstats2006.html#hevea_default331),
     [5.9](thinkstats2006.html#hevea_default464), [13.1](thinkstats2014.html#hevea_default1543)
+  id: totrans-49
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: CCDF，[5.1]（thinkstats2006.html#hevea_default327），[5.1]（thinkstats2006.html#hevea_default331），[5.9]（thinkstats2006.html#hevea_default464），[13.1]（thinkstats2014.html#hevea_default1543）
 - en: CDF, [4.1](thinkstats2005.html#hevea_default245), [4.3](thinkstats2005.html#hevea_default249),
     [4.10](thinkstats2005.html#hevea_default303), [5.2](thinkstats2006.html#hevea_default335),
     [5.4](thinkstats2006.html#hevea_default380), [5.5](thinkstats2006.html#hevea_default401),
     [5.6](thinkstats2006.html#hevea_default413), [6](thinkstats2007.html#hevea_default476),
     [6.3](thinkstats2007.html#hevea_default514), [9.9](thinkstats2010.html#hevea_default967),
     [13.3](thinkstats2014.html#hevea_default1562)
+  id: totrans-50
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: CDF，[4.1]（thinkstats2005.html#hevea_default245），[4.3]（thinkstats2005.html#hevea_default249），[4.10]（thinkstats2005.html#hevea_default303），[5.2]（thinkstats2006.html#hevea_default335），[5.4]（thinkstats2006.html#hevea_default380），[5.5]（thinkstats2006.html#hevea_default401），[5.6]（thinkstats2006.html#hevea_default413），[6]（thinkstats2007.html#hevea_default476），[6.3]（thinkstats2007.html#hevea_default514），[9.9]（thinkstats2010.html#hevea_default967），[13.3]（thinkstats2014.html#hevea_default1562）
 - en: complementary, [5.1](thinkstats2006.html#hevea_default326), [5.1](thinkstats2006.html#hevea_default330),
     [5.9](thinkstats2006.html#hevea_default463), [13.1](thinkstats2014.html#hevea_default1542)
+  id: totrans-51
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 补充，[5.1]（thinkstats2006.html#hevea_default326），[5.1]（thinkstats2006.html#hevea_default330），[5.9]（thinkstats2006.html#hevea_default463），[13.1]（thinkstats2014.html#hevea_default1542）
 - en: CDF, interpreting, [4.4](thinkstats2005.html#hevea_default261)
+  id: totrans-52
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: CDF，解释，[4.4]（thinkstats2005.html#hevea_default261）
 - en: CDF, inverse, [4.4](thinkstats2005.html#hevea_default257), [4.10](thinkstats2005.html#hevea_default306),
     [5.6](thinkstats2006.html#hevea_default418), [6.6](thinkstats2007.html#hevea_default530),
     [14.2](thinkstats2015.html#hevea_default1669), [14.5](thinkstats2015.html#hevea_default1721),
     [14.5](thinkstats2015.html#hevea_default1728)
+  id: totrans-53
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: CDF，逆，[4.4]（thinkstats2005.html#hevea_default257），[4.10]（thinkstats2005.html#hevea_default306），[5.6]（thinkstats2006.html#hevea_default418），[6.6]（thinkstats2007.html#hevea_default530），[14.2]（thinkstats2015.html#hevea_default1669），[14.5]（thinkstats2015.html#hevea_default1721），[14.5]（thinkstats2015.html#hevea_default1728）
 - en: Cdf, [4.4](thinkstats2005.html#hevea_default254), [4.6](thinkstats2005.html#hevea_default276),
     [4.7](thinkstats2005.html#hevea_default285), [4.7](thinkstats2005.html#hevea_default290),
     [5.1](thinkstats2006.html#hevea_default333), [6.3](thinkstats2007.html#hevea_default499),
@@ -270,105 +336,168 @@
     [10.7](thinkstats2011.html#hevea_default1130), [13.1](thinkstats2014.html#hevea_default1548),
     [13.6](thinkstats2014.html#hevea_default1582), [13.10](thinkstats2014.html#hevea_default1619),
     [13.10](thinkstats2014.html#hevea_default1628)
+  id: totrans-54
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: Cdf，[4.4](thinkstats2005.html#hevea_default254), [4.6](thinkstats2005.html#hevea_default276),
+    [4.7](thinkstats2005.html#hevea_default285), [4.7](thinkstats2005.html#hevea_default290),
+    [5.1](thinkstats2006.html#hevea_default333), [6.3](thinkstats2007.html#hevea_default499),
+    [6.6](thinkstats2007.html#hevea_default525), [6.6](thinkstats2007.html#hevea_default533),
+    [7.2](thinkstats2008.html#hevea_default614), [9.3](thinkstats2010.html#hevea_default885),
+    [10.7](thinkstats2011.html#hevea_default1130), [13.1](thinkstats2014.html#hevea_default1548),
+    [13.6](thinkstats2014.html#hevea_default1582), [13.10](thinkstats2014.html#hevea_default1619),
+    [13.10](thinkstats2014.html#hevea_default1628)
 - en: Census Bureau, [6.9](thinkstats2007.html#hevea_default563)
+  id: totrans-55
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 人口普查局，[6.9](thinkstats2007.html#hevea_default563)
 - en: Central Limit Theorem, [0](thinkstats2001.html#hevea_default11), [14.4](thinkstats2015.html#hevea_default1689),
     [14.4](thinkstats2015.html#hevea_default1706), [14.5](thinkstats2015.html#hevea_default1717),
     [14.6](thinkstats2015.html#hevea_default1733), [14.6](thinkstats2015.html#hevea_default1739),
     [14.7](thinkstats2015.html#hevea_default1763), [14.10](thinkstats2015.html#hevea_default1796)
+  id: totrans-56
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 中心极限定理，[0](thinkstats2001.html#hevea_default11), [14.4](thinkstats2015.html#hevea_default1689),
+    [14.4](thinkstats2015.html#hevea_default1706), [14.5](thinkstats2015.html#hevea_default1717),
+    [14.6](thinkstats2015.html#hevea_default1733), [14.6](thinkstats2015.html#hevea_default1739),
+    [14.7](thinkstats2015.html#hevea_default1763), [14.10](thinkstats2015.html#hevea_default1796)
 - en: CLT, [0](thinkstats2001.html#hevea_default12), [14.4](thinkstats2015.html#hevea_default1690),
     [14.4](thinkstats2015.html#hevea_default1707), [14.5](thinkstats2015.html#hevea_default1718),
     [14.6](thinkstats2015.html#hevea_default1734), [14.6](thinkstats2015.html#hevea_default1740),
     [14.7](thinkstats2015.html#hevea_default1764), [14.10](thinkstats2015.html#hevea_default1797)
+  id: totrans-57
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: CLT，[0](thinkstats2001.html#hevea_default12), [14.4](thinkstats2015.html#hevea_default1690),
+    [14.4](thinkstats2015.html#hevea_default1707), [14.5](thinkstats2015.html#hevea_default1718),
+    [14.6](thinkstats2015.html#hevea_default1734), [14.6](thinkstats2015.html#hevea_default1740),
+    [14.7](thinkstats2015.html#hevea_default1764), [14.10](thinkstats2015.html#hevea_default1797)
 - en: Counter, [13.4](thinkstats2014.html#hevea_default1570)
+  id: totrans-58
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 计数器，[13.4](thinkstats2014.html#hevea_default1570)
 - en: Current Population Survey, [6.9](thinkstats2007.html#hevea_default561)
+  id: totrans-59
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 当前人口调查，[6.9](thinkstats2007.html#hevea_default561)
 - en: cannabis, [12](thinkstats2013.html#hevea_default1371)
+  id: totrans-60
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 大麻，[12](thinkstats2013.html#hevea_default1371)
 - en: casino, [9.6](thinkstats2010.html#hevea_default921)
+  id: totrans-61
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 赌场，[9.6](thinkstats2010.html#hevea_default921)
 - en: categorical variable, [11.2](thinkstats2012.html#hevea_default1199), [11.5](thinkstats2012.html#hevea_default1266),
     [11.6](thinkstats2012.html#hevea_default1281), [11.8](thinkstats2012.html#hevea_default1327),
     [11.10](thinkstats2012.html#hevea_default1347), [11.11](thinkstats2012.html#hevea_default1361)
+  id: totrans-62
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 分类变量，[11.2](thinkstats2012.html#hevea_default1199), [11.5](thinkstats2012.html#hevea_default1266),
+    [11.6](thinkstats2012.html#hevea_default1281), [11.8](thinkstats2012.html#hevea_default1327),
+    [11.10](thinkstats2012.html#hevea_default1347), [11.11](thinkstats2012.html#hevea_default1361)
 - en: causal relationship, [7.8](thinkstats2008.html#hevea_default686)
+  id: totrans-63
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 因果关系，[7.8](thinkstats2008.html#hevea_default686)
 - en: causation, [7.8](thinkstats2008.html#hevea_default685)
+  id: totrans-64
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 因果关系，[7.8](thinkstats2008.html#hevea_default685)
 - en: central moment, [6.10](thinkstats2007.html#hevea_default573)
+  id: totrans-65
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 中心矩，[6.10](thinkstats2007.html#hevea_default573)
 - en: central tendency, [2.7](thinkstats2003.html#hevea_default129), [2.7](thinkstats2003.html#hevea_default137),
     [2.12](thinkstats2003.html#hevea_default171), [4.6](thinkstats2005.html#hevea_default274),
     [6.8](thinkstats2007.html#hevea_default539)
+  id: totrans-66
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 中心趋势，[2.7](thinkstats2003.html#hevea_default129), [2.7](thinkstats2003.html#hevea_default137),
+    [2.12](thinkstats2003.html#hevea_default171), [4.6](thinkstats2005.html#hevea_default274),
+    [6.8](thinkstats2007.html#hevea_default539)
 - en: century month, [13.5](thinkstats2014.html#hevea_default1575), [13.8](thinkstats2014.html#hevea_default1602)
+  id: totrans-67
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 世纪月份，[13.5](thinkstats2014.html#hevea_default1575), [13.8](thinkstats2014.html#hevea_default1602)
 - en: chi-squared distribution, [14.8](thinkstats2015.html#hevea_default1774)
+  id: totrans-68
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 卡方分布，[14.8](thinkstats2015.html#hevea_default1774)
 - en: chi-squared statistic, [9.7](thinkstats2010.html#hevea_default938), [9.8](thinkstats2010.html#hevea_default955)
+  id: totrans-69
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 卡方统计量，[9.7](thinkstats2010.html#hevea_default938), [9.8](thinkstats2010.html#hevea_default955)
 - en: chi-squared test, [9.6](thinkstats2010.html#hevea_default920), [9.7](thinkstats2010.html#hevea_default937),
     [9.13](thinkstats2010.html#hevea_default1017), [14.8](thinkstats2015.html#hevea_default1773)
+  id: totrans-70
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 卡方检验，[9.6](thinkstats2010.html#hevea_default920), [9.7](thinkstats2010.html#hevea_default937),
+    [9.13](thinkstats2010.html#hevea_default1017), [14.8](thinkstats2015.html#hevea_default1773)
 - en: city size, [5.5](thinkstats2006.html#hevea_default407)
+  id: totrans-71
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 城市规模，[5.5](thinkstats2006.html#hevea_default407)
 - en: class size, [3.4](thinkstats2004.html#hevea_default209)
+  id: totrans-72
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 班级规模，[3.4](thinkstats2004.html#hevea_default209)
 - en: cleaning, [0](thinkstats2001.html#hevea_default0), [11.4](thinkstats2012.html#hevea_default1247)
+  id: totrans-73
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 清洁，[0](thinkstats2001.html#hevea_default0), [11.4](thinkstats2012.html#hevea_default1247)
 - en: clinically significant, [2.10](thinkstats2003.html#hevea_default153), [2.12](thinkstats2003.html#hevea_default178)
+  id: totrans-74
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 临床显著性，[2.10](thinkstats2003.html#hevea_default153), [2.12](thinkstats2003.html#hevea_default178)
 - en: closed form, [5.2](thinkstats2006.html#hevea_default344), [11.7](thinkstats2012.html#hevea_default1298),
     [14.2](thinkstats2015.html#hevea_default1674)
+  id: totrans-75
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 封闭形式，[5.2](thinkstats2006.html#hevea_default344), [11.7](thinkstats2012.html#hevea_default1298),
+    [14.2](thinkstats2015.html#hevea_default1674)
 - en: coefficient of determination, [10.5](thinkstats2011.html#hevea_default1079),
     [10.5](thinkstats2011.html#hevea_default1083), [10.5](thinkstats2011.html#hevea_default1087),
     [10.6](thinkstats2011.html#hevea_default1096), [10.9](thinkstats2011.html#hevea_default1146),
@@ -377,32 +506,53 @@
     [11.3](thinkstats2012.html#hevea_default1223), [11.4](thinkstats2012.html#hevea_default1231),
     [11.4](thinkstats2012.html#hevea_default1243), [11.5](thinkstats2012.html#hevea_default1275),
     [11.8](thinkstats2012.html#hevea_default1324)
+  id: totrans-76
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 决定系数，[10.5](thinkstats2011.html#hevea_default1079), [10.5](thinkstats2011.html#hevea_default1083),
+    [10.5](thinkstats2011.html#hevea_default1087), [10.6](thinkstats2011.html#hevea_default1096),
+    [10.9](thinkstats2011.html#hevea_default1146), [11.1](thinkstats2012.html#hevea_default1178),
+    [11.2](thinkstats2012.html#hevea_default1201), [11.2](thinkstats2012.html#hevea_default1203),
+    [11.2](thinkstats2012.html#hevea_default1209), [11.3](thinkstats2012.html#hevea_default1223),
+    [11.4](thinkstats2012.html#hevea_default1231), [11.4](thinkstats2012.html#hevea_default1243),
+    [11.5](thinkstats2012.html#hevea_default1275), [11.8](thinkstats2012.html#hevea_default1324)
 - en: cohort, [13.8](thinkstats2014.html#hevea_default1596), [13.12](thinkstats2014.html#hevea_default1641)
+  id: totrans-77
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 队列，[13.8](thinkstats2014.html#hevea_default1596), [13.12](thinkstats2014.html#hevea_default1641)
 - en: cohort effect, [13.8](thinkstats2014.html#hevea_default1597), [13.12](thinkstats2014.html#hevea_default1642)
+  id: totrans-78
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 队列效应，[13.8](thinkstats2014.html#hevea_default1597), [13.12](thinkstats2014.html#hevea_default1642)
 - en: complementary CDF, [5.1](thinkstats2006.html#hevea_default325), [5.1](thinkstats2006.html#hevea_default329),
     [5.9](thinkstats2006.html#hevea_default462), [13.1](thinkstats2014.html#hevea_default1541),
     [13.6](thinkstats2014.html#hevea_default1583)
+  id: totrans-79
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 互补CDF，[5.1](thinkstats2006.html#hevea_default325), [5.1](thinkstats2006.html#hevea_default329),
+    [5.9](thinkstats2006.html#hevea_default462), [13.1](thinkstats2014.html#hevea_default1541),
+    [13.6](thinkstats2014.html#hevea_default1583)
 - en: compression, [5.7](thinkstats2006.html#hevea_default424)
+  id: totrans-80
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 压缩，[5.7](thinkstats2006.html#hevea_default424)
 - en: computational methods, [0](thinkstats2001.html#hevea_default9), [10.1](thinkstats2011.html#hevea_default1034),
     [14](thinkstats2015.html#hevea_default1647), [14.9](thinkstats2015.html#hevea_default1784)
+  id: totrans-81
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 计算方法，[0](thinkstats2001.html#hevea_default9), [10.1](thinkstats2011.html#hevea_default1034),
+    [14](thinkstats2015.html#hevea_default1647), [14.9](thinkstats2015.html#hevea_default1784)
 - en: confidence interval, [8.3](thinkstats2009.html#hevea_default770), [8.4](thinkstats2009.html#hevea_default787),
     [8.6](thinkstats2009.html#hevea_default806), [8.6](thinkstats2009.html#hevea_default815),
     [8.7](thinkstats2009.html#hevea_default830), [10.4](thinkstats2011.html#hevea_default1070),
@@ -412,93 +562,148 @@
     [13.7](thinkstats2014.html#hevea_default1594), [14.1](thinkstats2015.html#hevea_default1655),
     [14.2](thinkstats2015.html#hevea_default1670), [14.3](thinkstats2015.html#hevea_default1682),
     [14.10](thinkstats2015.html#hevea_default1805)
+  id: totrans-82
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 置信区间，[8.3](thinkstats2009.html#hevea_default770), [8.4](thinkstats2009.html#hevea_default787),
+    [8.6](thinkstats2009.html#hevea_default806), [8.6](thinkstats2009.html#hevea_default815),
+    [8.7](thinkstats2009.html#hevea_default830), [10.4](thinkstats2011.html#hevea_default1070),
+    [10.7](thinkstats2011.html#hevea_default1123), [10.7](thinkstats2011.html#hevea_default1134),
+    [10.8](thinkstats2011.html#hevea_default1138), [12.8](thinkstats2013.html#hevea_default1493),
+    [12.8](thinkstats2013.html#hevea_default1502), [13.7](thinkstats2014.html#hevea_default1586),
+    [13.7](thinkstats2014.html#hevea_default1594), [14.1](thinkstats2015.html#hevea_default1655),
+    [14.2](thinkstats2015.html#hevea_default1670), [14.3](thinkstats2015.html#hevea_default1682),
+    [14.10](thinkstats2015.html#hevea_default1805)
 - en: confirmation bias, [1](thinkstats2002.html#hevea_default28)
+  id: totrans-83
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 确认偏见，[1](thinkstats2002.html#hevea_default28)
 - en: confirmatory result, [9.11](thinkstats2010.html#hevea_default983)
+  id: totrans-84
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 确认结果，[9.11](thinkstats2010.html#hevea_default983)
 - en: continuous distribution, [6.3](thinkstats2007.html#hevea_default503)
+  id: totrans-85
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 连续分布，[6.3](thinkstats2007.html#hevea_default503)
 - en: contradiction, proof by, [9.1](thinkstats2010.html#hevea_default847)
+  id: totrans-86
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 矛盾，证明，[9.1](thinkstats2010.html#hevea_default847)
 - en: contributors, [0.2](thinkstats2001.html#hevea_default22)
+  id: totrans-87
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 贡献者，[0.2](thinkstats2001.html#hevea_default22)
 - en: control group, [7.8](thinkstats2008.html#hevea_default691), [7.10](thinkstats2008.html#hevea_default711)
+  id: totrans-88
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 对照组，[7.8](thinkstats2008.html#hevea_default691), [7.10](thinkstats2008.html#hevea_default711)
 - en: control variable, [0](thinkstats2001.html#hevea_default5), [11.3](thinkstats2012.html#hevea_default1227),
     [11.5](thinkstats2012.html#hevea_default1269), [11.11](thinkstats2012.html#hevea_default1359)
+  id: totrans-89
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 控制变量，[0](thinkstats2001.html#hevea_default5), [11.3](thinkstats2012.html#hevea_default1227),
+    [11.5](thinkstats2012.html#hevea_default1269), [11.11](thinkstats2012.html#hevea_default1359)
 - en: controlled trial, [7.8](thinkstats2008.html#hevea_default689)
+  id: totrans-90
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 受控试验，[7.8](thinkstats2008.html#hevea_default689)
 - en: correct positive, [9.10](thinkstats2010.html#hevea_default976)
+  id: totrans-91
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 正确的积极，[9.10](thinkstats2010.html#hevea_default976)
 - en: correlation, [0](thinkstats2001.html#hevea_default2), [7.3](thinkstats2008.html#hevea_default617),
     [7.5](thinkstats2008.html#hevea_default645), [7.6](thinkstats2008.html#hevea_default660),
     [7.8](thinkstats2008.html#hevea_default684), [7.10](thinkstats2008.html#hevea_default703),
     [9.5](thinkstats2010.html#hevea_default904), [10.1](thinkstats2011.html#hevea_default1033),
     [14.5](thinkstats2015.html#hevea_default1722), [14.5](thinkstats2015.html#hevea_default1731),
     [14.7](thinkstats2015.html#hevea_default1755)
+  id: totrans-92
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 相关性，[0](thinkstats2001.html#hevea_default2), [7.3](thinkstats2008.html#hevea_default617),
+    [7.5](thinkstats2008.html#hevea_default645), [7.6](thinkstats2008.html#hevea_default660),
+    [7.8](thinkstats2008.html#hevea_default684), [7.10](thinkstats2008.html#hevea_default703),
+    [9.5](thinkstats2010.html#hevea_default904), [10.1](thinkstats2011.html#hevea_default1033),
+    [14.5](thinkstats2015.html#hevea_default1722), [14.5](thinkstats2015.html#hevea_default1731),
+    [14.7](thinkstats2015.html#hevea_default1755)
 - en: serial, [12.6](thinkstats2013.html#hevea_default1450)
+  id: totrans-93
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 连续的，[12.6](thinkstats2013.html#hevea_default1450)
 - en: cost function, [8.1](thinkstats2009.html#hevea_default737), [10.1](thinkstats2011.html#hevea_default1036)
+  id: totrans-94
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 成本函数，[8.1](thinkstats2009.html#hevea_default737), [10.1](thinkstats2011.html#hevea_default1036)
 - en: covariance, [7.4](thinkstats2008.html#hevea_default638), [7.10](thinkstats2008.html#hevea_default707)
+  id: totrans-95
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 协方差，[7.4](thinkstats2008.html#hevea_default638), [7.10](thinkstats2008.html#hevea_default707)
 - en: crooked die, [9.6](thinkstats2010.html#hevea_default923)
+  id: totrans-96
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 歪骰子，[9.6](thinkstats2010.html#hevea_default923)
 - en: cross-sectional study, [1.2](thinkstats2002.html#hevea_default37), [1.10](thinkstats2002.html#hevea_default79)
+  id: totrans-97
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 横断面研究，[1.2](thinkstats2002.html#hevea_default37), [1.10](thinkstats2002.html#hevea_default79)
 - en: cumulative distribution function, [4.3](thinkstats2005.html#hevea_default250)
+  id: totrans-98
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 累积分布函数，[4.3](thinkstats2005.html#hevea_default250)
 - en: cumulative probability, [4.10](thinkstats2005.html#hevea_default304), [6.3](thinkstats2007.html#hevea_default501),
     [6.6](thinkstats2007.html#hevea_default527)
+  id: totrans-99
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 累积概率，[4.10](thinkstats2005.html#hevea_default304), [6.3](thinkstats2007.html#hevea_default501),
+    [6.6](thinkstats2007.html#hevea_default527)
 - en: cumulative product, [13.6](thinkstats2014.html#hevea_default1580)
+  id: totrans-100
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 累积乘积，[13.6](thinkstats2014.html#hevea_default1580)
 - en: cycle, [1.2](thinkstats2002.html#hevea_default41)
+  id: totrans-101
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 周期，[1.2](thinkstats2002.html#hevea_default41)
 - en: DataFrame, [1.4](thinkstats2002.html#hevea_default47), [1.4](thinkstats2002.html#hevea_default50),
     [1.4](thinkstats2002.html#hevea_default53), [1.6](thinkstats2002.html#hevea_default63),
     [1.7](thinkstats2002.html#hevea_default64), [1.8](thinkstats2002.html#hevea_default71),
@@ -518,134 +723,223 @@
     [12.8](thinkstats2013.html#hevea_default1482), [12.8](thinkstats2013.html#hevea_default1488),
     [13.1](thinkstats2014.html#hevea_default1545), [13.7](thinkstats2014.html#hevea_default1591),
     [13.8](thinkstats2014.html#hevea_default1599), [13.8](thinkstats2014.html#hevea_default1606)
+  id: totrans-102
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: DataFrame，[1.4](thinkstats2002.html#hevea_default47), [1.4](thinkstats2002.html#hevea_default50),
+    [1.4](thinkstats2002.html#hevea_default53), [1.6](thinkstats2002.html#hevea_default63),
+    [1.7](thinkstats2002.html#hevea_default64), [1.8](thinkstats2002.html#hevea_default71),
+    [1.9](thinkstats2002.html#hevea_default76), [2.4](thinkstats2003.html#hevea_default105),
+    [2.6](thinkstats2003.html#hevea_default122), [3.5](thinkstats2004.html#hevea_default218),
+    [3.5](thinkstats2004.html#hevea_default220), [3.7](thinkstats2004.html#hevea_default238),
+    [5.1](thinkstats2006.html#hevea_default323), [6.9](thinkstats2007.html#hevea_default564),
+    [7.1](thinkstats2008.html#hevea_default585), [7.2](thinkstats2008.html#hevea_default612),
+    [9.3](thinkstats2010.html#hevea_default878), [9.12](thinkstats2010.html#hevea_default993),
+    [10.4](thinkstats2011.html#hevea_default1065), [10.7](thinkstats2011.html#hevea_default1128),
+    [11.1](thinkstats2012.html#hevea_default1167), [11.4](thinkstats2012.html#hevea_default1237),
+    [11.8](thinkstats2012.html#hevea_default1315), [11.9](thinkstats2012.html#hevea_default1337),
+    [11.11](thinkstats2012.html#hevea_default1363), [12.1](thinkstats2013.html#hevea_default1374),
+    [12.1](thinkstats2013.html#hevea_default1379), [12.1](thinkstats2013.html#hevea_default1385),
+    [12.2](thinkstats2013.html#hevea_default1386), [12.3](thinkstats2013.html#hevea_default1394),
+    [12.4](thinkstats2013.html#hevea_default1424), [12.7](thinkstats2013.html#hevea_default1471),
+    [12.8](thinkstats2013.html#hevea_default1482), [12.8](thinkstats2013.html#hevea_default1488),
+    [13.1](thinkstats2014.html#hevea_default1545), [13.7](thinkstats2014.html#hevea_default1591),
+    [13.8](thinkstats2014.html#hevea_default1599), [13.8](thinkstats2014.html#hevea_default1606)
 - en: DateTimeIndex, [13.8](thinkstats2014.html#hevea_default1600)
+  id: totrans-103
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: DateTimeIndex，[13.8](thinkstats2014.html#hevea_default1600)
 - en: DictWrapper, [6.4](thinkstats2007.html#hevea_default516), [6.6](thinkstats2007.html#hevea_default528)
+  id: totrans-104
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: DictWrapper，[6.4](thinkstats2007.html#hevea_default516), [6.6](thinkstats2007.html#hevea_default528)
 - en: data collection, [1.1](thinkstats2002.html#hevea_default30)
+  id: totrans-105
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 数据收集，[1.1](thinkstats2002.html#hevea_default30)
 - en: data mining, [11.5](thinkstats2012.html#hevea_default1262), [11.10](thinkstats2012.html#hevea_default1344),
     [11.11](thinkstats2012.html#hevea_default1364)
+  id: totrans-106
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 数据挖掘，[11.5](thinkstats2012.html#hevea_default1262), [11.10](thinkstats2012.html#hevea_default1344),
+    [11.11](thinkstats2012.html#hevea_default1364)
 - en: date of birth, [11.10](thinkstats2012.html#hevea_default1339), [13.5](thinkstats2014.html#hevea_default1574)
+  id: totrans-107
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 出生日期，[11.10](thinkstats2012.html#hevea_default1339), [13.5](thinkstats2014.html#hevea_default1574)
 - en: date range, [12.4](thinkstats2013.html#hevea_default1427)
+  id: totrans-108
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 日期范围，[12.4](thinkstats2013.html#hevea_default1427)
 - en: datetime64, [12.1](thinkstats2013.html#hevea_default1384)
+  id: totrans-109
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: datetime64，[12.1](thinkstats2013.html#hevea_default1384)
 - en: debugging, [0](thinkstats2001.html#hevea_default10), [14.9](thinkstats2015.html#hevea_default1788)
+  id: totrans-110
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 调试，[0](thinkstats2001.html#hevea_default10), [14.9](thinkstats2015.html#hevea_default1788)
 - en: decile, [4.6](thinkstats2005.html#hevea_default280)
+  id: totrans-111
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 十分位数，[4.6](thinkstats2005.html#hevea_default280)
 - en: degrees of freedom, [8.2](thinkstats2009.html#hevea_default752), [14.7](thinkstats2015.html#hevea_default1762),
     [14.8](thinkstats2015.html#hevea_default1781)
+  id: totrans-112
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 自由度，[8.2](thinkstats2009.html#hevea_default752), [14.7](thinkstats2015.html#hevea_default1762),
+    [14.8](thinkstats2015.html#hevea_default1781)
 - en: density, [6.1](thinkstats2007.html#hevea_default478), [6.2](thinkstats2007.html#hevea_default488)
+  id: totrans-113
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 密度，[6.1](thinkstats2007.html#hevea_default478), [6.2](thinkstats2007.html#hevea_default488)
 - en: dependent variable, [11](thinkstats2012.html#hevea_default1151), [11.1](thinkstats2012.html#hevea_default1165),
     [11.1](thinkstats2012.html#hevea_default1185), [11.3](thinkstats2012.html#hevea_default1220),
     [11.6](thinkstats2012.html#hevea_default1280), [11.6](thinkstats2012.html#hevea_default1290),
     [11.8](thinkstats2012.html#hevea_default1308), [11.8](thinkstats2012.html#hevea_default1317),
     [11.11](thinkstats2012.html#hevea_default1350), [12.3](thinkstats2013.html#hevea_default1405)
+  id: totrans-114
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 因变量，[11](thinkstats2012.html#hevea_default1151), [11.1](thinkstats2012.html#hevea_default1165),
+    [11.1](thinkstats2012.html#hevea_default1185), [11.3](thinkstats2012.html#hevea_default1220),
+    [11.6](thinkstats2012.html#hevea_default1280), [11.6](thinkstats2012.html#hevea_default1290),
+    [11.8](thinkstats2012.html#hevea_default1308), [11.8](thinkstats2012.html#hevea_default1317),
+    [11.11](thinkstats2012.html#hevea_default1350), [12.3](thinkstats2013.html#hevea_default1405)
 - en: derivative, [6](thinkstats2007.html#hevea_default477)
+  id: totrans-115
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 导数，[6](thinkstats2007.html#hevea_default477)
 - en: descriptive statistics, [1.1](thinkstats2002.html#hevea_default31)
+  id: totrans-116
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 描述性统计，[1.1](thinkstats2002.html#hevea_default31)
 - en: deviation, [2.8](thinkstats2003.html#hevea_default141), [2.8](thinkstats2003.html#hevea_default143),
     [7.3](thinkstats2008.html#hevea_default628), [7.4](thinkstats2008.html#hevea_default639),
     [7.5](thinkstats2008.html#hevea_default647), [9.6](thinkstats2010.html#hevea_default927),
     [9.6](thinkstats2010.html#hevea_default934), [9.7](thinkstats2010.html#hevea_default940),
     [10.1](thinkstats2011.html#hevea_default1026), [10.6](thinkstats2011.html#hevea_default1102),
     [14.8](thinkstats2015.html#hevea_default1770)
+  id: totrans-117
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 偏差，[2.8](thinkstats2003.html#hevea_default141), [2.8](thinkstats2003.html#hevea_default143),
+    [7.3](thinkstats2008.html#hevea_default628), [7.4](thinkstats2008.html#hevea_default639),
+    [7.5](thinkstats2008.html#hevea_default647), [9.6](thinkstats2010.html#hevea_default927),
+    [9.6](thinkstats2010.html#hevea_default934), [9.7](thinkstats2010.html#hevea_default940),
+    [10.1](thinkstats2011.html#hevea_default1026), [10.6](thinkstats2011.html#hevea_default1102),
+    [14.8](thinkstats2015.html#hevea_default1770)
 - en: diagnosis, [13.3](thinkstats2014.html#hevea_default1563)
+  id: totrans-118
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 诊断，[13.3](thinkstats2014.html#hevea_default1563)
 - en: dice, [8.1](thinkstats2009.html#hevea_default741), [9.6](thinkstats2010.html#hevea_default922)
+  id: totrans-119
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 骰子，[8.1](thinkstats2009.html#hevea_default741), [9.6](thinkstats2010.html#hevea_default922)
 - en: dictionary, [2.1](thinkstats2003.html#hevea_default93), [6.4](thinkstats2007.html#hevea_default520)
+  id: totrans-120
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 字典，[2.1](thinkstats2003.html#hevea_default93), [6.4](thinkstats2007.html#hevea_default520)
 - en: digitize, [7.2](thinkstats2008.html#hevea_default610)
+  id: totrans-121
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 数字化，[7.2](thinkstats2008.html#hevea_default610)
 - en: discrete distribution, [6.3](thinkstats2007.html#hevea_default502)
+  id: totrans-122
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 离散分布，[6.3](thinkstats2007.html#hevea_default502)
 - en: discretize, [6.3](thinkstats2007.html#hevea_default511), [6.10](thinkstats2007.html#hevea_default571)
+  id: totrans-123
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 离散化，[6.3](thinkstats2007.html#hevea_default511), [6.10](thinkstats2007.html#hevea_default571)
 - en: distribution, [0](thinkstats2001.html#hevea_default1), [2.1](thinkstats2003.html#hevea_default90),
     [2.12](thinkstats2003.html#hevea_default163)
+  id: totrans-124
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 分布，[0](thinkstats2001.html#hevea_default1), [2.1](thinkstats2003.html#hevea_default90),
+    [2.12](thinkstats2003.html#hevea_default163)
 - en: analytic, [5](thinkstats2006.html#hevea_default312), [5.9](thinkstats2006.html#hevea_default459)
+  id: totrans-125
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 分析的，[5](thinkstats2006.html#hevea_default312), [5.9](thinkstats2006.html#hevea_default459)
 - en: chi-squared, [14.8](thinkstats2015.html#hevea_default1775)
+  id: totrans-126
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 卡方分布，[14.8](thinkstats2015.html#hevea_default1775)
 - en: empirical, [5](thinkstats2006.html#hevea_default314), [5.8](thinkstats2006.html#hevea_default448),
     [5.9](thinkstats2006.html#hevea_default457)
+  id: totrans-127
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 经验的，[5](thinkstats2006.html#hevea_default314), [5.8](thinkstats2006.html#hevea_default448),
+    [5.9](thinkstats2006.html#hevea_default457)
 - en: exponential, [5.1](thinkstats2006.html#hevea_default317), [5.3](thinkstats2006.html#hevea_default353),
     [5.6](thinkstats2006.html#hevea_default411), [5.8](thinkstats2006.html#hevea_default445),
     [6](thinkstats2007.html#hevea_default471), [6.3](thinkstats2007.html#hevea_default506),
     [8.5](thinkstats2009.html#hevea_default789), [8.6](thinkstats2009.html#hevea_default809),
     [14.4](thinkstats2015.html#hevea_default1698)
+  id: totrans-128
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 指数分布，[5.1](thinkstats2006.html#hevea_default317), [5.3](thinkstats2006.html#hevea_default353),
+    [5.6](thinkstats2006.html#hevea_default411), [5.8](thinkstats2006.html#hevea_default445),
+    [6](thinkstats2007.html#hevea_default471), [6.3](thinkstats2007.html#hevea_default506),
+    [8.5](thinkstats2009.html#hevea_default789), [8.6](thinkstats2009.html#hevea_default809),
+    [14.4](thinkstats2015.html#hevea_default1698)
 - en: Gaussian, [5.2](thinkstats2006.html#hevea_default342), [5.3](thinkstats2006.html#hevea_default360),
     [5.4](thinkstats2006.html#hevea_default390), [5.8](thinkstats2006.html#hevea_default433),
     [6](thinkstats2007.html#hevea_default475), [6.3](thinkstats2007.html#hevea_default510),
@@ -653,18 +947,31 @@
     [8.1](thinkstats2009.html#hevea_default717), [8.1](thinkstats2009.html#hevea_default724),
     [8.2](thinkstats2009.html#hevea_default746), [14.1](thinkstats2015.html#hevea_default1651),
     [14.4](thinkstats2015.html#hevea_default1687), [14.4](thinkstats2015.html#hevea_default1705)
+  id: totrans-129
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 高斯分布，[5.2](thinkstats2006.html#hevea_default342), [5.3](thinkstats2006.html#hevea_default360),
+    [5.4](thinkstats2006.html#hevea_default390), [5.8](thinkstats2006.html#hevea_default433),
+    [6](thinkstats2007.html#hevea_default475), [6.3](thinkstats2007.html#hevea_default510),
+    [7.3](thinkstats2008.html#hevea_default632), [7.7](thinkstats2008.html#hevea_default666),
+    [8.1](thinkstats2009.html#hevea_default717), [8.1](thinkstats2009.html#hevea_default724),
+    [8.2](thinkstats2009.html#hevea_default746), [14.1](thinkstats2015.html#hevea_default1651),
+    [14.4](thinkstats2015.html#hevea_default1687), [14.4](thinkstats2015.html#hevea_default1705)
 - en: lognormal, [5.4](thinkstats2006.html#hevea_default379), [5.4](thinkstats2006.html#hevea_default392),
     [5.8](thinkstats2006.html#hevea_default454), [7.7](thinkstats2008.html#hevea_default680),
     [14.4](thinkstats2015.html#hevea_default1700), [14.5](thinkstats2015.html#hevea_default1713),
     [14.10](thinkstats2015.html#hevea_default1794)
+  id: totrans-130
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 对数正态分布，[5.4](thinkstats2006.html#hevea_default379), [5.4](thinkstats2006.html#hevea_default392),
+    [5.8](thinkstats2006.html#hevea_default454), [7.7](thinkstats2008.html#hevea_default680),
+    [14.4](thinkstats2015.html#hevea_default1700), [14.5](thinkstats2015.html#hevea_default1713),
+    [14.10](thinkstats2015.html#hevea_default1794)
 - en: normal, [5.2](thinkstats2006.html#hevea_default340), [5.3](thinkstats2006.html#hevea_default358),
     [5.4](thinkstats2006.html#hevea_default388), [5.8](thinkstats2006.html#hevea_default431),
     [6](thinkstats2007.html#hevea_default473), [6.3](thinkstats2007.html#hevea_default508),
@@ -672,134 +979,193 @@
     [8.1](thinkstats2009.html#hevea_default715), [8.1](thinkstats2009.html#hevea_default722),
     [8.2](thinkstats2009.html#hevea_default744), [14.1](thinkstats2015.html#hevea_default1649),
     [14.4](thinkstats2015.html#hevea_default1685), [14.4](thinkstats2015.html#hevea_default1703)
+  id: totrans-131
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 正态分布，[5.2](thinkstats2006.html#hevea_default340), [5.3](thinkstats2006.html#hevea_default358),
+    [5.4](thinkstats2006.html#hevea_default388), [5.8](thinkstats2006.html#hevea_default431),
+    [6](thinkstats2007.html#hevea_default473), [6.3](thinkstats2007.html#hevea_default508),
+    [7.3](thinkstats2008.html#hevea_default630), [7.7](thinkstats2008.html#hevea_default664),
+    [8.1](thinkstats2009.html#hevea_default715), [8.1](thinkstats2009.html#hevea_default722),
+    [8.2](thinkstats2009.html#hevea_default744), [14.1](thinkstats2015.html#hevea_default1649),
+    [14.4](thinkstats2015.html#hevea_default1685), [14.4](thinkstats2015.html#hevea_default1703)
 - en: Pareto, [5.5](thinkstats2006.html#hevea_default399), [5.5](thinkstats2006.html#hevea_default404),
     [5.7](thinkstats2006.html#hevea_default428), [5.8](thinkstats2006.html#hevea_default440),
     [5.8](thinkstats2006.html#hevea_default452), [14.4](thinkstats2015.html#hevea_default1696),
     [14.5](thinkstats2015.html#hevea_default1716)
+  id: totrans-132
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 帕累托分布，[5.5](thinkstats2006.html#hevea_default399), [5.5](thinkstats2006.html#hevea_default404),
+    [5.7](thinkstats2006.html#hevea_default428), [5.8](thinkstats2006.html#hevea_default440),
+    [5.8](thinkstats2006.html#hevea_default452), [14.4](thinkstats2015.html#hevea_default1696),
+    [14.5](thinkstats2015.html#hevea_default1716)
 - en: Student’s t, [14.7](thinkstats2015.html#hevea_default1761)
+  id: totrans-133
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 学生t分布，[14.7](thinkstats2015.html#hevea_default1761)
 - en: uniform, [4.9](thinkstats2005.html#hevea_default299), [5.6](thinkstats2006.html#hevea_default416),
     [7.1](thinkstats2008.html#hevea_default593), [7.3](thinkstats2008.html#hevea_default634),
     [12.7](thinkstats2013.html#hevea_default1470)
+  id: totrans-134
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 均匀分布，[4.9](thinkstats2005.html#hevea_default299)，[5.6](thinkstats2006.html#hevea_default416)，[7.1](thinkstats2008.html#hevea_default593)，[7.3](thinkstats2008.html#hevea_default634)，[12.7](thinkstats2013.html#hevea_default1470)
 - en: Weibull, [5.8](thinkstats2006.html#hevea_default443)
+  id: totrans-135
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 威布尔分布，[5.8](thinkstats2006.html#hevea_default443)
 - en: distribution framework, [6.3](thinkstats2007.html#hevea_default497)
+  id: totrans-136
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 分布框架，[6.3](thinkstats2007.html#hevea_default497)
 - en: distributions, comparing, [4.5](thinkstats2005.html#hevea_default267)
+  id: totrans-137
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 分布，比较，[4.5](thinkstats2005.html#hevea_default267)
 - en: divorce, [13.11](thinkstats2014.html#hevea_default1633)
+  id: totrans-138
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 离婚，[13.11](thinkstats2014.html#hevea_default1633)
 - en: dot product, [7.4](thinkstats2008.html#hevea_default641)
+  id: totrans-139
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 点积，[7.4](thinkstats2008.html#hevea_default641)
 - en: dropna, [6.8](thinkstats2007.html#hevea_default551), [6.8](thinkstats2007.html#hevea_default554),
     [7.2](thinkstats2008.html#hevea_default609), [9.5](thinkstats2010.html#hevea_default914),
     [10.2](thinkstats2011.html#hevea_default1045), [10.6](thinkstats2011.html#hevea_default1106),
     [12.5](thinkstats2013.html#hevea_default1445)
+  id: totrans-140
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: dropna，[6.8](thinkstats2007.html#hevea_default551)，[6.8](thinkstats2007.html#hevea_default554)，[7.2](thinkstats2008.html#hevea_default609)，[9.5](thinkstats2010.html#hevea_default914)，[10.2](thinkstats2011.html#hevea_default1045)，[10.6](thinkstats2011.html#hevea_default1106)，[12.5](thinkstats2013.html#hevea_default1445)
 - en: EstimatedPdf, [6.2](thinkstats2007.html#hevea_default490)
+  id: totrans-141
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: EstimatedPdf，[6.2](thinkstats2007.html#hevea_default490)
 - en: EWMA, [12.4](thinkstats2013.html#hevea_default1435), [12.6](thinkstats2013.html#hevea_default1454),
     [12.10](thinkstats2013.html#hevea_default1517), [12.11](thinkstats2013.html#hevea_default1529)
+  id: totrans-142
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: EWMA，[12.4](thinkstats2013.html#hevea_default1435)，[12.6](thinkstats2013.html#hevea_default1454)，[12.10](thinkstats2013.html#hevea_default1517)，[12.11](thinkstats2013.html#hevea_default1529)
 - en: effect size, [2.9](thinkstats2003.html#hevea_default147), [2.9](thinkstats2003.html#hevea_default148),
     [2.9](thinkstats2003.html#hevea_default150), [2.12](thinkstats2003.html#hevea_default177),
     [9.3](thinkstats2010.html#hevea_default886), [9.10](thinkstats2010.html#hevea_default968),
     [9.13](thinkstats2010.html#hevea_default1006)
+  id: totrans-143
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 效应大小，[2.9](thinkstats2003.html#hevea_default147)，[2.9](thinkstats2003.html#hevea_default148)，[2.9](thinkstats2003.html#hevea_default150)，[2.12](thinkstats2003.html#hevea_default177)，[9.3](thinkstats2010.html#hevea_default886)，[9.10](thinkstats2010.html#hevea_default968)，[9.13](thinkstats2010.html#hevea_default1006)
 - en: electrical component, [13](thinkstats2014.html#hevea_default1538)
+  id: totrans-144
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 电子元件，[13](thinkstats2014.html#hevea_default1538)
 - en: empirical distribution, [5](thinkstats2006.html#hevea_default313), [5.8](thinkstats2006.html#hevea_default447),
     [5.9](thinkstats2006.html#hevea_default456)
+  id: totrans-145
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 经验分布，[5](thinkstats2006.html#hevea_default313)，[5.8](thinkstats2006.html#hevea_default447)，[5.9](thinkstats2006.html#hevea_default456)
 - en: endogenous variable, [11.8](thinkstats2012.html#hevea_default1319), [11.11](thinkstats2012.html#hevea_default1351),
     [12.3](thinkstats2013.html#hevea_default1407)
+  id: totrans-146
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 内生变量，[11.8](thinkstats2012.html#hevea_default1319)，[11.11](thinkstats2012.html#hevea_default1351)，[12.3](thinkstats2013.html#hevea_default1407)
 - en: equally spaced data, [12.1](thinkstats2013.html#hevea_default1378)
+  id: totrans-147
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 等间距数据，[12.1](thinkstats2013.html#hevea_default1378)
 - en: error, [8.1](thinkstats2009.html#hevea_default728), [9.9](thinkstats2010.html#hevea_default959)
+  id: totrans-148
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 误差，[8.1](thinkstats2009.html#hevea_default728)，[9.9](thinkstats2010.html#hevea_default959)
 - en: estimation, [0](thinkstats2001.html#hevea_default6), [1.1](thinkstats2002.html#hevea_default33),
     [8](thinkstats2009.html#hevea_default713), [8.7](thinkstats2009.html#hevea_default816),
     [8.7](thinkstats2009.html#hevea_default817), [10.4](thinkstats2011.html#hevea_default1060)
+  id: totrans-149
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 估计，[0](thinkstats2001.html#hevea_default6)，[1.1](thinkstats2002.html#hevea_default33)，[8](thinkstats2009.html#hevea_default713)，[8.7](thinkstats2009.html#hevea_default816)，[8.7](thinkstats2009.html#hevea_default817)，[10.4](thinkstats2011.html#hevea_default1060)
 - en: estimator, [8.1](thinkstats2009.html#hevea_default720), [8.1](thinkstats2009.html#hevea_default735)
+  id: totrans-150
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 估计器，[8.1](thinkstats2009.html#hevea_default720)，[8.1](thinkstats2009.html#hevea_default735)
 - en: biased, [8.2](thinkstats2009.html#hevea_default749), [8.2](thinkstats2009.html#hevea_default755),
     [8.3](thinkstats2009.html#hevea_default762), [8.5](thinkstats2009.html#hevea_default801),
     [8.6](thinkstats2009.html#hevea_default804), [8.6](thinkstats2009.html#hevea_default812),
     [14.2](thinkstats2015.html#hevea_default1665)
+  id: totrans-151
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 有偏的，[8.2](thinkstats2009.html#hevea_default749)，[8.2](thinkstats2009.html#hevea_default755)，[8.3](thinkstats2009.html#hevea_default762)，[8.5](thinkstats2009.html#hevea_default801)，[8.6](thinkstats2009.html#hevea_default804)，[8.6](thinkstats2009.html#hevea_default812)，[14.2](thinkstats2015.html#hevea_default1665)
 - en: unbiased, [8.2](thinkstats2009.html#hevea_default751)
+  id: totrans-152
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 无偏的，[8.2](thinkstats2009.html#hevea_default751)
 - en: ethics, [1.8](thinkstats2002.html#hevea_default74), [2.10](thinkstats2003.html#hevea_default155),
     [2.11](thinkstats2003.html#hevea_default158), [7.8](thinkstats2008.html#hevea_default693),
     [12](thinkstats2013.html#hevea_default1372), [13.6](thinkstats2014.html#hevea_default1585)
+  id: totrans-153
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 伦理学，[1.8](thinkstats2002.html#hevea_default74)，[2.10](thinkstats2003.html#hevea_default155)，[2.11](thinkstats2003.html#hevea_default158)，[7.8](thinkstats2008.html#hevea_default693)，[12](thinkstats2013.html#hevea_default1372)，[13.6](thinkstats2014.html#hevea_default1585)
 - en: exogenous variable, [11.8](thinkstats2012.html#hevea_default1318), [11.11](thinkstats2012.html#hevea_default1353),
     [12.3](thinkstats2013.html#hevea_default1406)
+  id: totrans-154
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 外生变量，[11.8](thinkstats2012.html#hevea_default1318)，[11.11](thinkstats2012.html#hevea_default1353)，[12.3](thinkstats2013.html#hevea_default1406)
 - en: expected remaining lifetime, [13.10](thinkstats2014.html#hevea_default1621)
+  id: totrans-155
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 预期剩余寿命，[13.10](thinkstats2014.html#hevea_default1621)
 - en: explanatory variable, [11](thinkstats2012.html#hevea_default1150), [11](thinkstats2012.html#hevea_default1158),
     [11.1](thinkstats2012.html#hevea_default1164), [11.1](thinkstats2012.html#hevea_default1184),
     [11.2](thinkstats2012.html#hevea_default1196), [11.3](thinkstats2012.html#hevea_default1219),
@@ -809,78 +1175,108 @@
     [11.8](thinkstats2012.html#hevea_default1316), [11.11](thinkstats2012.html#hevea_default1352),
     [12.3](thinkstats2013.html#hevea_default1400), [12.3](thinkstats2013.html#hevea_default1404),
     [12.8](thinkstats2013.html#hevea_default1479)
+  id: totrans-156
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 解释变量，[11]（thinkstats2012.html＃hevea_default1150），[11]（thinkstats2012.html＃hevea_default1158），[11.1]（thinkstats2012.html＃hevea_default1164），[11.1]（thinkstats2012.html＃hevea_default1184），[11.2]（thinkstats2012.html＃hevea_default1196），[11.3]（thinkstats2012.html＃hevea_default1219），[11.3]（thinkstats2012.html＃hevea_default1225），[11.4]（thinkstats2012.html＃hevea_default1245），[11.5]（thinkstats2012.html＃hevea_default1254），[11.5]（thinkstats2012.html＃hevea_default1264），[11.6]（thinkstats2012.html＃hevea_default1279），[11.6]（thinkstats2012.html＃hevea_default1289），[11.8]（thinkstats2012.html＃hevea_default1316），[11.11]（thinkstats2012.html＃hevea_default1352），[12.3]（thinkstats2013.html＃hevea_default1400），[12.3]（thinkstats2013.html＃hevea_default1404），[12.8]（thinkstats2013.html＃hevea_default1479）
 - en: exploration, [14.9](thinkstats2015.html#hevea_default1789)
+  id: totrans-157
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 探索，[14.9]（thinkstats2015.html＃hevea_default1789）
 - en: exploratory data analysis, [1.1](thinkstats2002.html#hevea_default32), [3.3](thinkstats2004.html#hevea_default204)
+  id: totrans-158
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 探索性数据分析，[1.1]（thinkstats2002.html＃hevea_default32），[3.3]（thinkstats2004.html＃hevea_default204）
 - en: exponential distribution, [5.1](thinkstats2006.html#hevea_default316), [5.3](thinkstats2006.html#hevea_default352),
     [5.6](thinkstats2006.html#hevea_default410), [5.8](thinkstats2006.html#hevea_default444),
     [6](thinkstats2007.html#hevea_default470), [6.3](thinkstats2007.html#hevea_default505),
     [8.5](thinkstats2009.html#hevea_default788), [8.6](thinkstats2009.html#hevea_default808),
     [14.4](thinkstats2015.html#hevea_default1697)
+  id: totrans-159
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 指数分布，[5.1]（thinkstats2006.html＃hevea_default316），[5.3]（thinkstats2006.html＃hevea_default352），[5.6]（thinkstats2006.html＃hevea_default410），[5.8]（thinkstats2006.html＃hevea_default444），[6]（thinkstats2007.html＃hevea_default470），[6.3]（thinkstats2007.html＃hevea_default505），[8.5]（thinkstats2009.html＃hevea_default788），[8.6]（thinkstats2009.html＃hevea_default808），[14.4]（thinkstats2015.html＃hevea_default1697）
 - en: exponentially-weighted moving average, [12.4](thinkstats2013.html#hevea_default1434),
     [12.11](thinkstats2013.html#hevea_default1528)
+  id: totrans-160
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 指数加权移动平均，[12.4]（thinkstats2013.html＃hevea_default1434），[12.11]（thinkstats2013.html＃hevea_default1528）
 - en: extrapolation, [13.9](thinkstats2014.html#hevea_default1611)
+  id: totrans-161
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 外推，[13.9]（thinkstats2014.html＃hevea_default1611）
 - en: FillBetween, [10.4](thinkstats2011.html#hevea_default1072), [12.8](thinkstats2013.html#hevea_default1494),
     [13.7](thinkstats2014.html#hevea_default1593)
+  id: totrans-162
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: FillBetween，[10.4]（thinkstats2011.html＃hevea_default1072），[12.8]（thinkstats2013.html＃hevea_default1494），[13.7]（thinkstats2014.html＃hevea_default1593）
 - en: FitLine, [10.2](thinkstats2011.html#hevea_default1039)
+  id: totrans-163
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: FitLine，[10.2]（thinkstats2011.html＃hevea_default1039）
 - en: false negative, [9.9](thinkstats2010.html#hevea_default965), [9.13](thinkstats2010.html#hevea_default1019)
+  id: totrans-164
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 假阴性，[9.9]（thinkstats2010.html＃hevea_default965），[9.13]（thinkstats2010.html＃hevea_default1019）
 - en: false positive, [9.9](thinkstats2010.html#hevea_default964), [9.13](thinkstats2010.html#hevea_default1018),
     [12.7](thinkstats2013.html#hevea_default1466)
+  id: totrans-165
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 假阳性，[9.9]（thinkstats2010.html＃hevea_default964），[9.13]（thinkstats2010.html＃hevea_default1018），[12.7]（thinkstats2013.html＃hevea_default1466）
 - en: field size, [4.8](thinkstats2005.html#hevea_default294)
+  id: totrans-166
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 场地大小，[4.8]（thinkstats2005.html＃hevea_default294）
 - en: fillna, [12.5](thinkstats2013.html#hevea_default1442), [12.5](thinkstats2013.html#hevea_default1446),
     [12.10](thinkstats2013.html#hevea_default1523)
+  id: totrans-167
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 填充，[12.5]（thinkstats2013.html＃hevea_default1442），[12.5]（thinkstats2013.html＃hevea_default1446），[12.10]（thinkstats2013.html＃hevea_default1523）
 - en: first babies, [1](thinkstats2002.html#hevea_default23)
+  id: totrans-168
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 第一个宝宝，[1]（thinkstats2002.html＃hevea_default23）
 - en: fitted values, [12.3](thinkstats2013.html#hevea_default1409)
+  id: totrans-169
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 拟合值，[12.3]（thinkstats2013.html＃hevea_default1409）
 - en: frequency, [2.1](thinkstats2003.html#hevea_default92), [2.2](thinkstats2003.html#hevea_default97),
     [2.2](thinkstats2003.html#hevea_default99), [2.11](thinkstats2003.html#hevea_default161),
     [2.12](thinkstats2003.html#hevea_default165), [3.1](thinkstats2004.html#hevea_default181),
     [3.7](thinkstats2004.html#hevea_default234), [6.4](thinkstats2007.html#hevea_default521),
     [6.6](thinkstats2007.html#hevea_default531), [9.6](thinkstats2010.html#hevea_default924),
     [9.6](thinkstats2010.html#hevea_default929)
+  id: totrans-170
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 频率，[2.1]（thinkstats2003.html＃hevea_default92），[2.2]（thinkstats2003.html＃hevea_default97），[2.2]（thinkstats2003.html＃hevea_default99），[2.11]（thinkstats2003.html＃hevea_default161），[2.12]（thinkstats2003.html＃hevea_default165），[3.1]（thinkstats2004.html＃hevea_default181），[3.7]（thinkstats2004.html＃hevea_default234），[6.4]（thinkstats2007.html＃hevea_default521），[6.6]（thinkstats2007.html＃hevea_default531），[9.6]（thinkstats2010.html＃hevea_default924），[9.6]（thinkstats2010.html＃hevea_default929）
 - en: Gaussian distribution, [2.12](thinkstats2003.html#hevea_default167), [5.2](thinkstats2006.html#hevea_default341),
     [5.3](thinkstats2006.html#hevea_default359), [5.4](thinkstats2006.html#hevea_default389),
     [5.8](thinkstats2006.html#hevea_default432), [6](thinkstats2007.html#hevea_default474),
@@ -889,44 +1285,59 @@
     [8.1](thinkstats2009.html#hevea_default723), [8.2](thinkstats2009.html#hevea_default745),
     [14.1](thinkstats2015.html#hevea_default1650), [14.4](thinkstats2015.html#hevea_default1686),
     [14.4](thinkstats2015.html#hevea_default1704)
+  id: totrans-171
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 高斯分布，[2.12]（thinkstats2003.html＃hevea_default167），[5.2]（thinkstats2006.html＃hevea_default341），[5.3]（thinkstats2006.html＃hevea_default359），[5.4]（thinkstats2006.html＃hevea_default389），[5.8]（thinkstats2006.html＃hevea_default432），[6]（thinkstats2007.html＃hevea_default474），[6.3]（thinkstats2007.html＃hevea_default509），[7.3]（thinkstats2008.html＃hevea_default631），[7.7]（thinkstats2008.html＃hevea_default665），[8.1]（thinkstats2009.html＃hevea_default716），[8.1]（thinkstats2009.html＃hevea_default723），[8.2]（thinkstats2009.html＃hevea_default745），[14.1]（thinkstats2015.html＃hevea_default1650），[14.4]（thinkstats2015.html＃hevea_default1686），[14.4]（thinkstats2015.html＃hevea_default1704）
 - en: GitHub, [0.2](thinkstats2001.html#hevea_default14)
+  id: totrans-172
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: GitHub，[0.2]（thinkstats2001.html＃hevea_default14）
 - en: Group, Blue Man, [5.8](thinkstats2006.html#hevea_default436)
+  id: totrans-173
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: Group，Blue Man，[5.8]（thinkstats2006.html＃hevea_default436）
 - en: gender gap, [14.10](thinkstats2015.html#hevea_default1810)
+  id: totrans-174
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 性别差距，[14.10]（thinkstats2015.html＃hevea_default1810）
 - en: generative process, [5.7](thinkstats2006.html#hevea_default426)
+  id: totrans-175
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 生成过程，[5.7]（thinkstats2006.html＃hevea_default426）
 - en: goodness of fit, [10.5](thinkstats2011.html#hevea_default1073), [10.9](thinkstats2011.html#hevea_default1145)
+  id: totrans-176
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 拟合优度，[10.5]（thinkstats2011.html＃hevea_default1073），[10.9]（thinkstats2011.html＃hevea_default1145）
 - en: gorilla, [8.3](thinkstats2009.html#hevea_default756), [8.3](thinkstats2009.html#hevea_default765),
     [8.3](thinkstats2009.html#hevea_default772), [8.4](thinkstats2009.html#hevea_default776),
     [14.1](thinkstats2015.html#hevea_default1652), [14.2](thinkstats2015.html#hevea_default1662),
     [14.3](thinkstats2015.html#hevea_default1678)
+  id: totrans-177
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: groupby, [7.2](thinkstats2008.html#hevea_default613), [12.1](thinkstats2013.html#hevea_default1380),
     [12.1](thinkstats2013.html#hevea_default1381), [13.8](thinkstats2014.html#hevea_default1607),
     [13.9](thinkstats2014.html#hevea_default1615), [13.11](thinkstats2014.html#hevea_default1636)
+  id: totrans-178
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: HazardFunction, [13.2](thinkstats2014.html#hevea_default1559), [13.4](thinkstats2014.html#hevea_default1572),
     [13.9](thinkstats2014.html#hevea_default1612)
+  id: totrans-179
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -938,10 +1349,12 @@
     [3.2](thinkstats2004.html#hevea_default203), [6.4](thinkstats2007.html#hevea_default515),
     [6.4](thinkstats2007.html#hevea_default522), [6.5](thinkstats2007.html#hevea_default524),
     [9.2](thinkstats2010.html#hevea_default860), [9.6](thinkstats2010.html#hevea_default930)
+  id: totrans-180
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Holm-Bonferroni method, [9.11](thinkstats2010.html#hevea_default982)
+  id: totrans-181
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -950,379 +1363,521 @@
     [9.3](thinkstats2010.html#hevea_default884), [9.5](thinkstats2010.html#hevea_default911),
     [9.6](thinkstats2010.html#hevea_default928), [9.8](thinkstats2010.html#hevea_default950),
     [10.6](thinkstats2011.html#hevea_default1100), [12.10](thinkstats2013.html#hevea_default1511)
+  id: totrans-182
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: hashable, [6.4](thinkstats2007.html#hevea_default519)
+  id: totrans-183
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: hazard function, [13.2](thinkstats2014.html#hevea_default1555), [13.4](thinkstats2014.html#hevea_default1568),
     [13.5](thinkstats2014.html#hevea_default1578), [13.12](thinkstats2014.html#hevea_default1639)
+  id: totrans-184
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: height, [5.8](thinkstats2006.html#hevea_default434), [5.8](thinkstats2006.html#hevea_default438),
     [7.1](thinkstats2008.html#hevea_default589)
+  id: totrans-185
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: hexbin plot, [7.1](thinkstats2008.html#hevea_default601)
+  id: totrans-186
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: histogram, [2.1](thinkstats2003.html#hevea_default91), [2.2](thinkstats2003.html#hevea_default95),
     [2.4](thinkstats2003.html#hevea_default104), [2.5](thinkstats2003.html#hevea_default117),
     [2.12](thinkstats2003.html#hevea_default164)
+  id: totrans-187
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: hockey, [8.6](thinkstats2009.html#hevea_default810)
+  id: totrans-188
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: hockey stick graph, [12](thinkstats2013.html#hevea_default1369)
+  id: totrans-189
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: hstack, [9.8](thinkstats2010.html#hevea_default953)
+  id: totrans-190
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: hypothesis testing, [0](thinkstats2001.html#hevea_default7), [1.1](thinkstats2002.html#hevea_default34),
     [9.1](thinkstats2010.html#hevea_default832), [9.13](thinkstats2010.html#hevea_default1004),
     [14.6](thinkstats2015.html#hevea_default1737)
+  id: totrans-191
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Index, [1.4](thinkstats2002.html#hevea_default49), [13.8](thinkstats2014.html#hevea_default1601)
+  id: totrans-192
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: IPython, [1.9](thinkstats2002.html#hevea_default75)
+  id: totrans-193
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: IQ, [10.5](thinkstats2011.html#hevea_default1086)
+  id: totrans-194
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: identical, [14.4](thinkstats2015.html#hevea_default1692)
+  id: totrans-195
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: income, [6.9](thinkstats2007.html#hevea_default560), [11.5](thinkstats2012.html#hevea_default1259),
     [11.5](thinkstats2012.html#hevea_default1268), [11.5](thinkstats2012.html#hevea_default1272)
+  id: totrans-196
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: incomplete information, [13.3](thinkstats2014.html#hevea_default1564)
+  id: totrans-197
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: independent, [14.4](thinkstats2015.html#hevea_default1691)
+  id: totrans-198
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: indexer
+  id: totrans-199
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: loc, [1.7](thinkstats2002.html#hevea_default67)
+  id: totrans-200
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
 - en: inf, [13.10](thinkstats2014.html#hevea_default1630)
+  id: totrans-201
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: installation, [0.2](thinkstats2001.html#hevea_default21)
+  id: totrans-202
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: interarrival time, [5.1](thinkstats2006.html#hevea_default319), [5.9](thinkstats2006.html#hevea_default461)
+  id: totrans-203
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: intercept, [10.1](thinkstats2011.html#hevea_default1028), [10.2](thinkstats2011.html#hevea_default1044)
+  id: totrans-204
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 截距，[10.1](thinkstats2011.html#hevea_default1028)，[10.2](thinkstats2011.html#hevea_default1044)
 - en: internal class, [6.4](thinkstats2007.html#hevea_default517)
+  id: totrans-205
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 内部类，[6.4](thinkstats2007.html#hevea_default517)
 - en: interpolation, [6.2](thinkstats2007.html#hevea_default495)
+  id: totrans-206
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 插值，[6.2](thinkstats2007.html#hevea_default495)
 - en: interquartile range, [4.6](thinkstats2005.html#hevea_default270), [4.10](thinkstats2005.html#hevea_default308)
+  id: totrans-207
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 四分位距，[4.6](thinkstats2005.html#hevea_default270)，[4.10](thinkstats2005.html#hevea_default308)
 - en: interval, [12.4](thinkstats2013.html#hevea_default1426), [12.8](thinkstats2013.html#hevea_default1503)
+  id: totrans-208
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 间隔，[12.4](thinkstats2013.html#hevea_default1426)，[12.8](thinkstats2013.html#hevea_default1503)
 - en: confidence, [8.7](thinkstats2009.html#hevea_default831)
+  id: totrans-209
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 置信度，[8.7](thinkstats2009.html#hevea_default831)
 - en: inverse CDF, [4.4](thinkstats2005.html#hevea_default256), [4.10](thinkstats2005.html#hevea_default305),
     [5.6](thinkstats2006.html#hevea_default417), [6.6](thinkstats2007.html#hevea_default529),
     [14.2](thinkstats2015.html#hevea_default1668), [14.5](thinkstats2015.html#hevea_default1720),
     [14.5](thinkstats2015.html#hevea_default1727)
+  id: totrans-210
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 逆CDF，[4.4](thinkstats2005.html#hevea_default256)，[4.10](thinkstats2005.html#hevea_default305)，[5.6](thinkstats2006.html#hevea_default417)，[6.6](thinkstats2007.html#hevea_default529)，[14.2](thinkstats2015.html#hevea_default1668)，[14.5](thinkstats2015.html#hevea_default1720)，[14.5](thinkstats2015.html#hevea_default1727)
 - en: inverse CDF algorithm, [4.7](thinkstats2005.html#hevea_default288), [5.6](thinkstats2006.html#hevea_default414)
+  id: totrans-211
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 逆CDF算法，[4.7](thinkstats2005.html#hevea_default288)，[5.6](thinkstats2006.html#hevea_default414)
 - en: iterative solver, [11.7](thinkstats2012.html#hevea_default1304)
+  id: totrans-212
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 迭代求解器，[11.7](thinkstats2012.html#hevea_default1304)
 - en: iterator, [14.5](thinkstats2015.html#hevea_default1724)
+  id: totrans-213
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 迭代器，[14.5](thinkstats2015.html#hevea_default1724)
 - en: James Joyce Ramble, [4.8](thinkstats2005.html#hevea_default292)
+  id: totrans-214
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 詹姆斯·乔伊斯漫步，[4.8](thinkstats2005.html#hevea_default292)
 - en: Janert, Philipp, [12.9](thinkstats2013.html#hevea_default1506)
+  id: totrans-215
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: Janert，Philipp，[12.9](thinkstats2013.html#hevea_default1506)
 - en: jitter, [7.1](thinkstats2008.html#hevea_default591), [7.10](thinkstats2008.html#hevea_default701)
+  id: totrans-216
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 抖动，[7.1](thinkstats2008.html#hevea_default591)，[7.10](thinkstats2008.html#hevea_default701)
 - en: join, [11.4](thinkstats2012.html#hevea_default1235), [11.4](thinkstats2012.html#hevea_default1241),
     [11.11](thinkstats2012.html#hevea_default1362)
+  id: totrans-217
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 连接，[11.4](thinkstats2012.html#hevea_default1235)，[11.4](thinkstats2012.html#hevea_default1241)，[11.11](thinkstats2012.html#hevea_default1362)
 - en: Kaplan-Meier estimation, [13.4](thinkstats2014.html#hevea_default1567), [13.12](thinkstats2014.html#hevea_default1640)
+  id: totrans-218
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: Kaplan-Meier估计，[13.4](thinkstats2014.html#hevea_default1567)，[13.12](thinkstats2014.html#hevea_default1640)
 - en: KDE, [6.2](thinkstats2007.html#hevea_default484), [6.10](thinkstats2007.html#hevea_default570)
+  id: totrans-219
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: KDE，[6.2](thinkstats2007.html#hevea_default484)，[6.10](thinkstats2007.html#hevea_default570)
 - en: kernel density estimation, [6.2](thinkstats2007.html#hevea_default485), [6.10](thinkstats2007.html#hevea_default569)
+  id: totrans-220
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 核密度估计，[6.2](thinkstats2007.html#hevea_default485)，[6.10](thinkstats2007.html#hevea_default569)
 - en: LeastSquares, [10.2](thinkstats2011.html#hevea_default1037)
+  id: totrans-221
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 最小二乘，[10.2](thinkstats2011.html#hevea_default1037)
 - en: lag, [12.6](thinkstats2013.html#hevea_default1452), [12.7](thinkstats2013.html#hevea_default1462),
     [12.7](thinkstats2013.html#hevea_default1477), [12.10](thinkstats2013.html#hevea_default1513),
     [12.11](thinkstats2013.html#hevea_default1532)
+  id: totrans-222
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 滞后，[12.6](thinkstats2013.html#hevea_default1452)，[12.7](thinkstats2013.html#hevea_default1462)，[12.7](thinkstats2013.html#hevea_default1477)，[12.10](thinkstats2013.html#hevea_default1513)，[12.11](thinkstats2013.html#hevea_default1532)
 - en: least squares fit, [10.1](thinkstats2011.html#hevea_default1022), [10.9](thinkstats2011.html#hevea_default1143)
+  id: totrans-223
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 最小二乘拟合，[10.1](thinkstats2011.html#hevea_default1022)，[10.9](thinkstats2011.html#hevea_default1143)
 - en: length
+  id: totrans-224
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 长度
 - en: pregnancy, [2.6](thinkstats2003.html#hevea_default128), [3.2](thinkstats2004.html#hevea_default200),
     [9.1](thinkstats2010.html#hevea_default837), [9.3](thinkstats2010.html#hevea_default870)
+  id: totrans-225
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 怀孕，[2.6](thinkstats2003.html#hevea_default128)，[3.2](thinkstats2004.html#hevea_default200)，[9.1](thinkstats2010.html#hevea_default837)，[9.3](thinkstats2010.html#hevea_default870)
 - en: likelihood, [11.7](thinkstats2012.html#hevea_default1302)
+  id: totrans-226
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 可能性，[11.7](thinkstats2012.html#hevea_default1302)
 - en: line plot, [3.2](thinkstats2004.html#hevea_default194)
+  id: totrans-227
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 线图，[3.2](thinkstats2004.html#hevea_default194)
 - en: linear algebra, [7.4](thinkstats2008.html#hevea_default640)
+  id: totrans-228
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 线性代数，[7.4](thinkstats2008.html#hevea_default640)
 - en: linear fit, [0](thinkstats2001.html#hevea_default3), [10.9](thinkstats2011.html#hevea_default1142)
+  id: totrans-229
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 线性拟合，[0](thinkstats2001.html#hevea_default3)，[10.9](thinkstats2011.html#hevea_default1142)
 - en: linear least squares, [10.1](thinkstats2011.html#hevea_default1023)
+  id: totrans-230
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 线性最小二乘，[10.1](thinkstats2011.html#hevea_default1023)
 - en: linear model, [10.6](thinkstats2011.html#hevea_default1093), [12.10](thinkstats2013.html#hevea_default1508)
+  id: totrans-231
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 线性模型，[10.6](thinkstats2011.html#hevea_default1093)，[12.10](thinkstats2013.html#hevea_default1508)
 - en: linear regression, [11](thinkstats2012.html#hevea_default1157), [11.11](thinkstats2012.html#hevea_default1356),
     [12.3](thinkstats2013.html#hevea_default1396), [12.8](thinkstats2013.html#hevea_default1480)
+  id: totrans-232
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 线性回归，[11](thinkstats2012.html#hevea_default1157)，[11.11](thinkstats2012.html#hevea_default1356)，[12.3](thinkstats2013.html#hevea_default1396)，[12.8](thinkstats2013.html#hevea_default1480)
 - en: linear relationship, [7.6](thinkstats2008.html#hevea_default654)
+  id: totrans-233
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 线性关系，[7.6](thinkstats2008.html#hevea_default654)
 - en: linear transformation, [14.1](thinkstats2015.html#hevea_default1658), [14.1](thinkstats2015.html#hevea_default1660)
+  id: totrans-234
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 线性变换，[14.1](thinkstats2015.html#hevea_default1658)，[14.1](thinkstats2015.html#hevea_default1660)
 - en: loc indexer, [1.7](thinkstats2002.html#hevea_default66)
+  id: totrans-235
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: loc索引器，[1.7](thinkstats2002.html#hevea_default66)
 - en: log odds, [11.7](thinkstats2012.html#hevea_default1301)
+  id: totrans-236
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 对数几率，[11.7](thinkstats2012.html#hevea_default1301)
 - en: logarithm, [14.10](thinkstats2015.html#hevea_default1799)
+  id: totrans-237
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 对数，[14.10](thinkstats2015.html#hevea_default1799)
 - en: logarithmic scale, [5.1](thinkstats2006.html#hevea_default328)
+  id: totrans-238
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 对数刻度，[5.1](thinkstats2006.html#hevea_default328)
 - en: '|'
+  id: totrans-239
   prefs: []
   type: TYPE_NORMAL
+  zh: '|'
 - en: logistic regression, [11.6](thinkstats2012.html#hevea_default1283), [11.7](thinkstats2012.html#hevea_default1297),
     [11.11](thinkstats2012.html#hevea_default1365)
+  id: totrans-240
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 逻辑回归，[11.6](thinkstats2012.html#hevea_default1283)，[11.7](thinkstats2012.html#hevea_default1297)，[11.11](thinkstats2012.html#hevea_default1365)
 - en: logit function, [11.8](thinkstats2012.html#hevea_default1307)
+  id: totrans-241
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: logit函数，[11.8](thinkstats2012.html#hevea_default1307)
 - en: lognormal distribution, [5.4](thinkstats2006.html#hevea_default378), [5.4](thinkstats2006.html#hevea_default391),
     [5.8](thinkstats2006.html#hevea_default453), [7.7](thinkstats2008.html#hevea_default679),
     [14.4](thinkstats2015.html#hevea_default1699), [14.5](thinkstats2015.html#hevea_default1712),
     [14.10](thinkstats2015.html#hevea_default1793)
+  id: totrans-242
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 对数正态分布，[5.4]，[5.4]，[5.8]，[7.7]，[14.4]，[14.5]，[14.10]
 - en: longitudinal study, [1.2](thinkstats2002.html#hevea_default39), [1.10](thinkstats2002.html#hevea_default81)
+  id: totrans-243
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 纵向研究，[1.2]，[1.10]
 - en: MacKay, David, [9.2](thinkstats2010.html#hevea_default858)
+  id: totrans-244
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: MacKay，David，[9.2]
 - en: MeanVar, [7.5](thinkstats2008.html#hevea_default652)
+  id: totrans-245
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: MeanVar，[7.5]
 - en: MLE, [8.1](thinkstats2009.html#hevea_default739), [8.5](thinkstats2009.html#hevea_default792),
     [8.7](thinkstats2009.html#hevea_default822), [10.1](thinkstats2011.html#hevea_default1031),
     [11.7](thinkstats2012.html#hevea_default1299)
+  id: totrans-246
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: MLE，[8.1]，[8.5]，[8.7]，[10.1]，[11.7]
 - en: MSE, [8.1](thinkstats2009.html#hevea_default729), [8.1](thinkstats2009.html#hevea_default732),
     [8.1](thinkstats2009.html#hevea_default738), [8.3](thinkstats2009.html#hevea_default759),
     [8.5](thinkstats2009.html#hevea_default798), [8.7](thinkstats2009.html#hevea_default819),
     [8.7](thinkstats2009.html#hevea_default821), [10.5](thinkstats2011.html#hevea_default1081)
+  id: totrans-247
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: MSE，[8.1]，[8.1]，[8.1]，[8.3]，[8.5]，[8.7]，[8.7]，[10.5]
 - en: marital status, [11.10](thinkstats2012.html#hevea_default1348), [13.3](thinkstats2014.html#hevea_default1565),
     [13.5](thinkstats2014.html#hevea_default1573), [13.8](thinkstats2014.html#hevea_default1608),
     [13.11](thinkstats2014.html#hevea_default1634)
+  id: totrans-248
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 婚姻状况，[11.10]，[13.3]，[13.5]，[13.8]，[13.11]
 - en: mass, [6.1](thinkstats2007.html#hevea_default479)
+  id: totrans-249
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 质量，[6.1]
 - en: matplotlib, [0.2](thinkstats2001.html#hevea_default20), [2.3](thinkstats2003.html#hevea_default102)
+  id: totrans-250
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: matplotlib，[0.2]，[2.3]
 - en: maximum likelihood estimator, [8.1](thinkstats2009.html#hevea_default740), [8.5](thinkstats2009.html#hevea_default793),
     [8.7](thinkstats2009.html#hevea_default823), [10.1](thinkstats2011.html#hevea_default1032),
     [11.7](thinkstats2012.html#hevea_default1300)
+  id: totrans-251
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 最大似然估计，[8.1]，[8.5]，[8.7]，[10.1]，[11.7]
 - en: mean, [2.7](thinkstats2003.html#hevea_default134), [3.6](thinkstats2004.html#hevea_default223),
     [5.2](thinkstats2006.html#hevea_default337), [7.3](thinkstats2008.html#hevea_default625),
     [8.1](thinkstats2009.html#hevea_default718), [8.5](thinkstats2009.html#hevea_default791),
     [14.4](thinkstats2015.html#hevea_default1693)
+  id: totrans-252
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 平均值，[2.7]，[3.6]，[5.2]，[7.3]，[8.1]，[8.5]，[14.4]
 - en: difference in, [9.2](thinkstats2010.html#hevea_default851), [9.3](thinkstats2010.html#hevea_default866)
+  id: totrans-253
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 差异，[9.2]，[9.3]
 - en: rolling, [12.4](thinkstats2013.html#hevea_default1420)
+  id: totrans-254
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 滚动，[12.4]
 - en: mean error, [8.2](thinkstats2009.html#hevea_default753)
+  id: totrans-255
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 平均误差，[8.2]
 - en: mean squared error, [8.1](thinkstats2009.html#hevea_default730), [8.1](thinkstats2009.html#hevea_default731),
     [8.7](thinkstats2009.html#hevea_default818), [8.7](thinkstats2009.html#hevea_default820)
+  id: totrans-256
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 均方误差，[8.1]，[8.1]，[8.7]，[8.7]
 - en: measurement error, [8.1](thinkstats2009.html#hevea_default725), [8.4](thinkstats2009.html#hevea_default780),
     [8.4](thinkstats2009.html#hevea_default785), [8.7](thinkstats2009.html#hevea_default827),
     [10.1](thinkstats2011.html#hevea_default1029), [10.4](thinkstats2011.html#hevea_default1058),
     [13.7](thinkstats2014.html#hevea_default1589)
+  id: totrans-257
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 测量误差，[8.1]，[8.4]，[8.4]，[8.7]，[10.1]，[10.4]，[13.7]
 - en: mechanical component, [13](thinkstats2014.html#hevea_default1537)
+  id: totrans-258
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 机械部件，[13]
 - en: median, [4.6](thinkstats2005.html#hevea_default273), [4.10](thinkstats2005.html#hevea_default307),
     [8.1](thinkstats2009.html#hevea_default727), [8.1](thinkstats2009.html#hevea_default734),
     [8.5](thinkstats2009.html#hevea_default797), [13.10](thinkstats2014.html#hevea_default1629)
+  id: totrans-259
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 中位数，[4.6]，[4.10]，[8.1]，[8.1]，[8.5]，[13.10]
 - en: medicine, [7.8](thinkstats2008.html#hevea_default692)
+  id: totrans-260
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 医学，[7.8]
 - en: memoryless, [13.10](thinkstats2014.html#hevea_default1625)
+  id: totrans-261
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 无记忆性，[13.10]
 - en: missing values, [1.6](thinkstats2002.html#hevea_default62), [9.5](thinkstats2010.html#hevea_default916),
     [12.2](thinkstats2013.html#hevea_default1392), [12.4](thinkstats2013.html#hevea_default1423),
     [12.4](thinkstats2013.html#hevea_default1430), [12.4](thinkstats2013.html#hevea_default1438),
     [12.5](thinkstats2013.html#hevea_default1439), [12.5](thinkstats2013.html#hevea_default1449),
     [12.10](thinkstats2013.html#hevea_default1520)
+  id: totrans-262
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 缺失值，[1.6]，[9.5]，[12.2]，[12.4]，[12.4]，[12.4]，[12.4]，[12.5]，[12.5]，[12.10]
 - en: mode, [2.7](thinkstats2003.html#hevea_default130), [2.11](thinkstats2003.html#hevea_default159),
     [2.12](thinkstats2003.html#hevea_default166)
+  id: totrans-263
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 模式，[2.7]，[2.11]，[2.12]
 - en: model, [5](thinkstats2006.html#hevea_default315), [5.1](thinkstats2006.html#hevea_default334),
     [5.2](thinkstats2006.html#hevea_default350), [5.3](thinkstats2006.html#hevea_default354),
     [5.3](thinkstats2006.html#hevea_default369), [5.3](thinkstats2006.html#hevea_default371),
@@ -1349,37 +1904,45 @@
     [12.4](thinkstats2013.html#hevea_default1413), [12.8](thinkstats2013.html#hevea_default1490),
     [12.8](thinkstats2013.html#hevea_default1504), [12.11](thinkstats2013.html#hevea_default1534),
     [14.9](thinkstats2015.html#hevea_default1790), [14.10](thinkstats2015.html#hevea_default1798)
+  id: totrans-264
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: modeling error, [12.8](thinkstats2013.html#hevea_default1486), [12.8](thinkstats2013.html#hevea_default1497),
     [13.7](thinkstats2014.html#hevea_default1587)
+  id: totrans-265
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: moment, [6.7](thinkstats2007.html#hevea_default535)
+  id: totrans-266
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: moment of inertia, [6.7](thinkstats2007.html#hevea_default536)
+  id: totrans-267
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: moving average, [12.4](thinkstats2013.html#hevea_default1414), [12.11](thinkstats2013.html#hevea_default1526)
+  id: totrans-268
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: multiple birth, [11.5](thinkstats2012.html#hevea_default1256)
+  id: totrans-269
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: multiple regression, [0](thinkstats2001.html#hevea_default4), [11](thinkstats2012.html#hevea_default1155),
     [11.2](thinkstats2012.html#hevea_default1188), [11.2](thinkstats2012.html#hevea_default1194),
     [11.11](thinkstats2012.html#hevea_default1355)
+  id: totrans-270
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: multiple tests, [9.11](thinkstats2010.html#hevea_default978)
+  id: totrans-271
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -1390,6 +1953,7 @@
     [10.6](thinkstats2011.html#hevea_default1107), [11.4](thinkstats2012.html#hevea_default1246),
     [12.5](thinkstats2013.html#hevea_default1447), [12.6](thinkstats2013.html#hevea_default1453),
     [13.5](thinkstats2014.html#hevea_default1576)
+  id: totrans-272
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -1398,22 +1962,27 @@
     [4.5](thinkstats2005.html#hevea_default262), [5.2](thinkstats2006.html#hevea_default346),
     [9.1](thinkstats2010.html#hevea_default834), [9.3](thinkstats2010.html#hevea_default867),
     [9.12](thinkstats2010.html#hevea_default991)
+  id: totrans-273
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: NBUE, [13.10](thinkstats2014.html#hevea_default1626), [13.12](thinkstats2014.html#hevea_default1643)
+  id: totrans-274
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Newsweek, [13.6](thinkstats2014.html#hevea_default1584), [13.8](thinkstats2014.html#hevea_default1609)
+  id: totrans-275
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Newton’s method, [11.7](thinkstats2012.html#hevea_default1303)
+  id: totrans-276
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Normal, [14.3](thinkstats2015.html#hevea_default1677), [14.6](thinkstats2015.html#hevea_default1741)
+  id: totrans-277
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -1423,6 +1992,7 @@
     [9.1](thinkstats2010.html#hevea_default835), [9.3](thinkstats2010.html#hevea_default868),
     [9.11](thinkstats2010.html#hevea_default984), [9.12](thinkstats2010.html#hevea_default992),
     [11.4](thinkstats2012.html#hevea_default1234)
+  id: totrans-278
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -1436,10 +2006,12 @@
     [12.1](thinkstats2013.html#hevea_default1375), [12.1](thinkstats2013.html#hevea_default1383),
     [12.3](thinkstats2013.html#hevea_default1403), [14.5](thinkstats2015.html#hevea_default1708),
     [14.7](thinkstats2015.html#hevea_default1758)
+  id: totrans-279
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: natural experiment, [7.8](thinkstats2008.html#hevea_default694), [7.10](thinkstats2008.html#hevea_default712)
+  id: totrans-280
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -1447,6 +2019,7 @@
     [12.4](thinkstats2013.html#hevea_default1431), [12.5](thinkstats2013.html#hevea_default1444),
     [12.8](thinkstats2013.html#hevea_default1485), [12.8](thinkstats2013.html#hevea_default1496),
     [13.5](thinkstats2014.html#hevea_default1579)
+  id: totrans-281
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -1454,6 +2027,7 @@
     [7.7](thinkstats2008.html#hevea_default675), [10.3](thinkstats2011.html#hevea_default1055),
     [11.3](thinkstats2012.html#hevea_default1211), [11.3](thinkstats2012.html#hevea_default1221),
     [12.10](thinkstats2013.html#hevea_default1507)
+  id: totrans-282
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -1466,6 +2040,7 @@
     [8.2](thinkstats2009.html#hevea_default743), [14.1](thinkstats2015.html#hevea_default1648),
     [14.2](thinkstats2015.html#hevea_default1672), [14.4](thinkstats2015.html#hevea_default1684),
     [14.4](thinkstats2015.html#hevea_default1702)
+  id: totrans-283
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -1474,10 +2049,12 @@
     [5.9](thinkstats2006.html#hevea_default466), [14.5](thinkstats2015.html#hevea_default1710),
     [14.5](thinkstats2015.html#hevea_default1711), [14.5](thinkstats2015.html#hevea_default1719),
     [14.5](thinkstats2015.html#hevea_default1730)
+  id: totrans-284
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: normalization, [3.1](thinkstats2004.html#hevea_default183), [3.7](thinkstats2004.html#hevea_default236)
+  id: totrans-285
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -1495,29 +2072,35 @@
     [14.7](thinkstats2015.html#hevea_default1756), [14.7](thinkstats2015.html#hevea_default1765),
     [14.8](thinkstats2015.html#hevea_default1771), [14.9](thinkstats2015.html#hevea_default1786),
     [14.10](thinkstats2015.html#hevea_default1801)
+  id: totrans-286
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: observer bias, [3.4](thinkstats2004.html#hevea_default211), [3.6](thinkstats2004.html#hevea_default221),
     [3.6](thinkstats2004.html#hevea_default230)
+  id: totrans-287
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: odds, [11.6](thinkstats2012.html#hevea_default1294), [11.11](thinkstats2012.html#hevea_default1367)
+  id: totrans-288
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: one-sided test, [9.4](thinkstats2010.html#hevea_default894), [9.13](thinkstats2010.html#hevea_default1013),
     [14.6](thinkstats2015.html#hevea_default1745)
+  id: totrans-289
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: ordinary least squares, [11](thinkstats2012.html#hevea_default1159), [11.1](thinkstats2012.html#hevea_default1169),
     [11.6](thinkstats2012.html#hevea_default1291), [11.11](thinkstats2012.html#hevea_default1357)
+  id: totrans-290
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: orthogonal vector, [7.4](thinkstats2008.html#hevea_default642)
+  id: totrans-291
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -1528,12 +2111,14 @@
     [7.1](thinkstats2008.html#hevea_default604), [7.3](thinkstats2008.html#hevea_default637),
     [7.7](thinkstats2008.html#hevea_default669), [7.7](thinkstats2008.html#hevea_default677),
     [8.1](thinkstats2009.html#hevea_default726), [8.5](thinkstats2009.html#hevea_default795)
+  id: totrans-292
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: oversampling, [1.2](thinkstats2002.html#hevea_default45), [1.10](thinkstats2002.html#hevea_default87),
     [3.4](thinkstats2004.html#hevea_default215), [10.7](thinkstats2011.html#hevea_default1127),
     [10.8](thinkstats2011.html#hevea_default1140)
+  id: totrans-293
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -1541,27 +2126,33 @@
     [5.7](thinkstats2006.html#hevea_default427), [5.8](thinkstats2006.html#hevea_default439),
     [5.8](thinkstats2006.html#hevea_default451), [14.4](thinkstats2015.html#hevea_default1695),
     [14.5](thinkstats2015.html#hevea_default1715)
+  id: totrans-294
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Pareto World, [5.8](thinkstats2006.html#hevea_default441)
+  id: totrans-295
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Pareto, Vilfredo, [5.5](thinkstats2006.html#hevea_default400)
+  id: totrans-296
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Patsy, [11.1](thinkstats2012.html#hevea_default1166), [11.5](thinkstats2012.html#hevea_default1265),
     [11.8](thinkstats2012.html#hevea_default1320)
+  id: totrans-297
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: PDF, [6](thinkstats2007.html#hevea_default468), [6.10](thinkstats2007.html#hevea_default566)
+  id: totrans-298
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Pdf, [6.3](thinkstats2007.html#hevea_default500)
+  id: totrans-299
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -1571,21 +2162,25 @@
     [7.9](thinkstats2008.html#hevea_default698), [9.5](thinkstats2010.html#hevea_default906),
     [9.5](thinkstats2010.html#hevea_default913), [10.5](thinkstats2011.html#hevea_default1082),
     [14.7](thinkstats2015.html#hevea_default1754)
+  id: totrans-300
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Pearson median skewness, [6.8](thinkstats2007.html#hevea_default545), [6.8](thinkstats2007.html#hevea_default558),
     [6.10](thinkstats2007.html#hevea_default577)
+  id: totrans-301
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Pearson, Karl, [7.5](thinkstats2008.html#hevea_default650)
+  id: totrans-302
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: PMF, [3.1](thinkstats2004.html#hevea_default184), [3.2](thinkstats2004.html#hevea_default190),
     [3.6](thinkstats2004.html#hevea_default225), [3.7](thinkstats2004.html#hevea_default232),
     [4.1](thinkstats2005.html#hevea_default239)
+  id: totrans-303
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -1596,15 +2191,18 @@
     [6.5](thinkstats2007.html#hevea_default523), [6.6](thinkstats2007.html#hevea_default532),
     [13.10](thinkstats2014.html#hevea_default1618), [13.10](thinkstats2014.html#hevea_default1622),
     [13.10](thinkstats2014.html#hevea_default1632)
+  id: totrans-304
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Poisson regression, [11.6](thinkstats2012.html#hevea_default1284), [11.10](thinkstats2012.html#hevea_default1346),
     [11.11](thinkstats2012.html#hevea_default1366)
+  id: totrans-305
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Price of Weed, [12](thinkstats2013.html#hevea_default1370)
+  id: totrans-306
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -1624,6 +2222,7 @@
     [14.6](thinkstats2015.html#hevea_default1744), [14.7](thinkstats2015.html#hevea_default1748),
     [14.7](thinkstats2015.html#hevea_default1769), [14.8](thinkstats2015.html#hevea_default1780),
     [14.9](thinkstats2015.html#hevea_default1785)
+  id: totrans-307
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -1639,10 +2238,12 @@
     [12.6](thinkstats2013.html#hevea_default1455), [12.8](thinkstats2013.html#hevea_default1481),
     [13.2](thinkstats2014.html#hevea_default1556), [13.8](thinkstats2014.html#hevea_default1598),
     [13.8](thinkstats2014.html#hevea_default1605), [13.9](thinkstats2014.html#hevea_default1613)
+  id: totrans-308
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: parabola, [11.3](thinkstats2012.html#hevea_default1212)
+  id: totrans-309
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -1655,16 +2256,19 @@
     [11.1](thinkstats2012.html#hevea_default1172), [11.6](thinkstats2012.html#hevea_default1292),
     [11.6](thinkstats2012.html#hevea_default1296), [12.8](thinkstats2013.html#hevea_default1484),
     [12.8](thinkstats2013.html#hevea_default1499)
+  id: totrans-310
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: percent point function, [14.5](thinkstats2015.html#hevea_default1729)
+  id: totrans-311
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: percentile, [4.2](thinkstats2005.html#hevea_default247), [4.6](thinkstats2005.html#hevea_default272),
     [4.10](thinkstats2005.html#hevea_default302), [5.2](thinkstats2006.html#hevea_default351),
     [7.2](thinkstats2008.html#hevea_default615), [14.2](thinkstats2015.html#hevea_default1675)
+  id: totrans-312
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -1672,6 +2276,7 @@
     [4.3](thinkstats2005.html#hevea_default251), [4.6](thinkstats2005.html#hevea_default277),
     [4.7](thinkstats2005.html#hevea_default282), [4.8](thinkstats2005.html#hevea_default291),
     [4.10](thinkstats2005.html#hevea_default301), [7.3](thinkstats2008.html#hevea_default623)
+  id: totrans-313
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -1680,53 +2285,64 @@
     [9.12](thinkstats2010.html#hevea_default996), [9.12](thinkstats2010.html#hevea_default999),
     [10.6](thinkstats2011.html#hevea_default1095), [10.6](thinkstats2011.html#hevea_default1104),
     [14.7](thinkstats2015.html#hevea_default1751), [14.9](thinkstats2015.html#hevea_default1783)
+  id: totrans-314
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: permutation test, [9.13](thinkstats2010.html#hevea_default1011)
+  id: totrans-315
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: plot
+  id: totrans-316
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: bar, [3.2](thinkstats2004.html#hevea_default193)
+  id: totrans-317
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
 - en: hexbin, [7.1](thinkstats2008.html#hevea_default602)
+  id: totrans-318
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
 - en: line, [3.2](thinkstats2004.html#hevea_default195)
+  id: totrans-319
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
 - en: normal probability, [5.3](thinkstats2006.html#hevea_default356), [5.9](thinkstats2006.html#hevea_default467)
+  id: totrans-320
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
 - en: scatter, [7.1](thinkstats2008.html#hevea_default582), [7.6](thinkstats2008.html#hevea_default658),
     [10.2](thinkstats2011.html#hevea_default1050)
+  id: totrans-321
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
 - en: point estimation, [8.7](thinkstats2009.html#hevea_default825)
+  id: totrans-322
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: population, [1.2](thinkstats2002.html#hevea_default42), [1.10](thinkstats2002.html#hevea_default78),
     [5.5](thinkstats2006.html#hevea_default406), [8.3](thinkstats2009.html#hevea_default757)
+  id: totrans-323
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: power, [9.10](thinkstats2010.html#hevea_default974), [9.13](thinkstats2010.html#hevea_default1020)
+  id: totrans-324
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -1735,14 +2351,17 @@
     [11.5](thinkstats2012.html#hevea_default1248), [12.8](thinkstats2013.html#hevea_default1478),
     [12.10](thinkstats2013.html#hevea_default1510), [12.10](thinkstats2013.html#hevea_default1519),
     [13.8](thinkstats2014.html#hevea_default1610)
+  id: totrans-325
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: predictive power, [11.1](thinkstats2012.html#hevea_default1187), [11.5](thinkstats2012.html#hevea_default1251)
+  id: totrans-326
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: preferential attachment, [5.7](thinkstats2006.html#hevea_default425)
+  id: totrans-327
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -1764,96 +2383,118 @@
     [13.10](thinkstats2014.html#hevea_default1620), [13.10](thinkstats2014.html#hevea_default1623),
     [13.10](thinkstats2014.html#hevea_default1624), [13.10](thinkstats2014.html#hevea_default1631),
     [14.6](thinkstats2015.html#hevea_default1732)
+  id: totrans-328
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: price, [12.1](thinkstats2013.html#hevea_default1376), [12.2](thinkstats2013.html#hevea_default1393),
     [12.8](thinkstats2013.html#hevea_default1489)
+  id: totrans-329
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: probability, [3.1](thinkstats2004.html#hevea_default182), [3.7](thinkstats2004.html#hevea_default235),
     [11.6](thinkstats2012.html#hevea_default1293)
+  id: totrans-330
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: probability density, [6.10](thinkstats2007.html#hevea_default568)
+  id: totrans-331
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: probability density function, [6](thinkstats2007.html#hevea_default469), [6.10](thinkstats2007.html#hevea_default567)
+  id: totrans-332
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: probability mass function, [3](thinkstats2004.html#hevea_default179), [3.1](thinkstats2004.html#hevea_default185),
     [3.7](thinkstats2004.html#hevea_default233)
+  id: totrans-333
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: product, [14.10](thinkstats2015.html#hevea_default1800)
+  id: totrans-334
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: proof by contradiction, [9.1](thinkstats2010.html#hevea_default848)
+  id: totrans-335
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: property, [13.1](thinkstats2014.html#hevea_default1551)
+  id: totrans-336
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: proxy variable, [11.11](thinkstats2012.html#hevea_default1360)
+  id: totrans-337
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: pseudo r-squared, [11.8](thinkstats2012.html#hevea_default1326), [11.8](thinkstats2012.html#hevea_default1328)
+  id: totrans-338
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: pumpkin, [2.7](thinkstats2003.html#hevea_default139)
+  id: totrans-339
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: pyplot, [2.3](thinkstats2003.html#hevea_default100), [3.2](thinkstats2004.html#hevea_default198),
     [12.2](thinkstats2013.html#hevea_default1389)
+  id: totrans-340
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: quadratic model, [11.3](thinkstats2012.html#hevea_default1215), [12.10](thinkstats2013.html#hevea_default1509),
     [12.10](thinkstats2013.html#hevea_default1514)
+  id: totrans-341
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: quantile, [4.6](thinkstats2005.html#hevea_default278), [4.10](thinkstats2005.html#hevea_default309)
+  id: totrans-342
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: quantize, [6.3](thinkstats2007.html#hevea_default512)
+  id: totrans-343
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: quartile, [4.6](thinkstats2005.html#hevea_default271)
+  id: totrans-344
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: query, [13.1](thinkstats2014.html#hevea_default1547)
+  id: totrans-345
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: quintile, [4.6](thinkstats2005.html#hevea_default279)
+  id: totrans-346
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: RegressionResults, [11.1](thinkstats2012.html#hevea_default1170)
+  id: totrans-347
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Resample, [9.10](thinkstats2010.html#hevea_default970)
+  id: totrans-348
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: RMSE, [8.1](thinkstats2009.html#hevea_default733), [8.5](thinkstats2009.html#hevea_default799),
     [11.1](thinkstats2012.html#hevea_default1186)
+  id: totrans-349
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -1864,20 +2505,24 @@
     [11.3](thinkstats2012.html#hevea_default1224), [11.4](thinkstats2012.html#hevea_default1232),
     [11.4](thinkstats2012.html#hevea_default1244), [11.5](thinkstats2012.html#hevea_default1276),
     [11.8](thinkstats2012.html#hevea_default1325)
+  id: totrans-350
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: race, [11.4](thinkstats2012.html#hevea_default1239), [11.5](thinkstats2012.html#hevea_default1255),
     [11.5](thinkstats2012.html#hevea_default1270), [11.8](thinkstats2012.html#hevea_default1312)
+  id: totrans-351
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: race time, [4.8](thinkstats2005.html#hevea_default293)
+  id: totrans-352
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: random module, [5.6](thinkstats2006.html#hevea_default419), [5.8](thinkstats2006.html#hevea_default446),
     [5.8](thinkstats2006.html#hevea_default449)
+  id: totrans-353
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -1885,57 +2530,70 @@
     [4.9](thinkstats2005.html#hevea_default300), [5.3](thinkstats2006.html#hevea_default361),
     [5.6](thinkstats2006.html#hevea_default412), [5.8](thinkstats2006.html#hevea_default450),
     [8.4](thinkstats2009.html#hevea_default782), [14.5](thinkstats2015.html#hevea_default1723)
+  id: totrans-354
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: randomized controlled trial, [7.8](thinkstats2008.html#hevea_default688), [7.10](thinkstats2008.html#hevea_default709)
+  id: totrans-355
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: rank, [7.3](thinkstats2008.html#hevea_default622), [7.7](thinkstats2008.html#hevea_default670),
     [7.10](thinkstats2008.html#hevea_default708)
+  id: totrans-356
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: rank correlation, [7.7](thinkstats2008.html#hevea_default673)
+  id: totrans-357
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: raw data, [1.5](thinkstats2002.html#hevea_default59), [1.10](thinkstats2002.html#hevea_default88)
+  id: totrans-358
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: raw moment, [6.10](thinkstats2007.html#hevea_default572)
+  id: totrans-359
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: recode, [1.5](thinkstats2002.html#hevea_default58), [1.10](thinkstats2002.html#hevea_default89)
+  id: totrans-360
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: record, [1.10](thinkstats2002.html#hevea_default83)
+  id: totrans-361
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: regression, [11](thinkstats2012.html#hevea_default1149), [11.11](thinkstats2012.html#hevea_default1349)
+  id: totrans-362
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: regression analysis, [7.8](thinkstats2008.html#hevea_default695)
+  id: totrans-363
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: regression model, [11](thinkstats2012.html#hevea_default1156), [11.4](thinkstats2012.html#hevea_default1230),
     [11.6](thinkstats2012.html#hevea_default1288), [11.6](thinkstats2012.html#hevea_default1295)
+  id: totrans-364
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: reindex, [12.4](thinkstats2013.html#hevea_default1425), [12.4](thinkstats2013.html#hevea_default1433),
     [12.10](thinkstats2013.html#hevea_default1522)
+  id: totrans-365
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: relay race, [3.6](thinkstats2004.html#hevea_default227)
+  id: totrans-366
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -1943,10 +2601,12 @@
     [7.1](thinkstats2008.html#hevea_default588), [9.10](thinkstats2010.html#hevea_default972),
     [9.12](thinkstats2010.html#hevea_default998), [10.4](thinkstats2011.html#hevea_default1064),
     [10.7](thinkstats2011.html#hevea_default1131)
+  id: totrans-367
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: representative, [1.2](thinkstats2002.html#hevea_default44), [1.10](thinkstats2002.html#hevea_default86)
+  id: totrans-368
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -1958,15 +2618,18 @@
     [13.11](thinkstats2014.html#hevea_default1635), [14](thinkstats2015.html#hevea_default1645),
     [14.7](thinkstats2015.html#hevea_default1766), [14.8](thinkstats2015.html#hevea_default1777),
     [14.9](thinkstats2015.html#hevea_default1782)
+  id: totrans-369
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: weighted, [10.7](thinkstats2011.html#hevea_default1121)
+  id: totrans-370
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
 - en: resampling test, [9.13](thinkstats2010.html#hevea_default1012)
+  id: totrans-371
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -1974,11 +2637,13 @@
     [10.9](thinkstats2011.html#hevea_default1144), [11.1](thinkstats2012.html#hevea_default1180),
     [12.3](thinkstats2013.html#hevea_default1412), [12.7](thinkstats2013.html#hevea_default1476),
     [12.8](thinkstats2013.html#hevea_default1491)
+  id: totrans-372
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: respondent, [1.2](thinkstats2002.html#hevea_default43), [1.10](thinkstats2002.html#hevea_default84),
     [5.4](thinkstats2006.html#hevea_default385)
+  id: totrans-373
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -1986,18 +2651,22 @@
     [6.10](thinkstats2007.html#hevea_default578), [7.3](thinkstats2008.html#hevea_default635),
     [7.7](thinkstats2008.html#hevea_default667), [7.7](thinkstats2008.html#hevea_default678),
     [8.5](thinkstats2009.html#hevea_default794), [14.9](thinkstats2015.html#hevea_default1787)
+  id: totrans-374
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: rolling mean, [12.4](thinkstats2013.html#hevea_default1419), [12.11](thinkstats2013.html#hevea_default1527)
+  id: totrans-375
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: SAT, [10.5](thinkstats2011.html#hevea_default1085)
+  id: totrans-376
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: SampleRows, [7.1](thinkstats2008.html#hevea_default584)
+  id: totrans-377
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -2006,6 +2675,7 @@
     [6.2](thinkstats2007.html#hevea_default486), [14.2](thinkstats2015.html#hevea_default1671),
     [14.7](thinkstats2015.html#hevea_default1759), [14.7](thinkstats2015.html#hevea_default1768),
     [14.8](thinkstats2015.html#hevea_default1776)
+  id: totrans-378
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -2017,65 +2687,79 @@
     [12.4](thinkstats2013.html#hevea_default1422), [12.5](thinkstats2013.html#hevea_default1441),
     [12.7](thinkstats2013.html#hevea_default1472), [12.10](thinkstats2013.html#hevea_default1521),
     [13.2](thinkstats2014.html#hevea_default1557), [13.9](thinkstats2014.html#hevea_default1614)
+  id: totrans-379
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Spearman coefficient of correlation, [7.3](thinkstats2008.html#hevea_default624),
     [7.7](thinkstats2008.html#hevea_default662), [7.7](thinkstats2008.html#hevea_default682),
     [7.9](thinkstats2008.html#hevea_default699), [9.5](thinkstats2010.html#hevea_default907)
+  id: totrans-380
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: SQL, [11.4](thinkstats2012.html#hevea_default1236)
+  id: totrans-381
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: StatsModels, [0.2](thinkstats2001.html#hevea_default19), [11.1](thinkstats2012.html#hevea_default1162),
     [11.8](thinkstats2012.html#hevea_default1305), [11.10](thinkstats2012.html#hevea_default1345),
     [12.3](thinkstats2013.html#hevea_default1395), [12.7](thinkstats2013.html#hevea_default1460)
+  id: totrans-382
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Straight Dope, The, [2.11](thinkstats2003.html#hevea_default157)
+  id: totrans-383
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Student’s t-distribution, [14.7](thinkstats2015.html#hevea_default1760)
+  id: totrans-384
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: SurvivalFunction, [13.1](thinkstats2014.html#hevea_default1550), [13.6](thinkstats2014.html#hevea_default1581)
+  id: totrans-385
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: sample, [1.10](thinkstats2002.html#hevea_default85), [4.3](thinkstats2005.html#hevea_default252),
     [8.3](thinkstats2009.html#hevea_default758)
+  id: totrans-386
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: sample mean, [8.3](thinkstats2009.html#hevea_default760), [8.6](thinkstats2009.html#hevea_default802)
+  id: totrans-387
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: sample median, [8.5](thinkstats2009.html#hevea_default796), [8.6](thinkstats2009.html#hevea_default803)
+  id: totrans-388
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: sample size, [8.3](thinkstats2009.html#hevea_default766), [9.12](thinkstats2010.html#hevea_default990),
     [14.3](thinkstats2015.html#hevea_default1680)
+  id: totrans-389
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: sample skewness, [6.8](thinkstats2007.html#hevea_default541), [6.10](thinkstats2007.html#hevea_default576)
+  id: totrans-390
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: sample variance, [2.8](thinkstats2003.html#hevea_default144), [8.2](thinkstats2009.html#hevea_default747)
+  id: totrans-391
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: sampling bias, [8.4](thinkstats2009.html#hevea_default778), [8.4](thinkstats2009.html#hevea_default783),
     [8.7](thinkstats2009.html#hevea_default826), [10.4](thinkstats2011.html#hevea_default1056)
+  id: totrans-392
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -2089,6 +2773,7 @@
     [14.6](thinkstats2015.html#hevea_default1738), [14.6](thinkstats2015.html#hevea_default1742),
     [14.7](thinkstats2015.html#hevea_default1757), [14.8](thinkstats2015.html#hevea_default1772),
     [14.10](thinkstats2015.html#hevea_default1802), [14.10](thinkstats2015.html#hevea_default1809)
+  id: totrans-393
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -2096,53 +2781,65 @@
     [10.4](thinkstats2011.html#hevea_default1061), [12.8](thinkstats2013.html#hevea_default1483),
     [12.8](thinkstats2013.html#hevea_default1495), [13.7](thinkstats2014.html#hevea_default1588),
     [13.8](thinkstats2014.html#hevea_default1604)
+  id: totrans-394
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: sampling weight, [10.7](thinkstats2011.html#hevea_default1118), [10.8](thinkstats2011.html#hevea_default1141),
     [10.9](thinkstats2011.html#hevea_default1147), [13.7](thinkstats2014.html#hevea_default1595)
+  id: totrans-395
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: saturation, [7.1](thinkstats2008.html#hevea_default597), [7.10](thinkstats2008.html#hevea_default702)
+  id: totrans-396
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: scatter plot, [7.1](thinkstats2008.html#hevea_default581), [7.6](thinkstats2008.html#hevea_default657),
     [7.10](thinkstats2008.html#hevea_default700), [10.2](thinkstats2011.html#hevea_default1049)
+  id: totrans-397
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: seasonality, [12.4](thinkstats2013.html#hevea_default1416), [12.5](thinkstats2013.html#hevea_default1440),
     [12.6](thinkstats2013.html#hevea_default1456)
+  id: totrans-398
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: selection bias, [1](thinkstats2002.html#hevea_default26), [3.6](thinkstats2004.html#hevea_default229)
+  id: totrans-399
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: self-selection, [8.4](thinkstats2009.html#hevea_default784)
+  id: totrans-400
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: sensitivity, [9.10](thinkstats2010.html#hevea_default975)
+  id: totrans-401
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: serial correlation, [12.6](thinkstats2013.html#hevea_default1451), [12.11](thinkstats2013.html#hevea_default1531)
+  id: totrans-402
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: sex, [11.5](thinkstats2012.html#hevea_default1253), [11.6](thinkstats2012.html#hevea_default1287)
+  id: totrans-403
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: sex ratio, [11.8](thinkstats2012.html#hevea_default1306), [11.10](thinkstats2012.html#hevea_default1341)
+  id: totrans-404
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: shape, [4.5](thinkstats2005.html#hevea_default268)
+  id: totrans-405
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -2163,10 +2860,12 @@
     [12.7](thinkstats2013.html#hevea_default1474), [12.10](thinkstats2013.html#hevea_default1515),
     [14.7](thinkstats2015.html#hevea_default1752), [14.10](thinkstats2015.html#hevea_default1807),
     [14.10](thinkstats2015.html#hevea_default1811)
+  id: totrans-406
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: simple regression, [11](thinkstats2012.html#hevea_default1154), [11.11](thinkstats2012.html#hevea_default1354)
+  id: totrans-407
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -2174,6 +2873,7 @@
     [9.2](thinkstats2010.html#hevea_default856), [10.4](thinkstats2011.html#hevea_default1063),
     [12.7](thinkstats2013.html#hevea_default1468), [12.8](thinkstats2013.html#hevea_default1501),
     [14.2](thinkstats2015.html#hevea_default1676)
+  id: totrans-408
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -2183,38 +2883,46 @@
     [7.7](thinkstats2008.html#hevea_default676), [7.7](thinkstats2008.html#hevea_default681),
     [10.6](thinkstats2011.html#hevea_default1113), [14.4](thinkstats2015.html#hevea_default1701),
     [14.5](thinkstats2015.html#hevea_default1714)
+  id: totrans-409
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: slope, [10.1](thinkstats2011.html#hevea_default1027), [10.2](thinkstats2011.html#hevea_default1043),
     [12.8](thinkstats2013.html#hevea_default1500), [12.10](thinkstats2013.html#hevea_default1518)
+  id: totrans-410
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: smoothing, [5.7](thinkstats2006.html#hevea_default422), [6.3](thinkstats2007.html#hevea_default504),
     [12.4](thinkstats2013.html#hevea_default1432)
+  id: totrans-411
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: soccer, [8.6](thinkstats2009.html#hevea_default811)
+  id: totrans-412
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: span, [12.4](thinkstats2013.html#hevea_default1436), [12.11](thinkstats2013.html#hevea_default1530)
+  id: totrans-413
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: spread, [2.7](thinkstats2003.html#hevea_default131), [2.12](thinkstats2003.html#hevea_default173),
     [4.6](thinkstats2005.html#hevea_default275)
+  id: totrans-414
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: spurious relationship, [7.8](thinkstats2008.html#hevea_default687), [11.2](thinkstats2012.html#hevea_default1189),
     [11.11](thinkstats2012.html#hevea_default1358)
+  id: totrans-415
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: squared residuals, [10.1](thinkstats2011.html#hevea_default1035)
+  id: totrans-416
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -2231,10 +2939,12 @@
     [14.2](thinkstats2015.html#hevea_default1667), [14.3](thinkstats2015.html#hevea_default1681),
     [14.4](thinkstats2015.html#hevea_default1688), [14.5](thinkstats2015.html#hevea_default1725),
     [14.10](thinkstats2015.html#hevea_default1804)
+  id: totrans-417
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: pooled, [2.9](thinkstats2003.html#hevea_default151)
+  id: totrans-418
   prefs:
   - PREF_IND
   - PREF_UL
@@ -2246,27 +2956,33 @@
     [10.8](thinkstats2011.html#hevea_default1139), [14.1](thinkstats2015.html#hevea_default1653),
     [14.2](thinkstats2015.html#hevea_default1666), [14.10](thinkstats2015.html#hevea_default1803),
     [14.10](thinkstats2015.html#hevea_default1806)
+  id: totrans-419
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: standard normal distribution, [5.9](thinkstats2006.html#hevea_default465), [14.5](thinkstats2015.html#hevea_default1726)
+  id: totrans-420
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: standard score, [7.3](thinkstats2008.html#hevea_default619), [7.5](thinkstats2008.html#hevea_default646),
     [7.10](thinkstats2008.html#hevea_default705)
+  id: totrans-421
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: standardize, [7.3](thinkstats2008.html#hevea_default627), [7.10](thinkstats2008.html#hevea_default704)
+  id: totrans-422
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: standardized moment, [6.8](thinkstats2007.html#hevea_default542), [6.10](thinkstats2007.html#hevea_default574)
+  id: totrans-423
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: stationary model, [12.8](thinkstats2013.html#hevea_default1498), [12.11](thinkstats2013.html#hevea_default1535)
+  id: totrans-424
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -2286,77 +3002,94 @@
     [12.7](thinkstats2013.html#hevea_default1465), [12.7](thinkstats2013.html#hevea_default1475),
     [12.10](thinkstats2013.html#hevea_default1516), [14.7](thinkstats2015.html#hevea_default1753),
     [14.10](thinkstats2015.html#hevea_default1808), [14.10](thinkstats2015.html#hevea_default1812)
+  id: totrans-425
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: step function, [4.3](thinkstats2005.html#hevea_default253)
+  id: totrans-426
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: study
+  id: totrans-427
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: cross-sectional, [1.2](thinkstats2002.html#hevea_default38), [1.10](thinkstats2002.html#hevea_default80)
+  id: totrans-428
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
 - en: longitudinal, [1.2](thinkstats2002.html#hevea_default40), [1.10](thinkstats2002.html#hevea_default82)
+  id: totrans-429
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
 - en: sum, [14.4](thinkstats2015.html#hevea_default1683)
+  id: totrans-430
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: summary statistic, [2.7](thinkstats2003.html#hevea_default136), [2.12](thinkstats2003.html#hevea_default174),
     [4.6](thinkstats2005.html#hevea_default269)
+  id: totrans-431
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: survival analysis, [13](thinkstats2014.html#hevea_default1536), [13.12](thinkstats2014.html#hevea_default1637)
+  id: totrans-432
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: survival curve, [13.1](thinkstats2014.html#hevea_default1540), [13.3](thinkstats2014.html#hevea_default1561),
     [13.4](thinkstats2014.html#hevea_default1571), [13.12](thinkstats2014.html#hevea_default1638)
+  id: totrans-433
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: survival rate, [13](thinkstats2014.html#hevea_default1539)
+  id: totrans-434
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: symmetric, [6.8](thinkstats2007.html#hevea_default544), [10.6](thinkstats2011.html#hevea_default1109),
     [14.6](thinkstats2015.html#hevea_default1747)
+  id: totrans-435
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Trivers-Willard hypothesis, [11.10](thinkstats2012.html#hevea_default1340)
+  id: totrans-436
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: tail, [2.7](thinkstats2003.html#hevea_default132), [2.12](thinkstats2003.html#hevea_default170),
     [14.8](thinkstats2015.html#hevea_default1778)
+  id: totrans-437
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: telephone sampling, [8.4](thinkstats2009.html#hevea_default781)
+  id: totrans-438
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: test
+  id: totrans-439
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: one-sided, [9.13](thinkstats2010.html#hevea_default1015)
+  id: totrans-440
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
 - en: two-sided, [9.13](thinkstats2010.html#hevea_default1016)
+  id: totrans-441
   prefs:
   - PREF_IND
   - PREF_UL
@@ -2365,10 +3098,12 @@
     [9.4](thinkstats2010.html#hevea_default892), [9.5](thinkstats2010.html#hevea_default905),
     [9.7](thinkstats2010.html#hevea_default939), [9.13](thinkstats2010.html#hevea_default1005),
     [14.8](thinkstats2015.html#hevea_default1779)
+  id: totrans-442
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: theory, [11.5](thinkstats2012.html#hevea_default1261)
+  id: totrans-443
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -2385,108 +3120,132 @@
     [7.2](thinkstats2008.html#hevea_default616), [9.3](thinkstats2010.html#hevea_default883),
     [10.4](thinkstats2011.html#hevea_default1071), [12.2](thinkstats2013.html#hevea_default1388),
     [13.1](thinkstats2014.html#hevea_default1553), [14.5](thinkstats2015.html#hevea_default1709)
+  id: totrans-444
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: threshold, [9.9](thinkstats2010.html#hevea_default961)
+  id: totrans-445
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: ticks, [12.2](thinkstats2013.html#hevea_default1390)
+  id: totrans-446
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: time series, [12](thinkstats2013.html#hevea_default1368), [12.9](thinkstats2013.html#hevea_default1505),
     [12.11](thinkstats2013.html#hevea_default1524)
+  id: totrans-447
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: transaction, [12.1](thinkstats2013.html#hevea_default1377)
+  id: totrans-448
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: transparency, [7.1](thinkstats2008.html#hevea_default600)
+  id: totrans-449
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: treatment group, [7.8](thinkstats2008.html#hevea_default690), [7.10](thinkstats2008.html#hevea_default710)
+  id: totrans-450
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: trend, [12.3](thinkstats2013.html#hevea_default1410), [12.4](thinkstats2013.html#hevea_default1415)
+  id: totrans-451
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: trimester, [13.1](thinkstats2014.html#hevea_default1552)
+  id: totrans-452
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: true negative, [11.9](thinkstats2012.html#hevea_default1335)
+  id: totrans-453
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: true positive, [11.9](thinkstats2012.html#hevea_default1334)
+  id: totrans-454
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: two-sided test, [9.4](thinkstats2010.html#hevea_default895), [9.13](thinkstats2010.html#hevea_default1014),
     [14.6](thinkstats2015.html#hevea_default1746)
+  id: totrans-455
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: U.S. Census Bureau, [5.5](thinkstats2006.html#hevea_default405)
+  id: totrans-456
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: UBNE, [13.10](thinkstats2014.html#hevea_default1627), [13.12](thinkstats2014.html#hevea_default1644)
+  id: totrans-457
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: unbiased estimator, [8.2](thinkstats2009.html#hevea_default750)
+  id: totrans-458
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: underpowered, [9.10](thinkstats2010.html#hevea_default977)
+  id: totrans-459
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: uniform distribution, [2.12](thinkstats2003.html#hevea_default169), [4.9](thinkstats2005.html#hevea_default298),
     [5.6](thinkstats2006.html#hevea_default415), [7.1](thinkstats2008.html#hevea_default592),
     [7.3](thinkstats2008.html#hevea_default633), [12.7](thinkstats2013.html#hevea_default1469)
+  id: totrans-460
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: units, [7.3](thinkstats2008.html#hevea_default618), [7.5](thinkstats2008.html#hevea_default648)
+  id: totrans-461
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: variance, [2.8](thinkstats2003.html#hevea_default140), [2.12](thinkstats2003.html#hevea_default175),
     [3.6](thinkstats2004.html#hevea_default224), [8.2](thinkstats2009.html#hevea_default742),
     [14.4](thinkstats2015.html#hevea_default1694)
+  id: totrans-462
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: visualization, [0](thinkstats2001.html#hevea_default8), [3.3](thinkstats2004.html#hevea_default205),
     [6.2](thinkstats2007.html#hevea_default493), [10.3](thinkstats2011.html#hevea_default1053),
     [12.2](thinkstats2013.html#hevea_default1387), [13.9](thinkstats2014.html#hevea_default1616)
+  id: totrans-463
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Weibull distribution, [5.8](thinkstats2006.html#hevea_default442)
+  id: totrans-464
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: wealth, [11.5](thinkstats2012.html#hevea_default1260)
+  id: totrans-465
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: weight, [7.1](thinkstats2008.html#hevea_default590), [10.7](thinkstats2011.html#hevea_default1119),
     [11.2](thinkstats2012.html#hevea_default1190), [11.5](thinkstats2012.html#hevea_default1271),
     [12.3](thinkstats2013.html#hevea_default1411), [14.2](thinkstats2015.html#hevea_default1663)
+  id: totrans-466
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: adult, [5.4](thinkstats2006.html#hevea_default376), [5.4](thinkstats2006.html#hevea_default395)
+  id: totrans-467
   prefs:
   - PREF_IND
   - PREF_UL
@@ -2506,38 +3265,46 @@
     [11.3](thinkstats2012.html#hevea_default1214), [11.4](thinkstats2012.html#hevea_default1229),
     [11.5](thinkstats2012.html#hevea_default1250), [11.5](thinkstats2012.html#hevea_default1258),
     [14.7](thinkstats2015.html#hevea_default1750), [14.10](thinkstats2015.html#hevea_default1792)
+  id: totrans-468
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
 - en: pumpkin, [2.7](thinkstats2003.html#hevea_default138)
+  id: totrans-469
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
 - en: sample, [1.5](thinkstats2002.html#hevea_default57)
+  id: totrans-470
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
 - en: weighted resampling, [10.7](thinkstats2011.html#hevea_default1120), [13.7](thinkstats2014.html#hevea_default1592)
+  id: totrans-471
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: window, [12.4](thinkstats2013.html#hevea_default1418), [12.4](thinkstats2013.html#hevea_default1429),
     [12.4](thinkstats2013.html#hevea_default1437), [12.11](thinkstats2013.html#hevea_default1525)
+  id: totrans-472
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: wrapper, [6.4](thinkstats2007.html#hevea_default518), [13.2](thinkstats2014.html#hevea_default1558),
     [14.2](thinkstats2015.html#hevea_default1673)
+  id: totrans-473
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: xticks, [12.2](thinkstats2013.html#hevea_default1391)
+  id: totrans-474
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: '|'
+  id: totrans-475
   prefs: []
   type: TYPE_NORMAL
