@@ -3,16 +3,20 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: Bootstrap抽样
 - en: 原文：[https://allendowney.github.io/ElementsOfDataScience/12_bootstrap.html](https://allendowney.github.io/ElementsOfDataScience/12_bootstrap.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ElementsOfDataScience/12_bootstrap.html](https://allendowney.github.io/ElementsOfDataScience/12_bootstrap.html)
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/12_bootstrap.ipynb)
     or [click here to download it](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/12_bootstrap.ipynb).'
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: '[单击此处在Colab上运行此笔记本](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/12_bootstrap.ipynb)
+    或 [单击此处下载](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/12_bootstrap.ipynb)。'
 - en: In the previous chapter we used resampling to compute standard errors and confidence
     intervals, which quantify the variability in an estimate due to random sampling.
     As one of the examples, we used data from the General Social Survey (GSS) to explore
@@ -21,12 +25,14 @@
   id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 在上一章中，我们使用重采样来计算标准误差和置信区间，以量化由于随机抽样而导致的估计变异性。作为示例之一，我们使用了来自总体社会调查（GSS）的数据，探索了支持枪支管制的变化，并计算了估计比例的置信区间。
 - en: In this chapter, we’ll use GSS data to estimate average income and the 10th
     percentile of income. We’ll see that the resampling method we used in the previous
     chapter works for the average income but not for the 10th percentile.
   id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本章中，我们将使用GSS数据来估计平均收入和收入的第10百分位数。我们将看到，在上一章中使用的重采样方法适用于平均收入，但不适用于第10百分位数。
 - en: To solve this problem, we’ll use another kind of resampling, called bootstrapping
     or bootstrap sampling (see [https://en.wikipedia.org/wiki/Bootstrapping_(statistics)](https://en.wikipedia.org/wiki/Bootstrapping_(statistics))).
     Then we’ll use bootstrapping to compute sampling distributions and confidence
@@ -37,17 +43,20 @@
   id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了解决这个问题，我们将使用另一种重采样方法，称为自助法或自助抽样（参见[https://en.wikipedia.org/wiki/Bootstrapping_(statistics)](https://en.wikipedia.org/wiki/Bootstrapping_(statistics))）。然后，我们将使用自助法来计算其他统计量的抽样分布和置信区间，包括相关系数和线性回归的参数。最后，我将指出当数据集中没有足够不同的值时，自助法重采样存在的问题，以及用KDE重采样解决它的方法。
 - en: Estimating Average Income
   id: totrans-6
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 估计平均收入
 - en: As a first example, we’ll use data from the General Social Survey to estimate
     average family income. The following cell loads the data, which I have stored
     in an HDF file.
   id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为第一个例子，我们将使用总体社会调查的数据来估计平均家庭收入。以下单元加载了我存储在HDF文件中的数据。
 - en: '[PRE0]'
   id: totrans-8
   prefs: []
@@ -57,30 +66,37 @@
   id: totrans-9
   prefs: []
   type: TYPE_TB
+  zh: '|  | 年份 | ID_ | 年龄 | 教育 | 性别 | 枪支法 | 大麻 | REALINC |'
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- |'
   id: totrans-10
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- | --- | --- | --- | --- |'
 - en: '| 0 | 1972 | 1 | 23.0 | 16.0 | 2 | 1.0 | NaN | 18951.0 |'
   id: totrans-11
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 1972 | 1 | 23.0 | 16.0 | 2 | 1.0 | NaN | 18951.0 |'
 - en: '| 1 | 1972 | 2 | 70.0 | 10.0 | 1 | 1.0 | NaN | 24366.0 |'
   id: totrans-12
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 1972 | 2 | 70.0 | 10.0 | 1 | 1.0 | NaN | 24366.0 |'
 - en: '| 2 | 1972 | 3 | 48.0 | 12.0 | 2 | 1.0 | NaN | 24366.0 |'
   id: totrans-13
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 1972 | 3 | 48.0 | 12.0 | 2 | 1.0 | NaN | 24366.0 |'
 - en: '| 3 | 1972 | 4 | 27.0 | 17.0 | 2 | 1.0 | NaN | 30458.0 |'
   id: totrans-14
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 1972 | 4 | 27.0 | 17.0 | 2 | 1.0 | NaN | 30458.0 |'
 - en: '| 4 | 1972 | 5 | 61.0 | 12.0 | 2 | 1.0 | NaN | 50763.0 |'
   id: totrans-15
   prefs: []
   type: TYPE_TB
+  zh: '| 4 | 1972 | 5 | 61.0 | 12.0 | 2 | 1.0 | NaN | 50763.0 |'
 - en: The column `REALINC` records family income, converted to 1986 dollars. The following
     figure uses the Seaborn function `kdeplot` to show the distribution of family
     income. The argument `cut=0` cuts off the curve so it doesn’t extend beyond the
@@ -88,6 +104,7 @@
   id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 列`REALINC`记录了家庭收入，转换为1986年的美元。以下图使用Seaborn函数`kdeplot`显示了家庭收入的分布。参数`cut=0`将曲线截断，使其不超出观察到的最小和最大值。
 - en: '[PRE1]'
   id: totrans-17
   prefs: []
@@ -97,12 +114,14 @@
   id: totrans-18
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/12_bootstrap_9_0.png](../Images/99360e8256da8befb7d3a32974f91c2b.png)'
 - en: The distribution of income is skewed to the right; most household incomes are
     less than $60,000, but a few are substantially higher. Here are the mean and standard
     deviation of the reported incomes.
   id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 收入分布向右倾斜；大多数家庭收入低于60000美元，但有些收入明显更高。以下是报告收入的均值和标准差。
 - en: '[PRE2]'
   id: totrans-20
   prefs: []
@@ -119,6 +138,7 @@
   id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个样本的平均家庭收入是31743美元。但如果我们再次进行GSS调查，平均值可能会更高或更低。为了了解它可能变化多少，我们可以使用上一章中的这个函数来模拟抽样过程。
 - en: '[PRE4]'
   id: totrans-23
   prefs: []
@@ -130,10 +150,12 @@
   id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: '`simulate_sample_mean`的参数是样本大小和收入的观察均值和标准差。它从具有给定均值和标准差的正态分布中生成样本，并返回样本的均值。'
 - en: Before we call this function, we have to count the number of valid responses.
   id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 在调用此函数之前，我们必须计算有效响应的数量。
 - en: '[PRE5]'
   id: totrans-26
   prefs: []
@@ -149,6 +171,7 @@
   id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，如果我们调用`simulate_sample_mean`一次，我们将从均值的抽样分布中获得一个值。
 - en: '[PRE7]'
   id: totrans-29
   prefs: []
@@ -163,6 +186,7 @@
   id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们多次调用它，我们将从抽样分布中获得一个随机样本。
 - en: '[PRE9]'
   id: totrans-32
   prefs: []
@@ -172,6 +196,7 @@
   id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是均值的抽样分布的样子：
 - en: '[PRE10]'
   id: totrans-34
   prefs: []
@@ -181,12 +206,14 @@
   id: totrans-35
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/12_bootstrap_22_0.png](../Images/e9e005c5553b42a9ff18942352f0cf9e.png)'
 - en: This distribution shows how much we would expect the observed mean to vary if
     we ran the GSS survey again. We’ll use the following function to summarize the
     sampling distribution.
   id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个分布显示了如果我们再次进行GSS调查，我们期望观察到的均值会有多大变化。我们将使用以下函数来总结抽样分布。
 - en: '[PRE11]'
   id: totrans-37
   prefs: []
@@ -201,14 +228,17 @@
   id: totrans-39
   prefs: []
   type: TYPE_TB
+  zh: '|  | 估计 | SE | CI90 |'
 - en: '| --- | --- | --- | --- |'
   id: totrans-40
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- |'
 - en: '|  | 31739.4 | 123.3 | [31531.6, 31941.8] |'
   id: totrans-41
   prefs: []
   type: TYPE_TB
+  zh: '|  | 31739.4 | 123.3 | [31531.6, 31941.8] |'
 - en: The result shows the mean of the sampling distribution, the standard error,
     and a 90% confidence interval. The mean of the sampling distribution is close
     to the mean of the data, as we expect. The standard error quantifies with width
@@ -444,6 +474,7 @@
   id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们多次运行它，我们会得到一个来自均值抽样分布的样本。
 - en: '[PRE28]'
   id: totrans-81
   prefs: []
@@ -454,6 +485,7 @@
   id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是结果的总结，与基于正常模型的结果进行了比较。
 - en: '[PRE29]'
   id: totrans-83
   prefs: []
@@ -463,23 +495,28 @@
   id: totrans-84
   prefs: []
   type: TYPE_TB
+  zh: '|  | 估计 | 标准误 | CI90 |'
 - en: '| --- | --- | --- | --- |'
   id: totrans-85
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- |'
 - en: '| normal model | 31739.40 | 123.30 | [31531.6, 31941.8] |'
   id: totrans-86
   prefs: []
   type: TYPE_TB
+  zh: '| 正常模型 | 31739.40 | 123.30 | [31531.6, 31941.8] |'
 - en: '| bootstrapping | 31742.67 | 121.39 | [31544.79, 31946.17] |'
   id: totrans-87
   prefs: []
   type: TYPE_TB
+  zh: '| 自助法 | 31742.67 | 121.39 | [31544.79, 31946.17] |'
 - en: The results from bootstrap sampling are consistent with the results based on
     the normal model. Now let’s see what happens when we estimate the 10th percentile.
   id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: 自助法抽样得到的结果与基于正常模型的结果一致。现在让我们看看当我们估计第10百分位数时会发生什么。
 - en: The following function generates a bootstrapped sample and returns the 10th
     percentile. Instead of `percentile` from Numpy, it uses `quantile` from Pandas,
     which drops `NaN` values. The parameter of `quantile` is a probability between
@@ -487,6 +524,7 @@
   id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数生成一个自助法样本，并返回第10百分位数。它使用Pandas的`quantile`而不是Numpy的`percentile`，因为`quantile`会删除`NaN`值。`quantile`的参数是0到1之间的概率，而不是0到100之间的百分比。
 - en: '[PRE30]'
   id: totrans-90
   prefs: []
@@ -497,6 +535,7 @@
   id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用它来生成来自第10百分位数抽样分布的样本。
 - en: '[PRE31]'
   id: totrans-92
   prefs: []
@@ -506,6 +545,7 @@
   id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是结果，以及基于正常模型的结果。
 - en: '[PRE32]'
   id: totrans-94
   prefs: []
@@ -515,41 +555,49 @@
   id: totrans-95
   prefs: []
   type: TYPE_TB
+  zh: '|  | 估计 | 标准误 | CI90 |'
 - en: '| --- | --- | --- | --- |'
   id: totrans-96
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- |'
 - en: '| normal model | -6095.13 | 207.46 | [-6441.61, -5753.08] |'
   id: totrans-97
   prefs: []
   type: TYPE_TB
+  zh: '| 正常模型 | -6095.13 | 207.46 | [-6441.61, -5753.08] |'
 - en: '| bootstrapping | 5649.50 | 88.71 | [5512.5, 5806.0] |'
   id: totrans-98
   prefs: []
   type: TYPE_TB
+  zh: '| 自助法 | 5649.50 | 88.71 | [5512.5, 5806.0] |'
 - en: The mean of the sampling distribution is consistent with the 10th percentile
     of the data, which is $5631. So the results from bootstrapping are more sensible
     than the results based on the normal model.
   id: totrans-99
   prefs: []
   type: TYPE_NORMAL
+  zh: 抽样分布的均值与数据的第10百分位数一致，为5631美元。因此，自助法得到的结果比基于正常模型的结果更合理。
 - en: In general, bootstrapping is robust; that is, it works well with many different
     distributions and many different statistics. However, at the end of the chapter,
     we’ll see one example where it fails.
   id: totrans-100
   prefs: []
   type: TYPE_NORMAL
+  zh: 总的来说，自助法是稳健的；也就是说，它适用于许多不同的分布和许多不同的统计数据。然而，在本章的最后，我们会看到一个它失败的例子。
 - en: Working with Bigger Data
   id: totrans-101
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 处理更大的数据
 - en: As sample size increases, errors due to random sampling get smaller. To demonstrate
     this effect, I’ll use data from the Behavioral Risk Factor Surveillance System
     (BRFSS).
   id: totrans-102
   prefs: []
   type: TYPE_NORMAL
+  zh: 随着样本量的增加，由于随机抽样引起的误差变得更小。为了演示这种效果，我将使用行为风险因素监测系统（BRFSS）的数据。
 - en: In previous chapters, we used BRFSS data to explore the relationship between
     height and weight, and the relationship between income and vegetable consumption.
     In this section, we’ll use it to estimate the average height for men in the United
@@ -557,10 +605,12 @@
   id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: 在之前的章节中，我们使用BRFSS数据来探索身高和体重之间的关系，以及收入和蔬菜消费之间的关系。在本节中，我们将使用它来估计美国男性的平均身高。
 - en: First, let’s read the 2019 data, which I have stored in an HDF file.
   id: totrans-104
   prefs: []
   type: TYPE_NORMAL
+  zh: 首先，让我们阅读2019年的数据，我已经将其存储在一个HDF文件中。
 - en: '[PRE33]'
   id: totrans-105
   prefs: []
@@ -576,6 +626,7 @@
   id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个数据集包含418268行，每行代表一个受访者，以及11列，每列代表我选择的一个变量。以下是前几行。
 - en: '[PRE35]'
   id: totrans-108
   prefs: []
@@ -586,38 +637,51 @@
   id: totrans-109
   prefs: []
   type: TYPE_TB
+  zh: '|  | SEQNO | HTM4 | WTKG3 | _SEX | _AGEG5YR | _VEGESU1 | _INCOMG | _LLCPWT
+    | AGE |'
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
   id: totrans-110
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
 - en: '| 0 | 2019000001 | 157.0 | 69.85 | 2 | 13.0 | 114.0 | 2 | 135.304080 | 82.0
     |'
   id: totrans-111
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 2019000001 | 157.0 | 69.85 | 2 | 13.0 | 114.0 | 2 | 135.304080 | 82.0
+    |'
 - en: '| 1 | 2019000002 | 163.0 | 48.99 | 2 | 11.0 | 121.0 | 3 | 1454.882220 | 72.0
     |'
   id: totrans-112
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 2019000002 | 163.0 | 48.99 | 2 | 11.0 | 121.0 | 3 | 1454.882220 | 72.0
+    |'
 - en: '| 2 | 2019000003 | 165.0 | 86.18 | 2 | 10.0 | 164.0 | 5 | 215.576852 | 67.0
     |'
   id: totrans-113
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 2019000003 | 165.0 | 86.18 | 2 | 10.0 | 164.0 | 5 | 215.576852 | 67.0
+    |'
 - en: '| 3 | 2019000004 | 165.0 | 55.34 | 2 | 13.0 | NaN | 4 | 261.282838 | 82.0 |'
   id: totrans-114
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 2019000004 | 165.0 | 55.34 | 2 | 13.0 | NaN | 4 | 261.282838 | 82.0 |'
 - en: '| 4 | 2019000005 | 152.0 | 49.90 | 2 | 13.0 | 178.0 | 9 | 535.270103 | 82.0
     |'
   id: totrans-115
   prefs: []
   type: TYPE_TB
+  zh: '| 4 | 2019000005 | 152.0 | 49.90 | 2 | 13.0 | 178.0 | 9 | 535.270103 | 82.0
+    |'
 - en: The `HTM4` column contains the respondents’ heights in centimeters.
   id: totrans-116
   prefs: []
   type: TYPE_NORMAL
+  zh: '`HTM4`列包含了受访者的身高（厘米）。'
 - en: '[PRE36]'
   id: totrans-117
   prefs: []
@@ -627,6 +691,7 @@
   id: totrans-118
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了选择男性受访者，我们将使用`SEX`列生成一个布尔`Series`。
 - en: '[PRE37]'
   id: totrans-119
   prefs: []
@@ -642,6 +707,7 @@
   id: totrans-121
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用`notna`和`sum`来计算具有有效身高数据的男性受访者的数量。
 - en: '[PRE39]'
   id: totrans-122
   prefs: []
@@ -656,6 +722,7 @@
   id: totrans-124
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是这些值的均值和标准差。
 - en: '[PRE41]'
   id: totrans-125
   prefs: []
@@ -672,6 +739,7 @@
   id: totrans-127
   prefs: []
   type: TYPE_NORMAL
+  zh: 美国男性的平均身高约为178厘米；标准差约为8厘米。我们可以使用自助法来生成来自均值抽样分布的值。为了减少计算时间，我将迭代次数设置为201。
 - en: '[PRE43]'
   id: totrans-128
   prefs: []
@@ -681,20 +749,24 @@
   id: totrans-129
   prefs: []
   type: TYPE_TB
+  zh: '|  | 估计 | 标准误 | CI90 |'
 - en: '| --- | --- | --- | --- |'
   id: totrans-130
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- |'
 - en: '|  | 178.079 | 0.019 | [178.047, 178.107] |'
   id: totrans-131
   prefs: []
   type: TYPE_TB
+  zh: '|  | 178.079 | 0.019 | [178.047, 178.107] |'
 - en: Because the sample size is so large, the standard error is small and the confidence
     interval is narrow. This result suggests that our estimate is very precise, which
     is true in the sense that the error due to random sampling is small.
   id: totrans-132
   prefs: []
   type: TYPE_NORMAL
+  zh: 由于样本量很大，标准误很小，置信区间很窄。这个结果表明我们的估计非常精确，这在随机抽样误差很小的意义上是正确的。
 - en: But there are other sources of error. For example, the heights and weights in
     this dataset are based on self-reports, so they are vulnerable to **social desirability
     bias** (see [https://en.wikipedia.org/wiki/Social-desirability_bias](https://en.wikipedia.org/wiki/Social-desirability_bias)).
