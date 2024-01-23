@@ -315,6 +315,7 @@
   id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们使用网格算法解决同样的问题。我将使用相同的超参数先验，用每个维度约100个元素的网格来近似。
 - en: '[PRE18]'
   id: totrans-58
   prefs: []
@@ -324,6 +325,7 @@
   id: totrans-59
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/4d36a111de94173800e762bcb4e11959161323a032fb787907ef801163972d21.png](../Images/b1f2ea3c74c546eb75cd9df07609763d.png)'
 - en: '[PRE19]'
   id: totrans-60
   prefs: []
@@ -333,11 +335,13 @@
   id: totrans-61
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/c5a4ef41048db2671496eab57fce6d329cb8f96b1be3d92a1916c1150e1a9737.png](../Images/f2dd9988c740ab93a9771e1c21d328d9.png)'
 - en: The following cells confirm that these priors are consistent with the prior
     samples from PyMC.
   id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下单元格证实这些先验与PyMC的先验样本一致。
 - en: '[PRE20]'
   id: totrans-63
   prefs: []
@@ -352,6 +356,7 @@
   id: totrans-65
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/87280efa676b32352a19b7704ee06b02e34ee045e7ef7f4831fdb67fa9c344d0.png](../Images/bf43b5d007ea8420fe02af58fa6c5eb7.png)'
 - en: '[PRE22]'
   id: totrans-66
   prefs: []
@@ -366,16 +371,19 @@
   id: totrans-68
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/ce51b8b82a93033e1b1d67375bedb99b23fa5283788710bd0205144e236ed498.png](../Images/d38b70b734ab5e74690ed941974b4d5e.png)'
 - en: The joint distribution of hyperparameters
   id: totrans-69
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 超参数的联合分布
 - en: I’ll use `make_joint` to make an array that represents the joint prior distribution
     of the hyperparameters.
   id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将使用`make_joint`来创建一个表示超参数联合先验分布的数组。
 - en: '[PRE24]'
   id: totrans-71
   prefs: []
@@ -395,6 +403,7 @@
   id: totrans-74
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是它的样子。
 - en: '[PRE27]'
   id: totrans-75
   prefs: []
@@ -404,16 +413,19 @@
   id: totrans-76
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/958b2a9ea3b4c8c4b4f3da5eb4ab7ec508f51a23ee621cafca7af2836e950632.png](../Images/00ac59083dbac51dc0a419beb53d318e.png)'
 - en: Joint prior of hyperparameters and x
   id: totrans-77
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 超参数和x的联合先验
 - en: Now we’re ready to lay out the grid for x, which is the proportion we’ll estimate
     for each hospital.
   id: totrans-78
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们准备好为x布置网格，这是我们将为每个医院估计的比例。
 - en: '[PRE28]'
   id: totrans-79
   prefs: []
@@ -423,6 +435,7 @@
   id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于每对超参数，我们将计算`x`的分布。
 - en: '[PRE29]'
   id: totrans-81
   prefs: []
@@ -452,6 +465,7 @@
   id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以通过计算不依赖于x的项来加快速度
 - en: '[PRE34]'
   id: totrans-87
   prefs: []
@@ -466,10 +480,12 @@
   id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个带有mu、sigma和x轴的3D数组。
 - en: Now we need to normalize each distribution of `x`.
   id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们需要对每个`x`的分布进行归一化。
 - en: '[PRE36]'
   id: totrans-91
   prefs: []
@@ -484,6 +500,7 @@
   id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了归一化，我们必须使用`divide`的安全版本，其中`0/0`是`0`。
 - en: '[PRE38]'
   id: totrans-94
   prefs: []
@@ -504,11 +521,13 @@
   id: totrans-97
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个包含每对超参数的`x`分布的数组。
 - en: Now, to get the prior distribution, we multiply through by the joint distribution
     of the hyperparameters.
   id: totrans-98
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，为了得到先验分布，我们需要通过超参数的联合分布进行乘法。
 - en: '[PRE41]'
   id: totrans-99
   prefs: []
@@ -534,11 +553,13 @@
   id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个表示`mu`、`sigma`和`x`的联合先验分布的3D数组。
 - en: To check that it is correct, I’ll extract the marginal distributions and compare
     them to the priors.
   id: totrans-104
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了检查它是否正确，我将提取边缘分布并将其与先验进行比较。
 - en: '[PRE45]'
   id: totrans-105
   prefs: []
@@ -553,6 +574,7 @@
   id: totrans-107
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/34c43829d056d3ea02a3b60bb7ae8a85900c7622aad347608b98ca80caa33779.png](../Images/e5b39fcfba081fb44539bcc089de8761.png)'
 - en: '[PRE47]'
   id: totrans-108
   prefs: []
@@ -562,12 +584,14 @@
   id: totrans-109
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/d0686bec19a94e62e2430a4f3992ecb72ff02e44030ef23a4d6856232389b10f.png](../Images/7735daeec9faf0628ff06fd7a96bac42.png)'
 - en: We didn’t compute the prior distribution of `x` explicitly; it follows from
     the distribution of the hyperparameters. But we can extract the prior marginal
     of `x` from the joint prior.
   id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们没有明确计算`x`的先验分布；它是由超参数的分布得出的。但我们可以从联合先验中提取`x`的先验边缘。
 - en: '[PRE48]'
   id: totrans-111
   prefs: []
@@ -577,10 +601,12 @@
   id: totrans-112
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/bdf43d9b32661a9cbb2dba60731aee477114f535ff9dde513a8f60a814568cd9.png](../Images/8b344dcdb4ee3fc57ed2b4d87590458a.png)'
 - en: And compare it to the prior sample from PyMC.
   id: totrans-113
   prefs: []
   type: TYPE_NORMAL
+  zh: 并将其与PyMC的先验样本进行比较。
 - en: '[PRE49]'
   id: totrans-114
   prefs: []
@@ -605,16 +631,19 @@
   id: totrans-118
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/4a08494ee22a1cd5637087377ca5d42275a09b72ebe2a0bcab09d4743c7880bf.png](../Images/3cca26cd857d171029edd0e7c4a4e10b.png)'
 - en: The prior distribution of `x` I get from the grid is a bit different from what
     I get from PyMC. I’m not sure why, but it doesn’t seem to affect the results much.
   id: totrans-119
   prefs: []
   type: TYPE_NORMAL
+  zh: 我从网格中得到的`x`的先验分布与我从PyMC中得到的有点不同。我不确定为什么，但似乎并不影响结果太多。
 - en: In addition to the marginals, we’ll also find it useful to extract the joint
     marginal distribution of the hyperparameters.
   id: totrans-120
   prefs: []
   type: TYPE_NORMAL
+  zh: 除了边缘之外，我们还会发现从超参数的联合边缘分布中提取是有用的。
 - en: '[PRE53]'
   id: totrans-121
   prefs: []
@@ -634,15 +663,18 @@
   id: totrans-124
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/ac19e03323b4eb0f5f7faff979e4b93a985cd85a2344b9596e03357d0b38d5fd.png](../Images/e4a58fb5c6bad02db959c56ff3784715.png)'
 - en: The Update
   id: totrans-125
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 更新
 - en: The likelihood of the data only depends on `x`, so we can compute it like this.
   id: totrans-126
   prefs: []
   type: TYPE_NORMAL
+  zh: 数据的似然性只取决于`x`，所以我们可以这样计算。
 - en: '[PRE56]'
   id: totrans-127
   prefs: []
@@ -662,10 +694,12 @@
   id: totrans-130
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/1d1840c79bc6a6af27158c4e2a15b8e4f57e29e8cef2496426af8782521d9b97.png](../Images/60671e80e622b1a3551d6e67df9ceb00.png)'
 - en: And here’s the update.
   id: totrans-131
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是更新。
 - en: '[PRE59]'
   id: totrans-132
   prefs: []
@@ -686,27 +720,32 @@
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 串行更新
 - en: At this point we can do an update based on a single hospital, but how do we
     update based on all of the hospitals?
   id: totrans-136
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这一点上，我们可以根据单个医院进行更新，但如何根据所有医院进行更新呢？
 - en: As a step toward the right answer, I’ll start with a wrong answer, which is
     to do the updates one at a time.
   id: totrans-137
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为得到正确答案的一步，我将从错误答案开始，即逐个更新。
 - en: After each update, we extract the posterior distribution of the hyperparameters
     and use it to create the prior for the next update.
   id: totrans-138
   prefs: []
   type: TYPE_NORMAL
+  zh: 每次更新后，我们提取超参数的后验分布并用它来创建下一个更新的先验。
 - en: At the end, the posterior distribution of hyperparameters is correct, and the
     marginal posterior of `x` for the *last* hospital is correct, but the other marginals
     are wrong because they do not take into account data from subsequent hospitals.
   id: totrans-139
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，超参数的后验分布是正确的，最后一个医院的`x`的边际后验是正确的，但其他边缘是错误的，因为它们没有考虑来自后续医院的数据。
 - en: '[PRE62]'
   id: totrans-140
   prefs: []
