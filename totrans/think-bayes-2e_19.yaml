@@ -1975,6 +1975,8 @@
   id: totrans-337
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE85]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE86]'
   id: totrans-338
   prefs: []
@@ -1985,6 +1987,8 @@
   id: totrans-339
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE87]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE88]'
   id: totrans-340
   prefs: []
@@ -1994,6 +1998,7 @@
   id: totrans-341
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE89]</details>'
 - en: '**Exercise:** An article in the *New England Journal of Medicine* reports results
     from a study that looked at the diagnosis rate of Attention Deficit Hyperactivity
     Disorder (ADHD) as a function of birth month: [“Attention Deficit–Hyperactivity
@@ -2001,6 +2006,7 @@
   id: totrans-342
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**《新英格兰医学杂志》上的一篇文章报告了一项研究的结果，该研究调查了多动症（ADHD）的诊断率与出生月份的关系：[“多动症和入学月份”](https://www.nejm.org/doi/10.1056/NEJMoa1806828)。'
 - en: They found that children born in June, July, and August were substantially more
     likely to be diagnosed with ADHD, compared to children born in September, but
     only in states that use a September cutoff for children to enter kindergarten.
@@ -2011,77 +2017,97 @@
   id: totrans-343
   prefs: []
   type: TYPE_NORMAL
+  zh: 他们发现，在六月、七月和八月出生的儿童被诊断为多动症的可能性要大得多，与九月出生的儿童相比，但只有在那些将九月作为幼儿园入学截止日期的州。 在这些州，八月出生的孩子比九月出生的孩子小近一年开始上学。
+    该研究的作者认为原因是“行为上的年龄差异可能被归因于多动症，而不是孩子年龄较小”。
 - en: Use the methods in this chapter to estimate the probability of diagnosis as
     a function of birth month. The notebook for this chapter provides the data and
     some suggestions for getting started.
   id: totrans-344
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用本章的方法来估计诊断概率作为出生月份的函数。 本章的笔记本提供了数据和一些建议，可以开始使用。
 - en: 'The paper includes this figure:'
   id: totrans-345
   prefs: []
   type: TYPE_NORMAL
+  zh: 文章中包括这张图：
 - en: '[![https://www.nejm.org/na101/home/literatum/publisher/mms/journals/content/nejm/2018/nejm_2018.379.issue-22/nejmoa1806828/20190131/images/img_xlarge/nejmoa1806828_f1.jpeg](../Images/f46c09554caa11c0e698e9d4112e95b1.png)](https://www.nejm.org/na101/home/literatum/publisher/mms/journals/content/nejm/2018/nejm_2018.379.issue-22/nejmoa1806828/20190131/images/img_xlarge/nejmoa1806828_f1.jpeg)'
   id: totrans-346
   prefs: []
   type: TYPE_NORMAL
+  zh: '[![https://www.nejm.org/na101/home/literatum/publisher/mms/journals/content/nejm/2018/nejm_2018.379.issue-22/nejmoa1806828/20190131/images/img_xlarge/nejmoa1806828_f1.jpeg](../Images/f46c09554caa11c0e698e9d4112e95b1.png)](https://www.nejm.org/na101/home/literatum/publisher/mms/journals/content/nejm/2018/nejm_2018.379.issue-22/nejmoa1806828/20190131/images/img_xlarge/nejmoa1806828_f1.jpeg)'
 - en: In my opinion, this representation of the data does not show the effect as clearly
     as it could.
   id: totrans-347
   prefs: []
   type: TYPE_NORMAL
+  zh: 在我看来，这种数据的表现形式并没有清楚地显示出效果。
 - en: But the figure includes the raw data, so we can analyze it ourselves.
   id: totrans-348
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是这张图包括原始数据，所以我们可以自己分析它。
 - en: 'Note: there is an error in the figure, confirmed by personal correspondence:'
   id: totrans-349
   prefs: []
   type: TYPE_NORMAL
+  zh: 注意：图中有一个错误，通过个人通信确认：
 - en: The May and June [diagnoses] are reversed. May should be 317 (not 287) and June
     should be 287 (not 317).
   id: totrans-350
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 五月和六月的[诊断]被颠倒了。 五月应该是317（而不是287），六月应该是287（而不是317）。
 - en: So here is the corrected data, where `n` is the number of children born in each
     month, starting with January, and `k` is the number of children diagnosed with
     ADHD.
   id: totrans-351
   prefs: []
   type: TYPE_NORMAL
+  zh: 所以这是更正后的数据，其中`n`是每个月出生的孩子人数，从一月开始，`k`是被诊断为多动症的孩子人数。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-352
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE90]</details>'
   id: totrans-353
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE90]</details>'
 - en: First, I’m going to “roll” the data so it starts in September rather than January.
   id: totrans-354
   prefs: []
   type: TYPE_NORMAL
+  zh: 首先，我将“滚动”数据，使其从九月开始，而不是一月。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-355
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE91]</details>'
   id: totrans-356
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE91]</details>'
 - en: And I’ll put it in a `DataFrame` with one row for each month and the diagnosis
     rate per 10,000.
   id: totrans-357
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后我将把它放在一个`DataFrame`中，每个月一行，每万人中的诊断率。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-358
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE92]'
   id: totrans-359
   prefs: []
@@ -2091,72 +2117,91 @@
   id: totrans-360
   prefs: []
   type: TYPE_TB
+  zh: '|  | x | k | n | 率 |'
 - en: '| --- | --- | --- | --- | --- |'
   id: totrans-361
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- |'
 - en: '| 0 | 0 | 225 | 35353 | 63.643821 |'
   id: totrans-362
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 0 | 225 | 35353 | 63.643821 |'
 - en: '| 1 | 1 | 240 | 34405 | 69.757303 |'
   id: totrans-363
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 1 | 240 | 34405 | 69.757303 |'
 - en: '| 2 | 2 | 232 | 31285 | 74.156944 |'
   id: totrans-364
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 2 | 232 | 31285 | 74.156944 |'
 - en: '| 3 | 3 | 243 | 31617 | 76.857387 |'
   id: totrans-365
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 3 | 243 | 31617 | 76.857387 |'
 - en: '| 4 | 4 | 265 | 32690 | 81.064546 |'
   id: totrans-366
   prefs: []
   type: TYPE_TB
+  zh: '| 4 | 4 | 265 | 32690 | 81.064546 |'
 - en: '| 5 | 5 | 280 | 31238 | 89.634420 |'
   id: totrans-367
   prefs: []
   type: TYPE_TB
+  zh: '| 5 | 5 | 280 | 31238 | 89.634420 |'
 - en: '| 6 | 6 | 307 | 34405 | 89.231216 |'
   id: totrans-368
   prefs: []
   type: TYPE_TB
+  zh: '| 6 | 6 | 307 | 34405 | 89.231216 |'
 - en: '| 7 | 7 | 312 | 34565 | 90.264719 |'
   id: totrans-369
   prefs: []
   type: TYPE_TB
+  zh: '| 7 | 7 | 312 | 34565 | 90.264719 |'
 - en: '| 8 | 8 | 317 | 34977 | 90.630986 |'
   id: totrans-370
   prefs: []
   type: TYPE_TB
+  zh: '| 8 | 8 | 317 | 34977 | 90.630986 |'
 - en: '| 9 | 9 | 287 | 34415 | 83.393869 |'
   id: totrans-371
   prefs: []
   type: TYPE_TB
+  zh: '| 9 | 9 | 287 | 34415 | 83.393869 |'
 - en: '| 10 | 10 | 320 | 36577 | 87.486672 |'
   id: totrans-372
   prefs: []
   type: TYPE_TB
+  zh: '| 10 | 10 | 320 | 36577 | 87.486672 |'
 - en: '| 11 | 11 | 309 | 36319 | 85.079435 |</details>'
   id: totrans-373
   prefs: []
   type: TYPE_NORMAL
+  zh: '| 11 | 11 | 309 | 36319 | 85.079435 |</details>'
 - en: Here’s what the diagnosis rates look like.
   id: totrans-374
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是诊断率的样子。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-375
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE93]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-376
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE93]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE94]'
   id: totrans-377
   prefs: []
@@ -2166,12 +2211,14 @@
   id: totrans-378
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/f7fcadfc675c91a1017eeedc3aceabe80e38f562484fb583b6ae2dc2712a8110.png](../Images/fc55cb668a66d64a73295c05ec30c03e.png)</details>'
 - en: For the first 9 months, from September to May, we see what we would expect if
     some of the excess diagnoses are due to “age-based variation in behavior”. For
     each month of difference in age, we see an increase in the number of diagnoses.
   id: totrans-379
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于前9个月，从9月到5月，我们看到了如果一些过多的诊断是由于“基于年龄的行为变异”而导致的情况。对于年龄差异的每个月，我们都看到诊断数量的增加。
 - en: This pattern breaks down for the last three months, June, July, and August.
     This might be explained by random variation, but it also might be due to parental
     manipulation; if some parents hold back children born near the deadline, the observations
@@ -2180,6 +2227,7 @@
   id: totrans-380
   prefs: []
   type: TYPE_NORMAL
+  zh: 这种模式在过去的三个月，即6月、7月和8月，都有所下降。这可能可以用随机变异来解释，但也可能是由于父母的操纵；如果一些父母推迟了接近截止日期出生的孩子，这些月份的观察结果将包括一些相对年龄较大、因此更不可能被诊断的孩子。
 - en: Unfortunately, the dataset includes only month of birth, not year, so we don’t
     know the actual ages of these students when they started school. However, we can
     use the first nine months to estimate the effect of age on diagnosis rate; then
@@ -2187,37 +2235,45 @@
   id: totrans-381
   prefs: []
   type: TYPE_NORMAL
+  zh: 不幸的是，数据集只包括出生月份，没有年份，所以我们不知道这些学生在开始上学时的实际年龄。然而，我们可以使用前九个月来估计年龄对诊断率的影响；然后我们可以考虑如何处理其他三个月。
 - en: Use the methods in this chapter to estimate the probability of diagnosis as
     a function of birth month. Start with the following prior distributions.
   id: totrans-382
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用本章的方法来估计诊断的概率作为出生月份的函数。从以下先验分布开始。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-383
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
 - en: '[PRE95]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-384
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE95]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE96]</details>'
   id: totrans-385
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE96]</details>'
 - en: Make a joint prior distribution and update it using the data for the first nine
     months.
   id: totrans-386
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 制作一个联合先验分布，并使用前九个月的数据对其进行更新。
 - en: Then draw a sample from the posterior distribution and use it to compute the
     median probability of diagnosis for each month and a 90% credible interval.
   id: totrans-387
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 然后从后验分布中抽取一个样本，并用它来计算每个月的诊断概率的中位数和90%的可信区间。
 - en: As a bonus exercise, do a second update using the data from the last three months,
     but treating the observed number of diagnoses as a lower bound on the number of
     diagnoses there would be if no children were kept back.
@@ -2225,11 +2281,13 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 作为一个额外的练习，使用过去三个月的数据进行第二次更新，但将观察到的诊断数量视为如果没有孩子被留下来会有的诊断数量的下限。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-389
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
 - en: '[PRE97]'
   id: totrans-390
   prefs: []
@@ -2241,55 +2299,80 @@
   id: totrans-391
   prefs: []
   type: TYPE_TB
+  zh: '| 截距 | -5.200 | -5.188 | -5.176 | -5.164 | -5.152 | -5.140 | -5.128 | -5.116
+    | -5.104 | -5.092 | ... | -4.708 | -4.696 | -4.684 | -4.672 | -4.660 | -4.648
+    | -4.636 | -4.624 | -4.612 | -4.600 |'
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
     | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
   id: totrans-392
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+    | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
 - en: '| Slope |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |'
   id: totrans-393
   prefs: []
   type: TYPE_TB
+  zh: '| 斜率 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |'
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
     | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
   id: totrans-394
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+    | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
 - en: '| 0.0000 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384
     | 0.000384 | 0.000384 | 0.000384 | 0.000384 | ... | 0.000384 | 0.000384 | 0.000384
     | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 |'
   id: totrans-395
   prefs: []
   type: TYPE_TB
+  zh: '| 0.0000 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384
+    | 0.000384 | 0.000384 | 0.000384 | 0.000384 | ... | 0.000384 | 0.000384 | 0.000384
+    | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 |'
 - en: '| 0.0016 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384
     | 0.000384 | 0.000384 | 0.000384 | 0.000384 | ... | 0.000384 | 0.000384 | 0.000384
     | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 |'
   id: totrans-396
   prefs: []
   type: TYPE_TB
+  zh: '| 0.0016 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384
+    | 0.000384 | 0.000384 | 0.000384 | 0.000384 | ... | 0.000384 | 0.000384 | 0.000384
+    | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 |'
 - en: '| 0.0032 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384
     | 0.000384 | 0.000384 | 0.000384 | 0.000384 | ... | 0.000384 | 0.000384 | 0.000384
     | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 |'
   id: totrans-397
   prefs: []
   type: TYPE_TB
+  zh: '| 0.0032 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384
+    | 0.000384 | 0.000384 | 0.000384 | 0.000384 | ... | 0.000384 | 0.000384 | 0.000384
+    | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 |'
 - en: '| 0.0048 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384
     | 0.000384 | 0.000384 | 0.000384 | 0.000384 | ... | 0.000384 | 0.000384 | 0.000384
     | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 |'
   id: totrans-398
   prefs: []
   type: TYPE_TB
+  zh: '| 0.0048 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384
+    | 0.000384 | 0.000384 | 0.000384 | 0.000384 | ... | 0.000384 | 0.000384 | 0.000384
+    | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 |'
 - en: '| 0.0064 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384
     | 0.000384 | 0.000384 | 0.000384 | 0.000384 | ... | 0.000384 | 0.000384 | 0.000384
     | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 |'
   id: totrans-399
   prefs: []
   type: TYPE_TB
+  zh: '| 0.0064 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384
+    | 0.000384 | 0.000384 | 0.000384 | 0.000384 | ... | 0.000384 | 0.000384 | 0.000384
+    | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 |'
 - en: 5 rows × 51 columns</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>
   id: totrans-400
   prefs: []
   type: TYPE_NORMAL
+  zh: 5行×51列</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE98]'
   id: totrans-401
   prefs: []
@@ -2299,31 +2382,39 @@
   id: totrans-402
   prefs: []
   type: TYPE_TB
+  zh: '|  |  | 概率 |'
 - en: '| --- | --- | --- |'
   id: totrans-403
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- |'
 - en: '| Slope | Intercept |  |'
   id: totrans-404
   prefs: []
   type: TYPE_TB
+  zh: '| 斜率 | 截距 |  |'
 - en: '| --- | --- | --- |'
   id: totrans-405
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- |'
 - en: '| 0.0 | -5.200 | 0.000384 |'
   id: totrans-406
   prefs: []
   type: TYPE_TB
+  zh: '| 0.0 | -5.200 | 0.000384 |'
 - en: '| -5.188 | 0.000384 |'
   id: totrans-407
   prefs: []
   type: TYPE_TB
+  zh: '| -5.188 | 0.000384 |'
 - en: '| -5.176 | 0.000384 |</details> <details class="hide above-input"><summary
     aria-label="Toggle hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-408
   prefs: []
   type: TYPE_NORMAL
+  zh: '| -5.176 | 0.000384 |</details> <details class="hide above-input"><summary
+    aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE99]'
   id: totrans-409
   prefs: []
@@ -2333,47 +2424,59 @@
   id: totrans-410
   prefs: []
   type: TYPE_TB
+  zh: '|  | x | k | n | rate |'
 - en: '| --- | --- | --- | --- | --- |'
   id: totrans-411
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- |'
 - en: '| 0 | 0 | 225 | 35353 | 63.643821 |'
   id: totrans-412
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 0 | 225 | 35353 | 63.643821 |'
 - en: '| 1 | 1 | 240 | 34405 | 69.757303 |'
   id: totrans-413
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 1 | 240 | 34405 | 69.757303 |'
 - en: '| 2 | 2 | 232 | 31285 | 74.156944 |'
   id: totrans-414
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 2 | 232 | 31285 | 74.156944 |'
 - en: '| 3 | 3 | 243 | 31617 | 76.857387 |'
   id: totrans-415
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 3 | 243 | 31617 | 76.857387 |'
 - en: '| 4 | 4 | 265 | 32690 | 81.064546 |'
   id: totrans-416
   prefs: []
   type: TYPE_TB
+  zh: '| 4 | 4 | 265 | 32690 | 81.064546 |'
 - en: '| 5 | 5 | 280 | 31238 | 89.634420 |'
   id: totrans-417
   prefs: []
   type: TYPE_TB
+  zh: '| 5 | 5 | 280 | 31238 | 89.634420 |'
 - en: '| 6 | 6 | 307 | 34405 | 89.231216 |'
   id: totrans-418
   prefs: []
   type: TYPE_TB
+  zh: '| 6 | 6 | 307 | 34405 | 89.231216 |'
 - en: '| 7 | 7 | 312 | 34565 | 90.264719 |'
   id: totrans-419
   prefs: []
   type: TYPE_TB
+  zh: '| 7 | 7 | 312 | 34565 | 90.264719 |'
 - en: '| 8 | 8 | 317 | 34977 | 90.630986 |</details> <details class="hide above-input"><summary
     aria-label="Toggle hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-420
   prefs: []
   type: TYPE_NORMAL
+  zh: '| 8 | 8 | 317 | 34977 | 90.630986 |</details> <details class="hide above-input"><summary
+    aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE100]'
   id: totrans-421
   prefs: []
@@ -2383,23 +2486,29 @@
   id: totrans-422
   prefs: []
   type: TYPE_TB
+  zh: '|  | x | k | n | rate |'
 - en: '| --- | --- | --- | --- | --- |'
   id: totrans-423
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- |'
 - en: '| 9 | 9 | 287 | 34415 | 83.393869 |'
   id: totrans-424
   prefs: []
   type: TYPE_TB
+  zh: '| 9 | 9 | 287 | 34415 | 83.393869 |'
 - en: '| 10 | 10 | 320 | 36577 | 87.486672 |'
   id: totrans-425
   prefs: []
   type: TYPE_TB
+  zh: '| 10 | 10 | 320 | 36577 | 87.486672 |'
 - en: '| 11 | 11 | 309 | 36319 | 85.079435 |</details> <details class="hide above-input"><summary
     aria-label="Toggle hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-426
   prefs: []
   type: TYPE_NORMAL
+  zh: '| 11 | 11 | 309 | 36319 | 85.079435 |</details> <details class="hide above-input"><summary
+    aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE101]'
   id: totrans-427
   prefs: []
@@ -2410,6 +2519,8 @@
   id: totrans-428
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE102]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE103]'
   id: totrans-429
   prefs: []
@@ -2420,6 +2531,8 @@
   id: totrans-430
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE104]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE105]'
   id: totrans-431
   prefs: []
@@ -2430,6 +2543,8 @@
   id: totrans-432
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE106]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE107]'
   id: totrans-433
   prefs: []
@@ -2440,6 +2555,8 @@
   id: totrans-434
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE108]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE109]'
   id: totrans-435
   prefs: []
@@ -2450,6 +2567,8 @@
   id: totrans-436
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE110]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE111]'
   id: totrans-437
   prefs: []
@@ -2460,6 +2579,8 @@
   id: totrans-438
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE112]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE113]'
   id: totrans-439
   prefs: []
@@ -2471,6 +2592,8 @@
   id: totrans-440
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/8d4f98743b92db5422c7fe2b019ad6b7803f2191347c176038fa4c9c488d08f3.png](../Images/877768dbfe81bcaf9a2987e3c6c619c1.png)</details><details
+    class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE114]'
   id: totrans-441
   prefs: []
@@ -2481,6 +2604,8 @@
   id: totrans-442
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE115]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE116]'
   id: totrans-443
   prefs: []
@@ -2492,6 +2617,8 @@
   id: totrans-444
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/b337e10727df99215bb86fa06d97261ab7c199eae928d7a36397babd31f2df3d.png](../Images/1e3b0ee906d6865b47751784829dc3ac.png)</details><details
+    class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE117]'
   id: totrans-445
   prefs: []
@@ -2503,6 +2630,8 @@
   id: totrans-446
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/516901f5e13958d8a6c10717e88d32e21a505a54720c437b42eb3f97fdebb5b8.png](../Images/6bf5df4ebf404b58a2db1ed8ee8d60db.png)</details><details
+    class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE118]'
   id: totrans-447
   prefs: []
@@ -2513,6 +2642,8 @@
   id: totrans-448
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE119]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE120]'
   id: totrans-449
   prefs: []
@@ -2523,6 +2654,8 @@
   id: totrans-450
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE121]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE122]'
   id: totrans-451
   prefs: []
@@ -2532,3 +2665,4 @@
   id: totrans-452
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/168f84e18b3338f4328e277a388b22e3d4da7f79745b6dcaa9369aeaadfde554.png](../Images/b128cc3045bc131b17f67874087d5b22.png)</details>'
