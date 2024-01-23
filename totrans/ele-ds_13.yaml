@@ -727,16 +727,19 @@
   id: totrans-122
   prefs: []
   type: TYPE_NORMAL
+  zh: 到目前为止，我们所做的例子都符合这个图表所示的框架：
 - en: '![](../Images/3bae19c4186703c90aec13ae2c4e4eec.png)'
   id: totrans-123
   prefs: []
   type: TYPE_IMG
+  zh: '![](../Images/3bae19c4186703c90aec13ae2c4e4eec.png)'
 - en: Using data from an experiment, we compute a sample statistic. In the vaccine
     example, we computed risks for each group and efficacy. In the height example,
     we computed the average height in the sample.
   id: totrans-124
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用实验数据，我们计算一个样本统计量。在疫苗的例子中，我们计算了每个组的风险和效力。在身高的例子中，我们计算了样本的平均身高。
 - en: Then we build a model of the sampling process. In the vaccine example, the model
     assumes that everyone in each group has the same probability of getting sick,
     and we use the data to choose the probability. In the height example, the model
@@ -745,28 +748,33 @@
   id: totrans-125
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后我们建立一个抽样过程的模型。在疫苗的例子中，模型假设每个组中的每个人患病的概率相同，我们使用数据来选择概率。在身高的例子中，模型假设身高是从正态分布中抽取的，并且我们使用数据来选择参数`mu`和`sigma`。
 - en: We use the model to simulate the experiment many times. Each simulation generates
     a dataset which we use to compute the sample statistic.
   id: totrans-126
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们使用模型多次模拟实验。每次模拟生成一个数据集，我们用它来计算样本统计量。
 - en: Finally, we collect the sample statistics from the simulations, plot the sampling
     distribution, and compute standard error and a confidence interval.
   id: totrans-127
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，我们从模拟中收集样本统计量，绘制抽样分布，并计算标准误差和置信区间。
 - en: I emphasize the role of the model in this framework because for a given experiment
     there might be several possible models, each including some elements of the real
     world and ignoring others.
   id: totrans-128
   prefs: []
   type: TYPE_NORMAL
+  zh: 我强调模型在这个框架中的作用，因为对于给定的实验，可能存在几种可能的模型，每个模型包括一些真实世界的元素，忽略其他元素。
 - en: For example, our model of the vaccine experiment assumes that everyone in each
     group has the same risk, but that’s probably not true. Here’s another version
     of `simulate_group` that includes variation in risk within each group.
   id: totrans-129
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，我们对疫苗实验的模型假设是每个组中的每个人患病的风险相同，但这可能并不正确。这是`simulate_group`的另一个版本，它包括每个组内风险的变化。
 - en: '[PRE47]'
   id: totrans-130
   prefs: []
@@ -779,16 +787,19 @@
   id: totrans-131
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个函数的版本假设每个人患病的概率不同，从`0`到`2*p`的均匀分布中抽取。当然，这只是关于概率在群体中可能分布的猜测，但我们可以用它来了解这种分布对结果的影响。
 - en: 'The rest of the function is the same as the previous version: it generates
     `xs`, which is an array of random values between `0` and `1`. Then it compares
     `xs` and `ps`, counting the number of times `p` exceeds `x`.'
   id: totrans-132
   prefs: []
   type: TYPE_NORMAL
+  zh: 函数的其余部分与之前的版本相同：它生成`xs`，这是在`0`和`1`之间的随机值数组。然后它比较`xs`和`ps`，计算`p`超过`x`的次数。
 - en: Here’s how we call this function, simulating the treatment group.
   id: totrans-133
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是我们如何调用这个函数，模拟治疗组。
 - en: '[PRE48]'
   id: totrans-134
   prefs: []
@@ -803,6 +814,7 @@
   id: totrans-136
   prefs: []
   type: TYPE_NORMAL
+  zh: 返回值是每1000例中的病例数。
 - en: '**Exercise:** Use this function to run 1000 simulations of the treatment group.
     Compute the mean of the results and confirm that it is close to the observed `risk_treatment`.
     To quantify the spread of the sampling distribution, compute the standard error.
@@ -811,12 +823,14 @@
   id: totrans-137
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** 使用这个函数对治疗组进行1000次模拟。计算结果的均值，并确认它接近观察到的`risk_treatment`。为了量化抽样分布的扩展，计算标准误差。它与我们在每个组中的每个人患病风险相同的原始模型计算的标准误差相比如何？'
 - en: '**Exercise:** The following is a version of `simulate_trial` that uses `simulate_variable_group`,
     from the previous exercise, to simulate the vaccine trial using the modified model,
     with variation in risk within the groups.'
   id: totrans-138
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** 以下是`simulate_trial`的一个版本，它使用前面练习中的`simulate_variable_group`来使用修改后的模型模拟疫苗试验，组内风险有所变化。'
 - en: Use this function to simulate 1000 trials. Compute the mean of the sampling
     distribution and confirm that it is close to the observed `efficacy`. Compute
     the standard error and compare it to the standard error we computed for the original
@@ -824,6 +838,7 @@
   id: totrans-139
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用这个函数来模拟1000次试验。计算抽样分布的均值，并确认它接近观察到的`efficacy`。计算标准误差，并将其与我们为原始模型计算的标准误差进行比较。
 - en: '[PRE50]'
   id: totrans-140
   prefs: []
@@ -834,12 +849,14 @@
   id: totrans-141
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** 重新采样框架的一个好处是，可以轻松计算其他统计量的抽样分布。'
 - en: For example, suppose we want to estimate the coefficient of variation (standard
     deviation as a fraction of the mean) for adult male height. Here’s how we can
     compute it.
   id: totrans-142
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，假设我们想要估计成年男性身高的变异系数（标准差占均值的比例）。下面是我们如何计算它。
 - en: '[PRE51]'
   id: totrans-143
   prefs: []
@@ -856,6 +873,7 @@
   id: totrans-145
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个例子中，标准差约为均值的4.5%。以下是`simulate_sample`的一个版本，它生成身高的随机样本并返回变异系数，而不是均值。
 - en: '[PRE53]'
   id: totrans-146
   prefs: []
@@ -867,11 +885,13 @@
   id: totrans-147
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用这个函数来模拟大小为`n=103`的1000个样本，使用`mean_height`作为`mu`，`std_height`作为`sigma`。绘制变异系数的抽样分布，并计算90%的置信区间。
 - en: Support for Gun Control
   id: totrans-148
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 支持枪支管制
 - en: In Chapter 10 we used data from the General Social Survey, specifically a variable
     called `GUNLAW`, to describe support for a gun control law as a function of age,
     sex, and years of education. Now let’s come back to that dataset and see how the
@@ -879,6 +899,7 @@
   id: totrans-149
   prefs: []
   type: TYPE_NORMAL
+  zh: 在第10章中，我们使用了来自《社会总体调查》的数据，具体来说是一个名为`GUNLAW`的变量，用来描述对枪支管制法的支持与年龄、性别和教育年限的关系。现在让我们回到那个数据集，看看随着时间的推移，回答发生了什么变化。
 - en: The following cell reloads the data.
   id: totrans-150
   prefs: []
