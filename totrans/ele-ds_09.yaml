@@ -1,88 +1,108 @@
 - en: DataFrames and Series
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
 - en: 原文：[https://allendowney.github.io/ElementsOfDataScience/07_dataframes.html](https://allendowney.github.io/ElementsOfDataScience/07_dataframes.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/07_dataframes.ipynb)
     or [click here to download it](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/07_dataframes.ipynb).'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
 - en: This chapter introduces Pandas, a Python library that provides functions for
     reading and writing data files, exploring and analyzing data, and generating visualizations.
     And it provides two new types for working with data, `DataFrame` and `Series`.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
 - en: 'We will use these tools to answer a data question: what is the average birth
     weight of babies in the United States? This example will demonstrate important
     steps in almost any data science project:'
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
 - en: Identifying data that can answer a question.
+  id: totrans-5
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: Obtaining the data and loading it in Python.
+  id: totrans-6
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: Checking the data and dealing with errors.
+  id: totrans-7
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: Selecting relevant subsets from the data.
+  id: totrans-8
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: Using histograms to visualize a distribution of values.
+  id: totrans-9
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: Using summary statistics to describe the data in a way that best answers the
     question.
+  id: totrans-10
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: Considering possible sources of error and limitations in our conclusions.
+  id: totrans-11
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: Let’s start by getting the data.
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
 - en: Reading the Data
+  id: totrans-13
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: We’ll use data from the National Survey of Family Growth (NSFG), which is available
     from the National Center for Health Statistics at [https://www.cdc.gov/nchs/nsfg/index.htm](https://www.cdc.gov/nchs/nsfg/index.htm).
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
 - en: 'To download the data, you have to agree to the Data User’s Agreement at [https://www.cdc.gov/nchs/data_access/ftp_dua.htm](https://www.cdc.gov/nchs/data_access/ftp_dua.htm).
     You should read those terms carefully, but let me draw your attention to what
     I think is the most important one:'
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
 - en: Make no attempt to learn the identity of any person or establishment included
     in these data.
+  id: totrans-16
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: NSFG respondents provide honest answers to questions of the most personal nature
     with the expectation that their identities will not be revealed. As ethical data
     scientists, we should respect their privacy and adhere to the terms of use.
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
 - en: Respondents to the NSFG provide general information about themselves, which
     is stored in the respondent file, and information about each time they have been
     pregnant, which is stored in the pregnancy file.
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
 - en: We will work with the pregnancy file, which contains one row for each pregnancy
     and one column for each of the 248 variables. Each variable represents responses
     to a question on the NSFG questionnaire.
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
 - en: The data is stored in a fixed-width format, which means that every row is the
@@ -91,159 +111,213 @@
     `CASEID`, which is a unique identifier for each respondent; the next two characters
     represent `PREGORDR`, which indicates whether a pregnancy is the respondent’s
     first, second, etc.
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
 - en: To read this data, we need a **data dictionary**, which specifies the names
     of the variables and the range of characters where each variable appears. The
     data and the data dictionary are available in separate files.
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE0]'
+  id: totrans-22
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: Pandas can read data in most common formats, including CSV, Excel, and fixed-width
     format, but it cannot read the data dictionary, which is in Stata format. For
     that, we’ll use a Python library called `statadict`.
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
 - en: From `statadict`, we’ll import `parse_stata_dict`, which reads the data dictionary.
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE1]'
+  id: totrans-25
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '[PRE2]'
+  id: totrans-26
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: The result is an object that contains
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
 - en: '`names`, which is a list of variable names, and'
+  id: totrans-28
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: '`colspecs`, which is a list of tuples.'
+  id: totrans-29
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Each tuple in `colspecs` specifies the first and last column where a variable
     appears.
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
 - en: These values are exactly the arguments we need to use `read_fwf`, which is the
     Pandas function that reads a file in fixed-width format.
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE3]'
+  id: totrans-32
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '[PRE4]'
+  id: totrans-33
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: 'The result from `read_fwf()` is a `DataFrame`, which is the primary type Pandas
     uses to store data. `DataFrame` has a method called `head()` that shows the first
     5 rows:'
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE5]'
+  id: totrans-35
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '|  | CASEID | PREGORDR | HOWPREG_N | HOWPREG_P | MOSCURRP | NOWPRGDK | PREGEND1
     | PREGEND2 | HOWENDDK | NBRNALIV | ... | SECU | SEST | CMINTVW | CMLSTYR | CMJAN3YR
     | CMJAN4YR | CMJAN5YR | QUARTER | PHASE | INTVWYEAR |'
+  id: totrans-36
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
     | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  id: totrans-37
   prefs: []
   type: TYPE_TB
 - en: '| 0 | 70627 | 1 | NaN | NaN | NaN | NaN | 6.0 | NaN | NaN | 1.0 | ... | 3 |
     322 | 1394 | 1382 | 1357 | 1345 | 1333 | 18 | 1 | 2016 |'
+  id: totrans-38
   prefs: []
   type: TYPE_TB
 - en: '| 1 | 70627 | 2 | NaN | NaN | NaN | NaN | 1.0 | NaN | NaN | NaN | ... | 3 |
     322 | 1394 | 1382 | 1357 | 1345 | 1333 | 18 | 1 | 2016 |'
+  id: totrans-39
   prefs: []
   type: TYPE_TB
 - en: '| 2 | 70627 | 3 | NaN | NaN | NaN | NaN | 6.0 | NaN | NaN | 1.0 | ... | 3 |
     322 | 1394 | 1382 | 1357 | 1345 | 1333 | 18 | 1 | 2016 |'
+  id: totrans-40
   prefs: []
   type: TYPE_TB
 - en: '| 3 | 70628 | 1 | NaN | NaN | NaN | NaN | 6.0 | NaN | NaN | 1.0 | ... | 2 |
     366 | 1409 | 1397 | 1369 | 1357 | 1345 | 23 | 1 | 2017 |'
+  id: totrans-41
   prefs: []
   type: TYPE_TB
 - en: '| 4 | 70628 | 2 | NaN | NaN | NaN | NaN | 6.0 | NaN | NaN | 1.0 | ... | 2 |
     366 | 1409 | 1397 | 1369 | 1357 | 1345 | 23 | 1 | 2017 |'
+  id: totrans-42
   prefs: []
   type: TYPE_TB
 - en: 5 rows × 248 columns
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE6]'
+  id: totrans-44
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '|  | CASEID | PREGORDR | HOWPREG_N | HOWPREG_P | MOSCURRP | NOWPRGDK | PREGEND1
     | PREGEND2 | HOWENDDK |'
+  id: totrans-45
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  id: totrans-46
   prefs: []
   type: TYPE_TB
 - en: '| 0 | 70627 | 1 | NaN | NaN | NaN | NaN | 6.0 | NaN | NaN |'
+  id: totrans-47
   prefs: []
   type: TYPE_TB
 - en: '| 1 | 70627 | 2 | NaN | NaN | NaN | NaN | 1.0 | NaN | NaN |'
+  id: totrans-48
   prefs: []
   type: TYPE_TB
 - en: '| 2 | 70627 | 3 | NaN | NaN | NaN | NaN | 6.0 | NaN | NaN |'
+  id: totrans-49
   prefs: []
   type: TYPE_TB
 - en: '| 3 | 70628 | 1 | NaN | NaN | NaN | NaN | 6.0 | NaN | NaN |'
+  id: totrans-50
   prefs: []
   type: TYPE_TB
 - en: '| 4 | 70628 | 2 | NaN | NaN | NaN | NaN | 6.0 | NaN | NaN |'
+  id: totrans-51
   prefs: []
   type: TYPE_TB
 - en: The first two columns are is `CASEID` and `PREGORDR`, which I mentioned earlier.
     The first three rows have the same `CASEID`, so this respondent reported three
     pregnancies; the values of `PREGORDR` indicate that they are the first, second,
     and third pregnancies, in that order.
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
 - en: We will learn more about the other variables as we go along.
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
 - en: 'In addition to methods like `head`, a `Dataframe` object has several **attributes**,
     which are variables associated with the object. For example, `nsfg` has an attribute
     called `shape`, which is a tuple containing the number of rows and columns:'
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE7]'
+  id: totrans-55
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '[PRE8]'
+  id: totrans-56
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: There are 9553 rows in this dataset, one for each pregnancy, and 248 columns,
     one for each variable.
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
 - en: '`nsfg` also has an attribute called `columns`, which contains the column names:'
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE9]'
+  id: totrans-59
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '[PRE10]'
+  id: totrans-60
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: The column names are stored in an `Index`, which is another Pandas type, similar
     to a list.
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
 - en: Based on the column names, you might be able to guess what some of the variables
     are, but in general you have to read the documentation.
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
 - en: When you work with datasets like the NSFG, it is important to read the documentation
@@ -251,385 +325,501 @@
     results and never realize it. So, before we start looking at data, let’s get familiar
     with the NSFG codebook, which describes every variable. You can download the codebook
     for this dataset from [https://github.com/AllenDowney/ElementsOfDataScience/raw/master/data/2015-2017_NSFG_FemPregFile_Codebook-508.pdf](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/data/2015-2017_NSFG_FemPregFile_Codebook-508.pdf).
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
 - en: If you search that document for “weigh at birth” you should find these variables
     related to birth weight.
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
 - en: '`BIRTHWGT_LB1`: Birthweight in Pounds - 1st baby from this pregnancy'
+  id: totrans-65
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: '`BIRTHWGT_OZ1`: Birthweight in Ounces - 1st baby from this pregnancy'
+  id: totrans-66
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: There are similar variables for a 2nd or 3rd baby, in the case of twins or triplets.
     For now we will focus on the first baby from each pregnancy, and we will come
     back to the issue of multiple births.
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
 - en: Series
+  id: totrans-68
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: In many ways a `DataFrame` is like a Python dictionary, where the column names
     are the keys and the columns are the values. You can select a column from a `DataFrame`
     using the bracket operator, with a string as the key.
+  id: totrans-69
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE11]'
+  id: totrans-70
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: '[PRE12]'
+  id: totrans-71
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: The result is a `Series`, which is a Pandas type that represents a single column
     of data. In this case the `Series` contains the birth weight, in pounds, for each
     live birth.
+  id: totrans-72
   prefs: []
   type: TYPE_NORMAL
 - en: '`head` shows the first five values in the `Series`, the name of the `Series`,
     and the data type:'
+  id: totrans-73
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE13]'
+  id: totrans-74
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: '[PRE14]'
+  id: totrans-75
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: One of the values is `NaN`, which stands for “Not a Number”. `NaN` is a special
     value used to indicate invalid or missing data. In this example, the pregnancy
     did not end in live birth, so birth weight is inapplicable.
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
 - en: '**Exercise:** The variable `BIRTHWGT_OZ1` contains the ounces part of birth
     weight.'
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
 - en: Select the column `'BIRTHWGT_OZ1'` from the `nsfg` `DataFrame` and assign it
     to a new variable called `ounces`. Then display the first 5 elements of `ounces`.
+  id: totrans-78
   prefs: []
   type: TYPE_NORMAL
 - en: '**Exercise:** The Pandas types we have seen so far are `DataFrame`, `Index`,
     and `Series`. You can find the documentation of these types at:'
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
 - en: '`DataFrame`: [https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html)'
+  id: totrans-80
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: '`Index`: [https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Index.html](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Index.html)'
+  id: totrans-81
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: '`Series`: [https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html)'
+  id: totrans-82
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: This documentation can be overwhelming; I don’t recommend trying to read it
     all now. But you might want to skim it so you know where to look later.
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
 - en: Validation
+  id: totrans-84
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: At this point we have identified the columns we need to answer the question
     and assigned them to variables named `pounds` and `ounces`.
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE15]'
+  id: totrans-86
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: Before we do anything with this data, we have to validate it. One part of validation
     is confirming that we are interpreting the data correctly.
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
 - en: We can use the `value_counts` method to see what values appear in `pounds` and
     how many times each value appears.
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE16]'
+  id: totrans-89
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: By default, the results are sorted with the most frequent value first, but we
     can use `sort_index` to sort them by value instead, with the lightest babies first
     and heaviest babies last.
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE17]'
+  id: totrans-91
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: '[PRE18]'
+  id: totrans-92
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: As we’d expect, the most frequent values are 6-8 pounds, but there are some
     very light babies, a few very heavy babies, and two special values, 98, and 99\.
     According to the codebook, these values indicate that the respondent declined
     to answer the question (98) or did not know (99).
+  id: totrans-93
   prefs: []
   type: TYPE_NORMAL
 - en: We can validate the results by comparing them to the codebook, which lists the
     values and their frequencies.
+  id: totrans-94
   prefs: []
   type: TYPE_NORMAL
 - en: '| value | label | Total |'
+  id: totrans-95
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- |'
+  id: totrans-96
   prefs: []
   type: TYPE_TB
 - en: '| . | INAPPLICABLE | 2863 |'
+  id: totrans-97
   prefs: []
   type: TYPE_TB
 - en: '| 0-5 | UNDER 6 POUNDS | 901 |'
+  id: totrans-98
   prefs: []
   type: TYPE_TB
 - en: '| 6 | 6 POUNDS | 1644 |'
+  id: totrans-99
   prefs: []
   type: TYPE_TB
 - en: '| 7 | 7 POUNDS | 2268 |'
+  id: totrans-100
   prefs: []
   type: TYPE_TB
 - en: '| 8 | 8 POUNDS | 1287 |'
+  id: totrans-101
   prefs: []
   type: TYPE_TB
 - en: '| 9-95 | 9 POUNDS OR MORE | 499 |'
+  id: totrans-102
   prefs: []
   type: TYPE_TB
 - en: '| 98 | Refused | 2 |'
+  id: totrans-103
   prefs: []
   type: TYPE_TB
 - en: '| 99 | Don’t know | 89 |'
+  id: totrans-104
   prefs: []
   type: TYPE_TB
 - en: '|  | Total | 9553 |'
+  id: totrans-105
   prefs: []
   type: TYPE_TB
 - en: The results from `value_counts` agree with the codebook, so we have some confidence
     that we are reading and interpreting the data correctly.
+  id: totrans-106
   prefs: []
   type: TYPE_NORMAL
 - en: '**Exercise:** In the `nsfg` `DataFrame`, the column `''OUTCOME''` encodes the
     outcome of each pregnancy as shown below:'
+  id: totrans-107
   prefs: []
   type: TYPE_NORMAL
 - en: '| Value | Meaning |'
+  id: totrans-108
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- |'
+  id: totrans-109
   prefs: []
   type: TYPE_TB
 - en: '| 1 | Live birth |'
+  id: totrans-110
   prefs: []
   type: TYPE_TB
 - en: '| 2 | Induced abortion |'
+  id: totrans-111
   prefs: []
   type: TYPE_TB
 - en: '| 3 | Stillbirth |'
+  id: totrans-112
   prefs: []
   type: TYPE_TB
 - en: '| 4 | Miscarriage |'
+  id: totrans-113
   prefs: []
   type: TYPE_TB
 - en: '| 5 | Ectopic pregnancy |'
+  id: totrans-114
   prefs: []
   type: TYPE_TB
 - en: '| 6 | Current pregnancy |'
+  id: totrans-115
   prefs: []
   type: TYPE_TB
 - en: Use `value_counts` to display the values in this column and how many times each
     value appears. Are the results consistent with the codebook?
+  id: totrans-116
   prefs: []
   type: TYPE_NORMAL
 - en: Summary Statistics
+  id: totrans-117
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: Another way to validate the data is with `describe`, which computes statistics
     that summarize the data, like the mean, standard deviation, minimum, and maximum.
+  id: totrans-118
   prefs: []
   type: TYPE_NORMAL
 - en: Here are the results for `pounds`.
+  id: totrans-119
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE19]'
+  id: totrans-120
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '[PRE20]'
+  id: totrans-121
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '`count` is the number of values, not including `NaN`. For this variable, there
     are 6690 value that are not `NaN`.'
+  id: totrans-122
   prefs: []
   type: TYPE_NORMAL
 - en: '`mean` and `std` are the mean and standard deviation. `min` and `max` are the
     minimum and maximum values, and in between are the 25th, 50th, and 75th percentiles.
     The 50th percentile is the median.'
+  id: totrans-123
   prefs: []
   type: TYPE_NORMAL
 - en: The mean is about `8.05`, but that doesn’t mean much because it includes the
     special values 98 and 99\. Before we can really compute the mean, we have to replace
     those values with `NaN` to identify them as missing data.
+  id: totrans-124
   prefs: []
   type: TYPE_NORMAL
 - en: 'The `replace()` method does what we want:'
+  id: totrans-125
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE21]'
+  id: totrans-126
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: '`replace` takes a list of the values we want to replace and the value we want
     to replace them with. `np.nan` means we are getting the special value `NaN` from
     the NumPy library, which is imported as `np`.'
+  id: totrans-127
   prefs: []
   type: TYPE_NORMAL
 - en: The result from `replace()` is a new `Series`, which I assign to `pounds_clean`.
     If we run `describe` again, we see that `count` is smaller now because it includes
     only the valid values.
+  id: totrans-128
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE22]'
+  id: totrans-129
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: '[PRE23]'
+  id: totrans-130
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: The mean of the new `Series` is about 6.7 pounds. Remember that the mean of
     the original `Series` was more than 8 pounds. It makes a big difference when you
     remove a few 99-pound babies!
+  id: totrans-131
   prefs: []
   type: TYPE_NORMAL
 - en: '**Exercise:** Use `describe` to summarize `ounces`.'
+  id: totrans-132
   prefs: []
   type: TYPE_NORMAL
 - en: Then use `replace` to replace the special values 98 and 99 with NaN, and assign
     the result to `ounces_clean`. Run `describe` again. How much does this cleaning
     affect the results?
+  id: totrans-133
   prefs: []
   type: TYPE_NORMAL
 - en: Series Arithmetic
+  id: totrans-134
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: Now we want to combine `pounds` and `ounces` into a single `Series` that contains
     total birth weight. Arithmetic operators work with `Series` objects; so, for example,
     to convert `pounds` to ounces, we could write
+  id: totrans-135
   prefs: []
   type: TYPE_NORMAL
 - en: '`pounds * 16`'
+  id: totrans-136
   prefs: []
   type: TYPE_NORMAL
 - en: Then we could add in `ounces` like this
+  id: totrans-137
   prefs: []
   type: TYPE_NORMAL
 - en: '`pounds * 16 + ounces`'
+  id: totrans-138
   prefs: []
   type: TYPE_NORMAL
 - en: '**Exercise:** Use `pounds_clean` and `ounces_clean` to compute the total birth
     weight expressed in kilograms (there are roughly 2.2 pounds per kilogram). What
     is the mean birth weight in kilograms?'
+  id: totrans-139
   prefs: []
   type: TYPE_NORMAL
 - en: '**Exercise:** For each pregnancy in the NSFG dataset, the variable `''AGECON''`
     encodes the respondent’s age at conception, and `''AGEPREG''` the respondent’s
     age at the end of the pregnancy.'
+  id: totrans-140
   prefs: []
   type: TYPE_NORMAL
 - en: Read the documentation of these variables. Are there any special values we have
     to deal with?
+  id: totrans-141
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Select `'AGECON'` and `'AGEPREG'` and assign them to variables named `agecon`
     and `agepreg`.
+  id: totrans-142
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Compute the difference, which is an estimate of the duration of the pregnancy.
+  id: totrans-143
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Use `.describe()` to compute the mean duration and other summary statistics.
+  id: totrans-144
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Based on the results, it seems like this might not be a good way to estimate
     the duration of pregnancy. Why not?
+  id: totrans-145
   prefs: []
   type: TYPE_NORMAL
 - en: Histograms
+  id: totrans-146
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: 'Let’s get back to the original question: what is the average birth weight for
     babies in the U.S.?'
+  id: totrans-147
   prefs: []
   type: TYPE_NORMAL
 - en: 'As an answer we *could* take the results from the previous section and compute
     the mean:'
+  id: totrans-148
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE24]'
+  id: totrans-149
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: '[PRE25]'
+  id: totrans-150
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: But it is risky to compute a summary statistic, like the mean, before we look
     at the whole distribution of values.
+  id: totrans-151
   prefs: []
   type: TYPE_NORMAL
 - en: A **distribution** is a set of possible values and their frequencies. One way
     to visualize a distribution is a **histogram**, which shows values on the `x`
     axis and their frequencies on the `y` axis.
+  id: totrans-152
   prefs: []
   type: TYPE_NORMAL
 - en: '`Series` provides a `hist` method that makes histograms. And we can use Matplotlib
     to label the axes.'
+  id: totrans-153
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE26]'
+  id: totrans-154
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: '![_images/07_dataframes_66_0.png](../Images/b0744351975b411829eb928c8e0df35a.png)'
+  id: totrans-155
   prefs: []
   type: TYPE_IMG
 - en: The keyword argument, `bins`, tells `hist` to divide the range of weights into
     30 intervals, called **bins**, and count how many values fall in each bin. The
     `x` axis is birth weight in pounds; the `y` axis is the number of births in each
     bin.
+  id: totrans-156
   prefs: []
   type: TYPE_NORMAL
 - en: The distribution looks a little like a bell curve, but the tail is longer on
     the left than on the right; that is, there are more light babies than heavy babies.
     That makes sense, because the distribution includes some babies that were born
     preterm.
+  id: totrans-157
   prefs: []
   type: TYPE_NORMAL
 - en: '**Exercise:** `hist` takes keyword arguments that specify the type and appearance
     of the histogram. Find the documentation of `hist` and see if you can figure out
     how to plot the histogram as an unfilled line against a background with no grid
     lines.'
+  id: totrans-158
   prefs: []
   type: TYPE_NORMAL
 - en: '**Exercise:** As we saw in a previous exercise, the NSFG dataset includes a
     column called `AGECON` that records age at conception for each pregnancy.'
+  id: totrans-159
   prefs: []
   type: TYPE_NORMAL
 - en: Select this column from the `DataFrame` and plot the histogram of the values
     with 20 bins.
+  id: totrans-160
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Label the `x` and `y` axes appropriately.
+  id: totrans-161
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Boolean Series
+  id: totrans-162
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -638,86 +828,121 @@
     the mean. That’s because preterm babies tend to be lighter. The most common duration
     for pregnancy is 39 weeks, which is “full term”; “preterm” is usually defined
     to be less than 37 weeks.
+  id: totrans-163
   prefs: []
   type: TYPE_NORMAL
 - en: To see which babies are preterm, we can use `PRGLNGTH`, which records pregnancy
     length in weeks and compute it to `37`.
+  id: totrans-164
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE27]'
+  id: totrans-165
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: '[PRE28]'
+  id: totrans-166
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: When you compare a `Series` to a value, the result is a Boolean `Series`; that
     is, a `Series` where each element is a Boolean value, `True` or `False`. In this
     case, it’s `True` for each preterm baby and `False` otherwise. We can use `head`
     to see the first 5 elements.
+  id: totrans-167
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE29]'
+  id: totrans-168
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: '[PRE30]'
+  id: totrans-169
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: If you compute the sum of a Boolean `Series`, it treats `True` as 1 and `False`
     as 0, so the sum is the number of `True` values, which is the number of preterm
     babies.
+  id: totrans-170
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE31]'
+  id: totrans-171
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: '[PRE32]'
+  id: totrans-172
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: If you compute the mean of a Boolean `Series`, you get the *fraction* of `True`
     values. In this case, it’s about 0.38; that is, about 38% of the pregnancies are
     less than 37 weeks.
+  id: totrans-173
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE33]'
+  id: totrans-174
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: '[PRE34]'
+  id: totrans-175
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: 'However, this result might be misleading because it includes all pregnancy
     outcomes, not just live births. We can create another Boolean `Series` to indicate
     which pregnancies ended in live birth:'
+  id: totrans-176
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE35]'
+  id: totrans-177
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: '[PRE36]'
+  id: totrans-178
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: 'Now we can use the operator `&`, which represents the logical AND operation,
     to identify pregnancies where the outcome is a live birth and preterm:'
+  id: totrans-179
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE37]'
+  id: totrans-180
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE37]'
 - en: '[PRE38]'
+  id: totrans-181
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: '**Exercise:** Of all live births, what fraction are preterm?'
+  id: totrans-182
   prefs: []
   type: TYPE_NORMAL
 - en: 'The other common logical operators are:'
+  id: totrans-183
   prefs: []
   type: TYPE_NORMAL
 - en: '`|`, which represents the logical OR operation; for example `live | preterm`
     is true if either `live` is true, or `preterm` is true, or both.'
+  id: totrans-184
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: '`~`, which represents the logical NOT operation; for example `~live` is true
     if `live` is false or `NaN`.'
+  id: totrans-185
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -725,13 +950,16 @@
     about using the NOT operator with a Series that contains `NaN` values. For example,
     `~preterm` would include not just full term pregnancies, but also pregnancies
     with unknown length.
+  id: totrans-186
   prefs: []
   type: TYPE_NORMAL
 - en: '**Exercise:** Of all pregnancies, what fraction are full term, that is, 37
     weeks or more? Of all live births, what fraction are full term?'
+  id: totrans-187
   prefs: []
   type: TYPE_NORMAL
 - en: Filtering Data
+  id: totrans-188
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -739,73 +967,102 @@
     that satisfy a condition or meet some criterion. For example, we can use `preterm`
     and the bracket operator to select values from `birth_weight`, so `preterm_weight`
     gets birth weights for preterm babies.
+  id: totrans-189
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE39]'
+  id: totrans-190
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: '[PRE40]'
+  id: totrans-191
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE40]'
 - en: 'To select full-term babies, we can create a Boolean `Series` like this:'
+  id: totrans-192
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE41]'
+  id: totrans-193
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE41]'
 - en: 'And use it to select birth weights for full term babies:'
+  id: totrans-194
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE42]'
+  id: totrans-195
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE42]'
 - en: '[PRE43]'
+  id: totrans-196
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE43]'
 - en: 'As expected, full term babies are heavier, on average, than preterm babies.
     To be more explicit, we could also limit the results to live births, like this:'
+  id: totrans-197
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE44]'
+  id: totrans-198
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE44]'
 - en: '[PRE45]'
+  id: totrans-199
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE45]'
 - en: But in this case we get the same result because `birth_weight` is only valid
     for live births.
+  id: totrans-200
   prefs: []
   type: TYPE_NORMAL
 - en: '**Exercise:** Let’s see if there is a difference in weight between single births
     and multiple births (twins, triplets, etc.). The variable `NBRNALIV` represents
     the number of babies born alive from a single pregnancy.'
+  id: totrans-201
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE46]'
+  id: totrans-202
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE46]'
 - en: '[PRE47]'
+  id: totrans-203
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE47]'
 - en: Use `nbrnaliv` and `live` to create a Boolean series called `multiple` that
     is true for multiple live births. Of all live births, what fraction are multiple
     births?
+  id: totrans-204
   prefs: []
   type: TYPE_NORMAL
 - en: '**Exercise:** Make a Boolean series called `single` that is true for single
     live births. Of all single births, what fraction are preterm? Of all multiple
     births, what fraction are preterm?'
+  id: totrans-205
   prefs: []
   type: TYPE_NORMAL
 - en: '**Exercise:** What is the average birth weight for live, single, full-term
     births?'
+  id: totrans-206
   prefs: []
   type: TYPE_NORMAL
 - en: Weighted Means
+  id: totrans-207
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: 'We are almost done, but there’s one more problem we have to solve: oversampling.'
+  id: totrans-208
   prefs: []
   type: TYPE_NORMAL
 - en: The NSFG is not exactly representative of the U.S. population. By design, some
@@ -813,116 +1070,173 @@
     **oversampled**. Oversampling helps to ensure that you have enough people in every
     subgroup to get reliable statistics, but it makes data analysis a little more
     complicated.
+  id: totrans-209
   prefs: []
   type: TYPE_NORMAL
 - en: Each pregnancy in the dataset has a **sampling weight** that indicates how many
     pregnancies it represents. In `nsfg`, the sampling weight is stored in a column
     named `wgt2015_2017`. Here’s what it looks like.
+  id: totrans-210
   prefs: []
   type: TYPE_NORMAL
+  zh: 数据集中的每次怀孕都有一个表示其代表多少怀孕的**抽样权重**。在`nsfg`中，抽样权重存储在名为`wgt2015_2017`的列中。它看起来是这样的。
 - en: '[PRE48]'
+  id: totrans-211
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE48]'
 - en: '[PRE49]'
+  id: totrans-212
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE49]'
 - en: The median value (50th percentile) in this column is about 7292, which means
     that a pregnancy with that weight represents 7292 total pregnancies in the population.
     But the range of values is wide, so some rows represent many more pregnancies
     than others.
+  id: totrans-213
   prefs: []
   type: TYPE_NORMAL
+  zh: 该列的中位数（第50百分位数）约为7292，这意味着体重为该值的怀孕代表人口中的7292个总怀孕。但数值范围很广，因此有些行代表的怀孕数量要比其他行多得多。
 - en: 'To take these weights into account, we can compute a **weighted mean**. Here
     are the steps:'
+  id: totrans-214
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了考虑这些权重，我们可以计算**加权平均值**。以下是步骤：
 - en: Multiply the birth weights for each pregnancy by the sampling weights and add
     up the products.
+  id: totrans-215
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 将每次怀孕的出生体重乘以抽样权重并将乘积相加。
 - en: Add up the sampling weights.
+  id: totrans-216
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 将抽样权重相加。
 - en: Divide the first sum by the second.
+  id: totrans-217
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 将第一个总和除以第二个总和。
 - en: To do this correctly, we have to be careful with missing data. To help with
     that, we’ll use two `Series` methods, `isna` and `notna`.
+  id: totrans-218
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了做到正确，我们必须小心处理缺失数据。为了帮助处理，我们将使用两个`Series`方法，`isna`和`notna`。
 - en: '`isna` returns a Boolean `Series` that is `True` where the corresponding value
     is `NaN`.'
+  id: totrans-219
   prefs: []
   type: TYPE_NORMAL
+  zh: '`isna`返回一个布尔`Series`，其中相应的值为`NaN`时为`True`。'
 - en: '[PRE50]'
+  id: totrans-220
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE50]'
 - en: '[PRE51]'
+  id: totrans-221
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE51]'
 - en: In `birth_weight` there are 3013 missing values (mostly for pregnancies that
     did not end in live birth).
+  id: totrans-222
   prefs: []
   type: TYPE_NORMAL
+  zh: 在`birth_weight`中有3013个缺失值（主要是指没有以活产结束的怀孕）。
 - en: '`notna` returns a Boolean `Series` that is `True` where the corresponding value
     is *not* `NaN`.'
+  id: totrans-223
   prefs: []
   type: TYPE_NORMAL
+  zh: '`notna`返回一个布尔`Series`，其中相应的值*不是*`NaN`时为`True`。'
 - en: '[PRE52]'
+  id: totrans-224
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE52]'
 - en: '[PRE53]'
+  id: totrans-225
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE53]'
 - en: We can combine `valid` with the other Boolean `Series` we have computed to identify
     single, full term, live births with valid birth weights.
+  id: totrans-226
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以将`valid`与我们计算出的其他布尔`Series`结合起来，以识别具有有效出生体重的单胎、足月、活产。
 - en: '[PRE54]'
+  id: totrans-227
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE54]'
 - en: '[PRE55]'
+  id: totrans-228
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE55]'
 - en: You can finish off this computation as an exercise.
+  id: totrans-229
   prefs: []
   type: TYPE_NORMAL
+  zh: 你可以把这个计算完成作为练习。
 - en: '**Exercise:** Use `selected`, `birth_weight`, and `sampling_weight` to compute
     the weighted mean of birth weight for live, single, full term births.'
+  id: totrans-230
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**使用`selected`，`birth_weight`和`sampling_weight`来计算活产、单胎、足月婴儿出生体重的加权平均值。'
 - en: You should find that the weighted mean is a little higher than the unweighted
     mean we computed in the previous section. That’s because the groups that are oversampled
     in the NSFG tend to have lighter babies, on average.
+  id: totrans-231
   prefs: []
   type: TYPE_NORMAL
+  zh: 你会发现，加权平均值比我们在上一节计算的非加权平均值略高。这是因为在NSFG中被过度抽样的群体平均来说婴儿体重较轻。
 - en: Summary
+  id: totrans-232
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 总结
 - en: 'This chapter poses what seems like a simple question: what is the average birth
     weight of babies in the United States?'
+  id: totrans-233
   prefs: []
   type: TYPE_NORMAL
+  zh: 这一章提出了一个看似简单的问题：美国婴儿的平均出生体重是多少？
 - en: To answer it, we found an appropriate dataset and read the files. Then we validated
     the data and dealt with special values, missing data, and errors. To explore the
     data, we used `value_counts`, `hist`, `describe`, and other Pandas methods. And
     to select relevant data, we used Boolean `Series`.
+  id: totrans-234
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了回答这个问题，我们找到了一个合适的数据集并读取了文件。然后我们验证了数据并处理了特殊值、缺失数据和错误。为了探索数据，我们使用了`value_counts`，`hist`，`describe`和其他Pandas方法。为了选择相关数据，我们使用了布尔`Series`。
 - en: Along the way, we had to think more about the question. What do we mean by “average”,
     and which babies should we include? Should we include all live births or exclude
     preterm babies or multiple births?
+  id: totrans-235
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个过程中，我们不得不更多地思考这个问题。我们所说的“平均”，以及应该包括哪些婴儿？应该包括所有活产还是排除早产婴儿或多胞胎？
 - en: And we had to think about the sampling process. By design, the NSFG respondents
     are not representative of the U.S. population, but we can use sampling weights
     to correct for this effect.
+  id: totrans-236
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们还必须考虑抽样过程。按设计，NSFG受访者并不代表美国人口，但我们可以使用抽样权重来纠正这种影响。
 - en: Even a simple question can be a challenging data science project.
+  id: totrans-237
   prefs: []
   type: TYPE_NORMAL
+  zh: 即使是一个简单的问题也可能是一个具有挑战性的数据科学项目。

@@ -635,10 +635,12 @@
   id: totrans-106
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，对于排名，我们需要一个从1到`n`的序列，其中`n`是`freqs`中元素的数量。我们可以使用`range`函数，它返回一个类型为`range`的值。
 - en: As a small example, here’s the range from 1 to 5.
   id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为一个小例子，这里是从1到5的范围。
 - en: '[PRE30]'
   id: totrans-108
   prefs: []
@@ -654,6 +656,7 @@
   id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: 然而，有一个问题。如果我们使用范围来制作一个列表，我们会发现“从1到5的范围”包括1，但不包括5。
 - en: '[PRE32]'
   id: totrans-111
   prefs: []
@@ -671,6 +674,7 @@
   id: totrans-113
   prefs: []
   type: TYPE_NORMAL
+  zh: 这可能看起来很奇怪，但通常更方便的是在这种定义方式下使用`range`，而不是看起来更自然的方式（参见[https://www.cs.utexas.edu/users/EWD/transcriptions/EWD08xx/EWD831.html](https://www.cs.utexas.edu/users/EWD/transcriptions/EWD08xx/EWD831.html)）。无论如何，我们可以通过增加第二个参数来得到我们想要的：
 - en: '[PRE34]'
   id: totrans-114
   prefs: []
@@ -685,6 +689,7 @@
   id: totrans-116
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，最后，我们可以制作一个代表从`1`到`n`的排名的范围：
 - en: '[PRE36]'
   id: totrans-117
   prefs: []
@@ -699,6 +704,7 @@
   id: totrans-119
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以绘制频率与排名的图表：
 - en: '[PRE38]'
   id: totrans-120
   prefs: []
@@ -708,6 +714,7 @@
   id: totrans-121
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/06_plotting_78_0.png](../Images/31a70a27c80c3046cb62367fd70d7460.png)'
 - en: 'The few most common words are very common, but the great majority of words
     are rare. So that’s consistent with Zipf’s law, but Zipf’s law is more specific.
     It claims that the frequencies should be inversely proportional to the ranks.
@@ -715,33 +722,40 @@
   id: totrans-122
   prefs: []
   type: TYPE_NORMAL
+  zh: 最常见的几个词非常常见，但绝大多数词都很少见。这与Zipf定律一致，但Zipf定律更具体。它声称频率应该与排名成反比。如果这是真的，我们可以写成：
 - en: \(f = k / r\)
   id: totrans-123
   prefs: []
   type: TYPE_NORMAL
+  zh: \(f = k / r\)
 - en: where \(r\) is the rank of a word, \(f\) is its frequency, and \(k\) is an unknown
     constant of proportionality. If we take the log of both sides, we get
   id: totrans-124
   prefs: []
   type: TYPE_NORMAL
+  zh: 其中\(r\)是一个词的排名，\(f\)是它的频率，\(k\)是一个未知的比例常数。如果我们两边取对数，我们得到
 - en: \(\log f = \log k - \log r\)
   id: totrans-125
   prefs: []
   type: TYPE_NORMAL
+  zh: \(\log f = \log k - \log r\)
 - en: This equation implies that if we plot \(f\) versus \(r\) on a log-log scale,
     we expect to see a straight line with intercept at \(\log k\) and slope -1.
   id: totrans-126
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个方程意味着，如果我们在对数-对数刻度上绘制\(f\)与\(r\)，我们期望看到一条截距为\(\log k\)，斜率为-1的直线。
 - en: Logarithmic Scales
   id: totrans-127
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 对数刻度
 - en: We can use `plt.xscale` to plot the `x` axis on a log scale.
   id: totrans-128
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用`plt.xscale`来绘制`x`轴的对数刻度。
 - en: '[PRE39]'
   id: totrans-129
   prefs: []
@@ -751,10 +765,12 @@
   id: totrans-130
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/06_plotting_81_0.png](../Images/9d58226c9d16ad1fb8a6110d8f0b6b0a.png)'
 - en: And `plt.yscale` to plot the `y` axis on a log scale.
   id: totrans-131
   prefs: []
   type: TYPE_NORMAL
+  zh: 以及`plt.yscale`来绘制`y`轴的对数刻度。
 - en: '[PRE40]'
   id: totrans-132
   prefs: []
@@ -764,12 +780,14 @@
   id: totrans-133
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/06_plotting_83_0.png](../Images/e1210900dc3a7d4282ed90c81ec8fe1e.png)'
 - en: The result is not quite a straight line, but it is close. We can get a sense
     of the slope by connecting the end points with a line. We’ll select the first
     and last elements from `xs`.
   id: totrans-134
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果不完全是一条直线，但很接近。我们可以通过连接端点来感受斜率。我们将从`xs`中选择第一个和最后一个元素。
 - en: '[PRE41]'
   id: totrans-135
   prefs: []
@@ -784,6 +802,7 @@
   id: totrans-137
   prefs: []
   type: TYPE_NORMAL
+  zh: 以及`ys`中的第一个和最后一个元素。
 - en: '[PRE43]'
   id: totrans-138
   prefs: []
@@ -798,6 +817,7 @@
   id: totrans-140
   prefs: []
   type: TYPE_NORMAL
+  zh: 并在它们之间绘制一条线。
 - en: '[PRE45]'
   id: totrans-141
   prefs: []
@@ -807,16 +827,19 @@
   id: totrans-142
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/06_plotting_89_0.png](../Images/9225e34b69d7305d2e156443284c10e8.png)'
 - en: The slope of this line is the “rise over run”, that is, the difference on the
     `y` axis divided by the difference on the `x` axis.
   id: totrans-143
   prefs: []
   type: TYPE_NORMAL
+  zh: 这条线的斜率是“上升与下降”，也就是`y`轴上的差除以`x`轴上的差。
 - en: 'We can compute the rise using `np.log10` to compute the log base 10 of the
     first and last values:'
   id: totrans-144
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用`np.log10`来计算第一个和最后一个值的以10为底的对数来计算上升：
 - en: '[PRE46]'
   id: totrans-145
   prefs: []
@@ -831,6 +854,7 @@
   id: totrans-147
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后我们可以使用`np.diff`来计算元素之间的差异：
 - en: '[PRE48]'
   id: totrans-148
   prefs: []
@@ -846,17 +870,20 @@
   id: totrans-150
   prefs: []
   type: TYPE_NORMAL
+  zh: 在下一个练习中，您将计算灰线的运行和斜率。
 - en: '**Exercise:** Use `log10` and `diff` to compute the run, that is, the difference
     on the `x` axis. Then divide the rise by the run to get the slope of the grey
     line. Is it close to -1, as Zipf’s law predicts?'
   id: totrans-151
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**使用`log10`和`diff`来计算运行，也就是`x`轴上的差。然后将上升除以运行得到灰线的斜率。它是否接近-1，正如Zipf定律所预测的那样？'
 - en: Summary
   id: totrans-152
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 总结
 - en: This chapter introduces the Matplotlib library, which we used to replicate two
     figures a Zipf plot. These examples demonstrate the most common elements of data
     visualization, including lines and markers, values and labels on the axes, a legend
@@ -865,3 +892,4 @@
   id: totrans-153
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章介绍了Matplotlib库，我们用它来复制了Zipf图的两个图。这些例子展示了数据可视化的最常见元素，包括线和标记，轴上的值和标签，图例和标题。Zipf图还展示了在对数刻度上绘制数据的强大功能。
