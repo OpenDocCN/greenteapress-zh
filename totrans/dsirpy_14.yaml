@@ -1,321 +1,452 @@
 - en: Priority Queues and Heaps
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
 - en: 原文：[https://allendowney.github.io/DSIRP/heap.html](https://allendowney.github.io/DSIRP/heap.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/heap.ipynb)'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
 - en: The `heapq` module
+  id: totrans-3
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: The `heapq` module provides functions for adding and removing elements to and
     from a heap.
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE0]'
+  id: totrans-5
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: The heap itself is literally a list, so if you create an empty list, you can
     think of it as a heap with no elements.
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE1]'
+  id: totrans-7
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: Then you can use `heappush` to add one element at a time.
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE2]'
+  id: totrans-9
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '[PRE3]'
+  id: totrans-10
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: 'The result is a list that represents a tree. Here’s how the correspondence
     works between the list representation and the tree representation:'
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
 - en: The first element (index 0) is the root.
+  id: totrans-12
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: The next two elements are the children of the root.
+  id: totrans-13
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: The next four element are the grandchildren of the root.
+  id: totrans-14
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: And so on.
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
 - en: In general, if the index of an element is `i`, its parent is `(i-1)//2` and
     its children are `2*i + 1` and `2*i + 2`.
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
 - en: Drawing the Tree
+  id: totrans-17
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: To generate the tree representation of the heap, the following function iterates
     through the heap and makes a NetworkX graph with an edge between each node and
     its parent.
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE4]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '[PRE5]'
+  id: totrans-20
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: To draw the tree, we’ll use a module called `EoN` that provides a function called
     [hierarchy_pos](https://epidemicsonnetworks.readthedocs.io/en/latest/functions/EoN.hierarchy_pos.html#EoN.hierarchy_pos).
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
 - en: It takes as a parameter a NetworkX graph that represents a tree, and it returns
     a dictionary that maps from each node to a position in the Cartesian plane. If
     we pass this dictionary to `nx.draw`, it lays the tree out accordingly.
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE6]'
+  id: totrans-23
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '[PRE7]'
+  id: totrans-24
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '[PRE8]'
+  id: totrans-25
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: Here’s what the tree representation looks like.
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE9]'
+  id: totrans-27
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '[PRE10]'
+  id: totrans-28
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '![_images/heap_17_1.png](../Images/c20dd2af8eed3f1003d17ac6ede89134.png)'
+  id: totrans-29
   prefs: []
   type: TYPE_IMG
 - en: The Heap Property
+  id: totrans-30
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: 'If the list is a heap, the tree should have the heap property:'
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
 - en: Every parent is less than or equal to its children.
+  id: totrans-32
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: 'Or more formally:'
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
 - en: For all pairs of nodes P and C, where P is the parent of C, the value of P must
     be less than or equal to the value of C.
+  id: totrans-34
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: The following function checks whether this property is true for all nodes.
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE11]'
+  id: totrans-36
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: As we might hope, `heap` is a heap.
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE12]'
+  id: totrans-38
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '[PRE13]'
+  id: totrans-39
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: Here’s a list of integers in no particular order, and as you might expect, it
     does not have the heap property.
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE14]'
+  id: totrans-41
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '[PRE15]'
+  id: totrans-42
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: Using a Heap to Sort
+  id: totrans-43
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: Given a heap, we can implement a sort algorithm called [heapsort](https://en.wikipedia.org/wiki/Heapsort).
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
 - en: 'Let’s start again with a fresh heap:'
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE16]'
+  id: totrans-46
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: If we know that a list is a heap, we can use `heappop` to find and remove the
     smallest element.
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE17]'
+  id: totrans-48
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: '[PRE18]'
+  id: totrans-49
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: '`heappop` rearranges the remaining elements of the list to restore the heap
     property (we’ll see how soon).'
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE19]'
+  id: totrans-51
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '[PRE20]'
+  id: totrans-52
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '[PRE21]'
+  id: totrans-53
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: '[PRE22]'
+  id: totrans-54
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: 'And that means we can use `heappop` again to get the second smallest element
     (of the original heap):'
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE23]'
+  id: totrans-56
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: '[PRE24]'
+  id: totrans-57
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: Which means we can use a heap to sort a list.
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
 - en: '**Exercise:** Write a generator function called `heapsort` that takes an iterable
     and yields the elements of the iterable in increasing order.'
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
 - en: Now let’s see how a heap is implemented. The two key methods are `push` and
     `pop`.
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
 - en: Push
+  id: totrans-61
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: To insert an element in a heap, you start by appending it to the list.
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
 - en: 'The result is generally not a heap, so you have to do some work to restore
     the heap property:'
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
 - en: If the new element is greater than or equal to its parent, you are done.
+  id: totrans-64
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Otherwise swap the new element with its parent.
+  id: totrans-65
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: If the new element is greater than or equal to the parent’s parent, you are
     done.
+  id: totrans-66
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Otherwise swap the new element with its parent’s parent.
+  id: totrans-67
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: And repeat, working your way up the tree, until you’re done or you reach the
     root.
+  id: totrans-68
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: This process is called “sift-up” or sometimes [swim](https://en.wikipedia.org/wiki/Heap_(data_structure)#Implementation).
+  id: totrans-69
   prefs: []
   type: TYPE_NORMAL
 - en: '**Exercise:** Write a function called `push` that does the same thing as `heappush`:
     it should take as parameters a list (which should be a heap) and a new element;
     it should add the new element to the list and restore the heap property.'
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
 - en: 'You can use this example to test your code:'
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE25]'
+  id: totrans-72
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: '[PRE26]'
+  id: totrans-73
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: '[PRE27]'
+  id: totrans-74
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: '[PRE28]'
+  id: totrans-75
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: Pop
+  id: totrans-76
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: 'To remove an element from the heap, you:'
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
 - en: Make a copy of the root element,
+  id: totrans-78
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Pop the *last* element off the list and store it at the root.
+  id: totrans-79
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Then you have to restore the heap property. If the new root is less than or
     equal to both of its children, you are done.
+  id: totrans-80
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 然后你必须恢复堆属性。如果新的根节点小于或等于它的两个子节点，那么你就完成了。
 - en: Otherwise, swap the parent with the smaller of its children.
+  id: totrans-81
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 否则，将父节点与较小的子节点交换。
 - en: Then repeat the process with the child you just replaced, and continue until
     you get to a leaf node.
+  id: totrans-82
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 然后用刚刚替换的子节点重复这个过程，并继续直到达到叶节点。
 - en: This process is called a “sift-down” or sometimes “sink”.
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个过程称为“筛选下降”或有时称为“下沉”。
 - en: '**Exercise:** Write a function called `pop` that does the same thing as `heappop`:
     it should remove the smallest element, restore the heap property, and return the
     smallest element.'
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**编写一个名为 `pop` 的函数，它执行与 `heappop` 相同的操作：它应该删除最小的元素，恢复堆属性，并返回最小的元素。'
 - en: 'Hint: This one is tricky because you have to deal with several special cases.'
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: 提示：这个有点棘手，因为你必须处理几种特殊情况。
 - en: '[PRE29]'
+  id: totrans-86
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: '[PRE30]'
+  id: totrans-87
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: '*Data Structures and Information Retrieval in Python*'
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: '*Python 中的数据结构和信息检索*'
 - en: Copyright 2021 Allen Downey
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: 版权所有 2021 年 Allen Downey
 - en: 'License: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: 许可证：[知识共享署名-非商业性使用-相同方式共享4.0国际许可协议](https://creativecommons.org/licenses/by-nc-sa/4.0/)

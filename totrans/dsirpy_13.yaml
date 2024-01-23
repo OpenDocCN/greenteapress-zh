@@ -1,205 +1,319 @@
 - en: Quiz 3
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 测验3
 - en: 原文：[https://allendowney.github.io/DSIRP/quiz03.html](https://allendowney.github.io/DSIRP/quiz03.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/DSIRP/quiz03.html](https://allendowney.github.io/DSIRP/quiz03.html)
 - en: 'BEFORE YOU START THIS QUIZ:'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 在开始这个测验之前：
 - en: Click on “Copy to Drive” to make a copy of the quiz,
+  id: totrans-3
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 点击“复制到驱动器”以复制测验，
 - en: Click on “Share”,
+  id: totrans-4
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 点击“分享”,
 - en: Click on “Change” and select “Anyone with this link can edit”
+  id: totrans-5
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 点击“更改”，然后选择“任何人都可以编辑”
 - en: Click “Copy link” and
+  id: totrans-6
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 点击“复制链接”和
 - en: Paste the link into [this Canvas assignment](https://canvas.olin.edu/courses/313/assignments/4985).
+  id: totrans-7
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 将链接粘贴到[此Canvas作业](https://canvas.olin.edu/courses/313/assignments/4985)。
 - en: This quiz is open notes, open internet. The only thing you can’t do is ask for
     help.
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个测验是开放笔记，开放互联网。你唯一不能做的事情就是寻求帮助。
 - en: Copyright 2021 Allen Downey, [MIT License](http://opensource.org/licenses/MIT)
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 版权所有2021年Allen Downey，[MIT许可证](http://opensource.org/licenses/MIT)
 - en: '[PRE0]'
+  id: totrans-10
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: Question 1
+  id: totrans-11
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 问题1
 - en: The following is the implementation of a binary search tree (BST) from `search.ipynb`.
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是从`search.ipynb`中实现的二叉搜索树（BST）。
 - en: '[PRE1]'
+  id: totrans-13
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '[PRE2]'
+  id: totrans-14
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '[PRE3]'
+  id: totrans-15
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: The following cell reads words from a file and adds them to a BST. But if you
     run it, you’ll get a `RecursionError`.
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下单元格从文件中读取单词并将它们添加到BST中。 但是如果你运行它，你会得到一个`RecursionError`。
 - en: '[PRE4]'
+  id: totrans-17
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '[PRE5]'
+  id: totrans-18
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: However, if we put the words into a list, shuffle the list, and then put the
     shuffled words into the BST, it works.
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是，如果我们将单词放入列表中，对列表进行洗牌，然后将洗牌后的单词放入BST中，它就可以工作。
 - en: '[PRE6]'
+  id: totrans-20
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '[PRE7]'
+  id: totrans-21
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '[PRE8]'
+  id: totrans-22
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: 'Write a few clear, complete sentences to answer the following two questions:'
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: 写几个清晰、完整的句子来回答以下两个问题：
 - en: Why did we get a `RecursionError`, and why does shuffling the words fix the
     problem?
+  id: totrans-24
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 我们为什么会得到`RecursionError`，为什么洗牌单词会解决问题？
 - en: What is the order of growth for the whole process; that is, reading the words
     into a list, shuffling the list, and then putting the shuffled words into a binary
     search tree. You can assume that `shuffle` is linear.
+  id: totrans-25
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 整个过程的增长顺序是什么；也就是说，将单词读入列表，对列表进行洗牌，然后将洗牌后的单词放入二叉搜索树。您可以假设`shuffle`是线性的。
 - en: Question 2
+  id: totrans-26
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 问题2
 - en: 'As we discussed in class, there are three versions of the search problem:'
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 正如我们在课堂上讨论的那样，搜索问题有三个版本：
 - en: Checking whether an element is in a collection; for example, this is what the
     `in` operator does.
+  id: totrans-28
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 检查元素是否在集合中；例如，这就是`in`运算符的作用。
 - en: Finding the index of an element in an ordered collection; for example, this
     is what the string method `find` does.
+  id: totrans-29
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 在有序集合中查找元素的索引；例如，这就是字符串方法`find`的作用。
 - en: In a collection of key-value pairs, finding the value that corresponds to a
     given key; this is what the dictionary method `get` does.
+  id: totrans-30
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 在键值对的集合中，找到与给定键对应的值；这就是字典方法`get`的作用。
 - en: In `search.ipynb`, we used a BST to solve the first problem. In this exercise,
     you will modify it to solve the third problem.
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 在`search.ipynb`中，我们使用了BST来解决第一个问题。在这个练习中，您将修改它以解决第三个问题。
 - en: Here’s the code again (although notice that the names of the objects are `MapNode`
     and `BSTMap`).
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里是代码（尽管请注意对象的名称是`MapNode`和`BSTMap`）。
 - en: '[PRE9]'
+  id: totrans-33
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '[PRE10]'
+  id: totrans-34
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '[PRE11]'
+  id: totrans-35
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: 'Modify this code so that it stores keys and values, rather than just elements
     of a collection. Then write a function called `get` that takes a `BSTMap` and
     a key:'
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 修改此代码，以便它存储键和值，而不仅仅是集合的元素。然后编写一个名为`get`的函数，该函数接受`BSTMap`和一个键：
 - en: If the key is in the map, it should return the corresponding value;
+  id: totrans-37
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果键在地图中，则应返回相应的值；
 - en: Otherwise it should raise a `KeyError` with an appropriate message.
+  id: totrans-38
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 否则，它应该引发一个带有适当消息的`KeyError`。
 - en: You can use the following code to test your implementation.
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 您可以使用以下代码来测试您的实现。
 - en: '[PRE12]'
+  id: totrans-40
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '[PRE13]'
+  id: totrans-41
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: '[PRE14]'
+  id: totrans-42
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '[PRE15]'
+  id: totrans-43
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '[PRE16]'
+  id: totrans-44
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: The following should raise a `KeyError`.
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下应该引发一个`KeyError`。
 - en: '[PRE17]'
+  id: totrans-46
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: Alternative solution
+  id: totrans-47
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 替代解决方案
 - en: 'Modify this code so that it stores keys and values, rather than just elements
     of a collection. Then write a function called `get` that takes a `BSTMap` and
     a key:'
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 修改此代码，以便它存储键和值，而不仅仅是集合的元素。然后编写一个名为`get`的函数，该函数接受`BSTMap`和一个键：
 - en: If the key is in the map, it should return the corresponding value;
+  id: totrans-49
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果键在地图中，则应返回相应的值；
 - en: Otherwise it should raise a `KeyError` with an appropriate message.
+  id: totrans-50
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 否则，它应该引发一个带有适当消息的`KeyError`。
 - en: You can use the following code to test your implementation.
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: 您可以使用以下代码来测试您的实现。
 - en: '[PRE18]'
+  id: totrans-52
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: '[PRE19]'
+  id: totrans-53
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '[PRE20]'
+  id: totrans-54
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '[PRE21]'
+  id: totrans-55
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: '[PRE22]'
+  id: totrans-56
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
