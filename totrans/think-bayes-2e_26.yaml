@@ -3,11 +3,13 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 估计疫苗的有效性
 - en: 原文：[https://allendowney.github.io/ThinkBayes2/vaccine2.html](https://allendowney.github.io/ThinkBayes2/vaccine2.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ThinkBayes2/vaccine2.html](https://allendowney.github.io/ThinkBayes2/vaccine2.html)
 - en: 'In a recent vaccine trial, no one in the vaccinated group got the disease,
     so the makers of the vaccine reported that it is 100% effective. Of course, nothing
     in the real world is 100% effective, so this example raises a question: how do
@@ -15,29 +17,35 @@
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 在最近的疫苗试验中，接种组没有人患病，因此疫苗制造商报告称其有效率为100%。当然，现实世界中没有什么是100%有效的，所以这个例子引发了一个问题：当病例数为0时，我们如何估计有效性？
 - en: In this article, I present a Bayesian way to answer this question – and the
     answer turns out to be about 94%.
   id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这篇文章中，我提出了一个贝叶斯的方法来回答这个问题——答案是大约94%。
 - en: '*If you like this article, you might also like the second edition of [*Think
     Bayes*](https://greenteapress.com/wp/think-bayes/).*'
   id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: '*如果你喜欢这篇文章，你可能也会喜欢[*Think Bayes*](https://greenteapress.com/wp/think-bayes/)的第二版。*'
 - en: '[Click here to run this article on Colab](https://colab.research.google.com/github/AllenDowney/ThinkBayes2/blob/master/examples/vaccine2.ipynb)'
   id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: '[点击这里在Colab上运行这篇文章](https://colab.research.google.com/github/AllenDowney/ThinkBayes2/blob/master/examples/vaccine2.ipynb)'
 - en: The Data
   id: totrans-6
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 数据
 - en: According to [this press release](https://www.pfizer.com/news/press-release/press-release-detail/pfizer-biontech-announce-positive-topline-results-pivotal)
   id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 根据[这份新闻稿](https://www.pfizer.com/news/press-release/press-release-detail/pfizer-biontech-announce-positive-topline-results-pivotal)
 - en: …in a Phase 3 trial in adolescents 12 to 15 years of age with or without prior
     evidence of SARS-CoV-2 infection, the Pfizer-BioNTech COVID-19 vaccine BNT162b2
     demonstrated 100% efficacy and robust antibody responses…
@@ -45,16 +53,19 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: …在12至15岁有或没有SARS-CoV-2感染证据的青少年中进行的3期试验中，辉瑞-联德COVID-19疫苗BNT162b2表现出100%的有效性和强大的抗体反应…
 - en: Of course, it is good news that the vaccine seems to work in this age group
     as well as it does in adults, and possibly better. But reporting that the vaccine
     is 100% effective is a little strange.
   id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 当然，疫苗在这个年龄组似乎像在成年人中一样有效，甚至可能更好，这是个好消息。但是报告说疫苗100%有效有点奇怪。
 - en: The press release includes the following details about the results
   id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 新闻稿包括以下关于结果的细节
 - en: The trial enrolled 2,260 adolescents 12 to 15 years of age in the United States.
     In the trial, 18 cases of COVID-19 were observed in the placebo group (n=1,129)
     versus none in the vaccinated group (n=1,131).
@@ -62,6 +73,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 试验在美国招募了2,260名12至15岁的青少年。在试验中，安慰剂组（n=1,129）观察到18例COVID-19病例，而接种组（n=1,131）没有观察到病例。
 - en: Since there were no cases in the vaccinated group, it is reasonable to think
     that the vaccine works, but in the real world, nothing is 100% effective. In a
     bigger trial, we should expect to see at least one case in the vaccinated group.
@@ -69,14 +81,17 @@
   id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 由于接种组没有病例，认为疫苗有效是合理的，但在现实世界中，没有什么是100%有效的。在更大的试验中，我们应该期望在接种组至少看到一个病例。但是我们如何估计尚未发生的事情的频率呢？
 - en: Bayesian statistics provides a sensible way to do just that.
   id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 贝叶斯统计提供了一个明智的方法来做到这一点。
 - en: Here’s the data as reported in the press release.
   id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是新闻稿中报道的数据。
 - en: '[PRE0]'
   id: totrans-15
   prefs: []
@@ -87,16 +102,19 @@
   id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了估计疫苗的有效性，我将首先分别计算每组的风险。
 - en: The Beta Distribution
   id: totrans-17
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 贝塔分布
 - en: If we start with a uniform prior distribution, the posterior is a beta distribution
     with parameters
   id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们从均匀先验分布开始，后验分布是具有参数的贝塔分布
 - en: '[PRE1]'
   id: totrans-19
   prefs: []
@@ -106,6 +124,7 @@
   id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用SciPy制作代表后验的贝塔分布。
 - en: '[PRE2]'
   id: totrans-21
   prefs: []
@@ -115,6 +134,7 @@
   id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是对照组的后验分布。
 - en: '[PRE3]'
   id: totrans-23
   prefs: []
@@ -129,6 +149,7 @@
   id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 后验均值接近观察到的比例：
 - en: '[PRE5]'
   id: totrans-26
   prefs: []
@@ -143,6 +164,7 @@
   id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是治疗组的后验分布。
 - en: '[PRE7]'
   id: totrans-29
   prefs: []
@@ -157,11 +179,13 @@
   id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 后验均值约为0.1%，虽然很小，但不是0。
 - en: 'To compute the distribution of risk ratios, I’ll make a discrete approximation
     to the two posterior distributions, using the `Pmf` object from `empiricaldist`:'
   id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了计算风险比的分布，我将使用`empiricaldist`的`Pmf`对象做出两个后验分布的离散近似：
 - en: '[PRE9]'
   id: totrans-33
   prefs: []
@@ -171,6 +195,7 @@
   id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些是`Pmf`对象：
 - en: '[PRE10]'
   id: totrans-35
   prefs: []
@@ -180,6 +205,7 @@
   id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 它们看起来是这样的：
 - en: '[PRE11]'
   id: totrans-37
   prefs: []
@@ -189,21 +215,25 @@
   id: totrans-38
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/d49a40c56490a24d2bed801957622063f28a37002fbdcdeb9e1bb630bcefc1ba.png](../Images/0774531b7db34a1d885c794d474cd7fa.png)'
 - en: Computing Efficacy
   id: totrans-39
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 计算有效性
 - en: Now, to compute efficacy, I’ll use these distributions to compute the distribution
     of risk ratio, `RR`, and then compute the distribution of efficacy, which is the
     complement of risk ration, `1-RR`.
   id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，为了计算有效性，我将使用这些分布来计算风险比`RR`的分布，然后计算有效性的分布，即风险比的补集`1-RR`。
 - en: We can use `div_dist` to compute the risk ratio.
   id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用`div_dist`来计算风险比。
 - en: '[PRE12]'
   id: totrans-42
   prefs: []
@@ -214,6 +244,7 @@
   id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是风险比的CDF。我将其截断为1，因为更高的值具有非常低的概率；也就是说，我们相当确定治疗是有效的。
 - en: '[PRE13]'
   id: totrans-44
   prefs: []
@@ -223,6 +254,7 @@
   id: totrans-45
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/52ddb97b67f0e1e0ef654e57e3821a182ca4da7ac9eb3139252a3b843439a763.png](../Images/fd0c4a9a47780bc9f7e9c1bc2549d78c.png)'
 - en: To compute the distribution of efficacy, we have to compute the distribution
     of `1-RR`, where `RR` is the risk ratio. We can do that with `empiricaldist` by
     creating a deterministic `Pmf` with the quantity `1` and using `sub_dist` to subtract
@@ -230,6 +262,7 @@
   id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: 要计算有效性的分布，我们必须计算`1-RR`的分布，其中`RR`是风险比。我们可以使用`empiricaldist`通过创建一个确定性的`Pmf`来做到这一点，其中包含数量`1`，并使用`sub_dist`来减去两个`Pmf`。
 - en: '[PRE14]'
   id: totrans-47
   prefs: []
@@ -239,6 +272,7 @@
   id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是结果。
 - en: '[PRE15]'
   id: totrans-49
   prefs: []
@@ -248,10 +282,12 @@
   id: totrans-50
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/31e48b6b6d9ba65a9acbcc12f0d0e324e7a5f51e9d71a5219389681f5d4a6a94.png](../Images/18ab9b62e59b1dc92850cf29c46fa713.png)'
 - en: The posterior mean is about 94%.
   id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: 后验均值约为94%。
 - en: '[PRE16]'
   id: totrans-52
   prefs: []
