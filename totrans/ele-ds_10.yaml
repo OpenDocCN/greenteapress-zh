@@ -3,26 +3,32 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 分布
 - en: 原文：[https://allendowney.github.io/ElementsOfDataScience/08_distributions.html](https://allendowney.github.io/ElementsOfDataScience/08_distributions.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ElementsOfDataScience/08_distributions.html](https://allendowney.github.io/ElementsOfDataScience/08_distributions.html)
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/08_distributions.ipynb)
     or [click here to download it](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/08_distributions.ipynb).'
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: '[点击此处在Colab上运行此笔记本](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/08_distributions.ipynb)
+    或 [点击此处下载](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/08_distributions.ipynb)。'
 - en: 'In this chapter we’ll see three ways to describe a set of values:'
   id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本章中，我们将看到描述一组值的三种方法：
 - en: A probability mass function (PMF), which represents a set of values and the
     number of times each one appears in a dataset.
   id: totrans-4
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 概率质量函数（PMF），表示数据集中一组值及每个值出现的次数。
 - en: A cumulative distribution function (CDF), which contains the same information
     as a PMF in a form that makes it easier to visualize, make comparisons, and perform
     some computations.
@@ -30,90 +36,109 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '累积分布函数（CDF），它包含与PMF相同的信息，但以一种更容易可视化、比较和执行一些计算的形式呈现。 '
 - en: A kernel density estimate (KDE), which is like a smooth, continuous version
     of a histogram.
   id: totrans-6
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 核密度估计（KDE），类似于直方图的平滑连续版本。
 - en: For examples, we’ll use data from the General Social Survey (GSS) to look at
     distributions of age and income, and to explore the relationship between income
     and education.
   id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，我们将使用一些来自《一般社会调查》（GSS）的数据，来研究年龄和收入的分布，并探讨收入和教育之间的关系。
 - en: But we’ll start with one of the most important ideas in statistics, the distribution.
   id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 但我们将从统计学中最重要的概念之一开始，即分布。
 - en: Distributions
   id: totrans-9
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 分布
 - en: A distribution is a set of values and their corresponding probabilities. For
     example, if you roll a six-sided die, there are six possible outcomes, the numbers
     `1` through `6`, and they all have the same probability, `1/6`.
   id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 分布是一组值及其对应的概率。例如，如果你掷一个六面骰子，有六种可能的结果，数字`1`到`6`，它们的概率都是相同的，为`1/6`。
 - en: 'We can represent this distribution of outcomes with a table, like this:'
   id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以用表格表示这些结果的分布，如下所示：
 - en: '| Value | Probability |'
   id: totrans-12
   prefs: []
   type: TYPE_TB
+  zh: '| 值 | 概率 |'
 - en: '| --- | --- |'
   id: totrans-13
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| 1 | 1/6 |'
   id: totrans-14
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 1/6 |'
 - en: '| 2 | 1/6 |'
   id: totrans-15
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 1/6 |'
 - en: '| 3 | 1/6 |'
   id: totrans-16
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 1/6 |'
 - en: '| 4 | 1/6 |'
   id: totrans-17
   prefs: []
   type: TYPE_TB
+  zh: '| 4 | 1/6 |'
 - en: '| 5 | 1/6 |'
   id: totrans-18
   prefs: []
   type: TYPE_TB
+  zh: '| 5 | 1/6 |'
 - en: '| 6 | 1/6 |'
   id: totrans-19
   prefs: []
   type: TYPE_TB
+  zh: '| 6 | 1/6 |'
 - en: More generally, a distributions can have any number of values, the values can
     be any type, and the probabilities do not have to be equal.
   id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 更一般地，分布可以有任意数量的值，这些值可以是任何类型，并且概率不必相等。
 - en: To represent distributions in Python, we will use a library called `empiricaldist`,
     for “empirical distribution”, where “empirical” means it is based on data rather
     than a mathematical formula.
   id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了在Python中表示分布，我们将使用一个名为`empiricaldist`的库，代表“经验分布”，其中“经验”表示它是基于数据而不是数学公式的。
 - en: '`empiricaldist` provides an object called `Pmf`, which stands for “probability
     mass function”. A `Pmf` object contains a set of possible outcomes and their probabilities.'
   id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: '`empiricaldist`提供了一个名为`Pmf`的对象，代表“概率质量函数”。`Pmf`对象包含一组可能的结果及其概率。'
 - en: 'For example, here’s a `Pmf` that represents the outcome of rolling a six-sided
     die:'
   id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，这是一个代表掷六面骰子结果的`Pmf`：
 - en: '[PRE0]'
   id: totrans-24
   prefs: []
@@ -124,6 +149,7 @@
   id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 第一个参数是每个结果的概率；第二个参数是结果的列表。我们可以这样显示结果。
 - en: '[PRE1]'
   id: totrans-26
   prefs: []
@@ -133,45 +159,55 @@
   id: totrans-27
   prefs: []
   type: TYPE_TB
+  zh: '|  | 概率 |'
 - en: '| --- | --- |'
   id: totrans-28
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| 1 | 0.166667 |'
   id: totrans-29
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 0.166667 |'
 - en: '| 2 | 0.166667 |'
   id: totrans-30
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 0.166667 |'
 - en: '| 3 | 0.166667 |'
   id: totrans-31
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 0.166667 |'
 - en: '| 4 | 0.166667 |'
   id: totrans-32
   prefs: []
   type: TYPE_TB
+  zh: '| 4 | 0.166667 |'
 - en: '| 5 | 0.166667 |'
   id: totrans-33
   prefs: []
   type: TYPE_TB
+  zh: '| 5 | 0.166667 |'
 - en: '| 6 | 0.166667 |'
   id: totrans-34
   prefs: []
   type: TYPE_TB
+  zh: '| 6 | 0.166667 |'
 - en: A `Pmf` object is a specialized version of a Pandas `Series`, so it provides
     all of the attributes and methods of a `Series`, plus some additional methods
     we’ll see soon.
   id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: '`Pmf`对象是Pandas `Series`的一个专门版本，因此它提供了`Series`的所有属性和方法，以及一些我们很快会看到的额外方法。'
 - en: The General Social Survey
   id: totrans-36
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 一般社会调查
 - en: Now we’ll use `Pmf` objects to represent distributions of values from a new
     dataset, the General Social Survey (GSS). The GSS surveys a representative sample
     of adult residents of the U.S. and asks questions about demographics, personal
@@ -180,17 +216,20 @@
   id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们将使用`Pmf`对象来表示来自新数据集——美国普查局的《一般社会调查》（GSS）的值分布。GSS对美国成年居民进行代表性抽样调查，并询问有关人口统计学、个人历史和社会政治问题信仰的问题。政治家、政策制定者和研究人员广泛使用它。
 - en: The GSS dataset contains hundreds of columns; using an online tool call [GSS
     Explorer](https://gssdataexplorer.norc.org/) I’ve selected just a few and created
     a subset of the data, called an **extract**.
   id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: GSS数据集包含数百列；使用一个名为[GSS Explorer](https://gssdataexplorer.norc.org/)的在线工具，我只选择了一些列，并创建了数据的一个子集，称为**提取**。
 - en: Like the NSFG data we used in the previous chapter, the GSS data is stored in
     a fixed-width format, described by a Stata data dictionary.
   id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 与我们在上一章中使用的NSFG数据一样，GSS数据以固定宽度格式存储，由Stata数据字典描述。
 - en: '[PRE2]'
   id: totrans-40
   prefs: []
@@ -200,6 +239,7 @@
   id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将使用`statadict`库来读取数据字典。
 - en: '[PRE3]'
   id: totrans-42
   prefs: []
@@ -209,6 +249,7 @@
   id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 数据文件已经压缩，但我们可以使用`gzip`库来打开它。
 - en: '[PRE4]'
   id: totrans-44
   prefs: []
@@ -219,6 +260,7 @@
   id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个类似文件的对象，因此我们可以将它作为参数传递给`read_fwf`：
 - en: '[PRE5]'
   id: totrans-46
   prefs: []
@@ -234,6 +276,7 @@
   id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个`DataFrame`，每个受访者一行，每个变量一列。以下是前几行。
 - en: '[PRE7]'
   id: totrans-49
   prefs: []
@@ -243,22 +286,27 @@
   id: totrans-50
   prefs: []
   type: TYPE_TB
+  zh: '|  | 年份 | ID_ | 年龄 | 教育 | 性别 | 枪支法 | 大麻 | 实际收入 |'
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- |'
   id: totrans-51
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- | --- | --- | --- | --- |'
 - en: '| 0 | 1972 | 1 | 23 | 16 | 2 | 1 | 0 | 18951.0 |'
   id: totrans-52
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 1972 | 1 | 23 | 16 | 2 | 1 | 0 | 18951.0 |'
 - en: '| 1 | 1972 | 2 | 70 | 10 | 1 | 1 | 0 | 24366.0 |'
   id: totrans-53
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 1972 | 2 | 70 | 10 | 1 | 1 | 0 | 24366.0 |'
 - en: '| 2 | 1972 | 3 | 48 | 12 | 2 | 1 | 0 | 24366.0 |'
   id: totrans-54
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 1972 | 3 | 48 | 12 | 2 | 1 | 0 | 24366.0 |'
 - en: '| 3 | 1972 | 4 | 27 | 17 | 2 | 1 | 0 | 30458.0 |'
   id: totrans-55
   prefs: []

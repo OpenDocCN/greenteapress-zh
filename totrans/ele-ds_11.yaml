@@ -1,109 +1,142 @@
 - en: Relationships
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
 - en: 原文：[https://allendowney.github.io/ElementsOfDataScience/09_relationships.html](https://allendowney.github.io/ElementsOfDataScience/09_relationships.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/09_relationships.ipynb)
     or [click here to download it](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/09_relationships.ipynb).'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
 - en: This chapter explores relationships between variables.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
 - en: We will visualize relationships using scatter plots, box plots, and violin plots,
+  id: totrans-4
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: And we will quantify relationships using correlation and simple regression.
+  id: totrans-5
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: The most important lesson in this chapter is that you should always visualize
     the relationship between variables before you try to quantify it; otherwise, you
     are likely to be misled.
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
 - en: Exploring relationships
+  id: totrans-7
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: So far we have mostly considered one variable at a time. Now it’s time to explore
     relationships between variables. As a first example, we’ll look at the relationship
     between height and weight.
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
 - en: We’ll use data from the Behavioral Risk Factor Surveillance System (BRFSS),
     which is run by the Centers for Disease Control at [https://www.cdc.gov/brfss](https://www.cdc.gov/brfss).
     The survey includes more than 400,000 respondents, but to keep things manageable,
     we’ll work with a random subsample of 100,000.
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE0]'
+  id: totrans-10
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '[PRE1]'
+  id: totrans-11
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: Here are the first few rows.
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE2]'
+  id: totrans-13
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '|  | SEX | HTM4 | WTKG3 | INCOME2 | _LLCPWT | _AGEG5YR | _VEGESU1 | _HTMG10
     | AGE |'
+  id: totrans-14
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  id: totrans-15
   prefs: []
   type: TYPE_TB
 - en: '| 96230 | 2.0 | 160.0 | 60.33 | 8.0 | 1398.525290 | 6.0 | 2.14 | 150.0 | 47.0
     |'
+  id: totrans-16
   prefs: []
   type: TYPE_TB
 - en: '| 244920 | 2.0 | 163.0 | 58.97 | 5.0 | 84.057503 | 13.0 | 3.14 | 160.0 | 89.5
     |'
+  id: totrans-17
   prefs: []
   type: TYPE_TB
 - en: '| 57312 | 2.0 | 163.0 | 72.57 | 8.0 | 390.248599 | 5.0 | 2.64 | 160.0 | 42.0
     |'
+  id: totrans-18
   prefs: []
   type: TYPE_TB
 - en: '| 32573 | 2.0 | 165.0 | 74.84 | 1.0 | 11566.705300 | 3.0 | 1.46 | 160.0 | 32.0
     |'
+  id: totrans-19
   prefs: []
   type: TYPE_TB
 - en: '| 355929 | 2.0 | 170.0 | 108.86 | 3.0 | 844.485450 | 3.0 | 1.81 | 160.0 | 32.0
     |'
+  id: totrans-20
   prefs: []
   type: TYPE_TB
 - en: The BRFSS includes hundreds of variables. For the examples in this chapter,
     we’ll work with just nine. The ones we’ll start with are `HTM4`, which records
     each respondent’s height in cm, and `WTKG3`, which records weight in kg.
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE3]'
+  id: totrans-22
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: To visualize the relationship between these variables, we’ll make a **scatter
     plot**, which shows one marker for each pair of values. Scatter plots are common
     and readily understood, but they are surprisingly hard to get right.
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
 - en: As a first attempt, we’ll use `plot` with the style string `o`, which plots
     a circle for each data point.
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE4]'
+  id: totrans-25
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '![_images/09_relationships_11_0.png](../Images/0417d7dc0b672dd4d053b67a4f13a952.png)'
+  id: totrans-26
   prefs: []
   type: TYPE_IMG
 - en: Each marker represents the height and weight of one person.
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
 - en: Based on the shape of the result, it looks like taller people are heavier, but
@@ -111,32 +144,42 @@
     it is **overplotted**, which means that there are markers piled on top of each
     other so you can’t tell where there are a lot of data points and where there is
     just one. When that happens, the results can be seriously misleading.
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
 - en: One way to improve the plot is to use transparency, which we can do with the
     keyword argument `alpha`. The lower the value of alpha, the more transparent each
     data point is.
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
 - en: Here’s what it looks like with `alpha=0.02`.
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE5]'
+  id: totrans-31
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '![_images/09_relationships_13_0.png](../Images/7b226a84851e1bad24d510a575ad27e5.png)'
+  id: totrans-32
   prefs: []
   type: TYPE_IMG
 - en: This is better, but there are so many data points, the scatter plot is still
     overplotted. The next step is to make the markers smaller. With `markersize=1`
     and a low value of alpha, the scatter plot is less saturated. Here’s what it looks
     like.
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE6]'
+  id: totrans-34
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '![_images/09_relationships_15_0.png](../Images/07e2449e50ef69aa705840b80a110dc3.png)'
+  id: totrans-35
   prefs: []
   type: TYPE_IMG
 - en: Again, this is better, but now we can see that the points fall in discrete columns.
@@ -144,134 +187,178 @@
     We can break up the columns by adding some random noise to the values; in effect,
     we are filling in the values that got rounded off. Adding random noise like this
     is called **jittering**.
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
 - en: We can use NumPy to add noise from a normal distribution with mean 0 and standard
     deviation 2.
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE7]'
+  id: totrans-38
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: Here’s what the plot looks like with jittered heights.
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE8]'
+  id: totrans-40
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '![_images/09_relationships_19_0.png](../Images/4685fab19750b500644159c3d95188b9.png)'
+  id: totrans-41
   prefs: []
   type: TYPE_IMG
 - en: The columns are gone, but now we can see that there are rows where people rounded
     off their weight. We can fix that by jittering weight, too.
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE9]'
+  id: totrans-43
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '[PRE10]'
+  id: totrans-44
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '![_images/09_relationships_22_0.png](../Images/e36d0a757b177922ec022735b88b7693.png)'
+  id: totrans-45
   prefs: []
   type: TYPE_IMG
 - en: Finally, let’s zoom in on the area where most of the data points are.
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
 - en: The functions `xlim` and `ylim` set the lower and upper bounds for the \(x\)
     and \(y\)-axis; in this case, we plot heights from 140 to 200 centimeters and
     weights up to 160 kilograms.
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
 - en: Here’s what it looks like.
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE11]'
+  id: totrans-49
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: '![_images/09_relationships_24_0.png](../Images/b594186e8e53e753a4be459cc9bb08b8.png)'
+  id: totrans-50
   prefs: []
   type: TYPE_IMG
 - en: Now we have a reliable picture of the relationship between height and weight.
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
 - en: Below you can see the misleading plot we started with and the more reliable
     one we ended with. They are clearly different, and they suggest different relationships
     between these variables.
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE12]'
+  id: totrans-53
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '![_images/09_relationships_26_0.png](../Images/8d3908a46b10416fbedf55126e0389ae.png)'
+  id: totrans-54
   prefs: []
   type: TYPE_IMG
 - en: The point of this example is that it takes some effort to make an effective
     scatter plot.
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
 - en: '**Exercise:** Do people tend to gain weight as they get older? We can answer
     this question by visualizing the relationship between weight and age.'
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
 - en: But before we make a scatter plot, it is a good idea to visualize distributions
     one variable at a time. So let’s look at the distribution of age.
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
 - en: The BRFSS dataset includes a column, `AGE`, which represents each respondent’s
     age in years. To protect respondents’ privacy, ages are rounded off into 5-year
     bins. `AGE` contains the midpoint of the bins.
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
 - en: Extract the variable `'AGE'` from the DataFrame `brfss` and assign it to `age`.
+  id: totrans-59
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Plot the PMF of `age` as a bar chart, using `Pmf` from `empiricaldist`.
+  id: totrans-60
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: '[PRE13]'
+  id: totrans-61
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: '**Exercise:** Now let’s look at the distribution of weight. The column that
     contains weight in kilograms is `WTKG3`. Because this column contains many unique
     values, displaying it as a PMF doesn’t work very well.'
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE14]'
+  id: totrans-63
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '![_images/09_relationships_33_0.png](../Images/fa5eca877cefa3c36996fc7e39e22787.png)'
+  id: totrans-64
   prefs: []
   type: TYPE_IMG
 - en: To get a better view of this distribution, try plotting the CDF.
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
 - en: Compute the CDF of a normal distribution with the same mean and standard deviation,
     and compare it with the distribution of weight. Is the normal distribution a good
     model for this data? What about log-transformed weights?
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
 - en: '**Exercise:** Now let’s make a scatter plot of `weight` versus `age`. Adjust
     `alpha` and `markersize` to avoid overplotting. Use `ylim` to limit the `y` axis
     from 0 to 200 kilograms.'
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
 - en: '**Exercise:** In the previous exercise, the ages fall in columns because they’ve
     been rounded into 5-year bins. If we jitter them, the scatter plot will show the
     relationship more clearly.'
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
 - en: Add random noise to `age` with mean `0` and standard deviation `2.5`.
+  id: totrans-69
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Make a scatter plot and adjust `alpha` and `markersize` again.
+  id: totrans-70
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Visualizing relationships
+  id: totrans-71
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -279,212 +366,274 @@
     variables, and in the exercises, you explored the relationship between age and
     weight. In this section, we’ll see other ways to visualize these relationships,
     including boxplots and violin plots.
+  id: totrans-72
   prefs: []
   type: TYPE_NORMAL
 - en: Let’s start with a scatter plot of weight versus age.
+  id: totrans-73
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE15]'
+  id: totrans-74
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '![_images/09_relationships_45_0.png](../Images/a50f46ab10afc40a0a690a4da0d9af81.png)'
+  id: totrans-75
   prefs: []
   type: TYPE_IMG
 - en: In this version of the scatter plot, the weights are jittered, but there’s still
     space between the columns. That makes it possible to see the shape of the distribution
     in each age group, and the differences between groups. With this view, it looks
     like weight increases until age 40 or 50, and then starts to decrease.
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
 - en: 'If we take this idea one step farther, we can use KDE to estimate the density
     function in each column and plot it. And there’s a name for that; it’s called
     a **violin plot**. Seaborn provides a function that makes violin plots, but before
     we can use it, we have to get rid of any rows with missing data. Here’s how:'
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE16]'
+  id: totrans-78
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '[PRE17]'
+  id: totrans-79
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: '`dropna()` creates a new DataFrame that drops the rows in `brfss` where `AGE`
     or `WTKG3` are `NaN`. Now we can call `violinplot`.'
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE18]'
+  id: totrans-81
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: '![_images/09_relationships_49_0.png](../Images/fe1e5b44ac02b33d284b3b2fd43bc087.png)'
+  id: totrans-82
   prefs: []
   type: TYPE_IMG
 - en: The `x` and `y` arguments mean we want `AGE` on the x-axis and `WTKG3` on the
     y-axis. `data` is the DataFrame we just created, which contains the variables
     we’re going to plot. The argument `inner=None` simplifies the plot a little.
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
 - en: In the figure, each shape represents the distribution of weight in one age group.
     The width of these shapes is proportional to the estimated density, so it’s like
     two vertical KDEs plotted back to back.
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
 - en: Another, related way to look at data like this is called a **box plot**, which
     represents summary statistics for the values in each group.
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
 - en: The code to generate a box plot is very similar.
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE19]'
+  id: totrans-87
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '![_images/09_relationships_51_0.png](../Images/7e87973eda9a7d48126c43c0c368a578.png)'
+  id: totrans-88
   prefs: []
   type: TYPE_IMG
 - en: The argument `whis=10` turns off a feature we don’t need. If you are curious
     about it, you can [read the documentation](https://seaborn.pydata.org/generated/seaborn.boxplot.html).
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
 - en: Each box represents the distribution of weight in an age group. The height of
     each box represents the range from the 25th to the 75th percentile. The line in
     the middle of each box is the median. The spines sticking out of the top and bottom
     show the minimum and maximum values.
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
 - en: In my opinion, this plot gives us the best view of the relationship between
     weight and age.
+  id: totrans-91
   prefs: []
   type: TYPE_NORMAL
 - en: Looking at the medians, it seems like people in their 40s are the heaviest;
     younger and older people are lighter.
+  id: totrans-92
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Looking at the sizes of the boxes, it seems like people in their 40s have the
     most variability in weight, too.
+  id: totrans-93
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: These plots also show how skewed the distribution of weight is; that is, the
     heaviest people are much farther from the median than the lightest people.
+  id: totrans-94
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: For data that skews toward higher values, it is sometimes useful to look at
     it on a logarithmic scale. We can do that with the Pyplot function `yscale`.
+  id: totrans-95
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE20]'
+  id: totrans-96
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '![_images/09_relationships_53_0.png](../Images/93107d54504b014bbf0d7e7e7f82ea89.png)'
+  id: totrans-97
   prefs: []
   type: TYPE_IMG
 - en: On a log scale, the distributions are symmetric, so the spines are the same
     length, the boxes are close to the middle of the figure, and we can see the relationship
     between age and weight more clearly.
+  id: totrans-98
   prefs: []
   type: TYPE_NORMAL
 - en: In the following exercises, you’ll have a chance to generate violin and box
     plots for other variables.
+  id: totrans-99
   prefs: []
   type: TYPE_NORMAL
 - en: '**Exercise:** Previously we looked at a scatter plot of height and weight,
     and saw that taller people tend to be heavier. Now let’s take a closer look using
     a box plot. The `brfss` DataFrame contains a column named `_HTMG10` that represents
     height in centimeters, binned into 10 cm groups.'
+  id: totrans-100
   prefs: []
   type: TYPE_NORMAL
 - en: Make a boxplot that shows the distribution of weight in each height group.
+  id: totrans-101
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Plot the y-axis on a logarithmic scale.
+  id: totrans-102
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'Suggestion: If the labels on the `x` axis collide, you can rotate them like
     this:'
+  id: totrans-103
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE21]'
+  id: totrans-104
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: '**Exercise:** As a second example, let’s look at the relationship between income
     and height.'
+  id: totrans-105
   prefs: []
   type: TYPE_NORMAL
 - en: In the BRFSS, income is represented as a categorical variable; that is, respondents
     are assigned to one of 8 income categories. The column name is `INCOME2`.
+  id: totrans-106
   prefs: []
   type: TYPE_NORMAL
 - en: Before we connect income with anything else, let’s look at the distribution
     by computing the PMF.
+  id: totrans-107
   prefs: []
   type: TYPE_NORMAL
 - en: Extract `INCOME2` from `brfss` and assign it to `income`.
+  id: totrans-108
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Plot the PMF of `income` as a bar chart.
+  id: totrans-109
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'Note: You will see that about a third of the respondents are in the highest
     income group; ideally, it would be better if there were more groups at the high
     end, but we’ll work with what we have.'
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
 - en: '**Exercise:** Generate a violin plot that shows the distribution of height
     in each income group. Can you see a relationship between these variables?'
+  id: totrans-111
   prefs: []
   type: TYPE_NORMAL
 - en: Quantifying Correlation
+  id: totrans-112
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: In the previous section, we visualized relationships between pairs of variables.
     Now we’ll learn about the **coefficient of correlation**, which quantifies the
     strength of these relationships.
+  id: totrans-113
   prefs: []
   type: TYPE_NORMAL
 - en: When people say “correlation” casually, they might mean any relationship between
     two variables. In statistics, it usually means Pearson’s correlation coefficient,
     which is a number between `-1` and `1` that quantifies the strength of a linear
     relationship between variables.
+  id: totrans-114
   prefs: []
   type: TYPE_NORMAL
 - en: 'To demonstrate, we’ll select three columns from the BRFSS dataset:'
+  id: totrans-115
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE22]'
+  id: totrans-116
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: 'The result is a DataFrame with just those columns. With this subset of the
     data, we can use the `corr` method, like this:'
+  id: totrans-117
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE23]'
+  id: totrans-118
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: '|  | HTM4 | WTKG3 | AGE |'
+  id: totrans-119
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- | --- |'
+  id: totrans-120
   prefs: []
   type: TYPE_TB
 - en: '| HTM4 | 1.000000 | 0.474203 | -0.093684 |'
+  id: totrans-121
   prefs: []
   type: TYPE_TB
 - en: '| WTKG3 | 0.474203 | 1.000000 | 0.021641 |'
+  id: totrans-122
   prefs: []
   type: TYPE_TB
 - en: '| AGE | -0.093684 | 0.021641 | 1.000000 |'
+  id: totrans-123
   prefs: []
   type: TYPE_TB
 - en: The result is a **correlation matrix**. Reading across the first row, the correlation
     of `HTM4` with itself is `1`. That’s expected; the correlation of anything with
     itself is `1`.
+  id: totrans-124
   prefs: []
   type: TYPE_NORMAL
 - en: The next entry is more interesting; the correlation of height and weight is
@@ -492,65 +641,86 @@
     moderate in strength, which means it has some predictive value, but not much.
     If you know someone’s height, you can make a somewhat better guess about their
     weight.
+  id: totrans-125
   prefs: []
   type: TYPE_NORMAL
 - en: The correlation between height and age is about `-0.09`. It’s negative, which
     means that older people tend to be shorter, but it’s weak, which means that knowing
     someone’s age would not help much if you were trying to guess their height.
+  id: totrans-126
   prefs: []
   type: TYPE_NORMAL
 - en: The correlation between age and weight is even smaller. It is tempting to conclude
     that there is no relationship between age and weight, but we have already seen
     that there is. So why is the correlation so low? Remember that the relationship
     between weight and age looks like this.
+  id: totrans-127
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE24]'
+  id: totrans-128
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: '![_images/09_relationships_67_0.png](../Images/e08b2449d2f26f07edcbc56575745657.png)'
+  id: totrans-129
   prefs: []
   type: TYPE_IMG
 - en: People in their forties are the heaviest; younger and older people are lighter.
     So this relationship is nonlinear. But correlation only measures linear relationships.
     If the relationship is nonlinear, correlation generally underestimates how strong
     it is.
+  id: totrans-130
   prefs: []
   type: TYPE_NORMAL
 - en: 'To demonstrate, I’ll generate some fake data: `xs` contains equally-spaced
     points between `-1` and `1`. `ys` is `xs` squared plus some random noise.'
+  id: totrans-131
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE25]'
+  id: totrans-132
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: Here’s the scatter plot of `xs` and `ys`.
+  id: totrans-133
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE26]'
+  id: totrans-134
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: '![_images/09_relationships_71_0.png](../Images/3eb9eba5d2edcc6a663377454c0140c9.png)'
+  id: totrans-135
   prefs: []
   type: TYPE_IMG
 - en: 'It’s clear that this is a strong relationship; if you are given `x`, you can
     make a much better guess about `y`. But here’s the correlation matrix:'
+  id: totrans-136
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE27]'
+  id: totrans-137
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: '[PRE28]'
+  id: totrans-138
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: Even though there is a strong non-linear relationship, the computed correlation
     is close to `0`.
+  id: totrans-139
   prefs: []
   type: TYPE_NORMAL
 - en: In general, if correlation is high – that is, close to `1` or `-1` – you can
     conclude that there is a strong linear relationship. But if correlation is close
     to `0`, that doesn’t mean there is no relationship; there might be a non-linear
     relationship.
+  id: totrans-140
   prefs: []
   type: TYPE_NORMAL
 - en: This is one of the reasons I think correlation is not such a great statistic.
@@ -558,342 +728,492 @@
     take it to mean. Specifically, correlation says nothing about slope. If we say
     that two variables are correlated, that means we can use one to predict the other.
     But that might not be what we care about.
+  id: totrans-141
   prefs: []
   type: TYPE_NORMAL
 - en: For example, suppose we are concerned about the health effects of weight gain,
     so we plot weight versus age from 20 to 50 years old. I’ll generate two fake datasets
     to demonstrate the point. In each dataset, `xs` represents age and `ys` represents
     weight.
+  id: totrans-142
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE29]'
+  id: totrans-143
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: '![_images/09_relationships_76_0.png](../Images/a792e394f5a150b6acab56cac547c476.png)'
+  id: totrans-144
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/09_relationships_76_0.png](../Images/a792e394f5a150b6acab56cac547c476.png)'
 - en: 'And here’s the second dataset:'
+  id: totrans-145
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是第二个数据集：
 - en: '[PRE30]'
+  id: totrans-146
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: '![_images/09_relationships_78_0.png](../Images/4f48c9ce48b94003e4368bd9af7e9f86.png)'
+  id: totrans-147
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/09_relationships_78_0.png](../Images/4f48c9ce48b94003e4368bd9af7e9f86.png)'
 - en: 'I constructed these examples so they look similar, but they have substantially
     different correlations:'
+  id: totrans-148
   prefs: []
   type: TYPE_NORMAL
+  zh: 我构建了这些例子，使它们看起来相似，但它们的相关性有很大的不同：
 - en: '[PRE31]'
+  id: totrans-149
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: '[PRE32]'
+  id: totrans-150
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: '[PRE33]'
+  id: totrans-151
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: '[PRE34]'
+  id: totrans-152
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: In the first example, the correlation is strong, close to `0.75`. In the second
     example, the correlation is moderate, close to `0.5`. So we might think the first
     relationship is more important. But look more closely at the `y` axis in both
     figures.
+  id: totrans-153
   prefs: []
   type: TYPE_NORMAL
+  zh: 在第一个例子中，相关性很强，接近0.75。在第二个例子中，相关性适中，接近0.5。因此我们可能认为第一个关系更重要。但更仔细地观察两个图中的y轴。
 - en: In the first example, the average weight gain over 30 years is less than 1 kilogram;
     in the second it is more than 5 kilograms! If we are concerned about the health
     effects of weight gain, the second relationship is probably more important, even
     though the correlation is lower.
+  id: totrans-154
   prefs: []
   type: TYPE_NORMAL
+  zh: 在第一个例子中，30年内的平均体重增加不到1公斤；而在第二个例子中，超过5公斤！如果我们关心体重增加的健康影响，第二个关系可能更重要，即使相关性较低。
 - en: The statistic we really care about is the slope of the line, not the coefficient
     of correlation.
+  id: totrans-155
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们真正关心的统计量是线的斜率，而不是相关系数。
 - en: In the next section, we’ll see how to estimate that slope. But first, let’s
     practice with correlation.
+  id: totrans-156
   prefs: []
   type: TYPE_NORMAL
+  zh: 在下一节中，我们将看到如何估计这个斜率。但首先，让我们练习一下相关性。
 - en: '**Exercise:** The purpose of the BRFSS is to explore health risk factors, so
     it includes questions about diet. The column `_VEGESU1` represents the number
     of servings of vegetables respondents reported eating per day.'
+  id: totrans-157
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**BRFSS的目的是探索健康风险因素，因此包括有关饮食的问题。列`_VEGESU1`代表受访者每天报告的蔬菜摄入量。'
 - en: Let’s see how this variable relates to age and income.
+  id: totrans-158
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们看看这个变量与年龄和收入的关系。
 - en: From the `brfss` DataFrame, select the columns `'AGE'`, `INCOME2`, and `_VEGESU1`.
+  id: totrans-159
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 从`brfss` DataFrame中选择列`'AGE'`，`INCOME2`和`_VEGESU1`。
 - en: Compute the correlation matrix for these variables.
+  id: totrans-160
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 计算这些变量的相关矩阵。
 - en: '**Exercise:** In the previous exercise, the correlation between income and
     vegetable consumption is about `0.12`. The correlation between age and vegetable
     consumption is about `-0.01`.'
+  id: totrans-161
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**在上一个练习中，收入和蔬菜消费之间的相关性约为0.12。年龄和蔬菜消费之间的相关性约为-0.01。'
 - en: Which of the following are correct interpretations of these results?
+  id: totrans-162
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下哪些是对这些结果的正确解释？
 - en: '*A*: People in this dataset with higher incomes eat more vegetables.'
+  id: totrans-163
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '*A*: 这个数据集中收入较高的人吃更多蔬菜。'
 - en: '*B*: The relationship between income and vegetable consumption is linear.'
+  id: totrans-164
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '*B*: 收入和蔬菜消费之间的关系是线性的。'
 - en: '*C*: Older people eat more vegetables.'
+  id: totrans-165
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '*C*: 年龄较大的人吃更多蔬菜。'
 - en: '*D*: There could be a strong non-linear relationship between age and vegetable
     consumption.'
+  id: totrans-166
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '*D*: 年龄和蔬菜消费之间可能存在强烈的非线性关系。'
 - en: '**Exercise:** In general it is a good idea to visualize the relationship between
     variables *before* you compute a correlation. We didn’t do that in the previous
     example, but it’s not too late.'
+  id: totrans-167
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**通常在计算相关性之前，先可视化变量之间的关系是一个好主意。我们在上一个例子中没有这样做，但现在还不算太晚。'
 - en: Generate a visualization of the relationship between age and vegetables. How
     would you describe the relationship, if any?
+  id: totrans-168
   prefs: []
   type: TYPE_NORMAL
+  zh: 生成年龄和蔬菜之间关系的可视化。如果有的话，你会如何描述这种关系？
 - en: Simple Linear Regression
+  id: totrans-169
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 简单线性回归
 - en: 'In the previous section we saw that correlation does not always measure what
     we really want to know. In this section, we look at an alternative: simple linear
     regression.'
+  id: totrans-170
   prefs: []
   type: TYPE_NORMAL
+  zh: 在上一节中，我们看到相关性并不总是能够衡量我们真正想要知道的内容。在本节中，我们将看看另一种方法：简单线性回归。
 - en: 'Let’s look again at the relationship between weight and age. In the previous
     section, I generated two fake datasets to make a point:'
+  id: totrans-171
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们再次看一下体重和年龄之间的关系。在上一节中，我生成了两个虚假数据集来阐明一个观点：
 - en: '[PRE35]'
+  id: totrans-172
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: '![_images/09_relationships_90_0.png](../Images/20848bdd08143a34214f40b4e2a1873a.png)'
+  id: totrans-173
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/09_relationships_90_0.png](../Images/20848bdd08143a34214f40b4e2a1873a.png)'
 - en: The one on the left has higher correlation, about 0.75 compared to 0.5. But
     in this context, the statistic we probably care about is the slope of the line,
     not the correlation coefficient. To estimate the slope, we can use `linregress`
     from the SciPy `stats` library.
+  id: totrans-174
   prefs: []
   type: TYPE_NORMAL
+  zh: 左边的那个相关性更高，约为0.75，而右边的为0.5。但在这种情况下，我们可能关心的统计量是线的斜率，而不是相关系数。为了估计斜率，我们可以使用SciPy的stats库中的`linregress`。
 - en: '[PRE36]'
+  id: totrans-175
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: '[PRE37]'
+  id: totrans-176
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE37]'
 - en: 'The result is a `LinregressResult` object that contains five values: `slope`
     is the slope of the line of best fit for the data; `intercept` is the intercept.
     We’ll interpret some of the other values later.'
+  id: totrans-177
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个`LinregressResult`对象，包含五个值：`slope`是数据最佳拟合线的斜率；`intercept`是截距。我们稍后会解释其他一些值。
 - en: 'For Fake Dataset #1, the estimated slope is about 0.019 kilograms per year
     or about 0.56 kilograms over the 30-year range.'
+  id: totrans-178
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于虚假数据集＃1，估计的斜率约为每年0.019公斤或30年范围内约0.56公斤。
 - en: '[PRE38]'
+  id: totrans-179
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: '[PRE39]'
+  id: totrans-180
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: 'Here are the results for Fake Dataset #2.'
+  id: totrans-181
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是虚假数据集＃2的结果。
 - en: '[PRE40]'
+  id: totrans-182
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE40]'
 - en: '[PRE41]'
+  id: totrans-183
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE41]'
 - en: 'The estimated slope is almost 10 times higher: about 0.18 kilograms per year
     or about 5.3 kilograms per 30 years:'
+  id: totrans-184
   prefs: []
   type: TYPE_NORMAL
+  zh: 估计的斜率几乎高出10倍：约为每年0.18公斤或每30年约5.3公斤：
 - en: '[PRE42]'
+  id: totrans-185
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE42]'
 - en: '[PRE43]'
+  id: totrans-186
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE43]'
 - en: What’s called `rvalue` here is correlation, which confirms what we saw before;
     the first example has higher correlation, about 0.75 compared to 0.5. But the
     strength of the effect, as measured by the slope of the line, is about 10 times
     higher in the second example.
+  id: totrans-187
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里所谓的`rvalue`是相关性，它证实了我们之前看到的；第一个例子的相关性更高，约为0.75，而第二个例子的效应强度，由线的斜率来衡量，约高出10倍。
 - en: 'We can use the results from `linregress` to compute the line of best fit: first
     we get the minimum and maximum of the observed `xs`; then we multiply by the slope
     and add the intercept. Here’s what that looks like for the first example.'
+  id: totrans-188
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用`linregress`的结果来计算最佳拟合线：首先得到观察到的`xs`的最小值和最大值；然后乘以斜率并加上截距。以下是第一个例子的情况。
 - en: '[PRE44]'
+  id: totrans-189
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE44]'
 - en: '![_images/09_relationships_100_0.png](../Images/8051e41f8fe62b0383f8e94762f267d6.png)'
+  id: totrans-190
   prefs: []
   type: TYPE_IMG
 - en: And here’s what it looks like for the second example.
+  id: totrans-191
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE45]'
+  id: totrans-192
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE45]'
 - en: '![_images/09_relationships_102_0.png](../Images/34ed86b462b76e9d24555b2ad497ee7b.png)'
+  id: totrans-193
   prefs: []
   type: TYPE_IMG
 - en: The visualization here might be misleading unless you look closely at the vertical
     scales; the slope in the second figure is almost 10 times higher.
+  id: totrans-194
   prefs: []
   type: TYPE_NORMAL
 - en: Regression of Height and Weight
+  id: totrans-195
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: Now let’s look at an example of regression with real data. Here’s the scatter
     plot of height and weight one more time.
+  id: totrans-196
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE46]'
+  id: totrans-197
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE46]'
 - en: '![_images/09_relationships_105_0.png](../Images/3df4d14f15a6c2225ba4532d0c6a1c82.png)'
+  id: totrans-198
   prefs: []
   type: TYPE_IMG
 - en: To compute the regression line, we’ll use `linregress` again. But it can’t handle
     `NaN` values, so we have to use `dropna` to remove rows that are missing the data
     we need.
+  id: totrans-199
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE47]'
+  id: totrans-200
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE47]'
 - en: Now we can compute the linear regression.
+  id: totrans-201
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE48]'
+  id: totrans-202
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE48]'
 - en: '[PRE49]'
+  id: totrans-203
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE49]'
 - en: The slope is about 0.92 kilograms per centimeter, which means that we expect
     a person one centimeter taller to be almost a kilogram heavier. That’s quite a
     lot.
+  id: totrans-204
   prefs: []
   type: TYPE_NORMAL
 - en: 'As before, we can compute the line of best fit:'
+  id: totrans-205
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE50]'
+  id: totrans-206
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE50]'
 - en: And here’s what that looks like.
+  id: totrans-207
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE51]'
+  id: totrans-208
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE51]'
 - en: '![_images/09_relationships_113_0.png](../Images/e4142ec64e2d0d789f6ff79b526d6ae8.png)'
+  id: totrans-209
   prefs: []
   type: TYPE_IMG
 - en: The slope of this line seems consistent with the scatter plot.
+  id: totrans-210
   prefs: []
   type: TYPE_NORMAL
 - en: Linear regression has the same problem as correlation; it only measures the
     strength of a linear relationship. Here’s the scatter plot of weight versus age,
     which we saw earlier.
+  id: totrans-211
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE52]'
+  id: totrans-212
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE52]'
 - en: '![_images/09_relationships_115_0.png](../Images/79646d87ba5ef26135a7892bc8ab7c0a.png)'
+  id: totrans-213
   prefs: []
   type: TYPE_IMG
 - en: People in their 40s are the heaviest; younger and older people are lighter.
     So the relationship is nonlinear.
+  id: totrans-214
   prefs: []
   type: TYPE_NORMAL
 - en: If we don’t look at the scatter plot and blindly compute the regression line,
     here’s what we get.
+  id: totrans-215
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE53]'
+  id: totrans-216
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE53]'
 - en: '[PRE54]'
+  id: totrans-217
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE54]'
 - en: The estimated slope is only 0.02 kilograms per year, or 0.6 kilograms in 30
     years. And here’s what the line of best fit looks like.
+  id: totrans-218
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE55]'
+  id: totrans-219
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE55]'
 - en: '![_images/09_relationships_119_0.png](../Images/ca00bd2ac7b9c0132242e62e0e069f54.png)'
+  id: totrans-220
   prefs: []
   type: TYPE_IMG
 - en: A straight line does not capture the relationship between these variables well.
+  id: totrans-221
   prefs: []
   type: TYPE_NORMAL
 - en: In the next chapter, you’ll see how to use multiple regression to estimate non-linear
     relationships. But first, let’s practice simple regression.
+  id: totrans-222
   prefs: []
   type: TYPE_NORMAL
 - en: '**Exercise:** Who do you think eats more vegetables, people with low income,
     or people with high income? Let’s find out.'
+  id: totrans-223
   prefs: []
   type: TYPE_NORMAL
 - en: As we’ve seen previously, the column `INCOME2` represents income level and `_VEGESU1`
     represents the number of vegetable servings respondents reported eating per day.
+  id: totrans-224
   prefs: []
   type: TYPE_NORMAL
 - en: Make a scatter plot with vegetable servings versus income, that is, with vegetable
     servings on the `y` axis and income group on the `x` axis.
+  id: totrans-225
   prefs: []
   type: TYPE_NORMAL
 - en: You might want to use `ylim` to zoom in on the bottom half of the `y` axis.
+  id: totrans-226
   prefs: []
   type: TYPE_NORMAL
 - en: '**Exercise:** Now let’s estimate the slope of the relationship between vegetable
     consumption and income.'
+  id: totrans-227
   prefs: []
   type: TYPE_NORMAL
 - en: Use `dropna` to select rows where `INCOME2` and `_VEGESU1` are not `NaN`.
+  id: totrans-228
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Extract `INCOME2` and `_VEGESU1` and compute the simple linear regression of
     these variables.
+  id: totrans-229
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: What is the slope of the regression line? What does this slope means in the
     context of the question we are exploring?
+  id: totrans-230
   prefs: []
   type: TYPE_NORMAL
 - en: '**Exercise:** Finally, plot the regression line on top of the scatter plot.'
+  id: totrans-231
   prefs: []
   type: TYPE_NORMAL
 - en: Summary
+  id: totrans-232
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -902,6 +1222,7 @@
     a good choice when you are exploring a new data set, but it can take some attention
     to avoid overplotting. Violin and box plot are particularly useful when one of
     the variables only takes on a few discrete values.'
+  id: totrans-233
   prefs: []
   type: TYPE_NORMAL
 - en: 'And we considered two ways to quantify the strength of a relationship: the
@@ -911,5 +1232,6 @@
     The slope of the regression line indicates how much difference we expect in one
     variable as we vary the other. One or the other might be more relevant, depending
     on the context.'
+  id: totrans-234
   prefs: []
   type: TYPE_NORMAL
