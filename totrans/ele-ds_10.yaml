@@ -263,20 +263,24 @@
   id: totrans-55
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 1972 | 4 | 27 | 17 | 2 | 1 | 0 | 30458.0 |'
 - en: '| 4 | 1972 | 5 | 61 | 12 | 2 | 1 | 0 | 50763.0 |'
   id: totrans-56
   prefs: []
   type: TYPE_TB
+  zh: '| 4 | 1972 | 5 | 61 | 12 | 2 | 1 | 0 | 50763.0 |'
 - en: I’ll explain these variables as we go along, but if you want more information,
     you can read the online documentation at [https://gssdataexplorer.norc.org/variables/vfilter](https://gssdataexplorer.norc.org/variables/vfilter).
   id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 我会在接下来的过程中解释这些变量，但如果你想了解更多信息，可以阅读[https://gssdataexplorer.norc.org/variables/vfilter](https://gssdataexplorer.norc.org/variables/vfilter)上的在线文档。
 - en: Distribution of Education
   id: totrans-58
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 教育分布
 - en: To get started with this dataset, let’s look at the distribution of `EDUC`,
     which records the number of years of education for each respondent. First we’ll
     select a column from the `DataFrame` and use `value_counts` to see what values
@@ -284,6 +288,7 @@
   id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 要开始处理这个数据集，让我们看看`EDUC`的分布，它记录了每个受访者的教育年限。首先，我们将从`DataFrame`中选择一列，并使用`value_counts`来查看其中包含哪些值。
 - en: '[PRE8]'
   id: totrans-60
   prefs: []
@@ -299,11 +304,13 @@
   id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: '`value_counts`的结果是一组可能的值以及每个值出现的次数，因此它是一种分布。'
 - en: The values `98` and `99` are special codes for “Don’t know” and “No answer”.
     We’ll use `replace` to replace these codes with `NaN`.
   id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 值`98`和`99`是“不知道”和“无回答”的特殊代码。我们将使用`replace`将这些代码替换为`NaN`。
 - en: '[PRE10]'
   id: totrans-64
   prefs: []
@@ -314,6 +321,7 @@
   id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们已经看到了一种可视化分布的方法，即直方图。这是教育水平的直方图。
 - en: '[PRE11]'
   id: totrans-66
   prefs: []
@@ -323,6 +331,7 @@
   id: totrans-67
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/08_distributions_33_0.png](../Images/b767f3981eee2b12b77061a2791a0c4e.png)'
 - en: Based on the histogram, we can see the general shape of the distribution and
     the central tendency – it looks like the peak is near 12 years of education. But
     a histogram is not the best way to visualize this distribution because it obscures
@@ -330,12 +339,14 @@
   id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: 根据直方图，我们可以看到分布的一般形状和中心趋势——看起来峰值接近12年的教育。但是直方图并不是可视化这种分布的最佳方式，因为它掩盖了一些重要的细节。
 - en: An alternative is to use a `Pmf`. The function `Pmf.from_seq` takes any kind
     of sequence – like a list, tuple, or Pandas `Series` – and computes the distribution
     of the values in the sequence.
   id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: 另一种方法是使用`Pmf`。函数`Pmf.from_seq`接受任何类型的序列——如列表、元组或Pandas `Series`——并计算序列中值的分布。
 - en: '[PRE12]'
   id: totrans-70
   prefs: []
@@ -351,10 +362,12 @@
   id: totrans-72
   prefs: []
   type: TYPE_NORMAL
+  zh: 关键字参数`normalize=False`表示我们不想对这个PMF进行标准化。我很快会解释这是什么意思。
 - en: Here’s what the first few rows look like.
   id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是前几行的样子。
 - en: '[PRE14]'
   id: totrans-74
   prefs: []
@@ -364,27 +377,33 @@
   id: totrans-75
   prefs: []
   type: TYPE_TB
+  zh: '|  | probs |'
 - en: '| --- | --- |'
   id: totrans-76
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| 0.0 | 165 |'
   id: totrans-77
   prefs: []
   type: TYPE_TB
+  zh: '| 0.0 | 165 |'
 - en: '| 1.0 | 47 |'
   id: totrans-78
   prefs: []
   type: TYPE_TB
+  zh: '| 1.0 | 47 |'
 - en: '| 2.0 | 152 |'
   id: totrans-79
   prefs: []
   type: TYPE_TB
+  zh: '| 2.0 | 152 |'
 - en: In this dataset, there are `165` respondents who report that they have had no
     formal education, and `47` who have only one year. Here the last few rows.
   id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个数据集中，有`165`名受访者报告称他们没有接受过正规教育，有`47`名只接受了一年的教育。这是最后几行。
 - en: '[PRE15]'
   id: totrans-81
   prefs: []
@@ -394,32 +413,39 @@
   id: totrans-82
   prefs: []
   type: TYPE_TB
+  zh: '|  | probs |'
 - en: '| --- | --- |'
   id: totrans-83
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| 18.0 | 2384 |'
   id: totrans-84
   prefs: []
   type: TYPE_TB
+  zh: '| 18.0 | 2384 |'
 - en: '| 19.0 | 920 |'
   id: totrans-85
   prefs: []
   type: TYPE_TB
+  zh: '| 19.0 | 920 |'
 - en: '| 20.0 | 1439 |'
   id: totrans-86
   prefs: []
   type: TYPE_TB
+  zh: '| 20.0 | 1439 |'
 - en: There are `1439` respondents who report that they have 20 or more years of formal
     education, which probably means they attended college and graduate school.
   id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: 有`1439`名受访者报告称他们接受了20年或更多年的正规教育，这可能意味着他们上了大学和研究生院。
 - en: 'You can use the bracket operator to look up a value in a `Pmf` and get the
     corresponding count:'
   id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: 您可以使用方括号运算符在`Pmf`中查找一个值并获得相应的计数：
 - en: '[PRE16]'
   id: totrans-89
   prefs: []
@@ -437,6 +463,7 @@
   id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: 通常当我们制作PMF时，我们想知道每个值的*比例*，而不是计数。我们可以通过设置`normalize=True`来实现；然后我们得到一个**标准化**的PMF，即第二列中的值加起来为1的PMF。
 - en: '[PRE18]'
   id: totrans-92
   prefs: []
@@ -446,27 +473,33 @@
   id: totrans-93
   prefs: []
   type: TYPE_TB
+  zh: '|  | probs |'
 - en: '| --- | --- |'
   id: totrans-94
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| 0.0 | 0.002553 |'
   id: totrans-95
   prefs: []
   type: TYPE_TB
+  zh: '| 0.0 | 0.002553 |'
 - en: '| 1.0 | 0.000727 |'
   id: totrans-96
   prefs: []
   type: TYPE_TB
+  zh: '| 1.0 | 0.000727 |'
 - en: '| 2.0 | 0.002352 |'
   id: totrans-97
   prefs: []
   type: TYPE_TB
+  zh: '| 2.0 | 0.002352 |'
 - en: 'Now if we use the bracket operator, the result is a fraction. For example,
     the fraction of people with 12 years of education is about 30%:'
   id: totrans-98
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，如果我们使用方括号运算符，结果将是一个分数。例如，12年教育的人数约为30%：
 - en: '[PRE19]'
   id: totrans-99
   prefs: []
@@ -482,6 +515,7 @@
   id: totrans-101
   prefs: []
   type: TYPE_NORMAL
+  zh: '`Pmf`提供了一个`bar`方法，可以将值及其概率绘制成条形图。'
 - en: '[PRE21]'
   id: totrans-102
   prefs: []
@@ -491,11 +525,13 @@
   id: totrans-103
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/08_distributions_47_0.png](../Images/8ccd9e744e3f7dd5765f9624805024e4.png)'
 - en: In this figure, we can see that the most common value is 12 years, but there
     are also peaks at 14 and 16, which correspond to two and four years of college.
   id: totrans-104
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个图中，我们可以看到最常见的值是12年，但也有14和16的峰值，对应着两年和四年的大学。
 - en: For this data, the PMF is probably a better choice than the histogram. The PMF
     shows all unique values, so we can see where the peaks are. Because the histogram
     puts values into bins, it obscures these details. With this dataset, and the default
@@ -504,31 +540,37 @@
   id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于这些数据，PMF可能比直方图更好。PMF显示所有唯一的值，因此我们可以看到峰值在哪里。因为直方图将值放入箱中，它掩盖了这些细节。对于这个数据集和默认的箱数，我们无法看到14和16年的峰值。但是PMF也有局限性，我们会看到。
 - en: First, here’s an exercise where you can practice with PMFs.
   id: totrans-106
   prefs: []
   type: TYPE_NORMAL
+  zh: 首先，这里有一个练习，你可以练习一下PMF。
 - en: '**Exercise:** Let’s look at the `YEAR` column in the `DataFrame`, which represents
     the year each respondent was interviewed.'
   id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**让我们看看`DataFrame`中的`YEAR`列，它表示每个受访者被采访的年份。'
 - en: Make an unnormalized `Pmf` for `YEAR` and display the result. How many respondents
     were interviewed in 2018?
   id: totrans-108
   prefs: []
   type: TYPE_NORMAL
+  zh: 为`YEAR`制作一个未标准化的`Pmf`并显示结果。2018年有多少受访者？
 - en: Cumulative Distribution Functions
   id: totrans-109
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 累积分布函数
 - en: 'Now we’ll see another way to represent a distribution, the cumulative distribution
     function (CDF). `empiricaldist` provides a `Cdf` object that represents a CDF.
     We can import it like this:'
   id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们将看到另一种表示分布的方法，即累积分布函数（CDF）。`empiricaldist`提供了一个代表CDF的`Cdf`对象。我们可以这样导入它：
 - en: '[PRE22]'
   id: totrans-111
   prefs: []
@@ -538,6 +580,7 @@
   id: totrans-112
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，假设我们有一个包含五个值的序列：
 - en: '[PRE23]'
   id: totrans-113
   prefs: []
@@ -547,6 +590,7 @@
   id: totrans-114
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是这些值的`Pmf`。
 - en: '[PRE24]'
   id: totrans-115
   prefs: []
@@ -556,26 +600,32 @@
   id: totrans-116
   prefs: []
   type: TYPE_TB
+  zh: '|  | probs |'
 - en: '| --- | --- |'
   id: totrans-117
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| 1 | 0.2 |'
   id: totrans-118
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 0.2 |'
 - en: '| 2 | 0.4 |'
   id: totrans-119
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 0.4 |'
 - en: '| 3 | 0.2 |'
   id: totrans-120
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 0.2 |'
 - en: '| 5 | 0.2 |'
   id: totrans-121
   prefs: []
   type: TYPE_TB
+  zh: '| 5 | 0.2 |'
 - en: If you draw a random value from `values`, the `Pmf` tells you the chance of
     getting `x`, for any value of `x`. So the probability of the value `1` is `1/5`;
     the probability of the value `2` is `2/5`; and the probabilities for `3` and `5`
@@ -583,16 +633,19 @@
   id: totrans-122
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果从`values`中随机抽取一个值，`Pmf`会告诉你获得`x`的机会，对于任何`x`的值。因此，值`1`的概率是`1/5`；值`2`的概率是`2/5`；值`3`和`5`的概率各为`1/5`。
 - en: A CDF is similar to a PMF in the sense that it contains values and their probabilities;
     the difference is that the probabilities in the CDF are the cumulative sum of
     the probabilities in the PMF.
   id: totrans-123
   prefs: []
   type: TYPE_NORMAL
+  zh: CDF类似于PMF，因为它包含值及其概率；不同之处在于CDF中的概率是PMF中概率的累积和。
 - en: Here’s a `Cdf` object for the same five values.
   id: totrans-124
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是相同五个值的`Cdf`对象。
 - en: '[PRE25]'
   id: totrans-125
   prefs: []
@@ -602,66 +655,80 @@
   id: totrans-126
   prefs: []
   type: TYPE_TB
+  zh: '|  | probs |'
 - en: '| --- | --- |'
   id: totrans-127
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| 1 | 0.2 |'
   id: totrans-128
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 0.2 |'
 - en: '| 2 | 0.6 |'
   id: totrans-129
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 0.6 |'
 - en: '| 3 | 0.8 |'
   id: totrans-130
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 0.8 |'
 - en: '| 5 | 1.0 |'
   id: totrans-131
   prefs: []
   type: TYPE_TB
+  zh: '| 5 | 1.0 |'
 - en: If you draw a random value from `values`, `Cdf` tells you the chance of getting
     a value *less than or equal to* `x`, for any given `x`.
   id: totrans-132
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果从`values`中随机抽取一个值，`Cdf`会告诉你获得一个值*小于或等于*`x`的机会，对于任何给定的`x`。
 - en: So the `Cdf` of `1` is `1/5` because one of the five values in the sequence
     is less than or equal to 1.
   id: totrans-133
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，`1`的`Cdf`是`1/5`，因为序列中五个值中有一个小于或等于1。
 - en: The `Cdf` of 2 is `3/5` because three of the five values are less than or equal
     to 2.
   id: totrans-134
   prefs: []
   type: TYPE_NORMAL
+  zh: 2的`Cdf`是`3/5`，因为五个值中有三个小于或等于2。
 - en: And the `Cdf` of 5 is `5/5` because all of the values are less than or equal
     to 5.
   id: totrans-135
   prefs: []
   type: TYPE_NORMAL
+  zh: '`5`的`Cdf`是`5/5`，因为所有的值都小于或等于5。'
 - en: CDF of Age
   id: totrans-136
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 年龄的CDF
 - en: Now let’s look at a more substantial `Cdf`, the distribution of ages for respondents
     in the General Social Survey.
   id: totrans-137
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们看一个更实质性的`Cdf`，即美国社会总体调查中受访者年龄的分布。
 - en: The variable we’ll use is `'AGE'`. According to the codebook, the range of the
     values is from `18` to `89`, where `89` means “89 or older”. The special codes
     `98` and `99` mean “Don’t know” and “Didn’t answer”. See [https://gssdataexplorer.norc.org/variables/53/vshow](https://gssdataexplorer.norc.org/variables/53/vshow).
   id: totrans-138
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将使用的变量是'AGE'。根据代码簿，值的范围是从`18`到`89`，其中`89`表示“89岁或更大”。特殊代码`98`和`99`表示“不知道”和“没有回答”。参见[https://gssdataexplorer.norc.org/variables/53/vshow](https://gssdataexplorer.norc.org/variables/53/vshow)。
 - en: We can use `replace` to replace the special codes with `NaN`.
   id: totrans-139
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用`replace`将特殊代码替换为`NaN`。
 - en: '[PRE26]'
   id: totrans-140
   prefs: []
@@ -671,6 +738,7 @@
   id: totrans-141
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以这样计算这些值的`Cdf`：
 - en: '[PRE27]'
   id: totrans-142
   prefs: []
@@ -681,6 +749,7 @@
   id: totrans-143
   prefs: []
   type: TYPE_NORMAL
+  zh: '`Cdf`提供了一个名为`plot`的方法，用于绘制CDF作为一条线。下面是它的样子。'
 - en: '[PRE28]'
   id: totrans-144
   prefs: []
@@ -690,16 +759,19 @@
   id: totrans-145
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/08_distributions_66_0.png](../Images/08d79f8c37a2eb99d15d998d79c69455.png)'
 - en: The \(x\)-axis is the ages, from 18 to 89\. The \(y\)-axis is the cumulative
     probabilities, from 0 to 1.
   id: totrans-146
   prefs: []
   type: TYPE_NORMAL
+  zh: \(x\)-轴是年龄，从18到89。\(y\)-轴是累积概率，从0到1。
 - en: '`cdf_age` can be used as a function, so if you give it an age, it returns the
     corresponding probability (in a NumPy array).'
   id: totrans-147
   prefs: []
   type: TYPE_NORMAL
+  zh: '`cdf_age`可以作为一个函数使用，因此如果给它一个年龄，它会返回相应的概率（在NumPy数组中）。'
 - en: '[PRE29]'
   id: totrans-148
   prefs: []
@@ -717,11 +789,13 @@
   id: totrans-150
   prefs: []
   type: TYPE_NORMAL
+  zh: '`q`代表“数量”，这是我们要查找的内容。`p`代表概率，这是结果。在这个例子中，数量是51岁，相应的概率约为`0.63`。这意味着大约63%的受访者年龄为51岁或更年轻。'
 - en: The arrow in the following figure shows how you could read this value from the
     CDF, at least approximately.
   id: totrans-151
   prefs: []
   type: TYPE_NORMAL
+  zh: 下图中的箭头显示了如何从CDF中读取这个值，至少是近似的。
 - en: '[PRE31]'
   id: totrans-152
   prefs: []
@@ -731,12 +805,14 @@
   id: totrans-153
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/08_distributions_71_0.png](../Images/997af415e48fee04879a2b81dc859a2f.png)'
 - en: The CDF is an invertible function, which means that if you have a probability,
     `p`, you can look up the corresponding quantity, `q`. `Cdf` provides a method
     called `inverse` that computes the inverse of the cumulative distribution function.
   id: totrans-154
   prefs: []
   type: TYPE_NORMAL
+  zh: CDF是一个可逆函数，这意味着如果你有一个概率`p`，你可以查找相应的数量`q`。`Cdf`提供了一个名为`inverse`的方法，用于计算累积分布函数的逆函数。
 - en: '[PRE32]'
   id: totrans-155
   prefs: []
@@ -751,16 +827,19 @@
   id: totrans-157
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个例子中，我们查找概率`0.25`，结果是`31`。
 - en: That means that 25% of the respondents are age 31 or less. Another way to say
     the same thing is “age 31 is the 25th percentile of this distribution”.
   id: totrans-158
   prefs: []
   type: TYPE_NORMAL
+  zh: 这意味着25%的受访者年龄为31岁或以下。另一种说法是“31岁是这个分布的第25百分位数”。
 - en: If we look up probability `0.75`, it returns `59`, so 75% of the respondents
     are 59 or younger.
   id: totrans-159
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们查找概率`0.75`，它返回`59`，所以75%的受访者年龄为59岁或更年轻。
 - en: '[PRE34]'
   id: totrans-160
   prefs: []
@@ -776,6 +855,7 @@
   id: totrans-162
   prefs: []
   type: TYPE_NORMAL
+  zh: 在下图中，箭头显示了如何从CDF中读取这些值。
 - en: '[PRE36]'
   id: totrans-163
   prefs: []
@@ -785,23 +865,27 @@
   id: totrans-164
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/08_distributions_77_0.png](../Images/4c002c1357bdea7e324ca209ff4ed33a.png)'
 - en: The distance from the 25th to the 75th percentile is called the **interquartile
     range**, or IQR. It measures the spread of the distribution, so it is similar
     to standard deviation or variance.
   id: totrans-165
   prefs: []
   type: TYPE_NORMAL
+  zh: 从第25百分位到第75百分位的距离称为**四分位距**，或IQR。它衡量了分布的扩散程度，因此类似于标准差或方差。
 - en: Because it is based on percentiles, it doesn’t get thrown off by extreme values
     or outliers, the way standard deviation does. So IQR is more **robust** than variance,
     which means it works well even if there are errors in the data or extreme values.
   id: totrans-166
   prefs: []
   type: TYPE_NORMAL
+  zh: 因为它是基于百分位数的，所以它不会受到极端值或异常值的影响，就像标准差那样。因此IQR比方差更**稳健**，这意味着即使数据中存在错误或极端值，它也能很好地工作。
 - en: '**Exercise:** Using `cdf_age`, compute the fraction of the respondents in the
     GSS dataset that are *older* than 65.'
   id: totrans-167
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**使用`cdf_age`，计算GSS数据集中*年龄*大于65岁的受访者的比例。'
 - en: '**Exercise:** The distribution of income in almost every country is long-tailed,
     which means there are a small number of people with very high incomes. In the
     GSS dataset, the column `REALINC` represents total household income, converted
@@ -1024,49 +1108,58 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 在美国，12年的教育通常意味着受访者已经完成了高中（中等教育）。
 - en: A respondent with 14 years of education has probably completed an associate
     degree (two years of college)
   id: totrans-211
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 14年教育的受访者可能已经完成了副学士学位（两年大学）
 - en: Someone with 16 years has probably completed a bachelor’s degree (four years
     of college or university).
   id: totrans-212
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 16年教育的人可能已经完成了学士学位（四年大学或大学）。
 - en: Define Boolean `Series` named `high`, `assc`, and `bach` that are true for respondents
     with
   id: totrans-213
   prefs: []
   type: TYPE_NORMAL
+  zh: 定义名为`high`、`assc`和`bach`的布尔`Series`，对于受访者，这些布尔值为真
 - en: 12 or fewer years of education,
   id: totrans-214
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 12年或更少的教育，
 - en: 13, 14, or 15 years, and
   id: totrans-215
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 13、14或15岁，以及
 - en: 16 or more.
   id: totrans-216
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 16岁或更多。
 - en: Compute and plot the distribution of income for each group. Remember to label
     the CDFs, display a legend, and label the axes. Write a few sentences that describe
     and interpret the results.
   id: totrans-217
   prefs: []
   type: TYPE_NORMAL
+  zh: 计算并绘制每个组的收入分布。记得标记CDFs，显示图例，并标记坐标轴。写几句话描述和解释结果。
 - en: Modeling Distributions
   id: totrans-218
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 建模分布
 - en: Some distributions have names. For example, you might be familiar with the normal
     distribution, also called the Gaussian distribution or the bell curve. And you
     might have heard of others like the exponential distribution, binomial distribution,
@@ -1074,34 +1167,40 @@
   id: totrans-219
   prefs: []
   type: TYPE_NORMAL
+  zh: 一些分布有名称。例如，你可能熟悉正态分布，也称为高斯分布或钟形曲线。你可能听说过其他分布，比如指数分布、二项分布，或者泊松分布。
 - en: These “distributions with names” are called **analytic** because they are described
     by analytic mathematical functions, as contrasted with empirical distributions,
     which are based on data.
   id: totrans-220
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些“带有名称的分布”被称为**解析**，因为它们由解析数学函数描述，与基于数据的经验分布相对。
 - en: It turns out that many things we measure in the world have distributions that
     are well approximated by analytic distributions, so these distributions are sometimes
     good models for the real world.
   id: totrans-221
   prefs: []
   type: TYPE_NORMAL
+  zh: 事实证明，我们在世界上测量的许多事物都具有可以用解析分布很好近似的分布，因此这些分布有时是现实世界的良好模型。
 - en: In this context, what I mean by a “model” is a simplified description of the
     world that is accurate enough for its intended purpose.
   id: totrans-222
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这种情况下，我所说的“模型”是指对世界的简化描述，足够准确以满足其预期目的。
 - en: In this section, we’ll compute the CDF of a normal distribution and compare
     it to an empirical distribution of data. But before we get to real data, we’ll
     start with fake data.
   id: totrans-223
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本节中，我们将计算正态分布的CDF，并将其与数据的经验分布进行比较。但在我们开始处理真实数据之前，我们将从虚假数据开始。
 - en: The following statement uses NumPy’s `random` library to generate 1000 values
     from a normal distribution with mean `0` and standard deviation `1`.
   id: totrans-224
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下语句使用NumPy的`random`库从均值为`0`，标准差为`1`的正态分布中生成1000个值。
 - en: '[PRE49]'
   id: totrans-225
   prefs: []
@@ -1116,6 +1215,7 @@
   id: totrans-227
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是样本的经验分布的样子。
 - en: '[PRE51]'
   id: totrans-228
   prefs: []
@@ -1125,12 +1225,14 @@
   id: totrans-229
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/08_distributions_115_0.png](../Images/705d7b62ac2b1c533d29f10195a3e7de.png)'
 - en: If we did not know that this sample was drawn from a normal distribution, and
     we wanted to check, we could compare the CDF of the data to the CDF of an ideal
     normal distribution, which we can use the SciPy library to compute.
   id: totrans-230
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们不知道这个样本是从正态分布中抽取的，并且我们想要检查，我们可以将数据的CDF与理想正态分布的CDF进行比较，我们可以使用SciPy库来计算。
 - en: '[PRE52]'
   id: totrans-231
   prefs: []
@@ -1141,26 +1243,31 @@
   id: totrans-232
   prefs: []
   type: TYPE_NORMAL
+  zh: 首先，我们从`scipy.stats`中导入`norm`，这是与统计相关的一组函数。
 - en: Then we use `linspace()` to create an array of equally-spaced points from -3
     to 3; those are the `x` values where we will evaluate the normal CDF.
   id: totrans-233
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后我们使用`linspace()`创建一个从-3到3的等间距点的数组；这些是我们将评估正态CDF的`x`值。
 - en: Next, `norm(0, 1)` creates an object that represents a normal distribution with
     mean `0` and standard deviation `1`.
   id: totrans-234
   prefs: []
   type: TYPE_NORMAL
+  zh: 接下来，`norm(0, 1)`创建一个表示均值为`0`，标准差为`1`的正态分布的对象。
 - en: Finally, `cdf` computes the CDF of the normal distribution, evaluated at each
     of the `xs`.
   id: totrans-235
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，`cdf`计算正态分布的CDF，在每个`xs`处进行评估。
 - en: I’ll plot the normal CDF with a gray line and then plot the CDF of the data
     again.
   id: totrans-236
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将用灰线绘制正态分布的CDF，然后再次绘制数据的CDF。
 - en: '[PRE53]'
   id: totrans-237
   prefs: []
@@ -1170,6 +1277,7 @@
   id: totrans-238
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/08_distributions_119_0.png](../Images/208e78c7944d03d1d832b0e495aad861.png)'
 - en: The CDF of the random sample agrees with the normal model. And that’s not surprising
     because the data were actually sampled from a normal distribution. When we collect
     data in the real world, we do not expect it to fit a normal distribution as well
@@ -1177,93 +1285,111 @@
   id: totrans-239
   prefs: []
   type: TYPE_NORMAL
+  zh: 随机样本的CDF与正态模型一致。这并不奇怪，因为数据实际上是从正态分布中抽取的。当我们在现实世界中收集数据时，我们并不希望它与正态分布一样好。在下一个练习中，我们将尝试并查看。
 - en: '**Exercise:** Is the normal distribution a good model for the distribution
     of ages in the U.S. population?'
   id: totrans-240
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**正态分布是否是美国人口年龄分布的良好模型？'
 - en: 'To answer this question:'
   id: totrans-241
   prefs: []
   type: TYPE_NORMAL
+  zh: 要回答这个问题：
 - en: Compute the mean and standard deviation of ages in the GSS dataset.
   id: totrans-242
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 计算GSS数据集中年龄的平均值和标准差。
 - en: Use `linspace` to create an array of equally spaced values between 18 and 89.
   id: totrans-243
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 使用`linspace`创建一个在18到89之间的等间距值的数组。
 - en: Use `norm` to create a normal distribution with the same mean and standard deviation
     as the data, then use it to compute the normal CDF for each value in the array.
   id: totrans-244
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 使用`norm`创建一个与数据具有相同均值和标准差的正态分布，然后使用它来计算数组中每个值的正态CDF。
 - en: Plot the normal CDF with a gray line.
   id: totrans-245
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 用灰线绘制正态分布的CDF。
 - en: Plot the CDF of the ages in the GSS.
   id: totrans-246
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 绘制GSS中年龄的CDF。
 - en: How well do the plotted CDFs agree?
   id: totrans-247
   prefs: []
   type: TYPE_NORMAL
+  zh: 绘制的CDF是否很好地吻合？
 - en: '**Exercise:** In many datasets, the distribution of income is approximately
     **lognormal**, which means that the logarithms of the incomes fit a normal distribution.
     Let’s see whether that’s true for the GSS data.'
   id: totrans-248
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**在许多数据集中，收入的分布大约是**对数正态**的，这意味着收入的对数符合正态分布。让我们看看GSS数据是否符合这一点。'
 - en: 'Extract `REALINC` from `gss` and compute its logarithm using `np.log10()`.
     Hint: Replace the value `0` with `NaN` before computing logarithms.'
   id: totrans-249
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 从`gss`中提取`REALINC`并使用`np.log10()`计算其对数。提示：在计算对数之前，用`NaN`替换值`0`。
 - en: Compute the mean and standard deviation of the log-transformed incomes.
   id: totrans-250
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 计算对数转换后的收入的均值和标准差。
 - en: Use `norm` to make a normal distribution with the same mean and standard deviation
     as the log-transformed incomes.
   id: totrans-251
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 使用`norm`函数创建一个与对数转换后的收入具有相同均值和标准差的正态分布。
 - en: Plot the CDF of the normal distribution.
   id: totrans-252
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 绘制正态分布的CDF。
 - en: Compute and plot the CDF of the log-transformed incomes.
   id: totrans-253
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 计算并绘制对数转换后的收入的CDF。
 - en: How similar are the CDFs of the log-transformed incomes and the normal distribution?
   id: totrans-254
   prefs: []
   type: TYPE_NORMAL
+  zh: 对数转换后的收入和正态分布的CDF有多相似？
 - en: Kernel Density Estimation
   id: totrans-255
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 核密度估计
 - en: 'We have seen two ways to represent distributions, PMFs and CDFs. Now we’ll
     learn another way: a probability density function, or PDF. The `norm` function,
     which we used to compute the normal CDF, can also compute the normal PDF:'
   id: totrans-256
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们已经看到了两种表示分布的方法，PMF和CDF。现在我们将学习另一种方法：概率密度函数，或PDF。我们用来计算正态CDF的`norm`函数也可以计算正态PDF：
 - en: '[PRE54]'
   id: totrans-257
   prefs: []
@@ -1273,15 +1399,18 @@
   id: totrans-258
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/08_distributions_127_0.png](../Images/afecee42b95c4c363297b06860ada23b.png)'
 - en: The normal PDF is the classic “bell curve”.
   id: totrans-259
   prefs: []
   type: TYPE_NORMAL
+  zh: 正态PDF是经典的“钟形曲线”。
 - en: 'It is tempting to compare the PMF of the data to the PDF of the normal distribution,
     but that doesn’t work. Let’s see what happens if we try:'
   id: totrans-260
   prefs: []
   type: TYPE_NORMAL
+  zh: 诱人的是将数据的PMF与正态分布的PDF进行比较，但这并不起作用。让我们看看如果我们尝试会发生什么：
 - en: '[PRE55]'
   id: totrans-261
   prefs: []
@@ -1291,11 +1420,13 @@
   id: totrans-262
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/08_distributions_129_0.png](../Images/7f46d3931d39c210362bc67fc8c3a222.png)'
 - en: The PMF of the sample is a flat line across the bottom. In the random sample,
     every value is unique, so they all have the same probability, one in 1000.
   id: totrans-263
   prefs: []
   type: TYPE_NORMAL
+  zh: 样本的PMF是底部的一条直线。在随机样本中，每个值都是唯一的，因此它们的概率都相同，为1000中的一个。
 - en: However, we can use the points in the sample to estimate the PDF of the distribution
     they came from. This process is called **kernel density estimation**, or KDE.
     It’s a way of getting from a PMF, a probability mass function, to a PDF, a probability
@@ -1303,11 +1434,13 @@
   id: totrans-264
   prefs: []
   type: TYPE_NORMAL
+  zh: 然而，我们可以使用样本中的点来估计它们来自的分布的PDF。这个过程称为**核密度估计**，或KDE。这是从PMF（概率质量函数）到PDF（概率密度函数）的一种方法。
 - en: To generate a KDE plot, we’ll use the Seaborn library, imported as `sns`. Seaborn
     provides `kdeplot`, which takes the sample, estimates the PDF, and plots it.
   id: totrans-265
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了生成KDE图，我们将使用Seaborn库，导入为`sns`。Seaborn提供`kdeplot`，它接受样本，估计PDF并绘制。
 - en: '[PRE56]'
   id: totrans-266
   prefs: []
@@ -1317,10 +1450,12 @@
   id: totrans-267
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/08_distributions_131_0.png](../Images/0d64dca24548d46d7c94ce7aff656c33.png)'
 - en: Now we can compare the KDE plot and the normal PDF.
   id: totrans-268
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以比较KDE图和正态PDF。
 - en: '[PRE57]'
   id: totrans-269
   prefs: []
@@ -1330,17 +1465,20 @@
   id: totrans-270
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/08_distributions_133_0.png](../Images/b2651ac172e84de0a538a65b0d8b4af7.png)'
 - en: The KDE plot matches the normal PDF pretty well, although the differences look
     bigger when we compare PDFs than they did with the CDFs. That means that the PDF
     is a more sensitive way to look for differences, but often it is too sensitive.
   id: totrans-271
   prefs: []
   type: TYPE_NORMAL
+  zh: KDE图与正态PDF相当匹配，尽管当我们比较PDF时，差异看起来更大，而在比较CDF时并非如此。这意味着PDF是寻找差异的更敏感的方法，但通常它太敏感了。
 - en: It’s hard to tell whether apparent differences mean anything, or if they are
     just random, as in this case.
   id: totrans-272
   prefs: []
   type: TYPE_NORMAL
+  zh: 很难判断明显的差异是否有意义，或者它们只是随机的，就像在这种情况下一样。
 - en: '**Exercise:** In a previous exercise, we asked “Is the normal distribution
     a good model for the distribution of ages in the U.S. population?” To answer this
     question, we plotted the CDF of the data and compared it to the CDF of a normal
@@ -1348,93 +1486,111 @@
   id: totrans-273
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**在以前的练习中，我们问“正态分布是否是美国人口年龄分布的良好模型？”为了回答这个问题，我们绘制了数据的CDF并将其与具有相同均值和标准差的正态分布的CDF进行比较。'
 - en: Now we’ll compare the estimated density of the data with the normal PDF.
   id: totrans-274
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们将比较数据的估计密度和正态PDF。
 - en: Again, compute the mean and standard deviation of ages in the GSS dataset.
   id: totrans-275
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 再次计算GSS数据集中年龄的均值和标准差。
 - en: Use `linspace` to create an array of values between 18 and 89.
   id: totrans-276
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 使用`linspace`创建一个在18到89之间的值数组。
 - en: Use `norm` to create a normal distribution with the same mean and standard deviation
     as the data, then use it to compute the normal PDF for each value in the array.
   id: totrans-277
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 使用`norm`创建一个与数据具有相同均值和标准差的正态分布，然后使用它来计算数组中每个值的正态PDF。
 - en: Plot the normal PDF with a gray line.
   id: totrans-278
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 用灰线绘制正态PDF。
 - en: Use `sns.kdeplot` to estimate and plot the density of the ages in the GSS.
   id: totrans-279
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 使用`sns.kdeplot`估计和绘制GSS中年龄的密度。
 - en: 'Note: Seaborn can’t handle NaNs, so use `dropna` to drop them before calling
     `kdeplot`.'
   id: totrans-280
   prefs: []
   type: TYPE_NORMAL
+  zh: 注意：Seaborn无法处理NaN，因此在调用`kdeplot`之前使用`dropna`将其删除。
 - en: How well do the PDF and KDE plots agree?
   id: totrans-281
   prefs: []
   type: TYPE_NORMAL
+  zh: PDF和KDE图有多符合？
 - en: '**Exercise:** In a previous exercise, we used CDFs to see if the distribution
     of income fits a lognormal distribution. We can make the same comparison using
     a PDF and KDE.'
   id: totrans-282
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**在以前的练习中，我们使用CDF来查看收入分布是否符合对数正态分布。我们可以使用PDF和KDE进行相同的比较。'
 - en: Again, extract `REALINC` from `gss` and compute its logarithm using `np.log10()`.
   id: totrans-283
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 再次从`gss`中提取`REALINC`并使用`np.log10()`计算其对数。
 - en: Compute the mean and standard deviation of the log-transformed incomes.
   id: totrans-284
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 计算对数转换后的收入的均值和标准差。
 - en: Use `norm` to make a normal distribution with the same mean and standard deviation
     as the log-transformed incomes.
   id: totrans-285
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 使用`norm`创建一个与对数转换后的收入具有相同均值和标准差的正态分布。
 - en: Plot the PDF of the normal distribution.
   id: totrans-286
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 绘制正态分布的PDF。
 - en: Use `sns.kdeplot()` to estimate and plot the density of the log-transformed
     incomes.
   id: totrans-287
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 使用`sns.kdeplot()`估计和绘制对数转换后的收入的密度。
 - en: Summary
   id: totrans-288
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 总结
 - en: In this chapter, we’ve seen four ways to visualize distributions, PMFs, CDFs,
     and KDE plots.
   id: totrans-289
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本章中，我们已经看到了四种可视化分布的方法，PMF、CDF和KDE图。
 - en: In general, I use CDFs when I am exploring data. That way, I get the best view
     of what’s going on without getting distracted by noise.
   id: totrans-290
   prefs: []
   type: TYPE_NORMAL
+  zh: 一般来说，我在探索数据时使用CDF。这样，我可以最好地了解情况，而不会被噪音分散注意力。
 - en: Then, if I am presenting results to an audience unfamiliar with CDFs, I might
     use a PMF if the dataset contains a small number of unique values, or KDE if there
     are many unique values.
