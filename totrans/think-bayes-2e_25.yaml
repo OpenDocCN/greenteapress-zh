@@ -211,6 +211,7 @@
   id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 这种转变是“检验悖论”的一个例子，[我写了一篇文章](https://towardsdatascience.com/the-inspection-paradox-is-everywhere-2ef1c2e9d709)。
 - en: As an aside, the Red Line schedule reports that trains run every 9 minutes during
     peak times. This is close to the posterior mean, but higher than the prior mean.
     I exchanged email with a representative of the MBTA, who confirmed that the reported
@@ -218,11 +219,13 @@
   id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 顺便说一句，红线的时间表报告称高峰时段每9分钟有一班火车。这接近后验均值，但高于先验均值。我和MBTA的一位代表交换了电子邮件，他确认报告的火车之间的时间故意保守，以应对变化。
 - en: Elapsed time
   id: totrans-36
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 经过的时间
 - en: Elapsed time, which I call `x`, is the time between the arrival of the previous
     train and the arrival of a passenger. Wait time, which I call `y`, is the time
     between the arrival of a passenger and the next arrival of a train. I chose this
@@ -230,6 +233,7 @@
   id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 经过的时间，我称之为`x`，是上一班火车到达和乘客到达之间的时间。等待时间，我称之为`y`，是乘客到达和下一班火车到达之间的时间。我选择这种符号是为了
 - en: '[PRE10]'
   id: totrans-38
   prefs: []
@@ -241,23 +245,27 @@
   id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 根据`z`的分布，我们可以计算`x`的分布。我将从一个简单的情况开始，然后推广。假设两列火车之间的间隙是5分钟或10分钟，概率相等。
 - en: If we arrive at a random time, we arrive during a 5 minute gap with probability
     1/3, or a 10 minute gap with probability 2/3.
   id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们在随机时间到达，有1/3的概率在5分钟的间隙到达，有2/3的概率在10分钟的间隙到达。
 - en: If we arrive during a 5 minute gap, `x` is uniform from 0 to 5 minutes. If we
     arrive during a 10 minute gap, `x` is uniform from 0 to 10. So the distribution
     of wait times is a weighted mixture of two uniform distributions.
   id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们在5分钟的间隙到达，`x`在0到5分钟之间是均匀分布的。如果我们在10分钟的间隙到达，`x`在0到10分钟之间是均匀分布的。因此等待时间的分布是两个均匀分布的加权混合。
 - en: More generally, if we have the posterior distribution of `z`, we can compute
     the distribution of `x` by making a mixture of uniform distributions. We’ll use
     the following function to make the uniform distributions.
   id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: 更一般地，如果我们有`z`的后验分布，我们可以通过制作均匀分布的混合来计算`x`的分布。我们将使用以下函数来制作均匀分布。
 - en: '[PRE11]'
   id: totrans-43
   prefs: []
@@ -269,11 +277,13 @@
   id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: '`make_elapsed_dist`接受一个假设的间隙和一系列可能的时间。它选择小于或等于`gap`的经过时间，并将它们放入代表均匀分布的`Pmf`中。'
 - en: I’ll use this function to make a sequence of `Pmf` objects, one for each gap
     in `posterior_z`.
   id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将使用这个函数来生成`posterior_z`中每个间隙的`Pmf`对象序列。
 - en: '[PRE12]'
   id: totrans-46
   prefs: []
@@ -283,6 +293,7 @@
   id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个代表从0到0.6分钟的均匀分布的例子。
 - en: '[PRE13]'
   id: totrans-48
   prefs: []
@@ -292,30 +303,37 @@
   id: totrans-49
   prefs: []
   type: TYPE_TB
+  zh: '|  | 概率 |'
 - en: '| --- | --- |'
   id: totrans-50
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| 0.0 | 0.25 |'
   id: totrans-51
   prefs: []
   type: TYPE_TB
+  zh: '| 0.0 | 0.25 |'
 - en: '| 0.2 | 0.25 |'
   id: totrans-52
   prefs: []
   type: TYPE_TB
+  zh: '| 0.2 | 0.25 |'
 - en: '| 0.4 | 0.25 |'
   id: totrans-53
   prefs: []
   type: TYPE_TB
+  zh: '| 0.4 | 0.25 |'
 - en: '| 0.6 | 0.25 |'
   id: totrans-54
   prefs: []
   type: TYPE_TB
+  zh: '| 0.6 | 0.25 |'
 - en: The last element of the sequence is uniform from 0 to 20 minutes.
   id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: 序列的最后一个元素是从0到20分钟的均匀分布。
 - en: '[PRE14]'
   id: totrans-56
   prefs: []
@@ -325,11 +343,13 @@
   id: totrans-57
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/e04c1eca3ff2aea714e04a33a17b2de9c6cc50b1c57b7713bc9cae27a7752c73.png](../Images/5cd0ae13b62935fcd0aa0d8aab31d774.png)'
 - en: Now we can use `make_mixture` to make a weighted mixture of uniform distributions,
     where the weights are the probabilities from `posterior_z`.
   id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以使用`make_mixture`来制作均匀分布的加权混合，其中权重是`posterior_z`的概率。
 - en: '[PRE15]'
   id: totrans-59
   prefs: []
@@ -344,6 +364,7 @@
   id: totrans-61
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/6dea62010873c6070d43c669b7d6fed2488b72f85a7a92175e24eae25cedba65.png](../Images/b5912e612f0d114e052c5984a1af004b.png)'
 - en: '[PRE17]'
   id: totrans-62
   prefs: []
@@ -359,17 +380,20 @@
   id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: 平均经过时间是4.4分钟，是`z`的后验均值的一半。这是有道理的，因为我们期望平均来说在间隙的中间到达。
 - en: Counting passengers
   id: totrans-65
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 计算乘客
 - en: Now let’s take into account the number of passengers waiting on the platform.
     Let’s assume that passengers are equally likely to arrive at any time, and that
     they arrive at a rate, `λ`, that is known to be 2 passengers per minute.
   id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们考虑站台上等待的乘客数量。假设乘客在任何时间到达的可能性相等，并且以已知的速率`λ`到达，该速率为每分钟2名乘客。
 - en: Under those assumptions, the number of passengers who arrive in `x` minutes
     follows a Poisson distribution with parameter `λ x` So we can use the SciPy function
     `poisson` to compute the likelihood of 10 passengers for each possible value of
@@ -377,6 +401,7 @@
   id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这些假设下，到达`x`分钟的乘客数量遵循参数为`λ x`的泊松分布。因此，我们可以使用SciPy函数`poisson`来计算每个可能的`x`值的10名乘客的似然。
 - en: '[PRE19]'
   id: totrans-68
   prefs: []
@@ -386,6 +411,7 @@
   id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: 有了这个似然，我们可以计算`x`的后验分布。
 - en: '[PRE20]'
   id: totrans-70
   prefs: []
@@ -400,6 +426,7 @@
   id: totrans-72
   prefs: []
   type: TYPE_NORMAL
+  zh: 看起来是这样的：
 - en: '[PRE22]'
   id: totrans-73
   prefs: []
@@ -409,11 +436,13 @@
   id: totrans-74
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/32a1f7d633afb2a26c83c036ec21abe5835f2647577f4f38059cc02c3083bbe9.png](../Images/a724e2ebba97e3d3b3149c940de6d5b5.png)'
 - en: Based on the number of passengers, we think it has been about 5 minutes since
     the last train.
   id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: 根据乘客数量，我们认为距离上一班火车已经大约5分钟。
 - en: '[PRE23]'
   id: totrans-76
   prefs: []
@@ -429,12 +458,14 @@
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 等待时间
 - en: Now how long do we think it will be until the next train? Based on what we know
     so far, the distribution of `z` is `posterior_z`, and the distribution of `x`
     is `posterior_x`. Remember that we defined
   id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们认为下一班火车还要多久？根据我们目前所知，`z`的分布是`posterior_z`，`x`的分布是`posterior_x`。记住我们定义了
 - en: '[PRE25]'
   id: totrans-80
   prefs: []
@@ -444,6 +475,7 @@
   id: totrans-81
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们知道`x`和`z`，我们可以计算
 - en: '[PRE26]'
   id: totrans-82
   prefs: []
@@ -453,6 +485,7 @@
   id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: 所以我们可以使用`sub_dist`来计算`y`的分布。
 - en: '[PRE27]'
   id: totrans-84
   prefs: []
@@ -463,6 +496,7 @@
   id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: 嗯，几乎。该分布包含一些负值，这是不可能的。但我们可以移除它们并重新归一化，就像这样：
 - en: '[PRE28]'
   id: totrans-86
   prefs: []
@@ -478,6 +512,7 @@
   id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: 根据目前的信息，这里是`x`，`y`和`z`的分布，显示为CDFs。
 - en: '[PRE30]'
   id: totrans-89
   prefs: []
