@@ -1514,6 +1514,8 @@
   id: totrans-269
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE73]'
   id: totrans-270
   prefs: []
@@ -1523,16 +1525,20 @@
   id: totrans-271
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/553368a9dc3a4c555472e4f17489bf9253f43d3f3ee2101c3b304bcba13e6c6f.png](../Images/63249dd4cc939a3f7d16ff724b2f40f2.png)</details>'
 - en: The posterior mean is pretty close to the test-taker’s actual ability, which
     is 600.
   id: totrans-272
   prefs: []
   type: TYPE_NORMAL
+  zh: 后验均值非常接近考试者的实际能力，即600。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-273
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE74]'
   id: totrans-274
   prefs: []
@@ -1542,81 +1548,102 @@
   id: totrans-275
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE75]</details>'
 - en: If we run this simulation again, we’ll get different results.
   id: totrans-276
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们再次运行这个模拟，我们将得到不同的结果。
 - en: Adaptation
   id: totrans-277
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 适应
 - en: 'Now let’s simulate an adaptive test. I’ll use the following function to choose
     questions, starting with the simplest strategy: all questions have the same difficulty.'
   id: totrans-278
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们模拟一个自适应测试。我将使用以下函数来选择问题，从最简单的策略开始：所有问题的难度都相同。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-279
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE76]</details>'
   id: totrans-280
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE76]</details>'
 - en: As parameters, `choose` takes `i`, which is the index of the question, and `belief`,
     which is a `Pmf` representing the posterior distribution of `ability`, based on
     responses to previous questions.
   id: totrans-281
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为参数，`choose`接受`i`，即问题的索引，以及`belief`，即基于先前问题的回答的`ability`后验分布的`Pmf`。
 - en: This version of `choose` doesn’t use these parameters; they are there so we
     can test other strategies (see the exercises at the end of the chapter).
   id: totrans-282
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个`choose`版本不使用这些参数；它们只是为了我们可以测试其他策略（见本章末尾的练习）。
 - en: The following function simulates a person taking a test, given that we know
     their actual ability.
   id: totrans-283
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数模拟了一个已知其实际能力的人参加考试。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-284
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE77]</details>'
   id: totrans-285
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE77]</details>'
 - en: The return values are a `Pmf` representing the posterior distribution of ability
     and a `DataFrame` containing the difficulty of the questions and the outcomes.
   id: totrans-286
   prefs: []
   type: TYPE_NORMAL
+  zh: 返回值是代表能力后验分布的`Pmf`和包含问题难度和结果的`DataFrame`。
 - en: Here’s an example, again for a test-taker with `ability=600`.
   id: totrans-287
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个例子，再次是针对`ability=600`的考试者。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-288
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE78]</details>'
   id: totrans-289
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE78]</details>'
 - en: We can use the trace to see how many responses were correct.
   id: totrans-290
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用轨迹来查看有多少回答是正确的。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-291
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE79]'
   id: totrans-292
   prefs: []
@@ -1626,15 +1653,19 @@
   id: totrans-293
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE80]</details>'
 - en: And here’s what the posterior looks like.
   id: totrans-294
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是后验分布的样子。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-295
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE81]'
   id: totrans-296
   prefs: []
@@ -1644,16 +1675,19 @@
   id: totrans-297
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/6fecd64a2fbf0f61eb5419cb676798c9831a102903ea96ca668ee184f4da95f6.png](../Images/06dc60e1e59865d48a2f8ee79cd5816c.png)</details>'
 - en: Again, the posterior distribution represents a pretty good estimate of the test-taker’s
     actual ability.
   id: totrans-298
   prefs: []
   type: TYPE_NORMAL
+  zh: 同样，后验分布代表了对考试者实际能力的相当好的估计。
 - en: Quantifying Precision
   id: totrans-299
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 量化精度
 - en: To quantify the precision of the estimates, I’ll use the standard deviation
     of the posterior distribution. The standard deviation measures the spread of the
     distribution, so higher value indicates more uncertainty about the ability of
@@ -1661,16 +1695,20 @@
   id: totrans-300
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了量化估计的精度，我将使用后验分布的标准差。标准差衡量了分布的扩散，因此更高的值表示对考试者能力的不确定性更大。
 - en: In the previous example, the standard deviation of the posterior distribution
     is about 40.
   id: totrans-301
   prefs: []
   type: TYPE_NORMAL
+  zh: 在前面的例子中，后验分布的标准差约为40。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-302
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE82]'
   id: totrans-303
   prefs: []
@@ -1680,6 +1718,7 @@
   id: totrans-304
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE83]</details>'
 - en: For an exam where all questions have the same difficulty, the precision of the
     estimate depends strongly on the ability of the test-taker. To show that, I’ll
     loop through a range of abilities and simulate a test using the version of `choice`
@@ -1687,29 +1726,37 @@
   id: totrans-305
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于所有问题难度相同的考试，估计的精度强烈依赖于考试者的能力。为了证明这一点，我将循环遍历一系列能力，并使用总是返回`difficulty=500`的`choice`版本来模拟一次测试。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-306
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE84]</details>'
   id: totrans-307
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE84]</details>'
 - en: The following plot shows the standard deviation of the posterior distribution
     for one simulation at each level of ability.
   id: totrans-308
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下图显示了在每个能力水平上进行一次模拟时后验分布的标准差。
 - en: The results are noisy, so I also plot a curve fitted to the data by [local regression](https://en.wikipedia.org/wiki/Local_regression).
   id: totrans-309
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果很嘈杂，所以我还绘制了一条通过[局部回归](https://en.wikipedia.org/wiki/Local_regression)拟合数据的曲线。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-310
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE85]'
   id: totrans-311
   prefs: []
@@ -1719,34 +1766,40 @@
   id: totrans-312
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/49fcae9333f76f35c854dcd4b654625f8dd41b8415ea903a5c3434780d2ea9fb.png](../Images/d29aa0df7d3b18ac9daca492b6efe4b9.png)</details>'
 - en: The test is most precise for people with ability between `500` and `600`, less
     precise for people at the high end of the range, and even worse for people at
     the low end.
   id: totrans-313
   prefs: []
   type: TYPE_NORMAL
+  zh: 测试对于能力在`500`和`600`之间的人来说最精确，对于能力在范围高端的人来说不那么精确，对于能力在范围低端的人来说更糟糕。
 - en: When all the questions have difficulty `500`, a person with `ability=800` has
     a high probability of getting them right. So when they do, we don’t learn very
     much about them.
   id: totrans-314
   prefs: []
   type: TYPE_NORMAL
+  zh: 当所有问题的难度都是`500`时，一个能力为`800`的人有很高的概率答对。所以当他们答对时，我们对他们的了解并不多。
 - en: If the test includes questions with a range of difficulty, it provides more
     information about people at the high and low ends of the range.
   id: totrans-315
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果测试包括一系列难度不同的问题，它会提供更多关于高端和低端人群的信息。
 - en: As an exercise at the end of the chapter, you’ll have a chance to try out other
     strategies, including adaptive strategies that choose each question based on previous
     outcomes.
   id: totrans-316
   prefs: []
   type: TYPE_NORMAL
+  zh: 在章节末的练习中，你将有机会尝试其他策略，包括根据先前结果选择每个问题的自适应策略。
 - en: Discriminatory Power
   id: totrans-317
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 区分能力
 - en: In the previous section we used the standard deviation of the posterior distribution
     to quantify the precision of the estimates. Another way to describe the performance
     of the test (as opposed to the performance of the test-takers) is to measure “discriminatory
@@ -1755,63 +1808,83 @@
   id: totrans-318
   prefs: []
   type: TYPE_NORMAL
+  zh: 在前一节中，我们使用后验分布的标准差来量化估计的精度。描述测试的表现（而不是测试者的表现）的另一种方法是衡量“区分能力”，即测试区分不同能力的测试者的能力。
 - en: To measure discriminatory power, I’ll simulate a person taking the test 100
     times; after each simulation, I’ll use the mean of the posterior distribution
     as their “score”.
   id: totrans-319
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了衡量区分能力，我将模拟一个人进行100次测试；每次模拟后，我将使用后验分布的均值作为他们的“分数”。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-320
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE86]</details>'
   id: totrans-321
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE86]</details>'
 - en: Here are samples of scores for people with several levels of ability.
   id: totrans-322
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是几个不同能力水平的人的分数样本。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-323
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE87]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-324
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE87]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE88]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-325
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE88]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE89]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-326
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE89]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE90]</details>'
   id: totrans-327
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE90]</details>'
 - en: Here’s what the distributions of scores look like.
   id: totrans-328
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是分数分布的样子。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-329
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE91]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-330
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE91]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE92]'
   id: totrans-331
   prefs: []
@@ -1821,26 +1894,32 @@
   id: totrans-332
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/e2f80922b8b9560c88074262e5b71df8c9b98feb9d33b222084ab78f75b14f93.png](../Images/0a2712bec0950fe312afd311635edd84.png)</details>'
 - en: On average, people with higher ability get higher scores, but anyone can have
     a bad day, or a good day, so there is some overlap between the distributions.
   id: totrans-333
   prefs: []
   type: TYPE_NORMAL
+  zh: 平均而言，能力更高的人得分更高，但任何人都可能有好天或坏天，所以分布之间存在一些重叠。
 - en: For people with ability between `500` and `600`, where the precision of the
     test is highest, the discriminatory power of the test is also high.
   id: totrans-334
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于能力在`500`和`600`之间的人，测试的精度最高，测试的区分能力也很高。
 - en: If people with abilities `500` and `600` take the test, it is almost certain
     that the person with higher ability will get a higher score.
   id: totrans-335
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果能力在`500`和`600`之间的人参加测试，几乎可以肯定能力更高的人会得到更高的分数。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-336
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE93]'
   id: totrans-337
   prefs: []
@@ -1850,15 +1929,19 @@
   id: totrans-338
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE94]</details>'
 - en: Between people with abilities `600` and `700`, it is less certain.
   id: totrans-339
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于能力在`600`和`700`之间的人，就不那么确定了。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-340
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE95]'
   id: totrans-341
   prefs: []
@@ -1868,15 +1951,19 @@
   id: totrans-342
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE96]</details>'
 - en: And between people with abilities `700` and `800`, it is not certain at all.
   id: totrans-343
   prefs: []
   type: TYPE_NORMAL
+  zh: 而对于能力在`700`和`800`之间的人，根本就不确定。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-344
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE97]'
   id: totrans-345
   prefs: []
@@ -1886,6 +1973,7 @@
   id: totrans-346
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE98]</details>'
 - en: But remember that these results are based on a test where all questions are
     equally difficult. If you do the exercises at the end of the chapter, you’ll see
     that the performance of the test is better if it includes questions with a range
@@ -1893,11 +1981,13 @@
   id: totrans-347
   prefs: []
   type: TYPE_NORMAL
+  zh: 但请记住，这些结果是基于一个测试，其中所有问题的难度都是相等的。如果你在章节末做练习，你会发现，如果测试包括一系列难度不同的问题，测试的表现会更好，甚至如果测试是自适应的话，表现会更好。
 - en: Go back and modify `choose`, which is the function that chooses the difficulty
     of the next question.
   id: totrans-348
   prefs: []
   type: TYPE_NORMAL
+  zh: 返回并修改`choose`，这是选择下一个问题难度的函数。
 - en: Write a version of `choose` that returns a range of difficulties by using `i`
     as an index into a sequence of difficulties.
   id: totrans-349
