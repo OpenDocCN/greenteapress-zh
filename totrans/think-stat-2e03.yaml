@@ -1,490 +1,698 @@
 - en: Chapter 2  Distributions
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 第2章 分布
 - en: 原文：[https://greenteapress.com/thinkstats2/html/thinkstats2003.html](https://greenteapress.com/thinkstats2/html/thinkstats2003.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://greenteapress.com/thinkstats2/html/thinkstats2003.html](https://greenteapress.com/thinkstats2/html/thinkstats2003.html)
 - en: 2.1  Histograms
+  id: totrans-2
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 2.1 直方图
 - en: One of the best ways to describe a variable is to report the values that appear
     in the dataset and how many times each value appears. This description is called
     the distribution of the variable.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 描述变量的最佳方法之一是报告数据集中出现的值以及每个值出现的次数。这个描述被称为变量的分布。
 - en: The most common representation of a distribution is a histogram, which is a
     graph that shows the frequency of each value. In this context, “frequency” means
     the number of times the value appears.
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 分布的最常见表示是直方图，它是一个显示每个值频率的图表。在这个上下文中，“频率”意味着该值出现的次数。
 - en: 'In Python, an efficient way to compute frequencies is with a dictionary. Given
     a sequence of values, `t`:'
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 在Python中，计算频率的有效方法是使用字典。给定一系列值`t`：
 - en: '[PRE0]'
+  id: totrans-6
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: 'The result is a dictionary that maps from values to frequencies. Alternatively,
     you could use the `Counter` class defined in the `collections` module:'
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个从值到频率的字典。或者，您可以使用`collections`模块中定义的`Counter`类：
 - en: '[PRE1]'
+  id: totrans-8
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: The result is a `Counter` object, which is a subclass of dictionary.
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个`Counter`对象，它是字典的子类。
 - en: Another option is to use the pandas method `value_counts`, which we saw in the
     previous chapter. But for this book I created a class, Hist, that represents histograms
     and provides the methods that operate on them.
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 另一个选择是使用我们在上一章中看到的pandas方法`value_counts`。但是对于这本书，我创建了一个名为Hist的类，它表示直方图并提供对其进行操作的方法。
 - en: 2.2  Representing histograms
+  id: totrans-11
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 2.2 直方图的表示
 - en: 'The Hist constructor can take a sequence, dictionary, pandas Series, or another
     Hist. You can instantiate a Hist object like this:'
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: Hist构造函数可以接受序列、字典、pandas Series或另一个Hist。您可以像这样实例化一个Hist对象：
 - en: '[PRE2]'
+  id: totrans-13
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: 'Hist objects provide `Freq`, which takes a value and returns its frequency:'
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: Hist对象提供了`Freq`，它接受一个值并返回其频率：
 - en: '[PRE3]'
+  id: totrans-15
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: 'The bracket operator does the same thing:'
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 括号操作符也是一样的：
 - en: '[PRE4]'
+  id: totrans-17
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: If you look up a value that has never appeared, the frequency is 0.
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果查找一个从未出现过的值，频率就是0。
 - en: '[PRE5]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '`Values` returns an unsorted list of the values in the Hist:'
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: '`Values`返回Hist中值的未排序列表：'
 - en: '[PRE6]'
+  id: totrans-21
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: 'To loop through the values in order, you can use the built-in function `sorted`:'
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 要按顺序循环遍历值，可以使用内置函数`sorted`：
 - en: '[PRE7]'
+  id: totrans-23
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: 'Or you can use `Items` to iterate through value-frequency pairs:'
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 或者您可以使用`Items`来迭代值-频率对：
 - en: '[PRE8]'
+  id: totrans-25
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: 2.3  Plotting histograms
+  id: totrans-26
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 2.3 绘制直方图
 - en: '* * *'
+  id: totrans-27
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
+  id: totrans-28
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/faf53f8a9f3b4da0a4934ed3ffb01bc0.png)'
+  id: totrans-29
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/faf53f8a9f3b4da0a4934ed3ffb01bc0.png)'
 - en: ''
+  id: totrans-30
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 2.1: Histogram of the pound part of birth weight. |'
+  id: totrans-31
   prefs:
   - PREF_BQ
   type: TYPE_TB
+  zh: 图2.1：出生体重磅部分的直方图。
 - en: ''
+  id: totrans-32
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-33
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: For this book I wrote a module called `thinkplot.py` that provides functions
     for plotting Hists and other objects defined in `thinkstats2.py`. It is based
     on `pyplot`, which is part of the `matplotlib` package. See Section [0.2](thinkstats2001.html#code)
     for information about installing `matplotlib`.
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于这本书，我编写了一个名为`thinkplot.py`的模块，它提供了用于绘制Hists和`thinkstats2.py`中定义的其他对象的函数。它基于`matplotlib`包中的`pyplot`。有关安装`matplotlib`的信息，请参见第[0.2](thinkstats2001.html#code)节。
 - en: 'To plot `hist` with `thinkplot`, try this:'
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 要使用`thinkplot`绘制`hist`，请尝试以下操作：
 - en: '[PRE9]'
+  id: totrans-36
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: You can read the documentation for `thinkplot` at [http://greenteapress.com/thinkstats2/thinkplot.html](http://greenteapress.com/thinkstats2/thinkplot.html).
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 您可以在[http://greenteapress.com/thinkstats2/thinkplot.html](http://greenteapress.com/thinkstats2/thinkplot.html)上阅读`thinkplot`的文档。
 - en: '* * *'
+  id: totrans-38
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
+  id: totrans-39
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/5e7be67a688c270624c15426d8bede5f.png)'
+  id: totrans-40
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/5e7be67a688c270624c15426d8bede5f.png)'
 - en: ''
+  id: totrans-41
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 2.2: Histogram of the ounce part of birth weight. |'
+  id: totrans-42
   prefs:
   - PREF_BQ
   type: TYPE_TB
+  zh: 图2.2：出生体重盎司部分的直方图。
 - en: ''
+  id: totrans-43
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-44
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: 2.4  NSFG variables
+  id: totrans-45
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 2.4 NSFG变量
 - en: Now let’s get back to the data from the NSFG. The code in this chapter is in
     `first.py`. For information about downloading and working with this code, see
     Section [0.2](thinkstats2001.html#code).
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们回到NSFG的数据。本章的代码在`first.py`中。有关下载和使用此代码的信息，请参见第[0.2](thinkstats2001.html#code)节。
 - en: When you start working with a new dataset, I suggest you explore the variables
     you are planning to use one at a time, and a good way to start is by looking at
     histograms.
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 当您开始处理一个新的数据集时，我建议您逐个探索您计划使用的变量，一个很好的开始方法是查看直方图。
 - en: In Section [1.6](thinkstats2002.html#cleaning) we transformed `agepreg` from
     centiyears to years, and combined `birthwgt_lb` and `birthwgt_oz` into a single
     quantity, `totalwgt_lb`. In this section I use these variables to demonstrate
     some features of histograms.
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 在第[1.6](thinkstats2002.html#cleaning)节中，我们将`agepreg`从厘年转换为年，并将`birthwgt_lb`和`birthwgt_oz`合并为一个数量`totalwgt_lb`。在本节中，我将使用这些变量来演示直方图的一些特性。
 - en: '* * *'
+  id: totrans-49
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
+  id: totrans-50
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/b4164a0adeb942c5184690e5b9ea897c.png)'
+  id: totrans-51
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/b4164a0adeb942c5184690e5b9ea897c.png)'
 - en: ''
+  id: totrans-52
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 2.3: Histogram of mother’s age at end of pregnancy. |'
+  id: totrans-53
   prefs:
   - PREF_BQ
   type: TYPE_TB
+  zh: 图2.3：怀孕结束时母亲的年龄直方图。
 - en: ''
+  id: totrans-54
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-55
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: 'I’ll start by reading the data and selecting records for live births:'
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将从读取数据并选择活产记录开始：
 - en: '[PRE10]'
+  id: totrans-57
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: The expression in brackets is a boolean Series that selects rows from the DataFrame
     and returns a new DataFrame. Next I generate and plot the histogram of `birthwgt_lb`
     for live births.
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 括号中的表达式是一个布尔Series，它从DataFrame中选择行并返回一个新的DataFrame。接下来，我生成并绘制了活产婴儿的`birthwgt_lb`的直方图。
 - en: '[PRE11]'
+  id: totrans-59
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: When the argument passed to Hist is a pandas Series, any `nan` values are dropped.
     `label` is a string that appears in the legend when the Hist is plotted.
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 当传递给Hist的参数是pandas Series时，任何“nan”值都会被丢弃。“label”是一个字符串，在绘制Hist时出现在图例中。
 - en: '* * *'
+  id: totrans-61
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
+  id: totrans-62
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/b4626625f035876edef9acaf7ede8d06.png)'
+  id: totrans-63
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/b4626625f035876edef9acaf7ede8d06.png)'
 - en: ''
+  id: totrans-64
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 2.4: Histogram of pregnancy length in weeks. |'
+  id: totrans-65
   prefs:
   - PREF_BQ
   type: TYPE_TB
+  zh: 图2.4：怀孕周数的直方图。
 - en: ''
+  id: totrans-66
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-67
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: Figure [2.1](#first_wgt_lb_hist) shows the result. The most common value, called
     the mode, is 7 pounds. The distribution is approximately bell-shaped, which is
     the shape of the normal distribution, also called a Gaussian distribution. But
     unlike a true normal distribution, this distribution is asymmetric; it has a tail
     that extends farther to the left than to the right.
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: 图 [2.1](#first_wgt_lb_hist) 显示了结果。最常见的值，称为众数，是7磅。分布大致呈钟形，这是正态分布的形状，也称为高斯分布。但与真正的正态分布不同，这个分布是不对称的；它的尾部向左延伸的距离比向右延伸的距离更远。
 - en: Figure [2.2](#first_wgt_oz_hist) shows the histogram of `birthwgt_oz`, which
     is the ounces part of birth weight. In theory we expect this distribution to be
     uniform; that is, all values should have the same frequency. In fact, 0 is more
     common than the other values, and 1 and 15 are less common, probably because respondents
     round off birth weights that are close to an integer value.
+  id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: 图 [2.2](#first_wgt_oz_hist) 显示了 `birthwgt_oz` 的直方图，即出生体重的盎司部分。理论上，我们期望这个分布是均匀的；也就是说，所有的值应该具有相同的频率。事实上，0比其他值更常见，1和15比较少见，可能是因为受访者将接近整数值的出生体重四舍五入了。
 - en: Figure [2.3](#first_agepreg_hist) shows the histogram of `agepreg`, the mother’s
     age at the end of pregnancy. The mode is 21 years. The distribution is very roughly
     bell-shaped, but in this case the tail extends farther to the right than left;
     most mothers are in their 20s, fewer in their 30s.
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: 图 [2.3](#first_agepreg_hist) 显示了 `agepreg` 的直方图，即母亲怀孕结束时的年龄。众数是21岁。分布大致呈钟形，但在这种情况下，尾部向右延伸的距离比向左延伸的距离更远；大多数母亲在20多岁，30多岁的母亲较少。
 - en: Figure [2.4](#first_prglngth_hist) shows the histogram of `prglngth`, the length
     of the pregnancy in weeks. By far the most common value is 39 weeks. The left
     tail is longer than the right; early babies are common, but pregnancies seldom
     go past 43 weeks, and doctors often intervene if they do.
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: 图 [2.4](#first_prglngth_hist) 显示了 `prglngth` 的直方图，即怀孕的周数。到目前为止，最常见的值是39周。左尾比右尾长；早产儿很常见，但怀孕很少超过43周，如果超过，医生通常会进行干预。
 - en: 2.5  Outliers
+  id: totrans-72
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 2.5  异常值
 - en: Looking at histograms, it is easy to identify the most common values and the
     shape of the distribution, but rare values are not always visible.
+  id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: 通过直方图，很容易识别最常见的值和分布的形状，但罕见的值并不总是可见。
 - en: Before going on, it is a good idea to check for outliers, which are extreme
     values that might be errors in measurement and recording, or might be accurate
     reports of rare events.
+  id: totrans-74
   prefs: []
   type: TYPE_NORMAL
+  zh: 在继续之前，检查异常值是一个好主意，这些异常值可能是测量和记录中的错误，也可能是罕见事件的准确报告。
 - en: 'Hist provides methods `Largest` and `Smallest`, which take an integer `n` and
     return the `n` largest or smallest values from the histogram:'
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: Hist 提供了 `Largest` 和 `Smallest` 方法，它们接受一个整数 `n`，并从直方图中返回 `n` 个最大或最小的值：
 - en: '[PRE12]'
+  id: totrans-76
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: In the list of pregnancy lengths for live births, the 10 lowest values are `[0,
     4, 9, 13, 17, 18, 19, 20, 21, 22]`. Values below 10 weeks are certainly errors;
     the most likely explanation is that the outcome was not coded correctly. Values
     higher than 30 weeks are probably legitimate. Between 10 and 30 weeks, it is hard
     to be sure; some values are probably errors, but some represent premature babies.
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: 在活产的怀孕时长列表中，最低的10个值是 `[0, 4, 9, 13, 17, 18, 19, 20, 21, 22]`。10周以下的值肯定是错误的；最有可能的解释是结果没有被正确编码。30周以上的值可能是合法的。在10到30周之间，很难确定；一些值可能是错误的，但一些代表早产儿。
 - en: 'On the other end of the range, the highest values are:'
+  id: totrans-78
   prefs: []
   type: TYPE_NORMAL
+  zh: 在范围的另一端，最高的值是：
 - en: '[PRE13]'
+  id: totrans-79
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: Most doctors recommend induced labor if a pregnancy exceeds 42 weeks, so some
     of the longer values are surprising. In particular, 50 weeks seems medically unlikely.
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 大多数医生建议如果怀孕超过42周就进行引产，因此一些较长的值令人惊讶。特别是，50周在医学上似乎不太可能。
 - en: The best way to handle outliers depends on “domain knowledge”; that is, information
     about where the data come from and what they mean. And it depends on what analysis
     you are planning to perform.
+  id: totrans-81
   prefs: []
   type: TYPE_NORMAL
+  zh: 处理异常值的最佳方法取决于“领域知识”；即数据来源和含义的信息。它还取决于您计划执行的分析。
 - en: In this example, the motivating question is whether first babies tend to be
     early (or late). When people ask this question, they are usually interested in
     full-term pregnancies, so for this analysis I will focus on pregnancies longer
     than 27 weeks.
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个例子中，激发问题是第一胎婴儿是否倾向于早产（或晚产）。当人们提出这个问题时，他们通常对足月妊娠感兴趣，因此在这个分析中，我将专注于怀孕超过27周的情况。
 - en: 2.6  First babies
+  id: totrans-83
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 2.6  第一胎婴儿
 - en: 'Now we can compare the distribution of pregnancy lengths for first babies and
     others. I divided the DataFrame of live births using `birthord`, and computed
     their histograms:'
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以比较第一胎婴儿和其他婴儿的怀孕时长分布。我使用 `birthord` 分割了活产的 DataFrame，并计算了它们的直方图：
 - en: '[PRE14]'
+  id: totrans-85
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: 'Then I plotted their histograms on the same axis:'
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后我在同一轴上绘制了它们的直方图：
 - en: '[PRE15]'
+  id: totrans-87
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '`thinkplot.PrePlot` takes the number of histograms we are planning to plot;
     it uses this information to choose an appropriate collection of colors.'
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: '`thinkplot.PrePlot` 接受我们计划绘制的直方图数量；它使用这些信息来选择一个合适的颜色集合。'
 - en: '* * *'
+  id: totrans-89
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
+  id: totrans-90
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/ee38cb3f683eccbe338a1c93002066ed.png)'
+  id: totrans-91
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/ee38cb3f683eccbe338a1c93002066ed.png)'
 - en: ''
+  id: totrans-92
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 2.5: Histogram of pregnancy lengths. |'
+  id: totrans-93
   prefs:
   - PREF_BQ
   type: TYPE_TB
+  zh: '| 图2.5：怀孕时长的直方图。|'
 - en: ''
+  id: totrans-94
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-95
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: '`thinkplot.Hist` normally uses `align=''center''` so that each bar is centered
     over its value. For this figure, I use `align=''right''` and `align=''left''`
     to place corresponding bars on either side of the value.'
+  id: totrans-96
   prefs: []
   type: TYPE_NORMAL
+  zh: '`thinkplot.Hist` 通常使用 `align=''center''`，这样每个条形图都居中于其值。对于这个图，我使用 `align=''right''`
+    和 `align=''left''` 将相应的条形图放置在值的两侧。'
 - en: With `width=0.45`, the total width of the two bars is 0.9, leaving some space
     between each pair.
+  id: totrans-97
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用 `width=0.45`，两个条形图的总宽度为0.9，留下了一些空间。
 - en: Finally, I adjust the axis to show only data between 27 and 46 weeks. Figure [2.5](#first_nsfg_hist)
     shows the result.
+  id: totrans-98
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，我调整轴，只显示27到46周之间的数据。图 [2.5](#first_nsfg_hist) 显示了结果。
 - en: Histograms are useful because they make the most frequent values immediately
     apparent. But they are not the best choice for comparing two distributions. In
     this example, there are fewer “first babies” than “others,” so some of the apparent
     differences in the histograms are due to sample sizes. In the next chapter we
     address this problem using probability mass functions.
+  id: totrans-99
   prefs: []
   type: TYPE_NORMAL
 - en: 2.7  Summarizing distributions
+  id: totrans-100
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: A histogram is a complete description of the distribution of a sample; that
     is, given a histogram, we could reconstruct the values in the sample (although
     not their order).
+  id: totrans-101
   prefs: []
   type: TYPE_NORMAL
 - en: If the details of the distribution are important, it might be necessary to present
     a histogram. But often we want to summarize the distribution with a few descriptive
     statistics.
+  id: totrans-102
   prefs: []
   type: TYPE_NORMAL
 - en: 'Some of the characteristics we might want to report are:'
+  id: totrans-103
   prefs: []
   type: TYPE_NORMAL
 - en: 'central tendency: Do the values tend to cluster around a particular point?'
+  id: totrans-104
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'modes: Is there more than one cluster?'
+  id: totrans-105
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'spread: How much variability is there in the values?'
+  id: totrans-106
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'tails: How quickly do the probabilities drop off as we move away from the modes?'
+  id: totrans-107
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'outliers: Are there extreme values far from the modes?'
+  id: totrans-108
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Statistics designed to answer these questions are called summary statistics.
     By far the most common summary statistic is the mean, which is meant to describe
     the central tendency of the distribution.
+  id: totrans-109
   prefs: []
   type: TYPE_NORMAL
 - en: If you have a sample of `n` values, x[i], the mean, x, is the sum of the values
     divided by the number of values; in other words
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
 - en: '| x =  |'
+  id: totrans-111
   prefs: []
   type: TYPE_TB
 - en: '&#124; 1 &#124;'
+  id: totrans-112
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124;  &#124;'
+  id: totrans-113
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124; n &#124;'
+  id: totrans-114
   prefs: []
   type: TYPE_NORMAL
 - en: '|   |'
+  id: totrans-115
   prefs: []
   type: TYPE_TB
 - en: '&#124;   &#124;'
+  id: totrans-116
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124; ∑ &#124;'
+  id: totrans-117
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124; i &#124;'
+  id: totrans-118
   prefs: []
   type: TYPE_NORMAL
 - en: '|  x[i]  |'
+  id: totrans-119
   prefs: []
   type: TYPE_TB
 - en: 'The words “mean” and “average” are sometimes used interchangeably, but I make
     this distinction:'
+  id: totrans-120
   prefs: []
   type: TYPE_NORMAL
 - en: The “mean” of a sample is the summary statistic computed with the previous formula.
+  id: totrans-121
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: An “average” is one of several summary statistics you might choose to describe
     a central tendency.
+  id: totrans-122
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -492,6 +700,7 @@
     are all pretty much the same size (at least the ones sold in supermarkets). So
     if I buy 6 apples and the total weight is 3 pounds, it would be a reasonable summary
     to say they are about a half pound each.
+  id: totrans-123
   prefs: []
   type: TYPE_NORMAL
 - en: But pumpkins are more diverse. Suppose I grow several varieties in my garden,
@@ -500,264 +709,372 @@
     pounds. The mean of this sample is 100 pounds, but if I told you “The average
     pumpkin in my garden is 100 pounds,” that would be misleading. In this example,
     there is no meaningful average because there is no typical pumpkin.
+  id: totrans-124
   prefs: []
   type: TYPE_NORMAL
 - en: 2.8  Variance
+  id: totrans-125
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: 'If there is no single number that summarizes pumpkin weights, we can do a little
     better with two numbers: mean and variance.'
+  id: totrans-126
   prefs: []
   type: TYPE_NORMAL
 - en: Variance is a summary statistic intended to describe the variability or spread
     of a distribution. The variance of a set of values is
+  id: totrans-127
   prefs: []
   type: TYPE_NORMAL
 - en: '| S² =  |'
+  id: totrans-128
   prefs: []
   type: TYPE_TB
 - en: '&#124; 1 &#124;'
+  id: totrans-129
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124;  &#124;'
+  id: totrans-130
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124; n &#124;'
+  id: totrans-131
   prefs: []
   type: TYPE_NORMAL
 - en: '|   |'
+  id: totrans-132
   prefs: []
   type: TYPE_TB
 - en: '&#124;   &#124;'
+  id: totrans-133
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124; ∑ &#124;'
+  id: totrans-134
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124; i &#124;'
+  id: totrans-135
   prefs: []
   type: TYPE_NORMAL
 - en: '|  (x[i] − x)²  |'
+  id: totrans-136
   prefs: []
   type: TYPE_TB
 - en: The term x[i] − x is called the “deviation from the mean,” so variance is the
     mean squared deviation. The square root of variance, S, is the standard deviation.
+  id: totrans-137
   prefs: []
   type: TYPE_NORMAL
 - en: If you have prior experience, you might have seen a formula for variance with
     n−1 in the denominator, rather than `n`. This statistic is used to estimate the
     variance in a population using a sample. We will come back to this in Chapter [8](thinkstats2009.html#estimation).
+  id: totrans-138
   prefs: []
   type: TYPE_NORMAL
 - en: 'Pandas data structures provide methods to compute mean, variance and standard
     deviation:'
+  id: totrans-139
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE16]'
+  id: totrans-140
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: For all live births, the mean pregnancy length is 38.6 weeks, the standard deviation
     is 2.7 weeks, which means we should expect deviations of 2-3 weeks to be common.
+  id: totrans-141
   prefs: []
   type: TYPE_NORMAL
 - en: Variance of pregnancy length is 7.3, which is hard to interpret, especially
     since the units are weeks², or “square weeks.” Variance is useful in some calculations,
     but it is not a good summary statistic.
+  id: totrans-142
   prefs: []
   type: TYPE_NORMAL
 - en: 2.9  Effect size
+  id: totrans-143
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: An effect size is a summary statistic intended to describe (wait for it) the
     size of an effect. For example, to describe the difference between two groups,
     one obvious choice is the difference in the means.
+  id: totrans-144
   prefs: []
   type: TYPE_NORMAL
+  zh: 效应大小是一种旨在描述效应大小的摘要统计量。例如，要描述两组之间的差异，一个明显的选择是均值的差异。
 - en: Mean pregnancy length for first babies is 38.601; for other babies it is 38.523\.
     The difference is 0.078 weeks, which works out to 13 hours. As a fraction of the
     typical pregnancy length, this difference is about 0.2%.
+  id: totrans-145
   prefs: []
   type: TYPE_NORMAL
+  zh: 第一个宝宝的平均怀孕期长为38.601周；其他宝宝为38.523周。差异为0.078周，相当于13小时。作为典型怀孕期长的一部分，这种差异约为0.2%。
 - en: If we assume this estimate is accurate, such a difference would have no practical
     consequences. In fact, without observing a large number of pregnancies, it is
     unlikely that anyone would notice this difference at all.
+  id: totrans-146
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们假设这个估计是准确的，这样的差异将没有实际后果。事实上，如果没有观察到大量的怀孕情况，很少有人会注意到这种差异。
 - en: Another way to convey the size of the effect is to compare the difference between
     groups to the variability within groups. Cohen’s d is a statistic intended to
     do that; it is defined
+  id: totrans-147
   prefs: []
   type: TYPE_NORMAL
+  zh: 另一种传达效果大小的方法是将组间差异与组内变异性进行比较。科恩的d是一种旨在做到这一点的统计量；它被定义为
 - en: '| d =  |'
+  id: totrans-148
   prefs: []
   type: TYPE_TB
+  zh: '| d =  |'
 - en: '&#124; x_1 − x_2 &#124;'
+  id: totrans-149
   prefs: []
   type: TYPE_NORMAL
+  zh: '| x_1 − x_2 |'
 - en: '&#124;  &#124;'
+  id: totrans-150
   prefs: []
   type: TYPE_NORMAL
+  zh: '|    |'
 - en: '&#124; s &#124;'
+  id: totrans-151
   prefs: []
   type: TYPE_NORMAL
+  zh: '| s |'
 - en: '|    |'
+  id: totrans-152
   prefs: []
   type: TYPE_TB
+  zh: '|    |'
 - en: 'where x_1 and x_2 are the means of the groups and s is the “pooled standard
     deviation”. Here’s the Python code that computes Cohen’s d:'
+  id: totrans-153
   prefs: []
   type: TYPE_NORMAL
+  zh: 其中x_1和x_2是组的均值，s是“合并标准差”。下面是计算科恩的d的Python代码：
 - en: '[PRE17]'
+  id: totrans-154
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: In this example, the difference in means is 0.029 standard deviations, which
     is small. To put that in perspective, the difference in height between men and
     women is about 1.7 standard deviations (see [https://en.wikipedia.org/wiki/Effect_size](https://en.wikipedia.org/wiki/Effect_size)).
+  id: totrans-155
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个例子中，均值的差异是0.029标准差，这是很小的。为了让人有所了解，男性和女性身高的差异约为1.7个标准差（参见[https://en.wikipedia.org/wiki/Effect_size](https://en.wikipedia.org/wiki/Effect_size)）。
 - en: 2.10  Reporting results
+  id: totrans-156
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 2.10  报告结果
 - en: We have seen several ways to describe the difference in pregnancy length (if
     there is one) between first babies and others. How should we report these results?
+  id: totrans-157
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们已经看到了几种描述第一个宝宝和其他宝宝怀孕期长短差异的方法。我们应该如何报告这些结果呢？
 - en: The answer depends on who is asking the question. A scientist might be interested
     in any (real) effect, no matter how small. A doctor might only care about effects
     that are clinically significant; that is, differences that affect treatment decisions.
     A pregnant woman might be interested in results that are relevant to her, like
     the probability of delivering early or late.
+  id: totrans-158
   prefs: []
   type: TYPE_NORMAL
+  zh: 答案取决于提问的人。科学家可能对任何（真实的）效果感兴趣，无论多么小。医生可能只关心临床上有意义的效果；也就是说，影响治疗决策的差异。怀孕的女性可能对与她相关的结果感兴趣，比如提前或推迟分娩的概率。
 - en: How you report results also depends on your goals. If you are trying to demonstrate
     the importance of an effect, you might choose summary statistics that emphasize
     differences. If you are trying to reassure a patient, you might choose statistics
     that put the differences in context.
+  id: totrans-159
   prefs: []
   type: TYPE_NORMAL
+  zh: 你报告结果的方式也取决于你的目标。如果你试图证明一个效应的重要性，你可能会选择强调差异的摘要统计数据。如果你试图安抚一个患者，你可能会选择将差异放在上下文中的统计数据。
 - en: Of course your decisions should also be guided by professional ethics. It’s
     ok to be persuasive; you *should* design statistical reports and visualizations
     that tell a story clearly. But you should also do your best to make your reports
     honest, and to acknowledge uncertainty and limitations.
+  id: totrans-160
   prefs: []
   type: TYPE_NORMAL
+  zh: 当然，你的决定也应该受到职业道德的指导。说服别人是可以的；你*应该*设计能清晰讲述故事的统计报告和可视化。但你也应该尽力使你的报告诚实，并承认不确定性和局限性。
 - en: 2.11  Exercises
+  id: totrans-161
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 2.11  练习
 - en: Exercise 1   *Based on the results in this chapter, suppose you were asked to
     summarize what you learned about whether first babies arrive late.*
+  id: totrans-162
   prefs: []
   type: TYPE_NORMAL
+  zh: 练习1 *根据本章的结果，假设有人要求你总结你对第一个宝宝是否会晚到的看法。*
 - en: '*Which summary statistics would you use if you wanted to get a story on the
     evening news? Which ones would you use if you wanted to reassure an anxious patient?*'
+  id: totrans-163
   prefs: []
   type: TYPE_NORMAL
+  zh: '*如果你想在晚间新闻中报道，你会使用哪些摘要统计数据？如果你想安抚焦虑的患者，你会使用哪些摘要统计数据？*'
 - en: '*Finally, imagine that you are Cecil Adams, author of The Straight Dope (*[*http://straightdope.com*](http://straightdope.com)*),
     and your job is to answer the question, “Do first babies arrive late?” Write a
     paragraph that uses the results in this chapter to answer the question clearly,
     precisely, and honestly.*'
+  id: totrans-164
   prefs: []
   type: TYPE_NORMAL
+  zh: '*最后，想象一下你是塞西尔·亚当斯，The Straight Dope的作者（[*http://straightdope.com*](http://straightdope.com)），你的工作是回答这个问题，“第一个宝宝会晚到吗？”写一段清晰、准确和诚实地使用本章结果回答这个问题的段落。*'
 - en: Exercise 2   *In the repository you downloaded, you should find a file named
     `chap02ex.ipynb`; open it. Some cells are already filled in, and you should execute
     them. Other cells give you instructions for exercises. Follow the instructions
     and fill in the answers.*
+  id: totrans-165
   prefs: []
   type: TYPE_NORMAL
+  zh: 练习2 *在你下载的存储库中，你应该会找到一个名为`chap02ex.ipynb`的文件；打开它。有些单元格已经填写好了，你应该执行它们。其他单元格会给出练习的说明。按照说明填写答案。*
 - en: '*A solution to this exercise is in `chap02soln.ipynb`*'
+  id: totrans-166
   prefs: []
   type: TYPE_NORMAL
+  zh: '*这个练习的解决方案在`chap02soln.ipynb`中*'
 - en: In the repository you downloaded, you should find a file named `chap02ex.py`;
     you can use this file as a starting place for the following exercises. My solution
     is in `chap02soln.py`.
+  id: totrans-167
   prefs: []
   type: TYPE_NORMAL
+  zh: 在你下载的存储库中，你应该会找到一个名为`chap02ex.py`的文件；你可以将这个文件作为以下练习的起点。我的解决方案在`chap02soln.py`中。
 - en: Exercise 3   *The mode of a distribution is the most frequent value; see* [*http://wikipedia.org/wiki/Mode_(statistics)*](http://wikipedia.org/wiki/Mode_(statistics))*.
     Write a function called `Mode` that takes a Hist and returns the most frequent
     value.*
+  id: totrans-168
   prefs: []
   type: TYPE_NORMAL
+  zh: 练习3 *分布的众数是最频繁出现的值；参见* [*http://wikipedia.org/wiki/Mode_(statistics)*](http://wikipedia.org/wiki/Mode_(statistics))
+    *。编写一个名为`Mode`的函数，该函数接受一个Hist并返回最频繁出现的值。*
 - en: '*As a more challenging exercise, write a function called `AllModes` that returns
     a list of value-frequency pairs in descending order of frequency.*'
+  id: totrans-169
   prefs: []
   type: TYPE_NORMAL
+  zh: '*作为一个更具挑战性的练习，编写一个名为`AllModes`的函数，它以频率降序返回值-频率对的列表。*'
 - en: Exercise 4   *Using the variable `totalwgt_lb`, investigate whether first babies
     are lighter or heavier than others. Compute Cohen’s* d *to quantify the difference
     between the groups. How does it compare to the difference in pregnancy length?*
+  id: totrans-170
   prefs: []
   type: TYPE_NORMAL
+  zh: 练习4 使用变量`totalwgt_lb`，调查第一个宝宝是更轻还是更重。计算Cohen的d来量化两组之间的差异。它与怀孕长度的差异相比如何？
 - en: 2.12  Glossary
+  id: totrans-171
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 2.12 术语表
 - en: 'distribution: The values that appear in a sample and the frequency of each.'
+  id: totrans-172
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 分布：样本中出现的值及其频率。
 - en: 'histogram: A mapping from values to frequencies, or a graph that shows this
     mapping.'
+  id: totrans-173
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 直方图：从值到频率的映射，或显示这种映射的图表。
 - en: 'frequency: The number of times a value appears in a sample.'
+  id: totrans-174
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 频率：值在样本中出现的次数。
 - en: 'mode: The most frequent value in a sample, or one of the most frequent values.'
+  id: totrans-175
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 模式：样本中最频繁出现的值，或者是最频繁出现的值之一。
 - en: 'normal distribution: An idealization of a bell-shaped distribution; also known
     as a Gaussian distribution.'
+  id: totrans-176
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 正态分布：钟形分布的理想化；也称为高斯分布。
 - en: 'uniform distribution: A distribution in which all values have the same frequency.'
+  id: totrans-177
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 均匀分布：所有值具有相同频率的分布。
 - en: 'tail: The part of a distribution at the high and low extremes.'
+  id: totrans-178
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 尾部：分布的高极端和低极端部分。
 - en: 'central tendency: A characteristic of a sample or population; intuitively,
     it is an average or typical value.'
+  id: totrans-179
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 中心趋势：样本或总体的特征；直观地，它是一个平均值或典型值。
 - en: 'outlier: A value far from the central tendency.'
+  id: totrans-180
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 异常值：远离中心趋势的值。
 - en: 'spread: A measure of how spread out the values in a distribution are.'
+  id: totrans-181
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 传播：分布中值的分散程度的度量。
 - en: 'summary statistic: A statistic that quantifies some aspect of a distribution,
     like central tendency or spread.'
+  id: totrans-182
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 摘要统计量：量化分布某些方面的统计量，如中心趋势或传播。
 - en: 'variance: A summary statistic often used to quantify spread.'
+  id: totrans-183
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 方差：经常用来量化传播的摘要统计量。
 - en: 'standard deviation: The square root of variance, also used as a measure of
     spread.'
+  id: totrans-184
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 标准差：方差的平方根，也用作传播的度量。
 - en: 'effect size: A summary statistic intended to quantify the size of an effect
     like a difference between groups.'
+  id: totrans-185
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 效应大小：旨在量化效应大小的摘要统计量，如组间差异。
 - en: 'clinically significant: A result, like a difference between groups, that is
     relevant in practice.'
+  id: totrans-186
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 临床意义：在实践中相关的结果，如组间差异。

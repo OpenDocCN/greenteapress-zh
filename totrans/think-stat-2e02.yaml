@@ -3,38 +3,45 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 第1章 探索性数据分析
 - en: 原文：[https://greenteapress.com/thinkstats2/html/thinkstats2002.html](https://greenteapress.com/thinkstats2/html/thinkstats2002.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://greenteapress.com/thinkstats2/html/thinkstats2002.html](https://greenteapress.com/thinkstats2/html/thinkstats2002.html)
 - en: The thesis of this book is that data combined with practical methods can answer
     questions and guide decisions under uncertainty.
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 本书的论点是，数据结合实用方法可以在不确定性下回答问题并指导决策。
 - en: 'As an example, I present a case study motivated by a question I heard when
     my wife and I were expecting our first child: do first babies tend to arrive late?'
   id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 举例来说，我提出了一个案例研究，这是我在我和妻子期待第一个孩子时听到的一个问题：第一个孩子是否倾向于出生晚？
 - en: 'If you Google this question, you will find plenty of discussion. Some people
     claim it’s true, others say it’s a myth, and some people say it’s the other way
     around: first babies come early.'
   id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你在谷歌上搜索这个问题，你会找到很多讨论。有些人声称这是真的，其他人说这是一个谬论，还有些人说情况正好相反：第一个孩子会提前出生。
 - en: 'In many of these discussions, people provide data to support their claims.
     I found many examples like these:'
   id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 在许多讨论中，人们提供数据来支持他们的观点。我发现了许多这样的例子：
 - en: “My two friends that have given birth recently to their first babies, BOTH went
     almost 2 weeks overdue before going into labour or being induced.”
   id: totrans-6
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: “我有两个朋友最近生了他们的第一个孩子，两个都超过预产期将近两周才开始分娩或被引产。”
 - en: ''
   id: totrans-7
   prefs:
@@ -46,6 +53,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: “我的第一个孩子晚了两周才出生，现在我觉得第二个孩子可能会提前两周出生！”
 - en: ''
   id: totrans-9
   prefs:
@@ -57,17 +65,20 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: “我不认为这可能是真的，因为我姐姐是我妈妈的第一个孩子，她出生得很早，我的许多表兄弟姐妹也是如此。”
 - en: Reports like these are called anecdotal evidence because they are based on data
     that is unpublished and usually personal. In casual conversation, there is nothing
     wrong with anecdotes, so I don’t mean to pick on the people I quoted.
   id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 这样的报告被称为轶事证据，因为它们是基于未发表的个人数据。在随意的谈话中，轶事没有问题，所以我并不是在挑剔我引用的人。
 - en: 'But we might want evidence that is more persuasive and an answer that is more
     reliable. By those standards, anecdotal evidence usually fails, because:'
   id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 但我们可能希望有更有说服力的证据和更可靠的答案。按这些标准，轶事证据通常是不可靠的，因为：
 - en: 'Small number of observations: If pregnancy length is longer for first babies,
     the difference is probably small compared to natural variation. In that case,
     we might have to compare a large number of pregnancies to be sure that a difference
@@ -76,6 +87,7 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 观察次数较少：如果第一胎的怀孕期较长，与自然变异相比，差异可能很小。在这种情况下，我们可能需要比较大量的怀孕情况，以确保存在差异。
 - en: 'Selection bias: People who join a discussion of this question might be interested
     because their first babies were late. In that case the process of selecting data
     would bias the results.'
@@ -83,32 +95,38 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 选择偏倚：加入这个问题讨论的人可能是因为他们的第一个孩子出生晚。在这种情况下，选择数据的过程会使结果产生偏差。
 - en: 'Confirmation bias: People who believe the claim might be more likely to contribute
     examples that confirm it. People who doubt the claim are more likely to cite counterexamples.'
   id: totrans-15
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 确认偏见：相信这个说法的人可能更有可能提供证实它的例子。怀疑这个说法的人更有可能引用反例。
 - en: 'Inaccuracy: Anecdotes are often personal stories, and often misremembered,
     misrepresented, repeated inaccurately, etc.'
   id: totrans-16
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 不准确性：轶事往往是个人故事，经常记错、曲解、重复不准确等。
 - en: So how can we do better?
   id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: 那么我们该如何做得更好呢？
 - en: 1.1  A statistical approach
   id: totrans-18
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 1.1 统计方法
 - en: 'To address the limitations of anecdotes, we will use the tools of statistics,
     which include:'
   id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了解决轶事的局限性，我们将使用统计工具，其中包括：
 - en: 'Data collection: We will use data from a large national survey that was designed
     explicitly with the goal of generating statistically valid inferences about the
     U.S. population.'
@@ -116,12 +134,14 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 数据收集：我们将使用大型全国调查的数据，该调查旨在明确设计，以实现对美国人口的统计有效推断。
 - en: 'Descriptive statistics: We will generate statistics that summarize the data
     concisely, and evaluate different ways to visualize data.'
   id: totrans-21
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 描述统计：我们将生成概括数据的统计数据，并评估不同的数据可视化方式。
 - en: 'Exploratory data analysis: We will look for patterns, differences, and other
     features that address the questions we are interested in. At the same time we
     will check for inconsistencies and identify limitations.'
@@ -129,28 +149,33 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 探索性数据分析：我们将寻找模式、差异和其他特征，以解决我们感兴趣的问题。与此同时，我们将检查不一致之处并确定局限性。
 - en: 'Estimation: We will use data from a sample to estimate characteristics of the
     general population.'
   id: totrans-23
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 估计：我们将使用样本数据来估计一般人口的特征。
 - en: 'Hypothesis testing: Where we see apparent effects, like a difference between
     two groups, we will evaluate whether the effect might have happened by chance.'
   id: totrans-24
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 假设检验：当我们看到明显的效应时，比如两组之间的差异，我们将评估这种效应是否可能是偶然发生的。
 - en: By performing these steps with care to avoid pitfalls, we can reach conclusions
     that are more justifiable and more likely to be correct.
   id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 通过谨慎地执行这些步骤以避免陷阱，我们可以得出更有道理和更有可能正确的结论。
 - en: 1.2  The National Survey of Family Growth
   id: totrans-26
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 1.2 全国家庭增长调查
 - en: Since 1973 the U.S. Centers for Disease Control and Prevention (CDC) have conducted
     the National Survey of Family Growth (NSFG), which is intended to gather “information
     on family life, marriage and divorce, pregnancy, infertility, use of contraception,
@@ -160,6 +185,7 @@
   id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 自1973年以来，美国疾病控制和预防中心（CDC）进行了全国家庭增长调查（NSFG），旨在收集“有关家庭生活、婚姻和离婚、怀孕、不孕不育、避孕使用以及男性和女性健康的信息。调查结果被用来……规划卫生服务和卫生教育项目，并对家庭、生育率和健康进行统计研究。”见[http://cdc.gov/nchs/nsfg.htm](http://cdc.gov/nchs/nsfg.htm)。
 - en: We will use data collected by this survey to investigate whether first babies
     tend to come late, and other questions. In order to use this data effectively,
     we have to understand the design of the study.
