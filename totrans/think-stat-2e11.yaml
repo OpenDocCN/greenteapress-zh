@@ -1,209 +1,298 @@
 - en: Chapter 10  Linear least squares
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 第10章 线性最小二乘法
 - en: 原文：[https://greenteapress.com/thinkstats2/html/thinkstats2011.html](https://greenteapress.com/thinkstats2/html/thinkstats2011.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://greenteapress.com/thinkstats2/html/thinkstats2011.html](https://greenteapress.com/thinkstats2/html/thinkstats2011.html)
 - en: The code for this chapter is in `linear.py`. For information about downloading
     and working with this code, see Section [0.2](thinkstats2001.html#code).
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章的代码在`linear.py`中。有关下载和使用此代码的信息，请参见第[0.2](thinkstats2001.html#code)节。
 - en: 10.1  Least squares fit
+  id: totrans-3
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 10.1 最小二乘拟合
 - en: Correlation coefficients measure the strength and sign of a relationship, but
     not the slope. There are several ways to estimate the slope; the most common is
     a linear least squares fit. A “linear fit” is a line intended to model the relationship
     between variables. A “least squares” fit is one that minimizes the mean squared
     error (MSE) between the line and the data.
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 相关系数衡量了关系的强度和符号，但没有衡量斜率。估计斜率的方法有几种，最常见的是线性最小二乘拟合。"线性拟合"是一条旨在模拟变量之间关系的直线。"最小二乘"拟合是使直线与数据之间的均方误差（MSE）最小化的拟合。
 - en: Suppose we have a sequence of points, `ys`, that we want to express as a function
     of another sequence `xs`. If there is a linear relationship between `xs` and `ys`
     with intercept `inter` and slope `slope`, we expect each `y[i]` to be `inter +
     slope * x[i]`.
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设我们有一个点序列`ys`，我们希望将其表示为另一个序列`xs`的函数。如果`xs`和`ys`之间存在线性关系，截距为`inter`，斜率为`slope`，我们期望每个`y[i]`都是`inter
+    + slope * x[i]`。
 - en: But unless the correlation is perfect, this prediction is only approximate.
     The vertical deviation from the line, or residual, is
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 但除非相关性完美，否则这种预测只是近似的。直线的垂直偏差，或残差，是
 - en: '[PRE0]'
+  id: totrans-7
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: The residuals might be due to random factors like measurement error, or non-random
     factors that are unknown. For example, if we are trying to predict weight as a
     function of height, unknown factors might include diet, exercise, and body type.
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 残差可能是由于测量误差等随机因素，或者是未知的非随机因素。例如，如果我们试图预测体重与身高的关系，未知因素可能包括饮食、运动和体型。
 - en: If we get the parameters `inter` and `slope` wrong, the residuals get bigger,
     so it makes intuitive sense that the parameters we want are the ones that minimize
     the residuals.
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们错误地得到了参数`inter`和`slope`，残差会变大，因此直观上讲，我们想要的参数是能最小化残差的参数。
 - en: We might try to minimize the absolute value of the residuals, or their squares,
     or their cubes; but the most common choice is to minimize the sum of squared residuals,
     `sum(res**2)`.
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以尝试最小化残差的绝对值，或它们的平方，或它们的立方；但最常见的选择是最小化残差的平方和，`sum(res**2)`。
 - en: 'Why? There are three good reasons and one less important one:'
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 为什么？有三个重要的原因和一个不太重要的原因：
 - en: Squaring has the feature of treating positive and negative residuals the same,
     which is usually what we want.
+  id: totrans-12
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 平方具有将正负残差视为相同的特性，这通常是我们想要的。
 - en: Squaring gives more weight to large residuals, but not so much weight that the
     largest residual always dominates.
+  id: totrans-13
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 平方会使较大的残差更加重要，但不会使最大的残差总是占主导地位。
 - en: If the residuals are uncorrelated and normally distributed with mean 0 and constant
     (but unknown) variance, then the least squares fit is also the maximum likelihood
     estimator of `inter` and `slope`. See [https://en.wikipedia.org/wiki/Linear_regression](https://en.wikipedia.org/wiki/Linear_regression).
+  id: totrans-14
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果残差是不相关的，并且服从均值为0、方差恒定（但未知）的正态分布，那么最小二乘拟合也是`inter`和`slope`的最大似然估计。参见[https://en.wikipedia.org/wiki/Linear_regression](https://en.wikipedia.org/wiki/Linear_regression)。
 - en: The values of `inter` and `slope` that minimize the squared residuals can be
     computed efficiently.
+  id: totrans-15
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 最小化平方残差的`inter`和`slope`的值可以高效地计算。
 - en: The last reason made sense when computational efficiency was more important
     than choosing the method most appropriate to the problem at hand. That’s no longer
     the case, so it is worth considering whether squared residuals are the right thing
     to minimize.
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 当计算效率比选择最适合问题的方法更重要时，最后一个原因是有道理的。但现在已经不再是这种情况，因此值得考虑是否最小化残差的平方是正确的。
 - en: For example, if you are using `xs` to predict values of `ys`, guessing too high
     might be better (or worse) than guessing too low. In that case you might want
     to compute some cost function for each residual, and minimize total cost, `sum(cost(res))`.
     However, computing a least squares fit is quick, easy and often good enough.
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，如果你正在使用`xs`来预测`ys`的值，猜测过高可能比猜测过低更好（或更糟）。在这种情况下，你可能希望为每个残差计算一些成本函数，并最小化总成本`sum(cost(res))`。然而，计算最小二乘拟合是快速、简单且通常足够好的。
 - en: 10.2  Implementation
+  id: totrans-18
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 10.2 实现
 - en: '`thinkstats2` provides simple functions that demonstrate linear least squares:'
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: '`thinkstats2`提供了演示线性最小二乘法的简单函数：'
 - en: '[PRE1]'
+  id: totrans-20
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '`LeastSquares` takes sequences `xs` and `ys` and returns the estimated parameters
     `inter` and `slope`. For details on how it works, see [http://wikipedia.org/wiki/Numerical_methods_for_linear_least_squares](http://wikipedia.org/wiki/Numerical_methods_for_linear_least_squares).'
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: '`LeastSquares`接受序列`xs`和`ys`，并返回估计的参数`inter`和`slope`。有关其工作原理的详细信息，请参见[http://wikipedia.org/wiki/Numerical_methods_for_linear_least_squares](http://wikipedia.org/wiki/Numerical_methods_for_linear_least_squares)。'
 - en: '`thinkstats2` also provides `FitLine`, which takes `inter` and `slope` and
     returns the fitted line for a sequence of `xs`.'
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: '`thinkstats2`还提供了`FitLine`，它接受`inter`和`slope`，并返回`xs`序列的拟合直线。'
 - en: '[PRE2]'
+  id: totrans-23
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: We can use these functions to compute the least squares fit for birth weight
     as a function of mother’s age.
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用这些函数来计算母亲年龄作为出生体重的函数的最小二乘拟合。
 - en: '[PRE3]'
+  id: totrans-25
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: 'The estimated intercept and slope are 6.8 lbs and 0.017 lbs per year. These
     values are hard to interpret in this form: the intercept is the expected weight
     of a baby whose mother is 0 years old, which doesn’t make sense in context, and
     the slope is too small to grasp easily.'
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 估计的截距和斜率分别为6.8磅和0.017磅/年。这些值以这种形式很难解释：截距是母亲年龄为0岁的婴儿的预期体重，在这种情况下是没有意义的，而斜率太小以至于难以理解。
 - en: Instead of presenting the intercept at x=0, it is often helpful to present the
     intercept at the mean of x. In this case the mean age is about 25 years and the
     mean baby weight for a 25 year old mother is 7.3 pounds. The slope is 0.27 ounces
     per year, or 0.17 pounds per decade.
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 通常情况下，不是在x=0处呈现截距，而是在x的均值处呈现截距更有帮助。在这种情况下，平均年龄约为25岁，25岁母亲的平均婴儿体重为7.3磅。斜率为每年0.27盎司，或每十年0.17磅。
 - en: '* * *'
+  id: totrans-28
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
+  id: totrans-29
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/147e224a9be95815080a938eba600d37.png)'
+  id: totrans-30
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/147e224a9be95815080a938eba600d37.png)'
 - en: ''
+  id: totrans-31
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 10.1: Scatter plot of birth weight and mother’s age with a linear
     fit. |'
+  id: totrans-32
   prefs:
   - PREF_BQ
   type: TYPE_TB
+  zh: '| 图10.1：出生体重和母亲年龄的散点图与线性拟合。 |'
 - en: ''
+  id: totrans-33
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-34
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: Figure [10.1](#linear1) shows a scatter plot of birth weight and age along with
     the fitted line. It’s a good idea to look at a figure like this to assess whether
     the relationship is linear and whether the fitted line seems like a good model
     of the relationship.
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 图[10.1](#linear1)显示了出生体重和年龄的散点图以及拟合线。查看这样的图来评估关系是否是线性的，以及拟合线是否是关系的一个好模型是一个好主意。
 - en: 10.3  Residuals
+  id: totrans-36
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 10.3 残差
 - en: 'Another useful test is to plot the residuals. `thinkstats2` provides a function
     that computes residuals:'
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 另一个有用的测试是绘制残差。`thinkstats2`提供了一个计算残差的函数：
 - en: '[PRE4]'
+  id: totrans-38
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '`Residuals` takes sequences `xs` and `ys` and estimated parameters `inter`
     and `slope`. It returns the differences between the actual values and the fitted
     line.'
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: '`Residuals`接受序列`xs`和`ys`以及估计的参数`inter`和`slope`。它返回实际值与拟合线之间的差异。'
 - en: '* * *'
+  id: totrans-40
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
+  id: totrans-41
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/0d7a71c806a551dd27aa1d16e2868e4c.png)'
+  id: totrans-42
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/0d7a71c806a551dd27aa1d16e2868e4c.png)'
 - en: ''
+  id: totrans-43
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 10.2: Residuals of the linear fit. |'
+  id: totrans-44
   prefs:
   - PREF_BQ
   type: TYPE_TB
+  zh: '| 图10.2：线性拟合的残差。 |'
 - en: ''
+  id: totrans-45
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-46
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: To visualize the residuals, I group respondents by age and compute percentiles
     in each group, as we saw in Section [7.2](thinkstats2008.html#characterizing).
     Figure [10.2](#linear2) shows the 25th, 50th and 75th percentiles of the residuals
@@ -211,82 +300,115 @@
     range (IQR) is about 2 pounds. So if we know the mother’s age, we can guess the
     baby’s weight within a pound, about 50% of the time, because 50% of the weights
     are in the IQR.
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了可视化残差，我按年龄对受访者进行分组，并计算每个组的百分位数，就像我们在第[7.2](thinkstats2008.html#characterizing)节中看到的那样。图[10.2](#linear2)显示了每个年龄组残差的25th、50th和75th百分位数。中位数接近零，符合预期，四分位距（IQR）约为2磅。因此，如果我们知道母亲的年龄，我们可以猜测婴儿的体重在一磅左右，大约50%的时间，因为50%的体重在IQR中。
 - en: Ideally these lines should be flat, indicating that the residuals are random,
     and parallel, indicating that the variance of the residuals is the same for all
     age groups. In fact, the lines are close to parallel, so that’s good; but they
     have some curvature, indicating that the relationship is nonlinear. Nevertheless,
     the linear fit is a simple model that is probably good enough for some purposes.
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 理想情况下，这些线应该是平的，表明残差是随机的，并且是平行的，表明残差的方差对所有年龄组都是相同的。实际上，这些线几乎是平行的，所以这很好；但它们有一些曲率，表明关系是非线性的。尽管如此，线性拟合是一个简单的模型，可能对某些目的来说是足够好的。
 - en: 10.4  Estimation
+  id: totrans-49
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 10.4 估计
 - en: The parameters `slope` and `inter` are estimates based on a sample; like other
     estimates, they are vulnerable to sampling bias, measurement error, and sampling
     error. As discussed in Chapter [8](thinkstats2009.html#estimation), sampling bias
     is caused by non-representative sampling, measurement error is caused by errors
     in collecting and recording data, and sampling error is the result of measuring
     a sample rather than the entire population.
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 参数`slope`和`inter`是基于样本的估计值；像其他估计值一样，它们容易受到抽样偏差、测量误差和抽样误差的影响。如第[8](thinkstats2009.html#estimation)章所讨论的，抽样偏差是由非代表性抽样引起的，测量误差是由在收集和记录数据时的错误引起的，抽样误差是由于对样本而不是整个人口进行测量而引起的。
 - en: To assess sampling error, we ask, “If we run this experiment again, how much
     variability do we expect in the estimates?” We can answer this question by running
     simulated experiments and computing sampling distributions of the estimates.
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了评估抽样误差，我们问：“如果我们再次运行这个实验，我们期望估计值有多大的变异性？”我们可以通过运行模拟实验并计算估计的抽样分布来回答这个问题。
 - en: I simulate the experiments by resampling the data; that is, I treat the observed
     pregnancies as if they were the entire population and draw samples, with replacement,
     from the observed sample.
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: 我通过对数据进行重新抽样来模拟实验；也就是说，我将观察到的怀孕视为整个人口，并从观察到的样本中进行替换抽样。
 - en: '[PRE5]'
+  id: totrans-53
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '`SamplingDistributions` takes a DataFrame with one row per live birth, and
     `iters`, the number of experiments to simulate. It uses `ResampleRows` to resample
     the observed pregnancies. We’ve already seen `SampleRows`, which chooses random
     rows from a DataFrame. `thinkstats2` also provides `ResampleRows`, which returns
     a sample the same size as the original:'
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: '`SamplingDistributions`接受一个每个活产的行的DataFrame，以及要模拟的实验次数`iters`。它使用`ResampleRows`来对观察到的怀孕进行重新抽样。我们已经看到了`SampleRows`，它从DataFrame中选择随机行。`thinkstats2`还提供了`ResampleRows`，它返回与原始样本大小相同的样本：'
 - en: '[PRE6]'
+  id: totrans-55
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: 'After resampling, we use the simulated sample to estimate parameters. The result
     is two sequences: the estimated intercepts and estimated slopes.'
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: 重新抽样后，我们使用模拟样本来估计参数。结果是两个序列：估计的截距和估计的斜率。
 - en: 'I summarize the sampling distributions by printing the standard error and confidence
     interval:'
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 我通过打印标准误差和置信区间来总结抽样分布：
 - en: '[PRE7]'
+  id: totrans-58
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '`Summarize` takes a sequence of estimates and the actual value. It prints the
     mean of the estimates, the standard error and a 90% confidence interval.'
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: '`Summarize`接受一系列估计值和实际值。它打印出估计的平均值、标准误差和90%的置信区间。'
 - en: For the intercept, the mean estimate is 6.83, with standard error 0.07 and 90%
     confidence interval (6.71, 6.94). The estimated slope, in more compact form, is
     0.0174, SE 0.0028, CI (0.0126, 0.0220). There is almost a factor of two between
     the low and high ends of this CI, so it should be considered a rough estimate.
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于截距，平均估计值为6.83，标准误差为0.07，90%的置信区间为(6.71, 6.94)。估计的斜率，更紧凑的形式是0.0174，SE 0.0028，CI
+    (0.0126, 0.0220)。这个CI的低端和高端之间几乎相差一倍，所以应该被视为一个粗略的估计。
 - en: 'To visualize the sampling error of the estimate, we could plot all of the fitted
     lines, or for a less cluttered representation, plot a 90% confidence interval
     for each age. Here’s the code:'
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE8]'
+  id: totrans-62
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '`xs` is the sequence of mother’s age. `inters` and `slopes` are the estimated
     parameters generated by `SamplingDistributions`. `percent` indicates which confidence
     interval to plot.'
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
 - en: '`PlotConfidenceIntervals` generates a fitted line for each pair of `inter`
@@ -294,34 +416,42 @@
     to select the upper and lower percentiles of `y` for each value of `x`. For a
     90% confidence interval, it selects the 5th and 95th percentiles. `FillBetween`
     draws a polygon that fills the space between two lines.'
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-65
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-66
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/c17bb3542750decc4b41dc80441c1678.png)'
+  id: totrans-67
   prefs:
   - PREF_BQ
   type: TYPE_IMG
 - en: ''
+  id: totrans-68
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 10.3: 50% and 90% confidence intervals showing variability in the
     fitted line due to sampling error of inter and slope. |'
+  id: totrans-69
   prefs:
   - PREF_BQ
   type: TYPE_TB
 - en: ''
+  id: totrans-70
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-71
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
@@ -329,85 +459,106 @@
     fitted to birth weight as a function of mother’s age. The vertical width of the
     region represents the effect of sampling error; the effect is smaller for values
     near the mean and larger for the extremes.
+  id: totrans-72
   prefs: []
   type: TYPE_NORMAL
 - en: 10.5  Goodness of fit
+  id: totrans-73
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: There are several ways to measure the quality of a linear model, or goodness
     of fit. One of the simplest is the standard deviation of the residuals.
+  id: totrans-74
   prefs: []
   type: TYPE_NORMAL
 - en: If you use a linear model to make predictions, `Std(res)` is the root mean squared
     error (RMSE) of your predictions. For example, if you use mother’s age to guess
     birth weight, the RMSE of your guess would be 1.40 lbs.
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
 - en: If you guess birth weight without knowing the mother’s age, the RMSE of your
     guess is `Std(ys)`, which is 1.41 lbs. So in this example, knowing a mother’s
     age does not improve the predictions substantially.
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
 - en: 'Another way to measure goodness of fit is the coefficient of determination,
     usually denoted R² and called “R-squared”:'
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE9]'
+  id: totrans-78
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '`Var(res)` is the MSE of your guesses using the model, `Var(ys)` is the MSE
     without it. So their ratio is the fraction of MSE that remains if you use the
     model, and R² is the fraction of MSE the model eliminates.'
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
 - en: For birth weight and mother’s age, R² is 0.0047, which means that mother’s age
     predicts about half of 1% of variance in birth weight.
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
 - en: 'There is a simple relationship between the coefficient of determination and
     Pearson’s coefficient of correlation: R² = ρ². For example, if ρ is 0.8 or -0.8,
     R² = 0.64.'
+  id: totrans-81
   prefs: []
   type: TYPE_NORMAL
 - en: Although ρ and R² are often used to quantify the strength of a relationship,
     they are not easy to interpret in terms of predictive power. In my opinion, `Std(res)`
     is the best representation of the quality of prediction, especially if it is presented
     in relation to `Std(ys)`.
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
 - en: For example, when people talk about the validity of the SAT (a standardized
     test used for college admission in the U.S.) they often talk about correlations
     between SAT scores and other measures of intelligence.
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
 - en: According to one study, there is a Pearson correlation of ρ=0.72 between total
     SAT scores and IQ scores, which sounds like a strong correlation. But R² = ρ²
     = 0.52, so SAT scores account for only 52% of variance in IQ.
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
 - en: IQ scores are normalized with `Std(ys) = 15`, so
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE10]'
+  id: totrans-86
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: So using SAT score to predict IQ reduces RMSE from 15 points to 10.4 points.
     A correlation of 0.72 yields a reduction in RMSE of only 31%.
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
 - en: If you see a correlation that looks impressive, remember that R² is a better
     indicator of reduction in MSE, and reduction in RMSE is a better indicator of
     predictive power.
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
 - en: 10.6  Testing a linear model
+  id: totrans-89
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: The effect of mother’s age on birth weight is small, and has little predictive
     power. So is it possible that the apparent relationship is due to chance? There
     are several ways we might test the results of a linear fit.
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
 - en: One option is to test whether the apparent reduction in MSE is due to chance.
@@ -418,245 +569,357 @@
     a one-sided test of R² is equivalent to a two-sided test of ρ. We’ve already done
     that test, and found p < 0.001, so we conclude that the apparent relationship
     between mother’s age and birth weight is statistically significant.
+  id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: 一种选择是测试MSE的明显减少是否是由于偶然原因。在这种情况下，检验统计量是R²，零假设是变量之间没有关系。我们可以通过排列来模拟零假设，就像在[9.5]节中测试母亲年龄和新生儿体重之间的相关性时一样。事实上，因为R²
+    = ρ²，对R²的单侧检验等价于对ρ的双侧检验。我们已经做过那个测试，并且发现p < 0.001，因此我们得出结论，母亲年龄和新生儿体重之间的明显关系在统计上是显著的。
 - en: 'Another approach is to test whether the apparent slope is due to chance. The
     null hypothesis is that the slope is actually zero; in that case we can model
     the birth weights as random variations around their mean. Here’s a HypothesisTest
     for this model:'
+  id: totrans-92
   prefs: []
   type: TYPE_NORMAL
+  zh: 另一种方法是测试明显斜率是否是由于偶然原因。零假设是斜率实际上为零；在这种情况下，我们可以将出生体重建模为围绕其均值的随机变化。这是这个模型的一个假设检验：
 - en: '[PRE11]'
+  id: totrans-93
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: The data are represented as sequences of ages and weights. The test statistic
     is the slope estimated by `LeastSquares`. The model of the null hypothesis is
     represented by the mean weight of all babies and the deviations from the mean.
     To generate simulated data, we permute the deviations and add them to the mean.
+  id: totrans-94
   prefs: []
   type: TYPE_NORMAL
+  zh: 数据被表示为年龄和体重的序列。检验统计量是由`LeastSquares`估计的斜率。零假设的模型由所有婴儿的平均体重和与平均值的偏差表示。为了生成模拟数据，我们对偏差进行排列并将它们加到平均值上。
 - en: 'Here’s the code that runs the hypothesis test:'
+  id: totrans-95
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是运行假设检验的代码：
 - en: '[PRE12]'
+  id: totrans-96
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: The p-value is less than 0.001, so although the estimated slope is small, it
     is unlikely to be due to chance.
+  id: totrans-97
   prefs: []
   type: TYPE_NORMAL
+  zh: p值小于0.001，因此尽管估计的斜率很小，但不太可能是由于偶然原因。
 - en: Estimating the p-value by simulating the null hypothesis is strictly correct,
     but there is a simpler alternative. Remember that we already computed the sampling
     distribution of the slope, in Section [10.4](#regest). To do that, we assumed
     that the observed slope was correct and simulated experiments by resampling.
+  id: totrans-98
   prefs: []
   type: TYPE_NORMAL
+  zh: 通过模拟零假设来估计p值是严格正确的，但有一个更简单的选择。记住我们已经在[10.4](#regest)节中计算了斜率的抽样分布。为了做到这一点，我们假设观察到的斜率是正确的，并通过重新抽样来模拟实验。
 - en: Figure [10.4](#linear4) shows the sampling distribution of the slope, from Section[10.4](#regest),
     and the distribution of slopes generated under the null hypothesis. The sampling
     distribution is centered about the estimated slope, 0.017 lbs/year, and the slopes
     under the null hypothesis are centered around 0; but other than that, the distributions
     are identical. The distributions are also symmetric, for reasons we will see in
     Section [14.4](thinkstats2015.html#CLT).
+  id: totrans-99
   prefs: []
   type: TYPE_NORMAL
+  zh: 图[10.4](#linear4)显示了斜率的抽样分布，来自[10.4](#regest)节，以及在零假设下生成的斜率分布。抽样分布围绕估计的斜率0.017磅/年中心，零假设下的斜率围绕0中心；但除此之外，这些分布是相同的。这些分布也是对称的，我们将在[14.4](thinkstats2015.html#CLT)节中看到原因。
 - en: '* * *'
+  id: totrans-100
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
+  id: totrans-101
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/6cb387fe7f1b0f5d9c3fbe86f3e55f5d.png)'
+  id: totrans-102
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/6cb387fe7f1b0f5d9c3fbe86f3e55f5d.png)'
 - en: ''
+  id: totrans-103
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 10.4: The sampling distribution of the estimated slope and the distribution
     of slopes generated under the null hypothesis. The vertical lines are at 0 and
     the observed slope, 0.017 lbs/year. |'
+  id: totrans-104
   prefs:
   - PREF_BQ
   type: TYPE_TB
+  zh: '| 图10.4：估计斜率的抽样分布和在零假设下生成的斜率分布。垂直线在0和观察到的斜率0.017磅/年处。|'
 - en: ''
+  id: totrans-105
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-106
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: 'So we could estimate the p-value two ways:'
+  id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，我们可以两种方式估计p值：
 - en: Compute the probability that the slope under the null hypothesis exceeds the
     observed slope.
+  id: totrans-108
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 计算零假设下的斜率超过观察到的斜率的概率。
 - en: Compute the probability that the slope in the sampling distribution falls below
     0\. (If the estimated slope were negative, we would compute the probability that
     the slope in the sampling distribution exceeds 0.)
+  id: totrans-109
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 计算抽样分布中斜率低于0的概率。(如果估计的斜率为负，我们将计算抽样分布中斜率高于0的概率。)
 - en: The second option is easier because we normally want to compute the sampling
     distribution of the parameters anyway. And it is a good approximation unless the
     sample size is small *and* the distribution of residuals is skewed. Even then,
     it is usually good enough, because p-values don’t have to be precise.
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: 第二个选择更容易，因为我们通常希望计算参数的抽样分布。即使样本量较小且残差分布是倾斜的，它通常也足够好，因为p值不必精确。
 - en: 'Here’s the code that estimates the p-value of the slope using the sampling
     distribution:'
+  id: totrans-111
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是使用抽样分布估计斜率的p值的代码：
 - en: '[PRE13]'
+  id: totrans-112
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: Again, we find p < 0.001.
+  id: totrans-113
   prefs: []
   type: TYPE_NORMAL
+  zh: 同样，我们发现p < 0.001。
 - en: 10.7  Weighted resampling
+  id: totrans-114
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 10.7 加权重抽样
 - en: So far we have treated the NSFG data as if it were a representative sample,
     but as I mentioned in Section [1.2](thinkstats2002.html#nsfg), it is not. The
     survey deliberately oversamples several groups in order to improve the chance
     of getting statistically significant results; that is, in order to improve the
     power of tests involving these groups.
+  id: totrans-115
   prefs: []
   type: TYPE_NORMAL
+  zh: 到目前为止，我们已经将NSFG数据视为代表性样本，但正如我在[1.2](thinkstats2002.html#nsfg)节中提到的，它并不是。这项调查有意过度采样了几个群体，以提高获得统计显著结果的机会；也就是说，以提高涉及这些群体的检验的功效。
 - en: This survey design is useful for many purposes, but it means that we cannot
     use the sample to estimate values for the general population without accounting
     for the sampling process.
+  id: totrans-116
   prefs: []
   type: TYPE_NORMAL
+  zh: 这种调查设计对许多目的都很有用，但这意味着我们不能在不考虑抽样过程的情况下使用样本来估计一般人口的值。
 - en: For each respondent, the NSFG data includes a variable called `finalwgt`, which
     is the number of people in the general population the respondent represents. This
     value is called a sampling weight, or just “weight.”
+  id: totrans-117
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于每个受访者，NSFG数据包括一个名为`finalwgt`的变量，它是受访者代表的一般人口数量。这个值称为抽样权重，或者只是“权重”。
 - en: As an example, if you survey 100,000 people in a country of 300 million, each
     respondent represents 3,000 people. If you oversample one group by a factor of
     2, each person in the oversampled group would have a lower weight, about 1500.
+  id: totrans-118
   prefs: []
   type: TYPE_NORMAL
+  zh: 举例来说，如果你在一个拥有 3 亿人口的国家中对 10 万人进行调查，每个受访者代表 3,000 人。如果你对某个群体进行了 2 倍的过采样，那么在过采样群体中的每个人的权重会更低，大约为
+    1500。
 - en: To correct for oversampling, we can use resampling; that is, we can draw samples
     from the survey using probabilities proportional to sampling weights. Then, for
     any quantity we want to estimate, we can generate sampling distributions, standard
     errors, and confidence intervals. As an example, I will estimate mean birth weight
     with and without sampling weights.
+  id: totrans-119
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了纠正过采样，我们可以使用重新采样；也就是说，我们可以使用与抽样权重成比例的概率从调查中抽取样本。然后，对于我们想要估计的任何数量，我们可以生成抽样分布、标准误差和置信区间。举例来说，我将估计有和没有抽样权重的情况下的平均出生体重。
 - en: 'In Section [10.4](#regest), we saw `ResampleRows`, which chooses rows from
     a DataFrame, giving each row the same probability. Now we need to do the same
     thing using probabilities proportional to sampling weights. `ResampleRowsWeighted`
     takes a DataFrame, resamples rows according to the weights in `finalwgt`, and
     returns a DataFrame containing the resampled rows:'
+  id: totrans-120
   prefs: []
   type: TYPE_NORMAL
+  zh: 在第 10.4 节中，我们看到了 `ResampleRows`，它从 DataFrame 中选择行，使每行具有相同的概率。现在我们需要使用与抽样权重成比例的概率来做同样的事情。`ResampleRowsWeighted`
+    接受一个 DataFrame，根据 `finalwgt` 中的权重重新对行进行抽样，并返回一个包含重新抽样行的 DataFrame：
 - en: '[PRE14]'
+  id: totrans-121
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '`weights` is a Series; converting it to a dictionary makes a map from the indices
     to the weights. In `cdf` the values are indices and the probabilities are proportional
     to the weights.'
+  id: totrans-122
   prefs: []
   type: TYPE_NORMAL
+  zh: '`weights` 是一个 Series；将其转换为字典会从索引到权重创建一个映射。在 `cdf` 中，值是索引，概率与权重成比例。'
 - en: '`indices` is a sequence of row indices; `sample` is a DataFrame that contains
     the selected rows. Since we sample with replacement, the same row might appear
     more than once.'
+  id: totrans-123
   prefs: []
   type: TYPE_NORMAL
+  zh: '`indices` 是一系列行索引；`sample` 是一个包含所选行的 DataFrame。由于我们进行有放回的抽样，同一行可能会出现多次。'
 - en: 'Now we can compare the effect of resampling with and without weights. Without
     weights, we generate the sampling distribution like this:'
+  id: totrans-124
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以比较有和没有抽样权重的情况下的效果。没有抽样权重，我们会这样生成抽样分布：
 - en: '[PRE15]'
+  id: totrans-125
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: 'With weights, it looks like this:'
+  id: totrans-126
   prefs: []
   type: TYPE_NORMAL
+  zh: 加权后，情况如下：
 - en: '[PRE16]'
+  id: totrans-127
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: 'The following table summarizes the results:'
+  id: totrans-128
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下表格总结了结果：
 - en: '|   | mean birth | standard | 90% CI |'
+  id: totrans-129
   prefs: []
   type: TYPE_TB
+  zh: '|   | 平均出生重量 | 标准 | 90% 置信区间 |'
 - en: '|   | weight (lbs) | error |   |'
+  id: totrans-130
   prefs: []
   type: TYPE_TB
+  zh: '|   | 体重（磅） | 误差 |   |'
 - en: '| Unweighted | 7.27 | 0.014 | (7.24, 7.29) |'
+  id: totrans-131
   prefs: []
   type: TYPE_TB
+  zh: '| 未加权 | 7.27 | 0.014 | (7.24, 7.29) |'
 - en: '| Weighted | 7.35 | 0.014 | (7.32, 7.37) |'
+  id: totrans-132
   prefs: []
   type: TYPE_TB
+  zh: '| 加权 | 7.35 | 0.014 | (7.32, 7.37) |'
 - en: In this example, the effect of weighting is small but non-negligible. The difference
     in estimated means, with and without weighting, is about 0.08 pounds, or 1.3 ounces.
     This difference is substantially larger than the standard error of the estimate,
     0.014 pounds, which implies that the difference is not due to chance.
+  id: totrans-133
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个例子中，加权的效果很小但不可忽略。估计的平均值在加权和不加权的情况下的差异约为 0.08 磅，或者 1.3 盎司。这个差异远大于估计的标准误差 0.014
+    磅，这意味着这个差异不是由于偶然造成的。
 - en: 10.8  Exercises
+  id: totrans-134
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 10.8 练习
 - en: A solution to this exercise is in `chap10soln.ipynb`
+  id: totrans-135
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个练习的解决方案在 `chap10soln.ipynb` 中。
 - en: Exercise 1
+  id: totrans-136
   prefs: []
   type: TYPE_NORMAL
+  zh: 练习 1
 - en: '*Using the data from the BRFSS, compute the linear least squares fit for log(weight)
     versus height. How would you best present the estimated parameters for a model
     like this where one of the variables is log-transformed? If you were trying to
     guess someone’s weight, how much would it help to know their height?*'
+  id: totrans-137
   prefs: []
   type: TYPE_NORMAL
+  zh: '*使用 BRFSS 的数据，计算 log(体重) 与身高的线性最小二乘拟合。在这种一个变量经过对数变换的模型中，你会如何最好地呈现估计的参数？如果你试图猜测某人的体重，了解他们的身高会有多大帮助？*'
 - en: '*Like the NSFG, the BRFSS oversamples some groups and provides a sampling weight
     for each respondent. In the BRFSS data, the variable name for these weights is
     `finalwt`. Use resampling, with and without weights, to estimate the mean height
     of respondents in the BRFSS, the standard error of the mean, and a 90% confidence
     interval. How much does correct weighting affect the estimates?*'
+  id: totrans-138
   prefs: []
   type: TYPE_NORMAL
+  zh: '*像 NSFG 一样，BRFSS 对一些群体进行了过采样，并为每个受访者提供了抽样权重。在 BRFSS 数据中，这些权重的变量名是 `finalwt`。使用重新采样，加权和不加权，来估计
+    BRFSS 受访者的平均身高、平均误差和 90% 置信区间。正确的加权对估计结果有多大影响？*'
 - en: 10.9  Glossary
+  id: totrans-139
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 10.9 术语表
 - en: 'linear fit: a line intended to model the relationship between variables.'
+  id: totrans-140
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 线性拟合：旨在模拟变量之间关系的一条线。
 - en: 'least squares fit: A model of a dataset that minimizes the sum of squares of
     the residuals.'
+  id: totrans-141
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 最小二乘拟合：最小化残差平方和的数据集模型。
 - en: 'residual: The deviation of an actual value from a model.'
+  id: totrans-142
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 残差：实际值与模型之间的偏差。
 - en: 'goodness of fit: A measure of how well a model fits data.'
+  id: totrans-143
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 拟合优度：衡量模型与数据拟合程度的指标。
 - en: 'coefficient of determination: A statistic intended to quantify goodness of
     fit.'
+  id: totrans-144
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 决定系数：旨在量化拟合优度的统计量。
 - en: 'sampling weight: A value associated with an observation in a sample that indicates
     what part of the population it represents.'
+  id: totrans-145
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 抽样权重：与样本中的观察值相关联的值，表示其代表的人口部分。
