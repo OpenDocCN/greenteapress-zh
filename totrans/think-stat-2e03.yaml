@@ -587,115 +587,139 @@
   id: totrans-99
   prefs: []
   type: TYPE_NORMAL
+  zh: 直方图很有用，因为它们立即显示出最频繁的值。但它们不是比较两个分布的最佳选择。在这个例子中，“第一个宝宝”的数量比“其他宝宝”少，所以直方图中的一些明显差异是由于样本量。在下一章中，我们将使用概率质量函数来解决这个问题。
 - en: 2.7  Summarizing distributions
   id: totrans-100
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 2.7  Summarizing distributions
 - en: A histogram is a complete description of the distribution of a sample; that
     is, given a histogram, we could reconstruct the values in the sample (although
     not their order).
   id: totrans-101
   prefs: []
   type: TYPE_NORMAL
+  zh: 直方图是样本分布的完整描述；也就是说，给定一个直方图，我们可以重建样本中的值（尽管不能重建它们的顺序）。
 - en: If the details of the distribution are important, it might be necessary to present
     a histogram. But often we want to summarize the distribution with a few descriptive
     statistics.
   id: totrans-102
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果分布的细节很重要，可能需要呈现直方图。但通常我们希望用几个描述性统计数据总结分布。
 - en: 'Some of the characteristics we might want to report are:'
   id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可能想要报告的一些特征是：
 - en: 'central tendency: Do the values tend to cluster around a particular point?'
   id: totrans-104
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 'central tendency: 值是否倾向于聚集在特定点周围？'
 - en: 'modes: Is there more than one cluster?'
   id: totrans-105
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 'modes: 是否有多个集群？'
 - en: 'spread: How much variability is there in the values?'
   id: totrans-106
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 'spread: 值之间有多少变异性？'
 - en: 'tails: How quickly do the probabilities drop off as we move away from the modes?'
   id: totrans-107
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 'tails: How quickly do the probabilities drop off as we move away from the modes?'
 - en: 'outliers: Are there extreme values far from the modes?'
   id: totrans-108
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 'outliers: 是否有远离模式的极端值？'
 - en: Statistics designed to answer these questions are called summary statistics.
     By far the most common summary statistic is the mean, which is meant to describe
     the central tendency of the distribution.
   id: totrans-109
   prefs: []
   type: TYPE_NORMAL
+  zh: 旨在回答这些问题的统计数据称为摘要统计数据。到目前为止，最常见的摘要统计量是均值，它旨在描述分布的中心趋势。
 - en: If you have a sample of `n` values, x[i], the mean, x, is the sum of the values
     divided by the number of values; in other words
   id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你有一个包含`n`个值的样本，x[i]，那么均值x是值的总和除以值的数量；换句话说
 - en: '| x =  |'
   id: totrans-111
   prefs: []
   type: TYPE_TB
+  zh: '| x =  |'
 - en: '&#124; 1 &#124;'
   id: totrans-112
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124; 1 &#124;'
 - en: '&#124;  &#124;'
   id: totrans-113
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124;  &#124;'
 - en: '&#124; n &#124;'
   id: totrans-114
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124; n &#124;'
 - en: '|   |'
   id: totrans-115
   prefs: []
   type: TYPE_TB
+  zh: '|   |'
 - en: '&#124;   &#124;'
   id: totrans-116
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124;   &#124;'
 - en: '&#124; ∑ &#124;'
   id: totrans-117
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124; ∑ &#124;'
 - en: '&#124; i &#124;'
   id: totrans-118
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124; i &#124;'
 - en: '|  x[i]  |'
   id: totrans-119
   prefs: []
   type: TYPE_TB
+  zh: '|  x[i]  |'
 - en: 'The words “mean” and “average” are sometimes used interchangeably, but I make
     this distinction:'
   id: totrans-120
   prefs: []
   type: TYPE_NORMAL
+  zh: “均值”和“平均值”有时可以互换使用，但我做出了区分：
 - en: The “mean” of a sample is the summary statistic computed with the previous formula.
   id: totrans-121
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 样本的“均值”是使用前面的公式计算的摘要统计量。
 - en: An “average” is one of several summary statistics you might choose to describe
     a central tendency.
   id: totrans-122
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: “平均值”是你可能选择用来描述中心趋势的几个摘要统计量之一。
 - en: Sometimes the mean is a good description of a set of values. For example, apples
     are all pretty much the same size (at least the ones sold in supermarkets). So
     if I buy 6 apples and the total weight is 3 pounds, it would be a reasonable summary
@@ -703,6 +727,7 @@
   id: totrans-123
   prefs: []
   type: TYPE_NORMAL
+  zh: 有时均值是一组值的良好描述。例如，苹果的大小几乎都一样大（至少是超市出售的那些）。所以如果我买了6个苹果，总重量是3磅，那么说它们每个大约半磅是一个合理的摘要。
 - en: But pumpkins are more diverse. Suppose I grow several varieties in my garden,
     and one day I harvest three decorative pumpkins that are 1 pound each, two pie
     pumpkins that are 3 pounds each, and one Atlantic Giant® pumpkin that weighs 591
@@ -712,73 +737,89 @@
   id: totrans-124
   prefs: []
   type: TYPE_NORMAL
+  zh: 但南瓜更加多样化。假设我在花园里种植了几个品种，有一天我收获了三个装饰南瓜，每个重1磅，两个馅饼南瓜，每个重3磅，还有一个重591磅的大西洋巨型南瓜。这个样本的均值是100磅，但如果我告诉你“我花园里的平均南瓜重100磅”，那就是误导性的。在这个例子中，没有有意义的平均值，因为没有典型的南瓜。
 - en: 2.8  Variance
   id: totrans-125
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 2.8  Variance
 - en: 'If there is no single number that summarizes pumpkin weights, we can do a little
     better with two numbers: mean and variance.'
   id: totrans-126
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果没有一个单一的数字来总结南瓜的重量，我们可以用两个数字更好地描述：均值和方差。
 - en: Variance is a summary statistic intended to describe the variability or spread
     of a distribution. The variance of a set of values is
   id: totrans-127
   prefs: []
   type: TYPE_NORMAL
+  zh: 方差是一个旨在描述分布的变异性或扩展的摘要统计量。一组值的方差是
 - en: '| S² =  |'
   id: totrans-128
   prefs: []
   type: TYPE_TB
+  zh: '| S² =  |'
 - en: '&#124; 1 &#124;'
   id: totrans-129
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124; 1 &#124;'
 - en: '&#124;  &#124;'
   id: totrans-130
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124;  &#124;'
 - en: '&#124; n &#124;'
   id: totrans-131
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124; n &#124;'
 - en: '|   |'
   id: totrans-132
   prefs: []
   type: TYPE_TB
+  zh: '|   |'
 - en: '&#124;   &#124;'
   id: totrans-133
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124;   &#124;'
 - en: '&#124; ∑ &#124;'
   id: totrans-134
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124; ∑ &#124;'
 - en: '&#124; i &#124;'
   id: totrans-135
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124; i &#124;'
 - en: '|  (x[i] − x)²  |'
   id: totrans-136
   prefs: []
   type: TYPE_TB
+  zh: '|  (x[i] − x)²  |'
 - en: The term x[i] − x is called the “deviation from the mean,” so variance is the
     mean squared deviation. The square root of variance, S, is the standard deviation.
   id: totrans-137
   prefs: []
   type: TYPE_NORMAL
+  zh: 术语x[i] − x称为“偏差”，所以方差是均方偏差。方差的平方根S是标准差。
 - en: If you have prior experience, you might have seen a formula for variance with
     n−1 in the denominator, rather than `n`. This statistic is used to estimate the
     variance in a population using a sample. We will come back to this in Chapter [8](thinkstats2009.html#estimation).
   id: totrans-138
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你有先前的经验，你可能已经看到了一个方差的公式，分母中有n−1，而不是`n`。这个统计量用于使用样本估计总体方差。我们将在第8章回到这个问题。[8](thinkstats2009.html#estimation)
 - en: 'Pandas data structures provide methods to compute mean, variance and standard
     deviation:'
   id: totrans-139
   prefs: []
   type: TYPE_NORMAL
+  zh: Pandas数据结构提供了计算均值、方差和标准差的方法：
 - en: '[PRE16]'
   id: totrans-140
   prefs: []
@@ -789,17 +830,20 @@
   id: totrans-141
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于所有活产，怀孕期的平均长度是38.6周，标准偏差是2.7周，这意味着我们应该预期2-3周的偏差是常见的。
 - en: Variance of pregnancy length is 7.3, which is hard to interpret, especially
     since the units are weeks², or “square weeks.” Variance is useful in some calculations,
     but it is not a good summary statistic.
   id: totrans-142
   prefs: []
   type: TYPE_NORMAL
+  zh: 怀孕期的方差是7.3，这很难解释，特别是因为单位是周²，或者“平方周”。方差在某些计算中很有用，但它不是一个很好的摘要统计量。
 - en: 2.9  Effect size
   id: totrans-143
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 2.9  Effect size
 - en: An effect size is a summary statistic intended to describe (wait for it) the
     size of an effect. For example, to describe the difference between two groups,
     one obvious choice is the difference in the means.
