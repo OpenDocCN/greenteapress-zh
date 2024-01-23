@@ -1,257 +1,403 @@
 - en: Quiz 4
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 测验4
 - en: 原文：[https://allendowney.github.io/DSIRP/quiz04.html](https://allendowney.github.io/DSIRP/quiz04.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/DSIRP/quiz04.html](https://allendowney.github.io/DSIRP/quiz04.html)
 - en: 'BEFORE YOU START THIS QUIZ:'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 在开始这个测验之前：
 - en: Click on “Copy to Drive” to make a copy of the quiz,
+  id: totrans-3
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 点击“复制到驱动器”以复制测验，
 - en: Click on “Share”,
+  id: totrans-4
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 点击“分享”，
 - en: Click on “Change” and select “Anyone with this link can edit”
+  id: totrans-5
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 点击“更改”，然后选择“任何拥有此链接的人都可以编辑”
 - en: Click “Copy link” and
+  id: totrans-6
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 点击“复制链接”和
 - en: Paste the link into [this Canvas assignment](https://canvas.olin.edu/courses/313/assignments/5032).
+  id: totrans-7
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 将链接粘贴到[此Canvas作业](https://canvas.olin.edu/courses/313/assignments/5032)中。
 - en: This quiz is open notes, open internet. The only thing you can’t do is ask for
     help.
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个测验是开放笔记，开放互联网。唯一不能做的就是寻求帮助。
 - en: Copyright 2021 Allen Downey, [MIT License](http://opensource.org/licenses/MIT)
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 版权所有2021年Allen Downey，[MIT许可证](http://opensource.org/licenses/MIT)
 - en: '[PRE0]'
+  id: totrans-10
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: Question 1
+  id: totrans-11
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 问题1
 - en: According to [Wikipedia](https://en.wikipedia.org/wiki/Gray_code), a Gray code
     is “an ordering of the binary numeral system such that two successive values differ
     in only one bit (binary digit).”
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 根据[Wikipedia](https://en.wikipedia.org/wiki/Gray_code)，格雷码是“二进制数制的一种排序，使得连续的两个值在只有一个位（二进制数字）上不同”。
 - en: 'A “Gray code list” is a table that lists the Gray code for each decimal number
     in order. For example, the following is the Gray code list for decimal numbers
     up to 3:'
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: “格雷码列表”是一个表，按顺序列出了每个十进制数的格雷码。例如，以下是直到3的十进制数的格雷码列表：
 - en: '[PRE1]'
+  id: totrans-14
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: In this code, the representation of the number 3 is the bit sequence `10`.
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这段代码中，数字3的表示是位序列`10`。
 - en: '[This section of the Wikipedia page](https://en.wikipedia.org/wiki/Gray_code#Constructing_an_n-bit_Gray_code)
     presents an algorithm for constructing a Gray code list with a given number of
     binary digits.'
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: '[Wikipedia页面的这一部分](https://en.wikipedia.org/wiki/Gray_code#Constructing_an_n-bit_Gray_code)提供了一个用于构建具有给定二进制数字数量的格雷码列表的算法。'
 - en: Write a function called `gray_code` that takes the number of binary digits,
     `n`, as a parameter and returns a list of strings that represents a Gray code
     list.
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: 编写一个名为`gray_code`的函数，该函数以二进制数字`n`的数量作为参数，并返回表示格雷码列表的字符串列表。
 - en: For example, `gray_code(3)` should return
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，`gray_code(3)`应返回
 - en: '[PRE2]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: Your function can be iterative or recursive.
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 您的函数可以是迭代的或递归的。
 - en: '[PRE3]'
+  id: totrans-21
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: You can use the following cells to test your solution.
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 您可以使用以下单元格来测试您的解决方案。
 - en: '[PRE4]'
+  id: totrans-23
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '[PRE5]'
+  id: totrans-24
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '[PRE6]'
+  id: totrans-25
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '[PRE7]'
+  id: totrans-26
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '[PRE8]'
+  id: totrans-27
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '[PRE9]'
+  id: totrans-28
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '[PRE10]'
+  id: totrans-29
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '[PRE11]'
+  id: totrans-30
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: Question 2
+  id: totrans-31
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 问题2
 - en: Suppose you are given a very large sequence of numbers and you are asked to
     find the `k` largest elements. One option would be to sort the sequence, but that
     would take time proportional to `n log n`, where `n` is the length of the sequence.
     And you would have to store the entire sequence.
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设您有一个非常大的数字序列，并且要求找到`k`个最大的元素。一种选择是对序列进行排序，但这将花费与序列长度`n`成正比的时间。而且您将不得不存储整个序列。
 - en: An alternative is to use a “bounded heap”, that is, a heap that never contains
     more than `k` elements.
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: 另一种方法是使用“有界堆”，即永远不包含超过`k`个元素的堆。
 - en: Write a function called `k_largest` that takes as parameters an iterable and
     an integer `k` and returns a list that contains the `k` largest elements in the
     iterable. Don’t worry about ties.
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 编写一个名为`k_largest`的函数，该函数以可迭代对象和整数`k`作为参数，并返回一个包含可迭代对象中`k`个最大元素的列表。不用担心并列。
 - en: Your implementation should not store more than `k` elements and it should take
     time proportional to `n log k`.
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 您的实现不应存储超过`k`个元素，并且它的时间复杂度应与`n log k`成正比。
 - en: You can use the following cells to test your function.
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 您可以使用以下单元格来测试您的函数。
 - en: '[PRE12]'
+  id: totrans-37
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '[PRE13]'
+  id: totrans-38
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: '[PRE14]'
+  id: totrans-39
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '[PRE15]'
+  id: totrans-40
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: Question 3
+  id: totrans-41
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 问题3
 - en: 'An expression tree is a tree that represents a mathematical expression. For
     example, the expression `(1+2) * 3` is represented by a tree with the multiplication
     operator at the root and two children:'
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: 表达式树是表示数学表达式的树。例如，表达式`(1+2) * 3`由根节点处的乘法运算符和两个子节点表示：
 - en: The left child is a node that contains the addition operator and two children,
     the number 1 and the number 2.
+  id: totrans-43
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 左子节点是一个包含加法运算符和两个子节点的节点，数字1和数字2。
 - en: The right child is a node that contains the number 3.
+  id: totrans-44
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 右子节点是一个包含数字3的节点。
 - en: To represent an expression tree, we can use a `namedtuple` called `Node` that
     contains three attributes, `data`, `left`, and `right`.
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 要表示表达式树，我们可以使用一个名为`Node`的`namedtuple`，其中包含三个属性，`data`，`left`和`right`。
 - en: '[PRE16]'
+  id: totrans-46
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: In a leaf node, `data` contains a number. For example, here are two nodes representing
     the numbers `1` and `2`.
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 在叶节点中，`data`包含一个数字。例如，这里有两个表示数字`1`和`2`的节点。
 - en: '[PRE17]'
+  id: totrans-48
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: '[PRE18]'
+  id: totrans-49
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: '[PRE19]'
+  id: totrans-50
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '[PRE20]'
+  id: totrans-51
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: For internal nodes (that is, not leaf nodes) `data` contains a function. To
     represent addition, subtraction, and multiplication, I’ll import functions from
     the `operator` module.
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于内部节点（即非叶节点），`data`包含一个函数。为了表示加法、减法和乘法，我将从`operator`模块导入函数。
 - en: '[PRE21]'
+  id: totrans-53
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: Now we can make an expression tree with the `add` function at the root and two
     operands as children.
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以用`add`函数作为根节点，两个操作数作为子节点来构建一个表达式树。
 - en: '[PRE22]'
+  id: totrans-55
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: '[PRE23]'
+  id: totrans-56
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: To evaluate this tree, we can extract the function and the two operands, then
     call the function and pass the operands as arguments.
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 要评估这棵树，我们可以提取函数和两个操作数，然后调用函数并将操作数作为参数传递。
 - en: '[PRE24]'
+  id: totrans-58
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: '[PRE25]'
+  id: totrans-59
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: Write a function called `evaluate` that takes an arbitrary expression tree,
     evaluates it, and returns an integer.
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 编写一个名为`evaluate`的函数，该函数接受任意表达式树，对其进行评估，并返回一个整数。
 - en: You will probably want to write this one recursively.
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: 您可能希望以递归的方式编写这个。
 - en: 'You can test your function with the following examples:'
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: 你可以使用以下示例测试您的函数：
 - en: '[PRE26]'
+  id: totrans-63
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: '[PRE27]'
+  id: totrans-64
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: '[PRE28]'
+  id: totrans-65
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: '[PRE29]'
+  id: totrans-66
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: '[PRE30]'
+  id: totrans-67
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: '[PRE31]'
+  id: totrans-68
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: '[PRE32]'
+  id: totrans-69
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: '[PRE33]'
+  id: totrans-70
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: '[PRE34]'
+  id: totrans-71
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: '[PRE35]'
+  id: totrans-72
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
