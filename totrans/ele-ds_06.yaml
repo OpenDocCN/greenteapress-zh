@@ -3,16 +3,20 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 循环和文件
 - en: 原文：[https://allendowney.github.io/ElementsOfDataScience/04_loops.html](https://allendowney.github.io/ElementsOfDataScience/04_loops.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ElementsOfDataScience/04_loops.html](https://allendowney.github.io/ElementsOfDataScience/04_loops.html)
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/04_loops.ipynb)
     or [click here to download it](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/04_loops.ipynb).'
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: '[点击这里在Colab上运行这个笔记本](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/04_loops.ipynb)
+    或 [点击这里下载](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/04_loops.ipynb)。'
 - en: This chapter presents loops, which are used to represent repeated computation,
     and files, which are used to store data. As an example, we will download the famous
     book *War and Peace* from Project Gutenberg and write a loop that reads the book
@@ -21,17 +25,20 @@
   id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章介绍了循环，用于表示重复计算，以及文件，用于存储数据。例如，我们将从Project Gutenberg下载著名的书籍*战争与和平*，并编写一个循环来读取这本书并计算单词数。这个例子介绍了一些新的计算工具；也是处理文本数据的入门。
 - en: Loops
   id: totrans-4
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 循环
 - en: 'One of the most important elements of computation is repetition, and the most
     common way to represent repetition is a `for` loop. As a simple example, suppose
     we want to display the elements of a tuple. Here’s a tuple of three integers:'
   id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 计算中最重要的元素之一是重复，表示重复的最常见方式是`for`循环。举个简单的例子，假设我们想显示一个元组的元素。这是一个包含三个整数的元组：
 - en: '[PRE0]'
   id: totrans-6
   prefs: []
@@ -41,6 +48,7 @@
   id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个打印元素的`for`循环。
 - en: '[PRE1]'
   id: totrans-8
   prefs: []
@@ -57,38 +65,46 @@
   id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 循环的第一行是一个**标题**，指定了元组`t`和一个变量名`x`。元组已经存在，但`x`不存在；循环将创建它。请注意，标题以冒号`:`结束。
 - en: Inside the loop is a `print` statement, which displays the value of `x`.
   id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 循环内有一个`print`语句，显示`x`的值。
 - en: 'So here’s what happens:'
   id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 所以发生了什么：
 - en: When the loop starts, it gets the first element of `t`, which is `1`, and assigns
     it to `x`. It executes the `print` statement, which displays the value `1`.
   id: totrans-13
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 当循环开始时，它获取`t`的第一个元素，即`1`，并将其赋给`x`。它执行`print`语句，显示值`1`。
 - en: Then it gets the second element of `t`, which is `2`, and displays it.
   id: totrans-14
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 然后它获取`t`的第二个元素，即`2`，并显示它。
 - en: Then it gets the third element of `t`, which is `3`, and displays it.
   id: totrans-15
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 然后它获取`t`的第三个元素，即`3`，并显示它。
 - en: After printing the last element of the tuple, the loop ends.
   id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 打印元组的最后一个元素后，循环结束。
 - en: 'We can also loop through the letters in a string:'
   id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们也可以循环遍历字符串中的字母：
 - en: '[PRE3]'
   id: totrans-18
   prefs: []
@@ -104,16 +120,19 @@
   id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 当循环开始时，`word`已经存在，但`letter`不存在。同样，循环创建`letter`并为其赋值。
 - en: The variable created by the loop is called the **loop variable**. You can give
     it any name you like; in this example, I chose `letter` to remind me what kind
     of value it contains.
   id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 循环创建的变量称为**循环变量**。你可以给它任何你喜欢的名字；在这个例子中，我选择了`letter`，以便提醒我它包含的是什么类型的值。
 - en: After the loop ends, the loop variable contains the last value.
   id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 循环结束后，循环变量包含最后一个值。
 - en: '[PRE5]'
   id: totrans-23
   prefs: []
@@ -129,12 +148,14 @@
   id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** 创建一个名为`sequence`的列表，其中包含四个任意类型的元素。编写一个`for`循环，打印这些元素。将循环变量命名为`element`。'
 - en: 'You might wonder why I didn’t call the list `list`. I avoided it because Python
     has a function named `list` that makes new lists. For example, if you have a string,
     you can make a list of letters, like this:'
   id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 你可能会想为什么我没有把列表称为`list`。我避免这样做是因为Python有一个名为`list`的函数，用于创建新的列表。例如，如果你有一个字符串，你可以创建一个字母列表，就像这样：
 - en: '[PRE7]'
   id: totrans-27
   prefs: []
@@ -149,22 +170,26 @@
   id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你创建一个名为`list`的变量，你就不能再使用这个函数了。
 - en: Counting with Loops
   id: totrans-30
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 循环计数
 - en: '*War and Peace* is a famously long book; let’s see how long it is. To count
     the words we need two elements: looping through the words in a text, and counting.
     We’ll start with counting.'
   id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: '*战争与和平*是一本非常长的书；让我们看看它有多长。要计算单词数，我们需要两个元素：循环遍历文本中的单词和计数。我们将从计数开始。'
 - en: 'We’ve already seen that you can create a variable and give it a value, like
     this:'
   id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们已经看到你可以创建一个变量并给它一个值，就像这样：
 - en: '[PRE9]'
   id: totrans-33
   prefs: []
@@ -180,6 +205,7 @@
   id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你给同一个变量赋予不同的值，新值会替换旧值。
 - en: '[PRE11]'
   id: totrans-36
   prefs: []
@@ -195,6 +221,7 @@
   id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 你可以通过读取旧值，加`1`，并将结果赋回原始变量来增加变量的值。
 - en: '[PRE13]'
   id: totrans-39
   prefs: []
@@ -211,6 +238,7 @@
   id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: 增加变量的值称为**递增**；减少值称为**递减**。这些操作是如此常见，以至于有专门的运算符。
 - en: '[PRE15]'
   id: totrans-42
   prefs: []
@@ -227,16 +255,19 @@
   id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个例子中，`+=`运算符读取`count`的值，加上`1`，并将结果赋回给`count`。Python还提供`-=`和其他更新运算符，如`*=`和`/=`。
 - en: '**Exercise:** The following is a number trick from *Learn With Math Games*
     at [https://www.learn-with-math-games.com/math-number-tricks.html](https://www.learn-with-math-games.com/math-number-tricks.html):'
   id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** 以下是来自*Learn With Math Games*的数字技巧[https://www.learn-with-math-games.com/math-number-tricks.html](https://www.learn-with-math-games.com/math-number-tricks.html)：'
 - en: '*Finding Someone’s Age*'
   id: totrans-46
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '*找到某人的年龄*'
 - en: ''
   id: totrans-47
   prefs:
@@ -248,6 +279,7 @@
   - PREF_BQ
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 让这个人把他们的年龄的第一个数字乘以5。
 - en: ''
   id: totrans-49
   prefs:
@@ -266,6 +298,7 @@
   - PREF_BQ
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 告诉他们加3。
 - en: ''
   id: totrans-52
   prefs:
@@ -284,6 +317,7 @@
   - PREF_BQ
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 现在告诉他们把这个数字翻一番。
 - en: ''
   id: totrans-55
   prefs:
@@ -303,6 +337,7 @@
   - PREF_BQ
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 最后，让这个人把他们的年龄的第二个数字加到这个数字上，并让他们告诉你答案。
 - en: ''
   id: totrans-58
   prefs:
@@ -321,6 +356,7 @@
   - PREF_BQ
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 减去6，你就得到他们的年龄。
 - en: Test this algorithm using your age. Use a single variable and update it using
     `+=` and other update operators.
   id: totrans-61
