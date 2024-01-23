@@ -1030,6 +1030,7 @@
   id: totrans-173
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以得出结论，这些相关性可能不是由偶然造成的。这在某种意义上是有用的，因为它排除了一种可能的解释。但这个例子也展示了这种假设检验的局限性。在大样本量下，由于随机性造成的变异往往很小，因此很少能解释我们在真实数据中看到的效应。
 - en: And hypothesis testing can be a distraction from more important questions. In
     Chapter 9, we saw that the relationship between weight and age is nonlinear. But
     the coefficient of correlation only measures linear relationships, so it does
@@ -1039,28 +1040,33 @@
   id: totrans-174
   prefs: []
   type: TYPE_NORMAL
+  zh: 而且假设检验可能会分散注意力，使人忽略更重要的问题。在第9章中，我们看到体重和年龄之间的关系是非线性的。但是相关系数只能测量线性关系，因此它无法捕捉到关系的真实强度。因此，测试相关性可能不是首要要做的更有用的事情。我们可以通过测试回归模型来做得更好。
 - en: Testing Regression Models
   id: totrans-175
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 测试回归模型
 - en: In the previous sections we used permutation to simulate a world where there
     is no correlation between two variables. In this section we’ll apply the same
     method to regression models.
   id: totrans-176
   prefs: []
   type: TYPE_NORMAL
+  zh: 在之前的章节中，我们使用排列来模拟两个变量之间没有相关性的世界。在本节中，我们将对回归模型应用相同的方法。
 - en: As an example, we’ll use NSFG data to explore the relationship between a mother’s
     age and her baby’s birth weight.
   id: totrans-177
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，我们将使用NSFG数据来探索母亲年龄和她的宝宝出生体重之间的关系。
 - en: In previous sections we computed birth weight and a Boolean variable that identifies
     first babies. Now we’ll store them as columns in `nsfg`, so we can use them with
     StatsModels.
   id: totrans-178
   prefs: []
   type: TYPE_NORMAL
+  zh: 在之前的章节中，我们计算了出生体重和一个标识第一个宝宝的布尔变量。现在我们将它们存储为`nsfg`中的列，这样我们就可以在StatsModels中使用它们。
 - en: '[PRE65]'
   id: totrans-179
   prefs: []
@@ -1071,6 +1077,7 @@
   id: totrans-180
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以选择代表活产、足月婴儿的行的子集，并复制一份，以便我们可以修改子集而不影响原始数据。
 - en: '[PRE66]'
   id: totrans-181
   prefs: []
@@ -1088,6 +1095,7 @@
   id: totrans-183
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了可视化母亲年龄和新生儿体重之间的关系，我们将使用一个箱线图，将母亲的年龄分成3年一组的区间。我们可以使用`np.arange`来确定区间边界，使用`pd.cut`将`AGECON`的值放入区间中。
 - en: '[PRE68]'
   id: totrans-184
   prefs: []
@@ -1098,10 +1106,12 @@
   id: totrans-185
   prefs: []
   type: TYPE_NORMAL
+  zh: 每个区间的标签是范围的中点；我使用了一个切片来删除最后一个标签，因为区间的数量比区间边界的数量少一个。
 - en: Here’s the box plot.
   id: totrans-186
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是箱线图。
 - en: '[PRE69]'
   id: totrans-187
   prefs: []
@@ -1111,6 +1121,7 @@
   id: totrans-188
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/13_hypothesis_122_0.png](../Images/bb32adbc00fbb9808d3b47dac0ec3ebc.png)'
 - en: It looks like the average birth weight is highest if the mother is 25-31 years
     old, and lower if she is younger or older. So the relationship might be nonlinear.
     Nevertheless, let’s start with a linear model and work our way up. Here’s a simple
@@ -1118,6 +1129,7 @@
   id: totrans-189
   prefs: []
   type: TYPE_NORMAL
+  zh: 看起来，如果母亲的年龄在25-31岁之间，平均出生体重最高，如果她年龄较小或较大，则较低。因此，这种关系可能是非线性的。尽管如此，我们还是从一个线性模型开始，逐步提升。这是一个简单的回归，以母亲受孕时的年龄为函数。
 - en: '[PRE70]'
   id: totrans-190
   prefs: []
@@ -1134,18 +1146,21 @@
   id: totrans-192
   prefs: []
   type: TYPE_NORMAL
+  zh: 回归线的斜率是每年0.016磅，这意味着如果一个母亲比另一个母亲大一岁，我们预计她的宝宝会重约0.016磅，大约是四分之一盎司。
 - en: This parameter is small, so we might wonder whether the apparent effect is due
     to chance. To answer that question, we will use permutation to simulate a world
     where there is no relationship between mother’s age and birth weight.
   id: totrans-193
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个参数很小，所以我们可能会想知道明显的效应是否是由偶然造成的。为了回答这个问题，我们将使用排列来模拟母亲年龄和出生体重之间没有关系的世界。
 - en: As a test statistic, we’ll use the coefficient of determination, denoted \(R^2\),
     which quantifies the predictive power of the model (see [https://en.wikipedia.org/wiki/Coefficient_of_determination](https://en.wikipedia.org/wiki/Coefficient_of_determination)).
     The regression results include \(R^2\) in a variable called `rsquared`.
   id: totrans-194
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为一个检验统计量，我们将使用决定系数的系数，表示为\(R^2\)，它量化了模型的预测能力（参见[https://en.wikipedia.org/wiki/Coefficient_of_determination](https://en.wikipedia.org/wiki/Coefficient_of_determination)）。回归结果包括一个名为`rsquared`的变量中的\(R^2\)。
 - en: '[PRE72]'
   id: totrans-195
   prefs: []
@@ -1164,11 +1179,13 @@
   id: totrans-197
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个模型的\(R^2\)值非常小，这意味着如果我们知道母亲的年龄（并使用线性模型），我们对宝宝的体重的猜测几乎没有改进。因此，这两个变量之间的明显关系可能是由偶然造成的。我们可以通过使用排列来模拟一个没有这种关系的世界来测试这种可能性。
 - en: The following function takes a `DataFrame`, shuffles the `AGECON` column, computes
     a linear regression model, and returns \(R^2\).
   id: totrans-198
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数接受一个`DataFrame`，洗牌`AGECON`列，计算线性回归模型，并返回\(R^2\)。
 - en: '[PRE74]'
   id: totrans-199
   prefs: []
@@ -1179,6 +1196,7 @@
   id: totrans-200
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们多次调用它，我们将从零假设下的\(R^2\)分布中获得一个样本。
 - en: '[PRE75]'
   id: totrans-201
   prefs: []
@@ -1190,6 +1208,7 @@
   id: totrans-202
   prefs: []
   type: TYPE_NORMAL
+  zh: 经过200次尝试，\(R^2\)的最大值约为0.003，比观察到的\(R^2\)值约为0.008要小。我们得出结论，观察到的效应比我们预期的偶然效应要大。
 - en: '[PRE76]'
   id: totrans-203
   prefs: []
