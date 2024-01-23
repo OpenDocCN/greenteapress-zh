@@ -1,8 +1,10 @@
 - en: How Many Typos?
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
 - en: 原文：[https://allendowney.github.io/ThinkBayes2/ok.html](https://allendowney.github.io/ThinkBayes2/ok.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
@@ -10,76 +12,98 @@
     ago, I learned that one of my new colleagues, Michelle McSweeney, just published
     [a book called *OK*](https://www.goodreads.com/book/show/58380165-ok), which is
     all about the word OK.
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
 - en: As we discussed the joys and miseries of publishing, Michelle mentioned that
     she had found a typo in the book after publication. So naturally I took it as
     a challenge to find the typo. While I was searching, I enjoyed the book very much.
     If you are interested in etymology, linguistics, and history, I recommend it!
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
 - en: As it turned out, I found exactly one typo. When I told Michelle, she asked
     me nervously which page it was on. Page 17\. She looked disappointed – that was
     not the same typo she found.
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
 - en: 'Now, for people who like Bayesian statistics, this scenario raises some questions:'
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
 - en: After our conversation, how many additional typos should we expect there to
     be?
+  id: totrans-6
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: If she and I had found the same typo, instead of different ones, how many typos
     would we expect?
+  id: totrans-7
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: As it happens, I used a similar scenario as [an example in *Think Bayes*](https://allendowney.github.io/ThinkBayes2/chap15.html#the-lincoln-index-problem).
     This notebook is based on the code I presented there. If there’s anything here
     that’s not clear, you could read the chapter for more details.
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
 - en: '[You can also click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ThinkBayes2/blob/master/examples/ok.ipynb).'
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
 - en: A Warm-up Problem
+  id: totrans-10
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: Starting with a simple version of the problem, let’s assume that we know `p0`
     and `p1`, which are the probabilities, respectively, that the first and second
     readers find any given typo.
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
 - en: For example, let’s assume that Michelle has a 66% chance of finding a typo and
     I have a 50% chance.
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE0]'
+  id: totrans-13
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: With these assumptions, we can compute an array that contains (in order) the
     probability that neither of us find a typo, the probability that only the second
     reader does, the probability that the first reader does, and the probability that
     we both do.
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE1]'
+  id: totrans-15
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '[PRE2]'
+  id: totrans-16
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '[PRE3]'
+  id: totrans-17
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: With the assumed probabilities, there is a 33% chance that we both find a typo
     and a 17% chance that neither of us do.
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
 - en: The Prior
+  id: totrans-19
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -87,386 +111,548 @@
     distribution, which is a reasonable default for values that are counts. And I’ll
     set the mean to 2, which means that before either of us read the book, we would
     have expected about two typos.
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE4]'
+  id: totrans-21
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '[PRE5]'
+  id: totrans-22
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: Here’s what the prior looks like.
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE6]</details> ![_images/77726d32755a0911144b37af88df7d5b01545b8f0092aaa4754562c4c6801e50.png](../Images/0d27247b200123da695694c7f46e46ab.png)'
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
 - en: The Update (Simple Version)
+  id: totrans-26
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: 'To represent the data, I’ll create these variables:'
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
 - en: '`k10`: the number of typos found by the first reader but not the second'
+  id: totrans-28
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: '`k01`: the number of typos found by the second reader but not the first'
+  id: totrans-29
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: '`k11`: the number of typos found by both readers'
+  id: totrans-30
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: '[PRE7]'
+  id: totrans-31
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: I’ll put the data in an array, with 0 as a place-keeper for the unknown value
     `k00`, which is the number of typos neither of us found.
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE8]'
+  id: totrans-33
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: Now we can use the multinomial distribution to compute the likelihood of the
     data for each hypothetical value of `N` (assuming for now that the probabilities
     in `y` are known).
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE9]'
+  id: totrans-35
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: We can compute the posterior in the usual way.
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE10]'
+  id: totrans-37
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '[PRE11]'
+  id: totrans-38
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: And here’s what it looks like.
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE12]</details> ![_images/e9548bb3eda665fa8cc1684da08ffe2df31f833e2ec55e22d0f4c6a08b185931.png](../Images/76953af36d1e930825c19828768e1369.png)'
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
 - en: The most likely value is 2, and the posterior mean is about 2.3, just a little
     higher than the prior mean.
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE13]'
+  id: totrans-44
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: '[PRE14]</details>'
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
 - en: But remember that this is based on the assumption that we know `p0` and `p1`.
     In reality, they are unknown, but we can estimate them from the data.
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
 - en: Three-Parameter Model
+  id: totrans-47
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: 'What we need is a model with three parameters: `N`, `p0`, and `p1`. We’ll use
     `prior_N` again for the prior distribution of `N`, and here are the priors for
     `p0` and `p1`:'
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE15]'
+  id: totrans-49
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '[PRE16]'
+  id: totrans-50
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '[PRE17]'
+  id: totrans-51
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: '![_images/7e0d1a057533e834e15cc2de09bb543b9108cd175ccce907df9079147b09c1be.png](../Images/ddb1ad9429f402e82ab247a9f4b7c9c7.png)'
+  id: totrans-52
   prefs: []
   type: TYPE_IMG
 - en: I used beta distributions to construct weakly informative priors for `p0` and
     `p1`, with means `0.66` and `0.5` respectively.
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
 - en: The Joint Prior
+  id: totrans-54
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: Now we have to assemble the marginal priors into a joint distribution. I’ll
     start by putting the first two into a `DataFrame`.
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE18]'
+  id: totrans-56
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: '[PRE19]'
+  id: totrans-57
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: Now I’ll stack them and put the result in a `Pmf`.
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE20]'
+  id: totrans-59
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '|  |  | probs |'
+  id: totrans-60
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- |'
+  id: totrans-61
   prefs: []
   type: TYPE_TB
 - en: '| N | p0 |  |'
+  id: totrans-62
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- |'
+  id: totrans-63
   prefs: []
   type: TYPE_TB
 - en: '| 0 | 0.00 | 0.000000 |'
+  id: totrans-64
   prefs: []
   type: TYPE_TB
 - en: '| 0.02 | 0.000013 |'
+  id: totrans-65
   prefs: []
   type: TYPE_TB
 - en: '| 0.04 | 0.000050 |'
+  id: totrans-66
   prefs: []
   type: TYPE_TB
 - en: We can use `make_joint` again to add in the third parameter.
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE21]'
+  id: totrans-68
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: '[PRE22]'
+  id: totrans-69
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: The result is a `DataFrame` with values of `N` and `p0` in a `MultiIndex` that
     goes down the rows and values of `p1` in an index that goes across the columns.
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE23]'
+  id: totrans-71
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: '|  | p1 | 0.00 | 0.02 | 0.04 | 0.06 | 0.08 | 0.10 | 0.12 | 0.14 | 0.16 | 0.18
     | ... | 0.82 | 0.84 | 0.86 | 0.88 | 0.90 | 0.92 | 0.94 | 0.96 | 0.98 | 1.00 |'
+  id: totrans-72
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
     | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  id: totrans-73
   prefs: []
   type: TYPE_TB
 - en: '| N | p0 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |'
+  id: totrans-74
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
     | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  id: totrans-75
   prefs: []
   type: TYPE_TB
 - en: '| 0 | 0.00 | 0.0 | 0.000000e+00 | 0.000000e+00 | 0.000000e+00 | 0.000000e+00
     | 0.000000e+00 | 0.000000e+00 | 0.000000e+00 | 0.000000e+00 | 0.000000e+00 | ...
     | 0.000000e+00 | 0.000000e+00 | 0.000000e+00 | 0.000000e+00 | 0.000000e+00 | 0.000000e+00
     | 0.000000e+00 | 0.000000e+00 | 0.000000e+00 | 0.0 |'
+  id: totrans-76
   prefs: []
   type: TYPE_TB
 - en: '| 0.02 | 0.0 | 2.997069e-08 | 5.871809e-08 | 8.624220e-08 | 1.125430e-07 |
     1.376205e-07 | 1.614748e-07 | 1.841057e-07 | 2.055133e-07 | 2.256977e-07 | ...
     | 2.256977e-07 | 2.055133e-07 | 1.841057e-07 | 1.614748e-07 | 1.376205e-07 | 1.125430e-07
     | 8.624220e-08 | 5.871809e-08 | 2.997069e-08 | 0.0 |'
+  id: totrans-77
   prefs: []
   type: TYPE_TB
 - en: '| 0.04 | 0.0 | 1.174362e-07 | 2.300791e-07 | 3.379286e-07 | 4.409848e-07 |
     5.392478e-07 | 6.327174e-07 | 7.213937e-07 | 8.052767e-07 | 8.843664e-07 | ...
     | 8.843664e-07 | 8.052767e-07 | 7.213937e-07 | 6.327174e-07 | 5.392478e-07 | 4.409848e-07
     | 3.379286e-07 | 2.300791e-07 | 1.174362e-07 | 0.0 |'
+  id: totrans-78
   prefs: []
   type: TYPE_TB
 - en: 3 rows × 51 columns
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
 - en: 'Now I’ll apply `stack` again:'
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE24]'
+  id: totrans-81
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: '|  |  |  | probs |'
+  id: totrans-82
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- | --- |'
+  id: totrans-83
   prefs: []
   type: TYPE_TB
 - en: '| N | p0 | p1 |  |'
+  id: totrans-84
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- | --- |'
+  id: totrans-85
   prefs: []
   type: TYPE_TB
 - en: '| 0 | 0.0 | 0.00 | 0.0 |'
+  id: totrans-86
   prefs: []
   type: TYPE_TB
 - en: '| 0.02 | 0.0 |'
+  id: totrans-87
   prefs: []
   type: TYPE_TB
 - en: '| 0.04 | 0.0 |'
+  id: totrans-88
   prefs: []
   type: TYPE_TB
 - en: The result is a `Pmf` with a three-column `MultiIndex` containing all possible
     triplets of parameters.
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
 - en: 'The number of rows is the product of the number of values in all three priors:'
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE25]'
+  id: totrans-91
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: '[PRE26]'
+  id: totrans-92
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: That’s still small enough to be practical, but it will take longer to compute
     the likelihoods than in the previous example.
+  id: totrans-93
   prefs: []
   type: TYPE_NORMAL
 - en: The Update (Three-Parameter Version)
+  id: totrans-94
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: Here’s the loop that computes the likelihoods. It’s similar to the one in the
     previous section, except that `y` is no longer constant; we compute it each time
     through the loop from hypothetical values of `p0` and `p1`.
+  id: totrans-95
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE27]'
+  id: totrans-96
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: '[PRE28]'
+  id: totrans-97
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: We can compute the posterior in the usual way.
+  id: totrans-98
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE29]'
+  id: totrans-99
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: '[PRE30]'
+  id: totrans-100
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: Here’s the posterior marginal distribution `N`.
+  id: totrans-101
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE31]'
+  id: totrans-102
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: '[PRE32]'
+  id: totrans-103
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: '![_images/521e5ac757cf28dc37bb176c71850b5773b74cdf68d0ea45e694a617bac42457.png](../Images/35882921e66e1b703284f0182178ec1c.png)'
+  id: totrans-104
   prefs: []
   type: TYPE_IMG
 - en: 'To compute the probability that there is at least one undiscovered typo, we
     can convert the posterior distribution to a survival function (complementary CDF):'
+  id: totrans-105
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE33]'
+  id: totrans-106
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: '[PRE34]'
+  id: totrans-107
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: The probability is about 37% that there’s another typo – so that’s good news!
+  id: totrans-108
   prefs: []
   type: TYPE_NORMAL
 - en: The posterior mean is about 2.5, which is a little higher than what we got with
     the simple model.
+  id: totrans-109
   prefs: []
   type: TYPE_NORMAL
+  zh: 后验均值约为2.5，比简单模型得到的结果略高。
 - en: '[PRE35]'
+  id: totrans-110
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: '[PRE36]'
+  id: totrans-111
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: Apparently our uncertainty about `p0` and `p1` leaves open the possibility that
     there are more typos and we are not very good at finding them. Here’s what the
     posterior distributions look like for `p0` and `p1`.
+  id: totrans-112
   prefs: []
   type: TYPE_NORMAL
+  zh: 显然，我们对`p0`和`p1`的不确定性使得存在更多的错别字的可能性，而我们并不擅长发现它们。下面是`p0`和`p1`的后验分布。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-113
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE37]</details> ![_images/b1402fb19dc1e3caa863266c73b6723a8334d075a54cad8f228d32265e115cc6.png](../Images/97f4d4ab12e650084fc56a9ab9ce658f.png)'
+  id: totrans-114
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE37]</details> ![_images/b1402fb19dc1e3caa863266c73b6723a8334d075a54cad8f228d32265e115cc6.png](../Images/97f4d4ab12e650084fc56a9ab9ce658f.png)'
 - en: With so little data, the posterior distributions are still quite wide, but the
     posterior means are a little smaller than the priors.
+  id: totrans-115
   prefs: []
   type: TYPE_NORMAL
+  zh: 由于数据很少，后验分布仍然相当宽，但后验均值略小于先验。
 - en: '[PRE38]'
+  id: totrans-116
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: '[PRE39]'
+  id: totrans-117
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: '[PRE40]'
+  id: totrans-118
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE40]'
 - en: '[PRE41]'
+  id: totrans-119
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE41]'
 - en: The fact that Michelle and I found only two typos is weak evidence that we are
     not as good at finding them as the priors implied.
+  id: totrans-120
   prefs: []
   type: TYPE_NORMAL
+  zh: Michelle和我只发现了两个错别字的事实，这表明我们在发现错别字方面并不像先验所暗示的那样擅长。
 - en: 'At this point, we’ve answered the first question: given that Michelle and I
     found different bugs, the expected value for the number of remaining typos is
     about 0.5.'
+  id: totrans-121
   prefs: []
   type: TYPE_NORMAL
+  zh: 到目前为止，我们已经回答了第一个问题：鉴于Michelle和我发现了不同的错误，剩余错别字的预期值约为0.5。
 - en: 'In the counterfactual case, if we had found the same typo, we would represent
     the data like this:'
+  id: totrans-122
   prefs: []
   type: TYPE_NORMAL
+  zh: 在反事实情况下，如果我们发现了相同的错别字，我们会这样表示数据：
 - en: '[PRE42]'
+  id: totrans-123
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE42]'
 - en: 'If we run the analysis with this data, we find:'
+  id: totrans-124
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们用这些数据进行分析，我们会发现：
 - en: The expected number of remaining typos is about 0.3 (compared to 0.5),
+  id: totrans-125
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 剩余错别字的预期数量约为0.3（与0.5相比），
 - en: there would be only a 25% chance that there is at least one undiscovered typo,
     and
+  id: totrans-126
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 只有25%的机会存在至少一个未发现的错别字，而且
 - en: we would conclude that Michelle and I are slightly better at finding typos.
+  id: totrans-127
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 我们会得出结论，Michelle和我在发现错别字方面略有优势。
 - en: This notebook is based on [this chapter of *Think Bayes*, Second Edition](https://allendowney.github.io/ThinkBayes2/chap15.html#the-lincoln-index-problem).
+  id: totrans-128
   prefs: []
   type: TYPE_NORMAL
+  zh: 这本笔记本是基于《Think Bayes，第二版》的[这一章](https://allendowney.github.io/ThinkBayes2/chap15.html#the-lincoln-index-problem)。
 - en: Copyright 2023 Allen B. Downey
+  id: totrans-129
   prefs: []
   type: TYPE_NORMAL
+  zh: 版权所有 2023 Allen B. Downey
 - en: 'License: [Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA
     4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  id: totrans-130
   prefs: []
   type: TYPE_NORMAL
+  zh: 许可证：[署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/)

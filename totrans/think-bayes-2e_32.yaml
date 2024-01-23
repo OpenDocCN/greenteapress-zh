@@ -1,114 +1,183 @@
 - en: Comparing birth rates
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 比较分娩率
 - en: 原文：[https://allendowney.github.io/ThinkBayes2/hospital_birth_rate.html](https://allendowney.github.io/ThinkBayes2/hospital_birth_rate.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ThinkBayes2/hospital_birth_rate.html](https://allendowney.github.io/ThinkBayes2/hospital_birth_rate.html)
 - en: '[Run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ThinkBayes2/blob/master/examples/hospital_birth_rate.ipynb)'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: '[在Colab上运行这个笔记本](https://colab.research.google.com/github/AllenDowney/ThinkBayes2/blob/master/examples/hospital_birth_rate.ipynb)'
 - en: Here’s an exercise that was in a draft of *Think Bayes*, but I ended up cutting
     it.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个在*Think Bayes*草稿中的练习，但我最终删掉了它。
 - en: '**Exercise:** Two doctors fresh out of medical school are arguing about whose
     hospital delivers more babies. The first doctor says, “I’ve been at Hospital A
     for one week, and already we’ve had a day when we delivered 19 babies.”'
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** 两位刚从医学院毕业的医生正在争论他们所在医院的分娩婴儿数量。第一位医生说：“我在A医院待了一周，我们已经有一天分娩了19个婴儿。”'
 - en: The second doctor says, “I’ve been at Hospital B for two weeks, and already
     there’s been a 20-baby day.”
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 第二位医生说：“我在B医院待了两个星期，已经有一天出生了20个婴儿。”
 - en: Which hospital do you think delivers more babies on average? You can assume
     that the number of babies born in a day is well modeled by a [Poisson distribution](https://en.wikipedia.org/wiki/Poisson_distribution)
     with parameter \(\lambda\), which is the Greek letter pronounced “lambda”.
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 你认为哪家医院平均分娩的婴儿更多？你可以假设一天出生的婴儿数量很好地符合[泊松分布](https://en.wikipedia.org/wiki/Poisson_distribution)的参数\(\lambda\)，这是希腊字母“lambda”的发音。
 - en: 'The following function computes the PMF of a Poisson distribution with parameter
     `lam` over a range of integers, `qs`:'
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数计算参数为`lam`的泊松分布在整数范围`qs`上的PMF：
 - en: '[PRE0]'
+  id: totrans-8
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: 'For example, if the actual value of \(\lambda\) is 8, we can compute the distribution
     of babies born in a single day like this:'
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，如果\(\lambda\)的实际值为8，我们可以这样计算单日出生的婴儿的分布：
 - en: '[PRE1]'
+  id: totrans-10
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: And here’s what it looks like.
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是它的样子。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE2]</details> ![_images/455e7212e0df3a64e4f896ba479de5ffdd0a75b04650b5db54c0254de70941eb.png](../Images/a154135c5310ff6d54430faa88766d2f.png)'
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE2]</details> ![_images/455e7212e0df3a64e4f896ba479de5ffdd0a75b04650b5db54c0254de70941eb.png](../Images/a154135c5310ff6d54430faa88766d2f.png)'
 - en: The mean of this distribution is the parameter, \(\lambda\).
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个分布的均值是参数\(\lambda\)。
 - en: '[PRE3]'
+  id: totrans-15
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '[PRE4]'
+  id: totrans-16
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: And here’s what the distributions look like for the maximum number of babies
     after one week or two weeks.
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是一周或两周后出生的婴儿的最大数量的分布。
 - en: '[PRE5]'
+  id: totrans-18
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '![_images/13f236aa791bf6e4cbb7a3f41b08f4a23884da7cfee2b831e04ab79ef253e372.png](../Images/6572fd1f7bbcbc590f53a1ad3b42adbb.png)'
+  id: totrans-19
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/13f236aa791bf6e4cbb7a3f41b08f4a23884da7cfee2b831e04ab79ef253e372.png](../Images/6572fd1f7bbcbc590f53a1ad3b42adbb.png)'
 - en: Now you finish it off from there.
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在你可以从这里完成它。
 - en: '[PRE6]'
+  id: totrans-21
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '[PRE7]'
+  id: totrans-22
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '[PRE8]'
+  id: totrans-23
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '[PRE9]'
+  id: totrans-24
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '[PRE10]'
+  id: totrans-25
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '[PRE11]'
+  id: totrans-26
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: '[PRE12]'
+  id: totrans-27
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '[PRE13]'
+  id: totrans-28
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: '![_images/dd6f0474e1a7d5db3a82a64f9408af43695c0e0a153f549cfdfd353ae06cce86.png](../Images/e611f3ad921d5602ff8901e3306514bc.png)'
+  id: totrans-29
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/dd6f0474e1a7d5db3a82a64f9408af43695c0e0a153f549cfdfd353ae06cce86.png](../Images/e611f3ad921d5602ff8901e3306514bc.png)'
 - en: '[PRE14]'
+  id: totrans-30
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '[PRE15]'
+  id: totrans-31
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '[PRE16]'
+  id: totrans-32
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '[PRE17]'
+  id: totrans-33
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
