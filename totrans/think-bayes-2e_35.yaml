@@ -1,8 +1,10 @@
 - en: The All-Knowing Cube of Probability
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
 - en: 原文：[https://allendowney.github.io/ThinkBayes2/beta_binomial.html](https://allendowney.github.io/ThinkBayes2/beta_binomial.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
@@ -10,272 +12,378 @@
     It is an extension of *[Think Bayes](https://greenteapress.com/wp/think-bayes/)*,
     [Chapter 18](https://allendowney.github.io/ThinkBayes2/chap18.html), which explains
     how to use conjugate priors to do Bayesian updates with very little computation.
+  id: totrans-2
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: The all-knowing cube of probability is an 3-D array that contains the past,
     the present, and the probabilistic future.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
 - en: At first, the cube appears to be a collection of binomial PMFs, but if we turn
     it sideways, we see that it is also a collection of negative binomial PMFs, and
     if we turn it sideways again, it is also a collection of grid-approximated beta
     distributions.
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
 - en: This tripartite nature is the source of its uncanny ability to perform Bayesian
     updates, which I will demonstrate.
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE0]'
+  id: totrans-6
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: Making the cube
+  id: totrans-7
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: Suppose you run \(n\) trials where the probability of success is \(p\). To compute
     the probability of \(k\) successes, we can use the binomial distribution.
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
 - en: For example, here’s a range of values for \(k\) and \(n\), and a discrete grid
     of values for \(p\).
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE1]'
+  id: totrans-10
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: We can use `meshgrid` to make a 3-D grid of \(k\), \(n\), and \(p\), and `binom`
     to evaluate the binomial PMF at each point.
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE2]'
+  id: totrans-12
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '[PRE3]'
+  id: totrans-13
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: The result is the **all-knowing cube of probability**, so-called because it
     can answer all of our questions about Bernoulli trials. Allow me to demonstrate.
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
 - en: The binomial distribution
+  id: totrans-15
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: Suppose we are given \(n\) and \(p\), and we would like to know the distribution
     of \(k\). We can answer that question by selecting a vector from the cube along
     the \(k\) axis.
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE4]'
+  id: totrans-17
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: The result is a normalized PMF.
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE5]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '[PRE6]'
+  id: totrans-20
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: Here’s what it looks like.
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE7]'
+  id: totrans-22
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '![_images/1dbbe565464b50915e694c1adcba74a56d1cbc3079226148517aa86de13d54f4.png](../Images/3ed8c9d7a44cc89c336bdae1c955d04d.png)'
+  id: totrans-23
   prefs: []
   type: TYPE_IMG
 - en: Because we used `binom` to compute the cube, we should not be surprised to find
     that this slice from the cube is a binomial PMF. But just to make sure, we can
     use `binom` again to confirm it.
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE8]'
+  id: totrans-25
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: And we can check that the results are consistent.
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE9]'
+  id: totrans-27
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '[PRE10]'
+  id: totrans-28
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: 'So we can think of the cube as a collection of binomial PMFs. But we can also
     think of it as a joint distribution of \(k\), \(n\), and \(p\), which raises the
     question: what do we get if we select a vector along the \(n\) and \(p\) axes?'
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
 - en: The negative binomial distribution
+  id: totrans-30
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: Suppose we plan to run Bernoulli trials with probability \(p\) until we see
     \(k\) successes. How many trials will it take?
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
 - en: We can answer this question by selecting a vector from the cube along the \(n\)
     axis.
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE11]'
+  id: totrans-33
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: The result is close to the answer we want, but there’s something we have to
     fix. Remember that the values in the cube come from the binomial PMF, which looks
     like this.
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
 - en: \[Pr(k; n, p) = \binom{n}{k} p^{k} (1-p)^{n-k}\]
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
 - en: The first term is the binomial coefficient, which indicates that there are \(n\)
     places we could find \(k\) successes. But if we keep running trials until we see
     \(k\) successes, we know the last trial will be a success, which means there are
     only \(n-1\) places we could find the other \(k-1\) successes.
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
 - en: So we have to adjust the values from the cube by dividing the elements by \(n/k\).
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE12]'
+  id: totrans-38
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: And normalize the results to get a proper PMF.
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE13]'
+  id: totrans-40
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: Here’s what it looks like.
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE14]'
+  id: totrans-42
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '![_images/51edcd12a1bc05b69931e2780914f6188edca778ea322bda187b49025823c225.png](../Images/4a176a0d1a4ac8dd63525dccd0402620.png)'
+  id: totrans-43
   prefs: []
   type: TYPE_IMG
 - en: This is a negative binomial distribution, which we can confirm using `scipy.stats.nbinom`.
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE15]'
+  id: totrans-45
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '[PRE16]'
+  id: totrans-46
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '[PRE17]'
+  id: totrans-47
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: '[PRE18]'
+  id: totrans-48
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: 'To see why this works we can compare the binomial PMF, which is a distribution
     over \(k\) with \(n\) and \(p\) as parameters:'
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
 - en: \[Pr(k; n, p) = \binom{n}{k} p^{k} (1-p)^{n-k}\]
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
 - en: 'And the negative binomial PMF, which I’ve written as a distribution over \(n\)
     with \(k\) and \(p\) as parameters:'
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
 - en: \[Pr(n; k, p) = \binom{n-1}{k-1} p^k (1-p)^{n-k}\]
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
 - en: This is not the most common way to parameterize the negative binomial distribution,
     but it shows that the only difference is in the binomial coefficient, because
     we know that the last trial is a success.
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
 - en: The beta distribution
+  id: totrans-54
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: Suppose we have 101 devices that perform Bernoulli trials with different probabilities.
     The first device has \(p=0\), the second has \(p=0.01\), and so on up to the last
     device with \(p=1\).
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
 - en: Now suppose we choose one of the devices so that all values of \(p\) are equally
     likely. If we run \(n\) trials and see \(k\) successes, what is the distribution
     of \(p\)?
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
 - en: We can answer this question by selecting a vector from the cube along the \(p\)
     axis.
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE19]'
+  id: totrans-58
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: The result is not normalized.
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE20]'
+  id: totrans-60
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '[PRE21]'
+  id: totrans-61
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: But we can normalize it like this.
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE22]'
+  id: totrans-63
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: And here’s what it looks like.
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE23]'
+  id: totrans-65
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: '![_images/1e2f223d24ce1e9e25ec684e3a964abe687315c7cf0abbccc146146a9d09dc10.png](../Images/4fdb4cb254e7f9ffae0b960858df03b6.png)'
+  id: totrans-66
   prefs: []
   type: TYPE_IMG
 - en: This is a beta distribution, which we can confirm by running `scipy.stats.beta`
     with a change of variables, \(a = k+1\) and \(b = n-k+1\).
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE24]'
+  id: totrans-68
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: '[PRE25]'
+  id: totrans-69
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: '[PRE26]'
+  id: totrans-70
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: '[PRE27]'
+  id: totrans-71
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: '[PRE28]'
+  id: totrans-72
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: To see why this works, let’s compare the PDF of the beta distribution
+  id: totrans-73
   prefs: []
   type: TYPE_NORMAL
 - en: \[f(p, a, b) = \frac{1}{B(a, b)} p^{a-1} (1-p)^{b-1} \]
+  id: totrans-74
   prefs: []
   type: TYPE_NORMAL
 - en: And the PMF of the binomial distribution.
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
 - en: \[Pr(k; n, p) = \binom{n}{k} p^{k} (1-p)^{n-k}\]
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
 - en: With the change of variables, they are identical except for the first term,
     which normalizes the distributions.
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
 - en: Conjugate priors
+  id: totrans-78
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -283,275 +391,403 @@
     which means they are joined together. This relationship has a useful property
     for Bayesian statistics: if the prior distribution of \(p\) is beta and the likelihood
     of the data is binomial, the posterior distribution is also beta.'
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
 - en: To see how that works, here is the PDF of the a beta prior distribution with
     parameters \(a\) and \(b\).
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
 - en: \[p^{a-1} (1-p)^{b-1}\]
+  id: totrans-81
   prefs: []
   type: TYPE_NORMAL
 - en: I have omitted the normalizing factor – we don’t need it because we are going
     to normalize the distribution after the update.
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
 - en: Now suppose we see \(k\) successes in \(n\) trials. The likelihood of this data
     is given by the binomial distribution, which has this PMF.
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
 - en: \[p^{k} (1-p)^{n-k}\]
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
 - en: Again, I have omitted the normalizing factor. Now to get the unnormalized posterior,
     we multiply the beta prior and the binomial likelihood. The result is
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
 - en: \[p^{a-1+k} (1-p)^{b-1+n-k}\]
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
 - en: which we recognize as an unnormalized beta distribution with parameters \(a+k\)
     and \(b+n-k\).
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
 - en: So if we observe \(k\) successes in \(n\) trials, we can do the update by making
     a beta posterior with parameters \(a+k\) and \(b+n-k\).
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
 - en: As an example, suppose the prior is a beta distribution with parameters \(a=2\)
     and \(b=3\).
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE29]'
+  id: totrans-90
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: And suppose we see \(k=5\) successes in \(n=10\) attempts.
+  id: totrans-91
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE30]'
+  id: totrans-92
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: We can compute the posterior by multiplying the prior and the likelihood, then
     normalizing the results.
+  id: totrans-93
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE31]'
+  id: totrans-94
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: Or we can compute a beta distribution with the updated parameters.
+  id: totrans-95
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE32]'
+  id: totrans-96
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: The result is the same either way.
+  id: totrans-97
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE33]'
+  id: totrans-98
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: '[PRE34]'
+  id: totrans-99
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: But we don’t have to compute the posterior by doing an explicit update, or by
     computing a beta distribution, because the all-knowing cube of probability already
     knows the answer – we just have to ask.
+  id: totrans-100
   prefs: []
   type: TYPE_NORMAL
 - en: The following function takes the parameters \(a\) and \(b\) and looks up the
     corresponding beta distribution already computed in the cube.
+  id: totrans-101
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE35]'
+  id: totrans-102
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: We can use it to get the posterior distribution of \(p\) from the cube.
+  id: totrans-103
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE36]'
+  id: totrans-104
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: And confirm that we get the same result.
+  id: totrans-105
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE37]'
+  id: totrans-106
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE37]'
 - en: '[PRE38]'
+  id: totrans-107
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: Here’s what it looks like.
+  id: totrans-108
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE39]'
+  id: totrans-109
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: '![_images/2b4e629151043e7f5d3a22dbba5ac9a8705b3ae0cd6a79ae6e9e462eb2e876a0.png](../Images/b5d64572157bf5ac1ff45eda06e05204.png)'
+  id: totrans-110
   prefs: []
   type: TYPE_IMG
 - en: Update with nbinom
+  id: totrans-111
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: Now suppose that instead of running \(n\) trials, we keep running trials until
     we see \(k\) successes – and suppose it takes \(n\) trials.
+  id: totrans-112
   prefs: []
   type: TYPE_NORMAL
 - en: In this case, we can use the negative binomial distribution to compute the likelihood
     of the data.
+  id: totrans-113
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE40]'
+  id: totrans-114
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE40]'
 - en: And we can do the update in the usual way.
+  id: totrans-115
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE41]'
+  id: totrans-116
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE41]'
 - en: 'It turns out that the result is the same in both cases:'
+  id: totrans-117
   prefs: []
   type: TYPE_NORMAL
 - en: If we decide ahead of time to run \(n\) trials, and see \(k\) successes, or
+  id: totrans-118
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: If we run until we see \(k\) successes, and it takes \(n\) trials.
+  id: totrans-119
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: '[PRE42]'
+  id: totrans-120
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE42]'
 - en: '[PRE43]'
+  id: totrans-121
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE43]'
 - en: 'Bayesian inference only depends on the data, not the stopping condition. Or,
     as my friend Ted Bunn put it: [Who knows what evil lurks in the hearts of men?
     The Bayesian doesn’t care.](https://blog.richmond.edu/physicsbunn/2012/01/05/who-knows-what-evil-lurks-in-the-hearts-of-men-the-bayesian-doesnt-care/)'
+  id: totrans-122
   prefs: []
   type: TYPE_NORMAL
+  zh: 贝叶斯推断只取决于数据，而不是停止条件。或者，正如我的朋友泰德·邦恩所说：[谁知道人心中隐藏着什么邪恶？贝叶斯不在乎。](https://blog.richmond.edu/physicsbunn/2012/01/05/who-knows-what-evil-lurks-in-the-hearts-of-men-the-bayesian-doesnt-care/)
 - en: Posterior predictive distributions
+  id: totrans-123
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 后验预测分布
 - en: The all-knowing cube of probability knows what we should believe in the light
     of new data, but that’s not all. It also knows the future, at least probabilistically.
+  id: totrans-124
   prefs: []
   type: TYPE_NORMAL
+  zh: 概率全知方块知道我们在新数据的光下应该相信什么，但这还不是全部。它也知道未来，至少是概率上的。
 - en: After an update, we can get posterior predictive distribution by computing a
     weighted mixture of binomial distributions with different values of \(p\), weighted
     by the posterior probabilities.
+  id: totrans-125
   prefs: []
   type: TYPE_NORMAL
+  zh: 更新后，我们可以通过计算加权的二项分布混合来获得后验预测分布，不同的\(p\)值，权重是后验概率。
 - en: We can do that by selecting the \((k, p)\) plane from the cube, multiplying
     by the posterior and summing away the \(p\) axis.
+  id: totrans-126
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以通过从方块中选择\((k, p)\)平面，乘以后验概率并消去\(p\)轴来做到这一点。
 - en: '[PRE44]'
+  id: totrans-127
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE44]'
 - en: The result is a distribution over \(k\). Here’s what it looks like (dropping
     values of \(k\) greater than \(n\)).
+  id: totrans-128
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个\(k\)上的分布。这是它的样子（去掉大于\(n\)的\(k\)的值）。
 - en: '[PRE45]'
+  id: totrans-129
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE45]'
 - en: '![_images/2590e39b2e536e14079fcc7ba7faff83a4bfbcce3d1babb7f3169dcdf8b6cf36.png](../Images/72dd6150a263282c745c197ab939388d.png)'
+  id: totrans-130
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/2590e39b2e536e14079fcc7ba7faff83a4bfbcce3d1babb7f3169dcdf8b6cf36.png](../Images/72dd6150a263282c745c197ab939388d.png)'
 - en: A beta mixture of binomials is a beta-binomial distribution, and it has a PMF
     we can compute analytically.
+  id: totrans-131
   prefs: []
   type: TYPE_NORMAL
+  zh: 二项分布的贝塔混合是贝塔二项分布，它有一个我们可以解析计算的PMF。
 - en: '[PRE46]'
+  id: totrans-132
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE46]'
 - en: So we can confirm that the all-knowing cube was correct.
+  id: totrans-133
   prefs: []
   type: TYPE_NORMAL
+  zh: 所以我们可以确认，全知方块是正确的。
 - en: '[PRE47]'
+  id: totrans-134
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE47]'
 - en: '[PRE48]'
+  id: totrans-135
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE48]'
 - en: The other posterior predictive
+  id: totrans-136
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 其他后验预测
 - en: We can also use the cube to compute the posterior predictive distribution of
     \(n\) given a required number of successes, \(k\).
+  id: totrans-137
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们还可以使用方块来计算给定所需成功次数\(k\)的\(n\)的后验预测分布。
 - en: We start by selecting the \((n, p)\) plane from the cube, which is a collection
     of negative binomials distributions, except that we have to correct them by dividing
     through by \(n/k\), as we did above.
+  id: totrans-138
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们首先从方块中选择\((n, p)\)平面，这是一组负二项分布，只是我们必须通过除以\(n/k\)来纠正它们，就像我们上面做的那样。
 - en: Actually, we only have to divide by \(n\) because \(k\) is a constant that will
     get normalized away.
+  id: totrans-139
   prefs: []
   type: TYPE_NORMAL
+  zh: 实际上，我们只需要除以\(n\)，因为\(k\)是一个常数，会被归一化掉。
 - en: '[PRE49]'
+  id: totrans-140
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE49]'
 - en: Now we can compute a weighted sum as in the previous example, multiplying by
     the posterior and summing away the \(p\) axis.
+  id: totrans-141
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以像前面的例子一样计算加权和，乘以后验概率并消去\(p\)轴。
 - en: '[PRE50]'
+  id: totrans-142
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE50]'
 - en: Here’s what it looks like.
+  id: totrans-143
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是它的样子。
 - en: '[PRE51]'
+  id: totrans-144
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE51]'
 - en: '![_images/f9799c743157bf4fad1e53e01bb39d37622a3165729b2255b2157422d1e781e8.png](../Images/cb60c74484fc8a7f55a406e46c7e8dd0.png)'
+  id: totrans-145
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/f9799c743157bf4fad1e53e01bb39d37622a3165729b2255b2157422d1e781e8.png](../Images/cb60c74484fc8a7f55a406e46c7e8dd0.png)'
 - en: A beta-weighted mixture of negative binomials is a beta-negative binomial distribution,
     and it has a PMF we can compute analytically. SciPy doesn’t have a function to
     do it, but we can write our own using functions in `scipy.special`.
+  id: totrans-146
   prefs: []
   type: TYPE_NORMAL
+  zh: 负二项分布的贝塔加权混合是贝塔负二项分布，它有一个我们可以解析计算的PMF。SciPy没有一个可以做到这一点的函数，但我们可以使用`scipy.special`中的函数自己编写。
 - en: '[PRE52]'
+  id: totrans-147
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE52]'
 - en: The conventional parameterization of the beta-negative binomial uses \(k\) for
     the number of failures and \(r\) for the number of required successes, so we have
     to change some variables to get a distribution over \(n\).
+  id: totrans-148
   prefs: []
   type: TYPE_NORMAL
+  zh: 贝塔负二项分布的传统参数化使用\(k\)表示失败次数，\(r\)表示所需成功次数，因此我们必须改变一些变量以获得\(n\)上的分布。
 - en: '[PRE53]'
+  id: totrans-149
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE53]'
 - en: But we can confirm that the result from the cube is consistent with the analytic
     PMF.
+  id: totrans-150
   prefs: []
   type: TYPE_NORMAL
+  zh: 但我们可以确认，方块的结果与解析PMF一致。
 - en: '[PRE54]'
+  id: totrans-151
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE54]'
 - en: '[PRE55]'
+  id: totrans-152
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE55]'
 - en: In conclusion, the all-knowing cube of probability contains the past (the prior
     distributions), the present (the posterior distributions), and the future (the
     posterior predictive distributions).
+  id: totrans-153
   prefs: []
   type: TYPE_NORMAL
+  zh: 总之，概率全知方块包含了过去（先验分布）、现在（后验分布）和未来（后验预测分布）。
 - en: Think Bayes, Second Edition
+  id: totrans-154
   prefs: []
   type: TYPE_NORMAL
+  zh: Bayes思维，第二版
 - en: Copyright 2020 Allen B. Downey
+  id: totrans-155
   prefs: []
   type: TYPE_NORMAL
+  zh: 版权所有 2020 Allen B. Downey
 - en: 'License: [Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA
     4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  id: totrans-156
   prefs: []
   type: TYPE_NORMAL
+  zh: 许可证：[署名-非商业-相同方式共享4.0国际（CC BY-NC-SA 4.0）](https://creativecommons.org/licenses/by-nc-sa/4.0/)

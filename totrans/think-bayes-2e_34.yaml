@@ -3,17 +3,20 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 多少本书？
 - en: 原文：[https://allendowney.github.io/ThinkBayes2/bookstore.html](https://allendowney.github.io/ThinkBayes2/bookstore.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ThinkBayes2/bookstore.html](https://allendowney.github.io/ThinkBayes2/bookstore.html)
 - en: Suppose you are the author of a book like *Probably Overthinking It*, and when
     you visit a local bookstore, like Newtonville Books in Newton, MA, you see that
     they have two copies of your book on display.
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设你是《可能是想多了》这本书的作者，当你去纽顿市的纽顿维尔书店时，你看到他们有两本你的书在展示。
 - en: Is it good that they have only a few copies, because it suggests they started
     with more and sold some? Or is it bad because it suggests they only keep a small
     number in stock, and they have not sold. More generally, what number of books
@@ -21,36 +24,43 @@
   id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 他们只有几本书是好事吗，因为这表明他们开始时有更多的书并卖掉了一些？还是坏事，因为这表明他们只保留了少量的库存，而且他们还没有卖出。更一般地说，你想看到多少本书？
 - en: 'To answer these questions, we have to make some modeling decisions. To keep
     it simple, I’ll assume:'
   id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 要回答这些问题，我们必须做出一些建模决策。为了保持简单，我将假设：
 - en: The bookstore orders books on some regular cycle of unknown duration.
   id: totrans-5
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 书店以某个未知周期的规律订购书。
 - en: At the beginning of every cycle, they start with `k` books.
   id: totrans-6
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 在每个周期的开始，他们从`k`本书开始。
 - en: People buy the book at a rate of `λ` books per cycle.
   id: totrans-7
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 人们以每个周期`λ`本的速率购买这本书。
 - en: When you visit the store, you arrive at a random time `t` during the cycle.
   id: totrans-8
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 当你访问商店时，你会在周期内的一个随机时间`t`到达。
 - en: We’ll start by defining prior distributions for these parameters, and then we’ll
     update it with the observed data. Here are some libraries we’ll need.
   id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将首先为这些参数定义先验分布，然后根据观察到的数据进行更新。以下是我们需要的一些库。
 - en: '[PRE0]'
   id: totrans-10
   prefs: []
@@ -71,12 +81,14 @@
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 先验
 - en: For some books, the store only keeps one copy in stock. For others it might
     keep as many as ten. If we would be equally unsurprised by any value in this range,
     the prior distribution of `k` is uniform between `1` and `10`.
   id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于一些书，商店只保留一本副本。对于其他书，它可能保留多达十本。如果我们对这个范围内的任何值都感到同样惊讶，`k`的先验分布在`1`和`10`之间是均匀的。
 - en: '[PRE3]'
   id: totrans-15
   prefs: []
@@ -87,6 +99,7 @@
   id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们在周期的随机时间点到达，`t`的先验分布在`0`和`1`之间是均匀的，以周期为单位。
 - en: '[PRE4]'
   id: totrans-17
   prefs: []
@@ -98,6 +111,7 @@
   id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们假设购书速率可能在每个周期之间的`2`和`3`本之间，但可能会大大提高——概率很低。我们可以选择一个具有合理均值和形状的对数正态分布。
 - en: '[PRE5]'
   id: totrans-19
   prefs: []
@@ -112,6 +126,7 @@
   id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是它的样子。
 - en: '[PRE7]'
   id: totrans-22
   prefs: []
@@ -121,12 +136,14 @@
   id: totrans-23
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/70c831167bdb156a5b844210efc57857ab6d977c8b7e921824c1657f8f7fe363.png](../Images/7a6248d3b35c301e201c66833f9bbfd0.png)'
 - en: 'To form the joint prior distribution, I’ll use `meshgrid` with the `ij` indexing
     order, which makes the order of the dimensions the same as the order of the arguments:
     `k`, `λ`, `t`.'
   id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了形成联合先验分布，我将使用`meshgrid`和`ij`索引顺序，使维度的顺序与参数的顺序相同：`k`、`λ`、`t`。
 - en: '[PRE8]'
   id: totrans-25
   prefs: []
@@ -147,10 +164,12 @@
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 更新
 - en: 'Now for the update, we have to handle two cases:'
   id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在进行更新，我们需要处理两种情况：
 - en: If we observe at least one book, `n`, the probability of the data is the probability
     of selling `k-n` books at rate `λ` over period `t`, which is given by the Poisson
     PMF.
@@ -158,6 +177,7 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果我们观察到至少一本书`n`，数据的概率就是在周期`t`内以速率`λ`销售`k-n`本书的概率，这由泊松分布给出。
 - en: If there are no copies left, we have to add in the probability that the number
     of books sold in this period could have exceeded `k`, which is given by the Poisson
     survival function.
@@ -165,11 +185,13 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果没有副本剩下，我们必须加上在这段时间内销售的书的数量可能超过`k`的概率，这由泊松生存函数给出。
 - en: The following function computes the probability of the data for all values of
     the parameters, multiplies by the prior, and normalizes the result.
   id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数计算参数的所有值的数据概率，乘以先验概率，并对结果进行归一化。
 - en: '[PRE11]'
   id: totrans-33
   prefs: []
@@ -179,6 +201,7 @@
   id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，我们将使用假设观察到的`2`本书进行更新。
 - en: '[PRE12]'
   id: totrans-35
   prefs: []
@@ -189,6 +212,7 @@
   id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 从联合后验中，我们可以提取`k`和`λ`的边际分布，并计算它们的均值。
 - en: '[PRE13]'
   id: totrans-37
   prefs: []
@@ -205,6 +229,7 @@
   id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 看到两本书表明商店每个周期开始时都有3-4本书，并且每个周期卖出2-3本。这是`k`的后验分布与其先验分布的比较。
 - en: '[PRE15]'
   id: totrans-40
   prefs: []
@@ -214,10 +239,12 @@
   id: totrans-41
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/d8e884eb1b4ec7868ee71b385c257a1c4fd4313edd3605c78f0494ff25846d8d.png](../Images/eb3b1a84b2ba5f03e66b6ac44ae83f0a.png)'
 - en: And here’s the posterior distribution of `λ`.
   id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是`λ`的后验分布。
 - en: '[PRE16]'
   id: totrans-43
   prefs: []
@@ -227,20 +254,24 @@
   id: totrans-44
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/181cd6f5e92ad73ba112dc4bea9f9c192d38cdea74b9be3320944502f1a86c26.png](../Images/0602e304c1897be769e3b96af5555917.png)'
 - en: Seeing two books doesn’t provide much information about the book-selling rate.
   id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 看到两本书并不能提供太多关于书的销售速率的信息。
 - en: Optimization
   id: totrans-46
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 优化
 - en: 'Now let’s consider the more general question, “What number of books would you
     most like to see?” There are two ways we might answer:'
   id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们考虑更一般的问题，“你最想看到多少本书？”我们可以有两种回答方式：
 - en: One answer might be the observation that leads to the highest estimate of `λ`.
     But if the book-selling rate is high, relative to `k`, the book will sometimes
     be out of stock, leading to lost sales.
@@ -248,18 +279,21 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 一个答案可能是导致对`λ`估计最高的观察。但是如果书的销售速率相对较高，相对于`k`，书有时会脱销，导致销售损失。
 - en: So an alternative is to choose the observation that implies the highest number
     of books sold per cycle.
   id: totrans-49
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 因此，另一种选择是选择暗示每个周期销售的书的数量最多的观察。
 - en: To compute the second one, we’ll need the following function, which makes a
     `Pmf` that represents the distribution of books sold during one cycle with rate
     `λ` and upper bound `k`.
   id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了计算第二个，我们需要以下函数，它生成一个代表以速率`λ`和上限`k`在一个周期内销售的书的分布的`Pmf`。
 - en: '[PRE17]'
   id: totrans-51
   prefs: []
