@@ -1,66 +1,81 @@
 - en: Chapter 4  Cumulative distribution functions
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
 - en: 原文：[https://greenteapress.com/thinkstats2/html/thinkstats2005.html](https://greenteapress.com/thinkstats2/html/thinkstats2005.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: The code for this chapter is in `cumulative.py`. For information about downloading
     and working with this code, see Section [0.2](thinkstats2001.html#code).
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
 - en: 4.1  The limits of PMFs
+  id: totrans-3
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: PMFs work well if the number of values is small. But as the number of values
     increases, the probability associated with each value gets smaller and the effect
     of random noise increases.
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
 - en: For example, we might be interested in the distribution of birth weights. In
     the NSFG data, the variable `totalwgt_lb` records weight at birth in pounds. Figure [4.1](#nsfg_birthwgt_pmf)
     shows the PMF of these values for first babies and others.
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-6
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-7
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/ca484416b47aead07e9b7fd39fd2f491.png)'
+  id: totrans-8
   prefs:
   - PREF_BQ
   type: TYPE_IMG
 - en: ''
+  id: totrans-9
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 4.1: PMF of birth weights. This figure shows a limitation of PMFs:
     they are hard to compare visually. |'
+  id: totrans-10
   prefs:
   - PREF_BQ
   type: TYPE_TB
 - en: ''
+  id: totrans-11
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-12
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: Overall, these distributions resemble the bell shape of a normal distribution,
     with many values near the mean and a few values much higher and lower.
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
 - en: But parts of this figure are hard to interpret. There are many spikes and valleys,
     and some apparent differences between the distributions. It is hard to tell which
     of these features are meaningful. Also, it is hard to see overall patterns; for
     example, which distribution do you think has the higher mean?
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
 - en: These problems can be mitigated by binning the data; that is, dividing the range
@@ -68,14 +83,17 @@
     each bin. Binning can be useful, but it is tricky to get the size of the bins
     right. If they are big enough to smooth out noise, they might also smooth out
     useful information.
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
 - en: An alternative that avoids these problems is the cumulative distribution function
     (CDF), which is the subject of this chapter. But before I can explain CDFs, I
     have to explain percentiles.
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
 - en: 4.2  Percentiles
+  id: totrans-17
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -84,190 +102,269 @@
     is the fraction of people who scored lower than you (or the same). So if you are
     “in the 90th percentile,” you did as well as or better than 90% of the people
     who took the exam.
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
 - en: 'Here’s how you could compute the percentile rank of a value, `your_score`,
     relative to the values in the sequence `scores`:'
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE0]'
+  id: totrans-20
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: As an example, if the scores in the sequence were 55, 66, 77, 88 and 99, and
     you got the 88, then your percentile rank would be `100 * 4 / 5` which is 80.
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
 - en: 'If you are given a value, it is easy to find its percentile rank; going the
     other way is slightly harder. If you are given a percentile rank and you want
     to find the corresponding value, one option is to sort the values and search for
     the one you want:'
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE1]'
+  id: totrans-23
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: The result of this calculation is a percentile. For example, the 50th percentile
     is the value with percentile rank 50\. In the distribution of exam scores, the
     50th percentile is 77.
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
 - en: 'This implementation of `Percentile` is not efficient. A better approach is
     to use the percentile rank to compute the index of the corresponding percentile:'
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE2]'
+  id: totrans-26
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: The difference between “percentile” and “percentile rank” can be confusing,
     and people do not always use the terms precisely. To summarize, `PercentileRank`
     takes a value and computes its percentile rank in a set of values; `Percentile`
     takes a percentile rank and computes the corresponding value.
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
 - en: 4.3  CDFs
+  id: totrans-28
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: Now that we understand percentiles and percentile ranks, we are ready to tackle
     the cumulative distribution function (CDF). The CDF is the function that maps
     from a value to its percentile rank.
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
 - en: The CDF is a function of x, where x is any value that might appear in the distribution.
     To evaluate CDF(x) for a particular value of x, we compute the fraction of values
     in the distribution less than or equal to x.
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
 - en: 'Here’s what that looks like as a function that takes a sequence, `sample`,
     and a value, `x`:'
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE3]'
+  id: totrans-32
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: This function is almost identical to `PercentileRank`, except that the result
     is a probability in the range 0–1 rather than a percentile rank in the range 0–100.
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个函数几乎和 `PercentileRank` 一样，不同之处在于结果是一个范围在 0-1 之间的概率，而不是范围在 0-100 之间的百分位秩。
 - en: 'As an example, suppose we collect a sample with the values `[1, 2, 2, 3, 5]`.
     Here are some values from its CDF:'
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 举个例子，假设我们收集了一个样本，其中包含值 `[1, 2, 2, 3, 5]`。这是它的 CDF 中的一些值：
 - en: '| CDF(0) = 0  |'
+  id: totrans-35
   prefs: []
   type: TYPE_TB
+  zh: '| CDF(0) = 0 |'
 - en: '| CDF(1) = 0.2 |'
+  id: totrans-36
   prefs: []
   type: TYPE_TB
+  zh: '| CDF(1) = 0.2 |'
 - en: '| CDF(2) = 0.6 |'
+  id: totrans-37
   prefs: []
   type: TYPE_TB
+  zh: '| CDF(2) = 0.6 |'
 - en: '| CDF(3) = 0.8 |'
+  id: totrans-38
   prefs: []
   type: TYPE_TB
+  zh: '| CDF(3) = 0.8 |'
 - en: '| CDF(4) = 0.8 |'
+  id: totrans-39
   prefs: []
   type: TYPE_TB
+  zh: '| CDF(4) = 0.8 |'
 - en: '| CDF(5) = 1 |'
+  id: totrans-40
   prefs: []
   type: TYPE_TB
+  zh: '| CDF(5) = 1 |'
 - en: We can evaluate the CDF for any value of x, not just values that appear in the
     sample. If x is less than the smallest value in the sample, CDF(x) is 0. If x
     is greater than the largest value, CDF(x) is 1.
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以对 x 的任何值评估 CDF，而不仅仅是样本中出现的值。如果 x 小于样本中的最小值，CDF(x) 为 0。如果 x 大于最大值，CDF(x)
+    为 1。
 - en: '* * *'
+  id: totrans-42
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
+  id: totrans-43
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/29c1a8ff725395d0939152da26755b01.png)'
+  id: totrans-44
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/29c1a8ff725395d0939152da26755b01.png)'
 - en: ''
+  id: totrans-45
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 4.2: Example of a CDF. |'
+  id: totrans-46
   prefs:
   - PREF_BQ
   type: TYPE_TB
+  zh: '| 图 4.2: CDF 的示例。 |'
 - en: ''
+  id: totrans-47
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-48
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: Figure [4.2](#example_cdf) is a graphical representation of this CDF. The CDF
     of a sample is a step function.
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: 图 [4.2](#example_cdf) 是这个 CDF 的图形表示。样本的 CDF 是一个阶梯函数。
 - en: 4.4  Representing CDFs
+  id: totrans-50
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 4.4 表示 CDFs
 - en: '`thinkstats2` provides a class named Cdf that represents CDFs. The fundamental
     methods Cdf provides are:'
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: '`thinkstats2` 提供了一个名为 Cdf 的类，表示 CDFs。Cdf 提供的基本方法有：'
 - en: '`Prob(x)`: Given a value `x`, computes the probability p = CDF(x). The bracket
     operator is equivalent to `Prob`.'
+  id: totrans-52
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`Prob(x)`: 给定一个值 `x`，计算概率 p = CDF(x)。括号操作符等同于 `Prob`。'
 - en: '`Value(p)`: Given a probability `p`, computes the corresponding value, `x`;
     that is, the inverse CDF of `p`.'
+  id: totrans-53
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`Value(p)`: 给定一个概率 `p`，计算相应的值 `x`；也就是说，`p` 的逆 CDF。'
 - en: '* * *'
+  id: totrans-54
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
+  id: totrans-55
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/e88e671e1ef575f92112902f92b544f1.png)'
+  id: totrans-56
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/e88e671e1ef575f92112902f92b544f1.png)'
 - en: ''
+  id: totrans-57
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 4.3: CDF of pregnancy length. |'
+  id: totrans-58
   prefs:
   - PREF_BQ
   type: TYPE_TB
+  zh: '| 图 4.3: 怀孕时长的 CDF。 |'
 - en: ''
+  id: totrans-59
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-60
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: 'The Cdf constructor can take as an argument a list of values, a pandas Series,
     a Hist, Pmf, or another Cdf. The following code makes a Cdf for the distribution
     of pregnancy lengths in the NSFG:'
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: Cdf 构造函数可以接受一个值列表、一个 pandas Series、一个 Hist、Pmf，或者另一个 Cdf 作为参数。下面的代码创建了一个 NSFG
+    怀孕时长分布的 Cdf：
 - en: '[PRE4]'
+  id: totrans-62
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '`thinkplot` provides a function named `Cdf` that plots Cdfs as lines:'
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: '`thinkplot` 提供了一个名为 `Cdf` 的函数，用于绘制 CDFs 作为线：'
 - en: '[PRE5]'
+  id: totrans-64
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: Figure [4.3](#cumulative_prglngth_cdf) shows the result. One way to read a CDF
     is to look up percentiles. For example, it looks like about 10% of pregnancies
     are shorter than 36 weeks, and about 90% are shorter than 41 weeks. The CDF also
@@ -275,194 +372,263 @@
     appear as steep or vertical sections of the CDF; in this example, the mode at
     39 weeks is apparent. There are few values below 30 weeks, so the CDF in this
     range is flat.
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: 图 [4.3](#cumulative_prglngth_cdf) 显示了结果。读取 CDF 的一种方法是查找百分位数。例如，看起来大约 10% 的怀孕时长小于
+    36 周，大约 90% 的怀孕时长小于 41 周。CDF 还提供了分布形状的可视化表示。常见值在 CDF 的陡峭或垂直部分出现；在这个例子中，39 周的众数是明显的。在
+    30 周以下的值很少，所以这个范围内的 CDF 是平的。
 - en: It takes some time to get used to CDFs, but once you do, I think you will find
     that they show more information, more clearly, than PMFs.
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: 需要一些时间来适应 CDFs，但一旦适应了，我认为你会发现它们比 PMFs 显示更多信息，更清晰。
 - en: 4.5  Comparing CDFs
+  id: totrans-67
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 4.5 比较 CDFs
 - en: CDFs are especially useful for comparing distributions. For example, here is
     the code that plots the CDF of birth weight for first babies and others.
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: CDFs 特别适用于比较分布。例如，这是绘制第一个宝宝和其他宝宝出生体重的 CDF 的代码。
 - en: '[PRE6]'
+  id: totrans-69
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '* * *'
+  id: totrans-70
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
+  id: totrans-71
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/8e2e1f18cc1257782a6af70adde754eb.png)'
+  id: totrans-72
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/8e2e1f18cc1257782a6af70adde754eb.png)'
 - en: ''
+  id: totrans-73
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 4.4: CDF of birth weights for first babies and others. |'
+  id: totrans-74
   prefs:
   - PREF_BQ
   type: TYPE_TB
+  zh: '| 图 4.4: 第一个宝宝和其他宝宝的出生体重的 CDF。 |'
 - en: ''
+  id: totrans-75
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-76
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: Figure [4.4](#cumulative_birthwgt_cdf) shows the result. Compared to Figure[4.1](#nsfg_birthwgt_pmf),
     this figure makes the shape of the distributions, and the differences between
     them, much clearer. We can see that first babies are slightly lighter throughout
     the distribution, with a larger discrepancy above the mean.
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: 图 [4.4](#cumulative_birthwgt_cdf) 显示了结果。与图 [4.1](#nsfg_birthwgt_pmf) 相比，这张图更清晰地展示了分布的形状和它们之间的差异。我们可以看到，第一个宝宝在整个分布中稍微更轻，而且在均值以上的差距更大。
 - en: 4.6  Percentile-based statistics
+  id: totrans-78
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 4.6 基于百分位数的统计
 - en: 'Once you have computed a CDF, it is easy to compute percentiles and percentile
     ranks. The Cdf class provides these two methods:'
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: 一旦计算了 CDF，就很容易计算百分位数和百分位秩。Cdf 类提供了这两种方法：
 - en: '`PercentileRank(x)`: Given a value `x`, computes its percentile rank, 100 ·
     CDF(x).'
+  id: totrans-80
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`PercentileRank(x)`: 给定一个值 `x`，计算它的百分位秩，即 100 · CDF(x)。'
 - en: '`Percentile(p)`: Given a percentile rank `p`, computes the corresponding value,
     `x`. Equivalent to `Value(p/100)`.'
+  id: totrans-81
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`Percentile(p)`: 给定一个百分位秩 `p`，计算相应的值 `x`。等同于 `Value(p/100)`。'
 - en: '`Percentile` can be used to compute percentile-based summary statistics. For
     example, the 50th percentile is the value that divides the distribution in half,
     also known as the median. Like the mean, the median is a measure of the central
     tendency of a distribution.'
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: '`Percentile` 可以用来计算基于百分位数的摘要统计。例如，第 50 百分位数是将分布分成两半的值，也称为中位数。和均值一样，中位数是分布集中趋势的一种度量。'
 - en: Actually, there are several definitions of “median,” each with different properties.
     But `Percentile(50)` is simple and efficient to compute.
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: 实际上，“中位数”有几种不同的定义，每种都有不同的特性。但 `Percentile(50)` 简单且高效。
 - en: Another percentile-based statistic is the interquartile range (IQR), which is
     a measure of the spread of a distribution. The IQR is the difference between the
     75th and 25th percentiles.
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: 另一个基于百分位数的统计量是四分位距（IQR），它是分布的扩展度量。IQR 是第 75 百分位数和第 25 百分位数之间的差异。
 - en: More generally, percentiles are often used to summarize the shape of a distribution.
     For example, the distribution of income is often reported in “quintiles”; that
     is, it is split at the 20th, 40th, 60th and 80th percentiles. Other distributions
     are divided into ten “deciles”. Statistics like these that represent equally-spaced
     points in a CDF are called quantiles. For more, see [https://en.wikipedia.org/wiki/Quantile](https://en.wikipedia.org/wiki/Quantile).
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
 - en: 4.7  Random numbers
+  id: totrans-86
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: Suppose we choose a random sample from the population of live births and look
     up the percentile rank of their birth weights. Now suppose we compute the CDF
     of the percentile ranks. What do you think the distribution will look like?
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
 - en: 'Here’s how we can compute it. First, we make the Cdf of birth weights:'
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE7]'
+  id: totrans-89
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: Then we generate a sample and compute the percentile rank of each value in the
     sample.
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE8]'
+  id: totrans-91
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '`sample` is a random sample of 100 birth weights, chosen with replacement;
     that is, the same value could be chosen more than once. `ranks` is a list of percentile
     ranks.'
+  id: totrans-92
   prefs: []
   type: TYPE_NORMAL
 - en: Finally we make and plot the Cdf of the percentile ranks.
+  id: totrans-93
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE9]'
+  id: totrans-94
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '* * *'
+  id: totrans-95
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-96
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/89fd66dbfaa005b184da671df1768a9a.png)'
+  id: totrans-97
   prefs:
   - PREF_BQ
   type: TYPE_IMG
 - en: ''
+  id: totrans-98
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 4.5: CDF of percentile ranks for a random sample of birth weights.
     |'
+  id: totrans-99
   prefs:
   - PREF_BQ
   type: TYPE_TB
 - en: ''
+  id: totrans-100
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-101
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: Figure [4.5](#cumulative_random) shows the result. The CDF is approximately
     a straight line, which means that the distribution is uniform.
+  id: totrans-102
   prefs: []
   type: TYPE_NORMAL
 - en: That outcome might be non-obvious, but it is a consequence of the way the CDF
     is defined. What this figure shows is that 10% of the sample is below the 10th
     percentile, 20% is below the 20th percentile, and so on, exactly as we should
     expect.
+  id: totrans-103
   prefs: []
   type: TYPE_NORMAL
 - en: 'So, regardless of the shape of the CDF, the distribution of percentile ranks
     is uniform. This property is useful, because it is the basis of a simple and efficient
     algorithm for generating random numbers with a given CDF. Here’s how:'
+  id: totrans-104
   prefs: []
   type: TYPE_NORMAL
 - en: Choose a percentile rank uniformly from the range 0–100.
+  id: totrans-105
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Use `Cdf.Percentile` to find the value in the distribution that corresponds
     to the percentile rank you chose.
+  id: totrans-106
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'Cdf provides an implementation of this algorithm, called `Random`:'
+  id: totrans-107
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE10]'
+  id: totrans-108
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: Cdf also provides `Sample`, which takes an integer, `n`, and returns a list
     of `n` values chosen at random from the Cdf.
+  id: totrans-109
   prefs: []
   type: TYPE_NORMAL
 - en: 4.8  Comparing percentile ranks
+  id: totrans-110
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -470,47 +636,60 @@
     For example, people who compete in foot races are usually grouped by age and gender.
     To compare people in different age groups, you can convert race times to percentile
     ranks.
+  id: totrans-111
   prefs: []
   type: TYPE_NORMAL
 - en: A few years ago I ran the James Joyce Ramble 10K in Dedham MA; I finished in
     42:44, which was 97th in a field of 1633\. I beat or tied 1537 runners out of
     1633, so my percentile rank in the field is 94%.
+  id: totrans-112
   prefs: []
   type: TYPE_NORMAL
 - en: 'More generally, given position and field size, we can compute percentile rank:'
+  id: totrans-113
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE11]'
+  id: totrans-114
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: In my age group, denoted M4049 for “male between 40 and 49 years of age”, I
     came in 26th out of 256\. So my percentile rank in my age group was 90%.
+  id: totrans-115
   prefs: []
   type: TYPE_NORMAL
 - en: If I am still running in 10 years (and I hope I am), I will be in the M5059
     division. Assuming that my percentile rank in my division is the same, how much
     slower should I expect to be?
+  id: totrans-116
   prefs: []
   type: TYPE_NORMAL
 - en: 'I can answer that question by converting my percentile rank in M4049 to a position
     in M5059\. Here’s the code:'
+  id: totrans-117
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE12]'
+  id: totrans-118
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: There were 171 people in M5059, so I would have to come in between 17th and
     18th place to have the same percentile rank. The finishing time of the 17th runner
     in M5059 was 46:05, so that’s the time I will have to beat to maintain my percentile
     rank.
+  id: totrans-119
   prefs: []
   type: TYPE_NORMAL
 - en: 4.9  Exercises
+  id: totrans-120
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: For the following exercises, you can start with `chap04ex.ipynb`. My solution
     is in `chap04soln.ipynb`.
+  id: totrans-121
   prefs: []
   type: TYPE_NORMAL
 - en: Exercise 1   *How much did you weigh at birth? If you don’t know, call your
@@ -521,54 +700,77 @@
     or higher, call your mother back and apologize.*Exercise 2   *The numbers generated
     by `random.random` are supposed to be uniform between 0 and 1; that is, every
     value in the range should have the same probability.*
+  id: totrans-122
   prefs: []
   type: TYPE_NORMAL
+  zh: 练习1 *你出生时有多重？如果你不知道，打电话给你的母亲或其他知道的人。使用NSFG数据（所有活产），计算出生体重的分布，并用它来找到你的百分位数。如果你是第一个宝宝，找到你在第一个宝宝分布中的百分位数。否则使用其他人的分布。如果你在90分位数或更高，请给你的母亲打电话道歉。*
+    练习2 *由`random.random`生成的数字应该在0到1之间均匀分布；也就是说，范围内的每个值应该具有相同的概率。*
 - en: '*Generate 1000 numbers from `random.random` and plot their PMF and CDF. Is
     the distribution uniform?*'
+  id: totrans-123
   prefs: []
   type: TYPE_NORMAL
+  zh: '*从`random.random`生成1000个数字并绘制它们的PMF和CDF。分布是否均匀？*'
 - en: 4.10  Glossary
+  id: totrans-124
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 4.10 术语表
 - en: 'percentile rank: The percentage of values in a distribution that are less than
     or equal to a given value.'
+  id: totrans-125
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 百分位数：分布中小于或等于给定值的值的百分比。
 - en: 'percentile: The value associated with a given percentile rank.'
+  id: totrans-126
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 百分位数：与给定百分位数相关联的值。
 - en: 'cumulative distribution function (CDF): A function that maps from values to
     their cumulative probabilities. CDF(x) is the fraction of the sample less than
     or equal to x.'
+  id: totrans-127
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 累积分布函数（CDF）：一个将值映射到它们的累积概率的函数。 CDF（x）是样本小于或等于x的分数。
 - en: 'inverse CDF: A function that maps from a cumulative probability, p, to the
     corresponding value.'
+  id: totrans-128
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 逆累积分布函数：一个将累积概率p映射到相应值的函数。
 - en: 'median: The 50th percentile, often used as a measure of central tendency.'
+  id: totrans-129
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 中位数：第50百分位数，通常用作中心趋势的度量。
 - en: 'interquartile range: The difference between the 75th and 25th percentiles,
     used as a measure of spread.'
+  id: totrans-130
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 四分位距：第75和25百分位数之间的差异，用作传播的度量。
 - en: 'quantile: A sequence of values that correspond to equally spaced percentile
     ranks; for example, the quartiles of a distribution are the 25th, 50th and 75th
     percentiles.'
+  id: totrans-131
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 分位数：对应于等间隔百分位数的一系列值；例如，分布的四分位数是第25、50和75百分位数。
 - en: 'replacement: A property of a sampling process. “With replacement” means that
     the same value can be chosen more than once; “without replacement” means that
     once a value is chosen, it is removed from the population.'
+  id: totrans-132
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 替换：抽样过程的一个属性。“有替换”意味着同一个值可以被选择多次；“无替换”意味着一旦选择了一个值，它就从总体中移除。

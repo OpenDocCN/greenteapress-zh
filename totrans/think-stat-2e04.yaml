@@ -522,6 +522,7 @@
   id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: 默认情况下，行和列从零开始编号，但您可以提供列名：
 - en: '[PRE16]'
   id: totrans-87
   prefs: []
@@ -532,6 +533,7 @@
   id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: 您还可以提供行名称。行名称的集合称为索引；行名称本身称为标签。
 - en: '[PRE17]'
   id: totrans-89
   prefs: []
@@ -542,6 +544,7 @@
   id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: 正如我们在上一章中看到的，简单的索引选择一个列，返回一个Series：
 - en: '[PRE18]'
   id: totrans-91
   prefs: []
@@ -552,6 +555,7 @@
   id: totrans-92
   prefs: []
   type: TYPE_NORMAL
+  zh: 要按标签选择行，可以使用`loc`属性，它返回一个Series：
 - en: '[PRE19]'
   id: totrans-93
   prefs: []
@@ -562,6 +566,7 @@
   id: totrans-94
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果您知道行的整数位置，而不是其标签，可以使用`iloc`属性，它也返回一个Series。
 - en: '[PRE20]'
   id: totrans-95
   prefs: []
@@ -571,6 +576,7 @@
   id: totrans-96
   prefs: []
   type: TYPE_NORMAL
+  zh: '`loc`也可以接受一个标签列表；在这种情况下，结果是一个DataFrame。'
 - en: '[PRE21]'
   id: totrans-97
   prefs: []
@@ -580,6 +586,7 @@
   id: totrans-98
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，您可以使用切片按标签选择一系列行：
 - en: '[PRE22]'
   id: totrans-99
   prefs: []
@@ -589,6 +596,7 @@
   id: totrans-100
   prefs: []
   type: TYPE_NORMAL
+  zh: 或者按整数位置：
 - en: '[PRE23]'
   id: totrans-101
   prefs: []
@@ -599,20 +607,24 @@
   id: totrans-102
   prefs: []
   type: TYPE_NORMAL
+  zh: 无论哪种情况，结果都是一个DataFrame，但请注意，第一个结果包括切片的末尾；第二个结果则不包括。
 - en: 'My advice: if your rows have labels that are not simple integers, use the labels
     consistently and avoid using integer positions.'
   id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: 我的建议是：如果您的行具有不是简单整数的标签，请一致使用标签，并避免使用整数位置。
 - en: 3.6  Exercises
   id: totrans-104
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 3.6  练习
 - en: Solutions to these exercises are in `chap03soln.ipynb` and `chap03soln.py`
   id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些练习的解决方案在`chap03soln.ipynb`和`chap03soln.py`中
 - en: Exercise 1   *Something like the class size paradox appears if you survey children
     and ask how many children are in their family. Families with many children are
     more likely to appear in your sample, and families with no children have no chance
@@ -620,83 +632,101 @@
   id: totrans-106
   prefs: []
   type: TYPE_NORMAL
+  zh: 练习1 *如果你调查孩子并问他们家里有多少孩子，就会出现类似班级规模悖论的情况。有很多孩子的家庭更有可能出现在你的样本中，而没有孩子的家庭则没有机会出现在样本中。*
 - en: '*Use the NSFG respondent variable `NUMKDHH` to construct the actual distribution
     for the number of children under 18 in the household.*'
   id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: '*使用NSFG受访者变量`NUMKDHH`来构建家庭中18岁以下儿童的实际分布。*'
 - en: '*Now compute the biased distribution we would see if we surveyed the children
     and asked them how many children under 18 (including themselves) are in their
     household.*'
   id: totrans-108
   prefs: []
   type: TYPE_NORMAL
+  zh: '*现在计算有偏差的分布，如果我们调查孩子并问他们家里有多少18岁以下的孩子（包括他们自己）。*'
 - en: '*Plot the actual and biased distributions, and compute their means. As a starting
     place, you can use `chap03ex.ipynb`.*'
   id: totrans-109
   prefs: []
   type: TYPE_NORMAL
+  zh: 绘制实际和有偏差的分布，并计算它们的均值。作为起点，您可以使用`chap03ex.ipynb`。
 - en: Exercise 2
   id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: 练习2
 - en: '*In Section *[*2.7*](thinkstats2003.html#mean) *we computed the mean of a sample
     by adding up the elements and dividing by n. If you are given a PMF, you can still
     compute the mean, but the process is slightly different:*'
   id: totrans-111
   prefs: []
   type: TYPE_NORMAL
+  zh: '*在第2.7节中，我们通过将元素相加并除以n来计算样本的均值。如果给定一个PMF，你仍然可以计算均值，但是过程略有不同：*'
 - en: '| x =  |'
   id: totrans-112
   prefs: []
   type: TYPE_TB
+  zh: '| x =  |'
 - en: '&#124;   &#124;'
   id: totrans-113
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124;   &#124;'
 - en: '&#124; ∑ &#124;'
   id: totrans-114
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124; ∑ &#124;'
 - en: '&#124; i &#124;'
   id: totrans-115
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124; i &#124;'
 - en: '|  p[i] x[i]  |'
   id: totrans-116
   prefs: []
   type: TYPE_TB
+  zh: '|  p[i] x[i]  |'
 - en: '*where the* x[i] *are the unique values in the PMF and* p[i]=PMF(x[i])*. Similarly,
     you can compute variance like this:*'
   id: totrans-117
   prefs: []
   type: TYPE_NORMAL
+  zh: '*其中* x[i] *是PMF中的唯一值，* p[i]=PMF(x[i])*. 类似地，您可以这样计算方差：*'
 - en: '| S² =  |'
   id: totrans-118
   prefs: []
   type: TYPE_TB
+  zh: '| S² =  |'
 - en: '&#124;   &#124;'
   id: totrans-119
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124;   &#124;'
 - en: '&#124; ∑ &#124;'
   id: totrans-120
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124; ∑ &#124;'
 - en: '&#124; i &#124;'
   id: totrans-121
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124; i &#124;'
 - en: '|  p[i] (x[i] − x)² |'
   id: totrans-122
   prefs: []
   type: TYPE_TB
+  zh: '|  p[i] (x[i] − x)² |'
 - en: '*Write functions called `PmfMean` and `PmfVar` that take a Pmf object and compute
     the mean and variance. To test these methods, check that they are consistent with
     the methods `Mean` and `Var` provided by Pmf.*'
   id: totrans-123
   prefs: []
   type: TYPE_NORMAL
+  zh: '*编写名为`PmfMean`和`PmfVar`的函数，这些函数接受一个Pmf对象并计算均值和方差。要测试这些方法，请检查它们是否与Pmf提供的`Mean`和`Var`方法一致。*'
 - en: Exercise 3   *I started with the question, “Are first babies more likely to
     be late?” To address it, I computed the difference in means between groups of
     babies, but I ignored the possibility that there might be a difference between
@@ -704,43 +734,51 @@
   id: totrans-124
   prefs: []
   type: TYPE_NORMAL
+  zh: 练习3 *我从这个问题开始，“第一个宝宝更有可能迟到吗？”为了解决这个问题，我计算了宝宝群体之间的均值差异，但我忽略了第一个宝宝和其他*同一个女人*之间可能存在差异的可能性。*
 - en: '*To address this version of the question, select respondents who have at least
     two babies and compute pairwise differences. Does this formulation of the question
     yield a different result?*'
   id: totrans-125
   prefs: []
   type: TYPE_NORMAL
+  zh: '*为了解决这个问题的版本，选择至少有两个孩子的受访者并计算成对的差异。这个问题的表述是否会产生不同的结果？*'
 - en: '*Hint: use `nsfg.MakePregMap`.*'
   id: totrans-126
   prefs: []
   type: TYPE_NORMAL
+  zh: 提示：使用`nsfg.MakePregMap`。
 - en: Exercise 4
   id: totrans-127
   prefs: []
   type: TYPE_NORMAL
+  zh: 练习4
 - en: '*In most foot races, everyone starts at the same time. If you are a fast runner,
     you usually pass a lot of people at the beginning of the race, but after a few
     miles everyone around you is going at the same speed.*'
   id: totrans-128
   prefs: []
   type: TYPE_NORMAL
+  zh: '*在大多数足球比赛中，每个人都同时开始。如果你是一个快跑者，你通常会在比赛开始时超过很多人，但是几英里后，你周围的每个人都以相同的速度前进。*'
 - en: '*When I ran a long-distance (209 miles) relay race for the first time, I noticed
     an odd phenomenon: when I overtook another runner, I was usually much faster,
     and when another runner overtook me, he was usually much faster.*'
   id: totrans-129
   prefs: []
   type: TYPE_NORMAL
+  zh: '*当我第一次参加长距离（209英里）接力赛时，我注意到一个奇怪的现象：当我超过另一个跑步者时，我通常要快得多，而当另一个跑步者超过我时，他通常要快得多。*'
 - en: '*At first I thought that the distribution of speeds might be bimodal; that
     is, there were many slow runners and many fast runners, but few at my speed.*'
   id: totrans-130
   prefs: []
   type: TYPE_NORMAL
+  zh: '*起初，我以为速度的分布可能是双峰的；也就是说，有很多慢跑者和很多快跑者，但是在我的速度上很少。*'
 - en: '*Then I realized that I was the victim of a bias similar to the effect of class
     size. The race was unusual in two ways: it used a staggered start, so teams started
     at different times; also, many teams included runners at different levels of ability.*'
   id: totrans-131
   prefs: []
   type: TYPE_NORMAL
+  zh: '*然后我意识到我是受到了一个类似于班级规模影响的偏见的受害者。这场比赛有两个不同寻常的地方：它采用了分段起跑，所以团队在不同的时间开始；此外，许多团队包括不同水平能力的跑步者。*'
 - en: '*As a result, runners were spread out along the course with little relationship
     between speed and location. When I joined the race, the runners near me were (pretty
     much) a random sample of the runners in the race.*'
