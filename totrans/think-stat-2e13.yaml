@@ -1,14 +1,17 @@
 - en: Chapter 12  Time series analysis
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
 - en: 原文：[https://greenteapress.com/thinkstats2/html/thinkstats2013.html](https://greenteapress.com/thinkstats2/html/thinkstats2013.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: A time series is a sequence of measurements from a system that varies in time.
     One famous example is the “hockey stick graph” that shows global average temperature
     over time (see [https://en.wikipedia.org/wiki/Hockey_stick_graph](https://en.wikipedia.org/wiki/Hockey_stick_graph)).
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
 - en: The example I work with in this chapter comes from Zachary M. Jones, a researcher
@@ -19,73 +22,92 @@
     The goal of his project is to investigate the effect of policy decisions, like
     legalization, on markets. I find this project appealing because it is an example
     that uses data to address important political questions, like drug policy.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
 - en: I hope you will find this chapter interesting, but I’ll take this opportunity
     to reiterate the importance of maintaining a professional attitude to data analysis.
     Whether and which drugs should be illegal are important and difficult public policy
     questions; our decisions should be informed by accurate data reported honestly.
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
 - en: The code for this chapter is in `timeseries.py`. For information about downloading
     and working with this code, see Section [0.2](thinkstats2001.html#code).
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
 - en: 12.1  Importing and cleaning
+  id: totrans-6
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: 'The data I downloaded from Mr. Jones’s site is in the repository for this book.
     The following code reads it into a pandas DataFrame:'
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE0]'
+  id: totrans-8
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '`parse_dates` tells `read_csv` to interpret values in column 5 as dates and
     convert them to NumPy `datetime64` objects.'
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
 - en: 'The DataFrame has a row for each reported transaction and the following columns:'
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
 - en: 'city: string city name.'
+  id: totrans-11
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'state: two-letter state abbreviation.'
+  id: totrans-12
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'price: price paid in dollars.'
+  id: totrans-13
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'amount: quantity purchased in grams.'
+  id: totrans-14
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'quality: high, medium, or low quality, as reported by the purchaser.'
+  id: totrans-15
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'date: date of report, presumed to be shortly after date of purchase.'
+  id: totrans-16
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'ppg: price per gram, in dollars.'
+  id: totrans-17
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'state.name: string state name.'
+  id: totrans-18
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'lat: approximate latitude of the transaction, based on city name.'
+  id: totrans-19
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'lon: approximate longitude of the transaction.'
+  id: totrans-20
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -94,31 +116,40 @@
     reported each day varies from 0 to several hundred. Many methods used to analyze
     time series require the measurements to be equally spaced, or at least things
     are simpler if they are.
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
 - en: In order to demonstrate these methods, I divide the dataset into groups by reported
     quality, and then transform each group into an equally spaced series by computing
     the mean daily price per gram.
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE1]'
+  id: totrans-23
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '`groupby` is a DataFrame method that returns a GroupBy object, `groups`; used
     in a for loop, it iterates the names of the groups and the DataFrames that represent
     them. Since the values of `quality` are `low`, `medium`, and `high`, we get three
     groups with those names.'
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
 - en: 'The loop iterates through the groups and calls `GroupByDay`, which computes
     the daily average price and returns a new DataFrame:'
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE2]'
+  id: totrans-26
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: The parameter, `transactions`, is a DataFrame that contains columns `date` and
     `ppg`. We select these two columns, then group by `date`.
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
 - en: The result, `grouped`, is a map from each date to a DataFrame that contains
@@ -126,6 +157,7 @@
     the groups and applies a function to each column of the group; in this case there
     is only one column, `ppg`. So the result of `aggregate` is a DataFrame with one
     row for each date and one column, `ppg`.
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
 - en: Dates in these DataFrames are stored as NumPy `datetime64` objects, which are
@@ -134,59 +166,74 @@
     years. So `GroupByDay` adds a column named `date` by copying the `index`, then
     adds `years`, which contains the number of years since the first transaction as
     a floating-point number.
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
 - en: The resulting DataFrame has columns `ppg`, `date`, and `years`.
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
 - en: 12.2  Plotting
+  id: totrans-31
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: 'The result from `GroupByQualityAndDay` is a map from each quality to a DataFrame
     of daily prices. Here’s the code I use to plot the three time series:'
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE3]'
+  id: totrans-33
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '`PrePlot` with `rows=3` means that we are planning to make three subplots laid
     out in three rows. The loop iterates through the DataFrames and creates a scatter
     plot for each. It is common to plot time series with line segments between the
     points, but in this case there are many data points and prices are highly variable,
     so adding lines would not help.'
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
 - en: Since the labels on the x-axis are dates, I use `pyplot.xticks` to rotate the
     “ticks” 30 degrees, making them more readable.
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-36
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-37
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/e245484870275fc7969f0dbbdfe2da66.png)'
+  id: totrans-38
   prefs:
   - PREF_BQ
   type: TYPE_IMG
 - en: ''
+  id: totrans-39
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 12.1: Time series of daily price per gram for high, medium, and low
     quality cannabis. |'
+  id: totrans-40
   prefs:
   - PREF_BQ
   type: TYPE_TB
 - en: ''
+  id: totrans-41
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-42
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
@@ -194,6 +241,7 @@
     plots is a gap around November 2013\. It’s possible that data collection was not
     active during this time, or the data might not be available. We will consider
     ways to deal with this missing data later.
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
 - en: Visually, it looks like the price of high quality cannabis is declining during
@@ -201,9 +249,11 @@
     might also be increasing, but it is harder to tell, since it seems to be more
     volatile. Keep in mind that quality data is reported by volunteers, so trends
     over time might reflect changes in how participants apply these labels.
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
 - en: 12.3  Linear regression
+  id: totrans-45
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -211,81 +261,105 @@
     a simple way to get started is by applying general-purpose tools like linear regression.
     The following function takes a DataFrame of daily prices and computes a least
     squares fit, returning the model and results objects from StatsModels:'
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE4]'
+  id: totrans-47
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: 'Then we can iterate through the qualities and fit a model to each:'
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE5]'
+  id: totrans-49
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: 'Here are the results:'
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
 - en: '| quality | intercept | slope | R² |'
+  id: totrans-51
   prefs: []
   type: TYPE_TB
 - en: '| high | 13.450 | -0.708 | 0.444 |'
+  id: totrans-52
   prefs: []
   type: TYPE_TB
 - en: '| medium | 8.879 | 0.283 | 0.050 |'
+  id: totrans-53
   prefs: []
   type: TYPE_TB
 - en: '| low | 5.362 | 0.568 | 0.030 |'
+  id: totrans-54
   prefs: []
   type: TYPE_TB
 - en: The estimated slopes indicate that the price of high quality cannabis dropped
     by about 71 cents per year during the observed interval; for medium quality it
     increased by 28 cents per year, and for low quality it increased by 57 cents per
     year. These estimates are all statistically significant with very small p-values.
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
 - en: The R² value for high quality cannabis is 0.44, which means that time as an
     explanatory variable accounts for 44% of the observed variability in price. For
     the other qualities, the change in price is smaller, and variability in prices
     is higher, so the values of R² are smaller (but still statistically significant).
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
 - en: 'The following code plots the observed prices and the fitted values:'
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE6]'
+  id: totrans-58
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: As we saw in Section [11.8](thinkstats2012.html#implementation), `model` contains
     `exog` and `endog`, NumPy arrays with the exogenous (explanatory) and endogenous
     (dependent) variables.
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-60
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-61
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/cda31d85c4970c02086678b0bd995185.png)'
+  id: totrans-62
   prefs:
   - PREF_BQ
   type: TYPE_IMG
 - en: ''
+  id: totrans-63
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 12.2: Time series of daily price per gram for high quality cannabis,
     and a linear least squares fit. |'
+  id: totrans-64
   prefs:
   - PREF_BQ
   type: TYPE_TB
 - en: ''
+  id: totrans-65
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-66
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
@@ -293,352 +367,495 @@
     of the fitted values. Figure [12.2](#timeseries2) shows the results for high quality
     cannabis. The model seems like a good linear fit for the data; nevertheless, linear
     regression is not the most appropriate choice for this data:'
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
 - en: First, there is no reason to expect the long-term trend to be a line or any
     other simple function. In general, prices are determined by supply and demand,
     both of which vary over time in unpredictable ways.
+  id: totrans-68
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 首先，没有理由期望长期趋势是一条直线或任何其他简单的函数。一般来说，价格是由供应和需求决定的，二者随时间以不可预测的方式变化。
 - en: Second, the linear regression model gives equal weight to all data, recent and
     past. For purposes of prediction, we should probably give more weight to recent
     data.
+  id: totrans-69
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 其次，线性回归模型对所有数据，包括最近和过去的数据，给予相等的权重。为了预测的目的，我们可能应该给予最近的数据更多的权重。
 - en: Finally, one of the assumptions of linear regression is that the residuals are
     uncorrelated noise. With time series data, this assumption is often false because
     successive values are correlated.
+  id: totrans-70
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 最后，线性回归的一个假设是残差是不相关的噪音。对于时间序列数据，这个假设通常是错误的，因为连续的值是相关的。
 - en: The next section presents an alternative that is more appropriate for time series
     data.
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: 下一节介绍了更适合时间序列数据的替代方法。
 - en: 12.4  Moving averages
+  id: totrans-72
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 12.4 移动平均
 - en: 'Most time series analysis is based on the modeling assumption that the observed
     series is the sum of three components:'
+  id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: 大多数时间序列分析都是基于这样的建模假设：观察到的系列是三个组成部分的总和：
 - en: 'Trend: A smooth function that captures persistent changes.'
+  id: totrans-74
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 趋势：捕捉持续变化的平滑函数。
 - en: 'Seasonality: Periodic variation, possibly including daily, weekly, monthly,
     or yearly cycles.'
+  id: totrans-75
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 季节性：周期性变化，可能包括每日、每周、每月或每年的周期。
 - en: 'Noise: Random variation around the long-term trend.'
+  id: totrans-76
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 噪音：长期趋势周围的随机变化。
 - en: Regression is one way to extract the trend from a series, as we saw in the previous
     section. But if the trend is not a simple function, a good alternative is a moving
     average. A moving average divides the series into overlapping regions, called
     windows, and computes the average of the values in each window.
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: 回归是从系列中提取趋势的一种方法，正如我们在前一节中看到的。但是，如果趋势不是一个简单的函数，一个很好的替代方法是移动平均。移动平均将系列分成重叠的区域，称为窗口，并计算每个窗口中值的平均值。
 - en: One of the simplest moving averages is the rolling mean, which computes the
     mean of the values in each window. For example, if the window size is 3, the rolling
     mean computes the mean of values 0 through 2, 1 through 3, 2 through 4, etc.
+  id: totrans-78
   prefs: []
   type: TYPE_NORMAL
+  zh: 最简单的移动平均之一是滚动均值，它计算每个窗口中值的平均值。例如，如果窗口大小为3，滚动均值计算值0到2、1到3、2到4等的平均值。
 - en: pandas provides `rolling_mean`, which takes a Series and a window size and returns
     a new Series.
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: pandas提供了`rolling_mean`，它接受一个Series和一个窗口大小，并返回一个新的Series。
 - en: '[PRE7]'
+  id: totrans-80
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: The first two values are `nan`; the next value is the mean of the first three
     elements, 0, 1, and 2\. The next value is the mean of 1, 2, and 3\. And so on.
+  id: totrans-81
   prefs: []
   type: TYPE_NORMAL
+  zh: 前两个值是`nan`；下一个值是前三个元素0、1和2的平均值。下一个值是1、2和3的平均值。依此类推。
 - en: Before we can apply `rolling_mean` to the cannabis data, we have to deal with
     missing values. There are a few days in the observed interval with no reported
     transactions for one or more quality categories, and a period in 2013 when data
     collection was not active.
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: 在我们可以将`rolling_mean`应用于大麻数据之前，我们必须处理缺失值。在观察区间中有几天没有报告某一或多个品质类别的交易，以及2013年数据收集不活跃的时期。
 - en: 'In the DataFrames we have used so far, these dates are absent; the index skips
     days with no data. For the analysis that follows, we need to represent this missing
     data explicitly. We can do that by “reindexing” the DataFrame:'
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: 在我们迄今为止使用的DataFrame中，这些日期是缺失的；索引跳过了没有数据的日期。对于接下来的分析，我们需要明确地表示这些缺失的数据。我们可以通过“重新索引”DataFrame来做到这一点：
 - en: '[PRE8]'
+  id: totrans-84
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: The first line computes a date range that includes every day from the beginning
     to the end of the observed interval. The second line creates a new DataFrame with
     all of the data from `daily`, but including rows for all dates, filled with `nan`.
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: 第一行计算了一个日期范围，包括观察区间的开始到结束的每一天。第二行创建了一个新的DataFrame，其中包含了来自`daily`的所有数据，但包括了所有日期的行，填充为`nan`。
 - en: 'Now we can plot the rolling mean like this:'
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以这样绘制滚动均值：
 - en: '[PRE9]'
+  id: totrans-87
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: The window size is 30, so each value in `roll_mean` is the mean of 30 values
     from `reindexed.ppg`.
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: 窗口大小为30，因此`roll_mean`中的每个值都是从`reindexed.ppg`中的30个值的平均值。
 - en: '* * *'
+  id: totrans-89
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
+  id: totrans-90
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/49eb17db4c1ca458a927d7542ce58fc4.png)'
+  id: totrans-91
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/49eb17db4c1ca458a927d7542ce58fc4.png)'
 - en: ''
+  id: totrans-92
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 12.3: Daily price and a rolling mean (left) and exponentially-weighted
     moving average (right). |'
+  id: totrans-93
   prefs:
   - PREF_BQ
   type: TYPE_TB
+  zh: '| 图12.3：每日价格和滚动均值（左）以及指数加权移动平均（右）。 |'
 - en: ''
+  id: totrans-94
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-95
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: Figure [12.3](#timeseries10) (left) shows the result. The rolling mean seems
     to do a good job of smoothing out the noise and extracting the trend. The first
     29 values are `nan`, and wherever there’s a missing value, it’s followed by another
     29 `nan`s. There are ways to fill in these gaps, but they are a minor nuisance.
+  id: totrans-96
   prefs: []
   type: TYPE_NORMAL
+  zh: 图[12.3](#timeseries10)（左）显示了结果。滚动均值似乎很好地平滑了噪音并提取了趋势。前29个值是`nan`，并且在每个缺失值后面都有另外29个`nan`。有方法可以填补这些间隙，但它们只是一个小麻烦。
 - en: An alternative is the exponentially-weighted moving average (EWMA), which has
     two advantages. First, as the name suggests, it computes a weighted average where
     the most recent value has the highest weight and the weights for previous values
     drop off exponentially. Second, the pandas implementation of EWMA handles missing
     values better.
+  id: totrans-97
   prefs: []
   type: TYPE_NORMAL
+  zh: 一种替代方法是指数加权移动平均（EWMA），它有两个优点。首先，正如其名称所示，它计算加权平均值，其中最近的值具有最高的权重，先前值的权重呈指数下降。其次，pandas对EWMA的实现更好地处理了缺失值。
 - en: '[PRE10]'
+  id: totrans-98
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: The span parameter corresponds roughly to the window size of a moving average;
     it controls how fast the weights drop off, so it determines the number of points
     that make a non-negligible contribution to each average.
+  id: totrans-99
   prefs: []
   type: TYPE_NORMAL
+  zh: span参数大致对应于移动平均的窗口大小；它控制权重的下降速度，因此确定了对每个平均值做出非可忽略贡献的点的数量。
 - en: Figure [12.3](#timeseries10) (right) shows the EWMA for the same data. It is
     similar to the rolling mean, where they are both defined, but it has no missing
     values, which makes it easier to work with. The values are noisy at the beginning
     of the time series, because they are based on fewer data points.
+  id: totrans-100
   prefs: []
   type: TYPE_NORMAL
+  zh: 图[12.3](#timeseries10)（右侧）显示了相同数据的EWMA。它类似于滚动均值，在定义时它们都有，但它没有缺失值，这使得它更容易处理。这些值在时间序列开始时很嘈杂，因为它们是基于较少的数据点。
 - en: 12.5  Missing values
+  id: totrans-101
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 12.5 缺失值
 - en: Now that we have characterized the trend of the time series, the next step is
     to investigate seasonality, which is periodic behavior. Time series data based
     on human behavior often exhibits daily, weekly, monthly, or yearly cycles. In
     the next section I present methods to test for seasonality, but they don’t work
     well with missing data, so we have to solve that problem first.
+  id: totrans-102
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们已经描述了时间序列的趋势，下一步是调查季节性，即周期行为。基于人类行为的时间序列数据通常表现出每日、每周、每月或每年的周期。在下一节中，我将介绍测试季节性的方法，但它们在存在缺失数据时效果不佳，因此我们必须先解决这个问题。
 - en: 'A simple and common way to fill missing data is to use a moving average. The
     Series method `fillna` does just what we want:'
+  id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: 填充缺失数据的一种简单常见方法是使用移动平均。Series方法`fillna`正是我们想要的：
 - en: '[PRE11]'
+  id: totrans-104
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: Wherever `reindexed.ppg` is `nan`, `fillna` replaces it with the corresponding
     value from `ewma`. The `inplace` flag tells `fillna` to modify the existing Series
     rather than create a new one.
+  id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: 无论`reindexed.ppg`在哪里是`nan`，`fillna`都会用`ewma`中对应的值替换它。`inplace`标志告诉`fillna`修改现有的Series而不是创建新的Series。
 - en: 'A drawback of this method is that it understates the noise in the series. We
     can solve that problem by adding in resampled residuals:'
+  id: totrans-106
   prefs: []
   type: TYPE_NORMAL
+  zh: 这种方法的缺点是它低估了系列中的噪音。我们可以通过添加重新采样的残差来解决这个问题：
 - en: '[PRE12]'
+  id: totrans-107
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '`resid` contains the residual values, not including days when `ppg` is `nan`.
     `fake_data` contains the sum of the moving average and a random sample of residuals.
     Finally, `fillna` replaces `nan` with values from `fake_data`.'
+  id: totrans-108
   prefs: []
   type: TYPE_NORMAL
+  zh: '`resid` 包含残差值，不包括 `ppg` 为 `nan` 的天数。 `fake_data` 包含移动平均和残差的随机样本之和。最后，`fillna`
+    用 `fake_data` 中的值替换 `nan`。'
 - en: '* * *'
+  id: totrans-109
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
+  id: totrans-110
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/7d75da41b3dcddd89c001753c236b50c.png)'
+  id: totrans-111
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/7d75da41b3dcddd89c001753c236b50c.png)'
 - en: ''
+  id: totrans-112
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 12.4: Daily price with filled data. |'
+  id: totrans-113
   prefs:
   - PREF_BQ
   type: TYPE_TB
+  zh: '| 图12.4：填充数据的每日价格。 |'
 - en: ''
+  id: totrans-114
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-115
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: Figure [12.4](#timeseries8) shows the result. The filled data is visually similar
     to the actual values. Since the resampled residuals are random, the results are
     different every time; later we’ll see how to characterize the error created by
     missing values.
+  id: totrans-116
   prefs: []
   type: TYPE_NORMAL
+  zh: 图[12.4](#timeseries8)显示了结果。填充数据在视觉上与实际值相似。由于重新采样的残差是随机的，结果每次都不同；稍后我们将看到如何描述由缺失值产生的误差。
 - en: 12.6  Serial correlation
+  id: totrans-117
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 12.6 串行相关
 - en: As prices vary from day to day, you might expect to see patterns. If the price
     is high on Monday, you might expect it to be high for a few more days; and if
     it’s low, you might expect it to stay low. A pattern like this is called serial
     correlation, because each value is correlated with the next one in the series.
+  id: totrans-118
   prefs: []
   type: TYPE_NORMAL
+  zh: 随着价格日益变化，您可能会期望看到一些模式。如果周一价格高，您可能会期望它在接下来的几天内保持高位；如果价格低，您可能会期望它保持低位。这样的模式称为串行相关，因为每个值与系列中的下一个值相关。
 - en: 'To compute serial correlation, we can shift the time series by an interval
     called a lag, and then compute the correlation of the shifted series with the
     original:'
+  id: totrans-119
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了计算串行相关，我们可以将时间序列按一个称为滞后的间隔移动，然后计算移动后的序列与原始序列的相关性：
 - en: '[PRE13]'
+  id: totrans-120
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: After the shift, the first `lag` values are `nan`, so I use a slice to remove
     them before computing `Corr`.
+  id: totrans-121
   prefs: []
   type: TYPE_NORMAL
+  zh: 移位后，前`lag`个值为`nan`，因此我使用切片在计算`Corr`之前将它们移除。
 - en: If we apply `SerialCorr` to the raw price data with lag 1, we find serial correlation
     0.48 for the high quality category, 0.16 for medium and 0.10 for low. In any time
     series with a long-term trend, we expect to see strong serial correlations; for
     example, if prices are falling, we expect to see values above the mean in the
     first half of the series and values below the mean in the second half.
+  id: totrans-122
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们将`SerialCorr`应用于具有滞后1的原始价格数据，我们发现高质量类别的串行相关性为0.48，中等为0.16，低为0.10。在具有长期趋势的任何时间序列中，我们都希望看到强烈的串行相关性；例如，如果价格下跌，我们期望在系列的前半部分看到高于平均值的值，并在后半部分看到低于平均值的值。
 - en: 'It is more interesting to see if the correlation persists if you subtract away
     the trend. For example, we can compute the residual of the EWMA and then compute
     its serial correlation:'
+  id: totrans-123
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果减去趋势后仍然存在相关性，那就更有趣了。例如，我们可以计算EWMA的残差，然后计算其串行相关性：
 - en: '[PRE14]'
+  id: totrans-124
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: With lag=1, the serial correlations for the de-trended data are -0.022 for high
     quality, -0.015 for medium, and 0.036 for low. These values are small, indicating
     that there is little or no one-day serial correlation in this series.
+  id: totrans-125
   prefs: []
   type: TYPE_NORMAL
+  zh: 当滞后=1时，去趋势数据的串行相关性分别为高质量-0.022，中等-0.015，低0.036。这些值很小，表明该系列中几乎没有一天的串行相关性。
 - en: 'To check for weekly, monthly, and yearly seasonality, I ran the analysis again
     with different lags. Here are the results:'
+  id: totrans-126
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了检查每周、每月和每年的季节性，我使用不同的滞后再次进行了分析。以下是结果：
 - en: '| lag | high | medium | low |'
+  id: totrans-127
   prefs: []
   type: TYPE_TB
+  zh: '| 滞后 | 高 | 中 | 低 |'
 - en: '| 1 | -0.029 | -0.014 | 0.034 |'
+  id: totrans-128
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | -0.029 | -0.014 | 0.034 |'
 - en: '| 7 | 0.02 | -0.042 | -0.0097 |'
+  id: totrans-129
   prefs: []
   type: TYPE_TB
+  zh: '| 7 | 0.02 | -0.042 | -0.0097 |'
 - en: '| 30 | 0.014 | -0.0064 | -0.013 |'
+  id: totrans-130
   prefs: []
   type: TYPE_TB
+  zh: '| 30 | 0.014 | -0.0064 | -0.013 |'
 - en: '| 365 | 0.045 | 0.015 | 0.033 |'
+  id: totrans-131
   prefs: []
   type: TYPE_TB
+  zh: '| 365 | 0.045 | 0.015 | 0.033 |'
 - en: In the next section we’ll test whether these correlations are statistically
     significant (they are not), but at this point we can tentatively conclude that
     there are no substantial seasonal patterns in these series, at least not with
     these lags.
+  id: totrans-132
   prefs: []
   type: TYPE_NORMAL
+  zh: 在下一节中，我们将测试这些相关性是否具有统计学意义（它们没有），但在这一点上，我们可以初步得出结论，即这些系列中没有实质性的季节性模式，至少在这些滞后中没有。
 - en: 12.7  Autocorrelation
+  id: totrans-133
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 12.7 自相关
 - en: If you think a series might have some serial correlation, but you don’t know
     which lags to test, you can test them all! The autocorrelation function is a function
     that maps from lag to the serial correlation with the given lag. “Autocorrelation”
     is another name for serial correlation, used more often when the lag is not 1.
+  id: totrans-134
   prefs: []
   type: TYPE_NORMAL
 - en: 'StatsModels, which we used for linear regression in Section [11.1](thinkstats2012.html#statsmodels),
     also provides functions for time series analysis, including `acf`, which computes
     the autocorrelation function:'
+  id: totrans-135
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE15]'
+  id: totrans-136
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '`acf` computes serial correlations with lags from 0 through `nlags`. The `unbiased`
     flag tells `acf` to correct the estimates for the sample size. The result is an
     array of correlations. If we select daily prices for high quality, and extract
     correlations for lags 1, 7, 30, and 365, we can confirm that `acf` and `SerialCorr`
     yield approximately the same results:'
+  id: totrans-137
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE16]'
+  id: totrans-138
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: With `lag=0`, `acf` computes the correlation of the series with itself, which
     is always 1.
+  id: totrans-139
   prefs: []
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-140
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-141
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/5973817390cd5f7934138e22767cc8dd.png)'
+  id: totrans-142
   prefs:
   - PREF_BQ
   type: TYPE_IMG
 - en: ''
+  id: totrans-143
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 12.5: Autocorrelation function for daily prices (left), and daily
     prices with a simulated weekly seasonality (right). |'
+  id: totrans-144
   prefs:
   - PREF_BQ
   type: TYPE_TB
 - en: ''
+  id: totrans-145
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-146
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
@@ -650,10 +867,12 @@
     each of 3 times series), we expect to see about 6 points outside this region.
     In fact, there are 7\. We conclude that there are no autocorrelations in these
     series that could not be explained by chance.
+  id: totrans-147
   prefs: []
   type: TYPE_NORMAL
 - en: I computed the gray regions by resampling the residuals. You can see my code
     in `timeseries.py`; the function is called `SimulateAutocorrelation`.
+  id: totrans-148
   prefs: []
   type: TYPE_NORMAL
 - en: To see what the autocorrelation function looks like when there is a seasonal
@@ -661,15 +880,19 @@
     demand for cannabis is higher on weekends, we might expect the price to be higher.
     To simulate this effect, I select dates that fall on Friday or Saturday and add
     a random amount to the price, chosen from a uniform distribution from $0 to $2.
+  id: totrans-149
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE17]'
+  id: totrans-150
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: '`frisat` is a boolean Series, `True` if the day of the week is Friday or Saturday.
     `fake` is a new DataFrame, initially a copy of `daily`, which we modify by adding
     random values to `ppg`. `frisat.sum()` is the total number of Fridays and Saturdays,
     which is the number of random values we have to generate.'
+  id: totrans-151
   prefs: []
   type: TYPE_NORMAL
 - en: Figure [12.5](#timeseries9) (right) shows autocorrelation functions for prices
@@ -678,52 +901,64 @@
     are statistically significant. For low quality they are not, because residuals
     in this category are large; the effect would have to be bigger to be visible through
     the noise.
+  id: totrans-152
   prefs: []
   type: TYPE_NORMAL
 - en: 12.8  Prediction
+  id: totrans-153
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: Time series analysis can be used to investigate, and sometimes explain, the
     behavior of systems that vary in time. It can also make predictions.
+  id: totrans-154
   prefs: []
   type: TYPE_NORMAL
 - en: 'The linear regressions we used in Section [12.3](#timeregress) can be used
     for prediction. The RegressionResults class provides `predict`, which takes a
     DataFrame containing the explanatory variables and returns a sequence of predictions.
     Here’s the code:'
+  id: totrans-155
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE18]'
+  id: totrans-156
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: '`results` is a RegressionResults object; `years` is the sequence of time values
     we want predictions for. The function constructs a DataFrame, passes it to `predict`,
     and returns the result.'
+  id: totrans-157
   prefs: []
   type: TYPE_NORMAL
 - en: If all we want is a single, best-guess prediction, we’re done. But for most
     purposes it is important to quantify error. In other words, we want to know how
     accurate the prediction is likely to be.
+  id: totrans-158
   prefs: []
   type: TYPE_NORMAL
 - en: 'There are three sources of error we should take into account:'
+  id: totrans-159
   prefs: []
   type: TYPE_NORMAL
 - en: 'Sampling error: The prediction is based on estimated parameters, which depend
     on random variation in the sample. If we run the experiment again, we expect the
     estimates to vary.'
+  id: totrans-160
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'Random variation: Even if the estimated parameters are perfect, the observed
     data varies randomly around the long-term trend, and we expect this variation
     to continue in the future.'
+  id: totrans-161
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'Modeling error: We have already seen evidence that the long-term trend is not
     linear, so predictions based on a linear model will eventually fail.'
+  id: totrans-162
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -732,10 +967,12 @@
     As I write this, cannabis is legal in two states and legal for medical purposes
     in 20 more. If more states legalize it, the price is likely to go down. But if
     the federal government cracks down, the price might go up.
+  id: totrans-163
   prefs: []
   type: TYPE_NORMAL
 - en: Modeling errors and unexpected future events are hard to quantify. Sampling
     error and random variation are easier to deal with, so we’ll do that first.
+  id: totrans-164
   prefs: []
   type: TYPE_NORMAL
 - en: 'To quantify sampling error, I use resampling, as we did in Section [10.4](thinkstats2011.html#regest).
@@ -743,291 +980,395 @@
     if we ran the experiment again. The simulations are based on the assumption that
     the estimated parameters are correct, but the random residuals could have been
     different. Here is a function that runs the simulations:'
+  id: totrans-165
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE19]'
+  id: totrans-166
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '`daily` is a DataFrame containing the observed prices; `iters` is the number
     of simulations to run.'
+  id: totrans-167
   prefs: []
   type: TYPE_NORMAL
 - en: '`SimulateResults` uses `RunLinearModel`, from Section [12.3](#timeregress),
     to estimate the slope and intercept of the observed values.'
+  id: totrans-168
   prefs: []
   type: TYPE_NORMAL
 - en: Each time through the loop, it generates a “fake” dataset by resampling the
     residuals and adding them to the fitted values. Then it runs a linear model on
     the fake data and stores the RegressionResults object.
+  id: totrans-169
   prefs: []
   type: TYPE_NORMAL
 - en: 'The next step is to use the simulated results to generate predictions:'
+  id: totrans-170
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE20]'
+  id: totrans-171
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '`GeneratePredictions` takes the sequence of results from the previous step,
     as well as `years`, which is a sequence of floats that specifies the interval
     to generate predictions for, and `add_resid`, which indicates whether it should
     add resampled residuals to the straight-line prediction. `GeneratePredictions`
     iterates through the sequence of RegressionResults and generates a sequence of
     predictions.'
+  id: totrans-172
   prefs: []
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-173
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-174
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/e02e8f5248569ee65ddd5a624335c5e0.png)'
+  id: totrans-175
   prefs:
   - PREF_BQ
   type: TYPE_IMG
 - en: ''
+  id: totrans-176
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 12.6: Predictions based on linear fits, showing variation due to sampling
     error and prediction error. |'
+  id: totrans-177
   prefs:
   - PREF_BQ
   type: TYPE_TB
 - en: ''
+  id: totrans-178
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-179
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: 'Finally, here’s the code that plots a 90% confidence interval for the predictions:'
+  id: totrans-180
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE21]'
+  id: totrans-181
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: '`PlotPredictions` calls `GeneratePredictions` twice: once with `add_resid=True`
     and again with `add_resid=False`. It uses `PercentileRows` to select the 5th and
     95th percentiles for each year, then plots a gray region between these bounds.'
+  id: totrans-182
   prefs: []
   type: TYPE_NORMAL
 - en: Figure [12.6](#timeseries4) shows the result. The dark gray region represents
     a 90% confidence interval for the sampling error; that is, uncertainty about the
     estimated slope and intercept due to sampling.
+  id: totrans-183
   prefs: []
   type: TYPE_NORMAL
 - en: The lighter region shows a 90% confidence interval for prediction error, which
     is the sum of sampling error and random variation.
+  id: totrans-184
   prefs: []
   type: TYPE_NORMAL
 - en: These regions quantify sampling error and random variation, but not modeling
     error. In general modeling error is hard to quantify, but in this case we can
     address at least one source of error, unpredictable external events.
+  id: totrans-185
   prefs: []
   type: TYPE_NORMAL
 - en: The regression model is based on the assumption that the system is stationary;
     that is, that the parameters of the model don’t change over time. Specifically,
     it assumes that the slope and intercept are constant, as well as the distribution
     of residuals.
+  id: totrans-186
   prefs: []
   type: TYPE_NORMAL
 - en: But looking at the moving averages in Figure [12.3](#timeseries10), it seems
     like the slope changes at least once during the observed interval, and the variance
     of the residuals seems bigger in the first half than the second.
+  id: totrans-187
   prefs: []
   type: TYPE_NORMAL
 - en: As a result, the parameters we get depend on the interval we observe. To see
     how much effect this has on the predictions, we can extend `SimulateResults` to
     use intervals of observation with different start and end dates. My implementation
     is in `timeseries.py`.
+  id: totrans-188
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，我们得到的参数取决于我们观察的时间间隔。为了了解这对预测的影响有多大，我们可以扩展`SimulateResults`以使用具有不同开始和结束日期的观察间隔。我的实现在`timeseries.py`中。
 - en: '* * *'
+  id: totrans-189
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
+  id: totrans-190
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/13a2d33d8c28e4238f501ab702d30cbe.png)'
+  id: totrans-191
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/13a2d33d8c28e4238f501ab702d30cbe.png)'
 - en: ''
+  id: totrans-192
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 12.7: Predictions based on linear fits, showing variation due to the
     interval of observation. |'
+  id: totrans-193
   prefs:
   - PREF_BQ
   type: TYPE_TB
+  zh: '| 图12.7：基于线性拟合的预测，显示由于观察间隔的变化而产生的变化。 |'
 - en: ''
+  id: totrans-194
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-195
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: Figure [12.7](#timeseries5) shows the result for the medium quality category.
     The lightest gray area shows a confidence interval that includes uncertainty due
     to sampling error, random variation, and variation in the interval of observation.
+  id: totrans-196
   prefs: []
   type: TYPE_NORMAL
+  zh: 图12.7显示了中等质量类别的结果。最浅灰色区域显示了包括由于抽样误差、随机变化和观察间隔变化而产生的不确定性的置信区间。
 - en: The model based on the entire interval has positive slope, indicating that prices
     were increasing. But the most recent interval shows signs of decreasing prices,
     so models based on the most recent data have negative slope. As a result, the
     widest predictive interval includes the possibility of decreasing prices over
     the next year.
+  id: totrans-197
   prefs: []
   type: TYPE_NORMAL
+  zh: 基于整个时间间隔的模型具有正斜率，表明价格正在上涨。但最近的时间间隔显示出价格下降的迹象，因此基于最近数据的模型具有负斜率。因此，最宽的预测间隔包括了未来一年价格下降的可能性。
 - en: 12.9  Further reading
+  id: totrans-198
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 12.9 进一步阅读
 - en: Time series analysis is a big topic; this chapter has only scratched the surface.
     An important tool for working with time series data is autoregression, which I
     did not cover here, mostly because it turns out not to be useful for the example
     data I worked with.
+  id: totrans-199
   prefs: []
   type: TYPE_NORMAL
+  zh: 时间序列分析是一个庞大的主题；本章只是触及了表面。处理时间序列数据的一个重要工具是自回归，我在这里没有涉及，主要是因为它对我处理的示例数据没有用处。
 - en: But once you have learned the material in this chapter, you are well prepared
     to learn about autoregression. One resource I recommend is Philipp Janert’s book,
     Data Analysis with Open Source Tools, O’Reilly Media, 2011\. His chapter on time
     series analysis picks up where this one leaves off.
+  id: totrans-200
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是一旦您学习了本章的材料，您就已经准备好了解自回归。我推荐的一个资源是Philipp Janert的书《Data Analysis with Open
+    Source Tools》，O'Reilly Media，2011年。他关于时间序列分析的章节延续了本章的内容。
 - en: 12.10  Exercises
+  id: totrans-201
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 12.10 练习
 - en: My solution to these exercises is in `chap12soln.py`.
+  id: totrans-202
   prefs: []
   type: TYPE_NORMAL
+  zh: 我对这些练习的解决方案在`chap12soln.py`中。
 - en: Exercise 1   *The linear model I used in this chapter has the obvious drawback
     that it is linear, and there is no reason to expect prices to change linearly
     over time. We can add flexibility to the model by adding a quadratic term, as
     we did in Section*[*11.3*](thinkstats2012.html#nonlinear)*.*
+  id: totrans-203
   prefs: []
   type: TYPE_NORMAL
+  zh: 练习1 *我在本章中使用的线性模型的明显缺点是它是线性的，没有理由期望价格随时间线性变化。我们可以通过添加二次项来为模型增加灵活性，就像我们在第11.3节中所做的那样。*
 - en: '*Use a quadratic model to fit the time series of daily prices, and use the
     model to generate predictions. You will have to write a version of `RunLinearModel`
     that runs that quadratic model, but after that you should be able to reuse code
     in `timeseries.py` to generate predictions.*'
+  id: totrans-204
   prefs: []
   type: TYPE_NORMAL
+  zh: '*使用二次模型拟合每日价格的时间序列，并使用该模型生成预测。您将需要编写一个运行二次模型的`RunLinearModel`的版本，但之后您应该能够重用`timeseries.py`中的代码来生成预测。*'
 - en: Exercise 2   *Write a definition for a class named `SerialCorrelationTest` that
     extends `HypothesisTest` from Section*[*9.2*](thinkstats2010.html#hypotest)*.
     It should take a series and a lag as data, compute the serial correlation of the
     series with the given lag, and then compute the p-value of the observed correlation.*
+  id: totrans-205
   prefs: []
   type: TYPE_NORMAL
+  zh: 练习2 *编写一个名为`SerialCorrelationTest`的类的定义，该类扩展了第9.2节中的`HypothesisTest`。它应该接受一个系列和一个滞后作为数据，计算给定滞后的系列的串行相关性，然后计算观察到的相关性的p值。*
 - en: '*Use this class to test whether the serial correlation in raw price data is
     statistically significant. Also test the residuals of the linear model and (if
     you did the previous exercise), the quadratic model.*'
+  id: totrans-206
   prefs: []
   type: TYPE_NORMAL
+  zh: '*使用这个类来测试原始价格数据中的串行相关性是否具有统计学意义。还要测试线性模型的残差以及（如果您完成了前一个练习）二次模型。*'
 - en: Exercise 3   *There are several ways to extend the EWMA model to generate predictions.
     One of the simplest is something like this:*
+  id: totrans-207
   prefs: []
   type: TYPE_NORMAL
+  zh: 练习3 *有几种方法可以扩展EWMA模型以生成预测。其中最简单的一种是这样的：*
 - en: '*Compute the EWMA of the time series and use the last point as an intercept,
     `inter`.*'
+  id: totrans-208
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '*计算时间序列的EWMA，并使用最后一个点作为截距，`inter`。*'
 - en: '*Compute the EWMA of differences between successive elements in the time series
     and use the last point as a slope, `slope`.*'
+  id: totrans-209
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '*计算时间序列中连续元素之间的差异的EWMA，并使用最后一个点作为斜率，`slope`。*'
 - en: '*To predict values at future times, compute `inter + slope * dt`, where `dt`
     is the difference between the time of the prediction and the time of the last
     observation.*'
+  id: totrans-210
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '*要预测未来时间的值，计算`inter + slope * dt`，其中`dt`是预测时间和最后观察时间之间的差异。*'
 - en: '*Use this method to generate predictions for a year after the last observation.
     A few hints:*'
+  id: totrans-211
   prefs: []
   type: TYPE_NORMAL
+  zh: '*使用这种方法生成最后观察后一年的预测。一些建议：*'
 - en: '*Use `timeseries.FillMissing` to fill in missing values before running this
     analysis. That way the time between consecutive elements is consistent.*'
+  id: totrans-212
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '*使用`timeseries.FillMissing`在运行此分析之前填充缺失值。这样，连续元素之间的时间是一致的。*'
 - en: '*Use `Series.diff` to compute differences between successive elements.*'
+  id: totrans-213
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '*使用`Series.diff`计算连续元素之间的差异。*'
 - en: '*Use `reindex` to extend the DataFrame index into the future.*'
+  id: totrans-214
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '*使用`reindex`将DataFrame索引扩展到未来。*'
 - en: '*Use `fillna` to put your predicted values into the DataFrame.*'
+  id: totrans-215
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '*使用`fillna`将预测值放入DataFrame中。*'
 - en: 12.11  Glossary
+  id: totrans-216
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 12.11 术语表
 - en: 'time series: A dataset where each value is associated with a timestamp, often
     a series of measurements and the times they were collected.'
+  id: totrans-217
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 时间序列：每个值都与时间戳相关联的数据集，通常是一系列测量值和它们收集的时间。
 - en: 'window: A sequence of consecutive values in a time series, often used to compute
     a moving average.'
+  id: totrans-218
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 窗口：时间序列中连续值的序列，通常用于计算移动平均值。
 - en: 'moving average: One of several statistics intended to estimate the underlying
     trend in a time series by computing averages (of some kind) for a series of overlapping
     windows.'
+  id: totrans-219
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 移动平均：用于估计时间序列中潜在趋势的几种统计量之一，通过计算一系列重叠窗口的平均值（某种类型的）。
 - en: 'rolling mean: A moving average based on the mean value in each window.'
+  id: totrans-220
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 滚动平均：基于每个窗口中的平均值的移动平均。
 - en: 'exponentially-weighted moving average (EWMA): A moving average based on a weighted
     mean that gives the highest weight to the most recent values, and exponentially
     decreasing weights to earlier values.'
+  id: totrans-221
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 指数加权移动平均（EWMA）：基于加权平均的移动平均，对最近的值给予最高权重，并对较早的值指数级减小权重。
 - en: 'span: A parameter of EWMA that determines how quickly the weights decrease.'
+  id: totrans-222
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 跨度：确定权重如何快速减小的EWMA的参数。
 - en: 'serial correlation: Correlation between a time series and a shifted or lagged
     version of itself.'
+  id: totrans-223
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 串行相关：时间序列与其自身的移位或滞后版本之间的相关性。
 - en: 'lag: The size of the shift in a serial correlation or autocorrelation.'
+  id: totrans-224
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 滞后：串行相关或自相关中的移位大小。
 - en: 'autocorrelation: A more general term for a serial correlation with any amount
     of lag.'
+  id: totrans-225
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 自相关：串行相关的更一般术语，具有任意滞后量。
 - en: 'autocorrelation function: A function that maps from lag to serial correlation.'
+  id: totrans-226
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 自相关函数：将滞后映射到串行相关的函数。
 - en: 'stationary: A model is stationary if the parameters and the distribution of
     residuals do not change over time.'
+  id: totrans-227
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 平稳：如果模型的参数和残差的分布随时间不变，则模型是平稳的。
