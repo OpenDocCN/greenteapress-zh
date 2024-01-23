@@ -3,15 +3,18 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 重新采样和逻辑回归
 - en: 原文：[https://allendowney.github.io/ElementsOfDataScience/resample_logit.html](https://allendowney.github.io/ElementsOfDataScience/resample_logit.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ElementsOfDataScience/resample_logit.html](https://allendowney.github.io/ElementsOfDataScience/resample_logit.html)
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/examples/resample_logit.ipynb)'
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: '[单击此处在Colab上运行此笔记本](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/examples/resample_logit.ipynb)'
 - en: Different ways of computing sampling distributions – and the statistics derived
     from them, like standard errors and confidence intervals – yield different results.
     None of them are right or wrong; rather, they are based on different modeling
@@ -20,10 +23,12 @@
   id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 计算抽样分布的不同方法以及从中得出的统计数据，如标准误差和置信区间，会产生不同的结果。它们没有对错之分；相反，它们基于不同的建模假设。在实践中，与其他误差来源相比，差异通常很小，因此我们可以自由选择任何方便的方法。
 - en: 'This article is prompted by a recent question on [Reddit](https://www.reddit.com/r/statistics/comments/10ayfm5/q_parametric_bootstrap_for_logistic_regression/):'
   id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 本文是由[Reddit](https://www.reddit.com/r/statistics/comments/10ayfm5/q_parametric_bootstrap_for_logistic_regression/)上最近的一个问题引发的：
 - en: I am trying to do parametric bootstrap for logistic regression but I don’t know
     what the random error terms should be. I know how to do it with linear regression
     since the error terms follow a normal distribution. Really appreciate any pointers
@@ -32,18 +37,22 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 我正在尝试对逻辑回归进行参数化自举，但我不知道随机误差项应该是什么。我知道如何对线性回归进行操作，因为误差项遵循正态分布。非常感谢任何关于这个主题的资源指针。
 - en: 'One of the responses recommends [this paper](https://www.scirp.org/journal/paperinformation.aspx?paperid=70962):
     “An Application of Bootstrapping in Logistic Regression Model”, by Isaac Akpor
     Adjei and Rezaul Karim.'
   id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 其中一位回答推荐了[这篇论文](https://www.scirp.org/journal/paperinformation.aspx?paperid=70962)：“逻辑回归模型中自举法的应用”，作者是Isaac
+    Akpor Adjei和Rezaul Karim。
 - en: 'The paper suggests two ways to compute the sampling distribution of the parameters
     of a logistic regression by bootstrap sampling. They characterize one as parametric
     and the other as non-parametric, and advise:'
   id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 该论文提出了通过自举抽样计算逻辑回归参数的抽样分布的两种方法。他们将其中一种表征为参数化的，另一种表征为非参数化的，并建议：
 - en: The non-parametric bootstrap [relies] on weaker assumptions (or no assumptions
     at all) about the underlying distribution of the population. Statistical practitioners
     should use non-parametric procedures only in so far as the assumptions about the
@@ -57,6 +66,8 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 非参数化自举法依赖于对人口基础分布的较弱假设（或根本没有假设）。统计从业者应该仅在对人口基础分布的假设严重存疑时才使用非参数化程序。…然而，当假设没有被违反时，与相应的参数化程序相比，非参数化程序通常具有更大的方差（在点估计中），更低的功率（在假设检验中），更宽的区间（在置信区间估计中），更低的正确选择概率（在排名和选择中）和更高的风险（在决策理论中）（Efron
+    and Tibshirani, 1994 [1]）。
 - en: The premise of this advice is that the parametric and non-parametric methods
     are answering the same question in different ways, and that one might be preferred
     over the other because the results are preferable in one way or another. It is
@@ -65,6 +76,7 @@
   id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些建议的前提是，参数化和非参数化方法以不同的方式回答相同的问题，并且可能更喜欢其中一种，因为结果在某种方面更可取。它还基于这样的假设，即参数的抽样分布以及从中得出的统计数据是唯一和客观定义的。
 - en: I disagree with these premises. The parametric and non-parametric methods they
     present are based on different modeling decisions, so they compute answers to
     different questions. And the models they are based on are only two of many possible
@@ -72,6 +84,7 @@
   id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 我不同意这些前提。他们提出的参数化和非参数化方法是基于不同的建模决策，因此它们计算出对不同问题的答案。而且它们所基于的模型只是众多可能模型中的两种。
 - en: To explain what I mean, I will implement the methods they propose and explain
     the assumptions each is based on. Then I will propose a third method that is a
     hybrid of the two. I’ll show that all three methods yield different results, and
@@ -79,17 +92,20 @@
   id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了解释我的意思，我将实施他们提出的方法，并解释每种方法所基于的假设。然后我将提出第三种方法，这是两种方法的混合体。我将展示这三种方法产生不同的结果，并提出何时可能更喜欢其中一种的标准。
 - en: The Data
   id: totrans-12
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 数据
 - en: As an example, I’ll use data from the General Social Survey (GSS). I’ll download
     an HDF file from the *Elements of Data Science* repository, which contains a subset
     of the GSS data that has been resampled to correct for stratified sampling.
   id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为一个例子，我将使用来自《通用社会调查》（GSS）的数据。我将从*数据科学要素*存储库中下载一个HDF文件，其中包含已经重新采样以纠正分层抽样的GSS数据子集。
 - en: '[PRE0]'
   id: totrans-14
   prefs: []
@@ -114,6 +130,7 @@
   id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 它包括64,814名受访者和每名受访者的8个变量。
 - en: '[PRE4]'
   id: totrans-19
   prefs: []
@@ -123,30 +140,37 @@
   id: totrans-20
   prefs: []
   type: TYPE_TB
+  zh: '|  | 年份 | ID_ | 年龄 | 教育 | 性别 | 枪支法 | 大麻 | 实际收入 |'
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- |'
   id: totrans-21
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- | --- | --- | --- | --- |'
 - en: '| 0 | 1972 | 1 | 23.0 | 16.0 | 2 | 1.0 | NaN | 18951.0 |'
   id: totrans-22
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 1972 | 1 | 23.0 | 16.0 | 2 | 1.0 | NaN | 18951.0 |'
 - en: '| 1 | 1972 | 2 | 70.0 | 10.0 | 1 | 1.0 | NaN | 24366.0 |'
   id: totrans-23
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 1972 | 2 | 70.0 | 10.0 | 1 | 1.0 | NaN | 24366.0 |'
 - en: '| 2 | 1972 | 3 | 48.0 | 12.0 | 2 | 1.0 | NaN | 24366.0 |'
   id: totrans-24
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 1972 | 3 | 48.0 | 12.0 | 2 | 1.0 | NaN | 24366.0 |'
 - en: '| 3 | 1972 | 4 | 27.0 | 17.0 | 2 | 1.0 | NaN | 30458.0 |'
   id: totrans-25
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 1972 | 4 | 27.0 | 17.0 | 2 | 1.0 | NaN | 30458.0 |'
 - en: '| 4 | 1972 | 5 | 61.0 | 12.0 | 2 | 1.0 | NaN | 50763.0 |'
   id: totrans-26
   prefs: []
   type: TYPE_TB
+  zh: '| 4 | 1972 | 5 | 61.0 | 12.0 | 2 | 1.0 | NaN | 50763.0 |'
 - en: To demonstrate logistic regression, I’ll use on [one of the questions](https://gssdataexplorer.norc.org/variables/285/vshow)
     in the General Social Survey, which asks “Do you think the use of marijuana should
     be made legal or not?” The responses are in a column called `GRASS`; here are
@@ -154,6 +178,7 @@
   id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了演示逻辑回归，我将使用[普遍社会调查](https://gssdataexplorer.norc.org/variables/285/vshow)中的一个问题，该问题问：“您认为大麻的使用应该合法化吗？”回答在名为`GRASS`的列中；以下是值。
 - en: '[PRE5]'
   id: totrans-28
   prefs: []
@@ -170,6 +195,7 @@
   id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将使用StatsModels，它提供了一个执行逻辑回归的函数。首先，我们必须重新编码因变量，使`1`表示“是”，`0`表示“否”。我们可以通过用`2`替换`0`来实现。
 - en: '[PRE7]'
   id: totrans-31
   prefs: []
@@ -180,6 +206,7 @@
   id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了建模二次关系，我将添加包含`AGE`和`EDUC`的平方值的列。
 - en: '[PRE8]'
   id: totrans-33
   prefs: []
@@ -189,6 +216,7 @@
   id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将删除具有我们需要的变量的缺失值的行。
 - en: '[PRE9]'
   id: totrans-35
   prefs: []
@@ -199,10 +227,12 @@
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 逻辑回归
 - en: Here are the results of logistic regression with these variables.
   id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是具有这些变量的逻辑回归的结果。
 - en: '[PRE10]'
   id: totrans-38
   prefs: []
@@ -217,67 +247,83 @@
   id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: 逻辑回归结果
 - en: '| Dep. Variable: | GRASS | No. Observations: | 20475 |'
   id: totrans-41
   prefs: []
   type: TYPE_TB
+  zh: '| 因变量：| GRASS | 观察次数：| 20475 |'
 - en: '| Model: | Logit | Df Residuals: | 20469 |'
   id: totrans-42
   prefs: []
   type: TYPE_TB
+  zh: '| 模型：| 逻辑回归 | 残差Df：| 20469 |'
 - en: '| Method: | MLE | Df Model: | 5 |'
   id: totrans-43
   prefs: []
   type: TYPE_TB
+  zh: '| 方法：| MLE | 模型Df：| 5 |'
 - en: '| Date: | Tue, 17 Jan 2023 | Pseudo R-squ.: | 0.05003 |'
   id: totrans-44
   prefs: []
   type: TYPE_TB
+  zh: '| 日期：| 2023年1月17日 | 伪R-squ.：| 0.05003 |'
 - en: '| Time: | 08:58:57 | Log-Likelihood: | -12151. |'
   id: totrans-45
   prefs: []
   type: TYPE_TB
+  zh: '| 时间：| 08:58:57 | 对数似然：| -12151. |'
 - en: '| converged: | True | LL-Null: | -12791. |'
   id: totrans-46
   prefs: []
   type: TYPE_TB
+  zh: '| 收敛：| 真 | LL-Null：| -12791. |'
 - en: '| Covariance Type: | nonrobust | LLR p-value: | 1.555e-274 |'
   id: totrans-47
   prefs: []
   type: TYPE_TB
+  zh: '| 协方差类型：| 非鲁棒 | LLR p值：| 1.555e-274 |'
 - en: '|  | coef | std err | z | P>&#124;z&#124; | [0.025 | 0.975] |'
   id: totrans-48
   prefs: []
   type: TYPE_TB
+  zh: '|  | 系数 | 标准误差 | z | P>&#124;z&#124; | [0.025 | 0.975] |'
 - en: '| Intercept | -1.6788 | 0.240 | -6.988 | 0.000 | -2.150 | -1.208 |'
   id: totrans-49
   prefs: []
   type: TYPE_TB
+  zh: '| 截距 | -1.6788 | 0.240 | -6.988 | 0.000 | -2.150 | -1.208 |'
 - en: '| C(SEX)[T.2] | -0.3849 | 0.031 | -12.394 | 0.000 | -0.446 | -0.324 |'
   id: totrans-50
   prefs: []
   type: TYPE_TB
+  zh: '| C(SEX)[T.2] | -0.3849 | 0.031 | -12.394 | 0.000 | -0.446 | -0.324 |'
 - en: '| AGE | -0.0278 | 0.005 | -5.399 | 0.000 | -0.038 | -0.018 |'
   id: totrans-51
   prefs: []
   type: TYPE_TB
+  zh: '| 年龄 | -0.0278 | 0.005 | -5.399 | 0.000 | -0.038 | -0.018 |'
 - en: '| AGE2 | 0.0001 | 5.28e-05 | 2.190 | 0.029 | 1.21e-05 | 0.000 |'
   id: totrans-52
   prefs: []
   type: TYPE_TB
+  zh: '| AGE2 | 0.0001 | 5.28e-05 | 2.190 | 0.029 | 1.21e-05 | 0.000 |'
 - en: '| EDUC | 0.2000 | 0.031 | 6.412 | 0.000 | 0.139 | 0.261 |'
   id: totrans-53
   prefs: []
   type: TYPE_TB
+  zh: '| 教育 | 0.2000 | 0.031 | 6.412 | 0.000 | 0.139 | 0.261 |'
 - en: '| EDUC2 | -0.0029 | 0.001 | -2.450 | 0.014 | -0.005 | -0.001 |'
   id: totrans-54
   prefs: []
   type: TYPE_TB
+  zh: '| EDUC2 | -0.0029 | 0.001 | -2.450 | 0.014 | -0.005 | -0.001 |'
 - en: To get a sense of what the results look like, we can plot the predicted probability
     of saying “yes” as a function of age, for male and female respondents.
   id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了了解结果的样子，我们可以绘制预测的“是”的概率作为年龄的函数，分别对男性和女性受访者。
 - en: '[PRE12]'
   id: totrans-56
   prefs: []
@@ -287,22 +333,26 @@
   id: totrans-57
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/resample_logit_21_0.png](../Images/aa74a3679320584224ecc98eebfea4f2.png)'
 - en: Men are more likely to support legalization than women, and younger people more
     likely than older people.
   id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 男性比女性更有可能支持合法化，年轻人比年长者更有可能。
 - en: Boostrap sampling
   id: totrans-59
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 自举抽样
 - en: Now let’s implement the method characterized as non-parametric, which is based
     on bootstrap resampling. The following function samples the rows of `data` with
     replacement and runs the regression model on the resampled data.
   id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们实施被描述为非参数的方法，该方法基于自举重采样。以下函数用替换抽样`data`的行并在重采样数据上运行回归模型。
 - en: '[PRE13]'
   id: totrans-61
   prefs: []
@@ -313,11 +363,13 @@
   id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: 发送到'fit'的选项使其运行更快，但结果影响不大。
 - en: Each time we run this process, the result represents a single draw from the
     sampling distribution of the parameters.
   id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 每次运行此过程，结果代表参数抽样分布的单次抽样。
 - en: '[PRE14]'
   id: totrans-64
   prefs: []
@@ -333,6 +385,7 @@
   id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: 通过多次运行它，我们从抽样分布中生成一个样本。`pqdm`在多个线程中运行抽样过程。
 - en: '[PRE16]'
   id: totrans-67
   prefs: []
@@ -347,34 +400,42 @@
   id: totrans-69
   prefs: []
   type: TYPE_TB
+  zh: '|  | 截距 | C(SEX)[T.2] | 年龄 | 年龄2 | 教育 | 教育2 |'
 - en: '| --- | --- | --- | --- | --- | --- | --- |'
   id: totrans-70
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- | --- | --- |'
 - en: '| 0 | -1.747448 | -0.413202 | -0.027473 | 0.000114 | 0.213299 | -0.003302 |'
   id: totrans-71
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | -1.747448 | -0.413202 | -0.027473 | 0.000114 | 0.213299 | -0.003302 |'
 - en: '| 1 | -2.055303 | -0.411384 | -0.029943 | 0.000129 | 0.276153 | -0.005563 |'
   id: totrans-72
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | -2.055303 | -0.411384 | -0.029943 | 0.000129 | 0.276153 | -0.005563 |'
 - en: '| 2 | -2.050773 | -0.414960 | -0.023190 | 0.000094 | 0.242778 | -0.004530 |'
   id: totrans-73
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | -2.050773 | -0.414960 | -0.023190 | 0.000094 | 0.242778 | -0.004530 |'
 - en: '| 3 | -2.031659 | -0.392391 | -0.029538 | 0.000147 | 0.251942 | -0.004616 |'
   id: totrans-74
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | -2.031659 | -0.392391 | -0.029538 | 0.000147 | 0.251942 | -0.004616 |'
 - en: '| 4 | -1.847295 | -0.363829 | -0.031532 | 0.000156 | 0.238870 | -0.004339 |'
   id: totrans-75
   prefs: []
   type: TYPE_TB
+  zh: '| 4 | -1.847295 | -0.363829 | -0.031532 | 0.000156 | 0.238870 | -0.004339 |'
 - en: Here’s what the sampling distribution looks like for one of the parameters.
   id: totrans-76
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是其中一个参数的抽样分布的样子。
 - en: '[PRE18]'
   id: totrans-77
   prefs: []
@@ -384,11 +445,13 @@
   id: totrans-78
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/resample_logit_31_0.png](../Images/898f8a3018abbd0356c483f5c05fecdf.png)'
 - en: The mean of the sampling distribution should be close to the parameters we estimated
     with the original dataset, and it is.
   id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: 抽样分布的均值应该接近我们用原始数据集估计的参数，而且确实是这样。
 - en: '[PRE19]'
   id: totrans-80
   prefs: []
@@ -398,40 +461,49 @@
   id: totrans-81
   prefs: []
   type: TYPE_TB
+  zh: '|  | 抽样均值 | 估计 |'
 - en: '| --- | --- | --- |'
   id: totrans-82
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- |'
 - en: '| Intercept | -1.681880 | -1.678838 |'
   id: totrans-83
   prefs: []
   type: TYPE_TB
+  zh: '| 截距 | -1.681880 | -1.678838 |'
 - en: '| C(SEX)[T.2] | -0.379621 | -0.384919 |'
   id: totrans-84
   prefs: []
   type: TYPE_TB
+  zh: '| C(SEX)[T.2] | -0.379621 | -0.384919 |'
 - en: '| AGE | -0.027804 | -0.027825 |'
   id: totrans-85
   prefs: []
   type: TYPE_TB
+  zh: '| 年龄 | -0.027804 | -0.027825 |'
 - en: '| AGE2 | 0.000115 | 0.000116 |'
   id: totrans-86
   prefs: []
   type: TYPE_TB
+  zh: '| AGE2 | 0.000115 | 0.000116 |'
 - en: '| EDUC | 0.201137 | 0.200002 |'
   id: totrans-87
   prefs: []
   type: TYPE_TB
+  zh: '| 教育 | 0.201137 | 0.200002 |'
 - en: '| EDUC2 | -0.002912 | -0.002855 |'
   id: totrans-88
   prefs: []
   type: TYPE_TB
+  zh: '| EDUC2 | -0.002912 | -0.002855 |'
 - en: The standard deviations of the sampling distributions should be close to the
     standard errors computed by StatsModels, and they are. Most of them are close
     enough that the difference probably doesn’t matter in practice.
   id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: 抽样分布的标准偏差应该接近StatsModels计算的标准误差，而且确实如此。它们中的大多数都足够接近，实际上差异可能并不重要。
 - en: '[PRE20]'
   id: totrans-90
   prefs: []
@@ -446,22 +518,27 @@
   id: totrans-92
   prefs: []
   type: TYPE_TB
+  zh: '|  | 抽样标准差 | 标准误差 | 百分比差异 |'
 - en: '| --- | --- | --- | --- |'
   id: totrans-93
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- |'
 - en: '| Intercept | 0.248814 | 0.240243 | 3.567779 |'
   id: totrans-94
   prefs: []
   type: TYPE_TB
+  zh: '| 截距 | 0.248814 | 0.240243 | 3.567779 |'
 - en: '| C(SEX)[T.2] | 0.027137 | 0.031057 | -12.622418 |'
   id: totrans-95
   prefs: []
   type: TYPE_TB
+  zh: '| C(SEX)[T.2] | 0.027137 | 0.031057 | -12.622418 |'
 - en: '| AGE | 0.004944 | 0.005153 | -4.066840 |'
   id: totrans-96
   prefs: []
   type: TYPE_TB
+  zh: '| 年龄 | 0.004944 | 0.005153 | -4.066840 |'
 - en: '| AGE2 | 0.000051 | 0.000053 | -4.198399 |'
   id: totrans-97
   prefs: []
