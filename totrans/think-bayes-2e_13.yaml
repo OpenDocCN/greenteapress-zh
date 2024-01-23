@@ -813,26 +813,31 @@
   id: totrans-142
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 0.3 | 0.500 | [0.27, 0.73] |'
 - en: '| 3 | 0.4 | 0.417 | [0.2, 0.65] |'
   id: totrans-143
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 0.4 | 0.417 | [0.2, 0.65] |'
 - en: We expect the credible intervals to contain the actual probabilities most of
     the time.
   id: totrans-144
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们期望置信区间大部分时间包含实际概率。
 - en: Explore and Exploit
   id: totrans-145
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 探索和开发
 - en: Based on these posterior distributions, which machine do you think we should
     play next? One option would be to choose the machine with the highest posterior
     mean.
   id: totrans-146
   prefs: []
   type: TYPE_NORMAL
+  zh: 基于这些后验分布，你认为我们应该下一步玩哪台机器？一个选择是选择后验均值最高的机器。
 - en: 'That would not be a bad idea, but it has a drawback: since we have only played
     each machine a few times, the posterior distributions are wide and overlapping,
     which means we are not sure which machine is the best; if we focus on one machine
@@ -840,39 +845,46 @@
   id: totrans-147
   prefs: []
   type: TYPE_NORMAL
+  zh: 这不是一个坏主意，但它有一个缺点：因为我们只玩了每台机器几次，后验分布很宽，重叠，这意味着我们不确定哪台机器是最好的；如果我们太早专注于一台机器，我们可能选择错误的机器并且玩得比应该更多。
 - en: To avoid that problem, we could go to the other extreme and play all machines
     equally until we are confident we have identified the best machine, and then play
     it exclusively.
   id: totrans-148
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了避免这个问题，我们可以走向另一个极端，直到我们有信心确定了最好的机器，然后专门玩它。
 - en: 'That’s not a bad idea either, but it has a drawback: while we are gathering
     data, we are not making good use of it; until we’re sure which machine is the
     best, we are playing the others more than we should.'
   id: totrans-149
   prefs: []
   type: TYPE_NORMAL
+  zh: 这也不是一个坏主意，但它有一个缺点：当我们收集数据时，我们没有充分利用它；直到我们确定哪台机器是最好的，我们玩其他机器的次数比应该更多。
 - en: The Bayesian Bandits strategy avoids both drawbacks by gathering and using data
     at the same time. In other words, it balances exploration and exploitation.
   id: totrans-150
   prefs: []
   type: TYPE_NORMAL
+  zh: 贝叶斯赌博策略通过同时收集和使用数据来避免这两个缺点。换句话说，它平衡了探索和开发。
 - en: 'The kernel of the idea is called [Thompson sampling](https://en.wikipedia.org/wiki/Thompson_sampling):
     when we choose a machine, we choose at random so that the probability of choosing
     each machine is proportional to the probability that it is the best.'
   id: totrans-151
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个想法的核心被称为[汤普森抽样](https://en.wikipedia.org/wiki/Thompson_sampling)：当我们选择一台机器时，我们随机选择，以便选择每台机器的概率与它是最好的概率成比例。
 - en: Given the posterior distributions, we can compute the “probability of superiority”
     for each machine.
   id: totrans-152
   prefs: []
   type: TYPE_NORMAL
+  zh: 给定后验分布，我们可以计算每台机器的“优越概率”。
 - en: 'Here’s one way to do it. We can draw a sample of 1000 values from each posterior
     distribution, like this:'
   id: totrans-153
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一种方法。我们可以从每个后验分布中抽取1000个值，就像这样：
 - en: '[PRE45]'
   id: totrans-154
   prefs: []
@@ -888,6 +900,7 @@
   id: totrans-156
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果有4行和1000列。我们可以使用`argmax`找到每列中最大值的索引：
 - en: '[PRE47]'
   id: totrans-157
   prefs: []
@@ -903,6 +916,7 @@
   id: totrans-159
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些索引的`Pmf`是每台机器产生最高值的次数的比例。
 - en: '[PRE49]'
   id: totrans-160
   prefs: []
@@ -912,31 +926,38 @@
   id: totrans-161
   prefs: []
   type: TYPE_TB
+  zh: '|  | 概率 |'
 - en: '| --- | --- |'
   id: totrans-162
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| 0 | 0.048 |'
   id: totrans-163
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 0.048 |'
 - en: '| 1 | 0.043 |'
   id: totrans-164
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 0.043 |'
 - en: '| 2 | 0.625 |'
   id: totrans-165
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 0.625 |'
 - en: '| 3 | 0.284 |'
   id: totrans-166
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 0.284 |'
 - en: These fractions approximate the probability of superiority for each machine.
     So we could choose the next machine by choosing a value from this `Pmf`.
   id: totrans-167
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些分数近似于每台机器的优越概率。因此，我们可以通过从这个`Pmf`中选择一个值来选择下一个机器。
 - en: '[PRE50]'
   id: totrans-168
   prefs: []
@@ -952,16 +973,19 @@
   id: totrans-170
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是选择一个单一值需要很多工作，而且并不是真正必要的，因为有一个捷径。
 - en: If we draw a single random value from each posterior distribution and select
     the machine that yields the highest value, it turns out that we’ll select each
     machine in proportion to its probability of superiority.
   id: totrans-171
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们从每个后验分布中抽取一个随机值，并选择产生最高值的机器，结果是我们将按照其优越概率选择每台机器。
 - en: That’s what the following function does.
   id: totrans-172
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数就是做这个的。
 - en: '[PRE52]'
   id: totrans-173
   prefs: []
@@ -973,10 +997,12 @@
   id: totrans-174
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个函数从每台机器的后验分布中选择一个值，然后使用`argmax`找到产生最高值的机器的索引。
 - en: Here’s an example.
   id: totrans-175
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个例子。
 - en: '[PRE53]'
   id: totrans-176
   prefs: []
@@ -992,11 +1018,13 @@
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 策略
 - en: 'Putting it all together, the following function chooses a machine, plays once,
     and updates `beliefs`:'
   id: totrans-179
   prefs: []
   type: TYPE_NORMAL
+  zh: 把所有这些放在一起，以下函数选择一台机器，玩一次，并更新`beliefs`：
 - en: '[PRE55]'
   id: totrans-180
   prefs: []
@@ -1006,6 +1034,7 @@
   id: totrans-181
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了测试它，让我们从一组新的信念和一个空的`Counter`开始。
 - en: '[PRE56]'
   id: totrans-182
   prefs: []
@@ -1015,6 +1044,7 @@
   id: totrans-183
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们运行赌博算法100次，我们可以看到`beliefs`如何更新：
 - en: '[PRE57]'
   id: totrans-184
   prefs: []
@@ -1024,43 +1054,54 @@
   id: totrans-185
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/020ff49d90aa605dcced01aefa1c2cfa99d6e29e2be17d4a4d8fa486bcb918b3.png](../Images/3dcd9ae63fc1320012c3f0ddfd24960d.png)'
 - en: The following table summarizes the results.
   id: totrans-186
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下表格总结了结果。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
   id: totrans-187
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE58]</details>'
   id: totrans-188
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE58]</details>'
 - en: '|  | Actual P(win) | Posterior mean | Credible interval |'
   id: totrans-189
   prefs: []
   type: TYPE_TB
+  zh: '|  | 实际P(获胜) | 后验均值 | 置信区间 |'
 - en: '| --- | --- | --- | --- |'
   id: totrans-190
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- |'
 - en: '| 0 | 0.1 | 0.107 | [0.0, 0.31] |'
   id: totrans-191
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 0.1 | 0.107 | [0.0, 0.31] |'
 - en: '| 1 | 0.2 | 0.269 | [0.14, 0.42] |'
   id: totrans-192
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 0.2 | 0.269 | [0.14, 0.42] |'
 - en: '| 2 | 0.3 | 0.293 | [0.18, 0.41] |'
   id: totrans-193
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 0.3 | 0.293 | [0.18, 0.41] |'
 - en: '| 3 | 0.4 | 0.438 | [0.3, 0.58] |'
   id: totrans-194
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 0.4 | 0.438 | [0.3, 0.58] |'
 - en: 'The credible intervals usually contain the actual probabilities of winning.
     The estimates are still rough, especially for the lower-probability machines.
     But that’s a feature, not a bug: the goal is to play the high-probability machines
@@ -1069,10 +1110,12 @@
   id: totrans-195
   prefs: []
   type: TYPE_NORMAL
+  zh: 置信区间通常包含获胜的实际概率。估计仍然很粗糙，特别是对于低概率的机器。但这是一个特点，而不是一个错误：目标是尽可能经常玩高概率的机器。使估计更精确是为了达到这个目的，而不是结束本身。
 - en: More importantly, let’s see how many times each machine got played.
   id: totrans-196
   prefs: []
   type: TYPE_NORMAL
+  zh: 更重要的是，让我们看看每台机器被玩了多少次。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-197

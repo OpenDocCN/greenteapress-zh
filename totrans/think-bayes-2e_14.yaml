@@ -1,156 +1,211 @@
 - en: Comparison
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
 - en: 原文：[https://allendowney.github.io/ThinkBayes2/chap11.html](https://allendowney.github.io/ThinkBayes2/chap11.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: This chapter introduces joint distributions, which are an essential tool for
     working with distributions of more than one variable.
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
 - en: We’ll use them to solve a silly problem on our way to solving a real problem.
     The silly problem is figuring out how tall two people are, given only that one
     is taller than the other. The real problem is rating chess players (or participants
     in other kinds of competition) based on the outcome of a game.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
 - en: To construct joint distributions and compute likelihoods for these problems,
     we will use outer products and similar operations. And that’s where we’ll start.
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
 - en: Outer Operations
+  id: totrans-5
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: 'Many useful operations can be expressed as the “outer product” of two sequences,
     or another kind of “outer” operation. Suppose you have sequences like `x` and
     `y`:'
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE0]'
+  id: totrans-7
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: The outer product of these sequences is an array that contains the product of
     every pair of values, one from each sequence. There are several ways to compute
     outer products, but the one I think is the most versatile is a “mesh grid”.
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
 - en: NumPy provides a function called `meshgrid` that computes a mesh grid. If we
     give it two sequences, it returns two arrays.
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE1]'
+  id: totrans-10
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: The first array contains copies of `x` arranged in rows, where the number of
     rows is the length of `y`.
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE2]'
+  id: totrans-12
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '[PRE3]'
+  id: totrans-13
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: The second array contains copies of `y` arranged in columns, where the number
     of columns is the length of `x`.
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE4]'
+  id: totrans-15
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '[PRE5]'
+  id: totrans-16
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: Because the two arrays are the same size, we can use them as operands for arithmetic
     functions like multiplication.
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE6]'
+  id: totrans-18
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '[PRE7]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: 'This is result is the outer product of `x` and `y`. We can see that more clearly
     if we put it in a `DataFrame`:'
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE8]'
+  id: totrans-21
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '|  | 1 | 3 | 5 |'
+  id: totrans-22
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- | --- |'
+  id: totrans-23
   prefs: []
   type: TYPE_TB
 - en: '| 2 | 2 | 6 | 10 |'
+  id: totrans-24
   prefs: []
   type: TYPE_TB
 - en: '| 4 | 4 | 12 | 20 |'
+  id: totrans-25
   prefs: []
   type: TYPE_TB
 - en: The values from `x` appear as column names; the values from `y` appear as row
     labels. Each element is the product of a value from `x` and a value from `y`.
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
 - en: We can use mesh grids to compute other operations, like the outer sum, which
     is an array that contains the *sum* of elements from `x` and elements from `y`.
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE9]'
+  id: totrans-28
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '[PRE10]'
+  id: totrans-29
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: We can also use comparison operators to compare elements from `x` with elements
     from `y`.
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE11]'
+  id: totrans-31
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: '[PRE12]'
+  id: totrans-32
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: The result is an array of Boolean values.
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
 - en: It might not be obvious yet why these operations are useful, but we’ll see examples
     soon. With that, we are ready to take on a new Bayesian problem.
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
 - en: How Tall Is A?
+  id: totrans-35
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: Suppose I choose two people from the population of adult males in the U.S.;
     I’ll call them A and B. If we see that A taller than B, how tall is A?
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
 - en: 'To answer this question:'
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
 - en: I’ll use background information about the height of men in the U.S. to form
     a prior distribution of height,
+  id: totrans-38
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: I’ll construct a joint prior distribution of height for A and B (and I’ll explain
     what that is),
+  id: totrans-39
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: Then I’ll update the prior with the information that A is taller, and
+  id: totrans-40
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: From the joint posterior distribution I’ll extract the posterior distribution
     of height for A.
+  id: totrans-41
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
@@ -158,778 +213,1190 @@
     is 7.7 cm. The distribution is not exactly normal, because nothing in the real
     world is, but the normal distribution is a pretty good model of the actual distribution,
     so we can use it as a prior distribution for A and B.
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
 - en: Here’s an array of equally-spaced values from 3 standard deviations below the
     mean to 3 standard deviations above (rounded up a little).
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE13]'
+  id: totrans-44
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: 'SciPy provides a function called `norm` that represents a normal distribution
     with a given mean and standard deviation, and provides `pdf`, which evaluates
     the probability density function (PDF) of the normal distribution:'
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE14]'
+  id: totrans-46
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: Probability densities are not probabilities, but if we put them in a `Pmf` and
     normalize it, the result is a discrete approximation of the normal distribution.
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE15]'
+  id: totrans-48
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: <details class="hide below-input"><summary aria-label="Toggle hidden content">Show
     code cell output Hide code cell output</summary>
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE16]</details>'
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
 - en: Here’s what it looks like.
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE17]</details> ![_images/ca73e5bb11900fb220f2fcf00c59faa78a261d27061d28a6802ff728177ec277.png](../Images/842397321283c90d3ac254aad8cf71a3.png)'
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE17]</details> ![_images/ca73e5bb11900fb220f2fcf00c59faa78a261d27061d28a6802ff728177ec277.png](../Images/842397321283c90d3ac254aad8cf71a3.png)'
 - en: This distribution represents what we believe about the heights of `A` and `B`
     before we take into account the data that `A` is taller.
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个分布代表了我们在考虑`A`比`B`高的数据之前对`A`和`B`的身高的信念。
 - en: Joint Distribution
+  id: totrans-55
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 联合分布
 - en: The next step is to construct a distribution that represents the probability
     of every pair of heights, which is called a joint distribution. The elements of
     the joint distribution are
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: 下一步是构建一个代表每对身高概率的分布，这被称为联合分布。联合分布的元素是
 - en: \[P(A_x~\mathrm{and}~B_y)\]
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: \[P(A_x~\mathrm{and}~B_y)\]
 - en: which is the probability that `A` is \(x\) cm tall and `B` is \(y\) cm tall,
     for all values of \(x\) and \(y\).
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 即`A`为\(x\)厘米高，`B`为\(y\)厘米高的概率，对于所有的\(x\)和\(y\)值。
 - en: At this point all we know about `A` and `B` is that they are male residents
     of the U.S., so their heights are independent; that is, knowing the height of
     `A` provides no additional information about the height of `B`.
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 此时我们对`A`和`B`的了解是，他们是美国的男性居民，所以他们的身高是独立的；也就是说，知道`A`的身高并不会提供关于`B`身高的额外信息。
 - en: 'In that case, we can compute the joint probabilities like this:'
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这种情况下，我们可以这样计算联合概率：
 - en: \[P(A_x~\mathrm{and}~B_y) = P(A_x)~P(B_y)\]
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: \[P(A_x~\mathrm{and}~B_y) = P(A_x)~P(B_y)\]
 - en: Each joint probability is the product of one element from the distribution of
     `x` and one element from the distribution of `y`.
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: 每个联合概率是从`x`的分布中的一个元素和从`y`的分布中的一个元素的乘积。
 - en: So if we have `Pmf` objects that represent the distribution of height for `A`
     and `B`, we can compute the joint distribution by computing the outer product
     of the probabilities in each `Pmf`.
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，如果我们有代表`A`和`B`身高分布的`Pmf`对象，我们可以通过计算每个`Pmf`中概率的外积来计算联合分布。
 - en: The following function takes two `Pmf` objects and returns a `DataFrame` that
     represents the joint distribution.
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数接受两个`Pmf`对象，并返回一个代表联合分布的`DataFrame`。
 - en: '[PRE18]'
+  id: totrans-65
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: The column names in the result are the quantities from `pmf1`; the row labels
     are the quantities from `pmf2`.
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果中的列名是来自`pmf1`的数量；行标签是来自`pmf2`的数量。
 - en: 'In this example, the prior distributions for `A` and `B` are the same, so we
     can compute the joint prior distribution like this:'
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个例子中，`A`和`B`的先验分布是相同的，所以我们可以这样计算联合先验分布：
 - en: '[PRE19]'
+  id: totrans-68
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '[PRE20]'
+  id: totrans-69
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: The result is a `DataFrame` with possible heights of `A` along the columns,
     heights of `B` along the rows, and the joint probabilities as elements.
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个`DataFrame`，`A`的可能身高沿着列，`B`的可能身高沿着行，联合概率作为元素。
 - en: If the prior is normalized, the joint prior is also be normalized.
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果先验被归一化，联合先验也将被归一化。
 - en: '[PRE21]'
+  id: totrans-72
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: '[PRE22]'
+  id: totrans-73
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: To add up all of the elements, we convert the `DataFrame` to a NumPy array before
     calling `sum`. Otherwise, `DataFrame.sum` would compute the sums of the columns
     and return a `Series`.
+  id: totrans-74
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了计算所有元素的和，我们在调用`sum`之前将`DataFrame`转换为NumPy数组。否则，`DataFrame.sum`会计算列的和并返回一个`Series`。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE23]'
+  id: totrans-76
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: '[PRE24]</details>'
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE24]</details>'
 - en: Visualizing the Joint Distribution
+  id: totrans-78
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 可视化联合分布
 - en: The following function uses `pcolormesh` to plot the joint distribution.
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数使用`pcolormesh`来绘制联合分布。
 - en: '[PRE25]'
+  id: totrans-80
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: Here’s what the joint prior distribution looks like.
+  id: totrans-81
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是联合先验分布的样子。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE26]</details> ![_images/f4c3236924afef3c39503dafbc9d23c4e950f98938d2b64e7e5461f4fc52d85a.png](../Images/50137dcd91919d400df5e3a4c6cf4909.png)'
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE26]</details> ![_images/f4c3236924afef3c39503dafbc9d23c4e950f98938d2b64e7e5461f4fc52d85a.png](../Images/50137dcd91919d400df5e3a4c6cf4909.png)'
 - en: As you might expect, the probability is highest (darkest) near the mean and
     drops off farther from the mean.
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: 正如你所期望的，概率在均值附近最高（最暗），离均值越远就会下降。
 - en: Another way to visualize the joint distribution is a contour plot.
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: 可视化联合分布的另一种方法是等高线图。
 - en: '[PRE27]'
+  id: totrans-86
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE28]</details> ![_images/b4d3a7f39be8b93f5a7bacd586ef2059900eafc9a11921af83552d1fc42549f2.png](../Images/de6e192d2a8a5c8f91d2cfeda116fb8a.png)'
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE28]</details> ![_images/b4d3a7f39be8b93f5a7bacd586ef2059900eafc9a11921af83552d1fc42549f2.png](../Images/de6e192d2a8a5c8f91d2cfeda116fb8a.png)'
 - en: Each line represents a level of equal probability.
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: 每条线代表相等概率的水平。
 - en: Likelihood
+  id: totrans-90
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 可能性
 - en: Now that we have a joint prior distribution, we can update it with the data,
     which is that `A` is taller than `B`.
+  id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们有了一个联合先验分布，我们可以用数据来更新它，即`A`比`B`高。
 - en: 'Each element in the joint distribution represents a hypothesis about the heights
     of `A` and `B`. To compute the likelihood of every pair of quantities, we can
     extract the column names and row labels from the prior, like this:'
+  id: totrans-92
   prefs: []
   type: TYPE_NORMAL
+  zh: 联合分布中的每个元素代表了关于`A`和`B`身高的假设。要计算每对数量的可能性，我们可以从先验中提取列名和行标签，就像这样：
 - en: '[PRE29]'
+  id: totrans-93
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: And use them to compute a mesh grid.
+  id: totrans-94
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后使用它们来计算一个网格。
 - en: '[PRE30]'
+  id: totrans-95
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: '`X` contains copies of the quantities in `x`, which are possible heights for
     `A`. `Y` contains copies of the quantities in `y`, which are possible heights
     for `B`.'
+  id: totrans-96
   prefs: []
   type: TYPE_NORMAL
+  zh: '`X`包含`x`中的数量的副本，这些是`A`可能的身高。`Y`包含`y`中的数量的副本，这些是`B`可能的身高。'
 - en: 'If we compare `X` and `Y`, the result is a Boolean array:'
+  id: totrans-97
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们比较`X`和`Y`，结果是一个布尔数组：
 - en: '[PRE31]'
+  id: totrans-98
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: '[PRE32]'
+  id: totrans-99
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: To compute likelihoods, I’ll use `np.where` to make an array with `1` where
     `A_taller` is `True` and 0 elsewhere.
+  id: totrans-100
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了计算可能性，我将使用`np.where`来创建一个数组，其中`A_taller`为`True`的地方为`1`，其他地方为`0`。
 - en: '[PRE33]'
+  id: totrans-101
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: To visualize this array of likelihoods, I’ll put in a `DataFrame` with the values
     of `x` as column names and the values of `y` as row labels.
+  id: totrans-102
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了可视化这个似然数组，我将把它放入一个`DataFrame`中，其中`x`的值作为列名，`y`的值作为行标签。
 - en: '[PRE34]'
+  id: totrans-103
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: 'Here’s what it looks like:'
+  id: totrans-104
   prefs: []
   type: TYPE_NORMAL
+  zh: 它看起来是这样的：
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE35]</details> ![_images/a7ddc31653415039de483cb2cc71bb15c2a5158cfc374e50d7907a3be3aa16eb.png](../Images/f1a899cd5882c5643e9cee128afa8c48.png)'
+  id: totrans-106
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE35]</details> ![_images/a7ddc31653415039de483cb2cc71bb15c2a5158cfc374e50d7907a3be3aa16eb.png](../Images/f1a899cd5882c5643e9cee128afa8c48f.png)'
 - en: The likelihood of the data is 1 where `X > Y` and 0 elsewhere.
+  id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: 数据的似然是`X > Y`的地方为1，其他地方为0。
 - en: The Update
+  id: totrans-108
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 更新
 - en: We have a prior, we have a likelihood, and we are ready for the update. As usual,
     the unnormalized posterior is the product of the prior and the likelihood.
+  id: totrans-109
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们有一个先验，我们有一个似然，我们准备好更新了。像往常一样，未归一化的后验是先验和似然的乘积。
 - en: '[PRE36]'
+  id: totrans-110
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: 'I’ll use the following function to normalize the posterior:'
+  id: totrans-111
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将使用以下函数来归一化后验：
 - en: '[PRE37]'
+  id: totrans-112
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE37]'
 - en: '[PRE38]'
+  id: totrans-113
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: <details class="hide below-input"><summary aria-label="Toggle hidden content">Show
     code cell output Hide code cell output</summary>
+  id: totrans-114
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide below-input"><summary aria-label="Toggle hidden content">显示代码单元格输出
+    隐藏代码单元格输出</summary>
 - en: '[PRE39]</details>'
+  id: totrans-115
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE39]</details>'
 - en: And here’s what it looks like.
+  id: totrans-116
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是它的样子。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-117
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE40]</details> ![_images/723b56c47afd3491992a957f204dd91d2d37db9e9eb60809483a62112d9d82d8.png](../Images/e58153ae31d610b7a67c24ce582a2d76.png)'
+  id: totrans-118
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE40]</details> ![_images/723b56c47afd3491992a957f204dd91d2d37db9e9eb60809483a62112d9d82d8.png](../Images/e58153ae31d610b7a67c24ce582a2d76.png)'
 - en: All pairs where `B` is taller than `A` have been eliminated. The rest of the
     posterior looks the same as the prior, except that it has been renormalized.
+  id: totrans-119
   prefs: []
   type: TYPE_NORMAL
+  zh: 所有`B`比`A`高的对都被消除了。后验的其余部分看起来与先验相同，只是已经被重新归一化。
 - en: Marginal Distributions
+  id: totrans-120
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 边缘分布
 - en: The joint posterior distribution represents what we believe about the heights
     of `A` and `B` given the prior distributions and the information that `A` is taller.
+  id: totrans-121
   prefs: []
   type: TYPE_NORMAL
+  zh: 联合后验分布表示了我们对`A`和`B`的身高的信念，考虑到先验分布和`A`更高的信息。
 - en: From this joint distribution, we can compute the posterior distributions for
     `A` and `B`. To see how, let’s start with a simpler problem.
+  id: totrans-122
   prefs: []
   type: TYPE_NORMAL
+  zh: 从这个联合分布中，我们可以计算`A`和`B`的后验分布。要了解如何做到这一点，让我们从一个更简单的问题开始。
 - en: Suppose we want to know the probability that `A` is 180 cm tall. We can select
     the column from the joint distribution where `x=180`.
+  id: totrans-123
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设我们想知道`A`身高为180厘米的概率。我们可以从联合分布中选择`x=180`的列。
 - en: '[PRE41]'
+  id: totrans-124
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE41]'
 - en: '[PRE42]'
+  id: totrans-125
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE42]'
 - en: This column contains posterior probabilities for all cases where `x=180`; if
     we add them up, we get the total probability that `A` is 180 cm tall.
+  id: totrans-126
   prefs: []
   type: TYPE_NORMAL
+  zh: 这一列包含了所有`x=180`的后验概率；如果我们把它们加起来，我们就得到了`A`身高为180厘米的总概率。
 - en: '[PRE43]'
+  id: totrans-127
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE43]'
 - en: '[PRE44]'
+  id: totrans-128
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE44]'
 - en: It’s about 3%.
+  id: totrans-129
   prefs: []
   type: TYPE_NORMAL
+  zh: 大约是3%。
 - en: 'Now, to get the posterior distribution of height for `A`, we can add up all
     of the columns, like this:'
+  id: totrans-130
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，要获得`A`的身高的后验分布，我们可以将所有列相加，就像这样：
 - en: '[PRE45]'
+  id: totrans-131
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE45]'
 - en: '[PRE46]'
+  id: totrans-132
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE46]'
 - en: The argument `axis=0` means we want to add up the columns.
+  id: totrans-133
   prefs: []
   type: TYPE_NORMAL
+  zh: 参数`axis=0`表示我们要将列相加。
 - en: The result is a `Series` that contains every possible height for `A` and its
     probability. In other words, it is the distribution of heights for `A`.
+  id: totrans-134
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个包含`A`的每个可能身高及其概率的`Series`。换句话说，这是`A`的身高分布。
 - en: 'We can put it in a `Pmf` like this:'
+  id: totrans-135
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以这样放入`Pmf`中：
 - en: '[PRE47]'
+  id: totrans-136
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE47]'
 - en: When we extract the distribution of a single variable from a joint distribution,
     the result is called a **marginal distribution**. The name comes from a common
     visualization that shows the joint distribution in the middle and the marginal
     distributions in the margins.
+  id: totrans-137
   prefs: []
   type: TYPE_NORMAL
+  zh: 当我们从联合分布中提取单个变量的分布时，结果称为**边缘分布**。这个名字来自一个常见的可视化，它在中间显示联合分布，边缘分布在边缘显示。
 - en: 'Here’s what the marginal distribution for `A` looks like:'
+  id: totrans-138
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是`A`的边缘分布的样子：
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-139
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE48]</details> ![_images/11645c6bdd4ed1339103397c3d1fadddf4c4a6d0a5a19bf0d76a844f7a4072da.png](../Images/08933f4fb6676b92895827e2c0334987.png)'
+  id: totrans-140
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE48]</details> ![_images/11645c6bdd4ed1339103397c3d1fadddf4c4a6d0a5a19bf0d76a844f7a4072da.png](../Images/08933f4fb6676b92895827e2c0334987.png)'
 - en: Similarly, we can get the posterior distribution of height for `B` by adding
     up the rows and putting the result in a `Pmf`.
+  id: totrans-141
   prefs: []
   type: TYPE_NORMAL
+  zh: 类似地，我们可以通过将行相加并将结果放入`Pmf`中来获得`B`的身高的后验分布。
 - en: '[PRE49]'
+  id: totrans-142
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE49]'
 - en: Here’s what it looks like.
+  id: totrans-143
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是它的样子。
 - en: '[PRE50]'
+  id: totrans-144
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE50]'
 - en: '![_images/ef59d833b4aa535c0d626935665b387c157495060b480d5c9c3ff175d66a065e.png](../Images/6ecdeb135d436cc037b65a5e88d8379b.png)'
+  id: totrans-145
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/ef59d833b4aa535c0d626935665b387c157495060b480d5c9c3ff175d66a065e.png](../Images/6ecdeb135d436cc037b65a5e88d8379b.png)'
 - en: 'Let’s put the code from this section in a function:'
+  id: totrans-146
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们把这一节的代码放在一个函数中：
 - en: '[PRE51]'
+  id: totrans-147
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE51]'
 - en: '`marginal` takes as parameters a joint distribution and an axis number:'
+  id: totrans-148
   prefs: []
   type: TYPE_NORMAL
+  zh: '`marginal`的参数是一个联合分布和一个轴编号：'
 - en: If `axis=0`, it returns the marginal of the first variable (the one on the x-axis);
+  id: totrans-149
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果 `axis=0`，它返回第一个变量（x轴上的变量）的边际；
 - en: If `axis=1`, it returns the marginal of the second variable (the one on the
     y-axis).
+  id: totrans-150
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果 `axis=1`，它返回第二个变量（y轴上的变量）的边缘。
 - en: 'So we can compute both marginals like this:'
+  id: totrans-151
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，我们可以这样计算两个边缘：
 - en: '[PRE52]'
+  id: totrans-152
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE52]'
 - en: Here’s what they look like, along with the prior.
+  id: totrans-153
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是它们的样子，以及先验。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-154
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE53]</details> ![_images/c7bcc6133ef1b03fe8ddbbbeb64d1c0f2a18cd4e302df47b5c51a535dff784a4.png](../Images/9ce2b6bed61876bfb802d372502d39fc.png)'
+  id: totrans-155
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE53]</details> ![_images/c7bcc6133ef1b03fe8ddbbbeb64d1c0f2a18cd4e302df47b5c51a535dff784a4.png](../Images/9ce2b6bed61876bfb802d372502d39fc.png)'
 - en: As you might expect, the posterior distribution for `A` is shifted to the right
     and the posterior distribution for `B` is shifted to the left.
+  id: totrans-156
   prefs: []
   type: TYPE_NORMAL
+  zh: 正如你所预期的，`A`的后验分布向右移动，`B`的后验分布向左移动。
 - en: 'We can summarize the results by computing the posterior means:'
+  id: totrans-157
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以通过计算后验均值来总结结果：
 - en: '[PRE54]'
+  id: totrans-158
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE54]'
 - en: '[PRE55]'
+  id: totrans-159
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE55]'
 - en: '[PRE56]'
+  id: totrans-160
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE56]'
 - en: '[PRE57]'
+  id: totrans-161
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE57]'
 - en: Based on the observation that `A` is taller than `B`, we are inclined to believe
     that `A` is a little taller than average, and `B` is a little shorter.
+  id: totrans-162
   prefs: []
   type: TYPE_NORMAL
+  zh: 基于`A`比`B`高的观察，我们倾向于相信`A`比平均身高稍高，而`B`则稍矮。
 - en: Notice that the posterior distributions are a little narrower than the prior.
     We can quantify that by computing their standard deviations.
+  id: totrans-163
   prefs: []
   type: TYPE_NORMAL
+  zh: 注意，后验分布比先验分布略窄。我们可以通过计算它们的标准差来量化。
 - en: '[PRE58]'
+  id: totrans-164
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE58]'
 - en: '[PRE59]'
+  id: totrans-165
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE59]'
 - en: '[PRE60]'
+  id: totrans-166
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE60]'
 - en: '[PRE61]'
+  id: totrans-167
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE61]'
 - en: The standard deviations of the posterior distributions are a little smaller,
     which means we are more certain about the heights of `A` and `B` after we compare
     them.
+  id: totrans-168
   prefs: []
   type: TYPE_NORMAL
+  zh: 后验分布的标准差略小，这意味着在比较后，我们对`A`和`B`的身高更加确定。
 - en: Conditional Posteriors
+  id: totrans-169
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 条件后验
 - en: Now suppose we measure `A` and find that he is 170 cm tall. What does that tell
     us about `B`?
+  id: totrans-170
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在假设我们测量`A`，发现他身高170厘米。这对我们有什么影响呢？
 - en: 'In the joint distribution, each column corresponds a possible height for `A`.
     We can select the column that corresponds to height 170 cm like this:'
+  id: totrans-171
   prefs: []
   type: TYPE_NORMAL
+  zh: 在联合分布中，每一列对应`A`可能的身高。我们可以这样选择对应于170厘米身高的列：
 - en: '[PRE62]'
+  id: totrans-172
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE62]'
 - en: 'The result is a `Series` that represents possible heights for `B` and their
     relative likelihoods. These likelihoods are not normalized, but we can normalize
     them like this:'
+  id: totrans-173
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个代表`B`可能身高及其相对可能性的`Series`。这些可能性没有被归一化，但我们可以这样归一化它们：
 - en: '[PRE63]'
+  id: totrans-174
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE63]'
 - en: '[PRE64]'
+  id: totrans-175
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE64]'
 - en: Making a `Pmf` copies the data by default, so we can normalize `cond_B` without
     affecting `column_170` or `posterior`. The result is the conditional distribution
     of height for `B` given that `A` is 170 cm tall.
+  id: totrans-176
   prefs: []
   type: TYPE_NORMAL
+  zh: 通过默认情况下，制作`Pmf`会复制数据，因此我们可以在不影响`column_170`或`posterior`的情况下对`cond_B`进行归一化。结果是给定`A`身高为170厘米的`B`的条件分布。
 - en: 'Here’s what it looks like:'
+  id: totrans-177
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是它的样子：
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-178
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE65]</details> ![_images/86c7afe0d535a76684f4ffc0dcabfae8d82c40210bbbd0297a63e924ba9891b9.png](../Images/6be7fd8c5145c981f4bfc9e1b14d77c3.png)'
+  id: totrans-179
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE65]</details> ![_images/86c7afe0d535a76684f4ffc0dcabfae8d82c40210bbbd0297a63e924ba9891b9.png](../Images/6be7fd8c5145c981f4bfc9e1b14d77c3.png)'
 - en: The conditional posterior distribution is cut off at 170 cm, because we have
     established that `B` is shorter than `A`, and `A` is 170 cm.
+  id: totrans-180
   prefs: []
   type: TYPE_NORMAL
+  zh: 条件后验分布被截断在170厘米，因为我们已经确定`B`比`A`矮，而`A`是170厘米。
 - en: Dependence and Independence
+  id: totrans-181
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 依赖和独立
 - en: When we constructed the joint prior distribution, I said that the heights of
     `A` and `B` were independent, which means that knowing one of them provides no
     information about the other. In other words, the conditional probability \(P(A_x
     | B_y)\) is the same as the unconditional probability \(P(A_x)\).
+  id: totrans-182
   prefs: []
   type: TYPE_NORMAL
+  zh: 当我们构建联合先验分布时，我说`A`和`B`的身高是独立的，这意味着知道其中一个不会提供关于另一个的信息。换句话说，条件概率\(P(A_x | B_y)\)与无条件概率\(P(A_x)\)相同。
 - en: But in the posterior distribution, \(A\) and \(B\) are not independent. If we
     know that `A` is taller than `B`, and we know how tall `A` is, that gives us information
     about `B`.
+  id: totrans-183
   prefs: []
   type: TYPE_NORMAL
+  zh: 但在后验分布中，\(A\)和\(B\)不是独立的。如果我们知道`A`比`B`高，并且我们知道`A`有多高，那么这就给了我们关于`B`的信息。
 - en: The conditional distribution we just computed demonstrates this dependence.
+  id: totrans-184
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们刚刚计算的条件分布展示了这种依赖关系。
 - en: Summary
+  id: totrans-185
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 总结
 - en: In this chapter we started with the “outer” operations, like outer product,
     which we used to construct a joint distribution.
+  id: totrans-186
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本章中，我们从“外部”操作开始，比如外积，用它来构建联合分布。
 - en: In general, you cannot construct a joint distribution from two marginal distributions,
     but in the special case where the distributions are independent, you can.
+  id: totrans-187
   prefs: []
   type: TYPE_NORMAL
+  zh: 一般来说，你不能从两个边缘分布构建联合分布，但在分布独立的特殊情况下，你可以。
 - en: We extended the Bayesian update process and applied it to a joint distribution.
     Then from the posterior joint distribution we extracted marginal posterior distributions
     and conditional posterior distributions.
+  id: totrans-188
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们扩展了贝叶斯更新过程，并将其应用于联合分布。然后从后验联合分布中提取了边缘后验分布和条件后验分布。
 - en: As an exercise, you’ll have a chance to apply the same process to a problem
     that’s a little more difficult and a lot more useful, updating a chess player’s
     rating based on the outcome of a game.
+  id: totrans-189
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为练习，你将有机会将相同的过程应用于一个稍微困难但更有用的问题，根据比赛结果更新国际象棋选手的等级。
 - en: Exercises
+  id: totrans-190
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 练习
 - en: '**Exercise:** Based on the results of the previous example, compute the posterior
     conditional distribution for `A` given that `B` is 180 cm.'
+  id: totrans-191
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**根据前面例子的结果，计算给定`B`身高为180厘米时`A`的后验条件分布。'
 - en: 'Hint: Use `loc` to select a row from a `DataFrame`.'
+  id: totrans-192
   prefs: []
   type: TYPE_NORMAL
+  zh: 提示：使用`loc`从`DataFrame`中选择一行。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-193
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE66]'
+  id: totrans-194
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE66]'
 - en: '[PRE67]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-195
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE67]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE68]'
+  id: totrans-196
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE68]'
 - en: '![_images/a055ca5045f355b7243323c26f627d5789ef38a780aeb10f2257adf1fbc67ffa.png](../Images/4523d653e69d7a8875570cb68998c64e.png)</details>'
+  id: totrans-197
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/a055ca5045f355b7243323c26f627d5789ef38a780aeb10f2257adf1fbc67ffa.png](../Images/4523d653e69d7a8875570cb68998c64e.png)</details>'
 - en: '**Exercise:** Suppose we have established that `A` is taller than `B`, but
     we don’t know how tall `B` is. Now we choose a random woman, `C`, and find that
     she is shorter than `A` by at least 15 cm. Compute posterior distributions for
     the heights of `A` and `C`.'
+  id: totrans-198
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**假设我们已经确定`A`比`B`高，但我们不知道`B`有多高。现在我们选择一个随机女性`C`，发现她比`A`矮至少15厘米。计算`A`和`C`的身高的后验分布。'
 - en: The average height for women in the U.S. is 163 cm; the standard deviation is
     7.3 cm.
+  id: totrans-199
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-200
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE69]'
+  id: totrans-201
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE69]'
 - en: '[PRE70]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-202
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE71]'
+  id: totrans-203
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE71]'
 - en: '[PRE72]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-204
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE73]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-205
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE74]'
+  id: totrans-206
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE74]'
 - en: '![_images/b4ce9f2bd62a61e3311858008a797a4a2efc2cc8ea61be3110d7325ab9da910a.png](../Images/d46bdea7dd841a7a636527b54e8fd124.png)</details><details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-207
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE75]'
+  id: totrans-208
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE75]'
 - en: '[PRE76]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-209
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE77]'
+  id: totrans-210
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE77]'
 - en: '![_images/290c2532c346858d5fc6608b0600e846e626a337ce17a947207b2272b1fc8c31.png](../Images/d1f82ed4fd480d24a85262be0004309e.png)</details><details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-211
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE78]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-212
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE79]'
+  id: totrans-213
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE79]'
 - en: '![_images/430a2c38b379b815ec316af7c3f25e645b7614fce48de46ed7e4932f3f0e470d.png](../Images/42e2c27461adc54b23f5693da2875560.png)</details>'
+  id: totrans-214
   prefs: []
   type: TYPE_NORMAL
 - en: '**Exercise:** [The Elo rating system](https://en.wikipedia.org/wiki/Elo_rating_system)
     is a way to quantify the skill level of players for games like chess.'
+  id: totrans-215
   prefs: []
   type: TYPE_NORMAL
 - en: 'It is based on a model of the relationship between the ratings of players and
     the outcome of a game. Specifically, if \(R_A\) is the rating of player `A` and
     \(R_B\) is the rating of player `B`, the probability that `A` beats `B` is given
     by the [logistic function](https://en.wikipedia.org/wiki/Logistic_function):'
+  id: totrans-216
   prefs: []
   type: TYPE_NORMAL
 - en: \[P(\mathrm{A~beats~B}) = \frac{1}{1 + 10^{(R_B-R_A)/400}}\]
+  id: totrans-217
   prefs: []
   type: TYPE_NORMAL
 - en: The parameters 10 and 400 are arbitrary choices that determine the range of
     the ratings. In chess, the range is from 100 to 2800.
+  id: totrans-218
   prefs: []
   type: TYPE_NORMAL
 - en: Notice that the probability of winning depends only on the difference in rankings.
     As an example, if \(R_A\) exceeds \(R_B\) by 100 points, the probability that
     `A` wins is
+  id: totrans-219
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE80]'
+  id: totrans-220
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE80]'
 - en: '[PRE81]'
+  id: totrans-221
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE81]'
 - en: Suppose `A` has a current rating of 1600, but we are not sure it is accurate.
     We could describe their true rating with a normal distribution with mean 1600
     and standard deviation 100, to indicate our uncertainty.
+  id: totrans-222
   prefs: []
   type: TYPE_NORMAL
 - en: And suppose `B` has a current rating of 1800, with the same level of uncertainty.
+  id: totrans-223
   prefs: []
   type: TYPE_NORMAL
 - en: Then `A` and `B` play and `A` wins. How should we update their ratings?
+  id: totrans-224
   prefs: []
   type: TYPE_NORMAL
 - en: 'To answer this question:'
+  id: totrans-225
   prefs: []
   type: TYPE_NORMAL
 - en: Construct prior distributions for `A` and `B`.
+  id: totrans-226
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: Use them to construct a joint distribution, assuming that the prior distributions
     are independent.
+  id: totrans-227
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: Use the logistic function above to compute the likelihood of the outcome under
     each joint hypothesis.
+  id: totrans-228
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: Use the joint prior and likelihood to compute the joint posterior.
+  id: totrans-229
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: Extract and plot the marginal posteriors for `A` and `B`.
+  id: totrans-230
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: Compute the posterior means for `A` and `B`. How much should their ratings change
     based on this outcome?
+  id: totrans-231
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-232
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE82]'
+  id: totrans-233
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE82]'
 - en: '[PRE83]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-234
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE84]'
+  id: totrans-235
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE84]'
 - en: '![_images/2b25e6e47c47b1066411fcbdc6fef1aa0ff264a2e1beedadbe5815e4455136f4.png](../Images/280d8fb1883c98dafa0ec36738513e7f.png)</details><details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-236
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE85]'
+  id: totrans-237
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE85]'
 - en: '[PRE86]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-238
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE86]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE87]'
+  id: totrans-239
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE87]'
 - en: '![_images/4de07e3466ba51067efc441c398a4adb3fbfb8765ba4be39d1efc16ef9d5b978.png](../Images/13dff45773fc776667e3b89755d738e6.png)</details><details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-240
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/4de07e3466ba51067efc441c398a4adb3fbfb8765ba4be39d1efc16ef9d5b978.png](../Images/13dff45773fc776667e3b89755d738e6.png)</details><details
+    class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE88]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-241
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE88]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE89]'
+  id: totrans-242
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE89]'
 - en: '![_images/e573c4ecda87b84b46b2defc2095974c362e25698723e9b1c4da8b119b4c5d0e.png](../Images/39ffb67774814afd090e41f44a028016.png)</details><details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-243
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/e573c4ecda87b84b46b2defc2095974c362e25698723e9b1c4da8b119b4c5d0e.png](../Images/39ffb67774814afd090e41f44a028016.png)</details><details
+    class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE90]'
+  id: totrans-244
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE90]'
 - en: '[PRE91]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-245
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE91]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE92]'
+  id: totrans-246
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE92]'
 - en: '![_images/1addaf3d554c55605c5d2e75c3a5320a4b3a651b523f638cbd3350cca102486a.png](../Images/9b617d0fd9e53ed922c41f2de3006160.png)</details><details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-247
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/1addaf3d554c55605c5d2e75c3a5320a4b3a651b523f638cbd3350cca102486a.png](../Images/9b617d0fd9e53ed922c41f2de3006160.png)</details><details
+    class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE93]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-248
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE93]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE94]'
+  id: totrans-249
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE94]'
 - en: '![_images/755763efb7d6c6063c18dd110c8b7d419592cfa700efaff6daa916d4c6d1cdc6.png](../Images/5c5653b529bbfc856a97da20c6edc1e2.png)</details><details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-250
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/755763efb7d6c6063c18dd110c8b7d419592cfa700efaff6daa916d4c6d1cdc6.png](../Images/5c5653b529bbfc856a97da20c6edc1e2.png)</details><details
+    class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE95]'
+  id: totrans-251
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE95]'
 - en: '[PRE96]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-252
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE96]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE97]'
+  id: totrans-253
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE97]'
 - en: '[PRE98]</details>'
+  id: totrans-254
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE98]</details>'
