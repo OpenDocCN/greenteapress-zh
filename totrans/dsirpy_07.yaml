@@ -3,25 +3,30 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 集合
 - en: 原文：[https://allendowney.github.io/DSIRP/set.html](https://allendowney.github.io/DSIRP/set.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/DSIRP/set.html](https://allendowney.github.io/DSIRP/set.html)
 - en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/set.ipynb)'
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: '[点击这里在Colab上运行这一章节](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/set.ipynb)'
 - en: Set operators and methods
   id: totrans-3
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 集合运算符和方法
 - en: 'The following example is based on Luciano Ramalho’s talk, [Set Practice: Learning
     from Python’s set type](https://www.youtube.com/watch?v=tGAngdU_8D8).'
   id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下示例基于Luciano Ramalho的演讲，[集合实践：从Python的集合类型中学习](https://www.youtube.com/watch?v=tGAngdU_8D8)。
 - en: '[PRE0]'
   id: totrans-5
   prefs: []
@@ -56,6 +61,7 @@
   id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 检查成员资格是常数时间。
 - en: '[PRE6]'
   id: totrans-12
   prefs: []
@@ -80,6 +86,7 @@
   id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 交集就像AND：它返回f和p中的元素。
 - en: '[PRE10]'
   id: totrans-17
   prefs: []
@@ -94,6 +101,7 @@
   id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 并集就像OR：它返回f或p中的元素。
 - en: '[PRE12]'
   id: totrans-20
   prefs: []
@@ -108,6 +116,7 @@
   id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 对称差异就像XOR：来自`f`或`p`但不是两者的元素。
 - en: '[PRE14]'
   id: totrans-23
   prefs: []
@@ -122,6 +131,7 @@
   id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是不是素数的斐波那契数。
 - en: '[PRE16]'
   id: totrans-26
   prefs: []
@@ -136,6 +146,7 @@
   id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: 和不是斐波那契数的素数。
 - en: '[PRE18]'
   id: totrans-29
   prefs: []
@@ -150,10 +161,12 @@
   id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 比较运算符检查子集和超集关系。
 - en: The Fibonacci numbers are not a superset of the primes.
   id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 斐波那契数不是素数的超集。
 - en: '[PRE20]'
   id: totrans-33
   prefs: []
@@ -168,6 +181,7 @@
   id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 而且素数不是斐波那契数的超集。
 - en: '[PRE22]'
   id: totrans-36
   prefs: []
@@ -182,10 +196,12 @@
   id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个意义上，集合不像数字：它们只是[部分有序](https://en.wikipedia.org/wiki/Partially_ordered_set)。
 - en: '`f` is a superset of `{1, 2, 3}`'
   id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: '`f`是`{1, 2, 3}`的超集'
 - en: '[PRE24]'
   id: totrans-40
   prefs: []
@@ -210,11 +226,13 @@
   id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: 集合提供方法以及运算符。为什么？
 - en: For one thing, the argument you pass to a method can be any iterable, not just
     a set.
   id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 首先，传递给方法的参数可以是任何可迭代对象，而不仅仅是一个集合。
 - en: '[PRE28]'
   id: totrans-46
   prefs: []
@@ -239,6 +257,7 @@
   id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 方法也接受多个参数：
 - en: '[PRE32]'
   id: totrans-51
   prefs: []
@@ -253,6 +272,7 @@
   id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你没有一个集合可以开始，你可以使用一个空集。
 - en: '[PRE34]'
   id: totrans-54
   prefs: []
@@ -267,11 +287,13 @@
   id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: 一个小的语法麻烦：`{1, 2, 3}`是一个集合，但`{}`是一个空字典。
 - en: Spelling Bee
   id: totrans-57
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 拼字比赛
 - en: '[The New York Times Spelling Bee](https://www.nytimes.com/puzzles/spelling-bee)
     is a daily puzzle where the goal is to spell as many words as possible using only
     the given set of seven letters. For example, in a recent Spelling Bee, the available
@@ -279,33 +301,39 @@
   id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: '[纽约时报拼字比赛](https://www.nytimes.com/puzzles/spelling-bee)是一个每日谜题，目标是仅使用给定的七个字母拼写尽可能多的单词。例如，在最近的拼字比赛中，可用的字母是`dehiklo`，所以你可以拼写“like”和“hold”。'
 - en: You can use each of the letters more than once, so “hook” and “deed” would be
     allowed, too.
   id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 你可以多次使用每个字母，所以“hook”和“deed”也是允许的。
 - en: To make it a little more interesting, one of the letters is special and must
     be included in every word. In this example, the special letter is `o`, so “hood”
     would be allowed, but not “like”.
   id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了使它更有趣，其中一个字母是特殊的，必须包含在每个单词中。在这个例子中，特殊字母是`o`，所以“hood”是允许的，但“like”不是。
 - en: Each word you find scores points depending on it’s length, which must be at
     least four letters. A word that uses all of the letters is called a “pangram”
     and scores extra points.
   id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: 你找到的每个单词都根据它的长度得分，长度至少为四个字母。使用所有字母的单词称为“全字母句”，并且得到额外的分数。
 - en: We’ll use this puzzle to explore the use of Python sets.
   id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将使用这个谜题来探索Python集合的使用。
 - en: Suppose we’re given a word and we would like to know whether it can be spelled
     using only a given set of letters. The following function solves this problem
     using string operations.
   id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设我们有一个单词，我们想知道它是否可以只用给定的字母集拼写。以下函数使用字符串操作解决了这个问题。
 - en: '[PRE36]'
   id: totrans-64
   prefs: []
@@ -317,11 +345,13 @@
   id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们在`word`中找到任何不在字母列表中的字母，我们可以立即返回`False`。如果我们在单词中没有找到任何不可用的字母，我们可以返回`True`。
 - en: Let’s try it out with some examples. In a recent Spelling Bee, the available
     letters were `dehiklo`. Let’s see what we can spell with them.
   id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们用一些例子来试试。在最近的拼字比赛中，可用的字母是`dehiklo`。让我们看看我们能用它们拼出什么。
 - en: '[PRE37]'
   id: totrans-67
   prefs: []
@@ -349,6 +379,7 @@
   id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: 练习：可以使用集合操作而不是列表操作更简洁地实现`uses_only`。[阅读`set`类的文档](https://docs.python.org/3/tutorial/datastructures.html#sets)并使用集合重写`uses_only`。
 - en: '[PRE41]'
   id: totrans-72
   prefs: []
@@ -374,10 +405,12 @@
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 单词列表
 - en: The following function downloads a list of about 100,000 words in American English.
   id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数下载了大约10万个美国英语单词的列表。
 - en: '[PRE45]'
   id: totrans-78
   prefs: []
@@ -388,6 +421,7 @@
   id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: 文件每行包含一个单词，所以我们可以读取文件并将其拆分成一个单词列表，就像这样：
 - en: '[PRE46]'
   id: totrans-80
   prefs: []
@@ -403,21 +437,25 @@
   id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: 练习：编写一个循环，遍历这个单词列表，并只打印单词
 - en: With at least four letters,
   id: totrans-83
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 至少有四个字母，
 - en: That can be spelled using only the letters `dehiklo`, and
   id: totrans-84
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 只能使用字母`dehiklo`拼写，和
 - en: That include the letter `o`.
   id: totrans-85
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 包括字母`o`。
 - en: '**Exercise:** Now let’s check for pangrams. Write a function called `uses_all`
     that takes two strings and returns `True` if the first string uses all of the
     letters in the second string. Think about how to express this computation using
@@ -425,21 +463,25 @@
   id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: 练习：现在让我们检查全字母句。编写一个名为`uses_all`的函数，它接受两个字符串，并在第一个字符串使用第二个字符串的所有字母时返回`True`。思考如何使用集合操作来表达这个计算。
 - en: Test your function with at least one case that returns `True` and one that returns
     `False`.
   id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: 用至少一个返回`True`和一个返回`False`的案例测试你的函数。
 - en: '**Exercise:** Modify the previous loop to search the word list for pangrams
     using `uses_only` and `uses_all`.'
   id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: 练习：修改前面的循环，使用`uses_only`和`uses_all`在单词列表中搜索全字母句。
 - en: Or, as a bonus, write a function called `uses_all_and_only` that checks both
     conditions using a single `set` operation.
   id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: 或者，作为奖励，编写一个名为`uses_all_and_only`的函数，使用单个`set`操作检查这两个条件。
 - en: Leftovers
   id: totrans-90
   prefs:

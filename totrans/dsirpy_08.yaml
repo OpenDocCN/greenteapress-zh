@@ -1,350 +1,474 @@
 - en: Recursion
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
 - en: 原文：[https://allendowney.github.io/DSIRP/recursion.html](https://allendowney.github.io/DSIRP/recursion.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/recursion.ipynb)'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
 - en: Example 1
+  id: totrans-3
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: Here’s an example of recursion from [this section of Think Python](https://greenteapress.com/thinkpython2/html/thinkpython2006.html#sec62).
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE0]'
+  id: totrans-5
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '[PRE1]'
+  id: totrans-6
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '[PRE2]'
+  id: totrans-7
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: 'To understand recursion, it’s important to have a good mental model of what
     happens when you run a function:'
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
 - en: Python interprets the arguments.
+  id: totrans-9
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: It creates a stack frame, which will contain the parameters and local variables.
+  id: totrans-10
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: Next it assigns the values of the arguments to the parameters.
+  id: totrans-11
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: Python runs the body of the function.
+  id: totrans-12
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: Then it recycles the stack frame.
+  id: totrans-13
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: The runtime stack contains the stack frames of currently-running functions.
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
 - en: Here’s a stack diagram that shows what happens when this `countdown` runs.
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
 - en: '![](../Images/e6390e44f830253a162632e35b3ae5d5.png)'
+  id: totrans-16
   prefs: []
   type: TYPE_IMG
 - en: '**Exercise:** What happens if you run countdown with a negative number? See
     here for more info'
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
 - en: Example 2
+  id: totrans-18
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: Here’s an example of recursion with a function that returns a value, from [this
     section of Think Python](https://greenteapress.com/thinkpython2/html/thinkpython2007.html#sec74).
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE3]'
+  id: totrans-20
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '[PRE4]'
+  id: totrans-21
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '[PRE5]'
+  id: totrans-22
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '[PRE6]'
+  id: totrans-23
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: Here’s the stack frame.
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
 - en: '![](../Images/1e57ce9bc16c0794848b760489997bc0.png)'
+  id: totrans-25
   prefs: []
   type: TYPE_IMG
 - en: '**Exercise:** Suppose you want to raise a number, `x`, to an integer power,
     `k`. An efficient way to do that is:'
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
 - en: If `k` is even, raise `x` to `k/2` and square it.
+  id: totrans-27
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: If `k` is odd, raise `x` to `(k-1)/2`, square it, and multiply by `x` one more
     time.
+  id: totrans-28
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Write a recursive function that implements this algorithm.
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
 - en: What is the order of growth of this algorithm? To keep it simple, suppose `k`
     is a power of two. How many times do we have to divide `k` by two before we get
     to 1?
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
 - en: Thinking about it in reverse, starting with 1, how many times do we have to
     double 1 before we get to `k`? In math notation, the question is
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
 - en: \[2^y = k\]
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
 - en: 'where `y` is the unknown number of steps. Taking the log of both sides, base
     2:'
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
 - en: \[y = log_2 k\]
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
 - en: In terms of order of growth, this algorithm is in `O(log k)`. We don’t have
     to specify the base of the logarithm, because a log in one base is a constant
     multiple of a log in any other base.
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
 - en: Example 3
+  id: totrans-36
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: Here’s another example of recursion from [this section of Think Python](https://greenteapress.com/thinkpython2/html/thinkpython2007.html#sec76).
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE7]'
+  id: totrans-38
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '[PRE8]'
+  id: totrans-39
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '[PRE9]'
+  id: totrans-40
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '[PRE10]'
+  id: totrans-41
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: Here’s a stack graph that shows all stack frames created during this function
     call.
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
 - en: Note that these frames are not all on the stack at the same time.
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
 - en: '![](../Images/1c6eef848ea17a2f2465eb079fa76755.png)'
+  id: totrans-44
   prefs: []
   type: TYPE_IMG
 - en: Here’s the [section from Think Python](https://greenteapress.com/thinkpython2/html/thinkpython2012.html#sec135)
     that shows how we can make fibonacci faster by “memoizing” it. That’s not a typo;
     the word is really [memoize](https://en.wikipedia.org/wiki/Memoization).
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE11]'
+  id: totrans-46
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: '[PRE12]'
+  id: totrans-47
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '[PRE13]'
+  id: totrans-48
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: '[PRE14]'
+  id: totrans-49
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '**Exercise:** The [Ackermann function](http://en.wikipedia.org/wiki/Ackermann_function),
     \(A(m, n)\), is defined:'
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
 - en: \[\begin{split} A(m, n) = \begin{cases} n+1 & \mbox{if } m = 0 \\ A(m-1, 1)
     & \mbox{if } m > 0 \mbox{ and } n = 0 \\ A(m-1, A(m, n-1)) & \mbox{if } m > 0
     \mbox{ and } n > 0. \end{cases} \end{split}\]
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
 - en: Write a function named `ackermann` that evaluates the Ackermann function. Use
     your function to evaluate `ackermann(3, 4)`, which should be 125.
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
 - en: What happens for larger values of `m` and `n`?
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
 - en: If you memoize it, can you evaluate the function with bigger values?
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
 - en: String functions
+  id: totrans-55
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: Many things we do iteratively can be expressed recursively as well.
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE15]'
+  id: totrans-57
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '[PRE16]'
+  id: totrans-58
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '[PRE17]'
+  id: totrans-59
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: For sequences and mapping types, there’s usually no advantage of the recursive
     version. But for trees and graphs, a recursive implementation can be clearer,
     more concise, and more demonstrably correct.
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
 - en: '**Exercise:** Here’s an exercise from, of all places, [StackOverflow](https://stackoverflow.com/questions/28977737/writing-a-recursive-string-function):'
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
 - en: Write a recursive, string-valued function, `replace`, that accepts a string
     and returns a new string consisting of the original string with each blank replaced
     with an asterisk (*)
+  id: totrans-62
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 编写一个递归的、字符串值的函数`replace`，它接受一个字符串，并返回一个新的字符串，其中每个空格都被星号(*)替换
 - en: ''
+  id: totrans-63
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: 'Replacing the blanks in a string involves:'
+  id: totrans-64
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 替换字符串中的空格包括：
 - en: ''
+  id: totrans-65
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: Nothing if the string is empty
+  id: totrans-66
   prefs:
   - PREF_BQ
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如果字符串为空，则不做任何操作
 - en: ''
+  id: totrans-67
   prefs:
   - PREF_BQ
   - PREF_IND
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-68
   prefs:
   - PREF_BQ
   - PREF_IND
   type: TYPE_NORMAL
 - en: 'Otherwise: If the first character is not a blank, simply concatenate it with
     the result of replacing the rest of the string'
+  id: totrans-69
   prefs:
   - PREF_BQ
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 否则：如果第一个字符不是空格，只需将其与替换字符串的其余部分连接起来
 - en: ''
+  id: totrans-70
   prefs:
   - PREF_BQ
   - PREF_IND
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-71
   prefs:
   - PREF_BQ
   - PREF_IND
   type: TYPE_NORMAL
 - en: If the first character IS a blank, concatenate an * with the result of replacing
     the rest of the string
+  id: totrans-72
   prefs:
   - PREF_BQ
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如果第一个字符是空格，则将*与替换字符串的其余部分连接起来
 - en: Exercises
+  id: totrans-73
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 练习
 - en: 'This one is from [Structure and Interpretation of Computer Programs](https://mitpress.mit.edu/sites/default/files/sicp/index.html):'
+  id: totrans-74
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个来自[计算机程序的结构和解释](https://mitpress.mit.edu/sites/default/files/sicp/index.html)：
 - en: The greatest common divisor (GCD) of two integers `a` and `b` is defined to
     be the largest integer that divides both `a` and `b` with no remainder. For example,
     the GCD of 16 and 28 is 4\. […] One way to find the GCD of two integers is to
     factor them and search for common factors, but there is a [famous algorithm](https://en.wikipedia.org/wiki/Euclidean_algorithm)
     that is much more efficient.
+  id: totrans-75
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 两个整数`a`和`b`的最大公约数（GCD）被定义为能够整除`a`和`b`的最大整数，没有余数。例如，16和28的最大公约数是4。[...]找到两个整数的最大公约数的一种方法是对它们进行因式分解并搜索公因数，但有一个[著名的算法](https://en.wikipedia.org/wiki/Euclidean_algorithm)要高效得多。
 - en: ''
+  id: totrans-76
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: The idea of the algorithm is based on the observation that, if `r` is the remainder
     when `a` is divided by `b`, then the common divisors of `a` and `b` are precisely
     the same as the common divisors of `b` and `r`.
+  id: totrans-77
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 该算法的思想基于这样的观察：如果`r`是`a`除以`b`的余数，那么`a`和`b`的公约数恰好与`b`和`r`的公约数相同。
 - en: ''
+  id: totrans-78
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: Thus, we can use the equation
+  id: totrans-79
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 因此，我们可以使用方程
 - en: ''
+  id: totrans-80
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: \[GCD(a, b) = GCD(b, r)\]
+  id: totrans-81
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: \[GCD(a, b) = GCD(b, r)\]
 - en: ''
+  id: totrans-82
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: to successively reduce the problem of computing a GCD to the problem of computing
     the GCD of smaller and smaller pairs of integers.
+  id: totrans-83
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 将计算GCD的问题逐步减少到计算更小的整数对的GCD的问题。
 - en: ''
+  id: totrans-84
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: It is possible to show that starting with any two positive integers and performing
     repeated reductions will always eventually produce a pair where the second number
     is 0\. Then the GCD is the other number in the pair.
+  id: totrans-85
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 可以证明，从任意两个正整数开始，并进行重复的减少，最终总会产生一个第二个数字为0的对。然后最大公约数是对中的另一个数字。
 - en: Write a function called `gcd` that takes two integers and uses this algorithm
     to compute their greatest common divisor.
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: 编写一个名为`gcd`的函数，它接受两个整数，并使用这个算法来计算它们的最大公约数。
 - en: 'This one is from [Structure and Interpretation of Computer Programs](https://mitpress.mit.edu/sites/default/files/sicp/index.html):'
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个来自[计算机程序的结构和解释](https://mitpress.mit.edu/sites/default/files/sicp/index.html)：
 - en: How many different ways can we make change of $1.00, given half-dollars, quarters,
     dimes, nickels, and pennies? […]
+  id: totrans-88
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 有多少种不同的方式可以找零1.00美元，给定的是半美元、25美分、10美分、5美分和1美分？
 - en: ''
+  id: totrans-89
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
@@ -355,30 +479,43 @@
     ways to make change for the amount without using any of the first kind of coin,
     plus the number of ways to make change assuming that we do use the first kind
     of coin.'
+  id: totrans-90
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 假设我们将可用的硬币类型按某种顺序排列。[...]观察到，找零的方式可以分为两组：一组是不使用第一种硬币的，另一组是使用第一种硬币的。因此，某个金额的找零方式的总数等于不使用第一种硬币的金额的找零方式的数量，加上假设我们使用第一种硬币的找零方式的数量。
 - en: Write a function that takes as parameters an amount of money in cents and a
     sequence of coin denominations. It should return the number of combinations of
     coins that add up to the given amount.
+  id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: 编写一个函数，它以美分为单位的金额和硬币面额序列作为参数。它应该返回组合硬币的数量，使其总和等于给定的金额。
 - en: The result for one dollar (`100` cents) with coins of denominations `(50, 25,
     10, 5, 1)` should be `292`.
+  id: totrans-92
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用面额为`(50, 25, 10, 5, 1)`的硬币，一个美元（100美分）的结果应该是`292`。
 - en: You might have to give some thought to the base cases.
+  id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: 你可能需要考虑基本情况。
 - en: '**Exercise:** Here’s one of my favorite Car Talk Puzzlers ([http://www.cartalk.com/content/puzzlers](http://www.cartalk.com/content/puzzlers)):'
+  id: totrans-94
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**这是我最喜欢的Car Talk Puzzlers之一（[http://www.cartalk.com/content/puzzlers](http://www.cartalk.com/content/puzzlers)）：'
 - en: What is the longest English word, that remains a valid English word, as you
     remove its letters one at a time?
+  id: totrans-95
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 当你一次又一次地去掉它的字母时，最长的英文单词是什么，它仍然是一个有效的英文单词？
 - en: ''
+  id: totrans-96
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
@@ -387,10 +524,13 @@
     word. If you do that, you’re eventually going to wind up with one letter and that
     too is going to be an English word—one that’s found in the dictionary. I want
     to know what’s the longest word and how many letters does it have?
+  id: totrans-97
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 现在，字母可以从任一端或中间删除，但不能重新排列任何字母。每次你去掉一个字母，你最终会得到另一个英文单词。如果你这样做，最终你会得到一个字母，这也是一个英文单词——一个在字典中找到的单词。我想知道最长的单词是什么，它有多少个字母？
 - en: ''
+  id: totrans-98
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
@@ -398,50 +538,76 @@
     sprite, you take a letter off, one from the interior of the word, take the r away,
     and we’re left with the word spite, then we take the e off the end, we’re left
     with spit, we take the s off, we’re left with pit, it, and I.'
+  id: totrans-99
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 我将给你一个小的例子：Sprite。好吗？你从sprite开始，你拿掉一个字母，从单词的中间拿掉一个字母，拿掉r，我们剩下spite这个词，然后我们拿掉结尾的e，我们剩下spit，我们拿掉s，我们剩下pit，it，和I。
 - en: Write a program to find all words that can be reduced in this way, and then
     find the longest one.
+  id: totrans-100
   prefs: []
   type: TYPE_NORMAL
+  zh: 编写一个程序，找出所有可以以这种方式减少的单词，然后找出最长的单词。
 - en: 'This exercise is a little more challenging than most, so here are some suggestions:'
+  id: totrans-101
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个练习比大多数练习都要困难一些，所以这里有一些建议：
 - en: You might want to write a function that takes a word and computes a list of
     all the words that can be formed by removing one letter. These are the “children”
     of the word.
+  id: totrans-102
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 你可能想写一个函数，它接受一个单词并计算可以通过去掉一个字母形成的所有单词的列表。这些是该单词的“子代”。
 - en: Recursively, a word is reducible if any of its children are reducible. As base
     cases, you can consider the single letter words “I”, “a” to be reducible.
+  id: totrans-103
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 递归地，如果任何一个子代是可减的，那么一个单词就是可减的。作为基本情况，你可以考虑单个字母单词“I”、“a”是可减的。
 - en: To improve the performance of your program, you might want to memoize the words
     that are known to be reducible.
+  id: totrans-104
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 为了提高程序的性能，你可能想要记忆那些已知是可减的单词。
 - en: '[PRE18]'
+  id: totrans-105
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: '[PRE19]'
+  id: totrans-106
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '[PRE20]'
+  id: totrans-107
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '[PRE21]'
+  id: totrans-108
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: '*Data Structures and Information Retrieval in Python*'
+  id: totrans-109
   prefs: []
   type: TYPE_NORMAL
+  zh: '*Python中的数据结构和信息检索*'
 - en: Copyright 2021 Allen Downey
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: 版权所有 2021 Allen Downey
 - en: 'License: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  id: totrans-111
   prefs: []
   type: TYPE_NORMAL
+  zh: 许可证：[知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议](https://creativecommons.org/licenses/by-nc-sa/4.0/)
