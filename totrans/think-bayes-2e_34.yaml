@@ -1,305 +1,441 @@
 - en: How Many Books?
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
 - en: 原文：[https://allendowney.github.io/ThinkBayes2/bookstore.html](https://allendowney.github.io/ThinkBayes2/bookstore.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: Suppose you are the author of a book like *Probably Overthinking It*, and when
     you visit a local bookstore, like Newtonville Books in Newton, MA, you see that
     they have two copies of your book on display.
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
 - en: Is it good that they have only a few copies, because it suggests they started
     with more and sold some? Or is it bad because it suggests they only keep a small
     number in stock, and they have not sold. More generally, what number of books
     would you like to see?
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
 - en: 'To answer these questions, we have to make some modeling decisions. To keep
     it simple, I’ll assume:'
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
 - en: The bookstore orders books on some regular cycle of unknown duration.
+  id: totrans-5
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: At the beginning of every cycle, they start with `k` books.
+  id: totrans-6
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: People buy the book at a rate of `λ` books per cycle.
+  id: totrans-7
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: When you visit the store, you arrive at a random time `t` during the cycle.
+  id: totrans-8
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: We’ll start by defining prior distributions for these parameters, and then we’ll
     update it with the observed data. Here are some libraries we’ll need.
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE0]'
+  id: totrans-10
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '[PRE1]'
+  id: totrans-11
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '[PRE2]'
+  id: totrans-12
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: Priors
+  id: totrans-13
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: For some books, the store only keeps one copy in stock. For others it might
     keep as many as ten. If we would be equally unsurprised by any value in this range,
     the prior distribution of `k` is uniform between `1` and `10`.
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE3]'
+  id: totrans-15
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: If we arrive at a random point in the cycle, the prior distribution of `t` is
     uniform between `0` and `1`, measured in cycles.
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE4]'
+  id: totrans-17
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: Now let’s figure the book-buying rate is probably between `2` and `3` copies
     per cycle, but it could be substantially higher – with low probability. We can
     choose a lognormal distribution that has a mean and shape that seem reasonable.
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE5]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '[PRE6]'
+  id: totrans-20
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: Here’s what it looks like.
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE7]'
+  id: totrans-22
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '![_images/70c831167bdb156a5b844210efc57857ab6d977c8b7e921824c1657f8f7fe363.png](../Images/7a6248d3b35c301e201c66833f9bbfd0.png)'
+  id: totrans-23
   prefs: []
   type: TYPE_IMG
 - en: 'To form the joint prior distribution, I’ll use `meshgrid` with the `ij` indexing
     order, which makes the order of the dimensions the same as the order of the arguments:
     `k`, `λ`, `t`.'
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE8]'
+  id: totrans-25
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '[PRE9]'
+  id: totrans-26
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '[PRE10]'
+  id: totrans-27
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: The update
+  id: totrans-28
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: 'Now for the update, we have to handle two cases:'
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
 - en: If we observe at least one book, `n`, the probability of the data is the probability
     of selling `k-n` books at rate `λ` over period `t`, which is given by the Poisson
     PMF.
+  id: totrans-30
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: If there are no copies left, we have to add in the probability that the number
     of books sold in this period could have exceeded `k`, which is given by the Poisson
     survival function.
+  id: totrans-31
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: The following function computes the probability of the data for all values of
     the parameters, multiplies by the prior, and normalizes the result.
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE11]'
+  id: totrans-33
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: As an example, we’ll do an update with the hypothetically observed `2` books.
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE12]'
+  id: totrans-35
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: From the joint posterior, we can extract the marginal distributions of `k` and
     `λ`, and compute their means.
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE13]'
+  id: totrans-37
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: '[PRE14]'
+  id: totrans-38
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: Seeing two books suggests that the store starts each cycle with 3-4 books and
     sells 2-3 per cycle. Here’s the posterior distribution of `k` compared to its
     prior.
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE15]'
+  id: totrans-40
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '![_images/d8e884eb1b4ec7868ee71b385c257a1c4fd4313edd3605c78f0494ff25846d8d.png](../Images/eb3b1a84b2ba5f03e66b6ac44ae83f0a.png)'
+  id: totrans-41
   prefs: []
   type: TYPE_IMG
 - en: And here’s the posterior distribution of `λ`.
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE16]'
+  id: totrans-43
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '![_images/181cd6f5e92ad73ba112dc4bea9f9c192d38cdea74b9be3320944502f1a86c26.png](../Images/0602e304c1897be769e3b96af5555917.png)'
+  id: totrans-44
   prefs: []
   type: TYPE_IMG
 - en: Seeing two books doesn’t provide much information about the book-selling rate.
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
 - en: Optimization
+  id: totrans-46
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: 'Now let’s consider the more general question, “What number of books would you
     most like to see?” There are two ways we might answer:'
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
 - en: One answer might be the observation that leads to the highest estimate of `λ`.
     But if the book-selling rate is high, relative to `k`, the book will sometimes
     be out of stock, leading to lost sales.
+  id: totrans-48
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: So an alternative is to choose the observation that implies the highest number
     of books sold per cycle.
+  id: totrans-49
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: To compute the second one, we’ll need the following function, which makes a
     `Pmf` that represents the distribution of books sold during one cycle with rate
     `λ` and upper bound `k`.
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE17]'
+  id: totrans-51
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: '[PRE18]'
+  id: totrans-52
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: '![_images/0fd14ae4ba21b3ce6cc5cae1189002d1d094fa87ba3ccbb39792c5d7724e2652.png](../Images/2ed1105510b8f76a6cf78c1135bcb0b1.png)'
+  id: totrans-53
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/0fd14ae4ba21b3ce6cc5cae1189002d1d094fa87ba3ccbb39792c5d7724e2652.png](../Images/2ed1105510b8f76a6cf78c1135bcb0b1.png)'
 - en: Now if we are given a posterior distribution, we can compute the expected sales
     for each pair of parameters and make a Pmf that maps from each expectation to
     its probability.
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，如果我们有后验分布，我们可以计算每对参数的预期销售额，并制作一个将每个预期映射到其概率的Pmf。
 - en: '[PRE19]'
+  id: totrans-55
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '[PRE20]'
+  id: totrans-56
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '[PRE21]'
+  id: totrans-57
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: Finally, let’s loop over possible values of `n` and compute for each one the
     posterior mean values of `k` and `λ`.
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，让我们循环遍历可能的`n`值，并计算每个`n`的后验均值`k`和`λ`的值。
 - en: '[PRE22]'
+  id: totrans-59
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: '|  | n | mean k | mean λ | exp sales |'
+  id: totrans-60
   prefs: []
   type: TYPE_TB
+  zh: '|  | n | mean k | mean λ | exp sales |'
 - en: '| --- | --- | --- | --- | --- |'
+  id: totrans-61
   prefs: []
   type: TYPE_TB
+  zh: '--- | --- | --- | --- | ---'
 - en: '| 0 | 0 | 2.409571 | 4.361937 | 2.025360 |'
+  id: totrans-62
   prefs: []
   type: TYPE_TB
+  zh: 0 | 0 | 2.409571 | 4.361937 | 2.025360
 - en: '| 1 | 1 | 2.322331 | 2.740616 | 1.643844 |'
+  id: totrans-63
   prefs: []
   type: TYPE_TB
+  zh: 1 | 1 | 2.322331 | 2.740616 | 1.643844
 - en: '| 2 | 2 | 3.294089 | 2.720710 | 2.036440 |'
+  id: totrans-64
   prefs: []
   type: TYPE_TB
+  zh: 2 | 2 | 3.294089 | 2.720710 | 2.036440
 - en: '| 3 | 3 | 4.254728 | 2.693604 | 2.269578 |'
+  id: totrans-65
   prefs: []
   type: TYPE_TB
+  zh: 3 | 3 | 4.254728 | 2.693604 | 2.269578
 - en: '| 4 | 4 | 5.199590 | 2.656726 | 2.393205 |'
+  id: totrans-66
   prefs: []
   type: TYPE_TB
+  zh: 4 | 4 | 5.199590 | 2.656726 | 2.393205
 - en: '| 5 | 5 | 6.122093 | 2.606749 | 2.441859 |'
+  id: totrans-67
   prefs: []
   type: TYPE_TB
+  zh: 5 | 5 | 6.122093 | 2.606749 | 2.441859
 - en: '| 6 | 6 | 7.013147 | 2.539618 | 2.435680 |'
+  id: totrans-68
   prefs: []
   type: TYPE_TB
+  zh: 6 | 6 | 7.013147 | 2.539618 | 2.435680
 - en: '| 7 | 7 | 7.860703 | 2.450961 | 2.384995 |'
+  id: totrans-69
   prefs: []
   type: TYPE_TB
+  zh: 7 | 7 | 7.860703 | 2.450961 | 2.384995
 - en: '| 8 | 8 | 8.649959 | 2.337343 | 2.295145 |'
+  id: totrans-70
   prefs: []
   type: TYPE_TB
+  zh: 8 | 8 | 8.649959 | 2.337343 | 2.295145
 - en: '| 9 | 9 | 9.365430 | 2.199540 | 2.172083 |'
+  id: totrans-71
   prefs: []
   type: TYPE_TB
+  zh: 9 | 9 | 9.365430 | 2.199540 | 2.172083
 - en: '| 10 | 10 | 10.000000 | 2.056530 | 2.037294 |'
+  id: totrans-72
   prefs: []
   type: TYPE_TB
+  zh: 10 | 10 | 10.000000 | 2.056530 | 2.037294
 - en: Here’s the implied sales rate as a function of the observed number of books.
     By this metric, the best number of books to see is `0`.
+  id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是隐含的销售率作为观察到的书籍数量的函数。按照这个标准，最好的书籍数量是`0`。
 - en: '[PRE23]'
+  id: totrans-74
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: '![_images/ab725915066bf7051e2566f58f24370cfb3ef8c8af969f3e2d27e29d94450417.png](../Images/c2b7a6f0690dc469e9069225998e6ad2.png)'
+  id: totrans-75
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/ab725915066bf7051e2566f58f24370cfb3ef8c8af969f3e2d27e29d94450417.png](../Images/c2b7a6f0690dc469e9069225998e6ad2.png)'
 - en: And here’s the implied number of books sold per cycle.
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是每个周期销售的书籍数量。
 - en: '[PRE24]'
+  id: totrans-77
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: '[PRE25]'
+  id: totrans-78
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: '![_images/b5cc4a92b204bc04b9add492874efd17495325a4e5462befd3932318a8f6c9a2.png](../Images/afb628ce7561b107d5370123c1c19484.png)'
+  id: totrans-79
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/b5cc4a92b204bc04b9add492874efd17495325a4e5462befd3932318a8f6c9a2.png](../Images/afb628ce7561b107d5370123c1c19484.png)'
 - en: This result is a little more interesting. Seeing `0` books is still good, but
     the optimal value is around `5`.
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个结果更有趣。看到`0`本书仍然不错，但最佳值在`5`左右。
 - en: Now, we should not take this value too seriously, as it is based on a very small
     amount of data and a lot of assumptions – both in the model and in the priors.
     But it is interesting that the optimal point is neither many nor none.
+  id: totrans-81
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，我们不应该太认真地对待这个数值，因为它是基于非常少量的数据和许多假设 - 模型和先验中都是如此。但有趣的是，最优点既不是很多也不是没有。
 - en: Thanks to Aubrey Clayton for [this tweet](https://twitter.com/aubreyclayton/status/1735467931490734251),
     which gave me the idea for this article.
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: 感谢Aubrey Clayton提供[这条推文](https://twitter.com/aubreyclayton/status/1735467931490734251)，这给了我这篇文章的灵感。
 - en: Copyright 2023 Allen B. Downey
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: 版权所有2023年Allen B. Downey
 - en: 'License: [Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA
     4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: 许可证：[署名-非商业性使用-相同方式共享4.0国际 (CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/)

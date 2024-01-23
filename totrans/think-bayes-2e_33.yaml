@@ -3,11 +3,13 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 有多少错别字？
 - en: 原文：[https://allendowney.github.io/ThinkBayes2/ok.html](https://allendowney.github.io/ThinkBayes2/ok.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ThinkBayes2/ok.html](https://allendowney.github.io/ThinkBayes2/ok.html)
 - en: When I started work at [Brilliant](https://brilliant.org) a couple of weeks
     ago, I learned that one of my new colleagues, Michelle McSweeney, just published
     [a book called *OK*](https://www.goodreads.com/book/show/58380165-ok), which is
@@ -15,6 +17,7 @@
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 当我几周前开始在[Brilliant](https://brilliant.org)工作时，我得知我的新同事之一，米歇尔·麦克斯威尼，刚刚出版了一本名为*OK*的书，这本书全都是关于“好”的。
 - en: As we discussed the joys and miseries of publishing, Michelle mentioned that
     she had found a typo in the book after publication. So naturally I took it as
     a challenge to find the typo. While I was searching, I enjoyed the book very much.
@@ -22,54 +25,64 @@
   id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 当我们讨论出版的乐趣和苦难时，米歇尔提到她在出版后发现了书中的错别字。所以我自然而然地把它看作是一个找错别字的挑战。当我在寻找时，我非常喜欢这本书。如果你对词源学、语言学和历史感兴趣，我推荐这本书！
 - en: As it turned out, I found exactly one typo. When I told Michelle, she asked
     me nervously which page it was on. Page 17\. She looked disappointed – that was
     not the same typo she found.
   id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 事实证明，我确实找到了一个错别字。当我告诉米歇尔时，她紧张地问我在哪一页。第17页。她看起来很失望 - 那不是她找到的同一个错别字。
 - en: 'Now, for people who like Bayesian statistics, this scenario raises some questions:'
   id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，对于喜欢贝叶斯统计的人来说，这种情况引发了一些问题：
 - en: After our conversation, how many additional typos should we expect there to
     be?
   id: totrans-6
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 在我们的对话之后，我们应该期望还有多少额外的错别字？
 - en: If she and I had found the same typo, instead of different ones, how many typos
     would we expect?
   id: totrans-7
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如果她和我找到了相同的错别字，而不是不同的，我们会期望有多少错别字？
 - en: As it happens, I used a similar scenario as [an example in *Think Bayes*](https://allendowney.github.io/ThinkBayes2/chap15.html#the-lincoln-index-problem).
     This notebook is based on the code I presented there. If there’s anything here
     that’s not clear, you could read the chapter for more details.
   id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 事实上，我在*Think Bayes*中使用了类似的情景[作为一个例子](https://allendowney.github.io/ThinkBayes2/chap15.html#the-lincoln-index-problem)。这本笔记本是基于我在那里提出的代码。如果有什么不清楚的地方，你可以阅读章节了解更多细节。
 - en: '[You can also click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ThinkBayes2/blob/master/examples/ok.ipynb).'
   id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: '[您也可以点击此处在Colab上运行此笔记本](https://colab.research.google.com/github/AllenDowney/ThinkBayes2/blob/master/examples/ok.ipynb)。'
 - en: A Warm-up Problem
   id: totrans-10
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 一个热身问题
 - en: Starting with a simple version of the problem, let’s assume that we know `p0`
     and `p1`, which are the probabilities, respectively, that the first and second
     readers find any given typo.
   id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 从问题的简单版本开始，假设我们知道`p0`和`p1`，分别是第一个和第二个读者找到任何给定错别字的概率。
 - en: For example, let’s assume that Michelle has a 66% chance of finding a typo and
     I have a 50% chance.
   id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，假设米歇尔有66%的几率发现错别字，而我有50%的几率。
 - en: '[PRE0]'
   id: totrans-13
   prefs: []
@@ -82,6 +95,7 @@
   id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这些假设下，我们可以计算一个数组，其中包含（按顺序）我们都找不到错别字的概率，只有第二个读者找到错别字的概率，只有第一个读者找到错别字的概率，以及我们都找到错别字的概率。
 - en: '[PRE1]'
   id: totrans-15
   prefs: []
@@ -102,11 +116,13 @@
   id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 根据假设的概率，我们有33%的几率都找到错别字，有17%的几率我们都没有找到。
 - en: The Prior
   id: totrans-19
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 先验
 - en: Next we need to choose a prior for the total number of typos. I’ll use a Poisson
     distribution, which is a reasonable default for values that are counts. And I’ll
     set the mean to 2, which means that before either of us read the book, we would
@@ -114,6 +130,7 @@
   id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 接下来，我们需要为错别字的总数选择一个先验。我将使用泊松分布，这是计数值的合理默认值。我将均值设为2，这意味着在我们任何人读这本书之前，我们预计会有大约两个错别字。
 - en: '[PRE4]'
   id: totrans-21
   prefs: []
@@ -128,39 +145,48 @@
   id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是先验的样子。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
   id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE6]</details> ![_images/77726d32755a0911144b37af88df7d5b01545b8f0092aaa4754562c4c6801e50.png](../Images/0d27247b200123da695694c7f46e46ab.png)'
   id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE6]</details> ![_images/77726d32755a0911144b37af88df7d5b01545b8f0092aaa4754562c4c6801e50.png](../Images/0d27247b200123da695694c7f46e46ab.png)'
 - en: The Update (Simple Version)
   id: totrans-26
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 更新（简单版本）
 - en: 'To represent the data, I’ll create these variables:'
   id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了表示数据，我将创建这些变量：
 - en: '`k10`: the number of typos found by the first reader but not the second'
   id: totrans-28
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`k10`：第一个读者发现但第二个读者没有发现的错别字的数量'
 - en: '`k01`: the number of typos found by the second reader but not the first'
   id: totrans-29
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`k01`：第二个读者发现但第一个读者没有发现的错别字的数量'
 - en: '`k11`: the number of typos found by both readers'
   id: totrans-30
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`k11`：两个读者都发现的错别字的数量'
 - en: '[PRE7]'
   id: totrans-31
   prefs: []
@@ -171,6 +197,7 @@
   id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将数据放入一个数组中，其中0作为未知值`k00`的占位符，它是我们都没有发现的错别字的数量。
 - en: '[PRE8]'
   id: totrans-33
   prefs: []
@@ -182,6 +209,7 @@
   id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以使用多项分布来计算每个假设的`N`值的数据的可能性（暂时假设`y`中的概率已知）。
 - en: '[PRE9]'
   id: totrans-35
   prefs: []
@@ -191,6 +219,7 @@
   id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以按照通常的方式计算后验。
 - en: '[PRE10]'
   id: totrans-37
   prefs: []
@@ -205,20 +234,25 @@
   id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是它的样子。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
   id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE12]</details> ![_images/e9548bb3eda665fa8cc1684da08ffe2df31f833e2ec55e22d0f4c6a08b185931.png](../Images/76953af36d1e930825c19828768e1369.png)'
   id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE12]</details> ![_images/e9548bb3eda665fa8cc1684da08ffe2df31f833e2ec55e22d0f4c6a08b185931.png](../Images/76953af36d1e930825c19828768e1369.png)'
 - en: The most likely value is 2, and the posterior mean is about 2.3, just a little
     higher than the prior mean.
   id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: 最可能的值是2，后验均值约为2.3，比先验均值略高一点。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-43
