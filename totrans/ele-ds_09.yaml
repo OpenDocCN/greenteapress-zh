@@ -185,6 +185,7 @@
   id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: '`read_fwf()`的结果是一个`DataFrame`，这是Pandas用于存储数据的主要类型。`DataFrame`有一个名为`head()`的方法，显示前5行：'
 - en: '[PRE5]'
   id: totrans-35
   prefs: []
@@ -196,40 +197,56 @@
   id: totrans-36
   prefs: []
   type: TYPE_TB
+  zh: '|  | CASEID | PREGORDR | HOWPREG_N | HOWPREG_P | MOSCURRP | NOWPRGDK | PREGEND1
+    | PREGEND2 | HOWENDDK | NBRNALIV | ... | SECU | SEST | CMINTVW | CMLSTYR | CMJAN3YR
+    | CMJAN4YR | CMJAN5YR | QUARTER | PHASE | INTVWYEAR |'
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
     | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
   id: totrans-37
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+    | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
 - en: '| 0 | 70627 | 1 | NaN | NaN | NaN | NaN | 6.0 | NaN | NaN | 1.0 | ... | 3 |
     322 | 1394 | 1382 | 1357 | 1345 | 1333 | 18 | 1 | 2016 |'
   id: totrans-38
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 70627 | 1 | NaN | NaN | NaN | NaN | 6.0 | NaN | NaN | 1.0 | ... | 3 |
+    322 | 1394 | 1382 | 1357 | 1345 | 1333 | 18 | 1 | 2016 |'
 - en: '| 1 | 70627 | 2 | NaN | NaN | NaN | NaN | 1.0 | NaN | NaN | NaN | ... | 3 |
     322 | 1394 | 1382 | 1357 | 1345 | 1333 | 18 | 1 | 2016 |'
   id: totrans-39
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 70627 | 2 | NaN | NaN | NaN | NaN | 1.0 | NaN | NaN | NaN | ... | 3 |
+    322 | 1394 | 1382 | 1357 | 1345 | 1333 | 18 | 1 | 2016 |'
 - en: '| 2 | 70627 | 3 | NaN | NaN | NaN | NaN | 6.0 | NaN | NaN | 1.0 | ... | 3 |
     322 | 1394 | 1382 | 1357 | 1345 | 1333 | 18 | 1 | 2016 |'
   id: totrans-40
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 70627 | 3 | NaN | NaN | NaN | NaN | 6.0 | NaN | NaN | 1.0 | ... | 3 |
+    322 | 1394 | 1382 | 1357 | 1345 | 1333 | 18 | 1 | 2016 |'
 - en: '| 3 | 70628 | 1 | NaN | NaN | NaN | NaN | 6.0 | NaN | NaN | 1.0 | ... | 2 |
     366 | 1409 | 1397 | 1369 | 1357 | 1345 | 23 | 1 | 2017 |'
   id: totrans-41
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 70628 | 1 | NaN | NaN | NaN | NaN | 6.0 | NaN | NaN | 1.0 | ... | 2 |
+    366 | 1409 | 1397 | 1369 | 1357 | 1345 | 23 | 1 | 2017 |'
 - en: '| 4 | 70628 | 2 | NaN | NaN | NaN | NaN | 6.0 | NaN | NaN | 1.0 | ... | 2 |
     366 | 1409 | 1397 | 1369 | 1357 | 1345 | 23 | 1 | 2017 |'
   id: totrans-42
   prefs: []
   type: TYPE_TB
+  zh: '| 4 | 70628 | 2 | NaN | NaN | NaN | NaN | 6.0 | NaN | NaN | 1.0 | ... | 2 |
+    366 | 1409 | 1397 | 1369 | 1357 | 1345 | 23 | 1 | 2017 |'
 - en: 5 rows × 248 columns
   id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 5行×248列
 - en: '[PRE6]'
   id: totrans-44
   prefs: []
@@ -240,30 +257,38 @@
   id: totrans-45
   prefs: []
   type: TYPE_TB
+  zh: '|  | CASEID | PREGORDR | HOWPREG_N | HOWPREG_P | MOSCURRP | NOWPRGDK | PREGEND1
+    | PREGEND2 | HOWENDDK |'
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
   id: totrans-46
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
 - en: '| 0 | 70627 | 1 | NaN | NaN | NaN | NaN | 6.0 | NaN | NaN |'
   id: totrans-47
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 70627 | 1 | NaN | NaN | NaN | NaN | 6.0 | NaN | NaN |'
 - en: '| 1 | 70627 | 2 | NaN | NaN | NaN | NaN | 1.0 | NaN | NaN |'
   id: totrans-48
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 70627 | 2 | NaN | NaN | NaN | NaN | 1.0 | NaN | NaN |'
 - en: '| 2 | 70627 | 3 | NaN | NaN | NaN | NaN | 6.0 | NaN | NaN |'
   id: totrans-49
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 70627 | 3 | NaN | NaN | NaN | NaN | 6.0 | NaN | NaN |'
 - en: '| 3 | 70628 | 1 | NaN | NaN | NaN | NaN | 6.0 | NaN | NaN |'
   id: totrans-50
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 70628 | 1 | NaN | NaN | NaN | NaN | 6.0 | NaN | NaN |'
 - en: '| 4 | 70628 | 2 | NaN | NaN | NaN | NaN | 6.0 | NaN | NaN |'
   id: totrans-51
   prefs: []
   type: TYPE_TB
+  zh: '| 4 | 70628 | 2 | NaN | NaN | NaN | NaN | 6.0 | NaN | NaN |'
 - en: The first two columns are is `CASEID` and `PREGORDR`, which I mentioned earlier.
     The first three rows have the same `CASEID`, so this respondent reported three
     pregnancies; the values of `PREGORDR` indicate that they are the first, second,
@@ -271,16 +296,19 @@
   id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: 前两列是`CASEID`和`PREGORDR`，我之前提到过。前三行具有相同的`CASEID`，因此此受访者报告了三次怀孕；`PREGORDR`的值表明它们是按顺序的第一、第二和第三次怀孕。
 - en: We will learn more about the other variables as we go along.
   id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: 随着我们的学习，我们将了解更多关于其他变量的信息。
 - en: 'In addition to methods like `head`, a `Dataframe` object has several **attributes**,
     which are variables associated with the object. For example, `nsfg` has an attribute
     called `shape`, which is a tuple containing the number of rows and columns:'
   id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: 除了像`head`这样的方法，`Dataframe`对象还有几个**属性**，这些属性是与对象相关联的变量。例如，`nsfg`有一个名为`shape`的属性，它是一个包含行数和列数的元组：
 - en: '[PRE7]'
   id: totrans-55
   prefs: []
@@ -296,10 +324,12 @@
   id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 此数据集中有9553行，每次怀孕一行，以及248列，每个变量一列。
 - en: '`nsfg` also has an attribute called `columns`, which contains the column names:'
   id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: '`nsfg`还有一个名为`columns`的属性，其中包含列名：'
 - en: '[PRE9]'
   id: totrans-59
   prefs: []
@@ -315,11 +345,13 @@
   id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: 列名存储在`Index`中，这是Pandas的另一种类型，类似于列表。
 - en: Based on the column names, you might be able to guess what some of the variables
     are, but in general you have to read the documentation.
   id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: 根据列名，您可能能够猜出一些变量是什么，但通常您需要阅读文档。
 - en: When you work with datasets like the NSFG, it is important to read the documentation
     carefully. If you interpret a variable incorrectly, you can generate nonsense
     results and never realize it. So, before we start looking at data, let’s get familiar
@@ -328,38 +360,45 @@
   id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 当您使用NSFG等数据集时，重要的是要仔细阅读文档。如果您错误地解释了一个变量，就会产生无意义的结果，而您却从未意识到。因此，在我们开始查看数据之前，让我们先熟悉一下NSFG代码簿，其中描述了每个变量。您可以从[https://github.com/AllenDowney/ElementsOfDataScience/raw/master/data/2015-2017_NSFG_FemPregFile_Codebook-508.pdf](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/data/2015-2017_NSFG_FemPregFile_Codebook-508.pdf)下载此数据集的代码簿。
 - en: If you search that document for “weigh at birth” you should find these variables
     related to birth weight.
   id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果您在文档中搜索“出生体重”，您应该会找到与出生体重相关的这些变量。
 - en: '`BIRTHWGT_LB1`: Birthweight in Pounds - 1st baby from this pregnancy'
   id: totrans-65
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`BIRTHWGT_LB1`：第一胎出生时的体重（磅）'
 - en: '`BIRTHWGT_OZ1`: Birthweight in Ounces - 1st baby from this pregnancy'
   id: totrans-66
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`BIRTHWGT_OZ1`：第一胎出生时的体重（盎司）'
 - en: There are similar variables for a 2nd or 3rd baby, in the case of twins or triplets.
     For now we will focus on the first baby from each pregnancy, and we will come
     back to the issue of multiple births.
   id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: 在双胞胎或三胞胎的情况下，还有类似的变量用于第2个或第3个宝宝。现在我们将专注于每次怀孕的第一个宝宝，并且我们将回到多胞胎的问题。
 - en: Series
   id: totrans-68
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 系列
 - en: In many ways a `DataFrame` is like a Python dictionary, where the column names
     are the keys and the columns are the values. You can select a column from a `DataFrame`
     using the bracket operator, with a string as the key.
   id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: '在许多方面，`DataFrame`类似于Python字典，其中列名是键，列是值。您可以使用方括号运算符从`DataFrame`中选择列，键是字符串。 '
 - en: '[PRE11]'
   id: totrans-70
   prefs: []
@@ -622,10 +661,12 @@
   id: totrans-124
   prefs: []
   type: TYPE_NORMAL
+  zh: 平均值约为`8.05`，但这并不重要，因为它包括特殊值98和99。在我们真正计算平均值之前，我们必须用`NaN`替换这些值以识别它们为缺失数据。
 - en: 'The `replace()` method does what we want:'
   id: totrans-125
   prefs: []
   type: TYPE_NORMAL
+  zh: '`replace()`方法做了我们想要的事情：'
 - en: '[PRE21]'
   id: totrans-126
   prefs: []
@@ -637,12 +678,14 @@
   id: totrans-127
   prefs: []
   type: TYPE_NORMAL
+  zh: '`replace`接受一个我们想要替换的值的列表和我们想要替换它们的值。`np.nan`表示我们从NumPy库中获得特殊值`NaN`，它被导入为`np`。'
 - en: The result from `replace()` is a new `Series`, which I assign to `pounds_clean`.
     If we run `describe` again, we see that `count` is smaller now because it includes
     only the valid values.
   id: totrans-128
   prefs: []
   type: TYPE_NORMAL
+  zh: '`replace()`的结果是一个新的`Series`，我将其赋给`pounds_clean`。如果我们再次运行`describe`，我们会看到`count`现在更小了，因为它只包括有效值。'
 - en: '[PRE22]'
   id: totrans-129
   prefs: []
@@ -659,93 +702,111 @@
   id: totrans-131
   prefs: []
   type: TYPE_NORMAL
+  zh: 新`Series`的平均值约为6.7磅。请记住，原始`Series`的平均值超过了8磅。当你移除几个重达99磅的婴儿时，这会产生很大的差异！
 - en: '**Exercise:** Use `describe` to summarize `ounces`.'
   id: totrans-132
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**使用`describe`来总结`ounces`。'
 - en: Then use `replace` to replace the special values 98 and 99 with NaN, and assign
     the result to `ounces_clean`. Run `describe` again. How much does this cleaning
     affect the results?
   id: totrans-133
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后使用`replace`将特殊值98和99替换为NaN，并将结果赋给`ounces_clean`。再次运行`describe`。这种清理对结果有多大影响？
 - en: Series Arithmetic
   id: totrans-134
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 系列算术
 - en: Now we want to combine `pounds` and `ounces` into a single `Series` that contains
     total birth weight. Arithmetic operators work with `Series` objects; so, for example,
     to convert `pounds` to ounces, we could write
   id: totrans-135
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们想要将`pounds`和`ounces`组合成一个包含总出生体重的单个`Series`。算术运算符可以用于`Series`对象；因此，例如，要将`pounds`转换为ounces，我们可以这样写：
 - en: '`pounds * 16`'
   id: totrans-136
   prefs: []
   type: TYPE_NORMAL
+  zh: '`pounds * 16`'
 - en: Then we could add in `ounces` like this
   id: totrans-137
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后我们可以这样添加`ounces`
 - en: '`pounds * 16 + ounces`'
   id: totrans-138
   prefs: []
   type: TYPE_NORMAL
+  zh: '`pounds * 16 + ounces`'
 - en: '**Exercise:** Use `pounds_clean` and `ounces_clean` to compute the total birth
     weight expressed in kilograms (there are roughly 2.2 pounds per kilogram). What
     is the mean birth weight in kilograms?'
   id: totrans-139
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**使用`pounds_clean`和`ounces_clean`来计算以千克表示的总出生体重（大约每千克有2.2磅）。平均出生体重是多少？'
 - en: '**Exercise:** For each pregnancy in the NSFG dataset, the variable `''AGECON''`
     encodes the respondent’s age at conception, and `''AGEPREG''` the respondent’s
     age at the end of the pregnancy.'
   id: totrans-140
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**对于NSFG数据集中的每次怀孕，变量`''AGECON''`编码了受访者受孕时的年龄，`''AGEPREG''`编码了受访者怀孕结束时的年龄。'
 - en: Read the documentation of these variables. Are there any special values we have
     to deal with?
   id: totrans-141
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 阅读这些变量的文档。我们是否有任何特殊值需要处理？
 - en: Select `'AGECON'` and `'AGEPREG'` and assign them to variables named `agecon`
     and `agepreg`.
   id: totrans-142
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 选择`'AGECON'`和`'AGEPREG'`，并将它们分配给名为`agecon`和`agepreg`的变量。
 - en: Compute the difference, which is an estimate of the duration of the pregnancy.
   id: totrans-143
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 计算差值，这是对怀孕持续时间的估计。
 - en: Use `.describe()` to compute the mean duration and other summary statistics.
   id: totrans-144
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 使用`.describe()`来计算平均持续时间和其他总结统计量。
 - en: Based on the results, it seems like this might not be a good way to estimate
     the duration of pregnancy. Why not?
   id: totrans-145
   prefs: []
   type: TYPE_NORMAL
+  zh: 根据结果，似乎这可能不是估计怀孕持续时间的好方法。为什么？
 - en: Histograms
   id: totrans-146
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 直方图
 - en: 'Let’s get back to the original question: what is the average birth weight for
     babies in the U.S.?'
   id: totrans-147
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们回到最初的问题：美国婴儿的平均出生体重是多少？
 - en: 'As an answer we *could* take the results from the previous section and compute
     the mean:'
   id: totrans-148
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为答案，我们*可以*使用前一节的结果来计算平均值：
 - en: '[PRE24]'
   id: totrans-149
   prefs: []
@@ -761,17 +822,20 @@
   id: totrans-151
   prefs: []
   type: TYPE_NORMAL
+  zh: 但在查看值的整个分布之前计算一个总结统计量，如均值，是有风险的。
 - en: A **distribution** is a set of possible values and their frequencies. One way
     to visualize a distribution is a **histogram**, which shows values on the `x`
     axis and their frequencies on the `y` axis.
   id: totrans-152
   prefs: []
   type: TYPE_NORMAL
+  zh: '**分布**是一组可能的值及其频率。可视化分布的一种方法是**直方图**，它显示了`x`轴上的值及其在`y`轴上的频率。'
 - en: '`Series` provides a `hist` method that makes histograms. And we can use Matplotlib
     to label the axes.'
   id: totrans-153
   prefs: []
   type: TYPE_NORMAL
+  zh: '`Series`提供了一个`hist`方法，用于制作直方图。我们可以使用Matplotlib来标记轴。'
 - en: '[PRE26]'
   id: totrans-154
   prefs: []
@@ -781,6 +845,7 @@
   id: totrans-155
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/07_dataframes_66_0.png](../Images/b0744351975b411829eb928c8e0df35a.png)'
 - en: The keyword argument, `bins`, tells `hist` to divide the range of weights into
     30 intervals, called **bins**, and count how many values fall in each bin. The
     `x` axis is birth weight in pounds; the `y` axis is the number of births in each
@@ -788,6 +853,7 @@
   id: totrans-156
   prefs: []
   type: TYPE_NORMAL
+  zh: 关键字参数`bins`告诉`hist`将重量范围分成30个间隔，称为**bins**，并计算每个bin中有多少值。`x`轴是出生体重（磅）；`y`轴是每个bin中的出生次数。
 - en: The distribution looks a little like a bell curve, but the tail is longer on
     the left than on the right; that is, there are more light babies than heavy babies.
     That makes sense, because the distribution includes some babies that were born
@@ -795,6 +861,7 @@
   id: totrans-157
   prefs: []
   type: TYPE_NORMAL
+  zh: 分布看起来有点像钟形曲线，但左边的尾巴比右边的长；也就是说，轻的婴儿比重的婴儿更多。这是有道理的，因为分布包括一些早产婴儿。
 - en: '**Exercise:** `hist` takes keyword arguments that specify the type and appearance
     of the histogram. Find the documentation of `hist` and see if you can figure out
     how to plot the histogram as an unfilled line against a background with no grid
@@ -802,27 +869,32 @@
   id: totrans-158
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**`hist`接受关键字参数，指定直方图的类型和外观。找到`hist`的文档，看看是否能弄清楚如何绘制直方图作为一个未填充的线，并且背景没有网格线。'
 - en: '**Exercise:** As we saw in a previous exercise, the NSFG dataset includes a
     column called `AGECON` that records age at conception for each pregnancy.'
   id: totrans-159
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**正如我们在之前的练习中看到的，NSFG数据集包括一个名为`AGECON`的列，记录了每次怀孕的受孕年龄。'
 - en: Select this column from the `DataFrame` and plot the histogram of the values
     with 20 bins.
   id: totrans-160
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 从`DataFrame`中选择这一列，并用20个bin绘制值的直方图。
 - en: Label the `x` and `y` axes appropriately.
   id: totrans-161
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 适当地标记`x`轴和`y`轴。
 - en: Boolean Series
   id: totrans-162
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 布尔Series
 - en: We have seen that the distribution of birth weights is **skewed** to the left;
     that is, there are more light babies than heavy ones and they are farther from
     the mean. That’s because preterm babies tend to be lighter. The most common duration
@@ -831,11 +903,13 @@
   id: totrans-163
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们已经看到出生体重的分布向左**偏斜**；也就是说，轻婴儿比重婴儿更多，它们离均值更远。这是因为早产婴儿往往体重较轻。怀孕的最常见持续时间是39周，这是“足月”；“早产”通常定义为少于37周。
 - en: To see which babies are preterm, we can use `PRGLNGTH`, which records pregnancy
     length in weeks and compute it to `37`.
   id: totrans-164
   prefs: []
   type: TYPE_NORMAL
+  zh: 要查看哪些婴儿为早产，我们可以使用`PRGLNGTH`，它记录了怀孕周数，并将其计算为`37`。
 - en: '[PRE27]'
   id: totrans-165
   prefs: []
@@ -853,6 +927,7 @@
   id: totrans-167
   prefs: []
   type: TYPE_NORMAL
+  zh: 当您将`Series`与一个值进行比较时，结果是一个布尔`Series`；也就是说，每个元素都是布尔值，`True`或`False`。在这种情况下，每个早产婴儿为`True`，否则为`False`。我们可以使用`head`来查看前5个元素。
 - en: '[PRE29]'
   id: totrans-168
   prefs: []
@@ -869,6 +944,7 @@
   id: totrans-170
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果计算布尔`Series`的总和，它将`True`视为1，`False`视为0，因此总和是`True`值的数量，即早产婴儿的数量。
 - en: '[PRE31]'
   id: totrans-171
   prefs: []
@@ -885,6 +961,7 @@
   id: totrans-173
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果计算布尔`Series`的均值，您将得到`True`值的*比例*。在这种情况下，约为0.38；也就是说，大约38%的怀孕少于37周。
 - en: '[PRE33]'
   id: totrans-174
   prefs: []
@@ -901,6 +978,7 @@
   id: totrans-176
   prefs: []
   type: TYPE_NORMAL
+  zh: 然而，这个结果可能会误导，因为它包括了所有的怀孕结果，而不仅仅是活产。我们可以创建另一个布尔`Series`来指示哪些怀孕以活产结束：
 - en: '[PRE35]'
   id: totrans-177
   prefs: []
@@ -916,6 +994,7 @@
   id: totrans-179
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以使用运算符`&`，它表示逻辑与操作，来识别结果为活产和早产的怀孕：
 - en: '[PRE37]'
   id: totrans-180
   prefs: []
@@ -930,22 +1009,26 @@
   id: totrans-182
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**在所有活产中，早产的比例是多少？'
 - en: 'The other common logical operators are:'
   id: totrans-183
   prefs: []
   type: TYPE_NORMAL
+  zh: 其他常见的逻辑运算符是：
 - en: '`|`, which represents the logical OR operation; for example `live | preterm`
     is true if either `live` is true, or `preterm` is true, or both.'
   id: totrans-184
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`|`，表示逻辑或操作；例如`live | preterm`如果`live`为真，或`preterm`为真，或两者都为真，则为真。'
 - en: '`~`, which represents the logical NOT operation; for example `~live` is true
     if `live` is false or `NaN`.'
   id: totrans-185
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`~`，表示逻辑非操作；例如`~live`如果`live`为假或`NaN`，则为真。'
 - en: The logical operators treat `NaN` the same as `False`, so you should be careful
     about using the NOT operator with a Series that contains `NaN` values. For example,
     `~preterm` would include not just full term pregnancies, but also pregnancies
@@ -953,16 +1036,19 @@
   id: totrans-186
   prefs: []
   type: TYPE_NORMAL
+  zh: 逻辑运算符将`NaN`视为`False`，因此在使用带有`NaN`值的`Series`的NOT运算符时，您应该小心。例如，`~preterm`将包括不仅仅是足月怀孕，还包括怀孕持续时间未知的怀孕。
 - en: '**Exercise:** Of all pregnancies, what fraction are full term, that is, 37
     weeks or more? Of all live births, what fraction are full term?'
   id: totrans-187
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**在所有怀孕中，足月的比例是多少，也就是说，37周或更长？在所有活产中，足月的比例是多少？'
 - en: Filtering Data
   id: totrans-188
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 数据过滤
 - en: We can use a Boolean `Series` as a filter; that is, we can select only rows
     that satisfy a condition or meet some criterion. For example, we can use `preterm`
     and the bracket operator to select values from `birth_weight`, so `preterm_weight`
@@ -970,6 +1056,7 @@
   id: totrans-189
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用布尔`Series`作为过滤器；也就是说，我们可以仅选择满足条件或符合某些标准的行。例如，我们可以使用`preterm`和括号运算符从`birth_weight`中选择值，因此`preterm_weight`得到早产婴儿的出生体重。
 - en: '[PRE39]'
   id: totrans-190
   prefs: []
@@ -984,6 +1071,7 @@
   id: totrans-192
   prefs: []
   type: TYPE_NORMAL
+  zh: 要选择足月婴儿，我们可以创建一个布尔`Series`，如下所示：
 - en: '[PRE41]'
   id: totrans-193
   prefs: []
@@ -993,6 +1081,7 @@
   id: totrans-194
   prefs: []
   type: TYPE_NORMAL
+  zh: 并使用它来选择足月婴儿的出生体重：
 - en: '[PRE42]'
   id: totrans-195
   prefs: []
@@ -1008,6 +1097,7 @@
   id: totrans-197
   prefs: []
   type: TYPE_NORMAL
+  zh: 预期地，足月婴儿的平均体重要比早产婴儿重。更明确地说，我们也可以将结果限制为活产，如下所示：
 - en: '[PRE44]'
   id: totrans-198
   prefs: []
@@ -1023,12 +1113,14 @@
   id: totrans-200
   prefs: []
   type: TYPE_NORMAL
+  zh: 但在这种情况下，我们得到了相同的结果，因为`birth_weight`仅对活产有效。
 - en: '**Exercise:** Let’s see if there is a difference in weight between single births
     and multiple births (twins, triplets, etc.). The variable `NBRNALIV` represents
     the number of babies born alive from a single pregnancy.'
   id: totrans-201
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**让我们看看单胎和多胎（双胞胎，三胞胎等）之间的体重差异。变量`NBRNALIV`表示单次怀孕中活产的婴儿数量。'
 - en: '[PRE46]'
   id: totrans-202
   prefs: []
@@ -1045,26 +1137,31 @@
   id: totrans-204
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用`nbrnaliv`和`live`创建一个名为`multiple`的布尔系列，该系列对于多个活产为真。在所有活产中，多胎出生的比例是多少？
 - en: '**Exercise:** Make a Boolean series called `single` that is true for single
     live births. Of all single births, what fraction are preterm? Of all multiple
     births, what fraction are preterm?'
   id: totrans-205
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**创建一个名为`single`的布尔系列，对于单个活产为真。在所有单胎中，早产的比例是多少？在所有多胎中，早产的比例是多少？'
 - en: '**Exercise:** What is the average birth weight for live, single, full-term
     births?'
   id: totrans-206
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**活产、单胎、足月出生的平均出生体重是多少？'
 - en: Weighted Means
   id: totrans-207
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 加权平均值
 - en: 'We are almost done, but there’s one more problem we have to solve: oversampling.'
   id: totrans-208
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们几乎完成了，但还有一个问题需要解决：过度抽样。
 - en: The NSFG is not exactly representative of the U.S. population. By design, some
     groups are more likely to appear in the sample than others; that is, they are
     **oversampled**. Oversampling helps to ensure that you have enough people in every
@@ -1073,6 +1170,7 @@
   id: totrans-209
   prefs: []
   type: TYPE_NORMAL
+  zh: NSFG并不完全代表美国人口。按设计，一些群体比其他群体更有可能出现在样本中；也就是说，它们被**过度抽样**了。过度抽样有助于确保每个子组中有足够的人数以获得可靠的统计数据，但它使数据分析变得更加复杂。
 - en: Each pregnancy in the dataset has a **sampling weight** that indicates how many
     pregnancies it represents. In `nsfg`, the sampling weight is stored in a column
     named `wgt2015_2017`. Here’s what it looks like.
