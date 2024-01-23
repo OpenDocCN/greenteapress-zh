@@ -400,6 +400,7 @@
   id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了可视化估计的抽样误差，我们可以绘制所有拟合线，或者为了更简洁的表示，为每个年龄绘制一个90%的置信区间。以下是代码：
 - en: '[PRE8]'
   id: totrans-62
   prefs: []
@@ -411,6 +412,7 @@
   id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: '`xs`是母亲的年龄序列。`inters`和`slopes`是由`SamplingDistributions`生成的估计参数。`percent`表示要绘制的置信区间。'
 - en: '`PlotConfidenceIntervals` generates a fitted line for each pair of `inter`
     and `slope` and stores the results in a sequence, `fys_seq`. Then it uses `PercentileRows`
     to select the upper and lower percentiles of `y` for each value of `x`. For a
@@ -419,11 +421,13 @@
   id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: '`PlotConfidenceIntervals`为每对`inter`和`slope`生成一个拟合线，并将结果存储在一个序列`fys_seq`中。然后它使用`PercentileRows`为每个`x`的值选择`y`的上下百分位数。对于90%的置信区间，它选择第5和第95百分位数。`FillBetween`绘制填充两条线之间空间的多边形。'
 - en: '* * *'
   id: totrans-65
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
   id: totrans-66
   prefs:
@@ -434,6 +438,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/c17bb3542750decc4b41dc80441c1678.png)'
 - en: ''
   id: totrans-68
   prefs:
@@ -445,6 +450,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_TB
+  zh: '| 图10.3：50%和90%置信区间显示由于截距和斜率的抽样误差而导致拟合线的变异性。|'
 - en: ''
   id: totrans-70
   prefs:
@@ -455,6 +461,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: Figure [10.3](#linear3) shows the 50% and 90% confidence intervals for curves
     fitted to birth weight as a function of mother’s age. The vertical width of the
     region represents the effect of sampling error; the effect is smaller for values
@@ -462,33 +469,39 @@
   id: totrans-72
   prefs: []
   type: TYPE_NORMAL
+  zh: 图[10.3](#linear3)显示了拟合到母亲年龄的出生体重曲线的50%和90%置信区间。区域的垂直宽度代表抽样误差的影响；对于接近均值的值，影响较小，对于极端值，影响较大。
 - en: 10.5  Goodness of fit
   id: totrans-73
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 10.5 拟合优度
 - en: There are several ways to measure the quality of a linear model, or goodness
     of fit. One of the simplest is the standard deviation of the residuals.
   id: totrans-74
   prefs: []
   type: TYPE_NORMAL
+  zh: 有几种方法可以衡量线性模型的质量或拟合优度。其中最简单的是残差的标准差。
 - en: If you use a linear model to make predictions, `Std(res)` is the root mean squared
     error (RMSE) of your predictions. For example, if you use mother’s age to guess
     birth weight, the RMSE of your guess would be 1.40 lbs.
   id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你使用线性模型进行预测，`Std(res)`是你预测的均方根误差（RMSE）。例如，如果你使用母亲的年龄来猜测出生体重，你的猜测的RMSE将是1.40磅。
 - en: If you guess birth weight without knowing the mother’s age, the RMSE of your
     guess is `Std(ys)`, which is 1.41 lbs. So in this example, knowing a mother’s
     age does not improve the predictions substantially.
   id: totrans-76
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你在不知道母亲年龄的情况下猜测出生体重，你的猜测的RMSE是`Std(ys)`，即1.41磅。因此，在这个例子中，知道母亲的年龄并没有显著改善预测。
 - en: 'Another way to measure goodness of fit is the coefficient of determination,
     usually denoted R² and called “R-squared”:'
   id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: 衡量拟合优度的另一种方法是决定系数，通常表示为R²，称为“R平方”：
 - en: '[PRE9]'
   id: totrans-78
   prefs: []
@@ -500,17 +513,20 @@
   id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: '`Var(res)`是使用模型进行猜测的MSE，`Var(ys)`是没有使用模型的MSE。因此，它们的比值是如果使用模型剩余MSE的分数，R²是模型消除的MSE的分数。'
 - en: For birth weight and mother’s age, R² is 0.0047, which means that mother’s age
     predicts about half of 1% of variance in birth weight.
   id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于出生体重和母亲的年龄，R²为0.0047，这意味着母亲的年龄预测了出生体重变异的大约半个百分点。
 - en: 'There is a simple relationship between the coefficient of determination and
     Pearson’s coefficient of correlation: R² = ρ². For example, if ρ is 0.8 or -0.8,
     R² = 0.64.'
   id: totrans-81
   prefs: []
   type: TYPE_NORMAL
+  zh: 决定系数和皮尔逊相关系数之间有一个简单的关系：R² = ρ²。例如，如果ρ为0.8或-0.8，则R² = 0.64。
 - en: Although ρ and R² are often used to quantify the strength of a relationship,
     they are not easy to interpret in terms of predictive power. In my opinion, `Std(res)`
     is the best representation of the quality of prediction, especially if it is presented
@@ -518,22 +534,26 @@
   id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: 尽管ρ和R²经常用来量化关系的强度，但它们在预测能力方面并不容易解释。在我看来，`Std(res)`是对预测质量的最佳表示，特别是如果它与`Std(ys)`相关联。
 - en: For example, when people talk about the validity of the SAT (a standardized
     test used for college admission in the U.S.) they often talk about correlations
     between SAT scores and other measures of intelligence.
   id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，当人们谈论SAT的有效性（美国大学入学的标准化考试）时，他们经常谈论SAT分数与智力的其他衡量指标之间的相关性。
 - en: According to one study, there is a Pearson correlation of ρ=0.72 between total
     SAT scores and IQ scores, which sounds like a strong correlation. But R² = ρ²
     = 0.52, so SAT scores account for only 52% of variance in IQ.
   id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: 根据一项研究，SAT总分和IQ分数之间的皮尔逊相关系数为ρ=0.72，听起来是一个很强的相关性。但是R² = ρ² = 0.52，因此SAT分数仅解释了IQ变异的52%。
 - en: IQ scores are normalized with `Std(ys) = 15`, so
   id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: IQ分数通过`Std(ys) = 15`进行标准化，因此
 - en: '[PRE10]'
   id: totrans-86
   prefs: []
@@ -544,23 +564,27 @@
   id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，使用SAT分数来预测IQ将RMSE从15分降低到10.4分。0.72的相关性仅导致RMSE减少了31%。
 - en: If you see a correlation that looks impressive, remember that R² is a better
     indicator of reduction in MSE, and reduction in RMSE is a better indicator of
     predictive power.
   id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你看到一个看起来令人印象深刻的相关性，记住R²是MSE减少的更好指标，RMSE的减少是预测能力的更好指标。
 - en: 10.6  Testing a linear model
   id: totrans-89
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 10.6 测试线性模型
 - en: The effect of mother’s age on birth weight is small, and has little predictive
     power. So is it possible that the apparent relationship is due to chance? There
     are several ways we might test the results of a linear fit.
   id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: 母亲年龄对出生体重的影响很小，预测能力也很小。因此，表面上的关系可能是由于偶然性造成的。我们可以通过几种方式来测试线性拟合的结果。
 - en: One option is to test whether the apparent reduction in MSE is due to chance.
     In that case, the test statistic is R² and the null hypothesis is that there is
     no relationship between the variables. We can simulate the null hypothesis by

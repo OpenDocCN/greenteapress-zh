@@ -1,8 +1,10 @@
 - en: Chapter 11  Regression
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
 - en: 原文：[https://greenteapress.com/thinkstats2/html/thinkstats2012.html](https://greenteapress.com/thinkstats2/html/thinkstats2012.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
@@ -10,11 +12,13 @@
     which is the more general problem of fitting any kind of model to any kind of
     data. This use of the term “regression” is a historical accident; it is only indirectly
     related to the original meaning of the word.
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
 - en: The goal of regression analysis is to describe the relationship between one
     set of variables, called the dependent variables, and another set of variables,
     called independent or explanatory variables.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
 - en: In the previous chapter we used mother’s age as an explanatory variable to predict
@@ -22,20 +26,24 @@
     explanatory variable, that’s simple regression. In this chapter, we move on to
     multiple regression, with more than one explanatory variable. If there is more
     than one dependent variable, that’s multivariate regression.
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
 - en: 'If the relationship between the dependent and explanatory variable is linear,
     that’s linear regression. For example, if the dependent variable is y and the
     explanatory variables are x[1] and x[2], we would write the following linear regression
     model:'
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
 - en: '| y = β[0] + β[1] x[1] + β[2] x[2] + ε  |'
+  id: totrans-6
   prefs: []
   type: TYPE_TB
 - en: where β[0] is the intercept, β[1] is the parameter associated with x[1], β[2]
     is the parameter associated with x[2], and ε is the residual due to random variation
     or other unknown factors.
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
 - en: Given a sequence of values for y and sequences for x[1] and x[2], we can find
@@ -43,13 +51,16 @@
     is called ordinary least squares. The computation is similar to `thinkstats2.LeastSquare`,
     but generalized to deal with more than one explanatory variable. You can find
     the details at [https://en.wikipedia.org/wiki/Ordinary_least_squares](https://en.wikipedia.org/wiki/Ordinary_least_squares)
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
 - en: The code for this chapter is in `regression.py`. For information about downloading
     and working with this code, see Section [0.2](thinkstats2001.html#code).
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
 - en: 11.1  StatsModels
+  id: totrans-10
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -58,256 +69,360 @@
     we’ll switch to StatsModels, a Python package that provides several forms of regression
     and other analyses. If you are using Anaconda, you already have StatsModels; otherwise
     you might have to install it.
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
 - en: 'As an example, I’ll run the model from the previous chapter with StatsModels:'
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE0]'
+  id: totrans-13
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '`statsmodels` provides two interfaces (APIs); the “formula” API uses strings
     to identify the dependent and explanatory variables. It uses a syntax called `patsy`;
     in this example, the `~` operator separates the dependent variable on the left
     from the explanatory variables on the right.'
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
 - en: '`smf.ols` takes the formula string and the DataFrame, `live`, and returns an
     OLS object that represents the model. The name `ols` stands for “ordinary least
     squares.”'
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
 - en: The `fit` method fits the model to the data and returns a RegressionResults
     object that contains the results.
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
 - en: 'The results are also available as attributes. `params` is a Series that maps
     from variable names to their parameters, so we can get the intercept and slope
     like this:'
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE1]'
+  id: totrans-18
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: The estimated parameters are 6.83 and 0.0175, the same as from `LeastSquares`.
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
 - en: '`pvalues` is a Series that maps from variable names to the associated p-values,
     so we can check whether the estimated slope is statistically significant:'
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE2]'
+  id: totrans-21
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: The p-value associated with `agepreg` is `5.7e-11`, which is less than 0.001,
     as expected.
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
 - en: '`results.rsquared` contains R², which is 0.0047\. `results` also provides `f_pvalue`,
     which is the p-value associated with the model as a whole, similar to testing
     whether R² is statistically significant.'
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
 - en: And `results` provides `resid`, a sequence of residuals, and `fittedvalues`,
     a sequence of fitted values corresponding to `agepreg`.
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
 - en: The results object provides `summary()`, which represents the results in a readable
     format.
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果对象提供了 `summary()`，以可读的格式表示结果。
 - en: '[PRE3]'
+  id: totrans-26
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: 'But it prints a lot of information that is not relevant (yet), so I use a simpler
     function called `SummarizeResults`. Here are the results of this model:'
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 但它打印了很多目前不相关的信息，所以我使用了一个更简单的函数叫做 `SummarizeResults`。这是这个模型的结果：
 - en: '[PRE4]'
+  id: totrans-28
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '`Std(ys)` is the standard deviation of the dependent variable, which is the
     RMSE if you have to guess birth weights without the benefit of any explanatory
     variables. `Std(res)` is the standard deviation of the residuals, which is the
     RMSE if your guesses are informed by the mother’s age. As we have already seen,
     knowing the mother’s age provides no substantial improvement to the predictions.'
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: '`Std(ys)` 是因变量的标准差，如果没有任何解释变量的情况下猜测出生体重，它就是RMSE。`Std(res)` 是残差的标准差，如果你的猜测受到母亲年龄的影响，它就是RMSE。正如我们已经看到的，知道母亲的年龄对预测没有实质性的改进。'
 - en: 11.2  Multiple regression
+  id: totrans-30
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 11.2 多元回归
 - en: In Section [4.5](thinkstats2005.html#birth_weights) we saw that first babies
     tend to be lighter than others, and this effect is statistically significant.
     But it is a strange result because there is no obvious mechanism that would cause
     first babies to be lighter. So we might wonder whether this relationship is spurious.
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 在第[4.5](thinkstats2005.html#birth_weights)节中，我们看到第一胎婴儿比其他婴儿更轻，这种影响在统计上是显著的。但这是一个奇怪的结果，因为没有明显的机制会导致第一胎婴儿更轻。所以我们可能会怀疑这种关系是虚假的。
 - en: In fact, there is a possible explanation for this effect. We have seen that
     birth weight depends on mother’s age, and we might expect that mothers of first
     babies are younger than others.
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 事实上，这种影响有可能有一个解释。我们已经看到出生体重取决于母亲的年龄，我们可能会期望第一胎婴儿的母亲比其他人年轻。
 - en: 'With a few calculations we can check whether this explanation is plausible.
     Then we’ll use multiple regression to investigate more carefully. First, let’s
     see how big the difference in weight is:'
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: 通过一些计算，我们可以检查这种解释是否合理。然后我们将使用多元回归更仔细地调查。首先，让我们看看体重差异有多大：
 - en: '[PRE5]'
+  id: totrans-34
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: 'First babies are 0.125 lbs lighter, or 2 ounces. And the difference in ages:'
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 第一胎婴儿比较轻0.125磅，或者2盎司。年龄的差异：
 - en: '[PRE6]'
+  id: totrans-36
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: 'The mothers of first babies are 3.59 years younger. Running the linear model
     again, we get the change in birth weight as a function of age:'
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 第一胎婴儿的母亲年轻了3.59岁。再次运行线性模型，我们得到了出生体重随年龄变化的变化：
 - en: '[PRE7]'
+  id: totrans-38
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: 'The slope is 0.0175 pounds per year. If we multiply the slope by the difference
     in ages, we get the expected difference in birth weight for first babies and others,
     due to mother’s age:'
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 斜率是每年0.0175磅。如果我们将斜率乘以年龄差异，我们就得到了母亲年龄导致第一胎婴儿和其他婴儿出生体重差异的预期值：
 - en: '[PRE8]'
+  id: totrans-40
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: The result is 0.063, just about half of the observed difference. So we conclude,
     tentatively, that the observed difference in birth weight can be partly explained
     by the difference in mother’s age.
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是0.063，正好是观察到的差异的一半。所以我们暂时得出结论，观察到的出生体重差异部分可以通过母亲年龄的差异来解释。
 - en: Using multiple regression, we can explore these relationships more systematically.
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用多元回归，我们可以更系统地探索这些关系。
 - en: '[PRE9]'
+  id: totrans-43
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: The first line creates a new column named `isfirst` that is True for first babies
     and False otherwise. Then we fit a model using `isfirst` as an explanatory variable.
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: 第一行创建了一个名为 `isfirst` 的新列，对于第一胎婴儿为真，否则为假。然后我们使用 `isfirst` 作为解释变量拟合模型。
 - en: 'Here are the results:'
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是结果：
 - en: '[PRE10]'
+  id: totrans-46
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: Because `isfirst` is a boolean, `ols` treats it as a categorical variable, which
     means that the values fall into categories, like True and False, and should not
     be treated as numbers. The estimated parameter is the effect on birth weight when
     `isfirst` is true, so the result, -0.125 lbs, is the difference in birth weight
     between first babies and others.
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 因为 `isfirst` 是一个布尔值，`ols` 将其视为一个分类变量，这意味着值分为类别，比如真和假，并且不应该被视为数字。估计的参数是 `isfirst`
+    为真时对出生体重的影响，所以结果-0.125磅是第一胎婴儿和其他婴儿出生体重的差异。
 - en: The slope and the intercept are statistically significant, which means that
     they were unlikely to occur by chance, but the the R² value for this model is
     small, which means that `isfirst` doesn’t account for a substantial part of the
     variation in birth weight.
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 斜率和截距在统计上是显著的，这意味着它们不太可能是偶然发生的，但是这个模型的R²值很小，这意味着 `isfirst` 并不能解释出生体重变化的重要部分。
 - en: 'The results are similar with `agepreg`:'
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: '`agepreg` 的结果类似：'
 - en: '[PRE11]'
+  id: totrans-50
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: Again, the parameters are statistically significant, but R² is low.
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: 再次，参数在统计上是显著的，但R²值很低。
 - en: 'These models confirm results we have already seen. But now we can fit a single
     model that includes both variables. With the formula `totalwgt_lb ~ isfirst +
     agepreg`, we get:'
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些模型证实了我们已经看到的结果。但现在我们可以拟合一个包括两个变量的单一模型。使用公式 `totalwgt_lb ~ isfirst + agepreg`，我们得到：
 - en: '[PRE12]'
+  id: totrans-53
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: In the combined model, the parameter for `isfirst` is smaller by about half,
     which means that part of the apparent effect of `isfirst` is actually accounted
     for by `agepreg`. And the p-value for `isfirst` is about 2.5%, which is on the
     border of statistical significance.
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: 在组合模型中，`isfirst` 的参数大约减小了一半，这意味着 `isfirst` 的一部分明显影响实际上是由 `agepreg` 解释的。而 `isfirst`
+    的p值约为2.5%，处于统计显著性的边缘。
 - en: R² for this model is a little higher, which indicates that the two variables
     together account for more variation in birth weight than either alone (but not
     by much).
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个模型的R²值稍微高一些，这表明这两个变量一起解释出生体重的变化比单独解释要多（但并不多）。
 - en: 11.3  Nonlinear relationships
+  id: totrans-56
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 11.3 非线性关系
 - en: 'Remembering that the contribution of `agepreg` might be nonlinear, we might
     consider adding a variable to capture more of this relationship. One option is
     to create a column, `agepreg2`, that contains the squares of the ages:'
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 记住 `agepreg` 的贡献可能是非线性的，我们可以考虑添加一个变量来捕捉更多的这种关系。一个选择是创建一个名为 `agepreg2` 的列，其中包含年龄的平方：
 - en: '[PRE13]'
+  id: totrans-58
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: 'Now by estimating parameters for `agepreg` and `agepreg2`, we are effectively
     fitting a parabola:'
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在通过估计 `agepreg` 和 `agepreg2` 的参数，我们有效地拟合了一个抛物线：
 - en: '[PRE14]'
+  id: totrans-60
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: The parameter of `agepreg2` is negative, so the parabola curves downward, which
     is consistent with the shape of the lines in Figure [10.2](thinkstats2011.html#linear2).
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
 - en: The quadratic model of `agepreg` accounts for more of the variability in birth
     weight; the parameter for `isfirst` is smaller in this model, and no longer statistically
     significant.
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
 - en: Using computed variables like `agepreg2` is a common way to fit polynomials
     and other functions to data. This process is still considered linear regression,
     because the dependent variable is a linear function of the explanatory variables,
     regardless of whether some variables are nonlinear functions of others.
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
 - en: 'The following table summarizes the results of these regressions:'
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
 - en: '|   | isfirst | agepreg | agepreg2 | R² |'
+  id: totrans-65
   prefs: []
   type: TYPE_TB
 - en: '| Model 1 | -0.125 * | – | – | 0.002 |'
+  id: totrans-66
   prefs: []
   type: TYPE_TB
 - en: '| Model 2 | – | 0.0175 * | – | 0.0047 |'
+  id: totrans-67
   prefs: []
   type: TYPE_TB
 - en: '| Model 3 | -0.0698 (0.025) | 0.0154 * | – | 0.0053 |'
+  id: totrans-68
   prefs: []
   type: TYPE_TB
 - en: '| Model 4 | -0.0504 (0.11) | 0.112 * | -0.00185 * | 0.0075 |'
+  id: totrans-69
   prefs: []
   type: TYPE_TB
 - en: The columns in this table are the explanatory variables and the coefficient
     of determination, R². Each entry is an estimated parameter and either a p-value
     in parentheses or an asterisk to indicate a p-value less than 0.001.
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
 - en: We conclude that the apparent difference in birth weight is explained, at least
     in part, by the difference in mother’s age. When we include mother’s age in the
     model, the effect of `isfirst` gets smaller, and the remaining effect might be
     due to chance.
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
 - en: In this example, mother’s age acts as a control variable; including `agepreg`
     in the model “controls for” the difference in age between first-time mothers and
     others, making it possible to isolate the effect (if any) of `isfirst`.
+  id: totrans-72
   prefs: []
   type: TYPE_NORMAL
 - en: 11.4  Data mining
+  id: totrans-73
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -316,11 +431,13 @@
     due to a difference in mother’s age. But the R² values of those models is very
     low, which means that they have little predictive power. In this section we’ll
     try to do better.
+  id: totrans-74
   prefs: []
   type: TYPE_NORMAL
 - en: Suppose one of your co-workers is expecting a baby and there is an office pool
     to guess the baby’s birth weight (if you are not familiar with betting pools,
     see [https://en.wikipedia.org/wiki/Betting_pool](https://en.wikipedia.org/wiki/Betting_pool)).
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
 - en: Now suppose that you *really* want to win the pool. What could you do to improve
@@ -328,6 +445,7 @@
     and another 3087 variables about each respondent. Maybe some of those variables
     have predictive power. To find out which ones are most useful, why not try them
     all?
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
 - en: Testing the variables in the pregnancy table is easy, but in order to use the
@@ -335,29 +453,36 @@
     In theory we could iterate through the rows of the pregnancy table, use the `caseid`
     to find the corresponding respondent, and copy the values from the correspondent
     table into the pregnancy table. But that would be slow.
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
 - en: 'A better option is to recognize this process as a join operation as defined
     in SQL and other relational database languages (see [https://en.wikipedia.org/wiki/Join_(SQL)](https://en.wikipedia.org/wiki/Join_(SQL))).
     Join is implemented as a DataFrame method, so we can perform the operation like
     this:'
+  id: totrans-78
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE15]'
+  id: totrans-79
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: The first line selects records for pregnancies longer than 30 weeks, assuming
     that the office pool is formed several weeks before the due date.
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
 - en: The next line reads the respondent file. The result is a DataFrame with integer
     indices; in order to look up respondents efficiently, I replace `resp.index` with
     `resp.caseid`.
+  id: totrans-81
   prefs: []
   type: TYPE_NORMAL
 - en: The `join` method is invoked on `live`, which is considered the “left” table,
     and passed `resp`, which is the “right” table. The keyword argument `on` indicates
     the variable used to match up rows from the two tables.
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
 - en: In this example some column names appear in both tables, so we have to provide
@@ -365,427 +490,617 @@
     columns from the right table. For example, both tables have a column named `race`
     that encodes the race of the respondent. The result of the join contains two columns
     named `race` and `race_r`.
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个例子中，一些列名同时出现在两个表中，因此我们必须提供“rsuffix”，这是一个字符串，将附加到右表中重叠列的名称。例如，两个表都有一个名为“race”的列，用于编码受访者的种族。连接的结果包含两个名为“race”和“race_r”的列。
 - en: The pandas implementation is fast. Joining the NSFG tables takes less than a
     second on an ordinary desktop computer. Now we can start testing variables.
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: Pandas的实现速度很快。在普通台式电脑上，连接NSFG表不到一秒钟。现在我们可以开始测试变量了。
 - en: '[PRE16]'
+  id: totrans-85
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: For each variable we construct a model, compute R², and append the results to
     a list. The models all include `agepreg`, since we already know that it has some
     predictive power.
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于每个变量，我们构建一个模型，计算R²，并将结果附加到列表中。所有模型都包括“agepreg”，因为我们已经知道它具有一定的预测能力。
 - en: I check that each explanatory variable has some variability; otherwise the results
     of the regression are unreliable. I also check the number of observations for
     each model. Variables that contain a large number of `nan`s are not good candidates
     for prediction.
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: 我检查每个解释变量是否具有一定的变异性；否则，回归的结果就不可靠。我还检查每个模型的观察数量。包含大量“nan”的变量不适合用于预测。
 - en: For most of these variables, we haven’t done any cleaning. Some of them are
     encoded in ways that don’t work very well for linear regression. As a result,
     we might overlook some variables that would be useful if they were cleaned properly.
     But maybe we will find some good candidates.
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于这些变量中的大多数，我们还没有进行任何清理。其中一些以不太适合线性回归的方式进行编码。因此，我们可能会忽略一些如果清理得当就会有用的变量。但也许我们会找到一些好的候选者。
 - en: 11.5  Prediction
+  id: totrans-89
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 11.5 预测
 - en: The next step is to sort the results and select the variables that yield the
     highest values of R².
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: 下一步是对结果进行排序，并选择产生最高R²值的变量。
 - en: '[PRE17]'
+  id: totrans-91
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: The first variable on the list is `totalwgt_lb`, followed by `birthwgt_lb`.
     Obviously, we can’t use birth weight to predict birth weight.
+  id: totrans-92
   prefs: []
   type: TYPE_NORMAL
+  zh: 列表中的第一个变量是“totalwgt_lb”，其次是“birthwgt_lb”。显然，我们不能用出生体重来预测出生体重。
 - en: Similarly `prglngth` has useful predictive power, but for the office pool we
     assume pregnancy length (and the related variables) are not known yet.
+  id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: 同样，“prglngth”具有有用的预测能力，但是对于办公室彩票，我们假设怀孕长度（以及相关变量）尚未知晓。
 - en: The first useful predictive variable is `babysex` which indicates whether the
     baby is male or female. In the NSFG dataset, boys are about 0.3 lbs heavier. So,
     assuming that the sex of the baby is known, we can use it for prediction.
+  id: totrans-94
   prefs: []
   type: TYPE_NORMAL
+  zh: 第一个有用的预测变量是“babysex”，表示婴儿是男性还是女性。在NSFG数据集中，男孩比女孩重约0.3磅。因此，假设知道婴儿的性别，我们可以用它进行预测。
 - en: Next is `race`, which indicates whether the respondent is white, black, or other.
     As an explanatory variable, race can be problematic. In datasets like the NSFG,
     race is correlated with many other variables, including income and other socioeconomic
     factors. In a regression model, race acts as a proxy variable, so apparent correlations
     with race are often caused, at least in part, by other factors.
+  id: totrans-95
   prefs: []
   type: TYPE_NORMAL
+  zh: 接下来是“race”，表示受访者是白人、黑人还是其他。作为解释变量，种族可能存在问题。在像NSFG这样的数据集中，种族与许多其他变量相关，包括收入和其他社会经济因素。在回归模型中，种族充当代理变量，因此与种族的表面相关往往至少部分是由其他因素引起的。
 - en: The next variable on the list is `nbrnaliv`, which indicates whether the pregnancy
     yielded multiple births. Twins and triplets tend to be smaller than other babies,
     so if we know whether our hypothetical co-worker is expecting twins, that would
     help.
+  id: totrans-96
   prefs: []
   type: TYPE_NORMAL
+  zh: 列表中的下一个变量是“nbrnaliv”，表示怀孕是否产生了多胞胎。双胞胎和三胞胎往往比其他婴儿小，因此如果我们知道我们假设的同事是否正在期待双胞胎，那将会有所帮助。
 - en: Next on the list is `paydu`, which indicates whether the respondent owns her
     home. It is one of several income-related variables that turn out to be predictive.
     In datasets like the NSFG, income and wealth are correlated with just about everything.
     In this example, income is related to diet, health, health care, and other factors
     likely to affect birth weight.
+  id: totrans-97
   prefs: []
   type: TYPE_NORMAL
+  zh: 列表中的下一个是“paydu”，表示受访者是否拥有自己的住房。这是几个与收入相关的变量之一，结果证明具有预测能力。在像NSFG这样的数据集中，收入和财富与几乎所有事物都相关。在这个例子中，收入与饮食、健康、医疗保健和其他可能影响出生体重的因素有关。
 - en: Some of the other variables on the list are things that would not be known until
     later, like `bfeedwks`, the number of weeks the baby was breast fed. We can’t
     use these variables for prediction, but you might want to speculate on reasons
     `bfeedwks` might be correlated with birth weight.
+  id: totrans-98
   prefs: []
   type: TYPE_NORMAL
+  zh: 列表中的其他一些变量是直到后来才能知道的，比如“bfeedwks”，婴儿哺乳的周数。我们不能用这些变量进行预测，但你可能想推测一下“bfeedwks”可能与出生体重相关的原因。
 - en: Sometimes you start with a theory and use data to test it. Other times you start
     with data and go looking for possible theories. The second approach, which this
     section demonstrates, is called data mining. An advantage of data mining is that
     it can discover unexpected patterns. A hazard is that many of the patterns it
     discovers are either random or spurious.
+  id: totrans-99
   prefs: []
   type: TYPE_NORMAL
+  zh: 有时你从理论出发，用数据来测试它。有时你从数据出发，寻找可能的理论。这一节展示的第二种方法称为数据挖掘。数据挖掘的优点是它可以发现意想不到的模式。危险在于它发现的许多模式要么是随机的，要么是虚假的。
 - en: 'Having identified potential explanatory variables, I tested a few models and
     settled on this one:'
+  id: totrans-100
   prefs: []
   type: TYPE_NORMAL
+  zh: 在确定了潜在的解释变量之后，我测试了一些模型，并最终选择了这个模型：
 - en: '[PRE18]'
+  id: totrans-101
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: 'This formula uses some syntax we have not seen yet: `C(race)` tells the formula
     parser (Patsy) to treat race as a categorical variable, even though it is encoded
     numerically.'
+  id: totrans-102
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个公式使用了一些我们还没有见过的语法：“C(race)”告诉公式解析器（Patsy）将种族视为分类变量，即使它是以数字编码的。
 - en: The encoding for `babysex` is 1 for male, 2 for female; writing `babysex==1`
     converts it to boolean, True for male and False for female.
+  id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: “babysex”的编码是1表示男性，2表示女性；写成“babysex==1”将其转换为布尔值，男性为True，女性为False。
 - en: Similarly `nbrnaliv>1` is True for multiple births and `paydu==1` is True for
     respondents who own their houses.
+  id: totrans-104
   prefs: []
   type: TYPE_NORMAL
+  zh: 同样，`nbrnaliv>1`对于多胞胎是True，`paydu==1`对于拥有自己房屋的受访者是True。
 - en: '`totincr` is encoded numerically from 1-14, with each increment representing
     about $5000 in annual income. So we can treat these values as numerical, expressed
     in units of $5000.'
+  id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: '`totincr`从1-14进行数字编码，每个增量代表大约5000美元的年收入。所以我们可以将这些值视为数值，以5000美元为单位。'
 - en: 'Here are the results of the model:'
+  id: totrans-106
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是模型的结果：
 - en: '[PRE19]'
+  id: totrans-107
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: The estimated parameters for race are larger than I expected, especially since
     we control for income. The encoding is 1 for black, 2 for white, and 3 for other.
     Babies of black mothers are lighter than babies of other races by 0.27–0.36 lbs.
+  id: totrans-108
   prefs: []
   type: TYPE_NORMAL
+  zh: 种族的估计参数比我预期的要大，尤其是在我们控制收入的情况下。编码是1代表黑人，2代表白人，3代表其他。黑人母亲的宝宝比其他种族的宝宝轻0.27-0.36磅。
 - en: As we’ve already seen, boys are heavier by about 0.3 lbs; twins and other multiplets
     are lighter by 1.4 lbs.
+  id: totrans-109
   prefs: []
   type: TYPE_NORMAL
+  zh: 正如我们已经看到的，男孩重大约0.3磅；双胞胎和其他多胞胎则轻1.4磅。
 - en: People who own their homes have heavier babies by about 0.12 lbs, even when
     we control for income. The parameter for mother’s age is smaller than what we
     saw in Section [11.2](#multiple), which suggests that some of the other variables
     are correlated with age, probably including `paydu` and `totincr`.
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: 拥有自己房屋的人，即使在我们控制收入的情况下，他们的宝宝也会重0.12磅。母亲年龄的参数比我们在第[11.2]节中看到的要小，这表明其他一些变量与年龄相关，可能包括`paydu`和`totincr`。
 - en: All of these variables are statistically significant, some with very low p-values,
     but R² is only 0.06, still quite small. RMSE without using the model is 1.27 lbs;
     with the model it drops to 1.23\. So your chance of winning the pool is not substantially
     improved. Sorry!
+  id: totrans-111
   prefs: []
   type: TYPE_NORMAL
+  zh: 所有这些变量都具有统计学意义，有些具有非常低的p值，但R²仅为0.06，仍然非常小。没有使用模型的RMSE为1.27磅；使用模型后下降到1.23。所以你赢得彩票的机会并没有得到实质性的改善。抱歉！
 - en: 11.6  Logistic regression
+  id: totrans-112
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 11.6 逻辑回归
 - en: In the previous examples, some of the explanatory variables were numerical and
     some categorical (including boolean). But the dependent variable was always numerical.
+  id: totrans-113
   prefs: []
   type: TYPE_NORMAL
+  zh: 在前面的例子中，一些解释变量是数值的，一些是分类的（包括布尔型）。但因变量总是数值的。
 - en: Linear regression can be generalized to handle other kinds of dependent variables.
     If the dependent variable is boolean, the generalized model is called logistic
     regression. If the dependent variable is an integer count, it’s called Poisson
     regression.
+  id: totrans-114
   prefs: []
   type: TYPE_NORMAL
+  zh: 线性回归可以推广处理其他类型的因变量。如果因变量是布尔型的，推广模型称为逻辑回归。如果因变量是整数计数，它被称为泊松回归。
 - en: As an example of logistic regression, let’s consider a variation on the office
     pool scenario. Suppose a friend of yours is pregnant and you want to predict whether
     the baby is a boy or a girl. You could use data from the NSFG to find factors
     that affect the “sex ratio”, which is conventionally defined to be the probability
     of having a boy.
+  id: totrans-115
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为逻辑回归的一个例子，让我们考虑办公室彩票情景的一个变化。假设你的一个朋友怀孕了，你想预测宝宝是男孩还是女孩。你可以使用NSFG的数据来找到影响“性别比”，这通常被定义为生男孩的概率的因素。
 - en: 'If you encode the dependent variable numerically, for example 0 for a girl
     and 1 for a boy, you could apply ordinary least squares, but there would be problems.
     The linear model might be something like this:'
+  id: totrans-116
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你将因变量进行数字编码，例如0代表女孩，1代表男孩，你可以应用普通最小二乘法，但会有问题。线性模型可能是这样的：
 - en: '| y = β[0] + β[1] x[1] + β[2] x[2] + ε  |'
+  id: totrans-117
   prefs: []
   type: TYPE_TB
+  zh: y = β[0] + β[1] x[1] + β[2] x[2] + ε
 - en: Where y is the dependent variable, and x[1] and x[2] are explanatory variables.
     Then we could find the parameters that minimize the residuals.
+  id: totrans-118
   prefs: []
   type: TYPE_NORMAL
+  zh: 其中y是因变量，x[1]和x[2]是解释变量。然后我们可以找到最小化残差的参数。
 - en: The problem with this approach is that it produces predictions that are hard
     to interpret. Given estimated parameters and values for x[1] and x[2], the model
     might predict y=0.5, but the only meaningful values of y are 0 and 1.
+  id: totrans-119
   prefs: []
   type: TYPE_NORMAL
+  zh: 这种方法的问题在于它产生了难以解释的预测。给定估计参数和x[1]和x[2]的值，模型可能预测y=0.5，但y的唯一有意义的值是0和1。
 - en: It is tempting to interpret a result like that as a probability; for example,
     we might say that a respondent with particular values of x[1] and x[2] has a 50%
     chance of having a boy. But it is also possible for this model to predict y=1.1
     or y=−0.1, and those are not valid probabilities.
+  id: totrans-120
   prefs: []
   type: TYPE_NORMAL
+  zh: 很容易将这样的结果解释为概率；例如，我们可能会说具有特定x[1]和x[2]值的受访者有50%的生男孩的机会。但这个模型也可能预测y=1.1或y=−0.1，这些不是有效的概率。
 - en: Logistic regression avoids this problem by expressing predictions in terms of
     odds rather than probabilities. If you are not familiar with odds, “odds in favor”
     of an event is the ratio of the probability it will occur to the probability that
     it will not.
+  id: totrans-121
   prefs: []
   type: TYPE_NORMAL
+  zh: 逻辑回归通过用赔率而不是概率来表达预测来避免这个问题。如果你不熟悉赔率，“事件的优势赔率”是它发生的概率与它不发生的概率的比率。
 - en: So if I think my team has a 75% chance of winning, I would say that the odds
     in their favor are three to one, because the chance of winning is three times
     the chance of losing.
+  id: totrans-122
   prefs: []
   type: TYPE_NORMAL
+  zh: 所以如果我认为我的团队有75%的获胜机会，我会说他们的优势是三比一，因为获胜的机会是失败的三倍。
 - en: 'Odds and probabilities are different representations of the same information.
     Given a probability, you can compute the odds like this:'
+  id: totrans-123
   prefs: []
   type: TYPE_NORMAL
+  zh: 赔率和概率是相同信息的不同表示。给定一个概率，你可以这样计算赔率：
 - en: '[PRE20]'
+  id: totrans-124
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: 'Given odds in favor, you can convert to probability like this:'
+  id: totrans-125
   prefs: []
   type: TYPE_NORMAL
+  zh: 给定优势赔率，你可以这样转换成概率：
 - en: '[PRE21]'
+  id: totrans-126
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: 'Logistic regression is based on the following model:'
+  id: totrans-127
   prefs: []
   type: TYPE_NORMAL
+  zh: 逻辑回归基于以下模型：
 - en: '| logo = β[0] + β[1] x[1] + β[2] x[2] + ε  |'
+  id: totrans-128
   prefs: []
   type: TYPE_TB
+  zh: 标志 = β[0] + β[1] x[1] + β[2] x[2] + ε
 - en: Where o is the odds in favor of a particular outcome; in the example, o would
     be the odds of having a boy.
+  id: totrans-129
   prefs: []
   type: TYPE_NORMAL
+  zh: 其中o是某种结果的优势赔率；在这个例子中，o将是生男孩的赔率。
 - en: 'Suppose we have estimated the parameters β[0], β[1], and β[2] (I’ll explain
     how in a minute). And suppose we are given values for x[1] and x[2]. We can compute
     the predicted value of logo, and then convert to a probability:'
+  id: totrans-130
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设我们已经估计了参数β[0]，β[1]和β[2]（我马上会解释如何做到）。并且假设我们已经得到了x[1]和x[2]的值。我们可以计算logo的预测值，然后转换为概率：
 - en: '[PRE22]'
+  id: totrans-131
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: So in the office pool scenario we could compute the predictive probability of
     having a boy. But how do we estimate the parameters?
+  id: totrans-132
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，在办公室抽奖的情况下，我们可以计算生男孩的预测概率。但是我们如何估计参数呢？
 - en: 11.7  Estimating parameters
+  id: totrans-133
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 11.7 估计参数
 - en: Unlike linear regression, logistic regression does not have a closed form solution,
     so it is solved by guessing an initial solution and improving it iteratively.
+  id: totrans-134
   prefs: []
   type: TYPE_NORMAL
+  zh: 与线性回归不同，逻辑回归没有封闭形式的解，因此通过猜测初始解并进行迭代改进来解决。
 - en: 'The usual goal is to find the maximum-likelihood estimate (MLE), which is the
     set of parameters that maximizes the likelihood of the data. For example, suppose
     we have the following data:'
+  id: totrans-135
   prefs: []
   type: TYPE_NORMAL
+  zh: 通常的目标是找到最大似然估计（MLE），即最大化数据的可能性的参数集。例如，假设我们有以下数据：
 - en: '[PRE23]'
+  id: totrans-136
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: 'And we start with the initial guesses β[0]=−1.5, β[1]=2.8, and β[2]=1.1:'
+  id: totrans-137
   prefs: []
   type: TYPE_NORMAL
+  zh: 首先，我们从初始猜测β[0]=−1.5, β[1]=2.8, 和 β[2]=1.1开始：
 - en: '[PRE24]'
+  id: totrans-138
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: 'Then for each row we can compute `log_o`:'
+  id: totrans-139
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后对于每一行，我们可以计算“log_o”：
 - en: '[PRE25]'
+  id: totrans-140
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: 'And convert from log odds to probabilities:'
+  id: totrans-141
   prefs: []
   type: TYPE_NORMAL
+  zh: 并将对数几率转换为概率：
 - en: '[PRE26]'
+  id: totrans-142
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: Notice that when `log_o` is greater than 0, `o` is greater than 1 and `p` is
     greater than 0.5.
+  id: totrans-143
   prefs: []
   type: TYPE_NORMAL
+  zh: 请注意，当`log_o`大于0时，`o`大于1且`p`大于0.5。
 - en: 'The likelihood of an outcome is `p` when `y==1` and `1-p` when `y==0`. For
     example, if we think the probability of a boy is 0.8 and the outcome is a boy,
     the likelihood is 0.8; if the outcome is a girl, the likelihood is 0.2\. We can
     compute that like this:'
+  id: totrans-144
   prefs: []
   type: TYPE_NORMAL
+  zh: 当`y==1`时，结果的可能性是`p`，当`y==0`时，结果的可能性是`1-p`。例如，如果我们认为男孩的概率是0.8，结果是男孩，那么可能性是0.8；如果结果是女孩，可能性是0.2。我们可以这样计算：
 - en: '[PRE27]'
+  id: totrans-145
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: 'The overall likelihood of the data is the product of `likes`:'
+  id: totrans-146
   prefs: []
   type: TYPE_NORMAL
+  zh: 数据的整体可能性是“likes”的乘积：
 - en: '[PRE28]'
+  id: totrans-147
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: For these values of `beta`, the likelihood of the data is 0.18. The goal of
     logistic regression is to find parameters that maximize this likelihood. To do
     that, most statistics packages use an iterative solver like Newton’s method (see
     [https://en.wikipedia.org/wiki/Logistic_regression#Model_fitting](https://en.wikipedia.org/wiki/Logistic_regression#Model_fitting)).
+  id: totrans-148
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于这些`beta`值，数据的可能性是0.18。逻辑回归的目标是找到最大化这种可能性的参数。为了做到这一点，大多数统计软件包使用像牛顿法这样的迭代求解器（参见[https://en.wikipedia.org/wiki/Logistic_regression#Model_fitting](https://en.wikipedia.org/wiki/Logistic_regression#Model_fitting)）。
 - en: 11.8  Implementation
+  id: totrans-149
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 11.8 实施
 - en: StatsModels provides an implementation of logistic regression called `logit`,
     named for the function that converts from probability to log odds. To demonstrate
     its use, I’ll look for variables that affect the sex ratio.
+  id: totrans-150
   prefs: []
   type: TYPE_NORMAL
+  zh: StatsModels提供了一种名为`logit`的逻辑回归实现，该实现以从概率到对数几率的转换函数命名。为了演示其用法，我将寻找影响性别比的变量。
 - en: 'Again, I load the NSFG data and select pregnancies longer than 30 weeks:'
+  id: totrans-151
   prefs: []
   type: TYPE_NORMAL
+  zh: 再次，我加载NSFG数据并选择怀孕超过30周的情况：
 - en: '[PRE29]'
+  id: totrans-152
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: '`logit` requires the dependent variable to be binary (rather than boolean),
     so I create a new column named `boy`, using `astype(int)` to convert to binary
     integers:'
+  id: totrans-153
   prefs: []
   type: TYPE_NORMAL
+  zh: '`logit`要求因变量是二进制的（而不是布尔值），因此我创建了一个名为`boy`的新列，使用`astype(int)`转换为二进制整数：'
 - en: '[PRE30]'
+  id: totrans-154
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: 'Factors that have been found to affect sex ratio include parents’ age, birth
     order, race, and social status. We can use logistic regression to see if these
     effects appear in the NSFG data. I’ll start with the mother’s age:'
+  id: totrans-155
   prefs: []
   type: TYPE_NORMAL
+  zh: 已经发现影响性别比的因素包括父母的年龄、出生顺序、种族和社会地位。我们可以使用逻辑回归来查看这些影响是否出现在NSFG数据中。我将从母亲的年龄开始：
 - en: '[PRE31]'
+  id: totrans-156
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: '`logit` takes the same arguments as `ols`, a formula in Patsy syntax and a
     DataFrame. The result is a Logit object that represents the model. It contains
     attributes called `endog` and `exog` that contain the endogenous variable, another
     name for the dependent variable, and the exogenous variables, another name for
     the explanatory variables. Since they are NumPy arrays, it is sometimes convenient
     to convert them to DataFrames:'
+  id: totrans-157
   prefs: []
   type: TYPE_NORMAL
+  zh: '`logit`接受与`ols`相同的参数，即Patsy语法中的公式和DataFrame。结果是一个代表模型的Logit对象。它包含名为`endog`和`exog`的属性，其中包含内生变量（因变量的另一个名称）和外生变量（解释变量的另一个名称）。由于它们是NumPy数组，有时将它们转换为DataFrames很方便：'
 - en: '[PRE32]'
+  id: totrans-158
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: 'The result of `model.fit` is a BinaryResults object, which is similar to the
     RegressionResults object we got from `ols`. Here is a summary of the results:'
+  id: totrans-159
   prefs: []
   type: TYPE_NORMAL
+  zh: '`model.fit`的结果是一个BinaryResults对象，它类似于我们从`ols`得到的RegressionResults对象。以下是结果的摘要：'
 - en: '[PRE33]'
+  id: totrans-160
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: The parameter of `agepreg` is positive, which suggests that older mothers are
     more likely to have boys, but the p-value is 0.783, which means that the apparent
     effect could easily be due to chance.
+  id: totrans-161
   prefs: []
   type: TYPE_NORMAL
+  zh: '`agepreg`的参数是正的，这表明年龄较大的母亲更有可能生男孩，但p值为0.783，这意味着明显的效应很可能是由于偶然因素。'
 - en: 'The coefficient of determination, R², does not apply to logistic regression,
     but there are several alternatives that are used as “pseudo R² values.” These
     values can be useful for comparing models. For example, here’s a model that includes
     several factors believed to be associated with sex ratio:'
+  id: totrans-162
   prefs: []
   type: TYPE_NORMAL
+  zh: 决定系数R²不适用于逻辑回归，但有几个替代值被用作“伪R²值”。这些值对于比较模型很有用。例如，这是一个包括几个被认为与性别比相关的因素的模型：
 - en: '[PRE34]'
+  id: totrans-163
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: 'Along with mother’s age, this model includes father’s age at birth (`hpagelb`),
     birth order (`birthord`), and race as a categorical variable. Here are the results:'
+  id: totrans-164
   prefs: []
   type: TYPE_NORMAL
+  zh: 除了母亲的年龄，该模型还包括父亲的出生年龄（`hpagelb`）、出生顺序（`birthord`）和种族作为分类变量。以下是结果：
 - en: '[PRE35]'
+  id: totrans-165
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: None of the estimated parameters are statistically significant. The pseudo-R²
     value is a little higher, but that could be due to chance.
+  id: totrans-166
   prefs: []
   type: TYPE_NORMAL
+  zh: 没有估计的参数是统计上显著的。伪R²值稍高一些，但这可能是由于偶然因素。
 - en: 11.9  Accuracy
+  id: totrans-167
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 11.9 准确性
 - en: 'In the office pool scenario, we are most interested in the accuracy of the
     model: the number of successful predictions, compared with what we would expect
     by chance.'
+  id: totrans-168
   prefs: []
   type: TYPE_NORMAL
+  zh: 在办公室抽奖的情况下，我们最感兴趣的是模型的准确性：成功预测的数量，与我们根据偶然因素所期望的相比。
 - en: 'In the NSFG data, there are more boys than girls, so the baseline strategy
     is to guess “boy” every time. The accuracy of this strategy is just the fraction
     of boys:'
+  id: totrans-169
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE36]'
+  id: totrans-170
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: Since `actual` is encoded in binary integers, the mean is the fraction of boys,
     which is 0.507.
+  id: totrans-171
   prefs: []
   type: TYPE_NORMAL
 - en: 'Here’s how we compute the accuracy of the model:'
+  id: totrans-172
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE37]'
+  id: totrans-173
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE37]'
 - en: '`results.predict` returns a NumPy array of probabilities, which we round off
     to 0 or 1\. Multiplying by `actual` yields 1 if we predict a boy and get it right,
     0 otherwise. So, `true_pos` indicates “true positives”.'
+  id: totrans-174
   prefs: []
   type: TYPE_NORMAL
 - en: 'Similarly, `true_neg` indicates the cases where we guess “girl” and get it
     right. Accuracy is the fraction of correct guesses:'
+  id: totrans-175
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE38]'
+  id: totrans-176
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: The result is 0.512, slightly better than the baseline, 0.507\. But, you should
     not take this result too seriously. We used the same data to build and test the
     model, so the model may not have predictive power on new data.
+  id: totrans-177
   prefs: []
   type: TYPE_NORMAL
 - en: 'Nevertheless, let’s use the model to make a prediction for the office pool.
     Suppose your friend is 35 years old and white, her husband is 39, and they are
     expecting their third child:'
+  id: totrans-178
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE39]'
+  id: totrans-179
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: To invoke `results.predict` for a new case, you have to construct a DataFrame
     with a column for each variable in the model. The result in this case is 0.52,
     so you should guess “boy.” But if the model improves your chances of winning,
     the difference is very small.
+  id: totrans-180
   prefs: []
   type: TYPE_NORMAL
 - en: 11.10  Exercises
+  id: totrans-181
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: My solution to these exercises is in `chap11soln.ipynb`.
+  id: totrans-182
   prefs: []
   type: TYPE_NORMAL
 - en: Exercise 1   *Suppose one of your co-workers is expecting a baby and you are
@@ -796,16 +1111,19 @@
     *The Trivers-Willard hypothesis suggests that for many mammals the sex ratio depends
     on “maternal condition”; that is, factors like the mother’s age, size, health,
     and social status. See* [*https://en.wikipedia.org/wiki/Trivers-Willard_hypothesis*](https://en.wikipedia.org/wiki/Trivers-Willard_hypothesis)
+  id: totrans-183
   prefs: []
   type: TYPE_NORMAL
 - en: '*Some studies have shown this effect among humans, but results are mixed. In
     this chapter we tested some variables related to these factors, but didn’t find
     any with a statistically significant effect on sex ratio.*'
+  id: totrans-184
   prefs: []
   type: TYPE_NORMAL
 - en: '*As an exercise, use a data mining approach to test the other variables in
     the pregnancy and respondent files. Can you find any factors with a substantial
     effect?*'
+  id: totrans-185
   prefs: []
   type: TYPE_NORMAL
 - en: Exercise 3   *If the quantity you want to predict is a count, you can use Poisson
@@ -813,11 +1131,13 @@
     It works the same way as `ols` and `logit`. As an exercise, let’s use it to predict
     how many children a woman has born; in the NSFG dataset, this variable is called
     `numbabes`.*
+  id: totrans-186
   prefs: []
   type: TYPE_NORMAL
 - en: '*Suppose you meet a woman who is 35 years old, black, and a college graduate
     whose annual household income exceeds $75,000\. How many children would you predict
     she has born?*'
+  id: totrans-187
   prefs: []
   type: TYPE_NORMAL
 - en: Exercise 4   *If the quantity you want to predict is categorical, you can use
@@ -825,95 +1145,127 @@
     called `mnlogit`. As an exercise, let’s use it to guess whether a woman is married,
     cohabitating, widowed, divorced, separated, or never married; in the NSFG dataset,
     marital status is encoded in a variable called `rmarital`.*
+  id: totrans-188
   prefs: []
   type: TYPE_NORMAL
 - en: '*Suppose you meet a woman who is 25 years old, white, and a high school graduate
     whose annual household income is about $45,000. What is the probability that she
     is married, cohabitating, etc?*'
+  id: totrans-189
   prefs: []
   type: TYPE_NORMAL
 - en: 11.11  Glossary
+  id: totrans-190
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: 'regression: One of several related processes for estimating parameters that
     fit a model to data.'
+  id: totrans-191
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'dependent variables: The variables in a regression model we would like to predict.
     Also known as endogenous variables.'
+  id: totrans-192
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'explanatory variables: The variables used to predict or explain the dependent
     variables. Also known as independent, or exogenous, variables.'
+  id: totrans-193
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'simple regression: A regression with only one dependent and one explanatory
     variable.'
+  id: totrans-194
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 简单回归：只有一个因变量和一个解释变量的回归。
 - en: 'multiple regression: A regression with multiple explanatory variables, but
     only one dependent variable.'
+  id: totrans-195
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 多元回归：具有多个解释变量但只有一个因变量的回归。
 - en: 'linear regression: A regression based on a linear model.'
+  id: totrans-196
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 线性回归：基于线性模型的回归。
 - en: 'ordinary least squares: A linear regression that estimates parameters by minimizing
     the squared error of the residuals.'
+  id: totrans-197
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 普通最小二乘法：通过最小化残差的平方误差来估计参数的线性回归。
 - en: 'spurious relationship: A relationship between two variables that is caused
     by a statistical artifact or a factor, not included in the model, that is related
     to both variables.'
+  id: totrans-198
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 虚假关系：两个变量之间的关系是由统计人为因素或因素引起的，而这些因素没有包括在模型中，但与两个变量相关。
 - en: 'control variable: A variable included in a regression to eliminate or “control
     for” a spurious relationship.'
+  id: totrans-199
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 控制变量：包括在回归中以消除或“控制”虚假关系的变量。
 - en: 'proxy variable: A variable that contributes information to a regression model
     indirectly because of a relationship with another factor, so it acts as a proxy
     for that factor.'
+  id: totrans-200
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 代理变量：由于与另一个因素有关系，间接地为回归模型提供信息的变量，因此充当该因素的代理。
 - en: 'categorical variable: A variable that can have one of a discrete set of unordered
     values.'
+  id: totrans-201
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 分类变量：可以具有一组无序值中的一个的变量。
 - en: 'join: An operation that combines data from two DataFrames using a key to match
     up rows in the two frames.'
+  id: totrans-202
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 连接：使用键将两个DataFrame的数据匹配起来的操作。
 - en: 'data mining: An approach to finding relationships between variables by testing
     a large number of models.'
+  id: totrans-203
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 数据挖掘：通过测试大量模型来寻找变量之间关系的方法。
 - en: 'logistic regression: A form of regression used when the dependent variable
     is boolean.'
+  id: totrans-204
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 逻辑回归：当因变量为布尔值时使用的一种回归形式。
 - en: 'Poisson regression: A form of regression used when the dependent variable is
     a non-negative integer, usually a count.'
+  id: totrans-205
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 泊松回归：当因变量是非负整数时使用的一种回归形式，通常是计数。
 - en: 'odds: An alternative way of representing a probability, p, as the ratio of
     the probability and its complement, p / (1−p).'
+  id: totrans-206
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 赔率：表示概率p的另一种方式，即概率及其补数的比率，p / (1−p)。
