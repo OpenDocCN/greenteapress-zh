@@ -543,45 +543,54 @@
   id: totrans-97
   prefs: []
   type: TYPE_TB
+  zh: '| 年龄2 | 0.000051 | 0.000053 | -4.198399 |'
 - en: '| EDUC | 0.031756 | 0.031193 | 1.804886 |'
   id: totrans-98
   prefs: []
   type: TYPE_TB
+  zh: '| 教育 | 0.031756 | 0.031193 | 1.804886 |'
 - en: '| EDUC2 | 0.001197 | 0.001166 | 2.687507 |'
   id: totrans-99
   prefs: []
   type: TYPE_TB
+  zh: '| 教育2 | 0.001197 | 0.001166 | 2.687507 |'
 - en: Of course, there is nothing magic about the standard errors computed by StatsModels;
     they are approximations based on a model of the sampling process, just like the
     results from resampling.
   id: totrans-100
   prefs: []
   type: TYPE_NORMAL
+  zh: 当然，StatsModels计算的标准误差并没有什么神奇之处；它们是基于抽样过程模型的近似值，就像重抽样的结果一样。
 - en: The Resampling Framework
   id: totrans-101
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 重抽样框架
 - en: The purpose of the sampling distribution is to quantify the variability in an
     estimate due to random sampling. It is the answer to the question, “If we ran
     this sampling process many times, how much would we expect the results to vary?”
   id: totrans-102
   prefs: []
   type: TYPE_NORMAL
+  zh: 抽样分布的目的是量化估计值由于随机抽样而产生的变异性。它是回答这个问题的答案：“如果我们多次运行这个抽样过程，我们期望结果会有多大变化？”
 - en: To answer that question, we need a model of the sampling process. We use the
     model to simulate the sampling process and generate counterfactual datasets that
     represent other samples the process could have generated.
   id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了回答这个问题，我们需要一个抽样过程的模型。我们使用该模型来模拟抽样过程，并生成代表该过程可能生成的其他样本的反事实数据集。
 - en: The following figure represents this framework.
   id: totrans-104
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下图表示了这个框架。
 - en: '![](../Images/3bae19c4186703c90aec13ae2c4e4eec.png)'
   id: totrans-105
   prefs: []
   type: TYPE_IMG
+  zh: '![](../Images/3bae19c4186703c90aec13ae2c4e4eec.png)'
 - en: In bootstrap resampling, we treat the rows of the original dataset as if they
     are the population and draw a random sample from it. We use this simulated data
     to compute the sample statistic; in this example, it’s the parameters of the logistic
@@ -590,6 +599,7 @@
   id: totrans-106
   prefs: []
   type: TYPE_NORMAL
+  zh: 在自助法重抽样中，我们将原始数据集的行视为总体，并从中抽取随机样本。我们使用这些模拟数据来计算样本统计量；在这个例子中，它是逻辑回归模型的参数。我们收集结果以形成抽样分布的样本，然后可以使用它来计算置信区间和标准误差。
 - en: This way of simulating the sampling process asks, in effect, what would have
     happened if we had surveyed different people. But that’s not the only possible
     model of the sampling process. An alternative is to ask what would happen if we
@@ -598,11 +608,13 @@
   id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: 这种模拟抽样过程的方式实际上是在询问，如果我们调查了不同的人会发生什么。但这并不是抽样过程的唯一可能模型。另一种可能是询问，如果我们调查了同样的人，但他们给出了不同的答案会发生什么。这就是参数化方法的基础模型。
 - en: Parametric bootstrap
   id: totrans-108
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 参数化bootstrap
 - en: 'So, how do we simulate a sampling process where we survey the same people,
     but they give different answers? One way is to assume, for the purposes of the
     simulation, that the parameters we estimated from the original data are correct.
@@ -611,6 +623,7 @@
   id: totrans-109
   prefs: []
   type: TYPE_NORMAL
+  zh: 那么，我们如何模拟这样一个抽样过程，即我们调查同样的人，但他们给出不同的答案？一种方法是假设，为了模拟的目的，我们从原始数据估计的参数是正确的。如果是这样，我们可以使用回归模型来计算每个受访者的预测概率，就像这样：
 - en: '[PRE22]'
   id: totrans-110
   prefs: []
@@ -625,6 +638,7 @@
   id: totrans-112
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以使用这些概率为每个受访者生成一个有偏的硬币投掷。
 - en: '[PRE24]'
   id: totrans-113
   prefs: []
@@ -640,6 +654,7 @@
   id: totrans-115
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后我们可以用这些模拟值作为因变量运行回归模型。以下函数展示了如何做到这一点。
 - en: '[PRE26]'
   id: totrans-116
   prefs: []
@@ -650,6 +665,7 @@
   id: totrans-117
   prefs: []
   type: TYPE_NORMAL
+  zh: 同样，单次模拟的结果是从抽样分布中随机抽取的值。
 - en: '[PRE27]'
   id: totrans-118
   prefs: []
@@ -664,6 +680,7 @@
   id: totrans-120
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们多次运行它，我们会得到抽样分布的一个样本。
 - en: '[PRE29]'
   id: totrans-121
   prefs: []
@@ -678,35 +695,44 @@
   id: totrans-123
   prefs: []
   type: TYPE_TB
+  zh: '|  | 截距 | C(SEX)[T.2] | 年龄 | 年龄2 | 教育 | 教育2 |'
 - en: '| --- | --- | --- | --- | --- | --- | --- |'
   id: totrans-124
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- | --- | --- |'
 - en: '| 0 | -1.804015 | -0.384881 | -0.014708 | -0.000017 | 0.180796 | -0.002302
     |'
   id: totrans-125
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | -1.804015 | -0.384881 | -0.014708 | -0.000017 | 0.180796 | -0.002302
+    |'
 - en: '| 1 | -1.432664 | -0.422171 | -0.023207 | 0.000044 | 0.166255 | -0.001940 |'
   id: totrans-126
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | -1.432664 | -0.422171 | -0.023207 | 0.000044 | 0.166255 | -0.001940 |'
 - en: '| 2 | -1.415658 | -0.406837 | -0.033815 | 0.000168 | 0.180158 | -0.001914 |'
   id: totrans-127
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | -1.415658 | -0.406837 | -0.033815 | 0.000168 | 0.180158 | -0.001914 |'
 - en: '| 3 | -1.840253 | -0.394937 | -0.028435 | 0.000126 | 0.221295 | -0.003461 |'
   id: totrans-128
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | -1.840253 | -0.394937 | -0.028435 | 0.000126 | 0.221295 | -0.003461 |'
 - en: '| 4 | -1.642430 | -0.375719 | -0.034946 | 0.000177 | 0.216985 | -0.003430 |'
   id: totrans-129
   prefs: []
   type: TYPE_TB
+  zh: '| 4 | -1.642430 | -0.375719 | -0.034946 | 0.000177 | 0.216985 | -0.003430 |'
 - en: Here’s the sampling distribution for a single parameter.
   id: totrans-130
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是单个参数的抽样分布。
 - en: '[PRE31]'
   id: totrans-131
   prefs: []
@@ -716,11 +742,13 @@
   id: totrans-132
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/resample_logit_53_0.png](../Images/2715a335ba843f9dcc8bd0f5d460bf53.png)'
 - en: Again, the standard deviations should be close to the standard errors, and they
     are.
   id: totrans-133
   prefs: []
   type: TYPE_NORMAL
+  zh: 标准偏差应该接近标准误差，而它们确实如此。
 - en: '[PRE32]'
   id: totrans-134
   prefs: []
@@ -730,55 +758,67 @@
   id: totrans-135
   prefs: []
   type: TYPE_TB
+  zh: '|  | 抽样标准差 | 标准误差 | 百分比差异 |'
 - en: '| --- | --- | --- | --- |'
   id: totrans-136
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- |'
 - en: '| Intercept | 0.199178 | 0.240243 | -17.092962 |'
   id: totrans-137
   prefs: []
   type: TYPE_TB
+  zh: '| 截距 | 0.199178 | 0.240243 | -17.092962 |'
 - en: '| C(SEX)[T.2] | 0.030494 | 0.031057 | -1.812430 |'
   id: totrans-138
   prefs: []
   type: TYPE_TB
+  zh: '| C(SEX)[T.2] | 0.030494 | 0.031057 | -1.812430 |'
 - en: '| AGE | 0.005085 | 0.005153 | -1.327560 |'
   id: totrans-139
   prefs: []
   type: TYPE_TB
+  zh: '| 年龄 | 0.005085 | 0.005153 | -1.327560 |'
 - en: '| AGE2 | 0.000054 | 0.000053 | 2.118557 |'
   id: totrans-140
   prefs: []
   type: TYPE_TB
+  zh: '| 年龄2 | 0.000054 | 0.000053 | 2.118557 |'
 - en: '| EDUC | 0.024899 | 0.031193 | -20.178173 |'
   id: totrans-141
   prefs: []
   type: TYPE_TB
+  zh: '| 教育 | 0.024899 | 0.031193 | -20.178173 |'
 - en: '| EDUC2 | 0.000935 | 0.001166 | -19.819110 |'
   id: totrans-142
   prefs: []
   type: TYPE_TB
+  zh: '| 教育2 | 0.000935 | 0.001166 | -19.819110 |'
 - en: So we have two models of the sampling process that yield different sampling
     distributions. But these are not the only models.
   id: totrans-143
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，我们有两种产生不同抽样分布的抽样过程模型。但这并不是唯一的模型。
 - en: If the first method asks, “What if we surveyed different people?” and the second
     asks “What if we surveyed the same people and they gave different answers?”, let’s
     consider a third method that asks “¿Por qué no los dos?”.
   id: totrans-144
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果第一种方法问：“如果我们调查不同的人会怎样？”而第二种问：“如果我们调查同样的人，他们给出不同的答案会怎样？”，那么让我们考虑第三种方法，即问：“为什么不两者兼而有之？”。
 - en: The Hybrid Model
   id: totrans-145
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 混合模型
 - en: The following function uses bootstrap sampling to simulate surveying different
     people; then it uses the parametric method to simulate their responses.
   id: totrans-146
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数使用自助法抽样来模拟调查不同的人；然后使用参数化方法来模拟他们的回答。
 - en: '[PRE33]'
   id: totrans-147
   prefs: []

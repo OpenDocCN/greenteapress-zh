@@ -1,234 +1,366 @@
 - en: Never Test for Normality
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 永远不要测试正态性
 - en: 原文：[https://allendowney.github.io/ElementsOfDataScience/anderson.html](https://allendowney.github.io/ElementsOfDataScience/anderson.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ElementsOfDataScience/anderson.html](https://allendowney.github.io/ElementsOfDataScience/anderson.html)
 - en: Way back in 2013, I wrote [this blog post](https://allendowney.blogspot.com/2013/08/are-my-data-normal.html)
     explaining why you should never use a statistical test to check whether a sample
     came from a Gaussian distribution.
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 早在2013年，我写了[这篇博客文章](https://allendowney.blogspot.com/2013/08/are-my-data-normal.html)解释为什么你永远不应该使用统计测试来检查样本是否来自高斯分布。
 - en: I argued that data from the real world never come from a Gaussian distribution,
     or any other simple mathematical model, so the answer to the question is always
     no.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 我认为现实世界中的数据从来不是来自高斯分布，或者任何其他简单的数学模型，所以对于这个问题的答案总是否定的。
 - en: 'And there are only two possible outcomes from the test:'
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 测试结果只有两种可能性：
 - en: If you have enough data, the test will reject the hypothesis that the data came
     from a Gaussian distribution, or
+  id: totrans-5
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果你有足够的数据，测试将拒绝数据来自高斯分布的假设，或者
 - en: If you don’t have enough data, the test will fail to reject the hypothesis.
+  id: totrans-6
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果你没有足够的数据，测试将无法拒绝零假设。
 - en: Either way, the result doesn’t tell you anything useful.
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 无论如何，结果并没有告诉你任何有用的信息。
 - en: In this article, I will explore a particular example and demonstrate this relationship
     between the sample size and the outcome of the test. And I will conclude, again,
     that
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这篇文章中，我将探讨一个特定的例子，并展示样本大小与测试结果之间的关系。我将再次得出结论，即
 - en: Choosing a distribution is not a statistical question; it is a modeling decision.
     No statistical test can tell you whether a particular distribution is a good model
     for your data.
+  id: totrans-9
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 选择一个分布不是一个统计问题；这是一个建模决策。没有统计测试可以告诉你特定分布是否是你的数据的一个好模型。
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/examples/anderson.ipynb)'
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: '[点击这里在Colab上运行这个笔记本](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/examples/anderson.ipynb)'
 - en: '[PRE0]'
+  id: totrans-11
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '[PRE1]'
+  id: totrans-12
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: I’ll start by generating a sample that is actually from a lognormal distribution.
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将首先生成一个实际来自对数正态分布的样本。
 - en: '[PRE2]'
+  id: totrans-14
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: I’ll use the sample mean and standard deviation to make a Gaussian model of
     the sample.
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将使用样本均值和标准差来制作样本的高斯模型。
 - en: '[PRE3]'
+  id: totrans-16
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: Here’s what the empirical distribution of the sample looks like compared to
     the CDF of the Gaussian distribution.
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是样本的经验分布与高斯分布的CDF进行比较的样子。
 - en: '[PRE4]'
+  id: totrans-18
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '![_images/anderson_8_0.png](../Images/f7811f8961e90e190359c5c895cd5d5d.png)'
+  id: totrans-19
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/anderson_8_0.png](../Images/f7811f8961e90e190359c5c895cd5d5d.png)'
 - en: It looks like the Gaussian distribution is a pretty good model for the data,
     and probably good enough for most purposes.
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 看起来高斯分布是数据的一个相当好的模型，对于大多数目的来说可能已经足够好了。
 - en: 'Let’s see what the [Anderson-Darling test](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.anderson.html)
     has to say:'
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们看看[Anderson-Darling测试](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.anderson.html)有什么说：
 - en: '[PRE5]'
+  id: totrans-22
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '[PRE6]'
+  id: totrans-23
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '[PRE7]'
+  id: totrans-24
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '[PRE8]'
+  id: totrans-25
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '[PRE9]'
+  id: totrans-26
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '[PRE10]'
+  id: totrans-27
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: The A-D statistic is 1.7, which exceeds the critical value, 0.77, so at the
     5% significance level, we can reject the hypothesis that this sample came from
     a Gaussian distribution. That’s the right answer, so it might seem like we’ve
     done something useful. But we haven’t.
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: A-D统计量为1.7，超过了临界值0.77，因此在5%的显著性水平下，我们可以拒绝这个样本来自高斯分布的假设。这是正确的答案，所以看起来我们已经做了一些有用的事情。但我们并没有。
 - en: Sample size
+  id: totrans-29
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 样本大小
 - en: The result from the A-D test depends on the sample size. To demonstrate, I’ll
     wrap the test in a function that returns a boolean.
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: A-D测试的结果取决于样本大小。为了演示，我将把测试包装在一个返回布尔值的函数中。
 - en: '[PRE11]'
+  id: totrans-31
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: '[PRE12]'
+  id: totrans-32
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '[PRE13]'
+  id: totrans-33
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: And wrap that in a function that takes a distribution and a sample size, generates
     a sample, runs the test, and returns the result.
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 并将其包装在一个函数中，该函数接受一个分布和一个样本大小，生成一个样本，运行测试，并返回结果。
 - en: '[PRE14]'
+  id: totrans-35
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: Now let’s see what the results look like as we vary the sample size.
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们看看当我们改变样本大小时结果是什么样子的。
 - en: I’ll run the test 1000 times, adjusting the sample size after each iteration.
     If the test rejects the null hypothesis, I’ll decrease the sample size by abut
     4%; if the test fails to reject, I’ll increase the sample size by 4%.
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将运行测试1000次，每次迭代后调整样本大小。如果测试拒绝零假设，我将减少样本大小约4%；如果测试未能拒绝，我将增加样本大小约4%。
 - en: That way the sample size does a random walk that tends to linger in the vicinity
     of the critical size where the probability of rejecting the null is near 50%.
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 这样样本大小就会随机游走，倾向于停留在拒绝零假设概率接近50%的临界大小附近。
 - en: '[PRE15]'
+  id: totrans-39
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: Here are the first few results.
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是前几个结果。
 - en: '[PRE16]'
+  id: totrans-41
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '|  | y | x |'
+  id: totrans-42
   prefs: []
   type: TYPE_TB
+  zh: '|  | y | x |'
 - en: '| --- | --- | --- |'
+  id: totrans-43
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- |'
 - en: '| 0 | 0 | 10.000000 |'
+  id: totrans-44
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 0 | 10.000000 |'
 - en: '| 1 | 0 | 10.363082 |'
+  id: totrans-45
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 0 | 10.363082 |'
 - en: '| 2 | 0 | 10.752798 |'
+  id: totrans-46
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 0 | 10.752798 |'
 - en: '| 3 | 0 | 11.301154 |'
+  id: totrans-47
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 0 | 11.301154 |'
 - en: '| 4 | 0 | 11.827253 |'
+  id: totrans-48
   prefs: []
   type: TYPE_TB
+  zh: '| 4 | 0 | 11.827253 |'
 - en: Now we can use logistic regression to model the probability of rejecting the
     null as a function of sample size.
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以使用逻辑回归来模拟拒绝零假设的概率作为样本大小的函数。
 - en: '[PRE17]'
+  id: totrans-50
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: '[PRE18]'
+  id: totrans-51
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: Here’s what the result looks like (with sample size on a log axis).
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是结果的样子（样本大小为对数轴）。
 - en: '[PRE19]'
+  id: totrans-53
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '![_images/anderson_26_0.png](../Images/b1f0cb103e72f00808828145e43b6bb0.png)'
+  id: totrans-54
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/anderson_26_0.png](../Images/b1f0cb103e72f00808828145e43b6bb0.png)'
 - en: When the sample size is more than 200, the probability of rejection is high.
     When the sample size is less than 100, the probability of rejection is low. But
     notice that it doesn’t go all the way to zero, because there is always a 5% chance
     of a false positive.
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: 当样本大小超过200时，拒绝的概率很高。当样本大小小于100时，拒绝的概率很低。但请注意，它并没有完全降到零，因为总是有5%的假阳性的可能性。
 - en: We can use the parameters of the logistic model to compute the critical value.
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用逻辑模型的参数来计算临界值。
 - en: '[PRE20]'
+  id: totrans-57
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '[PRE21]'
+  id: totrans-58
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: At this sample size, the probability of rejecting the null is close to 50%.
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个样本大小下，拒绝零假设的概率接近50%。
 - en: '[PRE22]'
+  id: totrans-60
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: '[PRE23]'
+  id: totrans-61
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: So, again, the result just depends on the sample size. If you have enough data,
     you’ll reject the null; otherwise you probably won’t. Either way, you learn nothing
     about the question you really care about, which is whether the Gaussian model
     is a *good enough* model of the data for your purposes.
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，结果只取决于样本大小。如果你有足够的数据，你会拒绝零假设；否则你可能不会。无论哪种方式，你都对你真正关心的问题一无所知，那就是高斯模型是否对你的目的来说是一个足够好的模型。
 - en: That’s a modeling decision, and no statistical test can help. In [the original
     article](https://allendowney.blogspot.com/2013/08/are-my-data-normal.html), I
     suggested some methods that might.
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个建模决策，没有统计检验可以帮助。在[原始文章](https://allendowney.blogspot.com/2013/08/are-my-data-normal.html)中，我提出了一些可能的方法。
 - en: Copyright 2023 Allen Downey
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: 版权所有 2023 年 Allen Downey
 - en: '[Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: '[署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
