@@ -1,418 +1,666 @@
 - en: Linked List
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 链表
 - en: 原文：[https://allendowney.github.io/DSIRP/linked_list.html](https://allendowney.github.io/DSIRP/linked_list.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/DSIRP/linked_list.html](https://allendowney.github.io/DSIRP/linked_list.html)
 - en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/linked_list.ipynb)'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: '[单击此处在Colab上运行本章](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/linked_list.ipynb)'
 - en: Linked Lists
+  id: totrans-3
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 链表
 - en: Implementing operations on linked lists is a staple of programming classes and
     technical interviews.
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 在链表上实现操作是编程课程和技术面试的重要内容。
 - en: I resist them because it is unlikely that you will ever have to implement a
     linked list in your professional work. And if you do, someone has made a bad decision.
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 我抵制它们，因为您很可能永远不会在专业工作中实现链表。如果您这样做了，那么某人已经做出了错误的决定。
 - en: However, they can be good études, that is, pieces that you practice in order
     to learn, but never perform.
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是，它们可以是很好的练习曲，也就是说，这些是您为了学习而练习但永远不会执行的曲目。
 - en: 'For many of these problems, there are several possible solutions, depending
     on the requirements:'
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于这些问题中的许多问题，根据要求，有几种可能的解决方案：
 - en: Are you allowed to modify an existing list, or do you have to create a new one?
+  id: totrans-8
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 您是否允许修改现有列表，还是必须创建一个新列表？
 - en: If you modify an existing structure, are you also supposed to return a reference
     to it?
+  id: totrans-9
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果您修改现有结构，您是否也应该返回对它的引用？
 - en: Are you allowed to allocate temporary structures, or do you have to perform
     all operations in place?
+  id: totrans-10
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 您是否允许分配临时结构，还是必须在原地执行所有操作？
 - en: And for all of these problems, you could write a solution iteratively or recursively.
     So there are many possible solutions for each.
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于所有这些问题，您都可以迭代或递归地编写解决方案。因此，每个问题都有许多可能的解决方案。
 - en: 'As we consider alternatives, some of the factors to keep in mind are:'
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 在考虑替代方案时，要牢记的一些因素是：
 - en: Performance in terms of time and space.
+  id: totrans-13
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 在时间和空间方面的性能。
 - en: Readability and demonstrably correctness.
+  id: totrans-14
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 可读性和可证明的正确性。
 - en: In general, performance should be asymptotically efficient; for example, if
     there is a constant time solution, a linear solution would not be acceptable.
     But we might be willing to pay some overhead to achieve bulletproof correctness.
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 一般来说，性能应该是渐进有效的；例如，如果有一个常数时间的解决方案，线性解决方案是不可接受的。但是，我们可能愿意支付一些开销来实现无懈可击的正确性。
 - en: Here’s the class we’ll use to represent the nodes in a list.
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是我们将用来表示列表中节点的类。
 - en: '[PRE0]'
+  id: totrans-17
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: 'We can create nodes like this:'
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以这样创建节点：
 - en: '[PRE1]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '[PRE2]'
+  id: totrans-20
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: 'And then link them up, like this:'
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后像这样链接它们：
 - en: '[PRE3]'
+  id: totrans-22
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '[PRE4]'
+  id: totrans-23
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '[PRE5]'
+  id: totrans-24
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: 'There are two ways to think about what `node1` is:'
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 有两种方法可以思考`node1`是什么：
 - en: It is “just” a node object, which happens to contain a link to another node.
+  id: totrans-26
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 它“只是”一个节点对象，恰好包含对另一个节点的链接。
 - en: It is the first node in a linked list of nodes.
+  id: totrans-27
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 它是节点链表中的第一个节点。
 - en: When we pass a node as a parameter, sometimes we think of it as a node and sometimes
     we think of it as the beginning of a list.
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: 当我们将一个节点作为参数传递时，有时我们认为它是一个节点，有时我们认为它是列表的开头。
 - en: LinkedList objects
+  id: totrans-29
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: LinkedList对象
 - en: For some operations, it will be convenient to have another object that represents
     the whole list (as opposed to one of its nodes).
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于一些操作，拥有另一个表示整个列表的对象将很方便（而不是它的一个节点）。
 - en: Here’s the class definition.
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是类的定义。
 - en: '[PRE6]'
+  id: totrans-32
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: If we create a `LinkedList` with a reference to `node1`, we can think of the
     result as a list with three elements.
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们创建一个带有对`node1`的引用的`LinkedList`，我们可以将结果视为具有三个元素的列表。
 - en: '[PRE7]'
+  id: totrans-34
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '[PRE8]'
+  id: totrans-35
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: Search
+  id: totrans-36
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 搜索
 - en: '**Exercise:** Write a function called `find` that takes a `LinkedList` and
     a target value; if the target value appears in the `LinkedList`, it should return
     the `Node` that contains it; otherwise it should return `None`.'
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**编写一个名为`find`的函数，该函数接受一个`LinkedList`和一个目标值；如果目标值出现在`LinkedList`中，则应返回包含它的`Node`；否则应返回`None`。'
 - en: You can use these examples to test your code.
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 您可以使用这些示例来测试您的代码。
 - en: '[PRE9]'
+  id: totrans-39
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '[PRE10]'
+  id: totrans-40
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '[PRE11]'
+  id: totrans-41
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: '[PRE12]'
+  id: totrans-42
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '[PRE13]'
+  id: totrans-43
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: Push and Pop
+  id: totrans-44
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 推和弹
 - en: 'Adding and removing elements from the *left* side of a linked list is relatively
     easy:'
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 在链表的*左*侧添加和删除元素相对容易：
 - en: '[PRE14]'
+  id: totrans-46
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '[PRE15]'
+  id: totrans-47
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '[PRE16]'
+  id: totrans-48
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '[PRE17]'
+  id: totrans-49
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: '[PRE18]'
+  id: totrans-50
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: '[PRE19]'
+  id: totrans-51
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '[PRE20]'
+  id: totrans-52
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '[PRE21]'
+  id: totrans-53
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: Adding and removing from the end right side take longer because we have to traverse
     the list.
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: 从右侧添加和删除需要更长的时间，因为我们必须遍历列表。
 - en: '**Exercise:** Write `rpush` and `rpop`.'
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**编写`rpush`和`rpop`。'
 - en: You can use the following example to test your code.
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: 您可以使用以下示例来测试您的代码。
 - en: '[PRE22]'
+  id: totrans-57
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: '[PRE23]'
+  id: totrans-58
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: '[PRE24]'
+  id: totrans-59
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: '[PRE25]'
+  id: totrans-60
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: '[PRE26]'
+  id: totrans-61
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: '[PRE27]'
+  id: totrans-62
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: '[PRE28]'
+  id: totrans-63
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: '[PRE29]'
+  id: totrans-64
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: '[PRE30]'
+  id: totrans-65
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: '[PRE31]'
+  id: totrans-66
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: Reverse
+  id: totrans-67
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 反转
 - en: Reversing a linked list is a classic interview question, although at this point
     it is so classic you will probably never encounter it.
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: 反转链表是一个经典的面试问题，尽管在这一点上它是如此经典，您可能永远不会遇到它。
 - en: But it is still a good exercise, in part because there are so many ways to do
     it. My solutions here are based on [this tutorial](https://www.geeksforgeeks.org/reverse-a-linked-list/).
+  id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是，这仍然是一个很好的练习，部分原因是有很多方法可以做到这一点。我这里的解决方案是基于[这个教程](https://www.geeksforgeeks.org/reverse-a-linked-list/)。
 - en: 'If you are allowed to make a new list, you can traverse the old list and `lpush`
     the elements onto the new list:'
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果允许创建一个新列表，您可以遍历旧列表并将元素`lpush`到新列表上：
 - en: '[PRE32]'
+  id: totrans-71
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: '[PRE33]'
+  id: totrans-72
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: '[PRE34]'
+  id: totrans-73
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: Here’s a recursive version that doesn’t allocate anything
+  id: totrans-74
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个不分配任何东西的递归版本
 - en: '[PRE35]'
+  id: totrans-75
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: '[PRE36]'
+  id: totrans-76
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: '[PRE37]'
+  id: totrans-77
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE37]'
 - en: And finally an iterative version that doesn’t allocate anything.
+  id: totrans-78
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，这是一个不分配任何东西的迭代版本。
 - en: '[PRE38]'
+  id: totrans-79
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: '[PRE39]'
+  id: totrans-80
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: '[PRE40]'
+  id: totrans-81
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE40]'
 - en: Remove
+  id: totrans-82
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 删除
 - en: One of the advantages of a linked list (compared to an array list) is that we
     can add and remove elements from the middle of the list in constant time.
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: 链表的一个优点（与数组列表相比）是我们可以在列表的中间以常数时间添加和删除元素。
 - en: For example, the following function takes a node and removes the node that follows
     it.
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，以下函数接受一个节点并删除其后的节点。
 - en: '[PRE41]'
+  id: totrans-85
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE41]'
 - en: 'Here’s an example:'
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个例子：
 - en: '[PRE42]'
+  id: totrans-87
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE42]'
 - en: '[PRE43]'
+  id: totrans-88
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE43]'
 - en: '**Exercise:** Write a function called `remove` that takes a LinkedList and
     a target value. It should remove the first node that contains the value, or raise
     a `ValueError` if it is not found.'
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**编写一个名为`remove`的函数，该函数接受一个LinkedList和一个目标值。它应该删除包含该值的第一个节点，如果找不到，则引发`ValueError`。'
 - en: 'Hint: This one is a little tricky.'
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: 提示：这个有点棘手。
 - en: You can use this example to test your code.
+  id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: 您可以使用此示例来测试您的代码。
 - en: '[PRE44]'
+  id: totrans-92
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE44]'
 - en: '[PRE45]'
+  id: totrans-93
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE45]'
 - en: '[PRE46]'
+  id: totrans-94
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE46]'
 - en: '[PRE47]'
+  id: totrans-95
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE47]'
 - en: '[PRE48]'
+  id: totrans-96
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE48]'
 - en: '[PRE49]'
+  id: totrans-97
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE49]'
 - en: '[PRE50]'
+  id: totrans-98
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE50]'
 - en: '[PRE51]'
+  id: totrans-99
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE51]'
 - en: '[PRE52]'
+  id: totrans-100
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE52]'
 - en: '[PRE53]'
+  id: totrans-101
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE53]'
 - en: Although `remove_after` is constant time, `remove` is not. Because we have to
     iterate through the nodes to find the target, `remove` takes linear time.
+  id: totrans-102
   prefs: []
   type: TYPE_NORMAL
+  zh: 虽然`remove_after`是常数时间，但`remove`不是。因为我们必须遍历节点以找到目标，`remove`需要线性时间。
 - en: Insert Sorted
+  id: totrans-103
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 插入排序
 - en: Similarly, you can insert an element into the middle of a linked list in constant
     time.
+  id: totrans-104
   prefs: []
   type: TYPE_NORMAL
+  zh: 同样，您可以在常数时间内将元素插入到链表的中间。
 - en: The following function inserts `data` after the given node in a list.
+  id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数在列表中的给定节点后插入`data`。
 - en: '[PRE54]'
+  id: totrans-106
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE54]'
 - en: '[PRE55]'
+  id: totrans-107
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE55]'
 - en: '[PRE56]'
+  id: totrans-108
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE56]'
 - en: '**Exercise:** Write a function called `insert_sorted` (also known as `insort`)
     that takes a linked list and a value and inserts the value in the list in the
     first place where it will be in increasing sorted order, that is, with the smallest
     element at the beginning.'
+  id: totrans-109
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**编写一个名为`insert_sorted`（也称为`insort`）的函数，它接受一个链表和一个值，并在列表中按照递增排序顺序将该值插入到第一个位置，即最小的元素在开头。'
 - en: '[PRE57]'
+  id: totrans-110
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE57]'
 - en: You can use the following example to test your code.
+  id: totrans-111
   prefs: []
   type: TYPE_NORMAL
+  zh: 您可以使用以下示例来测试您的代码。
 - en: '[PRE58]'
+  id: totrans-112
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE58]'
 - en: '[PRE59]'
+  id: totrans-113
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE59]'
 - en: '[PRE60]'
+  id: totrans-114
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE60]'
 - en: '[PRE61]'
+  id: totrans-115
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE61]'
 - en: '[PRE62]'
+  id: totrans-116
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE62]'
 - en: '[PRE63]'
+  id: totrans-117
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE63]'
 - en: '[PRE64]'
+  id: totrans-118
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE64]'
 - en: '[PRE65]'
+  id: totrans-119
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE65]'
 - en: Although `insert_after` is constant time, `insert_sorted` is not. Because we
     have to iterate through the nodes to find the insertion point, `insert_sorted`
     takes linear time.
+  id: totrans-120
   prefs: []
   type: TYPE_NORMAL
+  zh: 虽然`insert_after`是常数时间，但`insert_sorted`不是。因为我们必须遍历节点以找到插入点，`insert_sorted`需要线性时间。
 - en: '*Data Structures and Information Retrieval in Python*'
+  id: totrans-121
   prefs: []
   type: TYPE_NORMAL
+  zh: '*Python中的数据结构和信息检索*'
 - en: Copyright 2021 Allen Downey
+  id: totrans-122
   prefs: []
   type: TYPE_NORMAL
+  zh: 版权所有2021年Allen Downey
 - en: 'License: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  id: totrans-123
   prefs: []
   type: TYPE_NORMAL
+  zh: 许可证：[知识共享署名-非商业性使用-相同方式共享4.0国际许可协议](https://creativecommons.org/licenses/by-nc-sa/4.0/)

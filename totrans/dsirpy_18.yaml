@@ -3,35 +3,42 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: Redis
 - en: 原文：[https://allendowney.github.io/DSIRP/redis.html](https://allendowney.github.io/DSIRP/redis.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/DSIRP/redis.html](https://allendowney.github.io/DSIRP/redis.html)
 - en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/redis.ipynb)'
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 单击此处在Colab上运行本章节
 - en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/chap01.ipynb)'
   id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 单击此处在Colab上运行本章节
 - en: Persistence
   id: totrans-4
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 持久性
 - en: Data stored only in the memory of a running program is called “volatile”, because
     it disappears when the program ends.
   id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 仅存储在运行程序的内存中的数据称为“易失性”，因为当程序结束时它会消失。
 - en: Data that still exists after the program that created it ends is called “persistent”.
     In general, files stored in a file system are persistent, as well as data stored
     in databases.
   id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 在创建它的程序结束后仍然存在的数据称为“持久性”。一般来说，存储在文件系统中的文件以及存储在数据库中的数据是持久的。
 - en: A simple way to make data persistent is to store it in a file. For example,
     before the program ends, it could translate its data structures into a format
     like [JSON](https://en.wikipedia.org/wiki/JSON) and then write them into a file.
@@ -39,61 +46,72 @@
   id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 使数据持久的一个简单方法是将其存储在文件中。例如，在程序结束之前，它可以将其数据结构转换为类似[JSON](https://en.wikipedia.org/wiki/JSON)的格式，然后将其写入文件。当它再次启动时，它可以读取文件并重建数据结构。
 - en: 'But there are several problems with this solution:'
   id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是这种解决方案存在几个问题：
 - en: Reading and writing large data structures (like a Web index) would be slow.
   id: totrans-9
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 读取和写入大型数据结构（如Web索引）将会很慢。
 - en: The entire data structure might not fit into the memory of a single running
     program.
   id: totrans-10
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 整个数据结构可能无法适应单个运行程序的内存。
 - en: If a program ends unexpectedly (for example, due to a power outage), any changes
     made since the program last started would be lost.
   id: totrans-11
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如果程序意外结束（例如由于停电），自上次程序启动以来所做的任何更改都将丢失。
 - en: A better alternative is a database that provides persistent storage and the
     ability to read and write parts of the database without reading and writing the
     whole thing.
   id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 更好的选择是提供持久存储和能够读取和写入数据库部分而不是读取和写入整个数据库的数据库。
 - en: There are many kinds of [database management systems](https://en.wikipedia.org/wiki/Database)
     (DBMS) that provide these capabilities.
   id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 有许多种[数据库管理系统](https://en.wikipedia.org/wiki/Database)（DBMS）提供了这些功能。
 - en: The database we’ll use is Redis, which organizes data in structures that are
     similar to Python data structures. Among others, it provides lists, hashes (similar
     to Python dictionaries), and sets.
   id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将使用的数据库是Redis，它以类似于Python数据结构的结构组织数据。除其他外，它提供列表、哈希（类似于Python字典）和集合。
 - en: Redis is a “key-value database”, which means that it represents a mapping from
     keys to values. In Redis, the keys are strings and the values can be one of several
     types.
   id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: Redis是一个“键值数据库”，这意味着它表示从键到值的映射。在Redis中，键是字符串，值可以是几种类型之一。
 - en: Redis clients and servers
   id: totrans-16
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: Redis客户端和服务器
 - en: Redis is usually run as a remote service; in fact, the name stands for “REmote
     DIctionary Server”. To use Redis, you have to run the Redis server somewhere and
     then connect to it using a Redis client.
   id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: Redis通常作为远程服务运行；实际上，这个名字代表“远程字典服务器”。要使用Redis，您必须在某个地方运行Redis服务器，然后使用Redis客户端连接到它。
 - en: To get started, we’ll run the Redis server on the same machine where we run
     the Jupyter server. This will let us get started quickly, but if we are running
     Jupyter on Colab, the database lives in a Colab runtime environment, which disappears
@@ -101,16 +119,19 @@
   id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 要开始，我们将在运行Jupyter服务器的同一台机器上运行Redis服务器。这将让我们快速开始，但如果我们在Colab上运行Jupyter，数据库存在于Colab运行时环境中，当我们关闭笔记本时它就会消失。所以它并不是真正的持久化。
 - en: Later we will use [RedisToGo](http://thinkdast.com/redistogo), which runs Redis
     in the cloud. Databases on RedisToGo are persistent.
   id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 稍后我们将使用[RedisToGo](http://thinkdast.com/redistogo)，它在云中运行Redis。RedisToGo上的数据库是持久的。
 - en: The following cell installs the Redis server and starts it with the `daemonize`
     options, which runs it in the background so the Jupyter server can resume.
   id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下单元格安装Redis服务器，并使用`daemonize`选项启动它，该选项在后台运行它，以便Jupyter服务器可以恢复。
 - en: '[PRE0]'
   id: totrans-21
   prefs: []
@@ -126,11 +147,13 @@
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: redis-py
 - en: To talk to the Redis server, we’ll use [redis-py](https://redis-py.readthedocs.io/en/stable/index.html).
     Here’s how we use it to connect to the Redis server.
   id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 要与Redis服务器通信，我们将使用[redis-py](https://redis-py.readthedocs.io/en/stable/index.html)。以下是我们如何使用它来连接到Redis服务器。
 - en: '[PRE2]'
   id: totrans-25
   prefs: []
@@ -146,6 +169,7 @@
   id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: '`set`方法向数据库添加键值对。在下面的示例中，键和值都是字符串。'
 - en: '[PRE4]'
   id: totrans-28
   prefs: []
@@ -160,6 +184,7 @@
   id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: '`get`方法查找一个键并返回相应的值。'
 - en: '[PRE6]'
   id: totrans-31
   prefs: []
@@ -174,15 +199,18 @@
   id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果实际上不是一个字符串；它是一个[bytearray](https://stackoverflow.com/questions/6224052/what-is-the-difference-between-a-string-and-a-byte-string)。
 - en: For many purposes, a bytearray behaves like a string so for now we will treat
     it like a string and deal with differences as they arise.
   id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于许多目的，bytearray的行为类似于字符串，因此现在我们将把它视为字符串，并在出现差异时处理它们。
 - en: The values can be integers or floating-point numbers.
   id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 值可以是整数或浮点数。
 - en: '[PRE8]'
   id: totrans-36
   prefs: []
@@ -197,6 +225,7 @@
   id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: Redis还提供了一些理解数字的函数，比如`incr`。
 - en: '[PRE10]'
   id: totrans-39
   prefs: []
@@ -211,6 +240,7 @@
   id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是如果您`get`一个数字值，结果是一个bytearray。
 - en: '[PRE12]'
   id: totrans-42
   prefs: []
@@ -225,6 +255,7 @@
   id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果您想对其进行数学运算，您必须将其转换回数字。
 - en: '[PRE14]'
   id: totrans-45
   prefs: []
@@ -240,6 +271,7 @@
   id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果要一次设置多个值，可以将字典传递给`mset`。
 - en: '[PRE16]'
   id: totrans-48
   prefs: []
@@ -274,6 +306,7 @@
   id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果您尝试将任何其他类型存储在Redis数据库中，您将收到一个错误。
 - en: '[PRE22]'
   id: totrans-55
   prefs: []
@@ -291,11 +324,13 @@
   id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用`repr`函数创建列表的字符串表示，但该表示是特定于Python的。最好创建一个可以与任何语言一起使用的数据库。为此，我们可以使用JSON创建一个字符串表示。
 - en: The `json` module provides a function `dumps`, that creates a language-independent
     representation of most Python objects.
   id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: '`json`模块提供了一个`dumps`函数，它创建大多数Python对象的语言无关表示。'
 - en: '[PRE24]'
   id: totrans-59
   prefs: []
@@ -311,6 +346,7 @@
   id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: 当我们读取其中一个字符串时，我们可以使用`loads`将其转换回Python对象。
 - en: '[PRE26]'
   id: totrans-62
   prefs: []
@@ -328,11 +364,13 @@
   id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**创建一个包含几个项目的字典，包括不同类型的键和值。使用`json`将字典制作成字符串表示，然后将其存储为Redis数据库中的值。检索它并将其转换回字典。'
 - en: Redis Data Types
   id: totrans-65
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: Redis数据类型
 - en: 'JSON can represent most Python objects, so we could use it to store arbitrary
     data structures in Redis. But in that case Redis only knows that they are strings;
     it can’t work with them as data structures. For example, if we store a data structure
@@ -340,46 +378,55 @@
   id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: JSON可以表示大多数Python对象，因此我们可以使用它来在Redis中存储任意数据结构。但在这种情况下，Redis只知道它们是字符串；它无法将它们作为数据结构处理。例如，如果我们在JSON中存储数据结构，修改它的唯一方法是：
 - en: Get the entire structure, which might be large,
   id: totrans-67
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 获取整个结构，这可能很大，
 - en: Load it back into a Python structure,
   id: totrans-68
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 将其加载回Python结构，
 - en: Modify the Python structure,
   id: totrans-69
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 修改Python结构，
 - en: Dump it back into a JSON string, and
   id: totrans-70
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 将其转换回JSON字符串，
 - en: Replace the old value in the database with the new value.
   id: totrans-71
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 用新值替换数据库中的旧值。
 - en: That’s not very efficient. A better alternative is to use the data types Redis
     provides, which you can read about in the [Redis Data Types Intro](https://redis.io/topics/data-types-intro).
   id: totrans-72
   prefs: []
   type: TYPE_NORMAL
+  zh: 这并不是很有效。更好的选择是使用Redis提供的数据类型，您可以在[Redis数据类型介绍](https://redis.io/topics/data-types-intro)中了解更多信息。
 - en: Lists
   id: totrans-73
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 列表
 - en: The `rpush` method adds new elements to the end of a list (the `r` indicates
     the right-hand side of the list).
   id: totrans-74
   prefs: []
   type: TYPE_NORMAL
+  zh: '`rpush`方法将新元素添加到列表的末尾（`r`表示列表的右侧）。'
 - en: '[PRE28]'
   id: totrans-75
   prefs: []
@@ -395,10 +442,12 @@
   id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: 您无需执行任何特殊操作即可创建列表；如果不存在，Redis会创建它。
 - en: '`llen` returns the length of the list.'
   id: totrans-78
   prefs: []
   type: TYPE_NORMAL
+  zh: '`llen`返回列表的长度。'
 - en: '[PRE30]'
   id: totrans-79
   prefs: []
@@ -414,6 +463,7 @@
   id: totrans-81
   prefs: []
   type: TYPE_NORMAL
+  zh: '`lrange`从列表中获取元素。使用索引`0`和`-1`，它获取所有元素。'
 - en: '[PRE32]'
   id: totrans-82
   prefs: []
@@ -428,10 +478,12 @@
   id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个Python列表，但元素是字节字符串。
 - en: '`rpop` removes elements from the end of the list.'
   id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: '`rpop`从列表的末尾移除元素。'
 - en: '[PRE34]'
   id: totrans-86
   prefs: []
@@ -446,25 +498,30 @@
   id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: 您可以在[Redis文档](https://redis.io/commands#list)中了解更多关于其他列表方法的信息。
 - en: And you can read about the [redis-py API here](https://redis-py.readthedocs.io/en/stable/index.html#redis.Redis.rpush).
   id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: 您可以在[redis-py API这里](https://redis-py.readthedocs.io/en/stable/index.html#redis.Redis.rpush)了解更多信息。
 - en: In general, the documentation of Redis is very good; the documentation of `redis-py`
     is a little rough around the edges.
   id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: 一般来说，Redis的文档非常好；`redis-py`的文档有点粗糙。
 - en: '**Exercise:** Use `lpush` to add elements to the beginning of the list and
     `lpop` to remove them.'
   id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**使用`lpush`将元素添加到列表的开头，使用`lpop`将元素移除。'
 - en: 'Note: Redis lists behave like linked lists, so you can add and remove elements
     from either end in constant time.'
   id: totrans-92
   prefs: []
   type: TYPE_NORMAL
+  zh: 注意：Redis列表的行为类似于链表，因此您可以在常数时间内从任一端添加和删除元素。
 - en: '[PRE36]'
   id: totrans-93
   prefs: []
@@ -490,20 +547,24 @@
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 哈希
 - en: A [Redis hash](https://redis.io/commands#hash) is similar to a Python dictionary,
     but just to make things confusing the nomenclature is a little different.
   id: totrans-98
   prefs: []
   type: TYPE_NORMAL
+  zh: '[Redis哈希](https://redis.io/commands#hash)类似于Python字典，但为了使事情变得混乱，术语有点不同。'
 - en: What we would call a “key” in a Python dictionary is called a “field” in a Redis
     hash.
   id: totrans-99
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们在Python字典中称为“键”的东西在Redis哈希中称为“字段”。
 - en: 'The `hset` method sets a field-value pair in a hash:'
   id: totrans-100
   prefs: []
   type: TYPE_NORMAL
+  zh: '`hset`方法在哈希中设置字段-值对：'
 - en: '[PRE40]'
   id: totrans-101
   prefs: []
@@ -518,6 +579,7 @@
   id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: '`hget`方法查找字段并返回相应的值。'
 - en: '[PRE42]'
   id: totrans-104
   prefs: []
@@ -532,6 +594,7 @@
   id: totrans-106
   prefs: []
   type: TYPE_NORMAL
+  zh: '`hset`也可以接受Python字典作为参数：'
 - en: '[PRE44]'
   id: totrans-107
   prefs: []
@@ -546,6 +609,7 @@
   id: totrans-109
   prefs: []
   type: TYPE_NORMAL
+  zh: 要迭代哈希的元素，我们可以使用`hscan_iter`：
 - en: '[PRE46]'
   id: totrans-110
   prefs: []
@@ -560,30 +624,36 @@
   id: totrans-112
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果对于字段和值都是字节字符串。
 - en: '**Exercise:** To add multiple items to a hash, you can use `hset` with the
     keyword `mapping` and a dictionary (or other mapping type).'
   id: totrans-113
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**要向哈希添加多个项目，可以使用`hset`与关键字`mapping`和字典（或其他映射类型）。'
 - en: Use the `Counter` object from the `collections` module to count the letters
     in a string, then use `hset` to store the results in a Redis hash.
   id: totrans-114
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用`collections`模块的`Counter`对象来计算字符串中的字母，然后使用`hset`将结果存储在Redis哈希中。
 - en: Then use `hscan_iter` to display the results.
   id: totrans-115
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后使用`hscan_iter`来显示结果。
 - en: Deleting
   id: totrans-116
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 删除
 - en: Before we go on, let’s clean up the database by deleting all of the key-value
     pairs.
   id: totrans-117
   prefs: []
   type: TYPE_NORMAL
+  zh: 在继续之前，让我们通过删除所有键值对来清理数据库。
 - en: '[PRE48]'
   id: totrans-118
   prefs: []
@@ -594,21 +664,25 @@
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 变位词（再次！）
 - en: In a previous notebook, we made sets of words that are anagrams of each other
     by building a dictionary where they keys are sorted strings of letters and the
     values are lists of words.
   id: totrans-120
   prefs: []
   type: TYPE_NORMAL
+  zh: 在之前的笔记本中，我们通过构建一个字典，其中键是字母排序的字符串，值是单词列表，制作了单词的变位词集合。
 - en: We’ll start by solving this problem again using Python data structures; then
     we’ll translate it into Redis.
   id: totrans-121
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将首先使用Python数据结构解决这个问题；然后我们将其转换为Redis。
 - en: The following cell downloads a file that contains the list of words.
   id: totrans-122
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下单元格下载一个包含单词列表的文件。
 - en: '[PRE49]'
   id: totrans-123
   prefs: []
@@ -619,6 +693,7 @@
   id: totrans-124
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个生成器函数，它读取文件中的单词并逐个产生它们。
 - en: '[PRE50]'
   id: totrans-125
   prefs: []
