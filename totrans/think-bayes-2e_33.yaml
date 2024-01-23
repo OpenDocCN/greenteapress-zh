@@ -224,6 +224,8 @@
   id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE13]'
   id: totrans-44
   prefs: []
@@ -233,22 +235,26 @@
   id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE14]</details>'
 - en: But remember that this is based on the assumption that we know `p0` and `p1`.
     In reality, they are unknown, but we can estimate them from the data.
   id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: 但请记住，这是基于我们知道`p0`和`p1`的假设。实际上，它们是未知的，但我们可以从数据中估计它们。
 - en: Three-Parameter Model
   id: totrans-47
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 三参数模型
 - en: 'What we need is a model with three parameters: `N`, `p0`, and `p1`. We’ll use
     `prior_N` again for the prior distribution of `N`, and here are the priors for
     `p0` and `p1`:'
   id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们需要一个具有三个参数的模型：`N`，`p0`和`p1`。我们将再次使用`prior_N`作为`N`的先验分布，并且这里是`p0`和`p1`的先验分布：
 - en: '[PRE15]'
   id: totrans-49
   prefs: []
@@ -268,21 +274,25 @@
   id: totrans-52
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/7e0d1a057533e834e15cc2de09bb543b9108cd175ccce907df9079147b09c1be.png](../Images/ddb1ad9429f402e82ab247a9f4b7c9c7.png)'
 - en: I used beta distributions to construct weakly informative priors for `p0` and
     `p1`, with means `0.66` and `0.5` respectively.
   id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: 我使用beta分布构建了`p0`和`p1`的弱信息先验，分别为`0.66`和`0.5`。
 - en: The Joint Prior
   id: totrans-54
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 联合先验
 - en: Now we have to assemble the marginal priors into a joint distribution. I’ll
     start by putting the first two into a `DataFrame`.
   id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们必须将边际先验组合成联合分布。我将首先将前两个放入`DataFrame`中。
 - en: '[PRE18]'
   id: totrans-56
   prefs: []
@@ -297,6 +307,7 @@
   id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我将它们堆叠起来，并将结果放入`Pmf`中。
 - en: '[PRE20]'
   id: totrans-59
   prefs: []
@@ -306,34 +317,42 @@
   id: totrans-60
   prefs: []
   type: TYPE_TB
+  zh: '|  |  | 概率 |'
 - en: '| --- | --- | --- |'
   id: totrans-61
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- |'
 - en: '| N | p0 |  |'
   id: totrans-62
   prefs: []
   type: TYPE_TB
+  zh: '| N | p0 |  |'
 - en: '| --- | --- | --- |'
   id: totrans-63
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- |'
 - en: '| 0 | 0.00 | 0.000000 |'
   id: totrans-64
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 0.00 | 0.000000 |'
 - en: '| 0.02 | 0.000013 |'
   id: totrans-65
   prefs: []
   type: TYPE_TB
+  zh: '| 0.02 | 0.000013 |'
 - en: '| 0.04 | 0.000050 |'
   id: totrans-66
   prefs: []
   type: TYPE_TB
+  zh: '| 0.04 | 0.000050 |'
 - en: We can use `make_joint` again to add in the third parameter.
   id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以再次使用`make_joint`来添加第三个参数。
 - en: '[PRE21]'
   id: totrans-68
   prefs: []
@@ -349,6 +368,7 @@
   id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个`DataFrame`，其中`N`和`p0`的值在`MultiIndex`中沿着行下降，`p1`的值在沿着列横向。
 - en: '[PRE23]'
   id: totrans-71
   prefs: []
@@ -359,20 +379,27 @@
   id: totrans-72
   prefs: []
   type: TYPE_TB
+  zh: '|  | p1 | 0.00 | 0.02 | 0.04 | 0.06 | 0.08 | 0.10 | 0.12 | 0.14 | 0.16 | 0.18
+    | ... | 0.82 | 0.84 | 0.86 | 0.88 | 0.90 | 0.92 | 0.94 | 0.96 | 0.98 | 1.00 |'
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
     | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
   id: totrans-73
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+    | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
 - en: '| N | p0 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |'
   id: totrans-74
   prefs: []
   type: TYPE_TB
+  zh: '| N | p0 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |'
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
     | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
   id: totrans-75
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+    | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
 - en: '| 0 | 0.00 | 0.0 | 0.000000e+00 | 0.000000e+00 | 0.000000e+00 | 0.000000e+00
     | 0.000000e+00 | 0.000000e+00 | 0.000000e+00 | 0.000000e+00 | 0.000000e+00 | ...
     | 0.000000e+00 | 0.000000e+00 | 0.000000e+00 | 0.000000e+00 | 0.000000e+00 | 0.000000e+00
@@ -380,6 +407,10 @@
   id: totrans-76
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 0.00 | 0.0 | 0.000000e+00 | 0.000000e+00 | 0.000000e+00 | 0.000000e+00
+    | 0.000000e+00 | 0.000000e+00 | 0.000000e+00 | 0.000000e+00 | 0.000000e+00 | ...
+    | 0.000000e+00 | 0.000000e+00 | 0.000000e+00 | 0.000000e+00 | 0.000000e+00 | 0.000000e+00
+    | 0.000000e+00 | 0.000000e+00 | 0.000000e+00 | 0.0 |'
 - en: '| 0.02 | 0.0 | 2.997069e-08 | 5.871809e-08 | 8.624220e-08 | 1.125430e-07 |
     1.376205e-07 | 1.614748e-07 | 1.841057e-07 | 2.055133e-07 | 2.256977e-07 | ...
     | 2.256977e-07 | 2.055133e-07 | 1.841057e-07 | 1.614748e-07 | 1.376205e-07 | 1.125430e-07
@@ -387,6 +418,10 @@
   id: totrans-77
   prefs: []
   type: TYPE_TB
+  zh: '| 0.02 | 0.0 | 2.997069e-08 | 5.871809e-08 | 8.624220e-08 | 1.125430e-07 |
+    1.376205e-07 | 1.614748e-07 | 1.841057e-07 | 2.055133e-07 | 2.256977e-07 | ...
+    | 2.256977e-07 | 2.055133e-07 | 1.841057e-07 | 1.614748e-07 | 1.376205e-07 | 1.125430e-07
+    | 8.624220e-08 | 5.871809e-08 | 2.997069e-08 | 0.0 |'
 - en: '| 0.04 | 0.0 | 1.174362e-07 | 2.300791e-07 | 3.379286e-07 | 4.409848e-07 |
     5.392478e-07 | 6.327174e-07 | 7.213937e-07 | 8.052767e-07 | 8.843664e-07 | ...
     | 8.843664e-07 | 8.052767e-07 | 7.213937e-07 | 6.327174e-07 | 5.392478e-07 | 4.409848e-07
@@ -394,14 +429,20 @@
   id: totrans-78
   prefs: []
   type: TYPE_TB
+  zh: '| 0.04 | 0.0 | 1.174362e-07 | 2.300791e-07 | 3.379286e-07 | 4.409848e-07 |
+    5.392478e-07 | 6.327174e-07 | 7.213937e-07 | 8.052767e-07 | 8.843664e-07 | ...
+    | 8.843664e-07 | 8.052767e-07 | 7.213937e-07 | 6.327174e-07 | 5.392478e-07 | 4.409848e-07
+    | 3.379286e-07 | 2.300791e-07 | 1.174362e-07 | 0.0 |'
 - en: 3 rows × 51 columns
   id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: 3行×51列
 - en: 'Now I’ll apply `stack` again:'
   id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我将再次应用`stack`：
 - en: '[PRE24]'
   id: totrans-81
   prefs: []
@@ -411,39 +452,48 @@
   id: totrans-82
   prefs: []
   type: TYPE_TB
+  zh: '|  |  |  | 概率 |'
 - en: '| --- | --- | --- | --- |'
   id: totrans-83
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- |'
 - en: '| N | p0 | p1 |  |'
   id: totrans-84
   prefs: []
   type: TYPE_TB
+  zh: '| N | p0 | p1 |  |'
 - en: '| --- | --- | --- | --- |'
   id: totrans-85
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- |'
 - en: '| 0 | 0.0 | 0.00 | 0.0 |'
   id: totrans-86
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 0.0 | 0.00 | 0.0 |'
 - en: '| 0.02 | 0.0 |'
   id: totrans-87
   prefs: []
   type: TYPE_TB
+  zh: '| 0.02 | 0.0 |'
 - en: '| 0.04 | 0.0 |'
   id: totrans-88
   prefs: []
   type: TYPE_TB
+  zh: '| 0.04 | 0.0 |'
 - en: The result is a `Pmf` with a three-column `MultiIndex` containing all possible
     triplets of parameters.
   id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个`Pmf`，具有包含所有可能参数三元组的三列`MultiIndex`。
 - en: 'The number of rows is the product of the number of values in all three priors:'
   id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: 行数是三个先验中所有值的乘积：
 - en: '[PRE25]'
   id: totrans-91
   prefs: []
@@ -459,17 +509,20 @@
   id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: 这仍然足够小，可以实际操作，但计算可能性的时间比前一个例子要长。
 - en: The Update (Three-Parameter Version)
   id: totrans-94
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 更新（三参数版本）
 - en: Here’s the loop that computes the likelihoods. It’s similar to the one in the
     previous section, except that `y` is no longer constant; we compute it each time
     through the loop from hypothetical values of `p0` and `p1`.
   id: totrans-95
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是计算可能性的循环。它类似于上一节中的循环，只是`y`不再是常数；我们每次通过循环时都从`p0`和`p1`的假设值计算它。
 - en: '[PRE27]'
   id: totrans-96
   prefs: []
@@ -484,6 +537,7 @@
   id: totrans-98
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以按照通常的方式计算后验概率。
 - en: '[PRE29]'
   id: totrans-99
   prefs: []
@@ -498,6 +552,7 @@
   id: totrans-101
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是后验边际分布`N`。
 - en: '[PRE31]'
   id: totrans-102
   prefs: []
@@ -512,11 +567,13 @@
   id: totrans-104
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/521e5ac757cf28dc37bb176c71850b5773b74cdf68d0ea45e694a617bac42457.png](../Images/35882921e66e1b703284f0182178ec1c.png)'
 - en: 'To compute the probability that there is at least one undiscovered typo, we
     can convert the posterior distribution to a survival function (complementary CDF):'
   id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了计算至少存在一个未发现的打字错误的概率，我们可以将后验分布转换为生存函数（互补CDF）：
 - en: '[PRE33]'
   id: totrans-106
   prefs: []
@@ -531,6 +588,7 @@
   id: totrans-108
   prefs: []
   type: TYPE_NORMAL
+  zh: 大约有37%的概率存在另一个打字错误 - 这是个好消息！
 - en: The posterior mean is about 2.5, which is a little higher than what we got with
     the simple model.
   id: totrans-109
