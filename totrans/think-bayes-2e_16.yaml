@@ -496,11 +496,13 @@
   id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE28]</details> ![_images/17719b39d2db8694dcd3465576ab0f6848ab5bac7aaf1e6ca9c26bd616f14290.png](../Images/d3285bcfff528c7a281a867a76d7fade.png)'
 - en: 'There are two ways to work around that limitation. One is to plot the CDF,
     which smooths out the noise:'
   id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: 有两种方法可以解决这个限制。一种是绘制CDF，这样可以平滑噪音：
 - en: '[PRE29]'
   id: totrans-92
   prefs: []
@@ -511,16 +513,19 @@
   id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码隐藏代码单元格源代码</summary>
 - en: '[PRE30]</details> ![_images/7853b02a168362d7aaa22b1dc7b901dbf56554e8005a90aa2de857eac0221020.png](../Images/42384d504f6b67b8a8222412cdbf17ed.png)'
   id: totrans-94
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE30]</details> ![_images/7853b02a168362d7aaa22b1dc7b901dbf56554e8005a90aa2de857eac0221020.png](../Images/42384d504f6b67b8a8222412cdbf17ed.png)'
 - en: 'The other option is to use kernel density estimation (KDE) to make a smooth
     approximation of the PDF on an equally-spaced grid, which is what this function
     does:'
   id: totrans-95
   prefs: []
   type: TYPE_NORMAL
+  zh: 另一个选择是使用核密度估计（KDE）在等间距网格上对PDF进行平滑近似，这就是这个函数的作用：
 - en: '[PRE31]'
   id: totrans-96
   prefs: []
@@ -531,17 +536,20 @@
   id: totrans-97
   prefs: []
   type: TYPE_NORMAL
+  zh: '`kde_from_pmf`以`Pmf`和要评估KDE的位置数作为参数。'
 - en: It uses `gaussian_kde`, which we saw in <<_KernelDensityEstimation>>, passing
     the probabilities from the `Pmf` as weights. This makes the estimated densities
     higher where the probabilities in the `Pmf` are higher.
   id: totrans-98
   prefs: []
   type: TYPE_NORMAL
+  zh: 它使用了`gaussian_kde`，我们在<<_KernelDensityEstimation>>中看到了，将`Pmf`中的概率作为权重传递。这使得在`Pmf`中概率较高的地方，估计的密度更高。
 - en: Here’s what the kernel density estimate looks like for the `Pmf` of differences
     between the groups.
   id: totrans-99
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是`Pmf`之间差异的核密度估计的样子。
 - en: '[PRE32]'
   id: totrans-100
   prefs: []
@@ -552,15 +560,18 @@
   id: totrans-101
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码隐藏代码单元格源代码</summary>
 - en: '[PRE33]</details> ![_images/96237655b97311f4d9c0571002cba9f1f1bf1b50c9e4c69c7f47bdd4235cce83.png](../Images/750833c43967521c794d8e009b3bc6d2.png)'
   id: totrans-102
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE33]</details> ![_images/96237655b97311f4d9c0571002cba9f1f1bf1b50c9e4c69c7f47bdd4235cce83.png](../Images/750833c43967521c794d8e009b3bc6d2.png)'
 - en: The mean of this distribution is almost 10 points on a test where the mean is
     around 45, so the effect of the treatment seems to be substantial.
   id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个分布的均值几乎是测试中的45分的10分，因此治疗的效果似乎是显著的。
 - en: '[PRE34]'
   id: totrans-104
   prefs: []
@@ -575,6 +586,7 @@
   id: totrans-106
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用`credible_interval`来计算90%的可信区间。
 - en: '[PRE36]'
   id: totrans-107
   prefs: []
@@ -590,17 +602,20 @@
   id: totrans-109
   prefs: []
   type: TYPE_NORMAL
+  zh: 根据这个区间，我们相当确定治疗可以使测试分数提高2到17分。
 - en: Using Summary Statistics
   id: totrans-110
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 使用总结统计
 - en: In this example the dataset is not very big, so it doesn’t take too long to
     compute the probability of every score under every hypothesis. But the result
     is a 3-D array; for larger datasets, it might be too big to compute practically.
   id: totrans-111
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个例子中，数据集并不是很大，因此计算每个假设下每个分数的概率并不需要太长时间。但结果是一个3-D数组；对于更大的数据集，实际上可能太大而无法实际计算。
 - en: Also, with larger datasets the likelihoods get very small, sometimes so small
     that we can’t compute them with floating-point arithmetic. That’s because we are
     computing the probability of a particular dataset; the number of possible datasets
@@ -608,6 +623,7 @@
   id: totrans-112
   prefs: []
   type: TYPE_NORMAL
+  zh: 此外，对于更大的数据集，可能性会变得非常小，有时甚至小到我们无法用浮点运算来计算。这是因为我们正在计算特定数据集的概率；可能的数据集数量是天文数字级别的，因此它们的概率非常小。
 - en: An alternative is to compute a summary of the dataset and compute the likelihood
     of the summary. For example, if we compute the mean and standard deviation of
     the data, we can compute the likelihood of those summary statistics under each
@@ -615,11 +631,13 @@
   id: totrans-113
   prefs: []
   type: TYPE_NORMAL
+  zh: 另一种选择是计算数据集的摘要并计算摘要的可能性。例如，如果我们计算数据的均值和标准差，我们可以计算每个假设下这些摘要统计的可能性。
 - en: As an example, suppose we know that the actual mean of the population, \(\mu\),
     is 42 and the actual standard deviation, \(\sigma\), is 17.
   id: totrans-114
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，假设我们知道人口的实际均值\(\mu\)是42，实际标准差\(\sigma\)是17。
 - en: '[PRE38]'
   id: totrans-115
   prefs: []
@@ -631,10 +649,12 @@
   id: totrans-116
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在假设我们从这个分布中抽取一个样本，样本大小为`n=20`，并计算样本的均值，我将其称为`m`，以及样本的标准差，我将其称为`s`。
 - en: 'And suppose it turns out that:'
   id: totrans-117
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设结果是：
 - en: '[PRE39]'
   id: totrans-118
   prefs: []
@@ -645,17 +665,20 @@
   id: totrans-119
   prefs: []
   type: TYPE_NORMAL
+  zh: 摘要统计`m`和`s`与参数\(\mu\)和\(\sigma\)相差不远，因此它们似乎不太可能。
 - en: 'To compute their likelihood, we will take advantage of three results from mathematical
     statistics:'
   id: totrans-120
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了计算它们的可能性，我们将利用数理统计的三个结果：
 - en: Given \(\mu\) and \(\sigma\), the distribution of `m` is normal with parameters
     \(\mu\) and \(\sigma/\sqrt{n}\);
   id: totrans-121
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 给定\(\mu\)和\(\sigma\)，`m`的分布是具有参数\(\mu\)和\(\sigma/\sqrt{n}\)的正态分布；
 - en: The distribution of \(s\) is more complicated, but if we compute the transform
     \(t = n s^2 / \sigma^2\), the distribution of \(t\) is chi-squared with parameter
     \(n-1\); and
@@ -663,20 +686,24 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: \(s\)的分布更复杂，但如果我们计算变换\(t = n s^2 / \sigma^2\)，\(t\)的分布是具有参数\(n-1\)的卡方分布；以及
 - en: According to [Basu’s theorem](https://en.wikipedia.org/wiki/Basu%27s_theorem),
     `m` and `s` are independent.
   id: totrans-123
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 根据[巴苏定理](https://en.wikipedia.org/wiki/Basu%27s_theorem)，`m`和`s`是独立的。
 - en: So let’s compute the likelihood of `m` and `s` given \(\mu\) and \(\sigma\).
   id: totrans-124
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，让我们计算给定\(\mu\)和\(\sigma\)的`m`和`s`的可能性。
 - en: First I’ll create a `norm` object that represents the distribution of `m`.
   id: totrans-125
   prefs: []
   type: TYPE_NORMAL
+  zh: 首先，我将创建一个代表`m`分布的`norm`对象。
 - en: '[PRE40]'
   id: totrans-126
   prefs: []
@@ -687,6 +714,7 @@
   id: totrans-127
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是“均值的抽样分布”。我们可以用它来计算观察到的`m`值的可能性，即41。
 - en: '[PRE41]'
   id: totrans-128
   prefs: []
@@ -702,6 +730,7 @@
   id: totrans-130
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们计算观察到的`s`值的可能性，即18。首先，我们计算变换后的值`t`：
 - en: '[PRE43]'
   id: totrans-131
   prefs: []
@@ -716,6 +745,7 @@
   id: totrans-133
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后我们创建一个代表`t`分布的`chi2`对象：
 - en: '[PRE45]'
   id: totrans-134
   prefs: []
@@ -1029,11 +1059,14 @@
   id: totrans-188
   prefs: []
   type: TYPE_NORMAL
+  zh: '`norm`提供了`rvs`，它可以从分布中生成随机值。我们可以用它来模拟1000个样本，每个样本的样本量为`n=20`。'
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-189
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE67]'
   id: totrans-190
   prefs: []
@@ -1043,21 +1076,26 @@
   id: totrans-191
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE68]</details>'
 - en: The result is an array with 1000 rows, each containing a sample or 20 simulated
     test scores.
   id: totrans-192
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个包含1000行的数组，每行包含一个样本或20个模拟测试分数。
 - en: If we compute the mean of each row, the result is an array that contains 1000
     sample means; that is, each value is the mean of a sample with `n=20`.
   id: totrans-193
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们计算每行的平均值，结果将是一个包含1000个样本均值的数组；也就是说，每个值都是一个样本的均值，样本量为`n=20`。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-194
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE69]'
   id: totrans-195
   prefs: []
@@ -1067,63 +1105,80 @@
   id: totrans-196
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE70]</details>'
 - en: 'Now, let’s compare the distribution of these means to `dist_m`. I’ll use `pmf_from_dist`
     to make a discrete approximation of `dist_m`:'
   id: totrans-197
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，让我们将这些均值的分布与`dist_m`进行比较。我将使用`pmf_from_dist`来对`dist_m`进行离散近似：
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-198
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE71]</details>'
   id: totrans-199
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE71]</details>'
 - en: '`pmf_from_dist` takes an object representing a continuous distribution, evaluates
     its probability density function at equally space points between `low` and `high`,
     and returns a normalized `Pmf` that approximates the distribution.'
   id: totrans-200
   prefs: []
   type: TYPE_NORMAL
+  zh: '`pmf_from_dist`接受一个表示连续分布的对象，在`low`和`high`之间的等间距点上评估其概率密度函数，并返回一个近似分布的归一化`Pmf`。'
 - en: I’ll use it to evaluate `dist_m` over a range of six standard deviations.
   id: totrans-201
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将用它来评估`dist_m`在六个标准差范围内的情况。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-202
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE72]</details>'
   id: totrans-203
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE72]</details>'
 - en: Now let’s compare this theoretical distribution to the means of the samples.
     I’ll use `kde_from_sample` to estimate their distribution and evaluate it in the
     same locations as `pmf_m`.
   id: totrans-204
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们将这个理论分布与样本的均值进行比较。我将使用`kde_from_sample`来估计它们的分布，并在与`pmf_m`相同的位置进行评估。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-205
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE73]</details>'
   id: totrans-206
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE73]</details>'
 - en: The following figure shows the two distributions.
   id: totrans-207
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下图显示了这两个分布。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-208
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE74]'
   id: totrans-209
   prefs: []
@@ -1133,25 +1188,31 @@
   id: totrans-210
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/52c43bd9abdda9201e2072a09dfb286e5850cae41d61da3a6e7ad355b77b20fd.png](../Images/fdd44a246bef6bcdc55cc9a74e4b2d62.png)</details>'
 - en: The theoretical distribution and the distribution of sample means are in accord.
   id: totrans-211
   prefs: []
   type: TYPE_NORMAL
+  zh: 理论分布和样本均值的分布是一致的。
 - en: Checking Standard Deviation
   id: totrans-212
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 检查标准差
 - en: Let’s also check that the standard deviations follow the distribution we expect.
     First I’ll compute the standard deviation for each of the 1000 samples.
   id: totrans-213
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们还要检查一下标准差是否符合我们的预期分布。首先，我将计算1000个样本的标准差。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-214
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE75]'
   id: totrans-215
   prefs: []
@@ -1161,70 +1222,90 @@
   id: totrans-216
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE76]</details>'
 - en: Now we’ll compute the transformed values, \(t = n s^2 / \sigma^2\).
   id: totrans-217
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们将计算转换后的值，\(t = n s^2 / \sigma^2\)。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-218
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE77]</details>'
   id: totrans-219
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE77]</details>'
 - en: We expect the transformed values to follow a chi-square distribution with parameter
     \(n-1\). SciPy provides `chi2`, which we can use to represent this distribution.
   id: totrans-220
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们期望转换后的值遵循参数为\(n-1\)的卡方分布。SciPy提供了`chi2`，我们可以用它来表示这个分布。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-221
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE78]</details>'
   id: totrans-222
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE78]</details>'
 - en: We can use `pmf_from_dist` again to make a discrete approximation.
   id: totrans-223
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以再次使用`pmf_from_dist`进行离散近似。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-224
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE79]</details>'
   id: totrans-225
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE79]</details>'
 - en: And we’ll use `kde_from_sample` to estimate the distribution of the sample standard
     deviations.
   id: totrans-226
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将使用`kde_from_sample`来估计样本标准差的分布。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-227
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE80]</details>'
   id: totrans-228
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE80]</details>'
 - en: Now we can compare the theoretical distribution to the distribution of the standard
     deviations.
   id: totrans-229
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以将理论分布与标准差的分布进行比较。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-230
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE81]'
   id: totrans-231
   prefs: []
@@ -1234,21 +1315,26 @@
   id: totrans-232
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/8ff5ec2be08b5f2cd8763610a22cb2b6ded0e4ca76da07bb4cad7a56cb1eb824.png](../Images/23e05aba19a5fbc1b39471ad7eefc69b.png)</details>'
 - en: The distribution of transformed standard deviations agrees with the theoretical
     distribution.
   id: totrans-233
   prefs: []
   type: TYPE_NORMAL
+  zh: 转换后的标准差的分布与理论分布一致。
 - en: 'Finally, to confirm that the sample means and standard deviations are independent,
     I’ll compute their coefficient of correlation:'
   id: totrans-234
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，为了确认样本均值和标准差是独立的，我将计算它们的相关系数：
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-235
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE82]'
   id: totrans-236
   prefs: []
@@ -1258,25 +1344,31 @@
   id: totrans-237
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE83]</details>'
 - en: Their correlation is near zero, which is consistent with their being independent.
   id: totrans-238
   prefs: []
   type: TYPE_NORMAL
+  zh: 它们的相关性接近零，这与它们是独立的一致。
 - en: So the simulations confirm the theoretical results we used to do the update
     with summary statistics.
   id: totrans-239
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，模拟结果证实了我们用来使用摘要统计数据进行更新的理论结果。
 - en: We can also use `kdeplot` from Seaborn to see what their joint distribution
     looks like.
   id: totrans-240
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们还可以使用Seaborn中的`kdeplot`来查看它们的联合分布是什么样子的。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-241
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE84]'
   id: totrans-242
   prefs: []
@@ -1286,16 +1378,19 @@
   id: totrans-243
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/33bcff608384ba34050242a14176f0c7647ce9109c68aeb3c3041ca19defb6e6.png](../Images/1ec87303e4aed28ef3f8cf8cf945490d.png)</details>'
 - en: It looks like the axes of the ellipses are aligned with the axes, which indicates
     that the variables are independent.
   id: totrans-244
   prefs: []
   type: TYPE_NORMAL
+  zh: 看起来椭圆的轴与坐标轴对齐，这表明变量是独立的。
 - en: Summary
   id: totrans-245
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 摘要
 - en: 'In this chapter we used a joint distribution to represent prior probabilities
     for the parameters of a normal distribution, `mu` and `sigma`. And we updated
     that distribution two ways: first using the entire dataset and the normal PDF;
@@ -1305,17 +1400,20 @@
   id: totrans-246
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本章中，我们使用联合分布来表示正态分布的参数`mu`和`sigma`的先验概率。然后我们以两种方式更新了该分布：首先使用整个数据集和正态PDF；然后使用摘要统计数据、正态PDF和卡方PDF。使用摘要统计数据在计算上更有效，但在过程中会丢失一些信息。
 - en: Normal distributions appear in many domains, so the methods in this chapter
     are broadly applicable. The exercises at the end of the chapter will give you
     a chance to apply them.
   id: totrans-247
   prefs: []
   type: TYPE_NORMAL
+  zh: 正态分布出现在许多领域，因此本章中的方法具有广泛的适用性。本章末尾的练习将让您有机会应用它们。
 - en: Exercises
   id: totrans-248
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 练习
 - en: '**Exercise:** Looking again at the posterior joint distribution of `mu` and
     `sigma`, it seems like the standard deviation of the treated group might be lower;
     if so, that would suggest that the treatment is more effective for students with
@@ -1323,31 +1421,39 @@
   id: totrans-249
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** 再次查看`mu`和`sigma`的后验联合分布，似乎处理组的标准差可能较低；如果是这样，那就表明对于分数较低的学生，治疗更有效。'
 - en: But before we speculate too much, we should estimate the size of the difference
     and see whether it might actually be 0.
   id: totrans-250
   prefs: []
   type: TYPE_NORMAL
+  zh: 但在我们进行过多推测之前，我们应该估计差异的大小，并查看它是否实际上可能为0。
 - en: Extract the marginal posterior distributions of `sigma` for the two groups.
     What is the probability that the standard deviation is higher in the control group?
   id: totrans-251
   prefs: []
   type: TYPE_NORMAL
+  zh: 提取两组的`sigma`的边际后验分布。控制组的标准差更高的概率是多少？
 - en: Compute the distribution of the difference in `sigma` between the two groups.
     What is the mean of this difference? What is the 90% credible interval?
   id: totrans-252
   prefs: []
   type: TYPE_NORMAL
+  zh: 计算两组之间`sigma`的差异的分布。这种差异的均值是多少？90%的可信区间是多少？
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-253
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE85]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-254
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE85]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE86]'
   id: totrans-255
   prefs: []
@@ -1359,6 +1465,9 @@
   id: totrans-256
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/308308b6ecac3d93df676f436d6bdcb155063578cbf2f3436b0836d41eadb098.png](../Images/28f980c6489e761e5e36d9cac4408fec.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE87]'
   id: totrans-257
   prefs: []
@@ -1369,11 +1478,15 @@
   id: totrans-258
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE88]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE89]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-259
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE89]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE90]'
   id: totrans-260
   prefs: []
@@ -1384,6 +1497,8 @@
   id: totrans-261
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE91]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE92]'
   id: totrans-262
   prefs: []
@@ -1394,6 +1509,8 @@
   id: totrans-263
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE93]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE94]'
   id: totrans-264
   prefs: []
@@ -1403,6 +1520,7 @@
   id: totrans-265
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/4a41f5f62c4bf9c935fcc913296e6af4942eeac649bc5a0689dca131f81d3784.png](../Images/f8db324dc26895f255a7e1e081881c19.png)</details>'
 - en: '**Exercise:** An [effect size](http://en.wikipedia.org/wiki/Effect_size) is
     a statistic intended to quantify the magnitude of a phenomenon. If the phenomenon
     is a difference in means between two groups, a common way to quantify it is Cohen’s
@@ -1410,15 +1528,18 @@
   id: totrans-266
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** [效应大小](http://en.wikipedia.org/wiki/Effect_size)是一种旨在量化现象大小的统计量。如果现象是两组之间均值的差异，一种常见的量化方法是科恩效应大小，表示为\(d\)。'
 - en: If the parameters for Group 1 are \((\mu_1, \sigma_1)\), and the parameters
     for Group 2 are \((\mu_2, \sigma_2)\), Cohen’s effect size is
   id: totrans-267
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果第1组的参数为\((\mu_1, \sigma_1)\)，第2组的参数为\((\mu_2, \sigma_2)\)，则科恩效应大小为
 - en: \[ d = \frac{\mu_1 - \mu_2}{(\sigma_1 + \sigma_2)/2} \]
   id: totrans-268
   prefs: []
   type: TYPE_NORMAL
+  zh: \[ d = \frac{\mu_1 - \mu_2}{(\sigma_1 + \sigma_2)/2} \]
 - en: Use the joint posterior distributions for the two groups to compute the posterior
     distribution for Cohen’s effect size.
   id: totrans-269
@@ -1650,16 +1771,23 @@
   id: totrans-306
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/0abfd6d388bcc11c2cbc5a5bdff47d10cd98504e0d8303178e9038f9087c54f0.png](../Images/b9d7be510e4f972bddbd47c8a8091418.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE117]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-307
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE117]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE118]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-308
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE118]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE119]'
   id: totrans-309
   prefs: []
@@ -1671,6 +1799,9 @@
   id: totrans-310
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/f8dada047905f5f85c2e5f21efb160f4b275e94cf4fc642523008abe432780be.png](../Images/9f0bdab9a77306788bab7542713052c9.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE120]'
   id: totrans-311
   prefs: []
@@ -1681,6 +1812,8 @@
   id: totrans-312
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE121]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE122]'
   id: totrans-313
   prefs: []
@@ -1692,6 +1825,9 @@
   id: totrans-314
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/ac9958f8a232e0d024b18dd3b11c95ce2fd3980d1f0a54a3a1a50dc89a315070.png](../Images/fe30c4209d494fdc71e03f110b65e357.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE123]'
   id: totrans-315
   prefs: []
@@ -1702,6 +1838,8 @@
   id: totrans-316
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE124]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE125]'
   id: totrans-317
   prefs: []
@@ -1711,39 +1849,46 @@
   id: totrans-318
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE126]</details>'
 - en: '**Exercise:** The [Variability Hypothesis](http://en.wikipedia.org/wiki/Variability_hypothesis)
     is the observation that many physical traits are more variable among males than
     among females, in many species.'
   id: totrans-319
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** [变异性假设](http://en.wikipedia.org/wiki/Variability_hypothesis) 是这样一个观察：在许多物种中，许多生理特征在雄性中的变异性比在雌性中更大。'
 - en: It has been a subject of controversy since the early 1800s, which suggests an
     exercise we can use to practice the methods in this chapter. Let’s look at the
     distribution of heights for men and women in the U.S. and see who is more variable.
   id: totrans-320
   prefs: []
   type: TYPE_NORMAL
+  zh: 自19世纪初以来，这一直是一个有争议的话题，这表明我们可以使用本章中的方法进行练习。让我们看看美国男性和女性的身高分布，看看谁的变异性更大。
 - en: I used 2018 data from the CDC’s [Behavioral Risk Factor Surveillance System](https://www.cdc.gov/brfss/annual_data/annual_2018.html)
     (BRFSS), which includes self-reported heights from 154 407 men and 254 722 women.
   id: totrans-321
   prefs: []
   type: TYPE_NORMAL
+  zh: 我使用了2018年来自CDC的[行为风险因素监测系统](https://www.cdc.gov/brfss/annual_data/annual_2018.html)（BRFSS）的数据，其中包括来自154407名男性和254722名女性的自报身高。
 - en: 'Here’s what I found:'
   id: totrans-322
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是我找到的：
 - en: The average height for men is 178 cm; the average height for women is 163 cm.
     So men are taller on average; no surprise there.
   id: totrans-323
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 男性的平均身高为178厘米；女性的平均身高为163厘米。因此，男性的平均身高更高；这并不奇怪。
 - en: For men the standard deviation is 8.27 cm; for women it is 7.75 cm. So in absolute
     terms, men’s heights are more variable.
   id: totrans-324
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 对于男性，标准差为8.27厘米；对于女性，标准差为7.75厘米。因此，从绝对值来看，男性的身高更加变化。
 - en: But to compare variability between groups, it is more meaningful to use the
     [coefficient of variation](https://en.wikipedia.org/wiki/Coefficient_of_variation)
     (CV), which is the standard deviation divided by the mean. It is a dimensionless
@@ -1751,12 +1896,15 @@
   id: totrans-325
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是，要比较不同组之间的变异性，使用[变异系数](https://en.wikipedia.org/wiki/Coefficient_of_variation)
+    (CV) 更有意义，它是标准差除以均值。它是一个无量纲的变异性相对于尺度的度量。
 - en: For men CV is 0.0465; for women it is 0.0475. The coefficient of variation is
     higher for women, so this dataset provides evidence against the Variability Hypothesis.
     But we can use Bayesian methods to make that conclusion more precise.
   id: totrans-326
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于男性，CV为0.0465；对于女性，CV为0.0475。女性的变异系数更高，因此这个数据集提供了反对变异性假设的证据。但是我们可以使用贝叶斯方法使这个结论更加精确。
 - en: Use these summary statistics to compute the posterior distribution of `mu` and
     `sigma` for the distributions of male and female height. Use `Pmf.div_dist` to
     compute posterior distributions of CV. Based on this dataset and the assumption
@@ -1766,30 +1914,39 @@
   id: totrans-327
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用这些摘要统计数据计算男性和女性身高分布的`mu`和`sigma`的后验分布。使用`Pmf.div_dist`计算CV的后验分布。基于这个数据集和身高分布是正态分布的假设，男性的变异系数更高的概率是多少？CV的最可能比率是多少，这个比率的90%可信区间是多少？
 - en: 'Hint: Use different prior distributions for the two groups, and chose them
     so they cover all parameters with non-negligible probability.'
   id: totrans-328
   prefs: []
   type: TYPE_NORMAL
+  zh: 提示：为两组使用不同的先验分布，并选择它们以便覆盖所有具有非零概率的参数。
 - en: 'Also, you might find this function helpful:'
   id: totrans-329
   prefs: []
   type: TYPE_NORMAL
+  zh: 另外，你可能会发现这个函数有用：
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-330
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE127]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-331
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE127]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE128]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-332
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE128]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE129]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-333
