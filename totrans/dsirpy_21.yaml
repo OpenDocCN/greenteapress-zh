@@ -3,65 +3,78 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 测验5
 - en: 原文：[https://allendowney.github.io/DSIRP/quiz05.html](https://allendowney.github.io/DSIRP/quiz05.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/DSIRP/quiz05.html](https://allendowney.github.io/DSIRP/quiz05.html)
 - en: 'BEFORE YOU START THIS QUIZ:'
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 在开始这个测验之前：
 - en: Click on “Copy to Drive” to make a copy of the quiz,
   id: totrans-3
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 点击“复制到驱动器”以复制测验，
 - en: Click on “Share”,
   id: totrans-4
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 点击“分享”，
 - en: Click on “Change” and select “Anyone with this link can edit”
   id: totrans-5
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 点击“更改”，然后选择“任何拥有此链接的人都可以编辑”
 - en: Click “Copy link” and
   id: totrans-6
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 点击“复制链接”和
 - en: Paste the link into [this Canvas assignment](https://canvas.olin.edu/courses/313/assignments/5075).
   id: totrans-7
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 将链接粘贴到[此Canvas作业](https://canvas.olin.edu/courses/313/assignments/5075)中。
 - en: This quiz is open notes, open internet.
   id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个测验是开放笔记，开放互联网。
 - en: You can ask for help from the instructor, but not from anyone else.
   id: totrans-9
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 您可以向讲师寻求帮助，但不能向其他人寻求帮助。
 - en: You can use code you find on the internet, but if you use more than a couple
     of lines from a single source, you should attribute the source.
   id: totrans-10
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 您可以使用在互联网上找到的代码，但如果您从单个来源使用了超过几行代码，您应该注明出处。
 - en: Install and Start Redis
   id: totrans-11
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 安装和启动Redis
 - en: For this quiz, we will run Redis on Colab. The following cells install and start
     the server, install the client, and instantiate a `Redis` object.
   id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于这个测验，我们将在Colab上运行Redis。以下单元安装并启动服务器，安装客户端，并实例化一个`Redis`对象。
 - en: '[PRE0]'
   id: totrans-13
   prefs: []
@@ -82,11 +95,13 @@
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 银行家琳达
 - en: 'In a [famous experiment](https://en.wikipedia.org/wiki/Conjunction_fallacy),
     Tversky and Kahneman posed the following question:'
   id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: 在一项[著名的实验](https://en.wikipedia.org/wiki/Conjunction_fallacy)中，特沃斯基和卡尼曼提出了以下问题：
 - en: Linda is 31 years old, single, outspoken, and very bright. She majored in philosophy.
     As a student, she was deeply concerned with issues of discrimination and social
     justice, and also participated in anti-nuclear demonstrations. Which is more probable?
@@ -94,6 +109,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 琳达今年31岁，单身，直言不讳，非常聪明。她主修哲学。作为学生，她对歧视和社会正义问题非常关注，并参与了反核示威活动。哪个更可能？
 - en: ''
   id: totrans-19
   prefs:
@@ -105,6 +121,7 @@
   - PREF_BQ
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 琳达是一名银行出纳员。
 - en: ''
   id: totrans-21
   prefs:
@@ -123,18 +140,21 @@
   - PREF_BQ
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 琳达是一名银行出纳员，并且积极参与女权主义运动。
 - en: Many people choose the second answer, presumably because it seems more consistent
     with the description. It seems uncharacteristic if Linda is *just* a bank teller;
     it seems more consistent if she is also a feminist.
   id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 许多人选择第二个答案，可能是因为它似乎更符合描述。如果琳达*只是*一个银行出纳员，那似乎是不典型的；如果她还是一个女权主义者，那似乎更一致。
 - en: But the second answer cannot be “more probable”, as the question asks. To see
     why, let’s explore some data. The following cell downloads data from the [General
     Social Survey](http://www.gss.norc.org/).
   id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 但第二个答案不能是“更可能”，正如问题所问的那样。为了了解原因，让我们探索一些数据。以下单元从[普遍社会调查](http://www.gss.norc.org/)下载数据。
 - en: '[PRE3]'
   id: totrans-26
   prefs: []
@@ -145,6 +165,7 @@
   id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下单元将数据加载到Pandas `DataFrame`中。如果您对Pandas不熟悉，我会解释您需要了解的内容。
 - en: '[PRE4]'
   id: totrans-28
   prefs: []
@@ -155,71 +176,85 @@
   id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: '`DataFrame`中每个受访者都有一行，称为“受访者”，我选择的每个变量都有一列。这些列是：'
 - en: '`caseid`: Identification number for the respondent.'
   id: totrans-30
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`caseid`：受访者的识别号码。'
 - en: '`year`: Year when the respondent was surveyed.'
   id: totrans-31
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`year`：受访者接受调查的年份。'
 - en: '`age`: Respondent’s age when surveyed.'
   id: totrans-32
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`age`：受访者接受调查时的年龄。'
 - en: '`sex`: Male or female.'
   id: totrans-33
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`sex`：男性或女性。'
 - en: '`polviews`: Political views on a range from liberal to conservative.'
   id: totrans-34
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`polviews`：从自由主义到保守主义的政治观点范围。'
 - en: '`partyid`: Political party affiliation, Democrat, Independent, or Republican.'
   id: totrans-35
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`partyid`：政党隶属，民主党、独立党或共和党。'
 - en: '`indus10`: [Code](https://www.census.gov/cgi-bin/sssd/naics/naicsrch?chart=2007)
     for the industry the respondent works in.'
   id: totrans-36
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`indus10`：受访者所在行业的[代码](https://www.census.gov/cgi-bin/sssd/naics/naicsrch?chart=2007)。'
 - en: We will use Redis sets to explore the relationships among these variables. Specifically,
     we will answer the following questions related to the “Linda problem”.
   id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将使用Redis集来探索这些变量之间的关系。具体来说，我们将回答与“琳达问题”相关的以下问题。
 - en: The number of respondents who are female bankers,
   id: totrans-38
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 女性银行家的受访者人数，
 - en: The number of respondents who are liberal female banker.
   id: totrans-39
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 自由主义女性银行家的受访者人数。
 - en: And we will see that the second number is smaller than the first.
   id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将看到第二个数字比第一个数字小。
 - en: Iterating rows
   id: totrans-41
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 遍历行
 - en: The following loop iterates the first 3 rows in the `DataFrame` and prints the
     `caseid` and the contents of the row.
   id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下循环遍历`DataFrame`中的前3行，并打印`caseid`和行的内容。
 - en: '[PRE5]'
   id: totrans-43
   prefs: []
@@ -231,6 +266,7 @@
   id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下循环遍历`DataFrame`并创建一个集，其中包含行业代码为6870的行的`caseid`，这表明受访者在银行业工作。
 - en: '[PRE6]'
   id: totrans-45
   prefs: []
@@ -240,16 +276,19 @@
   id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们使用Redis集来做同样的事情。
 - en: Question 1
   id: totrans-47
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 问题1
 - en: The following loop creates a Redis set that contains the `caseid` for all respondents
     whose `indus10` is `6870`.
   id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下循环创建一个Redis集，其中包含所有`indus10`为`6870`的受访者的`caseid`。
 - en: '[PRE7]'
   id: totrans-49
   prefs: []
@@ -259,20 +298,24 @@
   id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 编写一个Redis命令来获取结果集中的元素数量。
 - en: Here’s the [documentation for Redis set commands](https://redis.io/commands#set).
   id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是[Redis集命令的文档](https://redis.io/commands#set)。
 - en: Question 2
   id: totrans-52
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 问题2
 - en: The following cell makes a Python set that contains the `caseid` of all respondents
     who identify as female.
   id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下单元创建一个包含所有自我认同为女性的受访者的`caseid`的Python集。
 - en: '[PRE8]'
   id: totrans-54
   prefs: []
@@ -283,6 +326,7 @@
   id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下单元创建一个Python集，其中包括自我认同为“极端自由主义者”、“自由主义者”或“稍微自由主义者”的`caseid`。
 - en: '[PRE9]'
   id: totrans-56
   prefs: []
@@ -293,6 +337,7 @@
   id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 编写这些循环的Redis版本，创建这些集，并显示每个集中的元素数量。对于键，使用以下字符串：
 - en: '[PRE10]'
   id: totrans-58
   prefs: []
@@ -303,6 +348,7 @@
   id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 在继续之前，请确保您在Redis上有三个集，并且每个集中的元素数量与我们使用Python集得到的结果一致。
 - en: If you make a mistake, you can use `delete` to start with a fresh, empty set.
     Or you can use the following loop to start with a fresh, empty database.
   id: totrans-60

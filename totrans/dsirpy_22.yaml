@@ -1,364 +1,539 @@
 - en: Deque
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
 - en: 原文：[https://allendowney.github.io/DSIRP/deque.html](https://allendowney.github.io/DSIRP/deque.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/deque.ipynb)'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
 - en: Double-ended Queue
+  id: totrans-3
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: With Python lists, we can add and remove elements from the *end* of the list
     in constant time, but adding and removing from the beginning takes linear time.
     That’s because Python lists are implemented using arrays that grow dynamically.
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
 - en: With linked lists, we can add and remove elements from the *beginning* of the
     list in constant time, but adding and removing from the end takes linear time.
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
 - en: With either of these implementations, it is easy to make a stack, that is, a
     collection where the first element we add is the last element we remove. A stack
     is also called a “first-in, last-out” queue, abbreviated FILO.
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
 - en: But it is not easy to implement a “first-in, first-out” queue, that is, a collection
     where the first element we add is the *first* element we remove.
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
 - en: Fortunately, there are ways to implement lists that can add and remove elements
     from both ends in constant time. A collection that has this property is called
     a double-ended queue, abbreviated “deque” and pronounced like “deck”.
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
 - en: One way to implement a deque is a doubly-linked list, also known as a “head-tail
     linked list”. Each node in a doubly-linked list has a reference to the previous
     node in the list as well as the next element, which I will call `left` and `right`.
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE0]'
+  id: totrans-10
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: 'We can create nodes like this:'
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE1]'
+  id: totrans-12
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '[PRE2]'
+  id: totrans-13
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: 'And then link them up, like this:'
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE3]'
+  id: totrans-15
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: To traverse the list from left to right, we can start at the beginning and follow
     the `right` links.
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE4]'
+  id: totrans-17
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '[PRE5]'
+  id: totrans-18
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: To traverse from right to left, we start and the end and follow the `left` links.
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE6]'
+  id: totrans-20
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '[PRE7]'
+  id: totrans-21
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: Deque objects
+  id: totrans-22
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: For some operations, it will be convenient to have another object that represents
     the whole list (as opposed to one of its nodes).
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
 - en: Here’s the class definition.
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE8]'
+  id: totrans-25
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: 'Now we can create a `Deque` with references to `node1` and `node3`:'
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE9]'
+  id: totrans-27
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '[PRE10]'
+  id: totrans-28
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: For debugging purposes, I’ll use the following function, which prints the list
     from right to left and then left to right, which confirms that all of the links
     are correct.
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE11]'
+  id: totrans-30
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: Here’s an example.
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE12]'
+  id: totrans-32
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '[PRE13]'
+  id: totrans-33
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: Push
+  id: totrans-34
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: Now let’s see how we can add and remove elements from the beginning and end
     in constant time. We’ll start with the push operations.
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
 - en: If we start with an empty deque, adding the first node is a special case, so
     I’ll pull that into a function.
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE14]'
+  id: totrans-37
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: Here’s an example.
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE15]'
+  id: totrans-39
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '[PRE16]'
+  id: totrans-40
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '**Exercise:** Write `left_push`, which takes a `Deque` object and a new value,
     and adds the value to the beginning of the deque.'
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
 - en: If the queue is empty, it should call `push_first` to handle the special case;
     otherwise it should handle the general case.
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
 - en: 'You can use the following examples to test your function:'
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE17]'
+  id: totrans-44
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: '[PRE18]'
+  id: totrans-45
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: '[PRE19]'
+  id: totrans-46
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '[PRE20]'
+  id: totrans-47
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '**Exercise:** Write `right_push`, which takes a `Deque` object and a new value,
     and adds the value to the end of the deque.'
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
 - en: If the queue is empty, it should call `push_first` to handle the special case;
     otherwise it should handle the general case.
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
 - en: 'You can use the following examples to test your function:'
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE21]'
+  id: totrans-51
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: '[PRE22]'
+  id: totrans-52
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: '[PRE23]'
+  id: totrans-53
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: '[PRE24]'
+  id: totrans-54
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: Pop
+  id: totrans-55
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: 'To pop elements from the deque, we have to handle two special cases:'
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
 - en: If `head` and `tail` are both `None`, the deque is empty and we should raise
     a `ValueError`.
+  id: totrans-57
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: If `head` and `tail` refer to the same `Node`, there is only one element, so
     we should remove it and leave the deque empty.
+  id: totrans-58
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: The following function handles these cases.
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE25]'
+  id: totrans-60
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: 'We can test it like this:'
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE26]'
+  id: totrans-62
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: '[PRE27]'
+  id: totrans-63
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: '[PRE28]'
+  id: totrans-64
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: '**Exercise:** Write `left_pop`, which takes a `Deque` object, remove the first
     node, and return the first data value.'
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
 - en: If the queue is empty or has a single element, it should call `pop_last` to
     handle the special case; otherwise it should handle the general case.
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
 - en: You can use the following example to test your code.
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE29]'
+  id: totrans-68
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: '[PRE30]'
+  id: totrans-69
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: '[PRE31]'
+  id: totrans-70
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: '[PRE32]'
+  id: totrans-71
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: Check to see whether the remaining list is well-formed.
+  id: totrans-72
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE33]'
+  id: totrans-73
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: '[PRE34]'
+  id: totrans-74
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: '[PRE35]'
+  id: totrans-75
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: '[PRE36]'
+  id: totrans-76
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: '[PRE37]'
+  id: totrans-77
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE37]'
 - en: '[PRE38]'
+  id: totrans-78
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: '**Exercise:** Write `right_pop`, which takes a `Deque` object, remove the last
     node, and return the last data value.'
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
 - en: If the queue is empty or has a single element, it should call `pop_last` to
     handle the special case; otherwise it should handle the general case.
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果队列为空或只有一个元素，它应该调用`pop_last`来处理特殊情况；否则，它应该处理一般情况。
 - en: You can use the following examples to test your function.
+  id: totrans-81
   prefs: []
   type: TYPE_NORMAL
+  zh: 您可以使用以下示例来测试您的函数。
 - en: '[PRE39]'
+  id: totrans-82
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: '[PRE40]'
+  id: totrans-83
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE40]'
 - en: '[PRE41]'
+  id: totrans-84
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE41]'
 - en: '[PRE42]'
+  id: totrans-85
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE42]'
 - en: '[PRE43]'
+  id: totrans-86
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE43]'
 - en: '[PRE44]'
+  id: totrans-87
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE44]'
 - en: '[PRE45]'
+  id: totrans-88
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE45]'
 - en: '[PRE46]'
+  id: totrans-89
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE46]'
 - en: '[PRE47]'
+  id: totrans-90
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE47]'
 - en: '[PRE48]'
+  id: totrans-91
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE48]'
 - en: collections.deque
+  id: totrans-92
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: collections.deque
 - en: The Python collections module provides an implementation of a deque. You can
     read the [documentation here](https://docs.python.org/3/library/collections.html#collections.deque)
     and the [source code here](https://github.com/python/cpython/blob/d943d19172aa93ce88bade15b9f23a0ce3bc72ff/Modules/_collectionsmodule.c).
+  id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: Python的collections模块提供了deque的实现。您可以在[这里阅读文档](https://docs.python.org/3/library/collections.html#collections.deque)和在[这里查看源代码](https://github.com/python/cpython/blob/d943d19172aa93ce88bade15b9f23a0ce3bc72ff/Modules/_collectionsmodule.c)。
 - en: To confirm that it can add and remove elements from the beginning and end in
     constant time, let’s run some timing tests.
+  id: totrans-94
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了确认它可以在常数时间内添加和删除元素，让我们运行一些计时测试。
 - en: '[PRE49]'
+  id: totrans-95
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE49]'
 - en: '[PRE50]'
+  id: totrans-96
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE50]'
 - en: '[PRE51]'
+  id: totrans-97
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE51]'
 - en: '[PRE52]'
+  id: totrans-98
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE52]'
 - en: '[PRE53]'
+  id: totrans-99
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE53]'
 - en: '[PRE54]'
+  id: totrans-100
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE54]'
 - en: '[PRE55]'
+  id: totrans-101
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE55]'
 - en: '![_images/deque_62_0.png](../Images/85ba4d03f21dc178a2b369f21085a5b5.png)'
+  id: totrans-102
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/deque_62_0.png](../Images/85ba4d03f21dc178a2b369f21085a5b5.png)'
 - en: Running these operations `n` times is linear in `n`, which means that each one
     is constant time, at least on average.
+  id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: 运行这些操作`n`次在`n`中是线性的，这意味着每个操作至少在平均情况下是常数时间。
 - en: '**Exercise:** Modify the examples above to confirm that `append` and `pop`
     are also constant time.'
+  id: totrans-104
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** 修改上面的示例以确认`append`和`pop`也是常数时间。'
 - en: '*Data Structures and Information Retrieval in Python*'
+  id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: '*Python中的数据结构和信息检索*'
 - en: Copyright 2021 Allen Downey
+  id: totrans-106
   prefs: []
   type: TYPE_NORMAL
+  zh: 版权所有 2021 Allen Downey
 - en: 'License: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: 许可证：[知识共享署名-非商业性使用-相同方式共享4.0国际许可协议](https://creativecommons.org/licenses/by-nc-sa/4.0/)
