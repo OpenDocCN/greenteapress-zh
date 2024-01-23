@@ -3,16 +3,19 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 假设检验
 - en: 原文：[https://allendowney.github.io/ElementsOfDataScience/13_hypothesis.html](https://allendowney.github.io/ElementsOfDataScience/13_hypothesis.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ElementsOfDataScience/13_hypothesis.html](https://allendowney.github.io/ElementsOfDataScience/13_hypothesis.html)
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/13_hypothesis.ipynb)
     or [click here to download it](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/13_hypothesis.ipynb).'
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: '[单击此处在Colab上运行此笔记本](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/13_hypothesis.ipynb)或[单击此处下载](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/13_hypothesis.ipynb)。'
 - en: This chapter introduces statistical hypothesis testing, which is such a contentious
     topic in the history of statistics, it’s hard to provide a simple definition.
     Instead, I’ll start with an example, present the problem hypothesis testing is
@@ -20,12 +23,14 @@
   id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章介绍了统计假设检验，这在统计学历史上是一个有争议的话题，很难提供一个简单的定义。相反，我将从一个例子开始，提出假设检验旨在解决的问题，然后展示一个解决方案。
 - en: 'The solution I’ll show is different from what you might find in a statistics
     book. Instead of mathematical analysis, we will use computational simulations.
     This approach has two advantages and one disadvantage:'
   id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将展示的解决方案与您在统计书籍中找到的不同。我们将使用计算模拟而不是数学分析。这种方法有两个优点和一个缺点：
 - en: 'Advantage: The standard statistics curriculum includes many different tests,
     and many people find it hard to remember which one to use. In my opinion, simulation
     makes it clearer that there is only one testing framework.'
@@ -33,6 +38,7 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 优势：标准统计课程包括许多不同的测试，许多人发现很难记住应该使用哪一个。在我看来，模拟使得只有一个测试框架更加清晰。
 - en: 'Advantage: Simulations make modeling decision explicit. All statistical methods
     are based on models, but when we use mathematical methods, it is easy to forget
     the assumptions they are based on. With computation, the assumptions are more
@@ -41,6 +47,7 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 优势：模拟使建模决策明确。所有统计方法都是基于模型的，但是当我们使用数学方法时，很容易忘记它们所基于的假设。通过计算，假设更加明显，更容易尝试不同的模型。
 - en: 'Disadvantage: Simulation uses a lot of computation. Some of the examples in
     this notebook take several seconds to run and the results are only approximate.
     For some problems, there are analytic methods that are faster and more accurate.'
@@ -48,17 +55,20 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 缺点：模拟需要大量计算。本笔记本中的一些示例需要几秒钟才能运行，并且结果只是近似值。对于一些问题，有更快更准确的解析方法。
 - en: The examples in this chapter include results from a clinical trial related to
     peanut allergies, and survey data from the National Survey of Family Growth (NSFG)
     and the Behavioral Risk Factor Surveillance System (BRFSS).
   id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章的示例包括与花生过敏有关的临床试验结果，以及来自国家家庭增长调查（NSFG）和行为风险因素监测系统（BRFSS）的调查数据。
 - en: Testing Medical Treatments
   id: totrans-9
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 测试医疗治疗
 - en: The LEAP study was a randomized trial that tested the effect of eating peanut
     snacks on the development of peanut allergies (see [http://www.leapstudy.co.uk/leap-0#.YEJax3VKikA](http://www.leapstudy.co.uk/leap-0#.YEJax3VKikA)).
     The subjects were infants who were at high risk of developing peanut allergies
@@ -68,10 +78,12 @@
   id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: LEAP研究是一项随机试验，测试了食用花生零食对花生过敏发展的影响（请参阅[http://www.leapstudy.co.uk/leap-0#.YEJax3VKikA](http://www.leapstudy.co.uk/leap-0#.YEJax3VKikA)）。受试者是婴儿，他们因被诊断患有其他食物过敏而有高发花生过敏的风险。在几年的时间里，一半的受试者定期食用含花生的零食；另一半则完全不食用花生。
 - en: 'The conclusion of the study, reported in 2015 is:'
   id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 该研究的结论报告于2015年：
 - en: Of the children who avoided peanut, 17% developed peanut allergy by the age
     of 5 years. Remarkably, only 3% of the children who were randomized to eating
     the peanut snack developed allergy by age 5\. Therefore, in high-risk infants,
@@ -81,6 +93,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 避免食用花生的儿童中，有17%在5岁时发展出花生过敏。值得注意的是，只有3%的儿童在5岁时被随机分配食用花生零食的情况下发展出过敏。因此，在高风险婴儿中，从生命的第11个月开始持续食用花生对预防花生过敏的发展非常有效。
 - en: These results seem impressive, but as skeptical data scientists we should wonder
     whether it is possible that we are getting fooled by randomness. Maybe the apparent
     difference between the groups is due to chance, not the effectiveness of the treatment.
@@ -90,6 +103,7 @@
   id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些结果看起来令人印象深刻，但作为怀疑论的数据科学家，我们应该怀疑是否可能被随机性愚弄。也许组之间的明显差异是由于偶然而不是治疗的有效性。为了查看这是否可能，我们将使用一个模型来模拟实验，其中治疗没有效果，并看看我们有多少次看到组之间如此大的差异。
 - en: Detailed results of the study are reported in the *New England Journal of Medicine*
     (see [https://www.nejm.org/doi/full/10.1056/NEJMoa1414850](https://www.nejm.org/doi/full/10.1056/NEJMoa1414850)).
     In that article, Figure 1 shows the number of subjects in the treatment and control
@@ -97,6 +111,7 @@
   id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 该研究的详细结果报告在*新英格兰医学杂志*中（请参阅[https://www.nejm.org/doi/full/10.1056/NEJMoa1414850](https://www.nejm.org/doi/full/10.1056/NEJMoa1414850)）。在那篇文章中，图1显示了治疗组和对照组的受试者人数，这两组恰好相等。
 - en: '[PRE0]'
   id: totrans-15
   prefs: []
@@ -108,6 +123,7 @@
   id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 从图2中，我们可以提取每组发展花生过敏的受试者人数。具体来说，我们将使用“意向治疗分析的两个队列”的数字。
 - en: '[PRE1]'
   id: totrans-17
   prefs: []
@@ -117,6 +133,7 @@
   id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 利用这些数字，我们可以计算每组的风险百分比。
 - en: '[PRE2]'
   id: totrans-19
   prefs: []
