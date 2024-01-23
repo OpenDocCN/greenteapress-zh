@@ -218,16 +218,19 @@
   id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 但如果翻转需要0.1秒，也许你应该再试一会儿。为了弄清何时翻转，让我们再次对\(\lambda\)和\(t\)的一般值进行相同的分析。
 - en: Generalization
   id: totrans-36
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 泛化
 - en: To minimize human error, I’ll use Sympy to do the algebra. Here are the symbols
     I’ll use.
   id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了最小化人为错误，我将使用Sympy进行代数运算。以下是我将使用的符号。
 - en: '[PRE7]'
   id: totrans-38
   prefs: []
@@ -237,6 +240,7 @@
   id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是再次使用符号的似然。
 - en: '[PRE8]'
   id: totrans-40
   prefs: []
@@ -252,6 +256,7 @@
   id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是贝叶斯表，使用\(p\)和\(q\)作为假设的先验概率。
 - en: '[PRE10]'
   id: totrans-43
   prefs: []
@@ -261,24 +266,30 @@
   id: totrans-44
   prefs: []
   type: TYPE_TB
+  zh: '|  | 先验 | 似然 | 未归一化 | 后验 |'
 - en: '| --- | --- | --- | --- | --- |'
   id: totrans-45
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- |'
 - en: '| Right way | p | exp(-lam*t) | p*exp(-lam*t) | p*exp(-lam*t)/(p*exp(-lam*t)
     + q) |'
   id: totrans-46
   prefs: []
   type: TYPE_TB
+  zh: '| 正确方式 | p | exp(-lam*t) | p*exp(-lam*t) | p*exp(-lam*t)/(p*exp(-lam*t) + q)
+    |'
 - en: '| Wrong way | q | 1 | q | q/(p*exp(-lam*t) + q) |'
   id: totrans-47
   prefs: []
   type: TYPE_TB
+  zh: '| 错误方式 | q | 1 | q | q/(p*exp(-lam*t) + q) |'
 - en: From the table I’ll select the posterior probability that the orientation is
     correct.
   id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 从表中，我将选择正确方向的后验概率。
 - en: '[PRE11]'
   id: totrans-49
   prefs: []
@@ -288,11 +299,13 @@
   id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\displaystyle \frac{p}{p + q e^{lam t}}\]
 - en: 'You might recognize this as a form of the [logistic function](https://en.wikipedia.org/wiki/Logistic_function);
     we can compute it like this:'
   id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: 你可能会认出这是[逻辑函数](https://en.wikipedia.org/wiki/Logistic_function)的一种形式；我们可以这样计算：
 - en: '[PRE12]'
   id: totrans-52
   prefs: []
@@ -303,6 +316,7 @@
   id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们看看对于一系列`t`的值，假设先验概率为`p=0.5`，它是什么样子的。
 - en: '[PRE13]'
   id: totrans-54
   prefs: []
@@ -312,16 +326,19 @@
   id: totrans-55
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/de7c57b361e3862191718049c129160d6a2e309b37236e2a27b5b2808d885d73.png](../Images/e0b43dd27c7fbea3ab513e80e876d2c8.png)'
 - en: After a few seconds of fiddling, you should be reasonably convinced that the
     orientation is wrong.
   id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: 几秒钟的摆弄后，你应该相当确信方向是错误的。
 - en: Strategy
   id: totrans-57
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 策略
 - en: 'Now, let’s think about turning belief into action. Let me start with a conjecture:
     I suspect that the best strategy is to try on the first side until the probability
     of correct orientation drops below some threshold (to be determined), then try
@@ -330,17 +347,20 @@
   id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，让我们考虑将信念转化为行动。让我从一个猜想开始：我怀疑最好的策略是在第一面尝试，直到正确方向的概率降到某个阈值以下（待确定），然后再尝试第二面，直到概率再次降到该阈值以下，并重复直到成功。
 - en: To test this strategy, we will have to figure out how long to try as a function
     of the prior probability, `p`, and the threshold probability, `r`. Again, I’ll
     make Sympy do the work.
   id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了测试这个策略，我们将不得不根据先验概率`p`和阈值概率`r`的函数来确定尝试多长时间。同样，我将让Sympy来完成这项工作。
 - en: Here’s the equation that sets the posterior probability, which we computed in
     the previous section, to `r`.
   id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是设置我们在上一节中计算的后验概率为`r`的方程。
 - en: '[PRE14]'
   id: totrans-61
   prefs: []
@@ -350,10 +370,12 @@
   id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\displaystyle \frac{p e^{- lam t}}{p e^{- lam t} + q} = r\]
 - en: And here’s the solution for `t` in terms of `p`, `q`, `r`, and `lam`.
   id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是关于`t`的解，用`p`、`q`、`r`和`lam`表示。
 - en: '[PRE15]'
   id: totrans-64
   prefs: []
@@ -363,11 +385,13 @@
   id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\displaystyle \frac{\log{\left(\frac{p \left(1 - r\right)}{q r} \right)}}{lam}\]
 - en: And here’s how we can express this solution in terms of the prior and posterior
     odds.
   id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是我们如何用先验和后验几率来表达这个解决方案的方式。
 - en: '[PRE16]'
   id: totrans-67
   prefs: []
@@ -378,6 +402,7 @@
   id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们看看对于一系列`r`的值，假设先验概率为`p=0.5`，它是什么样子的。
 - en: '[PRE17]'
   id: totrans-69
   prefs: []
@@ -387,59 +412,70 @@
   id: totrans-70
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/585af370b3b160af0bbacf09de7d129454c09bcd871873947b05f4c51cef9119.png](../Images/92988963e15d5f8249194a7819a6f3b5.png)'
 - en: When the threshold is low, we have to wait a few seconds to reach it. As the
     threshold increases, the time to reach it decreases. We’ll use this function in
     the next section to simulate the strategy.
   id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: 当阈值较低时，我们必须等待几秒钟才能达到它。随着阈值的增加，达到它的时间减少。我们将在下一节中使用这个函数来模拟这个策略。
 - en: Simulation
   id: totrans-72
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 模拟
 - en: 'As a step toward optimization, let’s run a simulation. The following function
     takes as parameters:'
   id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为优化的一步，让我们进行一次模拟。以下函数的参数为：
 - en: '`correct`: A Boolean indicating if the orientation is correct.'
   id: totrans-74
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`correct`：一个布尔值，指示方向是否正确。'
 - en: '`p`: The prior probability that the orientation is correct.'
   id: totrans-75
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`p`：方向正确的先验概率。'
 - en: '`lam`: The rate parameter for the distribution of time until success.'
   id: totrans-76
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`lam`：成功之前的时间分布的速率参数。'
 - en: '`r`: The threshold for the posterior probability.'
   id: totrans-77
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`r`：后验概率的阈值。'
 - en: '`flip`: The time it takes to flip the connector, in seconds.'
   id: totrans-78
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`flip`：连接器翻转所需的时间，以秒为单位。'
 - en: '`trace`: A list that indicates how much time we have spent, so far, trying
     and flipping.'
   id: totrans-79
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`trace`：一个列表，指示我们到目前为止尝试和翻转的时间。'
 - en: It runs the simulation and returns a sequence of waiting and flipping times.
     The sum of this sequence is the total time it took to connect. And we can use
     the length of the sequence to figure out how many times we had to flip.
   id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 它运行模拟并返回等待和翻转时间的序列。这个序列的总和是连接所需的总时间。我们可以使用序列的长度来计算我们需要翻转的次数。
 - en: '[PRE18]'
   id: totrans-81
   prefs: []
@@ -449,6 +485,7 @@
   id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个测试运行，从正确的一面开始。
 - en: '[PRE19]'
   id: totrans-83
   prefs: []
@@ -463,6 +500,7 @@
   id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个运行，我们从错误的一面开始。
 - en: '[PRE21]'
   id: totrans-86
   prefs: []
@@ -478,11 +516,13 @@
   id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数多次以初始概率`p=0.5`运行模拟，一半时间从正确的方向开始。
 - en: It returns two arrays, containing the length of the trace and the total duration
     for each simulation.
   id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: 它返回两个数组，包含轨迹的长度和每次模拟的总持续时间。
 - en: '[PRE23]'
   id: totrans-90
   prefs: []
@@ -492,6 +532,7 @@
   id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是具有阈值概率`r=0.25`的平均总持续时间。
 - en: '[PRE24]'
   id: totrans-92
   prefs: []
@@ -506,16 +547,19 @@
   id: totrans-94
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用这个阈值，平均需要大约2秒才能连接。
 - en: Optimization
   id: totrans-95
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 优化
 - en: 'Now let’s see how the average duration varies as we sweep through a range of
     values for the threshold probability, `r`:'
   id: totrans-96
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们看看随着阈值概率`r`的一系列值的变化，平均持续时间是如何变化的：
 - en: '[PRE26]'
   id: totrans-97
   prefs: []
