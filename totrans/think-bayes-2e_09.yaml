@@ -1,8 +1,10 @@
 - en: Odds and Addends
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
 - en: 原文：[https://allendowney.github.io/ThinkBayes2/chap06.html](https://allendowney.github.io/ThinkBayes2/chap06.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
@@ -11,174 +13,242 @@
     if you want to do a Bayesian update on paper or in your head. It also sheds light
     on the important idea of **evidence** and how we can quantify the strength of
     evidence.
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
 - en: The second part of the chapter is about “addends”, that is, quantities being
     added, and how we can compute their distributions. We’ll define functions that
     compute the distribution of sums, differences, products, and other operations.
     Then we’ll use those distributions as part of a Bayesian update.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
 - en: Odds
+  id: totrans-4
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: One way to represent a probability is with a number between 0 and 1, but that’s
     not the only way. If you have ever bet on a football game or a horse race, you
     have probably encountered another representation of probability, called **odds**.
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
 - en: You might have heard expressions like “the odds are three to one”, but you might
     not know what that means. The **odds in favor** of an event are the ratio of the
     probability it will occur to the probability that it will not.
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
 - en: The following function does this calculation.
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE0]'
+  id: totrans-8
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: For example, if my team has a 75% chance of winning, the odds in their favor
     are three to one, because the chance of winning is three times the chance of losing.
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE1]'
+  id: totrans-10
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '[PRE2]'
+  id: totrans-11
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: You can write odds in decimal form, but it is also common to write them as a
     ratio of integers. So “three to one” is sometimes written \(3:1\).
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
 - en: When probabilities are low, it is more common to report the **odds against**
     rather than the odds in favor. For example, if my horse has a 10% chance of winning,
     the odds in favor are \(1:9\).
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE3]'
+  id: totrans-14
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '[PRE4]'
+  id: totrans-15
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: But in that case it would be more common I to say that the odds against are
     \(9:1\).
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE5]'
+  id: totrans-17
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '[PRE6]'
+  id: totrans-18
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: 'Given the odds in favor, in decimal form, you can convert to probability like
     this:'
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE7]'
+  id: totrans-20
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: 'For example, if the odds are \(3/2\), the corresponding probability is \(3/5\):'
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE8]'
+  id: totrans-22
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '[PRE9]'
+  id: totrans-23
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: 'Or if you represent odds with a numerator and denominator, you can convert
     to probability like this:'
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE10]'
+  id: totrans-25
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '[PRE11]'
+  id: totrans-26
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: '[PRE12]'
+  id: totrans-27
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: Probabilities and odds are different representations of the same information;
     given either one, you can compute the other. But some computations are easier
     when we work with odds, as we’ll see in the next section, and some computations
     are even easier with log odds, which we’ll see later.
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
 - en: Bayes’s Rule
+  id: totrans-29
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: 'So far we have worked with Bayes’s theorem in the “probability form”:'
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
 - en: \[P(H|D) = \frac{P(H)~P(D|H)}{P(D)}\]
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
 - en: 'Writing \(\mathrm{odds}(A)\) for odds in favor of \(A\), we can express Bayes’s
     Theorem in “odds form”:'
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
 - en: \[\mathrm{odds}(A|D) = \mathrm{odds}(A)~\frac{P(D|A)}{P(D|B)}\]
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
 - en: 'This is Bayes’s Rule, which says that the posterior odds are the prior odds
     times the likelihood ratio. Bayes’s Rule is convenient for computing a Bayesian
     update on paper or in your head. For example, let’s go back to the cookie problem:'
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
 - en: Suppose there are two bowls of cookies. Bowl 1 contains 30 vanilla cookies and
     10 chocolate cookies. Bowl 2 contains 20 of each. Now suppose you choose one of
     the bowls at random and, without looking, select a cookie at random. The cookie
     is vanilla. What is the probability that it came from Bowl 1?
+  id: totrans-35
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: The prior probability is 50%, so the prior odds are 1\. The likelihood ratio
     is \(\frac{3}{4} / \frac{1}{2}\), or \(3/2\). So the posterior odds are \(3/2\),
     which corresponds to probability \(3/5\).
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE13]'
+  id: totrans-37
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: '[PRE14]'
+  id: totrans-38
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '[PRE15]'
+  id: totrans-39
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '[PRE16]'
+  id: totrans-40
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: 'If we draw another cookie and it’s chocolate, we can do another update:'
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE17]'
+  id: totrans-42
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: '[PRE18]'
+  id: totrans-43
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: And convert back to probability.
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE19]'
+  id: totrans-45
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '[PRE20]'
+  id: totrans-46
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: Oliver’s Blood
+  id: totrans-47
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: 'I’ll use Bayes’s Rule to solve another problem from MacKay’s [*Information
     Theory, Inference, and Learning Algorithms*](https://www.inference.org.uk/mackay/itila/):'
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
 - en: Two people have left traces of their own blood at the scene of a crime. A suspect,
@@ -187,6 +257,7 @@
     frequency 60%) and of type ‘AB’ (a rare type, with frequency 1%). Do these data
     [the traces found at the scene] give evidence in favor of the proposition that
     Oliver was one of the people [who left blood at the scene]?
+  id: totrans-49
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
@@ -194,97 +265,125 @@
     evidence in favor of (or against) a hypothesis. Intuitively, we might say that
     data favor a hypothesis if the hypothesis is more likely in light of the data
     than it was before.
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
 - en: In the cookie problem, the prior odds are 1, which corresponds to probability
     50%. The posterior odds are \(3/2\), or probability 60%. So the vanilla cookie
     is evidence in favor of Bowl 1.
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
 - en: Bayes’s Rule provides a way to make this intuition more precise. Again
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
 - en: \[\mathrm{odds}(A|D) = \mathrm{odds}(A)~\frac{P(D|A)}{P(D|B)}\]
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
 - en: 'Dividing through by \(\mathrm{odds}(A)\), we get:'
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
 - en: \[\frac{\mathrm{odds}(A|D)}{\mathrm{odds}(A)} = \frac{P(D|A)}{P(D|B)}\]
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
 - en: The term on the left is the ratio of the posterior and prior odds. The term
     on the right is the likelihood ratio, also called the **Bayes factor**.
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
 - en: If the Bayes factor is greater than 1, that means that the data were more likely
     under \(A\) than under \(B\). And that means that the odds are greater, in light
     of the data, than they were before.
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
 - en: If the Bayes factor is less than 1, that means the data were less likely under
     \(A\) than under \(B\), so the odds in favor of \(A\) go down.
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
 - en: Finally, if the Bayes factor is exactly 1, the data are equally likely under
     either hypothesis, so the odds do not change.
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
 - en: Let’s apply that to the problem at hand. If Oliver is one of the people who
     left blood at the crime scene, he accounts for the ‘O’ sample; in that case, the
     probability of the data is the probability that a random member of the population
     has type ‘AB’ blood, which is 1%.
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
 - en: 'If Oliver did not leave blood at the scene, we have two samples to account
     for. If we choose two random people from the population, what is the chance of
     finding one with type ‘O’ and one with type ‘AB’? Well, there are two ways it
     might happen:'
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
 - en: The first person might have ‘O’ and the second ‘AB’,
+  id: totrans-62
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Or the first person might have ‘AB’ and the second ‘O’.
+  id: totrans-63
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: The probability of either combination is \((0.6) (0.01)\), which is 0.6%, so
     the total probability is twice that, or 1.2%. So the data are a little more likely
     if Oliver is *not* one of the people who left blood at the scene.
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
 - en: 'We can use these probabilities to compute the likelihood ratio:'
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE21]'
+  id: totrans-66
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: '[PRE22]'
+  id: totrans-67
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: Since the likelihood ratio is less than 1, the blood tests are evidence *against*
     the hypothesis that Oliver left blood at the scence.
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
 - en: 'But it is weak evidence. For example, if the prior odds were 1 (that is, 50%
     probability), the posterior odds would be 0.83, which corresponds to a probability
     of 45%:'
+  id: totrans-69
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE23]'
+  id: totrans-70
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: '[PRE24]'
+  id: totrans-71
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: So this evidence doesn’t “move the needle” very much.
+  id: totrans-72
   prefs: []
   type: TYPE_NORMAL
 - en: This example is a little contrived, but it demonstrates the counterintuitive
     result that data *consistent* with a hypothesis are not necessarily *in favor
     of* the hypothesis.
+  id: totrans-73
   prefs: []
   type: TYPE_NORMAL
 - en: 'If this result still bothers you, this way of thinking might help: the data
@@ -292,928 +391,1443 @@
     If Oliver accounts for the common event, that leaves the rare event unexplained.
     If Oliver doesn’t account for the ‘O’ blood, we have two chances to find someone
     in the population with ‘AB’ blood. And that factor of two makes the difference.'
+  id: totrans-74
   prefs: []
   type: TYPE_NORMAL
 - en: '**Exercise:** Suppose that based on other evidence, you prior belief in Oliver’s
     guilt is 90%. How much would the blood evidence in this section change your beliefs?
     What if you initially thought there was only a 10% chance of his guilt?'
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE25]'
+  id: totrans-77
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: '[PRE26]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-78
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE26]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE27]'
+  id: totrans-79
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: '[PRE28]</details>'
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE28]</details>'
 - en: Addends
+  id: totrans-81
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 加数
 - en: The second half of this chapter is about distributions of sums and results of
     other operations. We’ll start with a forward problem, where we are given the inputs
     and compute the distribution of the output. Then we’ll work on inverse problems,
     where we are given the outputs and we compute the distribution of the inputs.
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章的后半部分是关于总和的分布和其他操作的结果。我们将从一个正向问题开始，我们已经给出了输入，计算输出的分布。然后我们将解决逆问题，我们已经给出了输出，我们计算输入的分布。
 - en: 'As a first example, suppose you roll two dice and add them up. What is the
     distribution of the sum? I’ll use the following function to create a `Pmf` that
     represents the possible outcomes of a die:'
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: 首先，假设你掷两个骰子并把它们加在一起。和的分布是什么？我将使用以下函数来创建一个代表骰子可能结果的`Pmf`：
 - en: '[PRE29]'
+  id: totrans-84
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: On a six-sided die, the outcomes are 1 through 6, all equally likely.
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: 在一个六面骰子上，结果是1到6，都是等可能的。
 - en: '[PRE30]'
+  id: totrans-86
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE31]</details> ![_images/c43b36bcf66bd6b728a6fe5ac6a7fc5f7eb51478dc651542d4edae0b5b0321ac.png](../Images/c2a1877e04a8a3fa36a8f59028332ffb.png)'
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE31]</details> ![_images/c43b36bcf66bd6b728a6fe5ac6a7fc5f7eb51478dc651542d4edae0b5b0321ac.png](../Images/c2a1877e04a8a3fa36a8f59028332ffb.png)'
 - en: If we roll two dice and add them up, there are 11 possible outcomes, 2 through
     12, but they are not equally likely. To compute the distribution of the sum, we
     have to enumerate the possible outcomes.
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们掷两个骰子并把它们加在一起，就有11种可能的结果，从2到12，但它们并不是等可能的。要计算和的分布，我们必须列举可能的结果。
 - en: 'And that’s how this function works:'
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是这个函数的工作原理：
 - en: '[PRE32]'
+  id: totrans-91
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: The parameters are `Pmf` objects representing distributions.
+  id: totrans-92
   prefs: []
   type: TYPE_NORMAL
+  zh: 参数是代表分布的`Pmf`对象。
 - en: The loops iterate though the quantities and probabilities in the `Pmf` objects.
     Each time through the loop `q` gets the sum of a pair of quantities, and `p` gets
     the probability of the pair. Because the same sum might appear more than once,
     we have to add up the total probability for each sum.
+  id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: 循环迭代`Pmf`对象中的数量和概率。每次循环中，`q`得到一对数量的和，`p`得到一对的概率。因为同样的和可能会出现不止一次，我们必须把每个和的总概率相加起来。
 - en: 'Notice a subtle element of this line:'
+  id: totrans-94
   prefs: []
   type: TYPE_NORMAL
+  zh: 注意这行的微妙之处：
 - en: '[PRE33]'
+  id: totrans-95
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: I use parentheses on the right side of the assignment, which returns 0 if `q`
     does not appear yet in `res`. I use brackets on the left side of the assignment
     to create or update an element in `res`; using parentheses on the left side would
     not work.
+  id: totrans-96
   prefs: []
   type: TYPE_NORMAL
+  zh: 我在赋值的右侧使用括号，如果`q`在`res`中还没有出现，它会返回0。我在赋值的左侧使用方括号来创建或更新`res`中的一个元素；在左侧使用括号是行不通的。
 - en: '`Pmf` provides `add_dist`, which does the same thing. You can call it as a
     method, like this:'
+  id: totrans-97
   prefs: []
   type: TYPE_NORMAL
+  zh: '`Pmf`提供了`add_dist`，它也可以做同样的事情。你可以像这样调用它作为一个方法：'
 - en: '[PRE34]'
+  id: totrans-98
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: 'Or as a function, like this:'
+  id: totrans-99
   prefs: []
   type: TYPE_NORMAL
+  zh: 或者作为一个函数，像这样：
 - en: '[PRE35]'
+  id: totrans-100
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: 'And here’s what the result looks like:'
+  id: totrans-101
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是结果的样子：
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-102
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE36]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell source Hide code cell source</summary>'
+  id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE36]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>'
 - en: '[PRE37]</details> ![_images/5f14ae8079e6a213ad93fa1a0cefd00895bff212ba562dd9d19448f25a988969.png](../Images/6c1db637e7682329b5bfa0a26b1f7b4e.png)'
+  id: totrans-104
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE37]</details> ![_images/5f14ae8079e6a213ad93fa1a0cefd00895bff212ba562dd9d19448f25a988969.png](../Images/6c1db637e7682329b5bfa0a26b1f7b4e.png)'
 - en: 'If we have a sequence of `Pmf` objects that represent dice, we can compute
     the distribution of the sum like this:'
+  id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们有一系列代表骰子的`Pmf`对象，我们可以这样计算和的分布：
 - en: '[PRE38]'
+  id: totrans-106
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: 'As an example, we can make a list of three dice like this:'
+  id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，我们可以像这样制作一个三个骰子的列表：
 - en: '[PRE39]'
+  id: totrans-108
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: And we can compute the distribution of their sum like this.
+  id: totrans-109
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以这样计算它们的和的分布。
 - en: '[PRE40]'
+  id: totrans-110
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE40]'
 - en: 'The following figure shows what these three distributions look like:'
+  id: totrans-111
   prefs: []
   type: TYPE_NORMAL
+  zh: 下图显示了这三个分布的样子：
 - en: The distribution of a single die is uniform from 1 to 6.
+  id: totrans-112
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 单个骰子的分布是从1到6的均匀分布。
 - en: The sum of two dice has a triangle distribution between 2 and 12.
+  id: totrans-113
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 两个骰子的和在2到12之间有一个三角形分布。
 - en: The sum of three dice has a bell-shaped distribution between 3 and 18.
+  id: totrans-114
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 三个骰子的和在3到18之间有一个钟形分布。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-115
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE41]</details> ![_images/3f108e3febe8fa608321ae32f3fc6dcb0452841dd61e69fd0f44bd17c1c6ca14.png](../Images/5a5a0645b1a295392ef92cc14b5f632f.png)'
+  id: totrans-116
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE41]</details> ![_images/3f108e3febe8fa608321ae32f3fc6dcb0452841dd61e69fd0f44bd17c1c6ca14.png](../Images/5a5a0645b1a295392ef92cc14b5f632f.png)'
 - en: As an aside, this example demonstrates the Central Limit Theorem, which says
     that the distribution of a sum converges on a bell-shaped normal distribution,
     at least under some conditions.
+  id: totrans-117
   prefs: []
   type: TYPE_NORMAL
+  zh: 顺便说一句，这个例子证明了中心极限定理，它说的是总和的分布会收敛到一个钟形的正态分布，至少在某些条件下是这样。
 - en: Gluten Sensitivity
+  id: totrans-118
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 麸质敏感
 - en: In 2015 I read a paper that tested whether people diagnosed with gluten sensitivity
     (but not celiac disease) were able to distinguish gluten flour from non-gluten
     flour in a blind challenge ([you can read the paper here](https://onlinelibrary.wiley.com/doi/full/10.1111/apt.13372)).
+  id: totrans-119
   prefs: []
   type: TYPE_NORMAL
+  zh: 2015年，我读了一篇论文，测试了被诊断为麸质敏感（但不是乳糜热）的人是否能在盲目挑战中区分麸质面粉和非麸质面粉（[你可以在这里阅读这篇论文](https://onlinelibrary.wiley.com/doi/full/10.1111/apt.13372)）。
 - en: Out of 35 subjects, 12 correctly identified the gluten flour based on resumption
     of symptoms while they were eating it. Another 17 wrongly identified the gluten-free
     flour based on their symptoms, and 6 were unable to distinguish.
+  id: totrans-120
   prefs: []
   type: TYPE_NORMAL
+  zh: 在35名受试者中，有12人根据恢复症状而正确识别了麸质面粉。另外17人根据他们的症状错误地识别了无麸质面粉，还有6人无法区分。
 - en: The authors conclude, “Double-blind gluten challenge induces symptom recurrence
     in just one-third of patients.”
+  id: totrans-121
   prefs: []
   type: TYPE_NORMAL
+  zh: 作者得出结论：“双盲麸质挑战只会导致三分之一的患者出现症状复发。”
 - en: 'This conclusion seems odd to me, because if none of the patients were sensitive
     to gluten, we would expect some of them to identify the gluten flour by chance.
     So here’s the question: based on this data, how many of the subjects are sensitive
     to gluten and how many are guessing?'
+  id: totrans-122
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个结论对我来说似乎很奇怪，因为如果没有一个患者对麸质过敏，我们会期望其中一些人碰巧识别出麸质面粉。因此，这里的问题是：根据这些数据，有多少受试者对麸质过敏，有多少是猜测的？
 - en: 'We can use Bayes’s Theorem to answer this question, but first we have to make
     some modeling decisions. I’ll assume:'
+  id: totrans-123
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用贝叶斯定理来回答这个问题，但首先我们必须做一些建模决策。我假设：
 - en: People who are sensitive to gluten have a 95% chance of correctly identifying
     gluten flour under the challenge conditions, and
+  id: totrans-124
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 对于对麸质敏感的人来说，在挑战条件下正确识别麸质面粉的几率为95％，
 - en: People who are not sensitive have a 40% chance of identifying the gluten flour
     by chance (and a 60% chance of either choosing the other flour or failing to distinguish).
+  id: totrans-125
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 对于不敏感的人来说，有40％的几率碰巧识别出麸质面粉（60％的几率要么选择其他面粉，要么无法区分）。
 - en: These particular values are arbitrary, but the results are not sensitive to
     these choices.
+  id: totrans-126
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些特定值是任意的，但结果不会受到这些选择的影响。
 - en: I will solve this problem in two steps. First, assuming that we know how many
     subjects are sensitive, I will compute the distribution of the data. Then, using
     the likelihood of the data, I will compute the posterior distribution of the number
     of sensitive patients.
+  id: totrans-127
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将分两步解决这个问题。首先，假设我们知道有多少受试者对麸质过敏，我将计算数据的分布。然后，使用数据的似然性，我将计算敏感患者数量的后验分布。
 - en: The first is the **forward problem**; the second is the **inverse problem**.
+  id: totrans-128
   prefs: []
   type: TYPE_NORMAL
+  zh: 第一个是**正向问题**；第二个是**逆问题**。
 - en: The Forward Problem
+  id: totrans-129
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 正向问题
 - en: 'Suppose we know that 10 of the 35 subjects are sensitive to gluten. That means
     that 25 are not:'
+  id: totrans-130
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设我们知道35名受试者中有10名对麸质过敏。这意味着有25名不过敏：
 - en: '[PRE42]'
+  id: totrans-131
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE42]'
 - en: Each sensitive subject has a 95% chance of identifying the gluten flour, so
     the number of correct identifications follows a binomial distribution.
+  id: totrans-132
   prefs: []
   type: TYPE_NORMAL
+  zh: 每个敏感的受试者有95％的几率识别麸质面粉，因此正确识别的数量遵循二项分布。
 - en: I’ll use `make_binomial`, which we defined in <<_TheBinomialDistribution>>,
     to make a `Pmf` that represents the binomial distribution.
+  id: totrans-133
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将使用我们在<<_TheBinomialDistribution>>中定义的`make_binomial`来制作代表二项分布的`Pmf`。
 - en: '[PRE43]'
+  id: totrans-134
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE43]'
 - en: The results are the distributions for the number of correct identifications
     in each group.
+  id: totrans-135
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是每组正确识别数量的分布。
 - en: 'Now we can use `add_dist` to compute the distribution of the total number of
     correct identifications:'
+  id: totrans-136
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以使用`add_dist`来计算总正确识别数量的分布：
 - en: '[PRE44]'
+  id: totrans-137
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE44]'
 - en: 'Here are the results:'
+  id: totrans-138
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是结果：
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-139
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码隐藏代码单元格源代码</summary>
 - en: '[PRE45]</details> ![_images/3e47fb19260ca824056dcc90c9e53515d3d7c9be4757ccf994017254c93be06c.png](../Images/1f321000f1d6a53c287f697719fa9824.png)'
+  id: totrans-140
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE45]</details> ![_images/3e47fb19260ca824056dcc90c9e53515d3d7c9be4757ccf994017254c93be06c.png](../Images/1f321000f1d6a53c287f697719fa9824.png)'
 - en: We expect most of the sensitive subjects to identify the gluten flour correctly.
     Of the 25 insensitive subjects, we expect about 10 to identify the gluten flour
     by chance. So we expect about 20 correct identifications in total.
+  id: totrans-141
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们期望大多数敏感的受试者能够正确识别麸质面粉。在25名不敏感的受试者中，我们预计大约有10人会碰巧识别出麸质面粉。因此，我们预计总共有大约20个正确的识别。
 - en: 'This is the answer to the forward problem: given the number of sensitive subjects,
     we can compute the distribution of the data.'
+  id: totrans-142
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是正向问题的答案：鉴于敏感受试者的数量，我们可以计算数据的分布。
 - en: The Inverse Problem
+  id: totrans-143
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 逆问题
 - en: 'Now let’s solve the inverse problem: given the data, we’ll compute the posterior
     distribution of the number of sensitive subjects.'
+  id: totrans-144
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们解决逆问题：鉴于数据，我们将计算敏感受试者数量的后验分布。
 - en: 'Here’s how. I’ll loop through the possible values of `num_sensitive` and compute
     the distribution of the data for each:'
+  id: totrans-145
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是如何做的。我将循环遍历`num_sensitive`的可能值，并计算每个值的数据分布：
 - en: '[PRE46]'
+  id: totrans-146
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE46]'
 - en: The loop enumerates the possible values of `num_sensitive`. For each value,
     it computes the distribution of the total number of correct identifications, and
     stores the result as a column in a Pandas `DataFrame`.
+  id: totrans-147
   prefs: []
   type: TYPE_NORMAL
+  zh: 循环枚举`num_sensitive`的可能值。对于每个值，它计算总正确识别数量的分布，并将结果存储为Pandas`DataFrame`中的一列。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-148
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
 - en: '[PRE47]'
+  id: totrans-149
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE47]'
 - en: '|  | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | ... | 26 | 27 | 28 | 29 | 30 |
     31 | 32 | 33 | 34 | 35 |'
+  id: totrans-150
   prefs: []
   type: TYPE_TB
+  zh: '|  | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | ... | 26 | 27 | 28 | 29 | 30 |
+    31 | 32 | 33 | 34 | 35 |'
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
     | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  id: totrans-151
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+    | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
 - en: '| 0 | 1.719071e-08 | 1.432559e-09 | 1.193799e-10 | 9.948326e-12 | 8.290272e-13
     | 6.908560e-14 | 5.757133e-15 | 4.797611e-16 | 3.998009e-17 | 3.331674e-18 | ...
     | 1.501694e-36 | 1.251411e-37 | 1.042843e-38 | 8.690357e-40 | 7.241964e-41 | 6.034970e-42
     | 5.029142e-43 | 4.190952e-44 | 3.492460e-45 | 2.910383e-46 |'
+  id: totrans-152
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 1.719071e-08 | 1.432559e-09 | 1.193799e-10 | 9.948326e-12 | 8.290272e-13
+    | 6.908560e-14 | 5.757133e-15 | 4.797611e-16 | 3.998009e-17 | 3.331674e-18 | ...
+    | 1.501694e-36 | 1.251411e-37 | 1.042843e-38 | 8.690357e-40 | 7.241964e-41 | 6.034970e-42
+    | 5.029142e-43 | 4.190952e-44 | 3.492460e-45 | 2.910383e-46 |'
 - en: '| 1 | 4.011165e-07 | 5.968996e-08 | 7.162795e-09 | 7.792856e-10 | 8.013930e-11
     | 7.944844e-12 | 7.676178e-13 | 7.276377e-14 | 6.796616e-15 | 6.274653e-16 | ...
     | 7.508469e-34 | 6.486483e-35 | 5.596590e-36 | 4.823148e-37 | 4.152060e-38 | 3.570691e-39
     | 3.067777e-40 | 2.633315e-41 | 2.258457e-42 | 1.935405e-43 |'
+  id: totrans-153
   prefs: []
   type: TYPE_TB
 - en: '| 2 | 4.545987e-06 | 9.741401e-07 | 1.709122e-07 | 2.506426e-08 | 3.269131e-09
     | 3.940182e-10 | 4.490244e-11 | 4.908756e-12 | 5.197412e-13 | 5.365476e-14 | ...
     | 1.806613e-31 | 1.620070e-32 | 1.449030e-33 | 1.292922e-34 | 1.151034e-35 | 1.022555e-36
     | 9.066202e-38 | 8.023344e-39 | 7.088005e-40 | 6.251357e-41 |'
+  id: totrans-154
   prefs: []
   type: TYPE_TB
 - en: 3 rows × 36 columns</details>
+  id: totrans-155
   prefs: []
   type: TYPE_NORMAL
 - en: 'The following figure shows selected columns from the `DataFrame`, corresponding
     to different hypothetical values of `num_sensitive`:'
+  id: totrans-156
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-157
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE48]</details> ![_images/d3a6012daa1a36dea54616b3bab308a507c20c69b4c9b2e889c0aae0dae66295.png](../Images/62e4ea7462f4fe30667801a6293636a6.png)'
+  id: totrans-158
   prefs: []
   type: TYPE_NORMAL
 - en: 'Now we can use this table to compute the likelihood of the data:'
+  id: totrans-159
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE49]'
+  id: totrans-160
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE49]'
 - en: '`loc` selects a row from the `DataFrame`. The row with index 12 contains the
     probability of 12 correct identifications for each hypothetical value of `num_sensitive`.
     And that’s exactly the likelihood we need to do a Bayesian update.'
+  id: totrans-161
   prefs: []
   type: TYPE_NORMAL
 - en: 'I’ll use a uniform prior, which implies that I would be equally surprised by
     any value of `num_sensitive`:'
+  id: totrans-162
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE50]'
+  id: totrans-163
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE50]'
 - en: 'And here’s the update:'
+  id: totrans-164
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE51]'
+  id: totrans-165
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE51]'
 - en: <details class="hide below-input"><summary aria-label="Toggle hidden content">Show
     code cell output Hide code cell output</summary>
+  id: totrans-166
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE52]</details>'
+  id: totrans-167
   prefs: []
   type: TYPE_NORMAL
 - en: For comparison, I also compute the posterior for another possible outcome, 20
     correct identifications.
+  id: totrans-168
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE53]'
+  id: totrans-169
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE53]'
 - en: <details class="hide below-input"><summary aria-label="Toggle hidden content">Show
     code cell output Hide code cell output</summary>
+  id: totrans-170
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE54]</details>'
+  id: totrans-171
   prefs: []
   type: TYPE_NORMAL
 - en: The following figure shows posterior distributions of `num_sensitive` based
     on the actual data, 12 correct identifications, and the other possible outcome,
     20 correct identifications.
+  id: totrans-172
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-173
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE55]</details> ![_images/4edbc176c039585b4e37ae3bbaa48382e58f129df43bdad9a00b9891467b7541.png](../Images/be42bd3ed0fd91410501a73a59b454c4.png)'
+  id: totrans-174
   prefs: []
   type: TYPE_NORMAL
 - en: With 12 correct identifications, the most likely conclusion is that none of
     the subjects are sensitive to gluten. If there had been 20 correct identifications,
     the most likely conclusion would be that 11-12 of the subjects were sensitive.
+  id: totrans-175
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE56]'
+  id: totrans-176
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE56]'
 - en: '[PRE57]'
+  id: totrans-177
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE57]'
 - en: '[PRE58]'
+  id: totrans-178
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE58]'
 - en: '[PRE59]'
+  id: totrans-179
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE59]'
 - en: Summary
+  id: totrans-180
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: This chapter presents two topics that are almost unrelated except that they
     make the title of the chapter catchy.
+  id: totrans-181
   prefs: []
   type: TYPE_NORMAL
 - en: The first part of the chapter is about Bayes’s Rule, evidence, and how we can
     quantify the strength of evidence using a likelihood ratio or Bayes factor.
+  id: totrans-182
   prefs: []
   type: TYPE_NORMAL
 - en: The second part is about `add_dist`, which computes the distribution of a sum.
     We can use this function to solve forward and inverse problems; that is, given
     the parameters of a system, we can compute the distribution of the data or, given
     the data, we can compute the distribution of the parameters.
+  id: totrans-183
   prefs: []
   type: TYPE_NORMAL
 - en: In the next chapter, we’ll compute distributions for minimums and maximums,
     and use them to solve more Bayesian problems. But first you might want to work
     on these exercises.
+  id: totrans-184
   prefs: []
   type: TYPE_NORMAL
 - en: Exercises
+  id: totrans-185
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: '**Exercise:** Let’s use Bayes’s Rule to solve the Elvis problem from <<_Distributions>>:'
+  id: totrans-186
   prefs: []
   type: TYPE_NORMAL
 - en: Elvis Presley had a twin brother who died at birth. What is the probability
     that Elvis was an identical twin?
+  id: totrans-187
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: In 1935, about 2/3 of twins were fraternal and 1/3 were identical. The question
     contains two pieces of information we can use to update this prior.
+  id: totrans-188
   prefs: []
   type: TYPE_NORMAL
 - en: First, Elvis’s twin was also male, which is more likely if they were identical
     twins, with a likelihood ratio of 2.
+  id: totrans-189
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Also, Elvis’s twin died at birth, which is more likely if they were identical
     twins, with a likelihood ratio of 1.25.
+  id: totrans-190
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: If you are curious about where those numbers come from, I wrote [a blog post
     about it](https://www.allendowney.com/blog/2020/01/28/the-elvis-problem-revisited).
+  id: totrans-191
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果您对这些数字的来源感到好奇，我写了一篇[博客文章](https://www.allendowney.com/blog/2020/01/28/the-elvis-problem-revisited)。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-192
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE60]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-193
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE60]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE61]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-194
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE61]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE62]'
+  id: totrans-195
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE62]'
 - en: '[PRE63]</details>'
+  id: totrans-196
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE63]</details>'
 - en: '**Exercise:** The following is an [interview question that appeared on glassdoor.com](https://www.glassdoor.com/Interview/You-re-about-to-get-on-a-plane-to-Seattle-You-want-to-know-if-you-should-bring-an-umbrella-You-call-3-random-friends-of-y-QTN_519262.htm),
     attributed to Facebook:'
+  id: totrans-197
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**以下是一个出现在glassdoor.com上的[面试问题](https://www.glassdoor.com/Interview/You-re-about-to-get-on-a-plane-to-Seattle-You-want-to-know-if-you-should-bring-an-umbrella-You-call-3-random-friends-of-y-QTN_519262.htm)，据说是Facebook提出的：'
 - en: You’re about to get on a plane to Seattle. You want to know if you should bring
     an umbrella. You call 3 random friends of yours who live there and ask each independently
     if it’s raining. Each of your friends has a 2/3 chance of telling you the truth
     and a 1/3 chance of messing with you by lying. All 3 friends tell you that “Yes”
     it is raining. What is the probability that it’s actually raining in Seattle?
+  id: totrans-198
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 您即将搭乘飞往西雅图的飞机。您想知道是否应该带伞。您给住在那里的3个朋友分别打电话，独立询问是否下雨。您的每个朋友都有2/3的机会告诉您实话，有1/3的机会开玩笑说谎。所有3个朋友都告诉您“是的”，现在西雅图是否下雨的概率是多少？
 - en: Use Bayes’s Rule to solve this problem. As a prior you can assume that it rains
     in Seattle about 10% of the time.
+  id: totrans-199
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用贝叶斯定理来解决这个问题。作为先验，您可以假设西雅图下雨的概率约为10%。
 - en: This question causes some confusion about the differences between Bayesian and
     frequentist interpretations of probability; if you are curious about this point,
     [I wrote a blog article about it](http://allendowney.blogspot.com/2016/09/bayess-theorem-is-not-optional.html).
+  id: totrans-200
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个问题引起了一些关于贝叶斯和频率主义概率解释之间的差异的混淆；如果您对这一点感到好奇，我写了一篇[博客文章](http://allendowney.blogspot.com/2016/09/bayess-theorem-is-not-optional.html)。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-201
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE64]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-202
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE64]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE65]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-203
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE65]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE66]'
+  id: totrans-204
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE66]'
 - en: '[PRE67]</details>'
+  id: totrans-205
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE67]</details>'
 - en: '**Exercise:** [According to the CDC](https://www.cdc.gov/tobacco/data_statistics/fact_sheets/health_effects/effects_cig_smoking),
     people who smoke are about 25 times more likely to develop lung cancer than nonsmokers.'
+  id: totrans-206
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**[根据疾病控制和预防中心的数据](https://www.cdc.gov/tobacco/data_statistics/fact_sheets/health_effects/effects_cig_smoking)，吸烟者患肺癌的风险大约是不吸烟者的25倍。'
 - en: '[Also according to the CDC](https://www.cdc.gov/tobacco/data_statistics/fact_sheets/adult_data/cig_smoking/index.htm),
     about 14% of adults in the U.S. are smokers. If you learn that someone has lung
     cancer, what is the probability they are a smoker?'
+  id: totrans-207
   prefs: []
   type: TYPE_NORMAL
+  zh: '[根据疾病控制和预防中心的数据](https://www.cdc.gov/tobacco/data_statistics/fact_sheets/adult_data/cig_smoking/index.htm)，美国大约有14%的成年人是吸烟者。如果您得知某人患有肺癌，那么他们是吸烟者的概率是多少？'
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-208
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE68]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-209
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE68]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE69]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-210
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE69]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE70]'
+  id: totrans-211
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE70]'
 - en: '[PRE71]</details>'
+  id: totrans-212
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE71]</details>'
 - en: '**Exercise:** In *Dungeons & Dragons*, the amount of damage a goblin can withstand
     is the sum of two six-sided dice. The amount of damage you inflict with a short
     sword is determined by rolling one six-sided die. A goblin is defeated if the
     total damage you inflict is greater than or equal to the amount it can withstand.'
+  id: totrans-213
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**在《龙与地下城》中，地精可以承受的伤害量是两个六面骰子的总和。你用短剑造成的伤害量是通过掷一个六面骰子来确定的。如果你造成的总伤害大于或等于地精所能承受的伤害量，那么地精就被打败了。'
 - en: Suppose you are fighting a goblin and you have already inflicted 3 points of
     damage. What is your probability of defeating the goblin with your next successful
     attack?
+  id: totrans-214
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设您正在与一个地精战斗，并且您已经造成了3点伤害。在下一次成功的攻击中，您打败地精的概率是多少？
 - en: 'Hint: You can use `Pmf.sub_dist` to subtract a constant amount, like 3, from
     a `Pmf`.'
+  id: totrans-215
   prefs: []
   type: TYPE_NORMAL
+  zh: 提示：您可以使用`Pmf.sub_dist`从`Pmf`中减去一个常数，比如3。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-216
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE72]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-217
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE72]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE73]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-218
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE73]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE74]'
+  id: totrans-219
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE74]'
 - en: '|  | probs |'
+  id: totrans-220
   prefs: []
   type: TYPE_TB
+  zh: '|  | 概率 |'
 - en: '| --- | --- |'
+  id: totrans-221
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| -1 | 0.027778 |'
+  id: totrans-222
   prefs: []
   type: TYPE_TB
+  zh: '| -1 | 0.027778 |'
 - en: '| 0 | 0.055556 |'
+  id: totrans-223
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 0.055556 |'
 - en: '| 1 | 0.083333 |'
+  id: totrans-224
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 0.083333 |'
 - en: '| 2 | 0.111111 |'
+  id: totrans-225
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 0.111111 |'
 - en: '| 3 | 0.138889 |'
+  id: totrans-226
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 0.138889 |'
 - en: '| 4 | 0.166667 |'
+  id: totrans-227
   prefs: []
   type: TYPE_TB
+  zh: '| 4 | 0.166667 |'
 - en: '| 5 | 0.138889 |'
+  id: totrans-228
   prefs: []
   type: TYPE_TB
+  zh: '| 5 | 0.138889 |'
 - en: '| 6 | 0.111111 |'
+  id: totrans-229
   prefs: []
   type: TYPE_TB
+  zh: '| 6 | 0.111111 |'
 - en: '| 7 | 0.083333 |'
+  id: totrans-230
   prefs: []
   type: TYPE_TB
+  zh: '| 7 | 0.083333 |'
 - en: '| 8 | 0.055556 |'
+  id: totrans-231
   prefs: []
   type: TYPE_TB
+  zh: '| 8 | 0.055556 |'
 - en: '| 9 | 0.027778 |</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-232
   prefs: []
   type: TYPE_NORMAL
+  zh: '| 9 | 0.027778 |</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE75]'
+  id: totrans-233
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE75]'
 - en: '|  | probs |'
+  id: totrans-234
   prefs: []
   type: TYPE_TB
+  zh: '|  | 概率 |'
 - en: '| --- | --- |'
+  id: totrans-235
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| -1 | 0.000000 |'
+  id: totrans-236
   prefs: []
   type: TYPE_TB
+  zh: '| -1 | 0.000000 |'
 - en: '| 0 | 0.000000 |'
+  id: totrans-237
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 0.000000 |'
 - en: '| 1 | 0.090909 |'
+  id: totrans-238
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 0.090909 |'
 - en: '| 2 | 0.121212 |'
+  id: totrans-239
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 0.121212 |'
 - en: '| 3 | 0.151515 |'
+  id: totrans-240
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 0.151515 |'
 - en: '| 4 | 0.181818 |'
+  id: totrans-241
   prefs: []
   type: TYPE_TB
+  zh: '| 4 | 0.181818 |'
 - en: '| 5 | 0.151515 |'
+  id: totrans-242
   prefs: []
   type: TYPE_TB
+  zh: '| 5 | 0.151515 |'
 - en: '| 6 | 0.121212 |'
+  id: totrans-243
   prefs: []
   type: TYPE_TB
+  zh: '| 6 | 0.121212 |'
 - en: '| 7 | 0.090909 |'
+  id: totrans-244
   prefs: []
   type: TYPE_TB
+  zh: '| 7 | 0.090909 |'
 - en: '| 8 | 0.060606 |'
+  id: totrans-245
   prefs: []
   type: TYPE_TB
+  zh: '| 8 | 0.060606 |'
 - en: '| 9 | 0.030303 |</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-246
   prefs: []
   type: TYPE_NORMAL
+  zh: '| 9 | 0.030303 |</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE76]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-247
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE76]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE77]'
+  id: totrans-248
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE77]'
 - en: '![_images/c4aa15c5ffeb5acf5ca0a2614bbb8bdcf50b9c7d12890ac7caabd2715a152213.png](../Images/a619f1380207071d29980a7ce6c583c5.png)</details><details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-249
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/c4aa15c5ffeb5acf5ca0a2614bbb8bdcf50b9c7d12890ac7caabd2715a152213.png](../Images/a619f1380207071d29980a7ce6c583c5.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE78]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-250
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE78]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE79]'
+  id: totrans-251
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE79]'
 - en: '[PRE80]</details>'
+  id: totrans-252
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE80]</details>'
 - en: '**Exercise:** Suppose I have a box with a 6-sided die, an 8-sided die, and
     a 12-sided die. I choose one of the dice at random, roll it twice, multiply the
     outcomes, and report that the product is 12. What is the probability that I chose
     the 8-sided die?'
+  id: totrans-253
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**假设我有一个装有一个6面骰子、一个8面骰子和一个12面骰子的盒子。我随机选择一个骰子，掷两次，将结果相乘，并报告乘积为12。我选择了8面骰子的概率是多少？'
 - en: 'Hint: `Pmf` provides a function called `mul_dist` that takes two `Pmf` objects
     and returns a `Pmf` that represents the distribution of the product.'
+  id: totrans-254
   prefs: []
   type: TYPE_NORMAL
+  zh: 提示：`Pmf`提供了一个名为`mul_dist`的函数，该函数接受两个`Pmf`对象并返回一个代表乘积分布的`Pmf`。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-255
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE81]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-256
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE81]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE82]'
+  id: totrans-257
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE82]'
 - en: '|  | probs |'
+  id: totrans-258
   prefs: []
   type: TYPE_TB
+  zh: '|  | 概率 |'
 - en: '| --- | --- |'
+  id: totrans-259
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| 1 | 0.0625 |'
+  id: totrans-260
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 0.0625 |'
 - en: '| 2 | 0.1250 |'
+  id: totrans-261
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 0.1250 |'
 - en: '| 3 | 0.1250 |'
+  id: totrans-262
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 0.1250 |'
 - en: '| 4 | 0.1875 |'
+  id: totrans-263
   prefs: []
   type: TYPE_TB
+  zh: '| 4 | 0.1875 |'
 - en: '| 6 | 0.1250 |'
+  id: totrans-264
   prefs: []
   type: TYPE_TB
+  zh: '| 6 | 0.1250 |'
 - en: '| 8 | 0.1250 |'
+  id: totrans-265
   prefs: []
   type: TYPE_TB
+  zh: '| 8 | 0.1250 |'
 - en: '| 9 | 0.0625 |'
+  id: totrans-266
   prefs: []
   type: TYPE_TB
+  zh: '| 9 | 0.0625 |'
 - en: '| 12 | 0.1250 |'
+  id: totrans-267
   prefs: []
   type: TYPE_TB
+  zh: '| 12 | 0.1250 |'
 - en: '| 16 | 0.0625 |</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-268
   prefs: []
   type: TYPE_NORMAL
+  zh: '| 16 | 0.0625 |</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE83]'
+  id: totrans-269
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE83]'
 - en: '[PRE84]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-270
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE84]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE85]'
+  id: totrans-271
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE85]'
 - en: '|  | probs |'
+  id: totrans-272
   prefs: []
   type: TYPE_TB
+  zh: '|  | 概率 |'
 - en: '| --- | --- |'
+  id: totrans-273
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| 6 | 0.516129 |'
+  id: totrans-274
   prefs: []
   type: TYPE_TB
+  zh: '| 6 | 0.516129 |'
 - en: '| 8 | 0.290323 |'
+  id: totrans-275
   prefs: []
   type: TYPE_TB
+  zh: '| 8 | 0.290323 |'
 - en: '| 12 | 0.193548 |</details>'
+  id: totrans-276
   prefs: []
   type: TYPE_NORMAL
+  zh: '| 12 | 0.193548 |</details>'
 - en: '**Exercise:** *Betrayal at House on the Hill* is a strategy game in which characters
     with different attributes explore a haunted house. Depending on their attributes,
     the characters roll different numbers of dice. For example, if attempting a task
     that depends on knowledge, Professor Longfellow rolls 5 dice, Madame Zostra rolls
     4, and Ox Bellows rolls 3\. Each die yields 0, 1, or 2 with equal probability.'
+  id: totrans-277
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**《背叛之屋》是一款策略游戏，其中具有不同属性的角色探索一个闹鬼的房子。根据他们的属性，角色掷出不同数量的骰子。例如，如果尝试依赖知识的任务，Longfellow教授掷5个骰子，Madame
+    Zostra掷4个，Ox Bellows掷3个。每个骰子以相等的概率产生0、1或2。'
 - en: If a randomly chosen character attempts a task three times and rolls a total
     of 3 on the first attempt, 4 on the second, and 5 on the third, which character
     do you think it was?
+  id: totrans-278
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果随机选择的字符尝试了三次任务，并且第一次尝试得到了3，第二次得到了4，第三次得到了5，你认为是哪个字符？
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-279
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE86]'
+  id: totrans-280
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE86]'
 - en: '|  | probs |'
+  id: totrans-281
   prefs: []
   type: TYPE_TB
+  zh: '|  | 概率 |'
 - en: '| --- | --- |'
+  id: totrans-282
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| 0 | 0.333333 |'
+  id: totrans-283
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 0.333333 |'
 - en: '| 1 | 0.333333 |'
+  id: totrans-284
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 0.333333 |'
 - en: '| 2 | 0.333333 |</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-285
   prefs: []
   type: TYPE_NORMAL
+  zh: '| 2 | 0.333333 |</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE87]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-286
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE87]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE88]'
+  id: totrans-287
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE88]'
 - en: '[PRE89]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-288
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE89]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE90]'
+  id: totrans-289
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE90]'
 - en: '[PRE91]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-290
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE91]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE92]'
+  id: totrans-291
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE92]'
 - en: '|  | probs |'
+  id: totrans-292
   prefs: []
   type: TYPE_TB
+  zh: '|  | 概率 |'
 - en: '| --- | --- |'
+  id: totrans-293
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| Bellows | 0.333333 |'
+  id: totrans-294
   prefs: []
   type: TYPE_TB
+  zh: '| 贝洛斯 | 0.333333 |'
 - en: '| Zostra | 0.333333 |'
+  id: totrans-295
   prefs: []
   type: TYPE_TB
+  zh: '| 佐斯特拉 | 0.333333 |'
 - en: '| Longfellow | 0.333333 |</details> <details class="hide above-input"><summary
     aria-label="Toggle hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-296
   prefs: []
   type: TYPE_NORMAL
+  zh: '| 朗费罗 | 0.333333 |</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE93]'
+  id: totrans-297
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE93]'
 - en: '|  | probs |'
+  id: totrans-298
   prefs: []
   type: TYPE_TB
+  zh: '|  | 概率 |'
 - en: '| --- | --- |'
+  id: totrans-299
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| Bellows | 0.006401 |'
+  id: totrans-300
   prefs: []
   type: TYPE_TB
+  zh: '| 贝洛斯 | 0.006401 |'
 - en: '| Zostra | 0.009152 |'
+  id: totrans-301
   prefs: []
   type: TYPE_TB
+  zh: '| 佐斯特拉 | 0.009152 |'
 - en: '| Longfellow | 0.004798 |</details> <details class="hide above-input"><summary
     aria-label="Toggle hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-302
   prefs: []
   type: TYPE_NORMAL
+  zh: '| 朗费罗 | 0.004798 |</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE94]'
+  id: totrans-303
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE94]'
 - en: '|  | probs |'
+  id: totrans-304
   prefs: []
   type: TYPE_TB
+  zh: '|  | 概率 |'
 - en: '| --- | --- |'
+  id: totrans-305
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| Bellows | 0.314534 |'
+  id: totrans-306
   prefs: []
   type: TYPE_TB
+  zh: '| 贝洛斯 | 0.314534 |'
 - en: '| Zostra | 0.449704 |'
+  id: totrans-307
   prefs: []
   type: TYPE_TB
+  zh: '| 佐斯特拉 | 0.449704 |'
 - en: '| Longfellow | 0.235762 |</details>'
+  id: totrans-308
   prefs: []
   type: TYPE_NORMAL
+  zh: '| 朗费罗 | 0.235762 |</details>'
 - en: '**Exercise:** There are 538 members of the United States Congress. Suppose
     we audit their investment portfolios and find that 312 of them out-perform the
     market. Let’s assume that an honest member of Congress has only a 50% chance of
     out-performing the market, but a dishonest member who trades on inside information
     has a 90% chance. How many members of Congress are honest?'
+  id: totrans-309
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** 美国国会有538名成员。假设我们审计他们的投资组合，并发现其中有312人的表现超过了市场。让我们假设一个诚实的国会成员只有50%的机会超过市场，但一个利用内部信息交易的不诚实成员有90%的机会。国会有多少名成员是诚实的？'
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-310
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
 - en: '[PRE95]'
+  id: totrans-311
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE95]'
 - en: '[PRE96]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-312
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE96]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE97]'
+  id: totrans-313
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE97]'
 - en: '[PRE98]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-314
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE98]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE99]'
+  id: totrans-315
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE99]'
 - en: '[PRE100]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-316
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE100]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE101]'
+  id: totrans-317
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE101]'
 - en: '[PRE102]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-318
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE102]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE103]'
+  id: totrans-319
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE103]'
 - en: '![_images/7447fc4391e9aa1cba5f6cab483deaa41bb05fa97e087ee7f87a4204e41e03c6.png](../Images/45ad6998d89c6322118de39215430731.png)</details><details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-320
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/7447fc4391e9aa1cba5f6cab483deaa41bb05fa97e087ee7f87a4204e41e03c6.png](../Images/45ad6998d89c6322118de39215430731.png)</details><details
+    class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE104]'
+  id: totrans-321
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE104]'
 - en: '[PRE105]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-322
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE105]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE106]'
+  id: totrans-323
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE106]'
 - en: '[PRE107]</details>'
+  id: totrans-324
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE107]</details>'

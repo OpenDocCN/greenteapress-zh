@@ -3,11 +3,13 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 估计计数
 - en: 原文：[https://allendowney.github.io/ThinkBayes2/chap05.html](https://allendowney.github.io/ThinkBayes2/chap05.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ThinkBayes2/chap05.html](https://allendowney.github.io/ThinkBayes2/chap05.html)
 - en: In the previous chapter we solved problems that involve estimating proportions.
     In the Euro problem, we estimated the probability that a coin lands heads up,
     and in the exercises, you estimated a batting average, the fraction of people
@@ -15,11 +17,13 @@
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 在前一章中，我们解决了涉及估计比例的问题。在欧元问题中，我们估计了硬币正面朝上的概率，在练习中，您估计了击球率、在税收上作假的人的比例以及击落入侵外星人的机会。
 - en: Clearly, some of these problems are more realistic than others, and some are
     more useful than others.
   id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 显然，其中一些问题比其他问题更现实，有些比其他问题更有用。
 - en: In this chapter, we’ll work on problems related to counting, or estimating the
     size of a population. Again, some of the examples will seem silly, but some of
     them, like the German Tank problem, have real applications, sometimes in life
@@ -27,54 +31,64 @@
   id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本章中，我们将解决与计数或估计人口规模有关的问题。同样，一些例子看起来很愚蠢，但其中一些，比如德国坦克问题，有真正的应用，有时甚至是生死攸关的情况。
 - en: The Train Problem
   id: totrans-5
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 火车问题
 - en: 'I found the train problem in Frederick Mosteller’s, [*Fifty Challenging Problems
     in Probability with Solutions*](https://store.doverpublications.com/0486653552.html):'
   id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 我在Frederick Mosteller的[*Fifty Challenging Problems in Probability with Solutions*](https://store.doverpublications.com/0486653552.html)中找到了火车问题：
 - en: “A railroad numbers its locomotives in order 1…N. One day you see a locomotive
     with the number 60\. Estimate how many locomotives the railroad has.”
   id: totrans-7
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: “一个铁路公司按顺序给其火车编号为1…N。有一天你看到一个编号为60的火车。估计铁路公司有多少火车。”
 - en: 'Based on this observation, we know the railroad has 60 or more locomotives.
     But how many more? To apply Bayesian reasoning, we can break this problem into
     two steps:'
   id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 基于这一观察，我们知道铁路公司有60辆或更多的火车。但还有多少？为了应用贝叶斯推理，我们可以将这个问题分为两个步骤：
 - en: What did we know about \(N\) before we saw the data?
   id: totrans-9
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 在我们看到数据之前，我们对\(N\)了解多少？
 - en: For any given value of \(N\), what is the likelihood of seeing the data (a locomotive
     with number 60)?
   id: totrans-10
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 对于给定的\(N\)值，看到数据（编号为60的火车）的可能性有多大？
 - en: The answer to the first question is the prior. The answer to the second is the
     likelihood.
   id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 第一个问题的答案是先验。第二个问题的答案是可能性。
 - en: We don’t have much basis to choose a prior, so we’ll start with something simple
     and then consider alternatives. Let’s assume that \(N\) is equally likely to be
     any value from 1 to 1000.
   id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们没有太多依据来选择先验，所以我们将从简单的开始，然后考虑其他选择。让我们假设\(N\)可能是1到1000之间的任何一个值。
 - en: 'Here’s the prior distribution:'
   id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是先验分布：
 - en: '[PRE0]'
   id: totrans-14
   prefs: []
@@ -87,10 +101,12 @@
   id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们来计算数据的可能性。在一个假设的\(N\)辆火车中，我们看到编号60的概率是多少？如果我们假设看到任何一辆火车的可能性是相等的，那么看到任何一辆火车的概率是\(1/N\)。
 - en: 'Here’s the function that does the update:'
   id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是进行更新的函数：
 - en: '[PRE1]'
   id: totrans-17
   prefs: []
@@ -102,10 +118,12 @@
   id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个函数可能看起来很熟悉；它与前一章中骰子问题的更新函数相同。在可能性方面，火车问题与骰子问题相同。
 - en: 'Here’s the update:'
   id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是更新：
 - en: '[PRE2]'
   id: totrans-20
   prefs: []
@@ -115,23 +133,29 @@
   id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是后验的样子：
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
   id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE3]</details> ![_images/3fd4516774234abdc207c2e19bea0991f19f2b933e638bd40ce82c44782249c5.png](../Images/c8884d0e433a999659931b4e047c3514.png)'
   id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE3]</details> ![_images/3fd4516774234abdc207c2e19bea0991f19f2b933e638bd40ce82c44782249c5.png](../Images/c8884d0e433a999659931b4e047c3514.png)'
 - en: Not surprisingly, all values of \(N\) below 60 have been eliminated.
   id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 毫不奇怪，所有小于60的\(N\)值都被排除了。
 - en: The most likely value, if you had to guess, is 60.
   id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你必须猜的话，最有可能的值是60。
 - en: '[PRE4]'
   id: totrans-26
   prefs: []
@@ -149,20 +173,24 @@
   id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: 这可能看起来不是一个很好的猜测；毕竟，你碰巧看到编号最高的火车的机会有多大呢？然而，如果你想最大化准确猜中答案的机会，你应该猜60。
 - en: 'But maybe that’s not the right goal. An alternative is to compute the mean
     of the posterior distribution. Given a set of possible quantities, \(q_i\), and
     their probabilities, \(p_i\), the mean of the distribution is:'
   id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 但也许这不是正确的目标。另一种方法是计算后验分布的均值。给定一组可能的数量\(q_i\)及其概率\(p_i\)，分布的均值为：
 - en: \[\mathrm{mean} = \sum_i p_i q_i\]
   id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\mathrm{mean} = \sum_i p_i q_i\]
 - en: 'Which we can compute like this:'
   id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以这样计算：
 - en: '[PRE6]'
   id: totrans-32
   prefs: []
@@ -177,6 +205,7 @@
   id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 或者我们可以使用`Pmf`提供的方法：
 - en: '[PRE8]'
   id: totrans-35
   prefs: []
@@ -194,11 +223,13 @@
   id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 后验的均值是333，所以如果你想最小化误差，这可能是一个很好的猜测。如果您一遍又一遍地玩这个猜测游戏，使用后验的均值作为您的估计将在长期内最小化[均方误差](http://en.wikipedia.org/wiki/Minimum_mean_square_error)。
 - en: Sensitivity to the Prior
   id: totrans-38
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 对先验的敏感性
 - en: The prior I used in the previous section is uniform from 1 to 1000, but I offered
     no justification for choosing a uniform distribution or that particular upper
     bound. We might wonder whether the posterior distribution is sensitive to the
@@ -206,10 +237,12 @@
   id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 我在上一节中使用的先验是从1到1000均匀分布的，但我没有为选择均匀分布或特定的上限提供理由。我们可能会想知道后验分布对先验的敏感性。由于数据很少——只有一个观察结果——它是敏感的。
 - en: 'This table shows what happens as we vary the upper bound:'
   id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: 这张表显示了当我们改变上限时会发生什么：
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
   id: totrans-41
