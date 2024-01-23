@@ -1,205 +1,317 @@
 - en: Bayesian Dice
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 贝叶斯骰子
 - en: 原文：[https://allendowney.github.io/ThinkBayes2/bayes_dice.html](https://allendowney.github.io/ThinkBayes2/bayes_dice.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ThinkBayes2/bayes_dice.html](https://allendowney.github.io/ThinkBayes2/bayes_dice.html)
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ThinkBayes2/blob/master/examples/bayes_dice.ipynb)'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: '[点击这里在Colab上运行这个笔记本](https://colab.research.google.com/github/AllenDowney/ThinkBayes2/blob/master/examples/bayes_dice.ipynb)'
 - en: I’ve been enjoying Aubrey Clayton’s new book [*Bernoulli’s Fallacy*](https://aubreyclayton.com/bernoulli).
     Chapter 1, which is about the historical development of competing definitions
     of probability, is worth the price of admission alone.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 我一直在享受奥布里·克莱顿的新书[*伯努利的谬误*](https://aubreyclayton.com/bernoulli)。第1章讲述了概率竞争定义的历史发展，单独就值得一读。
 - en: 'One of the examples in the first chapter is a simplified version of a problem
     posed by Thomas Bayes. The original version, [which I wrote about here](https://allendowney.blogspot.com/2015/06/bayesian-billiards.html),
     involves a billiards (pool) table; Clayton’s version uses dice:'
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 第一章的一个例子是托马斯·贝叶斯提出的一个简化版本的问题。原始版本，[我在这里写过](https://allendowney.blogspot.com/2015/06/bayesian-billiards.html)，涉及到一个台球桌；克莱顿的版本使用了骰子：
 - en: Your friend rolls a six-sided die and secretly records the outcome; this number
     becomes the target *T*. You then put on a blindfold and roll the same six-sided
     die over and over. You’re unable to see how it lands, so each time your friend
     […] tells you *only* whether the number you just rolled was greater than, equal
     to, or less than *T*.
+  id: totrans-5
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 你的朋友掷一个六面骰子并秘密记录结果；这个数字成为目标*T*。然后你蒙上眼睛，一遍又一遍地掷同一个六面骰子。你看不见它是如何落地的，所以每次你的朋友[…]只告诉你刚刚掷出的数字是大于、等于还是小于*T*。
 - en: ''
+  id: totrans-6
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: 'Suppose in one round of the game we had this sequence of outcomes, with G representing
     a greater roll, L a lesser roll, and E an equal roll:'
+  id: totrans-7
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 假设在游戏的一轮中，我们有这样的结果序列，其中G代表更大的掷出，L代表较小的掷出，E代表相等的掷出：
 - en: ''
+  id: totrans-8
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: G, G, L, E, L, L, L, E, G, L
+  id: totrans-9
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: G, G, L, E, L, L, L, E, G, L
 - en: Based on this data, what is the posterior distribution of *T*?
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 根据这些数据，*T*的后验分布是什么？
 - en: Computing likelihoods
+  id: totrans-11
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 计算可能性
 - en: There are two parts of my solution; computing the likelihood of the data under
     each hypothesis and then using those likelihoods to compute the posterior distribution
     of *T*.
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 我的解决方案有两个部分；计算每个假设下数据的可能性，然后使用这些可能性来计算*T*的后验分布。
 - en: To compute the likelihoods, I’ll demonstrate one of my favorite idioms, using
     a meshgrid to apply an operation, like `>`, to all pairs of values from two sequences.
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了计算可能性，我将演示我最喜欢的习语之一，使用网格来对两个序列的所有值对应应用操作，比如`>`。
 - en: In this case, the sequences are
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这种情况下，序列是
 - en: '`hypos`: The hypothetical values of *T*, and'
+  id: totrans-15
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`hypos`：*T*的假设值，和'
 - en: '`outcomes`: possible outcomes each time we roll the dice'
+  id: totrans-16
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`outcomes`：每次掷骰子的可能结果'
 - en: '[PRE0]'
+  id: totrans-17
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: If we compute a meshgrid of `outcomes` and `hypos`, the result is two arrays.
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们计算`outcomes`和`hypos`的网格，结果是两个数组。
 - en: '[PRE1]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: The first contains the possible outcomes repeated down the columns.
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 第一个包含了可能的结果，按列重复。
 - en: '[PRE2]'
+  id: totrans-21
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '[PRE3]'
+  id: totrans-22
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: The second contains the hypotheses repeated across the rows.
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: 第二个包含了假设在行中重复。
 - en: '[PRE4]'
+  id: totrans-24
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '[PRE5]'
+  id: totrans-25
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: If we apply an operator like `>`, the result is a Boolean array.
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们应用像`>`这样的操作符，结果是一个布尔数组。
 - en: '[PRE6]'
+  id: totrans-27
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '[PRE7]'
+  id: totrans-28
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: Now we can use `mean` with `axis=1` to compute the fraction of `True` values
     in each row.
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以使用`mean`和`axis=1`来计算每行中`True`值的比例。
 - en: '[PRE8]'
+  id: totrans-30
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '[PRE9]'
+  id: totrans-31
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: 'The result is the probability that the outcome is greater than *T*, for each
     hypothetical value of *T*. I’ll name this array `gt`:'
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是每个假设值*T*的结果大于*T*的概率。我将命名这个数组为`gt`：
 - en: '[PRE10]'
+  id: totrans-33
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '[PRE11]'
+  id: totrans-34
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: The first element of the array is 5/6, which indicates that if *T* is 1, the
     probability of exceeding it is 5/6. The second element is 2/3, which indicates
     that if *T* is 2, the probability of exceeding it is 2/3. And do on.
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 数组的第一个元素是5/6，这表明如果*T*是1，超过*T*的概率是5/6。第二个元素是2/3，这表明如果*T*是2，超过*T*的概率是2/3。以此类推。
 - en: Now we can compute the corresponding arrays for less than and equal.
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以计算小于和等于的相应数组。
 - en: '[PRE12]'
+  id: totrans-37
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '[PRE13]'
+  id: totrans-38
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: '[PRE14]'
+  id: totrans-39
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '[PRE15]'
+  id: totrans-40
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: In the next section, we’ll use these arrays to do a Bayesian update.
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: 在下一节中，我们将使用这些数组来进行贝叶斯更新。
 - en: The Update
+  id: totrans-42
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 更新
 - en: In this example, computing the likelihoods was the hard part. The Bayesian update
     is easy. Since *T* was chosen by rolling a fair die, the prior distribution for
     *T* is uniform. I’ll use a Pandas `Series` to represent it.
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个例子中，计算可能性是困难的部分。贝叶斯更新很容易。由于*T*是通过掷一个公平的骰子选择的，*T*的先验分布是均匀的。我将使用Pandas `Series`来表示它。
 - en: '[PRE16]'
+  id: totrans-44
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '[PRE17]'
+  id: totrans-45
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: Now here’s the sequence of data, encoded using the likelihoods we computed in
     the previous section.
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在这是数据序列，使用我们在上一节中计算的可能性。
 - en: '[PRE18]'
+  id: totrans-47
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: The following loop updates the prior distribution by multiplying by each of
     the likelihoods.
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下循环通过将每个可能性相乘来更新先验分布。
 - en: '[PRE19]'
+  id: totrans-49
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: Finally, we normalize the posterior.
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，我们对后验进行归一化。
 - en: '[PRE20]'
+  id: totrans-51
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '[PRE21]'
+  id: totrans-52
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: Here’s what it looks like.
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是它的样子。
 - en: '[PRE22]'
+  id: totrans-54
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: '![_images/2cdd9367819cda73320cb08dfa72c3215cb420f6cb2d95d167d39c88a06b165b.png](../Images/a502859d6161a3b40c92c397beb77bd6.png)'
+  id: totrans-55
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/2cdd9367819cda73320cb08dfa72c3215cb420f6cb2d95d167d39c88a06b165b.png](../Images/a502859d6161a3b40c92c397beb77bd6.png)'
 - en: As an aside, you might have noticed that the values in `eq` are all the same.
     So when the value we roll is equal to \(T\), we don’t get any new information
     about *T*. We could leave the instances of `eq` out of the data, and we would
     get the same answer.
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: 顺便说一句，你可能已经注意到`eq`中的值都是相同的。所以当我们掷出的值等于\(T\)时，我们不会得到关于*T*的任何新信息。我们可以把`eq`的实例从数据中去掉，我们会得到相同的答案。
