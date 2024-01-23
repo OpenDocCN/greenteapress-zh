@@ -1,12 +1,15 @@
 - en: Resampling and Logistic Regression
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
 - en: 原文：[https://allendowney.github.io/ElementsOfDataScience/resample_logit.html](https://allendowney.github.io/ElementsOfDataScience/resample_logit.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/examples/resample_logit.ipynb)'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
 - en: Different ways of computing sampling distributions – and the statistics derived
@@ -14,26 +17,31 @@
     None of them are right or wrong; rather, they are based on different modeling
     assumptions. In practice, the differences are often small compared to other sources
     of error, so we are free to use whichever is convenient.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
 - en: 'This article is prompted by a recent question on [Reddit](https://www.reddit.com/r/statistics/comments/10ayfm5/q_parametric_bootstrap_for_logistic_regression/):'
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
 - en: I am trying to do parametric bootstrap for logistic regression but I don’t know
     what the random error terms should be. I know how to do it with linear regression
     since the error terms follow a normal distribution. Really appreciate any pointers
     to resources about this topic.
+  id: totrans-5
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: 'One of the responses recommends [this paper](https://www.scirp.org/journal/paperinformation.aspx?paperid=70962):
     “An Application of Bootstrapping in Logistic Regression Model”, by Isaac Akpor
     Adjei and Rezaul Karim.'
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
 - en: 'The paper suggests two ways to compute the sampling distribution of the parameters
     of a logistic regression by bootstrap sampling. They characterize one as parametric
     and the other as non-parametric, and advise:'
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
 - en: The non-parametric bootstrap [relies] on weaker assumptions (or no assumptions
@@ -45,6 +53,7 @@
     (in confidence interval estimation), lower probability of correct selection (in
     ranking and selection) and higher risk (in decision theory) when compared to a
     corresponding parametric procedure (Efron and Tibshirani, 1994 [1] ).
+  id: totrans-8
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
@@ -53,328 +62,447 @@
     over the other because the results are preferable in one way or another. It is
     also based on the assumption that the sampling distribution of the parameters
     – and the statistics derived from it – are uniquely and objectively defined.
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
 - en: I disagree with these premises. The parametric and non-parametric methods they
     present are based on different modeling decisions, so they compute answers to
     different questions. And the models they are based on are only two of many possible
     models.
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
 - en: To explain what I mean, I will implement the methods they propose and explain
     the assumptions each is based on. Then I will propose a third method that is a
     hybrid of the two. I’ll show that all three methods yield different results, and
     suggest criteria for when one might be preferred over the others.
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
 - en: The Data
+  id: totrans-12
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: As an example, I’ll use data from the General Social Survey (GSS). I’ll download
     an HDF file from the *Elements of Data Science* repository, which contains a subset
     of the GSS data that has been resampled to correct for stratified sampling.
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE0]'
+  id: totrans-14
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '[PRE1]'
+  id: totrans-15
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '[PRE2]'
+  id: totrans-16
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '[PRE3]'
+  id: totrans-17
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: It includes 64,814 respondents and 8 variables for each respondent.
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE4]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '|  | YEAR | ID_ | AGE | EDUC | SEX | GUNLAW | GRASS | REALINC |'
+  id: totrans-20
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  id: totrans-21
   prefs: []
   type: TYPE_TB
 - en: '| 0 | 1972 | 1 | 23.0 | 16.0 | 2 | 1.0 | NaN | 18951.0 |'
+  id: totrans-22
   prefs: []
   type: TYPE_TB
 - en: '| 1 | 1972 | 2 | 70.0 | 10.0 | 1 | 1.0 | NaN | 24366.0 |'
+  id: totrans-23
   prefs: []
   type: TYPE_TB
 - en: '| 2 | 1972 | 3 | 48.0 | 12.0 | 2 | 1.0 | NaN | 24366.0 |'
+  id: totrans-24
   prefs: []
   type: TYPE_TB
 - en: '| 3 | 1972 | 4 | 27.0 | 17.0 | 2 | 1.0 | NaN | 30458.0 |'
+  id: totrans-25
   prefs: []
   type: TYPE_TB
 - en: '| 4 | 1972 | 5 | 61.0 | 12.0 | 2 | 1.0 | NaN | 50763.0 |'
+  id: totrans-26
   prefs: []
   type: TYPE_TB
 - en: To demonstrate logistic regression, I’ll use on [one of the questions](https://gssdataexplorer.norc.org/variables/285/vshow)
     in the General Social Survey, which asks “Do you think the use of marijuana should
     be made legal or not?” The responses are in a column called `GRASS`; here are
     the values.
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE5]'
+  id: totrans-28
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '[PRE6]'
+  id: totrans-29
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: I’ll use StatsModels, which provides a function that does logistic regression.
     First we have to recode the dependent variable so `1` means “yes” and `0` means
     “no”. We can do that by replacing `2` with `0`.
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE7]'
+  id: totrans-31
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: To model quadratic relationships, I’ll add columns that contain the values of
     `AGE` and `EDUC` squared.
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE8]'
+  id: totrans-33
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: And I’ll drop the rows that have missing values for the variables we’ll need.
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE9]'
+  id: totrans-35
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: Logistic Regression
+  id: totrans-36
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: Here are the results of logistic regression with these variables.
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE10]'
+  id: totrans-38
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '[PRE11]'
+  id: totrans-39
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: Logit Regression Results
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
 - en: '| Dep. Variable: | GRASS | No. Observations: | 20475 |'
+  id: totrans-41
   prefs: []
   type: TYPE_TB
 - en: '| Model: | Logit | Df Residuals: | 20469 |'
+  id: totrans-42
   prefs: []
   type: TYPE_TB
 - en: '| Method: | MLE | Df Model: | 5 |'
+  id: totrans-43
   prefs: []
   type: TYPE_TB
 - en: '| Date: | Tue, 17 Jan 2023 | Pseudo R-squ.: | 0.05003 |'
+  id: totrans-44
   prefs: []
   type: TYPE_TB
 - en: '| Time: | 08:58:57 | Log-Likelihood: | -12151. |'
+  id: totrans-45
   prefs: []
   type: TYPE_TB
 - en: '| converged: | True | LL-Null: | -12791. |'
+  id: totrans-46
   prefs: []
   type: TYPE_TB
 - en: '| Covariance Type: | nonrobust | LLR p-value: | 1.555e-274 |'
+  id: totrans-47
   prefs: []
   type: TYPE_TB
 - en: '|  | coef | std err | z | P>&#124;z&#124; | [0.025 | 0.975] |'
+  id: totrans-48
   prefs: []
   type: TYPE_TB
 - en: '| Intercept | -1.6788 | 0.240 | -6.988 | 0.000 | -2.150 | -1.208 |'
+  id: totrans-49
   prefs: []
   type: TYPE_TB
 - en: '| C(SEX)[T.2] | -0.3849 | 0.031 | -12.394 | 0.000 | -0.446 | -0.324 |'
+  id: totrans-50
   prefs: []
   type: TYPE_TB
 - en: '| AGE | -0.0278 | 0.005 | -5.399 | 0.000 | -0.038 | -0.018 |'
+  id: totrans-51
   prefs: []
   type: TYPE_TB
 - en: '| AGE2 | 0.0001 | 5.28e-05 | 2.190 | 0.029 | 1.21e-05 | 0.000 |'
+  id: totrans-52
   prefs: []
   type: TYPE_TB
 - en: '| EDUC | 0.2000 | 0.031 | 6.412 | 0.000 | 0.139 | 0.261 |'
+  id: totrans-53
   prefs: []
   type: TYPE_TB
 - en: '| EDUC2 | -0.0029 | 0.001 | -2.450 | 0.014 | -0.005 | -0.001 |'
+  id: totrans-54
   prefs: []
   type: TYPE_TB
 - en: To get a sense of what the results look like, we can plot the predicted probability
     of saying “yes” as a function of age, for male and female respondents.
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE12]'
+  id: totrans-56
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '![_images/resample_logit_21_0.png](../Images/aa74a3679320584224ecc98eebfea4f2.png)'
+  id: totrans-57
   prefs: []
   type: TYPE_IMG
 - en: Men are more likely to support legalization than women, and younger people more
     likely than older people.
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
 - en: Boostrap sampling
+  id: totrans-59
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: Now let’s implement the method characterized as non-parametric, which is based
     on bootstrap resampling. The following function samples the rows of `data` with
     replacement and runs the regression model on the resampled data.
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE13]'
+  id: totrans-61
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: The options sent to `fit` make it run faster, but don’t affect the results by
     much.
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
 - en: Each time we run this process, the result represents a single draw from the
     sampling distribution of the parameters.
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE14]'
+  id: totrans-64
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '[PRE15]'
+  id: totrans-65
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: By running it many times, we generate a sample from the sampling distribution.
     `pqdm` runs the sampling process in multiple threads.
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE16]'
+  id: totrans-67
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '[PRE17]'
+  id: totrans-68
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: '|  | Intercept | C(SEX)[T.2] | AGE | AGE2 | EDUC | EDUC2 |'
+  id: totrans-69
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- | --- | --- | --- | --- |'
+  id: totrans-70
   prefs: []
   type: TYPE_TB
 - en: '| 0 | -1.747448 | -0.413202 | -0.027473 | 0.000114 | 0.213299 | -0.003302 |'
+  id: totrans-71
   prefs: []
   type: TYPE_TB
 - en: '| 1 | -2.055303 | -0.411384 | -0.029943 | 0.000129 | 0.276153 | -0.005563 |'
+  id: totrans-72
   prefs: []
   type: TYPE_TB
 - en: '| 2 | -2.050773 | -0.414960 | -0.023190 | 0.000094 | 0.242778 | -0.004530 |'
+  id: totrans-73
   prefs: []
   type: TYPE_TB
 - en: '| 3 | -2.031659 | -0.392391 | -0.029538 | 0.000147 | 0.251942 | -0.004616 |'
+  id: totrans-74
   prefs: []
   type: TYPE_TB
 - en: '| 4 | -1.847295 | -0.363829 | -0.031532 | 0.000156 | 0.238870 | -0.004339 |'
+  id: totrans-75
   prefs: []
   type: TYPE_TB
 - en: Here’s what the sampling distribution looks like for one of the parameters.
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE18]'
+  id: totrans-77
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: '![_images/resample_logit_31_0.png](../Images/898f8a3018abbd0356c483f5c05fecdf.png)'
+  id: totrans-78
   prefs: []
   type: TYPE_IMG
 - en: The mean of the sampling distribution should be close to the parameters we estimated
     with the original dataset, and it is.
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE19]'
+  id: totrans-80
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '|  | Sampling mean | Estimates |'
+  id: totrans-81
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- |'
+  id: totrans-82
   prefs: []
   type: TYPE_TB
 - en: '| Intercept | -1.681880 | -1.678838 |'
+  id: totrans-83
   prefs: []
   type: TYPE_TB
 - en: '| C(SEX)[T.2] | -0.379621 | -0.384919 |'
+  id: totrans-84
   prefs: []
   type: TYPE_TB
 - en: '| AGE | -0.027804 | -0.027825 |'
+  id: totrans-85
   prefs: []
   type: TYPE_TB
 - en: '| AGE2 | 0.000115 | 0.000116 |'
+  id: totrans-86
   prefs: []
   type: TYPE_TB
 - en: '| EDUC | 0.201137 | 0.200002 |'
+  id: totrans-87
   prefs: []
   type: TYPE_TB
 - en: '| EDUC2 | -0.002912 | -0.002855 |'
+  id: totrans-88
   prefs: []
   type: TYPE_TB
 - en: The standard deviations of the sampling distributions should be close to the
     standard errors computed by StatsModels, and they are. Most of them are close
     enough that the difference probably doesn’t matter in practice.
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE20]'
+  id: totrans-90
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '[PRE21]'
+  id: totrans-91
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: '|  | Sampling std | Standard error | Percent diff |'
+  id: totrans-92
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- | --- |'
+  id: totrans-93
   prefs: []
   type: TYPE_TB
 - en: '| Intercept | 0.248814 | 0.240243 | 3.567779 |'
+  id: totrans-94
   prefs: []
   type: TYPE_TB
 - en: '| C(SEX)[T.2] | 0.027137 | 0.031057 | -12.622418 |'
+  id: totrans-95
   prefs: []
   type: TYPE_TB
 - en: '| AGE | 0.004944 | 0.005153 | -4.066840 |'
+  id: totrans-96
   prefs: []
   type: TYPE_TB
 - en: '| AGE2 | 0.000051 | 0.000053 | -4.198399 |'
+  id: totrans-97
   prefs: []
   type: TYPE_TB
 - en: '| EDUC | 0.031756 | 0.031193 | 1.804886 |'
+  id: totrans-98
   prefs: []
   type: TYPE_TB
 - en: '| EDUC2 | 0.001197 | 0.001166 | 2.687507 |'
+  id: totrans-99
   prefs: []
   type: TYPE_TB
 - en: Of course, there is nothing magic about the standard errors computed by StatsModels;
     they are approximations based on a model of the sampling process, just like the
     results from resampling.
+  id: totrans-100
   prefs: []
   type: TYPE_NORMAL
 - en: The Resampling Framework
+  id: totrans-101
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: The purpose of the sampling distribution is to quantify the variability in an
     estimate due to random sampling. It is the answer to the question, “If we ran
     this sampling process many times, how much would we expect the results to vary?”
+  id: totrans-102
   prefs: []
   type: TYPE_NORMAL
 - en: To answer that question, we need a model of the sampling process. We use the
     model to simulate the sampling process and generate counterfactual datasets that
     represent other samples the process could have generated.
+  id: totrans-103
   prefs: []
   type: TYPE_NORMAL
 - en: The following figure represents this framework.
+  id: totrans-104
   prefs: []
   type: TYPE_NORMAL
 - en: '![](../Images/3bae19c4186703c90aec13ae2c4e4eec.png)'
+  id: totrans-105
   prefs: []
   type: TYPE_IMG
 - en: In bootstrap resampling, we treat the rows of the original dataset as if they
@@ -382,6 +510,7 @@
     to compute the sample statistic; in this example, it’s the parameters of the logistic
     regression model. We collect the results to form a sample from the sampling distribution,
     which we can use to compute confidence intervals and standard errors.
+  id: totrans-106
   prefs: []
   type: TYPE_NORMAL
 - en: This way of simulating the sampling process asks, in effect, what would have
@@ -389,9 +518,11 @@
     model of the sampling process. An alternative is to ask what would happen if we
     surveyed the same people, but they gave different answers. That’s the model that
     underlies the parametric method.
+  id: totrans-107
   prefs: []
   type: TYPE_NORMAL
 - en: Parametric bootstrap
+  id: totrans-108
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -400,242 +531,359 @@
     simulation, that the parameters we estimated from the original data are correct.
     If so, we can use the regression model to compute the predicted probability for
     each respondent, like this:'
+  id: totrans-109
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE22]'
+  id: totrans-110
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: '[PRE23]'
+  id: totrans-111
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: Now we can use these probabilities to generate a biased coin toss for each respondent.
+  id: totrans-112
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE24]'
+  id: totrans-113
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: '[PRE25]'
+  id: totrans-114
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: Then we can run the regression model with these simulated values as the dependent
     variable. The following function shows how.
+  id: totrans-115
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE26]'
+  id: totrans-116
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: Again, the result from a single simulation is a random value from the sampling
     distribution.
+  id: totrans-117
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE27]'
+  id: totrans-118
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: '[PRE28]'
+  id: totrans-119
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: If we run it many times, we get a sample from the sampling distribution.
+  id: totrans-120
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE29]'
+  id: totrans-121
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: '[PRE30]'
+  id: totrans-122
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: '|  | Intercept | C(SEX)[T.2] | AGE | AGE2 | EDUC | EDUC2 |'
+  id: totrans-123
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- | --- | --- | --- | --- |'
+  id: totrans-124
   prefs: []
   type: TYPE_TB
 - en: '| 0 | -1.804015 | -0.384881 | -0.014708 | -0.000017 | 0.180796 | -0.002302
     |'
+  id: totrans-125
   prefs: []
   type: TYPE_TB
 - en: '| 1 | -1.432664 | -0.422171 | -0.023207 | 0.000044 | 0.166255 | -0.001940 |'
+  id: totrans-126
   prefs: []
   type: TYPE_TB
 - en: '| 2 | -1.415658 | -0.406837 | -0.033815 | 0.000168 | 0.180158 | -0.001914 |'
+  id: totrans-127
   prefs: []
   type: TYPE_TB
 - en: '| 3 | -1.840253 | -0.394937 | -0.028435 | 0.000126 | 0.221295 | -0.003461 |'
+  id: totrans-128
   prefs: []
   type: TYPE_TB
 - en: '| 4 | -1.642430 | -0.375719 | -0.034946 | 0.000177 | 0.216985 | -0.003430 |'
+  id: totrans-129
   prefs: []
   type: TYPE_TB
 - en: Here’s the sampling distribution for a single parameter.
+  id: totrans-130
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE31]'
+  id: totrans-131
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: '![_images/resample_logit_53_0.png](../Images/2715a335ba843f9dcc8bd0f5d460bf53.png)'
+  id: totrans-132
   prefs: []
   type: TYPE_IMG
 - en: Again, the standard deviations should be close to the standard errors, and they
     are.
+  id: totrans-133
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE32]'
+  id: totrans-134
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: '|  | Sampling std | Standard error | Percent diff |'
+  id: totrans-135
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- | --- |'
+  id: totrans-136
   prefs: []
   type: TYPE_TB
 - en: '| Intercept | 0.199178 | 0.240243 | -17.092962 |'
+  id: totrans-137
   prefs: []
   type: TYPE_TB
 - en: '| C(SEX)[T.2] | 0.030494 | 0.031057 | -1.812430 |'
+  id: totrans-138
   prefs: []
   type: TYPE_TB
 - en: '| AGE | 0.005085 | 0.005153 | -1.327560 |'
+  id: totrans-139
   prefs: []
   type: TYPE_TB
 - en: '| AGE2 | 0.000054 | 0.000053 | 2.118557 |'
+  id: totrans-140
   prefs: []
   type: TYPE_TB
 - en: '| EDUC | 0.024899 | 0.031193 | -20.178173 |'
+  id: totrans-141
   prefs: []
   type: TYPE_TB
 - en: '| EDUC2 | 0.000935 | 0.001166 | -19.819110 |'
+  id: totrans-142
   prefs: []
   type: TYPE_TB
 - en: So we have two models of the sampling process that yield different sampling
     distributions. But these are not the only models.
+  id: totrans-143
   prefs: []
   type: TYPE_NORMAL
 - en: If the first method asks, “What if we surveyed different people?” and the second
     asks “What if we surveyed the same people and they gave different answers?”, let’s
     consider a third method that asks “¿Por qué no los dos?”.
+  id: totrans-144
   prefs: []
   type: TYPE_NORMAL
 - en: The Hybrid Model
+  id: totrans-145
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: The following function uses bootstrap sampling to simulate surveying different
     people; then it uses the parametric method to simulate their responses.
+  id: totrans-146
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE33]'
+  id: totrans-147
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: '[PRE34]'
+  id: totrans-148
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: '[PRE35]'
+  id: totrans-149
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: '[PRE36]'
+  id: totrans-150
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: '[PRE37]'
+  id: totrans-151
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE37]'
 - en: '|  | Intercept | C(SEX)[T.2] | AGE | AGE2 | EDUC | EDUC2 |'
+  id: totrans-152
   prefs: []
   type: TYPE_TB
+  zh: '|  | 截距 | C(SEX)[T.2] | 年龄 | 年龄2 | 教育 | 教育2 |'
 - en: '| --- | --- | --- | --- | --- | --- | --- |'
+  id: totrans-153
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- | --- | --- |'
 - en: '| 0 | -2.019658 | -0.385612 | -0.025974 | 0.000108 | 0.249717 | -0.005012 |'
+  id: totrans-154
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | -2.019658 | -0.385612 | -0.025974 | 0.000108 | 0.249717 | -0.005012 |'
 - en: '| 1 | -1.648528 | -0.351063 | -0.025192 | 0.000100 | 0.182666 | -0.002312 |'
+  id: totrans-155
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | -1.648528 | -0.351063 | -0.025192 | 0.000100 | 0.182666 | -0.002312 |'
 - en: '| 2 | -1.780499 | -0.445770 | -0.032862 | 0.000173 | 0.242922 | -0.004569 |'
+  id: totrans-156
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | -1.780499 | -0.445770 | -0.032862 | 0.000173 | 0.242922 | -0.004569 |'
 - en: '| 3 | -1.534347 | -0.464670 | -0.029799 | 0.000125 | 0.189228 | -0.002218 |'
+  id: totrans-157
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | -1.534347 | -0.464670 | -0.029799 | 0.000125 | 0.189228 | -0.002218 |'
 - en: '| 4 | -1.336757 | -0.404636 | -0.030217 | 0.000137 | 0.160754 | -0.001453 |'
+  id: totrans-158
   prefs: []
   type: TYPE_TB
+  zh: '| 4 | -1.336757 | -0.404636 | -0.030217 | 0.000137 | 0.160754 | -0.001453 |'
 - en: Here’s the sampling distribution for one of the parameters.
+  id: totrans-159
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个参数的抽样分布。
 - en: '[PRE38]'
+  id: totrans-160
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: '![_images/resample_logit_63_0.png](../Images/1da9d9633359e51d2198daf296dc4f70.png)'
+  id: totrans-161
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/resample_logit_63_0.png](../Images/1da9d9633359e51d2198daf296dc4f70.png)'
 - en: Again, the standard errors are comparable to the ones computed by StatsModels.
+  id: totrans-162
   prefs: []
   type: TYPE_NORMAL
+  zh: 同样，标准误与StatsModels计算的标准误相当。
 - en: '[PRE39]'
+  id: totrans-163
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: '|  | Sampling std | Standard error | Percent diff |'
+  id: totrans-164
   prefs: []
   type: TYPE_TB
+  zh: '|  | 抽样标准差 | 标准误 | 百分比差 |'
 - en: '| --- | --- | --- | --- |'
+  id: totrans-165
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- |'
 - en: '| Intercept | 0.236901 | 0.240243 | -1.390859 |'
+  id: totrans-166
   prefs: []
   type: TYPE_TB
+  zh: '| 截距 | 0.236901 | 0.240243 | -1.390859 |'
 - en: '| C(SEX)[T.2] | 0.035600 | 0.031057 | 14.629106 |'
+  id: totrans-167
   prefs: []
   type: TYPE_TB
+  zh: '| C(SEX)[T.2] | 0.035600 | 0.031057 | 14.629106 |'
 - en: '| AGE | 0.005769 | 0.005153 | 11.939358 |'
+  id: totrans-168
   prefs: []
   type: TYPE_TB
+  zh: '| 年龄 | 0.005769 | 0.005153 | 11.939358 |'
 - en: '| AGE2 | 0.000061 | 0.000053 | 15.337773 |'
+  id: totrans-169
   prefs: []
   type: TYPE_TB
+  zh: '| 年龄2 | 0.000061 | 0.000053 | 15.337773 |'
 - en: '| EDUC | 0.031469 | 0.031193 | 0.884552 |'
+  id: totrans-170
   prefs: []
   type: TYPE_TB
+  zh: '| 教育 | 0.031469 | 0.031193 | 0.884552 |'
 - en: '| EDUC2 | 0.001173 | 0.001166 | 0.613167 |'
+  id: totrans-171
   prefs: []
   type: TYPE_TB
+  zh: '| 教育2 | 0.001173 | 0.001166 | 0.613167 |'
 - en: Now we have four ways to compute sampling distributions, confidence intervals,
     and standard errors – and they yield different results. So you might wonder…
+  id: totrans-172
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们有四种计算抽样分布、置信区间和标准误的方法，它们得到了不同的结果。所以你可能会想…
 - en: Which One Is Right?
+  id: totrans-173
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 哪一个是正确的？
 - en: None of them are right. They are based on different models of the sampling process,
     so they quantify different sources of uncertainty.
+  id: totrans-174
   prefs: []
   type: TYPE_NORMAL
+  zh: 它们都不正确。它们基于不同的抽样过程模型，因此量化了不同的不确定性来源。
 - en: In some cases we might find that different methods converge on the same results,
     asymptotically, under certain assumptions. But that doesn’t really matter, because
     with finite data sets, the results are not generally the same. So the important
     question is whether the differences are big enough to matter in practice.
+  id: totrans-175
   prefs: []
   type: TYPE_NORMAL
+  zh: 在某些情况下，我们可能会发现不同的方法在某些假设下渐近地收敛于相同的结果。但这并不重要，因为对于有限的数据集，结果通常不相同。因此，重要的问题是这些差异是否足够重要。
 - en: In this example, it is easy to implement multiple models and compare the results.
     If they were substantially different, we would need to think more carefully about
     the modeling assumptions they are based on and choose the one we think is the
     best description of the data-generating process.
+  id: totrans-176
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个例子中，实现多个模型并比较结果很容易。如果它们有很大的不同，我们需要更仔细地思考它们基于的建模假设，并选择我们认为是最好的数据生成过程描述的模型。
 - en: But in this example, the differences are small enough that they probably don’t
     matter in practice. So we are free to choose whichever is easiest to implement,
     or fastest to compute, or convenient in some other way.
+  id: totrans-177
   prefs: []
   type: TYPE_NORMAL
+  zh: 但在这个例子中，差异很小，可能在实践中并不重要。因此，我们可以自由选择实现最容易的，或者计算最快的，或者在某些方面最方便的方法。
 - en: It is a common error to presume that the result of an analytic method is uniquely
     correct, and that results from computational methods like resampling are approximations
     to it. Analytic methods are often fast to compute, but they are always based on
     modeling assumptions and usually based on approximations, so they are no more
     correct than computational methods.
+  id: totrans-178
   prefs: []
   type: TYPE_NORMAL
+  zh: 认为分析方法的结果是唯一正确的，而计算方法如重采样得到的结果是对其的近似，是一个常见的错误。分析方法通常计算速度快，但它们总是基于建模假设，通常是基于近似，因此它们并不比计算方法更正确。
 - en: Copyright 2023 Allen Downey
+  id: totrans-179
   prefs: []
   type: TYPE_NORMAL
+  zh: 版权所有2023年Allen Downey
 - en: '[Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  id: totrans-180
   prefs: []
   type: TYPE_NORMAL
+  zh: '[署名-非商业性使用-相同方式共享4.0国际(CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/)'

@@ -373,6 +373,7 @@
   id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 当我和妻子期待第一个孩子时，我们听说第一个孩子更有可能晚出生。但我们也听说第一个孩子更有可能早出生。那到底是哪个？作为一个手头有太多时间的数据科学家，我决定找出答案。我从家庭增长国家调查（NSFG）中获取了数据，这是我们在之前章节中使用过的同一调查。我把2015-2017年调查的结果放在了一个HDF文件中。以下是前几行的结果。
 - en: '[PRE21]'
   id: totrans-59
   prefs: []
@@ -383,40 +384,54 @@
   id: totrans-60
   prefs: []
   type: TYPE_TB
+  zh: '|  | CASEID | OUTCOME | BIRTHWGT_LB1 | BIRTHWGT_OZ1 | PRGLNGTH | NBRNALIV |
+    AGECON | AGEPREG | BIRTHORD | HPAGELB | WGT2015_2017 |'
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
   id: totrans-61
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
 - en: '| 0 | 70627 | 1 | 7.0 | 8.0 | 40 | 1.0 | 28 | 29.0 | 1.0 | 5.0 | 19877.457610
     |'
   id: totrans-62
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 70627 | 1 | 7.0 | 8.0 | 40 | 1.0 | 28 | 29.0 | 1.0 | 5.0 | 19877.457610
+    |'
 - en: '| 1 | 70627 | 4 | NaN | NaN | 14 | NaN | 32 | 32.0 | NaN | NaN | 19877.457610
     |'
   id: totrans-63
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 70627 | 4 | NaN | NaN | 14 | NaN | 32 | 32.0 | NaN | NaN | 19877.457610
+    |'
 - en: '| 2 | 70627 | 1 | 9.0 | 2.0 | 39 | 1.0 | 33 | 33.0 | 2.0 | 5.0 | 19877.457610
     |'
   id: totrans-64
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 70627 | 1 | 9.0 | 2.0 | 39 | 1.0 | 33 | 33.0 | 2.0 | 5.0 | 19877.457610
+    |'
 - en: '| 3 | 70628 | 1 | 6.0 | 9.0 | 39 | 1.0 | 17 | 18.0 | 1.0 | 1.0 | 4221.017695
     |'
   id: totrans-65
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 70628 | 1 | 6.0 | 9.0 | 39 | 1.0 | 17 | 18.0 | 1.0 | 1.0 | 4221.017695
+    |'
 - en: '| 4 | 70628 | 1 | 7.0 | 0.0 | 39 | 1.0 | 19 | 20.0 | 2.0 | 2.0 | 4221.017695
     |'
   id: totrans-66
   prefs: []
   type: TYPE_TB
+  zh: '| 4 | 70628 | 1 | 7.0 | 0.0 | 39 | 1.0 | 19 | 20.0 | 2.0 | 2.0 | 4221.017695
+    |'
 - en: We’ll use the `OUTCOME` column to select pregnancies that ended with a live
     birth.
   id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将使用`OUTCOME`列来选择以活产结束的怀孕。
 - en: '[PRE22]'
   id: totrans-68
   prefs: []
@@ -432,6 +447,7 @@
   id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: 并使用`PRGLNGTH`来选择在怀孕第37周或之后出生的足月婴儿。
 - en: '[PRE24]'
   id: totrans-71
   prefs: []
@@ -441,6 +457,7 @@
   id: totrans-72
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个数据集包括2724个第一个宝宝的数据。
 - en: '[PRE25]'
   id: totrans-73
   prefs: []
@@ -455,6 +472,7 @@
   id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: 还有3115个（不是第一个）婴儿。
 - en: '[PRE27]'
   id: totrans-76
   prefs: []
@@ -469,6 +487,7 @@
   id: totrans-78
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以选择第一个宝宝和其他宝宝的怀孕期长度。
 - en: '[PRE29]'
   id: totrans-79
   prefs: []
@@ -478,6 +497,7 @@
   id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是两组的怀孕期长度的平均值，以周为单位。
 - en: '[PRE30]'
   id: totrans-81
   prefs: []
@@ -493,6 +513,7 @@
   id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个数据集中，第一个宝宝的平均出生时间要晚一点。差异大约是0.2周，或者33小时。
 - en: '[PRE32]'
   id: totrans-84
   prefs: []
@@ -513,6 +534,7 @@
   id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: 相对于平均长度为39周，这并不是一个很大的差异。我们可能会想知道，即使两组是相同的，是否会有这么大的差异。为了回答这个问题，让我们想象一个世界，在那里第一个宝宝和其他宝宝的怀孕期长度没有差异。我们应该如何对这样的世界建模？和建模决策一样，有很多选择。一个简单的方法是将两组合并，计算怀孕期长度的平均值和标准差，就像这样：
 - en: '[PRE34]'
   id: totrans-87
   prefs: []
@@ -528,6 +550,7 @@
   id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以使用第11章中的`simulate_sample_mean`从正态分布中抽取一个随机样本，并返回均值。
 - en: '[PRE36]'
   id: totrans-90
   prefs: []
@@ -539,6 +562,7 @@
   id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们运行1000次，它会模拟抽样和测量过程，并返回从1000次模拟实验中的结果列表。以下是样本量为`n_first`的模拟结果：
 - en: '[PRE37]'
   id: totrans-92
   prefs: []
@@ -548,6 +572,7 @@
   id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: 还有样本量为`n_other`的样本。
 - en: '[PRE38]'
   id: totrans-94
   prefs: []
@@ -559,6 +584,7 @@
   id: totrans-95
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们逐个元素地减去模拟的均值，结果就是从模拟实验中观察到的差异列表，其中两组的分布是相同的。
 - en: '[PRE39]'
   id: totrans-96
   prefs: []
@@ -568,6 +594,7 @@
   id: totrans-97
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用KDE图来可视化这些值的分布。
 - en: '[PRE40]'
   id: totrans-98
   prefs: []
@@ -577,6 +604,7 @@
   id: totrans-99
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/13_hypothesis_64_0.png](../Images/31bd3f643026950fd3321396b7ab9c9c.png)'
 - en: The center of this distribution is near zero, which makes sense if the distribution
     in both group is the same. Just by chance, we sometimes see differences as big
     as 0.1 weeks, but in 1000 simulations, we never see a difference as big as the
@@ -584,6 +612,7 @@
   id: totrans-100
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个分布的中心接近于零，如果两组的分布相同，这是有道理的。仅仅偶然地，我们有时会看到0.1周的差异，但在1000次模拟中，我们从未看到数据中观察到的差异那么大，几乎是0.2周。
 - en: Based on this result, we can pretty much rule out the possibility that the difference
     we saw is due to random sampling. But we should remember that there are other
     possible sources of error. For one, pregnancy lengths in the NSFG are self-reported.
@@ -593,6 +622,7 @@
   id: totrans-101
   prefs: []
   type: TYPE_NORMAL
+  zh: 基于这个结果，我们基本可以排除我们看到的差异是由于随机抽样造成的可能性。但我们应该记住还有其他可能的误差来源。首先，NSFG中的怀孕期长度是自我报告的。当受访者接受采访时，他们对第一个孩子的回忆可能不如对最近孩子的回忆准确。或者对怀孕期长度的估计可能在经验不足的母亲身上不太准确。
 - en: A correspondent of mine, who knows more than me about giving birth, suggested
     yet another possibility. If a first baby is born by [Caesarean section](https://en.wikipedia.org/wiki/Caesarean_section),
     it is more likely that subsequent deliveries will be scheduled, and less likely
@@ -601,6 +631,7 @@
   id: totrans-102
   prefs: []
   type: TYPE_NORMAL
+  zh: 我的一位了解分娩情况比我更多的通讯员提出了另一个可能性。如果第一个宝宝是通过[剖腹产](https://en.wikipedia.org/wiki/Caesarean_section)出生的，那么后续的分娩更有可能是预定的，并且不太可能超过39周。这可能会降低非第一个宝宝的平均值。
 - en: In summary, the results in this section suggest that the observed difference
     is unlikely to be due to chance, but there are other possible explanations.
   id: totrans-103
