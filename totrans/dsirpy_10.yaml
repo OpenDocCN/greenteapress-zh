@@ -3,15 +3,18 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 深度优先搜索
 - en: 原文：[https://allendowney.github.io/DSIRP/dfs.html](https://allendowney.github.io/DSIRP/dfs.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/DSIRP/dfs.html](https://allendowney.github.io/DSIRP/dfs.html)
 - en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/dfs.ipynb)'
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: '[单击此处在Colab上运行本章](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/dfs.ipynb)'
 - en: This notebook presents “depth first search” as a way to iterate through the
     nodes in a tree. This algorithm applies to any kind of tree, but since we need
     an example, we’ll use BeautifulSoup, which is a Python module that reads HTML
@@ -19,11 +22,13 @@
   id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 本笔记本将“深度优先搜索”作为一种遍历树中节点的方法。这个算法适用于任何类型的树，但由于我们需要一个例子，我们将使用BeautifulSoup，它是一个读取HTML（和相关语言）并构建代表内容的树的Python模块。
 - en: Using BeautifulSoup
   id: totrans-4
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 使用BeautifulSoup
 - en: When you download a web page, the contents are written in HyperText Markup Language,
     aka HTML. For example, here is a minimal HTML document, which I borrowed from
     the [BeautifulSoup documentation](https://beautiful-soup-4.readthedocs.io). The
@@ -31,6 +36,7 @@
   id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 当您下载网页时，内容是用超文本标记语言（HTML）编写的。例如，这是一个最小的HTML文档，我从[BeautifulSoup文档](https://beautiful-soup-4.readthedocs.io)中借来的。文本来自刘易斯·卡罗尔的《爱丽丝梦游仙境》。
 - en: '[PRE0]'
   id: totrans-6
   prefs: []
@@ -40,6 +46,7 @@
   id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是我们如何使用BeautifulSoup来读取它。
 - en: '[PRE1]'
   id: totrans-8
   prefs: []
@@ -55,6 +62,7 @@
   id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个代表树根的`BeautifulSoup`对象。如果我们显示这个soup，它会重现HTML。
 - en: '[PRE3]'
   id: totrans-11
   prefs: []
@@ -69,6 +77,7 @@
   id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: '`prettify`使用缩进来显示文档的结构。'
 - en: '[PRE5]'
   id: totrans-14
   prefs: []
@@ -84,6 +93,7 @@
   id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: '`BeautifulSoup`对象有一个名为`children`的属性，返回它包含的对象的迭代器。'
 - en: '[PRE7]'
   id: totrans-17
   prefs: []
@@ -98,6 +108,7 @@
   id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用for循环来遍历它们。
 - en: '[PRE9]'
   id: totrans-20
   prefs: []
@@ -112,11 +123,13 @@
   id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个soup只包含一个孩子，那就是一个`Tag`。
 - en: '`BeautifulSoup` also provides `contents`, which returns the children in the
     form of a list, which can be more convenient.'
   id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: '`BeautifulSoup`还提供了`contents`，它以列表的形式返回孩子，这可能更方便。'
 - en: '[PRE11]'
   id: totrans-24
   prefs: []
@@ -132,6 +145,7 @@
   id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 唯一的孩子是包含整个文档的HTML元素。让我们只获取这个元素：
 - en: '[PRE13]'
   id: totrans-27
   prefs: []
@@ -146,6 +160,7 @@
   id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 元素的类型是`Tag`：
 - en: '[PRE15]'
   id: totrans-30
   prefs: []
@@ -160,6 +175,7 @@
   id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 标签的名称是`html`。
 - en: '[PRE17]'
   id: totrans-33
   prefs: []
@@ -174,6 +190,7 @@
   id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们获取这个顶层元素的孩子：
 - en: '[PRE19]'
   id: totrans-36
   prefs: []
@@ -189,10 +206,12 @@
   id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个列表中有三个元素，但很难阅读，因为当您打印一个元素时，它会打印所有的HTML。
 - en: I’ll use the following function to print elements in a simple form.
   id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将使用以下函数以简单的形式打印元素。
 - en: '[PRE21]'
   id: totrans-40
   prefs: []
@@ -212,6 +231,7 @@
   id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 以及以下函数来打印元素列表。
 - en: '[PRE24]'
   id: totrans-44
   prefs: []
@@ -231,6 +251,7 @@
   id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们尝试导航树。我将从`element`的第一个孩子开始。
 - en: '[PRE27]'
   id: totrans-48
   prefs: []
@@ -245,6 +266,7 @@
   id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 并打印它的孩子。
 - en: '[PRE29]'
   id: totrans-51
   prefs: []
@@ -259,6 +281,7 @@
   id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们获取第一个孩子的第一个孩子。
 - en: '[PRE31]'
   id: totrans-54
   prefs: []
@@ -283,6 +306,7 @@
   id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 第一个孙子的第一个孩子。
 - en: '[PRE35]'
   id: totrans-59
   prefs: []
@@ -317,25 +341,30 @@
   id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: '`NavigableString`没有孩子，所以我们已经到了尽头。'
 - en: In order to continue, we would have to backtrack to the grandchild and select
     the second child.
   id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了继续，我们需要回溯到孙子并选择第二个孩子。
 - en: Which means we have to keep track of which elements we have seen, in order to
     pick up where we left off.
   id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: 这意味着我们必须跟踪我们已经看到的元素，以便从我们离开的地方继续。
 - en: That’s what depth-first search does.
   id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是深度优先搜索的作用。
 - en: Depth-first search
   id: totrans-69
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 深度优先搜索
 - en: DFS starts at the root of the tree and selects the first child. If the child
     has children, it selects the first child again. When it gets to a node with no
     children, it backtracks, moving up the tree to the parent node, where it selects
@@ -344,11 +373,13 @@
   id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: DFS从树的根开始并选择第一个孩子。如果孩子有孩子，它再次选择第一个孩子。当它到达一个没有孩子的节点时，它回溯，向上移动到父节点，如果有下一个孩子，则再次选择；否则再次回溯。当它探索完根的最后一个孩子时，它就完成了。
 - en: 'There are two common ways to implement DFS, recursively and iteratively. The
     recursive implementation looks like this:'
   id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: 有两种常见的实现DFS的方法，递归和迭代。递归实现如下：
 - en: '[PRE41]'
   id: totrans-72
   prefs: []
@@ -369,6 +400,7 @@
   id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个使用列表表示元素堆栈的DFS的迭代版本：
 - en: '[PRE44]'
   id: totrans-76
   prefs: []
@@ -379,6 +411,7 @@
   id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: 参数`root`是我们要遍历的树的根，所以我们首先创建堆栈并将根推入其中。
 - en: The loop continues until the stack is empty. Each time through, it pops a `PageElement`
     off the stack. If it gets a `NavigableString`, it prints the contents. Then it
     pushes the children onto the stack. In order to process the children in the right
@@ -386,6 +419,7 @@
   id: totrans-78
   prefs: []
   type: TYPE_NORMAL
+  zh: 循环继续直到堆栈为空。每次循环时，它从堆栈中弹出一个`PageElement`。如果它得到一个`NavigableString`，它就打印内容。然后将孩子推入堆栈。为了以正确的顺序处理孩子，我们必须以相反的顺序将它们推入堆栈。
 - en: '[PRE45]'
   id: totrans-79
   prefs: []
@@ -402,10 +436,12 @@
   id: totrans-81
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**编写一个类似于`PageElement.find`的函数，它接受一个`PageElement`和一个标签名称，并返回具有给定名称的第一个标签。您可以以迭代或递归的方式编写它。'
 - en: Here’s how to check whether a `PageElement` is a `Tag`.
   id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是如何检查`PageElement`是否为`Tag`。
 - en: '[PRE47]'
   id: totrans-83
   prefs: []
@@ -422,6 +458,7 @@
   id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**编写一个类似于`PageElement.find_all`的生成器函数，它接受一个`PageElement`和一个标签名称，并产生所有具有给定名称的标签。您可以以迭代或递归的方式编写它。'
 - en: '*Data Structures and Information Retrieval in Python*'
   id: totrans-86
   prefs: []
