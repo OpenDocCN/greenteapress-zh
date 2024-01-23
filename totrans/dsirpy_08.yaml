@@ -3,24 +3,29 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 递归
 - en: 原文：[https://allendowney.github.io/DSIRP/recursion.html](https://allendowney.github.io/DSIRP/recursion.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/DSIRP/recursion.html](https://allendowney.github.io/DSIRP/recursion.html)
 - en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/recursion.ipynb)'
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: '[点击这里在Colab上运行本章](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/recursion.ipynb)'
 - en: Example 1
   id: totrans-3
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 示例1
 - en: Here’s an example of recursion from [this section of Think Python](https://greenteapress.com/thinkpython2/html/thinkpython2006.html#sec62).
   id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是[Think Python的这一部分](https://greenteapress.com/thinkpython2/html/thinkpython2006.html#sec62)中的递归示例。
 - en: '[PRE0]'
   id: totrans-5
   prefs: []
@@ -41,58 +46,70 @@
   id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 要理解递归，重要的是要对运行函数时发生的事情有一个良好的心智模型：
 - en: Python interprets the arguments.
   id: totrans-9
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: Python解释参数。
 - en: It creates a stack frame, which will contain the parameters and local variables.
   id: totrans-10
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 它创建一个栈帧，其中包含参数和局部变量。
 - en: Next it assigns the values of the arguments to the parameters.
   id: totrans-11
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来将参数的值分配给参数。
 - en: Python runs the body of the function.
   id: totrans-12
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: Python运行函数的主体。
 - en: Then it recycles the stack frame.
   id: totrans-13
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 然后它回收了栈帧。
 - en: The runtime stack contains the stack frames of currently-running functions.
   id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 运行时栈包含当前运行函数的栈帧。
 - en: Here’s a stack diagram that shows what happens when this `countdown` runs.
   id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个栈图，展示了当这个`countdown`运行时发生了什么。
 - en: '![](../Images/e6390e44f830253a162632e35b3ae5d5.png)'
   id: totrans-16
   prefs: []
   type: TYPE_IMG
+  zh: '![](../Images/e6390e44f830253a162632e35b3ae5d5.png)'
 - en: '**Exercise:** What happens if you run countdown with a negative number? See
     here for more info'
   id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** 如果你用负数运行倒计时会发生什么？点击这里了解更多信息'
 - en: Example 2
   id: totrans-18
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 示例2
 - en: Here’s an example of recursion with a function that returns a value, from [this
     section of Think Python](https://greenteapress.com/thinkpython2/html/thinkpython2007.html#sec74).
   id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个递归函数返回值的示例，来自[Think Python的这一部分](https://greenteapress.com/thinkpython2/html/thinkpython2007.html#sec74)。
 - en: '[PRE3]'
   id: totrans-20
   prefs: []
@@ -117,69 +134,83 @@
   id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是栈帧。
 - en: '![](../Images/1e57ce9bc16c0794848b760489997bc0.png)'
   id: totrans-25
   prefs: []
   type: TYPE_IMG
+  zh: '![](../Images/1e57ce9bc16c0794848b760489997bc0.png)'
 - en: '**Exercise:** Suppose you want to raise a number, `x`, to an integer power,
     `k`. An efficient way to do that is:'
   id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** 假设你想将一个数`x`提升到一个整数幂`k`。一个高效的方法是：'
 - en: If `k` is even, raise `x` to `k/2` and square it.
   id: totrans-27
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果`k`是偶数，将`x`提升到`k/2`并平方。
 - en: If `k` is odd, raise `x` to `(k-1)/2`, square it, and multiply by `x` one more
     time.
   id: totrans-28
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果`k`是奇数，将`x`提升到`(k-1)/2`，平方它，然后再乘以`x`一次。
 - en: Write a recursive function that implements this algorithm.
   id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 编写一个实现这个算法的递归函数。
 - en: What is the order of growth of this algorithm? To keep it simple, suppose `k`
     is a power of two. How many times do we have to divide `k` by two before we get
     to 1?
   id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个算法的增长顺序是什么？为了简单起见，假设`k`是2的幂。在我们得到1之前，我们需要将`k`除以2多少次？
 - en: Thinking about it in reverse, starting with 1, how many times do we have to
     double 1 before we get to `k`? In math notation, the question is
   id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 反过来思考，从1开始，我们需要将1加倍多少次才能得到`k`？在数学符号中，问题是
 - en: \[2^y = k\]
   id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: \[2^y = k\]
 - en: 'where `y` is the unknown number of steps. Taking the log of both sides, base
     2:'
   id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: 其中`y`是未知的步数。取两边的对数，以2为底：
 - en: \[y = log_2 k\]
   id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: \[y = log_2 k\]
 - en: In terms of order of growth, this algorithm is in `O(log k)`. We don’t have
     to specify the base of the logarithm, because a log in one base is a constant
     multiple of a log in any other base.
   id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 就增长顺序而言，这个算法是`O(log k)`。我们不必指定对数的底，因为一个底为1的对数是任何其他底的对数的常数倍。
 - en: Example 3
   id: totrans-36
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 示例3
 - en: Here’s another example of recursion from [this section of Think Python](https://greenteapress.com/thinkpython2/html/thinkpython2007.html#sec76).
   id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是[Think Python的这一部分](https://greenteapress.com/thinkpython2/html/thinkpython2007.html#sec76)中的另一个递归示例。
 - en: '[PRE7]'
   id: totrans-38
   prefs: []
@@ -205,20 +236,24 @@
   id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个栈图，展示了在这个函数调用期间创建的所有栈帧。
 - en: Note that these frames are not all on the stack at the same time.
   id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 请注意，这些帧不是同时都在栈上的。
 - en: '![](../Images/1c6eef848ea17a2f2465eb079fa76755.png)'
   id: totrans-44
   prefs: []
   type: TYPE_IMG
+  zh: '![](../Images/1c6eef848ea17a2f2465eb079fa76755.png)'
 - en: Here’s the [section from Think Python](https://greenteapress.com/thinkpython2/html/thinkpython2012.html#sec135)
     that shows how we can make fibonacci faster by “memoizing” it. That’s not a typo;
     the word is really [memoize](https://en.wikipedia.org/wiki/Memoization).
   id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是[Think Python的这一部分](https://greenteapress.com/thinkpython2/html/thinkpython2012.html#sec135)，展示了我们如何通过“记忆化”使斐波那契更快。这不是打字错误；这个词真的是[记忆化](https://en.wikipedia.org/wiki/Memoization)。
 - en: '[PRE11]'
   id: totrans-46
   prefs: []
@@ -244,34 +279,44 @@
   id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** [Ackermann函数](http://en.wikipedia.org/wiki/Ackermann_function)，\(A(m,
+    n)\)，定义如下：'
 - en: \[\begin{split} A(m, n) = \begin{cases} n+1 & \mbox{if } m = 0 \\ A(m-1, 1)
     & \mbox{if } m > 0 \mbox{ and } n = 0 \\ A(m-1, A(m, n-1)) & \mbox{if } m > 0
     \mbox{ and } n > 0. \end{cases} \end{split}\]
   id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\begin{split} A(m, n) = \begin{cases} n+1 & \mbox{if } m = 0 \\ A(m-1, 1)
+    & \mbox{if } m > 0 \mbox{ and } n = 0 \\ A(m-1, A(m, n-1)) & \mbox{if } m > 0
+    \mbox{ and } n > 0. \end{cases} \end{split}\]
 - en: Write a function named `ackermann` that evaluates the Ackermann function. Use
     your function to evaluate `ackermann(3, 4)`, which should be 125.
   id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: 编写一个名为`ackermann`的函数来评估Ackermann函数。使用你的函数来评估`ackermann(3, 4)`，结果应该是125。
 - en: What happens for larger values of `m` and `n`?
   id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于更大的`m`和`n`值会发生什么？
 - en: If you memoize it, can you evaluate the function with bigger values?
   id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你记忆化它，你能用更大的值评估这个函数吗？
 - en: String functions
   id: totrans-55
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 字符串函数
 - en: Many things we do iteratively can be expressed recursively as well.
   id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们以迭代方式做的许多事情也可以用递归方式表达。
 - en: '[PRE15]'
   id: totrans-57
   prefs: []
@@ -293,10 +338,12 @@
   id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于序列和映射类型，通常递归版本没有优势。但对于树和图，递归实现可以更清晰、更简洁，更容易证明正确。
 - en: '**Exercise:** Here’s an exercise from, of all places, [StackOverflow](https://stackoverflow.com/questions/28977737/writing-a-recursive-string-function):'
   id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** 这是一个来自[StackOverflow](https://stackoverflow.com/questions/28977737/writing-a-recursive-string-function)的练习：'
 - en: Write a recursive, string-valued function, `replace`, that accepts a string
     and returns a new string consisting of the original string with each blank replaced
     with an asterisk (*)

@@ -1,21 +1,26 @@
 - en: Depth First Search
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
 - en: 原文：[https://allendowney.github.io/DSIRP/dfs.html](https://allendowney.github.io/DSIRP/dfs.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/dfs.ipynb)'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
 - en: This notebook presents “depth first search” as a way to iterate through the
     nodes in a tree. This algorithm applies to any kind of tree, but since we need
     an example, we’ll use BeautifulSoup, which is a Python module that reads HTML
     (and related languages) and builds a tree that represents the content.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
 - en: Using BeautifulSoup
+  id: totrans-4
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -23,205 +28,311 @@
     aka HTML. For example, here is a minimal HTML document, which I borrowed from
     the [BeautifulSoup documentation](https://beautiful-soup-4.readthedocs.io). The
     text is from Lewis Carroll’s [*Alice’s Adventures in Wonderland*](https://www.gutenberg.org/files/11/11-h/11-h.htm).
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE0]'
+  id: totrans-6
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: Here’s how we use BeautifulSoup to read it.
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE1]'
+  id: totrans-8
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '[PRE2]'
+  id: totrans-9
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: The result is a `BeautifulSoup` object that represents the root of the tree.
     If we display the soup, it reproduces the HTML.
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE3]'
+  id: totrans-11
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '[PRE4]'
+  id: totrans-12
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '`prettify` uses indentation to show the structure of the document.'
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE5]'
+  id: totrans-14
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '[PRE6]'
+  id: totrans-15
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: The `BeautifulSoup` object has a property called `children` that returns an
     iterator of the objects it contains.
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE7]'
+  id: totrans-17
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '[PRE8]'
+  id: totrans-18
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: We can use a for loop to iterate through them.
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE9]'
+  id: totrans-20
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '[PRE10]'
+  id: totrans-21
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: This soup contains only a single child, which is a `Tag`.
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
 - en: '`BeautifulSoup` also provides `contents`, which returns the children in the
     form of a list, which can be more convenient.'
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE11]'
+  id: totrans-24
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: '[PRE12]'
+  id: totrans-25
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: 'The only child is an HTML element that contains the whole document. Let’s get
     just this element:'
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE13]'
+  id: totrans-27
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: '[PRE14]'
+  id: totrans-28
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: 'The type of the element is `Tag`:'
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE15]'
+  id: totrans-30
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '[PRE16]'
+  id: totrans-31
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: And the name of the tag is `html`.
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE17]'
+  id: totrans-33
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: '[PRE18]'
+  id: totrans-34
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: 'Now let’s get the children of this top-level element:'
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE19]'
+  id: totrans-36
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '[PRE20]'
+  id: totrans-37
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: There are three elements in this list, but it’s hard to read because when you
     print an element, it prints all of the HTML.
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
 - en: I’ll use the following function to print elements in a simple form.
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE21]'
+  id: totrans-40
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: '[PRE22]'
+  id: totrans-41
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: '[PRE23]'
+  id: totrans-42
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: And the following function to print a list of elements.
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE24]'
+  id: totrans-44
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: '[PRE25]'
+  id: totrans-45
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: '[PRE26]'
+  id: totrans-46
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: Now let’s try navigating the tree. I’ll start with the first child of `element`.
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE27]'
+  id: totrans-48
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: '[PRE28]'
+  id: totrans-49
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: And print its children.
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE29]'
+  id: totrans-51
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: '[PRE30]'
+  id: totrans-52
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: Now let’s get the first child of the first child.
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE31]'
+  id: totrans-54
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: '[PRE32]'
+  id: totrans-55
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: '[PRE33]'
+  id: totrans-56
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: '[PRE34]'
+  id: totrans-57
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: And the first child of the first grandchild.
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE35]'
+  id: totrans-59
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: '[PRE36]'
+  id: totrans-60
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: '[PRE37]'
+  id: totrans-61
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE37]'
 - en: '[PRE38]'
+  id: totrans-62
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: '[PRE39]'
+  id: totrans-63
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: '[PRE40]'
+  id: totrans-64
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE40]'
 - en: '`NavigableString` has no children, so we’ve come to the end of the road.'
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
 - en: In order to continue, we would have to backtrack to the grandchild and select
     the second child.
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
 - en: Which means we have to keep track of which elements we have seen, in order to
     pick up where we left off.
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
 - en: That’s what depth-first search does.
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
 - en: Depth-first search
+  id: totrans-69
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -230,69 +341,99 @@
     children, it backtracks, moving up the tree to the parent node, where it selects
     the next child if there is one; otherwise it backtracks again. When it has explored
     the last child of the root, it’s done.
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
 - en: 'There are two common ways to implement DFS, recursively and iteratively. The
     recursive implementation looks like this:'
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE41]'
+  id: totrans-72
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE41]'
 - en: '[PRE42]'
+  id: totrans-73
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE42]'
 - en: '[PRE43]'
+  id: totrans-74
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE43]'
 - en: 'Here is an iterative version of DFS that uses a list to represent a stack of
     elements:'
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE44]'
+  id: totrans-76
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE44]'
 - en: The parameter, `root`, is the root of the tree we want to traverse, so we start
     by creating the stack and pushing the root onto it.
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
 - en: The loop continues until the stack is empty. Each time through, it pops a `PageElement`
     off the stack. If it gets a `NavigableString`, it prints the contents. Then it
     pushes the children onto the stack. In order to process the children in the right
     order, we have to push them onto the stack in reverse order.
+  id: totrans-78
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE45]'
+  id: totrans-79
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE45]'
 - en: '[PRE46]'
+  id: totrans-80
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE46]'
 - en: '**Exercise:** Write a function similar to `PageElement.find` that takes a `PageElement`
     and a tag name and returns the first tag with the given name. You can write it
     iteratively or recursively.'
+  id: totrans-81
   prefs: []
   type: TYPE_NORMAL
 - en: Here’s how to check whether a `PageElement` is a `Tag`.
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE47]'
+  id: totrans-83
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE47]'
 - en: '[PRE48]'
+  id: totrans-84
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE48]'
 - en: '**Exercise:** Write a generator function similar to `PageElement.find_all`
     that takes a `PageElement` and a tag name and yields all tags with the given name.
     You can write it iteratively or recursively.'
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
 - en: '*Data Structures and Information Retrieval in Python*'
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: '*Python 中的数据结构和信息检索*'
 - en: Copyright 2021 Allen Downey
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: 版权所有 2021 年 Allen Downey
 - en: 'License: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: 许可证：[知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议](https://creativecommons.org/licenses/by-nc-sa/4.0/)
