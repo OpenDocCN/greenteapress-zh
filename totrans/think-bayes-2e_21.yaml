@@ -3,11 +3,13 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 共轭先验
 - en: 原文：[https://allendowney.github.io/ThinkBayes2/chap18.html](https://allendowney.github.io/ThinkBayes2/chap18.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ThinkBayes2/chap18.html](https://allendowney.github.io/ThinkBayes2/chap18.html)
 - en: In the previous chapters we have used grid approximations to solve a variety
     of problems. One of my goals has been to show that this approach is sufficient
     to solve many real-world problems. And I think it’s a good place to start because
@@ -15,6 +17,7 @@
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 在之前的章节中，我们已经使用网格近似来解决各种问题。我其中一个目标是要表明这种方法足以解决许多现实世界的问题。我认为这是一个很好的开始，因为它清楚地展示了这些方法的工作原理。
 - en: However, as we saw in the previous chapter, grid methods will only get you so
     far. As we increase the number of parameters, the number of points in the grid
     grows (literally) exponentially. With more than 3-4 parameters, grid methods become
@@ -22,16 +25,19 @@
   id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 然而，正如我们在上一章中看到的，网格方法只能帮你走得更远。随着参数数量的增加，网格中的点数（字面上）呈指数级增长。对于超过3-4个参数，网格方法变得不切实际。
 - en: 'So, in the remaining three chapters, I will present three alternatives:'
   id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，在剩下的三章中，我将提出三种替代方案：
 - en: In this chapter we’ll use **conjugate priors** to speed up some of the computations
     we’ve already done.
   id: totrans-5
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 在本章中，我们将使用**共轭先验**来加速我们已经完成的一些计算。
 - en: In the next chapter, I’ll present Markov chain Monte Carlo (MCMC) methods, which
     can solve problems with tens of parameters, or even hundreds, in a reasonable
     amount of time.
@@ -39,37 +45,44 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 在下一章中，我将介绍马尔可夫链蒙特卡洛（MCMC）方法，它可以在合理的时间内解决具有数十个甚至数百个参数的问题。
 - en: And in the last chapter we’ll use Approximate Bayesian Computation (ABC) for
     problems that are hard to model with simple distributions.
   id: totrans-7
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 在最后一章中，我们将使用近似贝叶斯计算（ABC）来解决难以用简单分布建模的问题。
 - en: We’ll start with the World Cup problem.
   id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将从世界杯问题开始。
 - en: The World Cup Problem Revisited
   id: totrans-9
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 重新审视世界杯问题
 - en: In <<_PoissonProcesses>>, we solved the World Cup problem using a Poisson process
     to model goals in a soccer game as random events that are equally likely to occur
     at any point during a game.
   id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 在<<_PoissonProcesses>>中，我们使用泊松过程解决了世界杯问题，将足球比赛中的进球建模为随机事件，这些事件在比赛的任何时间点都同样可能发生。
 - en: We used a gamma distribution to represent the prior distribution of \(\lambda\),
     the goal-scoring rate. And we used a Poisson distribution to compute the probability
     of \(k\), the number of goals scored.
   id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们使用gamma分布来表示\(\lambda\)的先验分布，即进球率。我们使用泊松分布来计算\(k\)的概率，即进球数。
 - en: Here’s a gamma object that represents the prior distribution.
   id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是代表先验分布的gamma对象。
 - en: '[PRE0]'
   id: totrans-13
   prefs: []
@@ -79,6 +92,7 @@
   id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个网格近似。
 - en: '[PRE1]'
   id: totrans-15
   prefs: []
@@ -88,6 +102,7 @@
   id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是对于每个可能的`lam`值得分4个目标的可能性。
 - en: '[PRE2]'
   id: totrans-17
   prefs: []
@@ -97,6 +112,7 @@
   id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是更新的方法。
 - en: '[PRE3]'
   id: totrans-19
   prefs: []
@@ -112,29 +128,34 @@
   id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 到目前为止，这应该是熟悉的。现在我们将使用共轭先验来解决相同的问题。
 - en: The Conjugate Prior
   id: totrans-22
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 共轭先验
 - en: In <<_TheGammaDistribution>>, I presented three reasons to use a gamma distribution
     for the prior and said there was a fourth reason I would reveal later. Well, now
     is the time.
   id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: 在<<_TheGammaDistribution>>中，我提出了使用gamma分布作为先验的三个原因，并说有第四个原因我将稍后揭示。现在是时候了。
 - en: The other reason I chose the gamma distribution is that it is the “conjugate
     prior” of the Poisson distribution, so-called because the two distributions are
     connected or coupled, which is what “conjugate” means.
   id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 我选择gamma分布的另一个原因是它是泊松分布的“共轭先验”，所谓的共轭是因为这两个分布是相连的或耦合的，这就是“共轭”的含义。
 - en: In the next section I’ll explain *how* they are connected, but first I’ll show
     you the consequence of this connection, which is that there is a remarkably simple
     way to compute the posterior distribution.
   id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 在下一节中，我将解释它们是如何相连的，但首先我将向你展示这种联系的后果，即计算后验分布有一个非常简单的方法。
 - en: However, in order to demonstrate it, we have to switch from the one-parameter
     version of the gamma distribution to the two-parameter version. Since the first
     parameter is called `alpha`, you might guess that the second parameter is called
@@ -142,11 +163,13 @@
   id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是，为了演示它，我们必须从gamma分布的单参数版本切换到双参数版本。由于第一个参数称为`alpha`，你可能会猜到第二个参数称为`beta`。
 - en: The following function takes `alpha` and `beta` and makes an object that represents
     a gamma distribution with those parameters.
   id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数接受`alpha`和`beta`，并创建一个代表具有这些参数的gamma分布的对象。
 - en: '[PRE5]'
   id: totrans-28
   prefs: []
@@ -156,6 +179,7 @@
   id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是先验分布，其中`alpha=1.4`，`beta=1`。
 - en: '[PRE6]'
   id: totrans-30
   prefs: []
@@ -171,6 +195,7 @@
   id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我声称，我们可以通过使用参数为`alpha+k`和`beta+1`的gamma分布来进行`k`个目标的贝叶斯更新，尽管没有证明。
 - en: '[PRE8]'
   id: totrans-33
   prefs: []
@@ -180,6 +205,7 @@
   id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是我们在`t=1`场比赛中用`k=4`个目标更新的方法。
 - en: '[PRE9]'
   id: totrans-35
   prefs: []
@@ -190,10 +216,12 @@
   id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 在我们用网格做的所有工作之后，我们可能会觉得通过添加两对数字来进行贝叶斯更新是荒谬的。所以让我们确认它是否有效。
 - en: I’ll make a `Pmf` with a discrete approximation of the posterior distribution.
   id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将使用离散近似的后验分布来创建一个`Pmf`。
 - en: '[PRE10]'
   id: totrans-38
   prefs: []
@@ -204,20 +232,24 @@
   id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 下图显示了使用网格算法计算的结果以及我们计算的后验分布。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容隐藏代码单元格内容</summary>
 - en: '[PRE11]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell source Hide code cell source</summary>'
   id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE11]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格源代码隐藏代码单元格源代码</summary>'
 - en: '[PRE12]</details> ![_images/39ff697e7662f79c15a8ae461ced3925ebe82de05318674e35232f7e65030af6.png](../Images/6eed57e32a4a8ae310cfa4205aaaacf9.png)'
   id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE12]</details> ![_images/39ff697e7662f79c15a8ae461ced3925ebe82de05318674e35232f7e65030af6.png](../Images/6eed57e32a4a8ae310cfa4205aaaacf9.png)'
 - en: They are the same other than small differences due to floating-point approximations.
   id: totrans-43
   prefs: []
