@@ -261,6 +261,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 两个人在犯罪现场留下了自己的血迹。嫌疑人奥利弗经过测试，发现有‘O’型血。两个血迹的血型分别为‘O’（当地人口中常见类型，频率为60%）和‘AB’（罕见类型，频率为1%）。这些数据[在现场发现的痕迹]是否支持奥利弗是[在现场留下血迹的人]的命题？
 - en: To answer this question, we need to think about what it means for data to give
     evidence in favor of (or against) a hypothesis. Intuitively, we might say that
     data favor a hypothesis if the hypothesis is more likely in light of the data
@@ -268,49 +269,59 @@
   id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 要回答这个问题，我们需要考虑数据对假设支持（或反对）的含义。直观上，我们可能会说，如果数据在数据的支持下假设在数据的支持下比以前更有可能，那么数据支持假设。
 - en: In the cookie problem, the prior odds are 1, which corresponds to probability
     50%. The posterior odds are \(3/2\), or probability 60%. So the vanilla cookie
     is evidence in favor of Bowl 1.
   id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: 在饼干问题中，先验几率为1，对应概率为50%。后验几率为\(3/2\)，或概率为60%。因此，香草饼干是支持Bowl 1的证据。
 - en: Bayes’s Rule provides a way to make this intuition more precise. Again
   id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: 贝叶斯定理提供了一种使这种直觉更加精确的方法。再次
 - en: \[\mathrm{odds}(A|D) = \mathrm{odds}(A)~\frac{P(D|A)}{P(D|B)}\]
   id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\mathrm{odds}(A|D) = \mathrm{odds}(A)~\frac{P(D|A)}{P(D|B)}\]
 - en: 'Dividing through by \(\mathrm{odds}(A)\), we get:'
   id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: 通过\(\mathrm{odds}(A)\)除以，我们得到：
 - en: \[\frac{\mathrm{odds}(A|D)}{\mathrm{odds}(A)} = \frac{P(D|A)}{P(D|B)}\]
   id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\frac{\mathrm{odds}(A|D)}{\mathrm{odds}(A)} = \frac{P(D|A)}{P(D|B)}\]
 - en: The term on the left is the ratio of the posterior and prior odds. The term
     on the right is the likelihood ratio, also called the **Bayes factor**.
   id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: 左边的项是后验和先验几率的比值。右边的项是可能性比，也称为**贝叶斯因子**。
 - en: If the Bayes factor is greater than 1, that means that the data were more likely
     under \(A\) than under \(B\). And that means that the odds are greater, in light
     of the data, than they were before.
   id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果贝叶斯因子大于1，这意味着数据在\(A\)下的可能性大于\(B\)。这意味着在数据的支持下，几率比以前更大。
 - en: If the Bayes factor is less than 1, that means the data were less likely under
     \(A\) than under \(B\), so the odds in favor of \(A\) go down.
   id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果贝叶斯因子小于1，这意味着数据在\(A\)下的可能性小于\(B\)，因此支持\(A\)的几率下降。
 - en: Finally, if the Bayes factor is exactly 1, the data are equally likely under
     either hypothesis, so the odds do not change.
   id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，如果贝叶斯因子恰好为1，则数据在任一假设下的可能性相等，因此几率不会改变。
 - en: Let’s apply that to the problem at hand. If Oliver is one of the people who
     left blood at the crime scene, he accounts for the ‘O’ sample; in that case, the
     probability of the data is the probability that a random member of the population
@@ -318,6 +329,7 @@
   id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们将这个应用到手头的问题上。如果奥利弗是在犯罪现场留下血液的人之一，他解释了‘O’样本；在这种情况下，数据的概率是人口中随机成员具有‘AB’型血液的概率，即1%。
 - en: 'If Oliver did not leave blood at the scene, we have two samples to account
     for. If we choose two random people from the population, what is the chance of
     finding one with type ‘O’ and one with type ‘AB’? Well, there are two ways it
@@ -325,26 +337,31 @@
   id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果奥利弗没有在现场留下血液，我们有两个样本要解释。如果我们从人口中随机选择两个人，找到一个人有‘O’型血，一个人有‘AB’型血的机会是多少？嗯，可能有两种方式：
 - en: The first person might have ‘O’ and the second ‘AB’,
   id: totrans-62
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 第一个人可能有‘O’，第二个人可能有‘AB’，
 - en: Or the first person might have ‘AB’ and the second ‘O’.
   id: totrans-63
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 或者第一个人可能有‘AB’，第二个人有‘O’。
 - en: The probability of either combination is \((0.6) (0.01)\), which is 0.6%, so
     the total probability is twice that, or 1.2%. So the data are a little more likely
     if Oliver is *not* one of the people who left blood at the scene.
   id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: 任一组合的概率是\((0.6) (0.01)\)，即0.6%，因此总概率是这个的两倍，即1.2%。因此，如果奥利弗*不是*在现场留下血液的人，数据可能性更大。
 - en: 'We can use these probabilities to compute the likelihood ratio:'
   id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用这些概率来计算可能性比：
 - en: '[PRE21]'
   id: totrans-66
   prefs: []
@@ -360,12 +377,14 @@
   id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: 由于可能性比小于1，血液测试是反对奥利弗在现场留下血液的假设的证据。
 - en: 'But it is weak evidence. For example, if the prior odds were 1 (that is, 50%
     probability), the posterior odds would be 0.83, which corresponds to a probability
     of 45%:'
   id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: 但这是弱证据。例如，如果先验几率为1（即50%的概率），后验几率将为0.83，对应概率为45%：
 - en: '[PRE23]'
   id: totrans-70
   prefs: []
@@ -380,12 +399,14 @@
   id: totrans-72
   prefs: []
   type: TYPE_NORMAL
+  zh: 所以这个证据并没有“改变”太多。
 - en: This example is a little contrived, but it demonstrates the counterintuitive
     result that data *consistent* with a hypothesis are not necessarily *in favor
     of* the hypothesis.
   id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个例子有点牵强，但它展示了与假设一致的数据不一定有利于假设的反直觉结果。
 - en: 'If this result still bothers you, this way of thinking might help: the data
     consist of a common event, type ‘O’ blood, and a rare event, type ‘AB’ blood.
     If Oliver accounts for the common event, that leaves the rare event unexplained.
@@ -394,17 +415,21 @@
   id: totrans-74
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果这个结果仍然困扰你，这种思考方式可能会有所帮助：数据包括一个常见事件，类型为‘O’的血液，和一个罕见事件，类型为‘AB’的血液。如果奥利弗解释了常见事件，那就留下了无法解释的罕见事件。如果奥利弗没有解释‘O’血液，我们有两次机会在人口中找到‘AB’血液的人。这个因素是两倍。
 - en: '**Exercise:** Suppose that based on other evidence, you prior belief in Oliver’s
     guilt is 90%. How much would the blood evidence in this section change your beliefs?
     What if you initially thought there was only a 10% chance of his guilt?'
   id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**假设基于其他证据，你对奥利弗的有罪信念是90%。这一部分的血液证据会如何改变你的信念？如果你最初认为他有罪的可能性只有10%呢？'
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-76
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE25]'
   id: totrans-77
   prefs: []
