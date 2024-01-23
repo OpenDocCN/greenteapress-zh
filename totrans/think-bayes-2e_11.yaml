@@ -1125,32 +1125,41 @@
   id: totrans-185
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**回到世界杯问题的第一个版本。假设法国和克罗地亚进行了一场复赛。法国率先得分的概率是多少？'
 - en: 'Hint: Compute the posterior predictive distribution for the time until the
     first goal by making a mixture of exponential distributions. You can use the following
     function to make a PMF that approximates an exponential distribution.'
   id: totrans-186
   prefs: []
   type: TYPE_NORMAL
+  zh: 提示：通过制作指数分布的混合来计算首个进球的后验预测分布。您可以使用以下函数制作近似指数分布的PMF。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-187
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
 - en: '[PRE60]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-188
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE60]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE61]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-189
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE61]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE62]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-190
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE62]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE63]'
   id: totrans-191
   prefs: []
@@ -1162,6 +1171,8 @@
   id: totrans-192
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/c6056f1c8681d9a55bbb7434ffbf28fd8676cf8e71f1e833edec65ca92f43b2f.png](../Images/bc7bd8003dc80e838f43d3190f7ed3f4.png)</details><details
+    class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE64]'
   id: totrans-193
   prefs: []
@@ -1171,6 +1182,7 @@
   id: totrans-194
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE65]</details>'
 - en: '**Exercise:** In the 2010-11 National Hockey League (NHL) Finals, my beloved
     Boston Bruins played a best-of-seven championship series against the despised
     Vancouver Canucks. Boston lost the first two games 0-1 and 2-3, then won the next
@@ -1179,27 +1191,33 @@
   id: totrans-195
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**在2010-11赛季的国家冰球联盟（NHL）总决赛中，我心爱的波士顿布鲁因队与令人厌恶的温哥华加人队进行了一场七场比赛的冠军系列赛。波士顿在前两场比赛中以0-1和2-3输掉了比赛，然后赢得了接下来的两场比赛，分别是8-1和4-0。在系列赛的这一阶段，波士顿赢得下一场比赛的概率是多少，他们赢得冠军的概率又是多少？'
 - en: To choose a prior distribution, I got some statistics from [http://www.nhl.com](http://www.nhl.com),
     specifically the average goals per game for each team in the 2010-11 season. The
     distribution is well modeled by a gamma distribution with mean 2.8.
   id: totrans-196
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了选择先验分布，我从[http://www.nhl.com](http://www.nhl.com)获取了一些统计数据，具体是2010-11赛季每支球队的平均进球数。该分布很好地由均值为2.8的伽玛分布模拟。
 - en: In what ways do you think the outcome of these games might violate the assumptions
     of the Poisson model? How would these violations affect your predictions?
   id: totrans-197
   prefs: []
   type: TYPE_NORMAL
+  zh: 你认为这些比赛的结果可能违反泊松模型的假设？这些违反会如何影响你的预测？
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-198
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
 - en: '[PRE66]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-199
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE66]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE67]'
   id: totrans-200
   prefs: []
@@ -1210,6 +1228,8 @@
   id: totrans-201
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE68]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE69]'
   id: totrans-202
   prefs: []
@@ -1226,6 +1246,8 @@
   id: totrans-204
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/8961cb45c2d1db771b78e9c4b438312f7dce1565f33644f678a6f2463f8a0a2f.png](../Images/3575c4c5dd177b425f14969172ffe9c4.png)</details><details
+    class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE71]'
   id: totrans-205
   prefs: []
@@ -1236,6 +1258,8 @@
   id: totrans-206
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE72]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE73]'
   id: totrans-207
   prefs: []
@@ -1246,6 +1270,8 @@
   id: totrans-208
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE74]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE75]'
   id: totrans-209
   prefs: []
@@ -1257,11 +1283,15 @@
   id: totrans-210
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/c60ceceee189a52422bbfd1fa049ebb442236f4beb2ea4762ef515d24343ffbe.png](../Images/05d43fbce560d31a5916b25fb4940199.png)</details><details
+    class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE76]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-211
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE76]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE77]'
   id: totrans-212
   prefs: []
@@ -1273,6 +1303,8 @@
   id: totrans-213
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/aacd06863c73f0847d6ec939ef6c81a6bafb123c3163fd62b93fa43e0cf9d227.png](../Images/5bb78125c1a8e5bf4e5d784b719b0c13.png)</details><details
+    class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE78]'
   id: totrans-214
   prefs: []

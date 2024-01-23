@@ -1,31 +1,38 @@
 - en: Decision Analysis
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
 - en: 原文：[https://allendowney.github.io/ThinkBayes2/chap09.html](https://allendowney.github.io/ThinkBayes2/chap09.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: This chapter presents a problem inspired by the game show *The Price is Right*.
     It is a silly example, but it demonstrates a useful process called Bayesian [decision
     analysis](https://en.wikipedia.org/wiki/Decision_analysis).
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
 - en: As in previous examples, we’ll use data and prior distribution to compute a
     posterior distribution; then we’ll use the posterior distribution to choose an
     optimal strategy in a game that involves bidding.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
 - en: As part of the solution, we will use kernel density estimation (KDE) to estimate
     the prior distribution, and a normal distribution to compute the likelihood of
     the data.
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
 - en: And at the end of the chapter, I pose a related problem you can solve as an
     exercise.
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
 - en: The Price Is Right Problem
+  id: totrans-6
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -34,189 +41,247 @@
     “The Showcase”, where the objective is to guess the price of a collection of prizes.
     The contestant who comes closest to the actual price, without going over, wins
     the prizes.
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
 - en: Nathaniel went first. His showcase included a dishwasher, a wine cabinet, a
     laptop computer, and a car. He bid \$26,000.
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
 - en: Letia’s showcase included a pinball machine, a video arcade game, a pool table,
     and a cruise of the Bahamas. She bid \$21,500.
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
 - en: The actual price of Nathaniel’s showcase was \$25,347\. His bid was too high,
     so he lost.
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
 - en: The actual price of Letia’s showcase was \$21,578.
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
 - en: She was only off by \$78, so she won her showcase and, because her bid was off
     by less than 250, she also won Nathaniel’s showcase.
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
 - en: 'For a Bayesian thinker, this scenario suggests several questions:'
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
 - en: Before seeing the prizes, what prior beliefs should the contestants have about
     the price of the showcase?
+  id: totrans-14
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: After seeing the prizes, how should the contestants update those beliefs?
+  id: totrans-15
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: Based on the posterior distribution, what should the contestants bid?
+  id: totrans-16
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: 'The third question demonstrates a common use of Bayesian methods: decision
     analysis.'
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
 - en: This problem is inspired by [an example](https://nbviewer.jupyter.org/github/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers/blob/master/Chapter5_LossFunctions/Ch5_LossFunctions_PyMC3.ipynb)
     in Cameron Davidson-Pilon’s book, [*Probablistic Programming and Bayesian Methods
     for Hackers*](http://camdavidsonpilon.github.io/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers).
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
 - en: The Prior
+  id: totrans-19
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: To choose a prior distribution of prices, we can take advantage of data from
     previous episodes. Fortunately, [fans of the show keep detailed records](https://web.archive.org/web/20121107204942/http://www.tpirsummaries.8m.com/).
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
 - en: For this example, I downloaded files containing the price of each showcase from
     the 2011 and 2012 seasons and the bids offered by the contestants.
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
 - en: The following function reads the data and cleans it up a little.
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE0]'
+  id: totrans-23
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: I’ll read both files and concatenate them.
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE1]'
+  id: totrans-25
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE2]'
+  id: totrans-27
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '[PRE3]</details>'
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
 - en: 'Here’s what the dataset looks like:'
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE4]'
+  id: totrans-30
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '|  | Showcase 1 | Showcase 2 | Bid 1 | Bid 2 | Difference 1 | Difference 2
     |'
+  id: totrans-31
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- | --- | --- | --- | --- |'
+  id: totrans-32
   prefs: []
   type: TYPE_TB
 - en: '| 0 | 50969.0 | 45429.0 | 42000.0 | 34000.0 | 8969.0 | 11429.0 |'
+  id: totrans-33
   prefs: []
   type: TYPE_TB
 - en: '| 1 | 21901.0 | 34061.0 | 14000.0 | 59900.0 | 7901.0 | -25839.0 |'
+  id: totrans-34
   prefs: []
   type: TYPE_TB
 - en: '| 2 | 32815.0 | 53186.0 | 32000.0 | 45000.0 | 815.0 | 8186.0 |'
+  id: totrans-35
   prefs: []
   type: TYPE_TB
 - en: The first two columns, `Showcase 1` and `Showcase 2`, are the values of the
     showcases in dollars. The next two columns are the bids the contestants made.
     The last two columns are the differences between the actual values and the bids.
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
 - en: Kernel Density Estimation
+  id: totrans-37
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: This dataset contains the prices for 313 previous showcases, which we can think
     of as a sample from the population of possible prices.
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
 - en: We can use this sample to estimate the prior distribution of showcase prices.
     One way to do that is kernel density estimation (KDE), which uses the sample to
     estimate a smooth distribution. If you are not familiar with KDE, you can [read
     about it here](https://mathisonian.github.io/kde).
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
 - en: SciPy provides `gaussian_kde`, which takes a sample and returns an object that
     represents the estimated distribution.
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
 - en: The following function takes `sample`, makes a KDE, evaluates it at a given
     sequence of quantities, `qs`, and returns the result as a normalized PMF.
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE5]'
+  id: totrans-42
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: 'We can use it to estimate the distribution of values for Showcase 1:'
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE6]'
+  id: totrans-44
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: 'Here’s what it looks like:'
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE7]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell source Hide code cell source</summary>'
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE8]</details> ![_images/ebaa0745d09379dd23ab450b3c00d28fbc9fb9cd3e2cf44daeb54add4c0dd6b3.png](../Images/f5710bb28e58d6b9012587f16bce6520.png)'
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
 - en: '**Exercise:** Use this function to make a `Pmf` that represents the prior distribution
     for Showcase 2, and plot it.'
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE9]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE10]'
+  id: totrans-52
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '![_images/03e7a17b911a5c8515491255fd219d0d4ad520f22f431b7f9edd96263ac92665.png](../Images/f4f9e3ebe8bbc827836c00a2bbff3bdb.png)</details>'
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
 - en: Distribution of Error
+  id: totrans-54
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: 'To update these priors, we have to answer these questions:'
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
 - en: What data should we consider and how should we quantify it?
+  id: totrans-56
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Can we compute a likelihood function; that is, for each hypothetical price,
     can we compute the conditional likelihood of the data?
+  id: totrans-57
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -224,730 +289,1062 @@
     instrument with known error characteristics. In this model, when the contestant
     sees the prizes, they guess the price of each prize and add up the prices. Let’s
     call this total `guess`.
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
 - en: Now the question we have to answer is, “If the actual price is `price`, what
     is the likelihood that the contestant’s guess would be `guess`?”
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
 - en: Equivalently, if we define `error = guess - price`, we can ask, “What is the
     likelihood that the contestant’s guess is off by `error`?”
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
 - en: 'To answer this question, I’ll use the historical data again. For each showcase
     in the dataset, let’s look at the difference between the contestant’s bid and
     the actual price:'
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE11]'
+  id: totrans-62
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: To visualize the distribution of these differences, we can use KDE again.
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE12]'
+  id: totrans-64
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: 'Here’s what these distributions look like:'
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE13]</details> ![_images/38edf57e021b3d3e8ce3a2ddc1a30895a9ccc1658bd4a943befbe2c2bbd9b82e.png](../Images/1f2c4977b6b89234efbc72504e4094b9.png)'
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
 - en: It looks like the bids are too low more often than too high, which makes sense.
     Remember that under the rules of the game, you lose if you overbid, so contestants
     probably underbid to some degree deliberately.
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
 - en: For example, if they guess that the value of the showcase is \\(40,000, they
     might bid \\\)36,000 to avoid going over.
+  id: totrans-69
   prefs: []
   type: TYPE_NORMAL
 - en: It looks like these distributions are well modeled by a normal distribution,
     so we can summarize them with their mean and standard deviation.
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
 - en: For example, here is the mean and standard deviation of `Diff` for Player 1.
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE14]'
+  id: totrans-72
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '[PRE15]'
+  id: totrans-73
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: Now we can use these differences to model the contestant’s distribution of errors.
     This step is a little tricky because we don’t actually know the contestant’s guesses;
     we only know what they bid.
+  id: totrans-74
   prefs: []
   type: TYPE_NORMAL
 - en: 'So we have to make some assumptions:'
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
 - en: I’ll assume that contestants underbid because they are being strategic, and
     that on average their guesses are accurate. In other words, the mean of their
     errors is 0.
+  id: totrans-76
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: But I’ll assume that the spread of the differences reflects the actual spread
     of their errors. So, I’ll use the standard deviation of the differences as the
     standard deviation of their errors.
+  id: totrans-77
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 但我假设差异的扩散反映了它们误差的实际扩散。因此，我将使用差异的标准差作为它们误差的标准差。
 - en: Based on these assumptions, I’ll make a normal distribution with parameters
     0 and `std_diff1`.
+  id: totrans-78
   prefs: []
   type: TYPE_NORMAL
+  zh: 基于这些假设，我将使用参数0和`std_diff1`创建一个正态分布。
 - en: SciPy provides an object called `norm` that represents a normal distribution
     with the given mean and standard deviation.
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: SciPy提供了一个名为`norm`的对象，表示具有给定均值和标准差的正态分布。
 - en: '[PRE16]'
+  id: totrans-80
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: The result is an object that provides `pdf`, which evaluates the probability
     density function of the normal distribution.
+  id: totrans-81
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个对象，提供了`pdf`，用于评估正态分布的概率密度函数。
 - en: For example, here is the probability density of `error=-100`, based on the distribution
     of errors for Player 1.
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，这里是`error=-100`的概率密度，基于Player 1的误差分布。
 - en: '[PRE17]'
+  id: totrans-83
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: '[PRE18]'
+  id: totrans-84
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: By itself, this number doesn’t mean very much, because probability densities
     are not probabilities. But they are proportional to probabilities, so we can use
     them as likelihoods in a Bayesian update, as we’ll see in the next section.
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: 单独来看，这个数字并没有太多意义，因为概率密度不是概率。但它们与概率成比例，所以我们可以将它们用作贝叶斯更新中的可能性，正如我们将在下一节中看到的那样。
 - en: Update
+  id: totrans-86
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 更新
 - en: Suppose you are Player 1\. You see the prizes in your showcase and your guess
     for the total price is \$23,000.
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设你是Player 1。你看到你的展示奖品，你猜测总价值为23,000美元。
 - en: From your guess I will subtract away each hypothetical price in the prior distribution;
     the result is your error under each hypothesis.
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: 根据你的猜测，我将从先前分布中的每个假设价格中减去；结果是你在每个假设下的误差。
 - en: '[PRE19]'
+  id: totrans-89
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: Now suppose we know, based on past performance, that your estimation error is
     well modeled by `error_dist1`. Under that assumption we can compute the likelihood
     of your error under each hypothesis.
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在假设我们知道，基于过去的表现，你的估计误差很好地符合`error_dist1`。在这种假设下，我们可以计算每个假设下你的误差的可能性。
 - en: '[PRE20]'
+  id: totrans-91
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: The result is an array of likelihoods, which we can use to update the prior.
+  id: totrans-92
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个可能性数组，我们可以用它来更新先验。
 - en: '[PRE21]'
+  id: totrans-93
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: <details class="hide below-input"><summary aria-label="Toggle hidden content">Show
     code cell output Hide code cell output</summary>
+  id: totrans-94
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide below-input"><summary aria-label="切换隐藏内容">显示代码单元格输出 隐藏代码单元格输出</summary>
 - en: '[PRE22]</details>'
+  id: totrans-95
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE22]</details>'
 - en: 'Here’s what the posterior distribution looks like:'
+  id: totrans-96
   prefs: []
   type: TYPE_NORMAL
+  zh: 后验分布如下：
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-97
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格源代码 隐藏代码单元格源代码</summary>
 - en: '[PRE23]</details> ![_images/aa8da72d19e4cc2f8250daffba23cacc37f51d434598893c89d0b11c900ab63c.png](../Images/20af617e710a333d6f7a5753b0309a6b.png)'
+  id: totrans-98
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE23]</details> ![_images/aa8da72d19e4cc2f8250daffba23cacc37f51d434598893c89d0b11c900ab63c.png](../Images/20af617e710a333d6f7a5753b0309a6b.png)'
 - en: Because your initial guess is in the lower end of the range, the posterior distribution
     has shifted to the left. We can compute the posterior mean to see by how much.
+  id: totrans-99
   prefs: []
   type: TYPE_NORMAL
+  zh: 因为你的初始猜测在范围的较低端，后验分布已经向左移动。我们可以计算后验均值，看看移动了多少。
 - en: '[PRE24]'
+  id: totrans-100
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: '[PRE25]'
+  id: totrans-101
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: Before you saw the prizes, you expected to see a showcase with a value close
     to \\(30,000. After making a guess of \\\)23,000, you updated the prior distribution.
     Based on the combination of the prior and your guess, you now expect the actual
     price to be about \$26,000.
+  id: totrans-102
   prefs: []
   type: TYPE_NORMAL
+  zh: 在看到奖品之前，你期望看到一个价值接近30,000美元的展示。在猜测23,000美元后，你更新了先验分布。根据先验和你的猜测的组合，你现在期望实际价格约为26,000美元。
 - en: '**Exercise:** Now suppose you are Player 2\. When you see your showcase, you
     guess that the total price is \$38,000.'
+  id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**现在假设你是Player 2。当你看到你的展示时，你猜测总价值为38,000美元。'
 - en: Use `diff2` to construct a normal distribution that represents the distribution
     of your estimation errors.
+  id: totrans-104
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用`diff2`构建一个代表你估计误差分布的正态分布。
 - en: Compute the likelihood of your guess for each actual price and use it to update
     `prior2`.
+  id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: 计算每个实际价格的你猜测的可能性，并用它来更新`prior2`。
 - en: Plot the posterior distribution and compute the posterior mean. Based on the
     prior and your guess, what do you expect the actual price of the showcase to be?
+  id: totrans-106
   prefs: []
   type: TYPE_NORMAL
+  zh: 绘制后验分布并计算后验均值。根据先验和你的猜测，你期望展示的实际价格是多少？
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
 - en: '[PRE26]'
+  id: totrans-108
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: '[PRE27]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-109
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE27]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE28]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE28]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE29]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-111
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE29]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE30]'
+  id: totrans-112
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: '[PRE31]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-113
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE31]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE32]'
+  id: totrans-114
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: '![_images/ddaebf298f67138cb1ad06d9864e123abfa90d2dcfc18d188d40247fa118ee0a.png](../Images/236c7d0250007875a754dd2c19e1c288.png)</details><details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-115
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/ddaebf298f67138cb1ad06d9864e123abfa90d2dcfc18d188d40247fa118ee0a.png](../Images/236c7d0250007875a754dd2c19e1c288.png)</details><details
+    class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE33]'
+  id: totrans-116
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: '[PRE34]</details>'
+  id: totrans-117
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE34]</details>'
 - en: Probability of Winning
+  id: totrans-118
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 获胜的概率
 - en: Now that we have a posterior distribution for each player, let’s think about
     strategy.
+  id: totrans-119
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们对每个玩家都有了后验分布，让我们考虑一下策略。
 - en: First, from the point of view of Player 1, let’s compute the probability that
     Player 2 overbids. To keep it simple, I’ll use only the performance of past players,
     ignoring the value of the showcase.
+  id: totrans-120
   prefs: []
   type: TYPE_NORMAL
+  zh: 首先，从玩家1的角度来看，让我们计算玩家2出价过高的概率。为了简单起见，我将只使用过去玩家的表现，忽略展示品的价值。
 - en: The following function takes a sequence of past bids and returns the fraction
     that overbid.
+  id: totrans-121
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数接受过去出价的序列，并返回出价过高的比例。
 - en: '[PRE35]'
+  id: totrans-122
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: Here’s an estimate for the probability that Player 2 overbids.
+  id: totrans-123
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是玩家2出价过高的估计。
 - en: '[PRE36]'
+  id: totrans-124
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: '[PRE37]'
+  id: totrans-125
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE37]'
 - en: Now suppose Player 1 underbids by \$5000. What is the probability that Player
     2 underbids by more?
+  id: totrans-126
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在假设玩家1低出了5000美元。玩家2低出的概率是多少？
 - en: 'The following function uses past performance to estimate the probability that
     a player underbids by more than a given amount, `diff`:'
+  id: totrans-127
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数使用过去的表现来估计玩家出价低于给定金额`diff`的概率：
 - en: '[PRE38]'
+  id: totrans-128
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: Here’s the probability that Player 2 underbids by more than \$5000.
+  id: totrans-129
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是玩家2低出5000美元以上的概率。
 - en: '[PRE39]'
+  id: totrans-130
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: '[PRE40]'
+  id: totrans-131
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE40]'
 - en: And here’s the probability they underbid by more than \$10,000.
+  id: totrans-132
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是他们低出10000美元以上的概率。
 - en: '[PRE41]'
+  id: totrans-133
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE41]'
 - en: '[PRE42]'
+  id: totrans-134
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE42]'
 - en: 'We can combine these functions to compute the probability that Player 1 wins,
     given the difference between their bid and the actual price:'
+  id: totrans-135
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以结合这些函数来计算玩家1赢得比赛的概率，给定他们的出价与实际价格之间的差异：
 - en: '[PRE43]'
+  id: totrans-136
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE43]'
 - en: Here’s the probability that you win, given that you underbid by \$5000.
+  id: totrans-137
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是你低出5000美元的情况下赢得比赛的概率。
 - en: '[PRE44]'
+  id: totrans-138
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE44]'
 - en: '[PRE45]'
+  id: totrans-139
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE45]'
 - en: Now let’s look at the probability of winning for a range of possible differences.
+  id: totrans-140
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们看看一系列可能差异的赢得概率。
 - en: '[PRE46]'
+  id: totrans-141
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE46]'
 - en: 'Here’s what it looks like:'
+  id: totrans-142
   prefs: []
   type: TYPE_NORMAL
+  zh: 它看起来是这样的：
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-143
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE47]</details> ![_images/95b1f75c55a42262fae0f50426c1ad7109acb4485c645d8df064158bda3be190.png](../Images/d89a68655a2a15bae620e54b69ce9d9f.png)'
+  id: totrans-144
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE47]</details> ![_images/95b1f75c55a42262fae0f50426c1ad7109acb4485c645d8df064158bda3be190.png](../Images/d89a68655a2a15bae620e54b69ce9d9f.png)'
 - en: If you underbid by \$30,000, the chance of winning is about 30%, which is mostly
     the chance your opponent overbids.
+  id: totrans-145
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你低于30000美元，赢得比赛的机会约为30%，这主要是你的对手出价过高的机会。
 - en: As your bids gets closer to the actual price, your chance of winning approaches
     1.
+  id: totrans-146
   prefs: []
   type: TYPE_NORMAL
+  zh: 随着你的出价接近实际价格，你赢得比赛的机会接近1。
 - en: And, of course, if you overbid, you lose (even if your opponent also overbids).
+  id: totrans-147
   prefs: []
   type: TYPE_NORMAL
+  zh: 当然，如果你出价过高，你就输了（即使你的对手也出价过高）。
 - en: '**Exercise:** Run the same analysis from the point of view of Player 2\. Using
     the sample of differences from Player 1, compute:'
+  id: totrans-148
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** 从玩家2的角度运行相同的分析。使用来自玩家1的差异样本，计算：'
 - en: The probability that Player 1 overbids.
+  id: totrans-149
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 玩家1出价过高的概率。
 - en: The probability that Player 1 underbids by more than \$5000.
+  id: totrans-150
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 玩家1低出5000美元以上的概率。
 - en: The probability that Player 2 wins, given that they underbid by \$5000.
+  id: totrans-151
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 玩家2赢得比赛的概率，假设他们低出5000美元。
 - en: Then plot the probability that Player 2 wins for a range of possible differences
     between their bid and the actual price.
+  id: totrans-152
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后绘制玩家2赢得比赛的概率，以及他们的出价与实际价格之间可能的差异范围。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-153
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE48]'
+  id: totrans-154
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE48]'
 - en: '[PRE49]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-155
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE49]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE50]'
+  id: totrans-156
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE50]'
 - en: '[PRE51]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-157
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE51]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE52]'
+  id: totrans-158
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE52]'
 - en: '[PRE53]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-159
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE53]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE54]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-160
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE54]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE55]'
+  id: totrans-161
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE55]'
 - en: '![_images/6a0fdd6202e5213fa2c54cc2554bb11ee21096e795e3c9e8c7418d6fd3e5cbbf.png](../Images/176beb4578160880511cac1e394957ed.png)</details>'
+  id: totrans-162
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/6a0fdd6202e5213fa2c54cc2554bb11ee21096e795e3c9e8c7418d6fd3e5cbbf.png](../Images/176beb4578160880511cac1e394957ed.png)</details>'
 - en: Decision Analysis
+  id: totrans-163
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 决策分析
 - en: In the previous section we computed the probability of winning, given that we
     have underbid by a particular amount.
+  id: totrans-164
   prefs: []
   type: TYPE_NORMAL
+  zh: 在前一节中，我们计算了在我们低出一定金额的情况下赢得比赛的概率。
 - en: In reality the contestants don’t know how much they have underbid by, because
     they don’t know the actual price.
+  id: totrans-165
   prefs: []
   type: TYPE_NORMAL
+  zh: 实际上，参赛者不知道他们低出了多少，因为他们不知道实际价格。
 - en: But they do have a posterior distribution that represents their beliefs about
     the actual price, and they can use that to estimate their probability of winning
     with a given bid.
+  id: totrans-166
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是他们确实有一个代表他们对实际价格的信念的后验分布，并且他们可以使用它来估计他们在给定出价下赢得比赛的概率。
 - en: The following function takes a possible bid, a posterior distribution of actual
     prices, and a sample of differences for the opponent.
+  id: totrans-167
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数接受可能的出价、实际价格的后验分布和对手差异的样本。
 - en: It loops through the hypothetical prices in the posterior distribution and,
     for each price,
+  id: totrans-168
   prefs: []
   type: TYPE_NORMAL
+  zh: 它循环遍历后验分布中的假设价格，并对每个价格进行计算，
 - en: Computes the difference between the bid and the hypothetical price,
+  id: totrans-169
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 计算出价和假设价格之间的差异，
 - en: Computes the probability that the player wins, given that difference, and
+  id: totrans-170
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 计算玩家在给定差异情况下赢得比赛的概率，并
 - en: Adds up the weighted sum of the probabilities, where the weights are the probabilities
     in the posterior distribution.
+  id: totrans-171
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 将概率的加权和相加，其中权重是后验分布中的概率。
 - en: '[PRE56]'
+  id: totrans-172
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE56]'
 - en: 'This loop implements the law of total probability:'
+  id: totrans-173
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个循环实现了总概率法则：
 - en: \[P(win) = \sum_{price} P(price) ~ P(win ~|~ price)\]
+  id: totrans-174
   prefs: []
   type: TYPE_NORMAL
+  zh: \[P(win) = \sum_{price} P(price) ~ P(win ~|~ price)\]
 - en: Here’s the probability that Player 1 wins, based on a bid of \$25,000 and the
     posterior distribution `posterior1`.
+  id: totrans-175
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE57]'
+  id: totrans-176
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE57]'
 - en: '[PRE58]'
+  id: totrans-177
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE58]'
 - en: Now we can loop through a series of possible bids and compute the probability
     of winning for each one.
+  id: totrans-178
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE59]'
+  id: totrans-179
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE59]'
 - en: Here are the results.
+  id: totrans-180
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-181
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE60]</details> ![_images/a118051eb20c1b1e1fa32532dac88b183989c32465dd2c54b09fee90ac644590.png](../Images/5468adc006e73cd0ec8165b8c8422cf2.png)'
+  id: totrans-182
   prefs: []
   type: TYPE_NORMAL
 - en: And here’s the bid that maximizes Player 1’s chance of winning.
+  id: totrans-183
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE61]'
+  id: totrans-184
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE61]'
 - en: '[PRE62]'
+  id: totrans-185
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE62]'
 - en: '[PRE63]'
+  id: totrans-186
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE63]'
 - en: '[PRE64]'
+  id: totrans-187
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE64]'
 - en: Recall that your guess was \\(23,000. Using your guess to compute the posterior
     distribution, the posterior mean is about \\\)26,000. But the bid that maximizes
     your chance of winning is \$21,000.
+  id: totrans-188
   prefs: []
   type: TYPE_NORMAL
 - en: '**Exercise:** Do the same analysis for Player 2.'
+  id: totrans-189
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-190
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE65]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-191
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE66]'
+  id: totrans-192
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE66]'
 - en: '![_images/c0a1356834ee3205a1df9657db18fef0a9c80ffdd65b4072b09881b624a09e95.png](../Images/389b2238e8f72065bd674acbfd491767.png)</details><details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-193
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE67]'
+  id: totrans-194
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE67]'
 - en: '[PRE68]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-195
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE69]'
+  id: totrans-196
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE69]'
 - en: '[PRE70]</details>'
+  id: totrans-197
   prefs: []
   type: TYPE_NORMAL
 - en: Maximizing Expected Gain
+  id: totrans-198
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: In the previous section we computed the bid that maximizes your chance of winning.
     And if that’s your goal, the bid we computed is optimal.
+  id: totrans-199
   prefs: []
   type: TYPE_NORMAL
 - en: 'But winning isn’t everything. Remember that if your bid is off by \$250 or
     less, you win both showcases. So it might be a good idea to increase your bid
     a little: it increases the chance you overbid and lose, but it also increases
     the chance of winning both showcases.'
+  id: totrans-200
   prefs: []
   type: TYPE_NORMAL
 - en: Let’s see how that works out. The following function computes how much you will
     win, on average, given your bid, the actual price, and a sample of errors for
     your opponent.
+  id: totrans-201
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE71]'
+  id: totrans-202
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE71]'
 - en: For example, if the actual price is \\(35000 and you bid \\\)30000, you will
     win about \$23,600 worth of prizes on average, taking into account your probability
     of losing, winning one showcase, or winning both.
+  id: totrans-203
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE72]'
+  id: totrans-204
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE72]'
 - en: '[PRE73]'
+  id: totrans-205
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE73]'
 - en: In reality we don’t know the actual price, but we have a posterior distribution
     that represents what we know about it. By averaging over the prices and probabilities
     in the posterior distribution, we can compute the expected gain for a particular
     bid.
+  id: totrans-206
   prefs: []
   type: TYPE_NORMAL
 - en: In this context, “expected” means the average over the possible showcase values,
     weighted by their probabilities.
+  id: totrans-207
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE74]'
+  id: totrans-208
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE74]'
 - en: For the posterior we computed earlier, based on a guess of \\(23,000, the expected
     gain for a bid of \\\)21,000 is about \$16,900.
+  id: totrans-209
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE75]'
+  id: totrans-210
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE75]'
 - en: '[PRE76]'
+  id: totrans-211
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE76]'
 - en: But can we do any better?
+  id: totrans-212
   prefs: []
   type: TYPE_NORMAL
 - en: To find out, we can loop through a range of bids and find the one that maximizes
     expected gain.
+  id: totrans-213
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE77]'
+  id: totrans-214
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE77]'
 - en: Here are the results.
+  id: totrans-215
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-216
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE78]</details> ![_images/5af6f2ee1d12a94b053bbcda95332bfc6757bf389b2ebf6eb448cbc759aa423b.png](../Images/fd2870c0b0ddd8087fe670358dacba4d.png)'
+  id: totrans-217
   prefs: []
   type: TYPE_NORMAL
 - en: Here is the optimal bid.
+  id: totrans-218
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE79]'
+  id: totrans-219
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE79]'
 - en: '[PRE80]'
+  id: totrans-220
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE80]'
 - en: With that bid, the expected gain is about \$17,400.
+  id: totrans-221
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE81]'
+  id: totrans-222
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE81]'
 - en: '[PRE82]'
+  id: totrans-223
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE82]'
 - en: Recall that your initial guess was \\(23,000. The bid that maximizes the chance
     of winning is \\\)21,000. And the bid that maximizes your expected gain is \$22,000.
+  id: totrans-224
   prefs: []
   type: TYPE_NORMAL
 - en: '**Exercise:** Do the same analysis for Player 2.'
+  id: totrans-225
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-226
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE83]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-227
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE84]'
+  id: totrans-228
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE84]'
 - en: '![_images/fa3190e06341295c604af81707aff93d8ee047523308df3bba4a68565008857a.png](../Images/038f8ef198dbb66ad9477d8d0636264d.png)</details><details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-229
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE85]'
+  id: totrans-230
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE85]'
 - en: '[PRE86]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-231
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE87]'
+  id: totrans-232
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE87]'
 - en: '[PRE88]</details>'
+  id: totrans-233
   prefs: []
   type: TYPE_NORMAL
 - en: Summary
+  id: totrans-234
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: 'There’s a lot going on this this chapter, so let’s review the steps:'
+  id: totrans-235
   prefs: []
   type: TYPE_NORMAL
 - en: First we used KDE and data from past shows to estimate prior distributions for
     the values of the showcases.
+  id: totrans-236
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: Then we used bids from past shows to model the distribution of errors as a normal
     distribution.
+  id: totrans-237
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: We did a Bayesian update using the distribution of errors to compute the likelihood
     of the data.
+  id: totrans-238
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: We used the posterior distribution for the value of the showcase to compute
     the probability of winning for each possible bid, and identified the bid that
     maximizes the chance of winning.
+  id: totrans-239
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: Finally, we used probability of winning to compute the expected gain for each
     possible bid, and identified the bid that maximizes expected gain.
+  id: totrans-240
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: Incidentally, this example demonstrates the hazard of using the word “optimal”
     without specifying what you are optimizing. The bid that maximizes the chance
     of winning is not generally the same as the bid that maximizes expected gain.
+  id: totrans-241
   prefs: []
   type: TYPE_NORMAL
 - en: Discussion
+  id: totrans-242
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: When people discuss the pros and cons of Bayesian estimation, as contrasted
     with classical methods sometimes called “frequentist”, they often claim that in
     many cases Bayesian methods and frequentist methods produce the same results.
+  id: totrans-243
   prefs: []
   type: TYPE_NORMAL
 - en: 'In my opinion, this claim is mistaken because Bayesian and frequentist method
     produce different *kinds* of results:'
+  id: totrans-244
   prefs: []
   type: TYPE_NORMAL
 - en: The result of frequentist methods is usually a single value that is considered
     to be the best estimate (by one of several criteria) or an interval that quantifies
     the precision of the estimate.
+  id: totrans-245
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: The result of Bayesian methods is a posterior distribution that represents all
     possible outcomes and their probabilities.
+  id: totrans-246
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Granted, you can use the posterior distribution to choose a “best” estimate
     or compute an interval. And in that case the result might be the same as the frequentist
     estimate.
+  id: totrans-247
   prefs: []
   type: TYPE_NORMAL
 - en: 'But doing so discards useful information and, in my opinion, eliminates the
     primary benefit of Bayesian methods: the posterior distribution is more useful
     than a single estimate, or even an interval.'
+  id: totrans-248
   prefs: []
   type: TYPE_NORMAL
 - en: The example in this chapter demonstrates the point. Using the entire posterior
     distribution, we can compute the bid that maximizes the probability of winning,
     or the bid that maximizes expected gain, even if the rules for computing the gain
     are complicated (and nonlinear).
+  id: totrans-249
   prefs: []
   type: TYPE_NORMAL
 - en: With a single estimate or an interval, we can’t do that, even if they are “optimal”
     in some sense. In general, frequentist estimation provides little guidance for
     decision-making.
+  id: totrans-250
   prefs: []
   type: TYPE_NORMAL
 - en: If you hear someone say that Bayesian and frequentist methods produce the same
     results, you can be confident that they don’t understand Bayesian methods.
+  id: totrans-251
   prefs: []
   type: TYPE_NORMAL
 - en: Exercises
+  id: totrans-252
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -955,424 +1352,585 @@
     subway to South Station and then a commuter train home to Needham. Because the
     subway was unpredictable, I left the office early enough that I could wait up
     to 15 minutes and still catch the commuter train.'
+  id: totrans-253
   prefs: []
   type: TYPE_NORMAL
 - en: When I got to the subway stop, there were usually about 10 people waiting on
     the platform. If there were fewer than that, I figured I just missed a train,
     so I expected to wait a little longer than usual. And if there there more than
     that, I expected another train soon.
+  id: totrans-254
   prefs: []
   type: TYPE_NORMAL
 - en: But if there were a *lot* more than 10 passengers waiting, I inferred that something
     was wrong, and I expected a long wait. In that case, I might leave and take a
     taxi.
+  id: totrans-255
   prefs: []
   type: TYPE_NORMAL
 - en: We can use Bayesian decision analysis to quantify the analysis I did intuitively.
     Given the number of passengers on the platform, how long should we expect to wait?
     And when should we give up and take a taxi?
+  id: totrans-256
   prefs: []
   type: TYPE_NORMAL
 - en: My analysis of this problem is in `redline.ipynb`, which is in the repository
     for this book. [Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ThinkBayes2/blob/master/notebooks/redline.ipynb).
+  id: totrans-257
   prefs: []
   type: TYPE_NORMAL
+  zh: 我对这个问题的分析在`redline.ipynb`中，它在这本书的存储库中。[单击此处在Colab上运行此笔记本](https://colab.research.google.com/github/AllenDowney/ThinkBayes2/blob/master/notebooks/redline.ipynb)。
 - en: '**Exercise:** This exercise is inspired by a true story. In 2001 I created
     [Green Tea Press](https://greenteapress.com) to publish my books, starting with
     *Think Python*. I ordered 100 copies from a short run printer and made the book
     available for sale through a distributor.'
+  id: totrans-258
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**这个练习是由一个真实的故事启发的。2001年，我创建了[Green Tea Press](https://greenteapress.com)来出版我的书，从*Think
+    Python*开始。我从短期印刷商那里订购了100本书，并通过分销商开始销售这本书。'
 - en: After the first week, the distributor reported that 12 copies were sold. Based
     that report, I thought I would run out of copies in about 8 weeks, so I got ready
     to order more. My printer offered me a discount if I ordered more than 1000 copies,
     so I went a little crazy and ordered 2000.
+  id: totrans-259
   prefs: []
   type: TYPE_NORMAL
+  zh: 第一周之后，分销商报告说卖出了12本。根据这个报告，我认为我大约8周就会卖完，所以我准备好订购更多。我的印刷商给了我一个折扣，如果我订购超过1000本，所以我有点疯狂地订购了2000本。
 - en: A few days later, my mother called to tell me that her *copies* of the book
     had arrived. Surprised, I asked how many. She said ten.
+  id: totrans-260
   prefs: []
   type: TYPE_NORMAL
+  zh: 几天后，我妈妈打电话告诉我她的这本书已经到了。我很惊讶，问了她有多少。她说有十本。
 - en: It turned out I had sold only two books to non-relatives. And it took a lot
     longer than I expected to sell 2000 copies.
+  id: totrans-261
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果我只卖了两本书给非亲戚。而且卖出2000本书的时间比我预期的长得多。
 - en: The details of this story are unique, but the general problem is something almost
     every retailer has to figure out. Based on past sales, how do you predict future
     sales? And based on those predictions, how do you decide how much to order and
     when?
+  id: totrans-262
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个故事的细节是独一无二的，但一般的问题几乎每个零售商都必须解决。根据过去的销售情况，你如何预测未来的销售情况？根据这些预测，你如何决定订购多少以及何时订购？
 - en: Often the cost of a bad decision is complicated. If you place a lot of small
     orders rather than one big one, your costs are likely to be higher. If you run
     out of inventory, you might lose customers. And if you order too much, you have
     to pay the various costs of holding inventory.
+  id: totrans-263
   prefs: []
   type: TYPE_NORMAL
+  zh: 通常，一个错误决策的成本是复杂的。如果你分批下订单而不是一次性下大订单，你的成本可能会更高。如果你库存不足，你可能会失去顾客。如果你订购太多，你必须支付持有库存的各种成本。
 - en: So, let’s solve a version of the problem I faced. It will take some work to
     set up the problem; the details are in the notebook for this chapter.
+  id: totrans-264
   prefs: []
   type: TYPE_NORMAL
+  zh: 所以，让我们解决我面临的问题的一个版本。设置问题需要一些工作；有关详细信息，请参阅本章的笔记本。
 - en: Suppose you start selling books online. During the first week you sell 10 copies
     (and let’s assume that none of the customers are your mother). During the second
     week you sell 9 copies.
+  id: totrans-265
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设你开始在网上卖书。第一周你卖出10本（假设没有一个顾客是你的母亲）。第二周你卖出9本。
 - en: Assuming that the arrival of orders is a Poisson process, we can think of the
     weekly orders as samples from a Poisson distribution with an unknown rate. We
     can use orders from past weeks to estimate the parameter of this distribution,
     generate a predictive distribution for future weeks, and compute the order size
     that maximized expected profit.
+  id: totrans-266
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设订单的到货是泊松过程，我们可以将每周的订单视为来自具有未知速率的泊松分布的样本。我们可以使用过去几周的订单来估计这个分布的参数，生成未来几周的预测分布，并计算最大化预期利润的订单大小。
 - en: Suppose the cost of printing the book is \$5 per copy,
+  id: totrans-267
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 假设印刷这本书的成本是每本5美元，
 - en: But if you order 100 or more, it’s \$4.50 per copy.
+  id: totrans-268
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 但如果你订购100本或更多，每本是4.50美元。
 - en: For every book you sell, you get \$10.
+  id: totrans-269
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 每卖出一本书，你就赚10美元。
 - en: But if you run out of books before the end of 8 weeks, you lose \$50 in future
     sales for every week you are out of stock.
+  id: totrans-270
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 但如果你在8周结束之前卖完了书，你将损失50美元的未来销售额。
 - en: If you have books left over at the end of 8 weeks, you lose \$2 in inventory
     costs per extra book.
+  id: totrans-271
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果你在8周结束时还有剩余的书，每多一本书你就会损失2美元的库存成本。
 - en: For example, suppose you get orders for 10 books per week, every week. If you
     order 60 books,
+  id: totrans-272
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，假设你每周都有10本书的订单。如果你订购60本书，
 - en: The total cost is \$300.
+  id: totrans-273
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 总成本是300美元。
 - en: You sell all 60 books, so you make \$600.
+  id: totrans-274
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 你卖掉了所有60本书，所以你赚了600美元。
 - en: But the book is out of stock for two weeks, so you lose \$100 in future sales.
+  id: totrans-275
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 但是这本书缺货两周，所以你将在未来销售中损失100美元。
 - en: In total, your profit is \$200.
+  id: totrans-276
   prefs: []
   type: TYPE_NORMAL
+  zh: 总的来说，你的利润是200美元。
 - en: If you order 100 books,
+  id: totrans-277
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你订购100本书，
 - en: The total cost is \$450.
+  id: totrans-278
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 总成本是450美元。
 - en: You sell 80 books, so you make \$800.
+  id: totrans-279
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 你卖了80本书，所以你赚了800美元。
 - en: But you have 20 books left over at the end, so you lose \$40.
+  id: totrans-280
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 但是最后你还剩下20本书，所以你损失了40美元。
 - en: In total, your profit is \$310.
+  id: totrans-281
   prefs: []
   type: TYPE_NORMAL
+  zh: 总的来说，你的利润是310美元。
 - en: Combining these costs with your predictive distribution, how many books should
     you order to maximize your expected profit?
+  id: totrans-282
   prefs: []
   type: TYPE_NORMAL
+  zh: 结合这些成本和你的预测分布，你应该订购多少书才能最大化你的预期利润？
 - en: 'To get you started, the following functions compute profits and costs according
     to the specification of the problem:'
+  id: totrans-283
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了让你开始，以下函数根据问题的规范计算利润和成本：
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-284
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"> <summary aria-label="切换隐藏内容">显示代码单元格内容隐藏代码单元格内容</summary>
 - en: '[PRE89]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-285
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE89] </ details> <details class="hide above-input"> <summary aria-label="切换隐藏内容">显示代码单元格内容隐藏代码单元格内容</summary>'
 - en: '[PRE90]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-286
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE90] </ details> <details class="hide above-input"> <summary aria-label="切换隐藏内容">显示代码单元格内容隐藏代码单元格内容</summary>'
 - en: '[PRE91]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-287
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE91] </ details> <details class="hide above-input"> <summary aria-label="切换隐藏内容">显示代码单元格内容隐藏代码单元格内容</summary>'
 - en: '[PRE92]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-288
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE93]</details>'
+  id: totrans-289
   prefs: []
   type: TYPE_NORMAL
 - en: 'To test these functions, suppose we get exactly 10 orders per week for eight
     weeks:'
+  id: totrans-290
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-291
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE94]'
+  id: totrans-292
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE94]'
 - en: '[PRE95]</details>'
+  id: totrans-293
   prefs: []
   type: TYPE_NORMAL
 - en: If you print 60 books, your net profit is \$200, as in the example.
+  id: totrans-294
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-295
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE96]'
+  id: totrans-296
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE96]'
 - en: '[PRE97]</details>'
+  id: totrans-297
   prefs: []
   type: TYPE_NORMAL
 - en: If you print 100 books, your net profit is \$310.
+  id: totrans-298
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-299
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE98]'
+  id: totrans-300
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE98]'
 - en: '[PRE99]</details>'
+  id: totrans-301
   prefs: []
   type: TYPE_NORMAL
 - en: Of course, in the context of the problem you don’t know how many books will
     be ordered in any given week. You don’t even know the average rate of orders.
     However, given the data and some assumptions about the prior, you can compute
     the distribution of the rate of orders.
+  id: totrans-302
   prefs: []
   type: TYPE_NORMAL
 - en: You’ll have a chance to do that, but to demonstrate the decision analysis part
     of the problem, I’ll start with the arbitrary assumption that order rates come
     from a gamma distribution with mean 9.
+  id: totrans-303
   prefs: []
   type: TYPE_NORMAL
 - en: Here’s a `Pmf` that represents this distribution.
+  id: totrans-304
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-305
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE100]'
+  id: totrans-306
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE100]'
 - en: '[PRE101]</details>'
+  id: totrans-307
   prefs: []
   type: TYPE_NORMAL
 - en: 'And here’s what it looks like:'
+  id: totrans-308
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-309
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE102]'
+  id: totrans-310
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE102]'
 - en: '![_images/f0c07feace81ea12a0bd72e74c54165fcf17f2031f3a2fcdd831a65ed6c36fea.png](../Images/895f1f7563ae339842c1238cfccd8c3a.png)</details>'
+  id: totrans-311
   prefs: []
   type: TYPE_NORMAL
 - en: Now, we *could* generate a predictive distribution for the number of books ordered
     in a given week, but in this example we have to deal with a complicated cost function.
     In particular, `out_of_stock_cost` depends on the sequence of orders.
+  id: totrans-312
   prefs: []
   type: TYPE_NORMAL
 - en: So, rather than generate a predictive distribution, I suggest we run simulations.
     I’ll demonstrate the steps.
+  id: totrans-313
   prefs: []
   type: TYPE_NORMAL
 - en: First, from our hypothetical distribution of rates, we can draw a random sample
     of 1000 values.
+  id: totrans-314
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-315
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE103]'
+  id: totrans-316
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE103]'
 - en: '[PRE104]</details>'
+  id: totrans-317
   prefs: []
   type: TYPE_NORMAL
 - en: For each possible rate, we can generate a sequence of 8 orders.
+  id: totrans-318
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-319
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE105]'
+  id: totrans-320
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE105]'
 - en: '[PRE106]</details>'
+  id: totrans-321
   prefs: []
   type: TYPE_NORMAL
 - en: Each row of this array is a hypothetical sequence of orders based on a different
     hypothetical order rate.
+  id: totrans-322
   prefs: []
   type: TYPE_NORMAL
 - en: Now, if you tell me how many books you printed, I can compute your expected
     profits, averaged over these 1000 possible sequences.
+  id: totrans-323
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-324
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE107]</details>'
+  id: totrans-325
   prefs: []
   type: TYPE_NORMAL
 - en: For example, here are the expected profits if you order 70, 80, or 90 books.
+  id: totrans-326
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-327
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE108]'
+  id: totrans-328
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE108]'
 - en: '[PRE109]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-329
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE110]'
+  id: totrans-330
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE110]'
 - en: '[PRE111]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-331
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE112]'
+  id: totrans-332
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE112]'
 - en: '[PRE113]</details>'
+  id: totrans-333
   prefs: []
   type: TYPE_NORMAL
 - en: Now, let’s sweep through a range of values and compute expected profits as a
     function of the number of books you print.
+  id: totrans-334
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-335
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE114]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-336
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE115]'
+  id: totrans-337
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE115]'
 - en: '![_images/e7bd0c699b0f0d5d3def4bba11e16b0b0f888bb38e04107ae33456cb2593b744.png](../Images/56763189d6ade009952f80fd45745b8a.png)</details>'
+  id: totrans-338
   prefs: []
   type: TYPE_NORMAL
 - en: Here is the optimal order and the expected profit.
+  id: totrans-339
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-340
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE116]'
+  id: totrans-341
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE116]'
 - en: '[PRE117]</details>'
+  id: totrans-342
   prefs: []
   type: TYPE_NORMAL
 - en: Now it’s your turn. Choose a prior that you think is reasonable, update it with
     the data you are given, and then use the posterior distribution to do the analysis
     I just demonstrated.
+  id: totrans-343
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-344
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE118]'
+  id: totrans-345
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE118]'
 - en: '[PRE119]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-346
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE120]'
+  id: totrans-347
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE120]'
 - en: '![_images/a6338a1a0893a7144417ca17ebf2bc03705a6c0f0dc14683682fd835e33ee33f.png](../Images/ad7464144586cf985b0b21156b164db3.png)</details><details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-348
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE121]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-349
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE122]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-350
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE123]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-351
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE124]'
+  id: totrans-352
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE124]'
 - en: '[PRE125]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-353
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE126]'
+  id: totrans-354
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE126]'
 - en: '[PRE127]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-355
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE128]'
+  id: totrans-356
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE128]'
 - en: '[PRE129]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-357
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE130]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-358
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE131]'
+  id: totrans-359
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE131]'
 - en: '![_images/f6e8f3aba82c7dc42ab819db153489febe30bd949e0bc8eb661d66f90388cf3a.png](../Images/9a8222c213f96336bc0694b34e3b8deb.png)</details><details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-360
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE132]'
+  id: totrans-361
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE132]'
 - en: '[PRE133]</details>'
+  id: totrans-362
   prefs: []
   type: TYPE_NORMAL
