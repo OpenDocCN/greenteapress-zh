@@ -3,38 +3,45 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 第4章 累积分布函数
 - en: 原文：[https://greenteapress.com/thinkstats2/html/thinkstats2005.html](https://greenteapress.com/thinkstats2/html/thinkstats2005.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://greenteapress.com/thinkstats2/html/thinkstats2005.html](https://greenteapress.com/thinkstats2/html/thinkstats2005.html)
 - en: The code for this chapter is in `cumulative.py`. For information about downloading
     and working with this code, see Section [0.2](thinkstats2001.html#code).
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章的代码在`cumulative.py`中。有关下载和使用此代码的信息，请参阅第[0.2](thinkstats2001.html#code)节。
 - en: 4.1  The limits of PMFs
   id: totrans-3
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 4.1 PMFs的限制
 - en: PMFs work well if the number of values is small. But as the number of values
     increases, the probability associated with each value gets smaller and the effect
     of random noise increases.
   id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果值的数量较少，PMFs效果很好。但是随着值的数量增加，与每个值相关的概率变小，随机噪声的影响增加。
 - en: For example, we might be interested in the distribution of birth weights. In
     the NSFG data, the variable `totalwgt_lb` records weight at birth in pounds. Figure [4.1](#nsfg_birthwgt_pmf)
     shows the PMF of these values for first babies and others.
   id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，我们可能对出生体重的分布感兴趣。在NSFG数据中，变量`totalwgt_lb`记录了出生体重（以磅为单位）。图[4.1](#nsfg_birthwgt_pmf)显示了这些值的PMF，分别为第一个孩子和其他孩子。
 - en: '* * *'
   id: totrans-6
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
   id: totrans-7
   prefs:
@@ -45,6 +52,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/ca484416b47aead07e9b7fd39fd2f491.png)'
 - en: ''
   id: totrans-9
   prefs:
@@ -56,6 +64,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_TB
+  zh: '| 图4.1：出生体重的PMF。这张图显示了PMFs的一个限制：它们在视觉上很难比较。|'
 - en: ''
   id: totrans-11
   prefs:
@@ -66,11 +75,13 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: Overall, these distributions resemble the bell shape of a normal distribution,
     with many values near the mean and a few values much higher and lower.
   id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 总的来说，这些分布类似于正态分布的钟形，大部分值接近平均值，而少数值则高于或低于平均值。
 - en: But parts of this figure are hard to interpret. There are many spikes and valleys,
     and some apparent differences between the distributions. It is hard to tell which
     of these features are meaningful. Also, it is hard to see overall patterns; for
@@ -78,6 +89,7 @@
   id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是，这个图的某些部分很难解释。有许多尖峰和低谷，以及分布之间的一些明显差异。很难判断这些特征哪些是有意义的。此外，很难看出整体模式；例如，你认为哪个分布的平均值更高？
 - en: These problems can be mitigated by binning the data; that is, dividing the range
     of values into non-overlapping intervals and counting the number of values in
     each bin. Binning can be useful, but it is tricky to get the size of the bins
@@ -86,17 +98,20 @@
   id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些问题可以通过对数据进行分箱来缓解；即将值的范围分成不重叠的间隔，并计算每个箱中的值的数量。分箱可能很有用，但要正确确定箱的大小很棘手。如果它们足够大以平滑噪声，它们可能也会平滑掉有用的信息。
 - en: An alternative that avoids these problems is the cumulative distribution function
     (CDF), which is the subject of this chapter. But before I can explain CDFs, I
     have to explain percentiles.
   id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 避免这些问题的另一种选择是累积分布函数（CDF），这是本章的主题。但在我解释CDF之前，我必须解释百分位数。
 - en: 4.2  Percentiles
   id: totrans-17
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 4.2 百分位数
 - en: If you have taken a standardized test, you probably got your results in the
     form of a raw score and a percentile rank. In this context, the percentile rank
     is the fraction of people who scored lower than you (or the same). So if you are
@@ -105,11 +120,13 @@
   id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你参加过标准化考试，你可能得到了原始分数和百分位数排名。在这种情况下，百分位数排名是得分低于你（或相同）的人的比例。因此，如果你处于“90百分位数”，你的表现和90%参加考试的人一样好或更好。
 - en: 'Here’s how you could compute the percentile rank of a value, `your_score`,
     relative to the values in the sequence `scores`:'
   id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是如何计算值`your_score`相对于序列`scores`中的值的百分位数排名的：
 - en: '[PRE0]'
   id: totrans-20
   prefs: []
@@ -120,6 +137,7 @@
   id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，如果序列中的分数是55、66、77、88和99，而你得到了88，那么你的百分位数排名将是`100 * 4 / 5`，即80。
 - en: 'If you are given a value, it is easy to find its percentile rank; going the
     other way is slightly harder. If you are given a percentile rank and you want
     to find the corresponding value, one option is to sort the values and search for
@@ -127,6 +145,7 @@
   id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果给定一个值，找到它的百分位数排名很容易；反过来则稍微困难一些。如果给定一个百分位数排名，想要找到相应的值，一种选择是对值进行排序并搜索你想要的值：
 - en: '[PRE1]'
   id: totrans-23
   prefs: []
@@ -138,11 +157,13 @@
   id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个计算的结果是一个百分位数。例如，第50百分位数是具有百分位数排名50的值。在考试分数的分布中，第50百分位数是77。
 - en: 'This implementation of `Percentile` is not efficient. A better approach is
     to use the percentile rank to compute the index of the corresponding percentile:'
   id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: '`Percentile`的这种实现效率不高。更好的方法是使用百分位数排名来计算相应百分位数的索引：'
 - en: '[PRE2]'
   id: totrans-26
   prefs: []
@@ -155,28 +176,33 @@
   id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: “百分位数”和“百分位数排名”的区别可能令人困惑，人们并不总是精确地使用这些术语。总之，`PercentileRank`接受一个值并计算其在一组值中的百分位数排名；`Percentile`接受一个百分位数排名并计算相应的值。
 - en: 4.3  CDFs
   id: totrans-28
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 4.3 CDFs
 - en: Now that we understand percentiles and percentile ranks, we are ready to tackle
     the cumulative distribution function (CDF). The CDF is the function that maps
     from a value to its percentile rank.
   id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们了解了百分位数和百分位数排名，我们准备好处理累积分布函数（CDF）了。CDF是将值映射到其百分位数排名的函数。
 - en: The CDF is a function of x, where x is any value that might appear in the distribution.
     To evaluate CDF(x) for a particular value of x, we compute the fraction of values
     in the distribution less than or equal to x.
   id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: CDF是x的函数，其中x是可能出现在分布中的任何值。要评估特定值x的CDF(x)，我们计算分布中小于或等于x的值的比例。
 - en: 'Here’s what that looks like as a function that takes a sequence, `sample`,
     and a value, `x`:'
   id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是一个以序列`sample`和一个值`x`为参数的函数的样子：
 - en: '[PRE3]'
   id: totrans-32
   prefs: []
@@ -503,21 +529,25 @@
   id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: 更一般地，百分位数经常用于总结分布的形状。例如，收入分布通常以“五分位数”报告；也就是说，它在第20、40、60和80百分位数处分割。其他分布被分为十个“分位数”。这些代表CDF中等间隔点的统计数据称为分位数。更多信息，请参阅[https://en.wikipedia.org/wiki/Quantile](https://en.wikipedia.org/wiki/Quantile)。
 - en: 4.7  Random numbers
   id: totrans-86
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 4.7 随机数
 - en: Suppose we choose a random sample from the population of live births and look
     up the percentile rank of their birth weights. Now suppose we compute the CDF
     of the percentile ranks. What do you think the distribution will look like?
   id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设我们从活产儿人群中随机选择一个样本，并查找其出生体重的百分位数。现在假设我们计算百分位数的CDF。你认为分布会是什么样子？
 - en: 'Here’s how we can compute it. First, we make the Cdf of birth weights:'
   id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是我们如何计算的。首先，我们制作出生体重的Cdf：
 - en: '[PRE7]'
   id: totrans-89
   prefs: []
@@ -528,6 +558,7 @@
   id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后我们生成一个样本，并计算样本中每个值的百分位数。
 - en: '[PRE8]'
   id: totrans-91
   prefs: []
@@ -539,10 +570,12 @@
   id: totrans-92
   prefs: []
   type: TYPE_NORMAL
+  zh: '`sample`是一个包含100个出生体重的随机样本，可以重复选择；也就是说，同一个值可能会被选择多次。`ranks`是一个百分位数的列表。'
 - en: Finally we make and plot the Cdf of the percentile ranks.
   id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，我们制作并绘制百分位数的Cdf。
 - en: '[PRE9]'
   id: totrans-94
   prefs: []
@@ -553,6 +586,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
   id: totrans-96
   prefs:
@@ -563,6 +597,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/89fd66dbfaa005b184da671df1768a9a.png)'
 - en: ''
   id: totrans-98
   prefs:
@@ -574,6 +609,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_TB
+  zh: '| 图4.5：随机出生体重样本的百分位数累积分布函数。 |'
 - en: ''
   id: totrans-100
   prefs:
@@ -584,11 +620,13 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: Figure [4.5](#cumulative_random) shows the result. The CDF is approximately
     a straight line, which means that the distribution is uniform.
   id: totrans-102
   prefs: []
   type: TYPE_NORMAL
+  zh: 图[4.5](#cumulative_random)显示了结果。CDF大致是一条直线，这意味着分布是均匀的。
 - en: That outcome might be non-obvious, but it is a consequence of the way the CDF
     is defined. What this figure shows is that 10% of the sample is below the 10th
     percentile, 20% is below the 20th percentile, and so on, exactly as we should
@@ -596,27 +634,32 @@
   id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个结果可能不明显，但它是CDF定义的一个结果。这个图表显示的是样本的10%在第10百分位以下，20%在第20百分位以下，依此类推，正如我们应该期望的那样。
 - en: 'So, regardless of the shape of the CDF, the distribution of percentile ranks
     is uniform. This property is useful, because it is the basis of a simple and efficient
     algorithm for generating random numbers with a given CDF. Here’s how:'
   id: totrans-104
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，不管CDF的形状如何，百分位数的分布都是均匀的。这个特性很有用，因为它是生成具有给定CDF的随机数的一个简单有效的算法的基础。这是如何做的：
 - en: Choose a percentile rank uniformly from the range 0–100.
   id: totrans-105
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 均匀地从0-100范围内选择一个百分位数。
 - en: Use `Cdf.Percentile` to find the value in the distribution that corresponds
     to the percentile rank you chose.
   id: totrans-106
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 使用`Cdf.Percentile`找到与您选择的百分位数相对应的分布中的值。
 - en: 'Cdf provides an implementation of this algorithm, called `Random`:'
   id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: Cdf提供了这个算法的实现，称为`Random`：
 - en: '[PRE10]'
   id: totrans-108
   prefs: []
@@ -627,11 +670,13 @@
   id: totrans-109
   prefs: []
   type: TYPE_NORMAL
+  zh: Cdf还提供了`Sample`，它接受一个整数`n`，并返回从Cdf中随机选择的`n`个值的列表。
 - en: 4.8  Comparing percentile ranks
   id: totrans-110
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 4.8 比较百分位数
 - en: Percentile ranks are useful for comparing measurements across different groups.
     For example, people who compete in foot races are usually grouped by age and gender.
     To compare people in different age groups, you can convert race times to percentile
@@ -639,16 +684,19 @@
   id: totrans-111
   prefs: []
   type: TYPE_NORMAL
+  zh: 百分位数对于比较不同组的测量结果很有用。例如，参加足球比赛的人通常按年龄和性别分组。要比较不同年龄组的人，可以将比赛时间转换为百分位数。
 - en: A few years ago I ran the James Joyce Ramble 10K in Dedham MA; I finished in
     42:44, which was 97th in a field of 1633\. I beat or tied 1537 runners out of
     1633, so my percentile rank in the field is 94%.
   id: totrans-112
   prefs: []
   type: TYPE_NORMAL
+  zh: 几年前，我在马萨诸塞州德德姆参加了詹姆斯·乔伊斯漫步10公里赛；我以42:44的成绩获得了1633名选手中的第97名。我在1633名选手中击败或并列1537名，所以我在该领域的百分位数是94%。
 - en: 'More generally, given position and field size, we can compute percentile rank:'
   id: totrans-113
   prefs: []
   type: TYPE_NORMAL
+  zh: 更一般地，给定位置和字段大小，我们可以计算百分位数：
 - en: '[PRE11]'
   id: totrans-114
   prefs: []
@@ -659,17 +707,20 @@
   id: totrans-115
   prefs: []
   type: TYPE_NORMAL
+  zh: 在我的年龄组M4049中，我在256个人中排名第26。所以我的年龄组中的百分位数是90%。
 - en: If I am still running in 10 years (and I hope I am), I will be in the M5059
     division. Assuming that my percentile rank in my division is the same, how much
     slower should I expect to be?
   id: totrans-116
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我还在跑步10年（我希望我是），我将进入M5059组。假设我的年龄组中的百分位数相同，我应该期望慢多少？
 - en: 'I can answer that question by converting my percentile rank in M4049 to a position
     in M5059\. Here’s the code:'
   id: totrans-117
   prefs: []
   type: TYPE_NORMAL
+  zh: 我可以通过将M4049的百分位数转换为M5059的位置来回答这个问题。这是代码：
 - en: '[PRE12]'
   id: totrans-118
   prefs: []
@@ -682,16 +733,19 @@
   id: totrans-119
   prefs: []
   type: TYPE_NORMAL
+  zh: M5059组有171人，所以我必须在第17和第18名之间才能有相同的百分位数。M5059组中第17名选手的完赛时间是46:05，所以这就是我要超越的时间，以保持我的百分位数。
 - en: 4.9  Exercises
   id: totrans-120
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 4.9 练习
 - en: For the following exercises, you can start with `chap04ex.ipynb`. My solution
     is in `chap04soln.ipynb`.
   id: totrans-121
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于以下练习，可以从`chap04ex.ipynb`开始。我的解决方案在`chap04soln.ipynb`中。
 - en: Exercise 1   *How much did you weigh at birth? If you don’t know, call your
     mother or someone else who knows. Using the NSFG data (all live births), compute
     the distribution of birth weights and use it to find your percentile rank. If
