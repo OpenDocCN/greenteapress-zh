@@ -3,16 +3,20 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 重采样
 - en: 原文：[https://allendowney.github.io/ElementsOfDataScience/11_resampling.html](https://allendowney.github.io/ElementsOfDataScience/11_resampling.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ElementsOfDataScience/11_resampling.html](https://allendowney.github.io/ElementsOfDataScience/11_resampling.html)
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/11_resampling.ipynb)
     or [click here to download it](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/11_resampling.ipynb).'
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: '[点击此处在Colab上运行此笔记本](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/11_resampling.ipynb)
+    或 [点击此处下载](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/11_resampling.ipynb)。'
 - en: This chapter introduces **resampling methods**, which are used to quantify the
     precision of an estimate. As examples, we’ll use results from a vaccine trial
     to estimate the efficacy of the vaccine, data from the Behavioral Risk Factor
@@ -22,39 +26,46 @@
   id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章介绍了**重采样方法**，用于量化估计的精度。例如，我们将使用疫苗试验的结果来估计疫苗的有效性，使用行为风险因素监测系统的数据来估计美国男性的平均身高，以及使用社会普查的数据来查看对枪支管制的支持如何随时间变化。
 - en: Vaccine Testing
   id: totrans-4
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 疫苗测试
 - en: Suppose you read a report about a new vaccine and the manufacturer says it is
     67% effective at preventing disease. You might wonder where that number comes
     from, what it means, and how confident we should be that it is correct.
   id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设你读到一份关于一种新疫苗的报告，制造商表示它在预防疾病方面的有效性为67%。你可能会想知道这个数字是从哪里来的，它的含义是什么，以及我们应该对它的准确性有多大的信心。
 - en: 'Results like this often come from a randomized controlled trial (RCT), which
     works like this:'
   id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 这样的结果通常来自随机对照试验（RCT），其工作原理如下：
 - en: 'You recruit a large group of volunteers and divide them into two groups at
     random: the “treatment group” receives the vaccine; the “control group” does not.'
   id: totrans-7
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 你招募了一大群志愿者，并将他们随机分成两组：``治疗组''接种疫苗；``对照组''不接种。
 - en: Then you follow both groups for a period of time and record the number of people
     in each group who are diagnosed with the disease.
   id: totrans-8
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 然后，你跟踪这两组一段时间，并记录每组被诊断出患有这种疾病的人数。
 - en: As an example, suppose you recruit 43,783 participants and they are assigned
     to groups with approximately the same size.
   id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，假设你招募了43,783名参与者，并将他们随机分配到大致相同大小的组中。
 - en: '[PRE0]'
   id: totrans-10
   prefs: []
@@ -65,6 +76,7 @@
   id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 在观察期间，有468人被诊断出患有这种疾病：控制组352人，治疗组116人。
 - en: '[PRE1]'
   id: totrans-12
   prefs: []
@@ -75,6 +87,7 @@
   id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用这些结果来计算每组患病的风险，每1000人的病例数
 - en: '[PRE2]'
   id: totrans-14
   prefs: []
@@ -102,6 +115,7 @@
   id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 治疗组的风险明显较低 - 每1000人约为5例，而控制组为16例 - 这表明疫苗是有效的。我们可以通过计算相对风险来总结这些结果，相对风险是两种风险的比值（参见[https://en.wikipedia.org/wiki/Relative_risk](https://en.wikipedia.org/wiki/Relative_risk)）：
 - en: '[PRE6]'
   id: totrans-19
   prefs: []
@@ -118,6 +132,7 @@
   id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个例子中，相对风险约为0.33，这意味着治疗组的患病风险是控制组的33%。同样，我们可以报告相对风险的补集，即**有效性**：
 - en: '[PRE8]'
   id: totrans-22
   prefs: []
@@ -135,6 +150,7 @@
   id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个例子中，疫苗的有效性为0.67，这意味着疫苗可以将患病风险降低67%。这是个好消息，但作为怀疑论的数据科学家，我们不应该假设它是完全准确的。可能出现了很多问题。
 - en: For example, if people in the treatment group know they have been vaccinated,
     they might take fewer precautions to prevent disease, and people in the control
     group might be more careful. That would affect the estimated efficacy, which is
@@ -143,39 +159,46 @@
   id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，如果治疗组的人知道他们已接种疫苗，他们可能会采取更少的预防措施来预防疾病，而控制组的人可能会更加小心。这将影响估计的有效性，这就是为什么很多试验都是“盲目”的，意思是受试者不知道他们属于哪个组。
 - en: The estimate would also be less accurate if people in either group don’t follow
     the protocol. For example, someone in the treatment group might not complete treatment,
     or someone in the control group might receive treatment from another source.
   id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果任何一组的人不遵循协议，估计也会不太准确。例如，治疗组中的某人可能没有完成治疗，或者控制组中的某人可能从其他来源接受了治疗。
 - en: And there are many other possible sources of error, including honest mistakes
     and deliberate fraud.
   id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 还有许多其他可能的误差来源，包括诚实的错误和故意的欺诈。
 - en: In general it is hard to know whether estimates like this are accurate; nevertheless,
     there are things we can do to assess their quality.
   id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: 总的来说，很难知道这样的估计是否准确；尽管如此，我们可以做一些事情来评估它们的质量。
 - en: 'When estimates are reported in scientific journals, they almost always include
     one of two measurements of uncertainty: a standard error or a confidence interval.
     In the next section, I’ll explain what they mean and show how to compute them.'
   id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 当科学期刊中报告估计值时，它们几乎总是包括两种不确定性测量中的一种：标准误差或置信区间。在下一节中，我将解释它们的含义，并展示如何计算它们。
 - en: Simulating One Group
   id: totrans-30
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 模拟一个组
 - en: In our hypothetical example, there are 21 911 people in the treatment group
     and 116 of them got the disease, so the estimated risk is about 5 cases per 1000
     people.
   id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 在我们的假设例子中，治疗组有21,911人，其中有116人患病，因此估计的风险约为每1000人5例。
 - en: '[PRE10]'
   id: totrans-32
   prefs: []
