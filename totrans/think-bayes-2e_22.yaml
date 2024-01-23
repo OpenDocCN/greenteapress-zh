@@ -1188,6 +1188,7 @@
   id: totrans-198
   prefs: []
   type: TYPE_NORMAL
+  zh: 简单回归模型只有三个参数，所以我们可以使用网格算法。但是幸福报告中的回归模型有六个预测变量，因此总共有八个参数，包括截距和`sigma`。
 - en: It is not practical to compute a grid approximation for a model with eight parameters.
     Even a coarse grid, with 20 points along each dimension, would have more than
     25 billion points. And with 153 countries, we would have to compute almost 4 trillion
@@ -1195,16 +1196,20 @@
   id: totrans-199
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于具有八个参数的模型来说，计算网格逼近是不切实际的。即使是粗网格，每个维度有20个点，也会有超过250亿个点。而且有153个国家，我们将不得不计算近4万亿个可能性。
 - en: But PyMC3 can handle a model with eight parameters comfortably, as we’ll see
     in the next section.
   id: totrans-200
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是PyMC3可以轻松处理具有八个参数的模型，我们将在下一节中看到。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-201
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE56]'
   id: totrans-202
   prefs: []
@@ -1215,6 +1220,8 @@
   id: totrans-203
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE57]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE58]'
   id: totrans-204
   prefs: []
@@ -1224,16 +1231,19 @@
   id: totrans-205
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE59]</details>'
 - en: Multiple Regression
   id: totrans-206
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 多元回归
 - en: Before we implement the multiple regression model, I’ll select the columns we
     need from the `DataFrame`.
   id: totrans-207
   prefs: []
   type: TYPE_NORMAL
+  zh: 在我们实施多元回归模型之前，我将从`DataFrame`中选择我们需要的列。
 - en: '[PRE60]'
   id: totrans-208
   prefs: []
@@ -1244,6 +1254,8 @@
   id: totrans-209
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE61]'
   id: totrans-210
   prefs: []
@@ -1254,25 +1266,33 @@
   id: totrans-211
   prefs: []
   type: TYPE_TB
+  zh: '|  | 阶梯分数 | 人均GDP | 社会支持 | 健康预期寿命 | 自由度 | 慷慨 | 对腐败的看法 |'
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- |'
   id: totrans-212
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- | --- | --- | --- |'
 - en: '| 0 | 7.8087 | 10.639267 | 0.954330 | 71.900826 | 0.949172 | -0.059482 | 0.195445
     |'
   id: totrans-213
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 7.8087 | 10.639267 | 0.954330 | 71.900826 | 0.949172 | -0.059482 | 0.195445
+    |'
 - en: '| 1 | 7.6456 | 10.774001 | 0.955991 | 72.402504 | 0.951444 | 0.066202 | 0.168489
     |'
   id: totrans-214
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 7.6456 | 10.774001 | 0.955991 | 72.402504 | 0.951444 | 0.066202 | 0.168489
+    |'
 - en: '| 2 | 7.5599 | 10.979933 | 0.942847 | 74.102448 | 0.921337 | 0.105911 | 0.303728
     |</details>'
   id: totrans-215
   prefs: []
   type: TYPE_NORMAL
+  zh: '| 2 | 7.5599 | 10.979933 | 0.942847 | 74.102448 | 0.921337 | 0.105911 | 0.303728
+    |</details>'
 - en: 'The predictive variables have different units: log-GDP is in log-dollars, life
     expectancy is in years, and the other variables are on arbitrary scales. To make
     these factors comparable, I’ll standardize the data so that each variable has
@@ -1280,6 +1300,7 @@
   id: totrans-216
   prefs: []
   type: TYPE_NORMAL
+  zh: 预测变量具有不同的单位：对数GDP以对数美元表示，预期寿命以年为单位，其他变量以任意比例表示。为了使这些因素可比较，我将标准化数据，使每个变量的均值为0，标准差为1。
 - en: '[PRE62]'
   id: totrans-217
   prefs: []
@@ -1289,6 +1310,7 @@
   id: totrans-218
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们构建模型。我将提取因变量。
 - en: '[PRE63]'
   id: totrans-219
   prefs: []
@@ -1298,6 +1320,7 @@
   id: totrans-220
   prefs: []
   type: TYPE_NORMAL
+  zh: 以及自变量。
 - en: '[PRE64]'
   id: totrans-221
   prefs: []
@@ -1308,6 +1331,7 @@
   id: totrans-222
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是模型。`b0`是截距；`b1`到`b6`是与预测变量相关的参数。
 - en: '[PRE65]'
   id: totrans-223
   prefs: []
@@ -1318,10 +1342,12 @@
   id: totrans-224
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用预测变量的向量和参数的向量更简洁地表示这个模型，但我决定保持简单。
 - en: Now we can sample from the joint posterior distribution.
   id: totrans-225
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以从联合后验分布中抽样。
 - en: '[PRE66]'
   id: totrans-226
   prefs: []
@@ -1332,6 +1358,8 @@
   id: totrans-227
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide below-input"><summary aria-label="Toggle hidden content">显示代码单元格输出
+    隐藏代码单元格输出</summary>
 - en: '[PRE67]'
   id: totrans-228
   prefs: []
@@ -1342,20 +1370,26 @@
   id: totrans-229
   prefs: []
   type: TYPE_NORMAL
+  zh: '<progress value="3000" class="" max="3000" style="width:300px; height:20px;
+    vertical-align: middle;">100.00% [3000/3000 00:04<00:00 Sampling 2 chains, 0 divergences]</progress>'
 - en: '[PRE68]</details>'
   id: totrans-230
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE68]</details>'
 - en: Because we standardized the data, we expect the intercept to be 0, and in fact
     the posterior mean of `b0` is close to 0.
   id: totrans-231
   prefs: []
   type: TYPE_NORMAL
+  zh: 因为我们对数据进行了标准化，我们期望截距为0，事实上`b0`的后验均值接近于0。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-232
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE69]'
   id: totrans-233
   prefs: []
@@ -1365,15 +1399,19 @@
   id: totrans-234
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE70]</details>'
 - en: 'We can also check the posterior mean of `sigma`:'
   id: totrans-235
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们还可以检查`sigma`的后验均值：
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-236
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE71]'
   id: totrans-237
   prefs: []
@@ -1383,11 +1421,13 @@
   id: totrans-238
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE72]</details>'
 - en: From `trace4` we can extract samples from the posterior distributions of the
     parameters and compute their means.
   id: totrans-239
   prefs: []
   type: TYPE_NORMAL
+  zh: 从`trace4`中，我们可以提取参数的后验分布样本并计算它们的均值。
 - en: '[PRE73]'
   id: totrans-240
   prefs: []
@@ -1397,6 +1437,7 @@
   id: totrans-241
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们还可以计算94%的可信区间（在第3和第97百分位之间）。
 - en: '[PRE74]'
   id: totrans-242
   prefs: []
@@ -1406,47 +1447,59 @@
   id: totrans-243
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下表格总结了结果。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
   id: totrans-244
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格来源
+    隐藏代码单元格来源</summary>
 - en: '[PRE75]</details>'
   id: totrans-245
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE75]</details>'
 - en: '|  | Posterior mean | 94% CI |'
   id: totrans-246
   prefs: []
   type: TYPE_TB
+  zh: '|  | 后验均值 | 94% CI |'
 - en: '| --- | --- | --- |'
   id: totrans-247
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- |'
 - en: '| Logged GDP per capita | 0.244 | [0.085, 0.41] |'
   id: totrans-248
   prefs: []
   type: TYPE_TB
+  zh: '| 人均GDP | 0.244 | [0.085, 0.41] |'
 - en: '| Social support | 0.225 | [0.081, 0.377] |'
   id: totrans-249
   prefs: []
   type: TYPE_TB
+  zh: '| 社会支持 | 0.225 | [0.081, 0.377] |'
 - en: '| Healthy life expectancy | 0.225 | [0.081, 0.377] |'
   id: totrans-250
   prefs: []
   type: TYPE_TB
+  zh: '| 健康预期寿命 | 0.225 | [0.081, 0.377] |'
 - en: '| Freedom to make life choices | 0.187 | [0.087, 0.289] |'
   id: totrans-251
   prefs: []
   type: TYPE_TB
+  zh: '| 自由度 | 0.187 | [0.087, 0.289] |'
 - en: '| Generosity | 0.054 | [-0.039, 0.14] |'
   id: totrans-252
   prefs: []
   type: TYPE_TB
+  zh: '| 慷慨 | 0.054 | [-0.039, 0.14] |'
 - en: '| Perceptions of corruption | -0.100 | [-0.197, 0.002] |'
   id: totrans-253
   prefs: []
   type: TYPE_TB
+  zh: '| 对腐败的看法 | -0.100 | [-0.197, 0.002] |'
 - en: It looks like GDP has the strongest association with happiness (or satisfaction),
     followed by social support, life expectancy, and freedom.
   id: totrans-254
@@ -1607,6 +1660,7 @@
   id: totrans-283
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
 - en: '[PRE79]'
   id: totrans-284
   prefs: []
@@ -1622,6 +1676,8 @@
   id: totrans-286
   prefs: []
   type: TYPE_NORMAL
+  zh: '<progress value="4000" class="" max="4000" style="width:300px; height:20px;
+    vertical-align: middle;">100.00% [4000/4000 00:00<00:00 Sampling 2 chains, 0 divergences]</progress>'
 - en: '[PRE81]'
   id: totrans-287
   prefs: []
@@ -1631,30 +1687,36 @@
   id: totrans-288
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/6508eeee449a1c8e82ce7ce0664789351b1fd247cb5460e9429a6934db033734.png](../Images/dee9f9d8c3a7ab7b7a7cad18a04ff162.png)</details>'
 - en: '**Exercise:** In <<_TheWeibullDistribution>> we generated a sample from a Weibull
     distribution with \(\lambda=3\) and \(k=0.8\). Then we used the data to compute
     a grid approximation of the posterior distribution of those parameters.'
   id: totrans-289
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** 在<<_WeibullDistribution>>中，我们从Weibull分布中生成了一个样本，其中\(\lambda=3\)，\(k=0.8\)。然后我们使用数据来计算这些参数的后验分布的网格近似。'
 - en: Now let’s do the same with PyMC3.
   id: totrans-290
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们用PyMC3做同样的事情。
 - en: For the priors, you can use uniform distributions as we did in <<_SurvivalAnalysis>>,
     or you could use `HalfNormal` distributions provided by PyMC3.
   id: totrans-291
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于先验，你可以使用像我们在<<_SurvivalAnalysis>>中使用的均匀分布，或者你可以使用PyMC3提供的`HalfNormal`分布。
 - en: 'Note: The `Weibull` class in PyMC3 uses different parameters than SciPy. The
     parameter `alpha` in PyMC3 corresponds to \(k\), and `beta` corresponds to \(\lambda\).'
   id: totrans-292
   prefs: []
   type: TYPE_NORMAL
+  zh: 注意：PyMC3中的`Weibull`类使用的参数与SciPy不同。PyMC3中的参数`alpha`对应于\(k\)，而`beta`对应于\(\lambda\)。
 - en: 'Here’s the data again:'
   id: totrans-293
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是数据：
 - en: '[PRE82]'
   id: totrans-294
   prefs: []
@@ -1665,6 +1727,7 @@
   id: totrans-295
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
 - en: '[PRE83]'
   id: totrans-296
   prefs: []
@@ -1680,6 +1743,8 @@
   id: totrans-298
   prefs: []
   type: TYPE_NORMAL
+  zh: '<progress value="4000" class="" max="4000" style="width:300px; height:20px;
+    vertical-align: middle;">100.00% [4000/4000 00:01<00:00 Sampling 2 chains, 0 divergences]</progress>'
 - en: '[PRE85]'
   id: totrans-299
   prefs: []
@@ -1689,30 +1754,37 @@
   id: totrans-300
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/20ca2eef771e17ce366680fbf0cd5b3fa489b23d328038c5def182f25c399a5e.png](../Images/90b78b9ea67cbd74076b70a4cef6125f.png)</details>'
 - en: '**Exercise:** In <<_ImprovingReadingAbility>> we used data from a reading test
     to estimate the parameters of a normal distribution.'
   id: totrans-301
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** 在<<_ImprovingReadingAbility>>中，我们使用了阅读测试的数据来估计正态分布的参数。'
 - en: Make a model that defines uniform prior distributions for `mu` and `sigma` and
     uses the data to estimate their posterior distributions.
   id: totrans-302
   prefs: []
   type: TYPE_NORMAL
+  zh: 创建一个模型，为`mu`和`sigma`定义均匀先验分布，并使用数据来估计它们的后验分布。
 - en: Now estimate the parameters for the treated group.
   id: totrans-303
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在估计受试组的参数。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-304
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
 - en: '[PRE86]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-305
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE86]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容隐藏代码单元格内容</summary>'
 - en: '[PRE87]'
   id: totrans-306
   prefs: []
@@ -1728,11 +1800,15 @@
   id: totrans-308
   prefs: []
   type: TYPE_NORMAL
+  zh: '<progress value="3000" class="" max="3000" style="width:300px; height:20px;
+    vertical-align: middle;">100.00% [3000/3000 00:01<00:00 Sampling 2 chains, 0 divergences]</progress>'
 - en: '[PRE89]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-309
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE89]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容隐藏代码单元格内容</summary>'
 - en: '[PRE90]'
   id: totrans-310
   prefs: []
@@ -1742,11 +1818,13 @@
   id: totrans-311
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/d8e1802f0f4db48c5429de4dc2411d4445c82281b3e3719facb259a356c7daac.png](../Images/0ea3f1ef40964a9f6ae59de890108f8d.png)</details>'
 - en: '**Exercise:** In <<_TheLincolnIndexProblem>> we used a grid algorithm to solve
     the Lincoln Index problem as presented by John D. Cook:'
   id: totrans-312
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** 在<<_TheLincolnIndexProblem>>中，我们使用了一个网格算法来解决由John D. Cook提出的Lincoln指数问题：'
 - en: “Suppose you have a tester who finds 20 bugs in your program. You want to estimate
     how many bugs are really in the program. You know there are at least 20 bugs,
     and if you have supreme confidence in your tester, you may suppose there are around
@@ -1758,16 +1836,19 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: “假设你有一个测试者在你的程序中发现了20个错误。你想要估计程序中实际有多少错误。你知道至少有20个错误，如果你对你的测试者非常有信心，你可以假设大约有20个错误。但也许你的测试者不是很好。也许有数百个错误。你怎么知道有多少错误呢？没有办法知道一个测试者。但如果你有两个测试者，即使你不知道测试者有多么熟练，你也可以得到一个很好的想法。”
 - en: Suppose the first tester finds 20 bugs, the second finds 15, and they find 3
     in common; use PyMC3 to estimate the number of bugs.
   id: totrans-314
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设第一个测试者发现了20个错误，第二个测试者发现了15个错误，他们共同发现了3个错误；使用PyMC3来估计错误的数量。
 - en: 'Note: This exercise is more difficult that some of the previous ones. One of
     the challenges is that the data includes `k00`, which depends on `N`:'
   id: totrans-315
   prefs: []
   type: TYPE_NORMAL
+  zh: 注意：这个练习比之前的一些练习更难。其中一个挑战是数据包括`k00`，它取决于`N`：
 - en: '[PRE91]'
   id: totrans-316
   prefs: []
@@ -1778,6 +1859,7 @@
   id: totrans-317
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，我们必须将数据构建为模型的一部分。为此，我们可以使用`pm.math.stack`，它可以生成一个数组：
 - en: '[PRE92]'
   id: totrans-318
   prefs: []
@@ -1787,52 +1869,63 @@
   id: totrans-319
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，你可能会发现使用`pm.Multinomial`很有帮助。
 - en: 'I’ll use the following notation for the data:'
   id: totrans-320
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将使用以下符号表示数据：
 - en: k11 is the number of bugs found by both testers,
   id: totrans-321
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: k11是两个测试者发现的错误数量，
 - en: k10 is the number of bugs found by the first tester but not the second,
   id: totrans-322
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: k10是第一个测试者发现的错误数量，但第二个测试者没有发现，
 - en: k01 is the number of bugs found by the second tester but not the first, and
   id: totrans-323
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: k01是第二个测试者发现的错误数量，但第一个测试者没有发现，而
 - en: k00 is the unknown number of undiscovered bugs.
   id: totrans-324
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: k00是未发现的错误的未知数量。
 - en: 'Here are the values for all but `k00`:'
   id: totrans-325
   prefs: []
   type: TYPE_NORMAL
+  zh: '这里是除了`k00`之外的所有值:'
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-326
   prefs: []
   type: TYPE_NORMAL
+  zh: <细节 类="隐藏在输入上方"><摘要 aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</摘要>
 - en: '[PRE93]</details>'
   id: totrans-327
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE93]</细节>'
 - en: 'In total, 32 bugs have been discovered:'
   id: totrans-328
   prefs: []
   type: TYPE_NORMAL
+  zh: '总共发现了32个错误:'
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-329
   prefs: []
   type: TYPE_NORMAL
+  zh: <细节 类="隐藏在输入上方"><摘要 aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</摘要>
 - en: '[PRE94]'
   id: totrans-330
   prefs: []
@@ -1843,11 +1936,13 @@
   id: totrans-331
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE95]</细节> <细节 类="隐藏在输入上方"><摘要 aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</摘要>'
 - en: '[PRE96]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-332
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE96]</细节> <细节 类="隐藏在输入上方"><摘要 aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</摘要>'
 - en: '[PRE97]'
   id: totrans-333
   prefs: []
@@ -1863,11 +1958,14 @@
   id: totrans-335
   prefs: []
   type: TYPE_NORMAL
+  zh: '<进度 value="4000" 类="" 最大="4000" 样式="宽度:300像素; 高度:20像素; 垂直对齐: 中间;">100.00% [4000/4000
+    00:02<00:00 采样 2 链, 0 发散]</进度>'
 - en: '[PRE99]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-336
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE99]</细节> <细节 类="隐藏在输入上方"><摘要 aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</摘要>'
 - en: '[PRE100]'
   id: totrans-337
   prefs: []
@@ -1877,3 +1975,4 @@
   id: totrans-338
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/beeaa10ba1b2c50623f3239a25baa2d674c0a47c8035caaac00df5f38eebf9b4.png](../Images/c82753560176a0cc0aa0c7e546e6dc9a.png)</细节>'
