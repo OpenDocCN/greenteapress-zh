@@ -3,54 +3,64 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 双端队列
 - en: 原文：[https://allendowney.github.io/DSIRP/deque.html](https://allendowney.github.io/DSIRP/deque.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/DSIRP/deque.html](https://allendowney.github.io/DSIRP/deque.html)
 - en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/deque.ipynb)'
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: '[单击此处在Colab上运行本章](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/deque.ipynb)'
 - en: Double-ended Queue
   id: totrans-3
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 双端队列
 - en: With Python lists, we can add and remove elements from the *end* of the list
     in constant time, but adding and removing from the beginning takes linear time.
     That’s because Python lists are implemented using arrays that grow dynamically.
   id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用Python列表，我们可以在常数时间内从列表的*末尾*添加和删除元素，但是从开头添加和删除元素需要线性时间。这是因为Python列表是使用动态增长的数组实现的。
 - en: With linked lists, we can add and remove elements from the *beginning* of the
     list in constant time, but adding and removing from the end takes linear time.
   id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用链接列表，我们可以在常数时间内添加和删除列表的*开头*的元素，但是从末尾添加和删除元素需要线性时间。
 - en: With either of these implementations, it is easy to make a stack, that is, a
     collection where the first element we add is the last element we remove. A stack
     is also called a “first-in, last-out” queue, abbreviated FILO.
   id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用这两种实现中的任何一种，都可以轻松地创建一个堆栈，也就是说，我们添加的第一个元素是我们移除的最后一个元素。堆栈也称为“先进后出”队列，缩写为FILO。
 - en: But it is not easy to implement a “first-in, first-out” queue, that is, a collection
     where the first element we add is the *first* element we remove.
   id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是实现“先进先出”队列并不容易，也就是说，我们添加的第一个元素是*第一个*要移除的元素。
 - en: Fortunately, there are ways to implement lists that can add and remove elements
     from both ends in constant time. A collection that has this property is called
     a double-ended queue, abbreviated “deque” and pronounced like “deck”.
   id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 幸运的是，有方法可以实现可以在常数时间内从两端添加和删除元素的列表。具有此属性的集合称为双端队列，缩写为“deque”，发音类似于“deck”。
 - en: One way to implement a deque is a doubly-linked list, also known as a “head-tail
     linked list”. Each node in a doubly-linked list has a reference to the previous
     node in the list as well as the next element, which I will call `left` and `right`.
   id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 实现deque的一种方法是双向链表，也称为“头尾链接列表”。双向链表中的每个节点都有对列表中前一个节点的引用以及下一个元素的引用，我将其称为`left`和`right`。
 - en: '[PRE0]'
   id: totrans-10
   prefs: []
@@ -60,6 +70,7 @@
   id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以像这样创建节点：
 - en: '[PRE1]'
   id: totrans-12
   prefs: []
@@ -74,6 +85,7 @@
   id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后将它们链接起来，就像这样：
 - en: '[PRE3]'
   id: totrans-15
   prefs: []
@@ -84,6 +96,7 @@
   id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 要从左到右遍历列表，我们可以从开头开始并跟随`right`链接。
 - en: '[PRE4]'
   id: totrans-17
   prefs: []
@@ -98,6 +111,7 @@
   id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 要从右到左遍历，我们从末尾开始并跟随`left`链接。
 - en: '[PRE6]'
   id: totrans-20
   prefs: []
@@ -113,15 +127,18 @@
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 双端队列对象
 - en: For some operations, it will be convenient to have another object that represents
     the whole list (as opposed to one of its nodes).
   id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于某些操作，拥有另一个表示整个列表的对象将很方便（而不是它的一个节点）。
 - en: Here’s the class definition.
   id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是类定义。
 - en: '[PRE8]'
   id: totrans-25
   prefs: []
@@ -131,6 +148,7 @@
   id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以创建一个具有对`node1`和`node3`的引用的`Deque`：
 - en: '[PRE9]'
   id: totrans-27
   prefs: []
@@ -147,6 +165,7 @@
   id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 出于调试目的，我将使用以下函数，它从右到左打印列表，然后从左到右打印，这可以确认所有的链接都是正确的。
 - en: '[PRE11]'
   id: totrans-30
   prefs: []
@@ -156,6 +175,7 @@
   id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个例子。
 - en: '[PRE12]'
   id: totrans-32
   prefs: []
@@ -171,16 +191,19 @@
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 推
 - en: Now let’s see how we can add and remove elements from the beginning and end
     in constant time. We’ll start with the push operations.
   id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们看看如何在常数时间内从开头和末尾添加和删除元素。我们将从推送操作开始。
 - en: If we start with an empty deque, adding the first node is a special case, so
     I’ll pull that into a function.
   id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们从一个空的deque开始，添加第一个节点是一个特殊情况，所以我会将其放入一个函数中。
 - en: '[PRE14]'
   id: totrans-37
   prefs: []
@@ -190,6 +213,7 @@
   id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个例子。
 - en: '[PRE15]'
   id: totrans-39
   prefs: []
@@ -205,15 +229,18 @@
   id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**编写`left_push`，它接受一个`Deque`对象和一个新值，并将该值添加到deque的开头。'
 - en: If the queue is empty, it should call `push_first` to handle the special case;
     otherwise it should handle the general case.
   id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果队列为空，则应调用`push_first`来处理特殊情况；否则应处理一般情况。
 - en: 'You can use the following examples to test your function:'
   id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 您可以使用以下示例来测试您的函数：
 - en: '[PRE17]'
   id: totrans-44
   prefs: []
@@ -239,15 +266,18 @@
   id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**编写`right_push`，它接受一个`Deque`对象和一个新值，并将该值添加到deque的末尾。'
 - en: If the queue is empty, it should call `push_first` to handle the special case;
     otherwise it should handle the general case.
   id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果队列为空，则应调用`push_first`来处理特殊情况；否则应处理一般情况。
 - en: 'You can use the following examples to test your function:'
   id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 您可以使用以下示例来测试您的函数：
 - en: '[PRE21]'
   id: totrans-51
   prefs: []
@@ -273,26 +303,31 @@
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 弹出
 - en: 'To pop elements from the deque, we have to handle two special cases:'
   id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: 要从deque中弹出元素，我们必须处理两种特殊情况：
 - en: If `head` and `tail` are both `None`, the deque is empty and we should raise
     a `ValueError`.
   id: totrans-57
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果`head`和`tail`都是`None`，则deque为空，我们应该引发`ValueError`。
 - en: If `head` and `tail` refer to the same `Node`, there is only one element, so
     we should remove it and leave the deque empty.
   id: totrans-58
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果`head`和`tail`引用同一个`Node`，则只有一个元素，因此我们应该删除它并使deque为空。
 - en: The following function handles these cases.
   id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数处理这些情况。
 - en: '[PRE25]'
   id: totrans-60
   prefs: []
@@ -302,6 +337,7 @@
   id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以这样测试它：
 - en: '[PRE26]'
   id: totrans-62
   prefs: []
@@ -322,15 +358,18 @@
   id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**编写`left_pop`，它接受一个`Deque`对象，删除第一个节点，并返回第一个数据值。'
 - en: If the queue is empty or has a single element, it should call `pop_last` to
     handle the special case; otherwise it should handle the general case.
   id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果队列为空或只有一个元素，则应调用`pop_last`来处理特殊情况；否则应处理一般情况。
 - en: You can use the following example to test your code.
   id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: 您可以使用以下示例来测试您的代码。
 - en: '[PRE29]'
   id: totrans-68
   prefs: []
@@ -355,6 +394,7 @@
   id: totrans-72
   prefs: []
   type: TYPE_NORMAL
+  zh: 检查剩余的列表是否格式良好。
 - en: '[PRE33]'
   id: totrans-73
   prefs: []
@@ -390,6 +430,7 @@
   id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**编写`right_pop`，它接受一个`Deque`对象，删除最后一个节点，并返回最后一个数据值。'
 - en: If the queue is empty or has a single element, it should call `pop_last` to
     handle the special case; otherwise it should handle the general case.
   id: totrans-80
