@@ -3,25 +3,32 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 变量和值
 - en: 原文：[https://allendowney.github.io/ElementsOfDataScience/01_variables.html](https://allendowney.github.io/ElementsOfDataScience/01_variables.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ElementsOfDataScience/01_variables.html](https://allendowney.github.io/ElementsOfDataScience/01_variables.html)
 - en: '[Run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/01_variables.ipynb)
     or'
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: '[在Colab上运行此笔记本](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/01_variables.ipynb)
+    或'
 - en: '[Run this notebook on Sagemaker Studio Lab](https://studiolab.sagemaker.aws/import/github/AllenDowney/ElementsOfDataScience/blob/master/01_variables.ipynb)
     or'
   id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: '[在Sagemaker Studio Lab上运行此笔记本](https://studiolab.sagemaker.aws/import/github/AllenDowney/ElementsOfDataScience/blob/master/01_variables.ipynb)
+    或'
 - en: '[Download this notebook](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/01_variables.ipynb).'
   id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: '[下载此笔记本](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/01_variables.ipynb)。'
 - en: Data science is the use of data to answers questions and guide decision making.
     For example, a topic of current debate is whether we should raise the minimum
     wage in the United States. Some economists think that raising the minimum wage
@@ -30,28 +37,33 @@
   id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 数据科学是利用数据来回答问题和指导决策的过程。例如，当前有争议的一个话题是我们是否应该提高美国的最低工资标准。一些经济学家认为提高最低工资标准会使家庭摆脱贫困；其他人认为这会导致更多的失业。但是经济理论只能带我们走到这一步。在某个时候，我们需要数据。
 - en: 'A successful data science project requires three elements:'
   id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 成功的数据科学项目需要三个要素：
 - en: 'A question: For example, what is the relationship between the minimum wage
     and unemployment?'
   id: totrans-7
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 一个问题：例如，最低工资和失业之间的关系是什么？
 - en: 'Data: To answer this question, the best data would be results from a well designed
     experiment. But if we can’t get ideal data, we have to work with what we can get.'
   id: totrans-8
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 数据：要回答这个问题，最好的数据将是来自一个设计良好的实验的结果。但如果我们无法获得理想的数据，我们必须利用我们能够获得的数据。
 - en: 'Methods: With the right data, simple methods are often enough to find answers
     and present them clearly. But sometimes we need more specialized tools.'
   id: totrans-9
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 方法：有了正确的数据，简单的方法通常足以找到答案并清晰地呈现它们。但有时我们需要更专业的工具。
 - en: In an ideal world, we would pose a question, find data, and choose the appropriate
     methods, in that order. More often, the process is iterative. We might start with
     one question, get stuck, and pivot to a different question. Or we might explore
@@ -61,57 +73,68 @@
   id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 在理想的世界中，我们会提出一个问题，找到数据，并按顺序选择适当的方法。更常见的情况是迭代的过程。我们可能从一个问题开始，卡住了，然后转向另一个问题。或者我们可能探索一个新的数据集，并发现它可以回答的问题。或者我们可能从一个工具开始，然后寻找它可以解决的问题。大多数数据科学项目都需要灵活性和坚持不懈。
 - en: 'The goal of this book is to give you the tools you need to execute a data science
     project from beginning to end, including these steps:'
   id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 这本书的目标是为您提供从头到尾执行数据科学项目所需的工具，包括以下步骤：
 - en: Choosing questions, data, and methods that go together.
   id: totrans-12
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 选择问题、数据和相配套的方法。
 - en: Finding data or collecting it yourself.
   id: totrans-13
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 查找数据或自己收集数据。
 - en: Cleaning and validating data.
   id: totrans-14
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 清理和验证数据。
 - en: Exploring datasets, visualizing distributions and relationships between variables.
   id: totrans-15
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 探索数据集，可视化变量之间的分布和关系。
 - en: Modeling data and generating predictions.
   id: totrans-16
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 对数据建模和生成预测。
 - en: Designing data visualizations that tell a compelling story.
   id: totrans-17
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 设计能讲述引人入胜故事的数据可视化。
 - en: Communicating results effectively.
   id: totrans-18
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 有效地传达结果。
 - en: We’ll start with basic programming concepts and work our way toward data science
     tools.
   id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将从基本的编程概念开始，逐步向数据科学工具迈进。
 - en: I won’t assume that you already know about programming, statistics, or data
     science. When I use a term, I try to define it immediately, and when I use a programming
     feature, I try to explain it clearly.
   id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 我不会假设您已经了解编程、统计学或数据科学。当我使用一个术语时，我会立即尝试对其进行定义，当我使用一个编程特性时，我会尽量清晰地解释它。
 - en: This book is in the form of Jupyter notebooks. Jupyter is a software development
     tool you can run in a web browser, so you don’t have to install any software.
     A Jupyter notebook is a document that contains text, Python code, and results.
@@ -120,65 +143,78 @@
   id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 这本书是以Jupyter笔记本的形式呈现的。Jupyter是一种软件开发工具，可以在Web浏览器中运行，因此您不必安装任何软件。Jupyter笔记本是一个包含文本、Python代码和结果的文档。因此，您可以像阅读书籍一样阅读它，但也可以修改代码、运行它、开发新程序并测试它们。
 - en: The notebooks contain exercises where you can practice what you learn. I encourage
     you to do the exercises as you go along.
   id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些笔记本包含练习，您可以在学习过程中练习。我鼓励您在学习过程中做练习。
 - en: 'The topics in this chapter are:'
   id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章的主题包括：
 - en: Using Jupyter to write and run Python code.
   id: totrans-24
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 使用Jupyter编写和运行Python代码。
 - en: 'Basic programming features in Python: variables and values.'
   id: totrans-25
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: Python中的基本编程特性：变量和值。
 - en: Translating formulas from math notation to Python.
   id: totrans-26
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 将数学符号转换为Python。
 - en: Along the way, we’ll review a couple of math topics I assume you have seen before,
     logarithms and algebra.
   id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 在此过程中，我们将回顾一些我假设你以前见过的数学主题，如对数和代数。
 - en: Numbers
   id: totrans-28
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 数字
 - en: Python provides tools for working with many kinds of data, including numbers,
     words, dates, times, and locations (latitude and longitude).
   id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: Python提供了处理许多种类数据的工具，包括数字、单词、日期、时间和位置（纬度和经度）。
 - en: 'Let’s start with numbers. Python can work with several types of numbers, but
     the two most common are:'
   id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们从数字开始。Python可以处理多种类型的数字，但最常见的两种是：
 - en: '`int`, which represents integer values like `3`, and'
   id: totrans-31
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`int`，表示像`3`这样的整数值，和'
 - en: '`float`, which represents numbers that have a fraction part, like `3.14159`.'
   id: totrans-32
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`float`，表示具有小数部分的数字，如`3.14159`。'
 - en: 'Most often, we use `int` to represent counts and `float` to represent measurements.
     Here’s an example of an `int` and a `float`:'
   id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: 最常见的情况是，我们使用`int`表示计数，使用`float`表示测量值。以下是一个`int`和一个`float`的示例：
 - en: '[PRE0]'
   id: totrans-34
   prefs: []
