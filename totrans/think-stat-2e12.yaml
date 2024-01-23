@@ -3,11 +3,13 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 第11章 回归
 - en: 原文：[https://greenteapress.com/thinkstats2/html/thinkstats2012.html](https://greenteapress.com/thinkstats2/html/thinkstats2012.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://greenteapress.com/thinkstats2/html/thinkstats2012.html](https://greenteapress.com/thinkstats2/html/thinkstats2012.html)
 - en: The linear least squares fit in the previous chapter is an example of regression,
     which is the more general problem of fitting any kind of model to any kind of
     data. This use of the term “regression” is a historical accident; it is only indirectly
@@ -15,12 +17,14 @@
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 在上一章中的线性最小二乘拟合是回归的一个例子，回归是将任何类型的模型拟合到任何类型的数据的更一般的问题。这种使用术语“回归”的方式是历史偶然事件；它只间接地与该词的原始含义相关。
 - en: The goal of regression analysis is to describe the relationship between one
     set of variables, called the dependent variables, and another set of variables,
     called independent or explanatory variables.
   id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 回归分析的目标是描述一个变量集（称为因变量）与另一个变量集（称为自变量或解释变量）之间的关系。
 - en: In the previous chapter we used mother’s age as an explanatory variable to predict
     birth weight as a dependent variable. When there is only one dependent and one
     explanatory variable, that’s simple regression. In this chapter, we move on to
@@ -29,6 +33,7 @@
   id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 在上一章中，我们使用母亲的年龄作为解释变量来预测出生体重作为因变量。当只有一个因变量和一个解释变量时，那就是简单回归。在本章中，我们将转向多元回归，有多个解释变量。如果有多个因变量，那就是多元回归。
 - en: 'If the relationship between the dependent and explanatory variable is linear,
     that’s linear regression. For example, if the dependent variable is y and the
     explanatory variables are x[1] and x[2], we would write the following linear regression
@@ -36,16 +41,19 @@
   id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果因变量和自变量之间的关系是线性的，那就是线性回归。例如，如果因变量是y，自变量是x[1]和x[2]，我们将写下以下线性回归模型：
 - en: '| y = β[0] + β[1] x[1] + β[2] x[2] + ε  |'
   id: totrans-6
   prefs: []
   type: TYPE_TB
+  zh: '| y = β[0] + β[1] x[1] + β[2] x[2] + ε |'
 - en: where β[0] is the intercept, β[1] is the parameter associated with x[1], β[2]
     is the parameter associated with x[2], and ε is the residual due to random variation
     or other unknown factors.
   id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 其中β[0]是截距，β[1]是与x[1]相关的参数，β[2]是与x[2]相关的参数，ε是由于随机变化或其他未知因素而产生的残差。
 - en: Given a sequence of values for y and sequences for x[1] and x[2], we can find
     the parameters, β[0], β[1], and β[2], that minimize the sum of ε². This process
     is called ordinary least squares. The computation is similar to `thinkstats2.LeastSquare`,
@@ -54,16 +62,19 @@
   id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 给定y的一系列值和x[1]和x[2]的序列，我们可以找到最小化ε²总和的参数β[0]、β[1]和β[2]。这个过程称为普通最小二乘法。计算类似于`thinkstats2.LeastSquare`，但是泛化以处理多个解释变量。您可以在[https://en.wikipedia.org/wiki/Ordinary_least_squares](https://en.wikipedia.org/wiki/Ordinary_least_squares)找到详细信息
 - en: The code for this chapter is in `regression.py`. For information about downloading
     and working with this code, see Section [0.2](thinkstats2001.html#code).
   id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章的代码在`regression.py`中。有关下载和使用此代码的信息，请参阅第[0.2](thinkstats2001.html#code)节。
 - en: 11.1  StatsModels
   id: totrans-10
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 11.1 StatsModels
 - en: In the previous chapter I presented `thinkstats2.LeastSquares`, an implementation
     of simple linear regression intended to be easy to read. For multiple regression
     we’ll switch to StatsModels, a Python package that provides several forms of regression
@@ -72,10 +83,12 @@
   id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 在上一章中，我介绍了`thinkstats2.LeastSquares`，这是一个用于简单线性回归的实现，旨在易于阅读。对于多元回归，我们将切换到StatsModels，这是一个提供多种形式的回归和其他分析的Python包。如果您使用Anaconda，您已经拥有StatsModels；否则，您可能需要安装它。
 - en: 'As an example, I’ll run the model from the previous chapter with StatsModels:'
   id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，我将使用StatsModels运行上一章的模型：
 - en: '[PRE0]'
   id: totrans-13
   prefs: []
@@ -88,23 +101,27 @@
   id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: '`statsmodels`提供两种接口（API）；“公式”API使用字符串来标识因变量和解释变量。它使用一种称为`patsy`的语法；在这个例子中，`~`运算符将左侧的因变量与右侧的解释变量分开。'
 - en: '`smf.ols` takes the formula string and the DataFrame, `live`, and returns an
     OLS object that represents the model. The name `ols` stands for “ordinary least
     squares.”'
   id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: '`smf.ols`接受公式字符串和DataFrame `live`，并返回一个代表模型的OLS对象。`ols`代表“普通最小二乘法”。'
 - en: The `fit` method fits the model to the data and returns a RegressionResults
     object that contains the results.
   id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: '`fit`方法将模型拟合到数据并返回一个包含结果的RegressionResults对象。'
 - en: 'The results are also available as attributes. `params` is a Series that maps
     from variable names to their parameters, so we can get the intercept and slope
     like this:'
   id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果也可用作属性。`params`是一个将变量名映射到其参数的Series，因此我们可以这样获取截距和斜率：
 - en: '[PRE1]'
   id: totrans-18
   prefs: []
@@ -114,11 +131,13 @@
   id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 估计的参数为6.83和0.0175，与`LeastSquares`相同。
 - en: '`pvalues` is a Series that maps from variable names to the associated p-values,
     so we can check whether the estimated slope is statistically significant:'
   id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: '`pvalues`是一个将变量名映射到相关p值的Series，因此我们可以检查估计的斜率是否具有统计显著性：'
 - en: '[PRE2]'
   id: totrans-21
   prefs: []
@@ -129,17 +148,20 @@
   id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 与`agepreg`相关的p值为`5.7e-11`，小于0.001，符合预期。
 - en: '`results.rsquared` contains R², which is 0.0047\. `results` also provides `f_pvalue`,
     which is the p-value associated with the model as a whole, similar to testing
     whether R² is statistically significant.'
   id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: '`results.rsquared`包含R²，为0.0047。`results`还提供了`f_pvalue`，它是与整个模型相关的p值，类似于测试R²是否具有统计显著性。'
 - en: And `results` provides `resid`, a sequence of residuals, and `fittedvalues`,
     a sequence of fitted values corresponding to `agepreg`.
   id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: '`results`还提供了`resid`，一个残差序列，和`fittedvalues`，与`agepreg`对应的一系列拟合值。'
 - en: The results object provides `summary()`, which represents the results in a readable
     format.
   id: totrans-25
@@ -1056,6 +1078,7 @@
   id: totrans-169
   prefs: []
   type: TYPE_NORMAL
+  zh: 在NSFG数据中，男孩比女孩多，因此基准策略是每次都猜“男孩”。这种策略的准确性就是男孩的比例：
 - en: '[PRE36]'
   id: totrans-170
   prefs: []
@@ -1066,10 +1089,12 @@
   id: totrans-171
   prefs: []
   type: TYPE_NORMAL
+  zh: 由于“实际”以二进制整数编码，平均值是男孩的比例，为0.507。
 - en: 'Here’s how we compute the accuracy of the model:'
   id: totrans-172
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是我们计算模型准确性的方法：
 - en: '[PRE37]'
   id: totrans-173
   prefs: []
@@ -1081,11 +1106,13 @@
   id: totrans-174
   prefs: []
   type: TYPE_NORMAL
+  zh: '`results.predict`返回一个概率的NumPy数组，我们将其四舍五入为0或1。乘以`actual`，如果我们预测男孩并且猜对了，就得到1，否则得到0。因此，`true_pos`表示“真正例”。'
 - en: 'Similarly, `true_neg` indicates the cases where we guess “girl” and get it
     right. Accuracy is the fraction of correct guesses:'
   id: totrans-175
   prefs: []
   type: TYPE_NORMAL
+  zh: 同样，`true_neg`表示我们猜“女孩”并且猜对的情况。准确性是正确猜测的比例：
 - en: '[PRE38]'
   id: totrans-176
   prefs: []
@@ -1097,12 +1124,14 @@
   id: totrans-177
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果为0.512，略优于基准值0.507。但是，你不应该太认真对待这个结果。我们使用相同的数据来构建和测试模型，因此该模型可能对新数据没有预测能力。
 - en: 'Nevertheless, let’s use the model to make a prediction for the office pool.
     Suppose your friend is 35 years old and white, her husband is 39, and they are
     expecting their third child:'
   id: totrans-178
   prefs: []
   type: TYPE_NORMAL
+  zh: 尽管如此，让我们使用该模型来预测办公室竞猜。假设你的朋友35岁，是白人，她的丈夫39岁，他们正在期待他们的第三个孩子：
 - en: '[PRE39]'
   id: totrans-179
   prefs: []
@@ -1115,15 +1144,18 @@
   id: totrans-180
   prefs: []
   type: TYPE_NORMAL
+  zh: 要调用`results.predict`来预测一个新案例，你必须构建一个DataFrame，其中包含模型中的每个变量的列。在这种情况下的结果是0.52，所以你应该猜“男孩”。但是如果该模型提高了你赢得竞猜的机会，差异是非常小的。
 - en: 11.10  Exercises
   id: totrans-181
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 11.10 练习
 - en: My solution to these exercises is in `chap11soln.ipynb`.
   id: totrans-182
   prefs: []
   type: TYPE_NORMAL
+  zh: 我对这些练习的解决方案在`chap11soln.ipynb`中。
 - en: Exercise 1   *Suppose one of your co-workers is expecting a baby and you are
     participating in an office pool to predict the date of birth. Assuming that bets
     are placed during the 30th week of pregnancy, what variables could you use to
@@ -1135,18 +1167,22 @@
   id: totrans-183
   prefs: []
   type: TYPE_NORMAL
+  zh: 练习1 *假设你的一个同事正在期待宝宝的出生，你正在参与一个办公室竞猜宝宝出生日期的活动。假设在怀孕30周时下注，你可以使用哪些变量来做出最佳预测？你应该限制自己使用在出生前已知的变量，并且可能会被其他人知道的变量。*练习2
+    *特里弗斯-威拉德假说表明，对于许多哺乳动物，性别比取决于“母体状况”；也就是说，像母亲的年龄、体型、健康和社会地位等因素。请参见* [*https://en.wikipedia.org/wiki/Trivers-Willard_hypothesis*](https://en.wikipedia.org/wiki/Trivers-Willard_hypothesis)
 - en: '*Some studies have shown this effect among humans, but results are mixed. In
     this chapter we tested some variables related to these factors, but didn’t find
     any with a statistically significant effect on sex ratio.*'
   id: totrans-184
   prefs: []
   type: TYPE_NORMAL
+  zh: '*一些研究表明人类中存在这种影响，但结果是参差不齐的。在本章中，我们测试了一些与这些因素相关的变量，但没有发现任何具有统计显著影响性别比的因素。*'
 - en: '*As an exercise, use a data mining approach to test the other variables in
     the pregnancy and respondent files. Can you find any factors with a substantial
     effect?*'
   id: totrans-185
   prefs: []
   type: TYPE_NORMAL
+  zh: '*作为练习，使用数据挖掘方法测试怀孕和受访者文件中的其他变量。你能找到任何具有实质影响的因素吗？*'
 - en: Exercise 3   *If the quantity you want to predict is a count, you can use Poisson
     regression, which is implemented in StatsModels with a function called `poisson`.
     It works the same way as `ols` and `logit`. As an exercise, let’s use it to predict
@@ -1155,12 +1191,14 @@
   id: totrans-186
   prefs: []
   type: TYPE_NORMAL
+  zh: 练习3 *如果你想要预测的数量是计数的，你可以使用泊松回归，在StatsModels中用一个名为`poisson`的函数实现。它的工作方式与`ols`和`logit`相同。作为练习，让我们用它来预测一个女性生了多少个孩子；在NSFG数据集中，这个变量称为`numbabes`。*
 - en: '*Suppose you meet a woman who is 35 years old, black, and a college graduate
     whose annual household income exceeds $75,000\. How many children would you predict
     she has born?*'
   id: totrans-187
   prefs: []
   type: TYPE_NORMAL
+  zh: '*假设你遇到一个35岁的黑人女性，大学毕业，年收入超过75000美元。你会预测她有多少个孩子？*'
 - en: Exercise 4   *If the quantity you want to predict is categorical, you can use
     multinomial logistic regression, which is implemented in StatsModels with a function
     called `mnlogit`. As an exercise, let’s use it to guess whether a woman is married,
@@ -1169,35 +1207,41 @@
   id: totrans-188
   prefs: []
   type: TYPE_NORMAL
+  zh: 练习4 *如果你想要预测的数量是分类的，你可以使用多项式 logistic 回归，这在StatsModels中用一个名为`mnlogit`的函数实现。作为练习，让我们用它来猜测一个女性是已婚、同居、丧偶、离婚、分居还是未婚；在NSFG数据集中，婚姻状况是用一个名为`rmarital`的变量编码的。*
 - en: '*Suppose you meet a woman who is 25 years old, white, and a high school graduate
     whose annual household income is about $45,000. What is the probability that she
     is married, cohabitating, etc?*'
   id: totrans-189
   prefs: []
   type: TYPE_NORMAL
+  zh: '*假设你遇到一个25岁的白人女性，高中毕业，年收入约为45000美元。她结婚、同居等的概率是多少？*'
 - en: 11.11  Glossary
   id: totrans-190
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 11.11 术语表
 - en: 'regression: One of several related processes for estimating parameters that
     fit a model to data.'
   id: totrans-191
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 回归：用于估计适合数据模型的参数的几个相关过程之一。
 - en: 'dependent variables: The variables in a regression model we would like to predict.
     Also known as endogenous variables.'
   id: totrans-192
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 因变量：回归模型中我们想要预测的变量。也被称为内生变量。
 - en: 'explanatory variables: The variables used to predict or explain the dependent
     variables. Also known as independent, or exogenous, variables.'
   id: totrans-193
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 解释变量：用于预测或解释因变量的变量。也被称为自变量或外生变量。
 - en: 'simple regression: A regression with only one dependent and one explanatory
     variable.'
   id: totrans-194
