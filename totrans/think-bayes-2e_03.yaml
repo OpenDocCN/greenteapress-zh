@@ -1,13 +1,16 @@
 - en: Preface
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
 - en: 原文：[https://allendowney.github.io/ThinkBayes2/preface.html](https://allendowney.github.io/ThinkBayes2/preface.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: The premise of this book, and the other books in the *Think X* series, is that
     if you know how to program, you can use that skill to learn other topics.
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
 - en: Most books on Bayesian statistics use math notation and present ideas using
@@ -15,18 +18,22 @@
     instead of continuous mathematics. As a result, what would be an integral in a
     math book becomes a summation, and most operations on probability distributions
     are loops or array operations.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
 - en: I think this presentation is easier to understand, at least for people with
     programming skills. It is also more general, because when we make modeling decisions,
     we can choose the most appropriate model without worrying too much about whether
     the model lends itself to mathematical analysis.
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
 - en: Also, it provides a smooth path from simple examples to real-world problems.
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
 - en: Who is this book for?
+  id: totrans-6
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -34,20 +41,24 @@
     with NumPy and Pandas, that will help, but I’ll explain what you need as we go.
     You don’t need to know calculus or linear algebra. You don’t need any prior knowledge
     of statistics.
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
 - en: In Chapter 1, I define probability and introduce conditional probability, which
     is the foundation of Bayes’s Theorem. Chapter 3 introduces the probability distribution,
     which is the foundation of Bayesian statistics.
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
 - en: In later chapters, we use a variety of discrete and continuous distributions,
     including the binomial, exponential, Poisson, beta, gamma, and normal distributions.
     I will explain each distribution when it is introduced, and we will use SciPy
     to compute them, so you don’t need to know about their mathematical properties.
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
 - en: Modeling
+  id: totrans-10
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -55,30 +66,36 @@
     some degree of modeling. Before we can apply Bayesian methods (or any other analysis),
     we have to make decisions about which parts of the real-world system to include
     in the model and which details we can abstract away.
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
 - en: For example, in Chapter 8, the motivating problem is to predict the winner of
     a soccer (football) game. I model goal-scoring as a Poisson process, which implies
     that a goal is equally likely at any point in the game. That is not exactly true,
     but it is probably a good enough model for most purposes.
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
 - en: I think it is important to include modeling as an explicit part of problem solving
     because it reminds us to think about modeling errors (that is, errors due to simplifications
     and assumptions of the model).
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
 - en: Many of the methods in this book are based on discrete distributions, which
     makes some people worry about numerical errors. But for real-world problems, numerical
     errors are almost always smaller than modeling errors.
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
 - en: Furthermore, the discrete approach often allows better modeling decisions, and
     I would rather have an approximate solution to a good model than an exact solution
     to a bad model.
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
 - en: Working with the code
+  id: totrans-16
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -86,34 +103,42 @@
     to work with the code. The original form of this book is a series of Jupyter notebooks.
     After you read each chapter, I encourage you to run the notebook and work on the
     exercises.
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
 - en: If you need help, my solutions are available.
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
 - en: 'There are several ways to run the notebooks:'
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
 - en: If you have Python and Jupyter installed, you can download the notebooks and
     run them on your computer.
+  id: totrans-20
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: If you don’t have a programming environment where you can run Jupyter notebooks,
     you can use Colab, which lets you run Jupyter notebooks in a browser without installing
     anything.
+  id: totrans-21
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: To run the notebooks on Colab, start from [this landing page](http://allendowney.github.io/ThinkBayes2/index.html),
     which has links to all of the notebooks.
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
 - en: If you already have Python and Jupyter, you can [download the notebooks as a
     Zip file](https://github.com/AllenDowney/ThinkBayes2/raw/master/ThinkBayes2Notebooks.zip).
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
 - en: Installing Jupyter
+  id: totrans-24
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -122,52 +147,67 @@
     I found Anaconda easy to install. By default it installs files in your home directory,
     so you don’t need administrator privileges. You can download Anaconda from [this
     site](https://www.anaconda.com/products/individual).
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
 - en: Anaconda includes most of the packages you need to run the code in this book.
     But there are a few additional packages you need to install.
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
 - en: To make sure you have everything you need (and the right versions), the best
     option is to create a Conda environment. [Download this Conda environment file](https://github.com/AllenDowney/ThinkBayes2/raw/master/environment.yml)
     and run the following commands to create and activate an environment called `ThinkBayes2.`
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE0]'
+  id: totrans-28
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: 'If you don’t want to create an environment just for this book, you can install
     what you need using Conda. The following commands should get everything you need:'
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE1]'
+  id: totrans-30
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: 'If you don’t want to use Anaconda, you will need the following packages:'
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
 - en: Jupyter to run the notebooks, [https://jupyter.org/](https://jupyter.org/);
+  id: totrans-32
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: NumPy for basic numerical computation, [https://www.numpy.org/](https://www.numpy.org/);
+  id: totrans-33
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: SciPy for scientific computation, [https://www.scipy.org/](https://www.scipy.org/);
+  id: totrans-34
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Pandas for working with data, [https://pandas.pydata.org/](https://pandas.pydata.org/);
+  id: totrans-35
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: matplotlib for visualization, [https://matplotlib.org/](https://matplotlib.org/);
+  id: totrans-36
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: empiricaldist for representing distributions, [https://pypi.org/project/empiricaldist/](https://pypi.org/project/empiricaldist/).
     .
+  id: totrans-37
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -175,78 +215,98 @@
     installations, and they can be hard to install in some environments. If you have
     trouble installing them, I recommend using Anaconda or one of the other Python
     distributions that include these packages.
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
 - en: Contributor List
+  id: totrans-39
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: If you have a suggestion or correction, please send email to *[downey@allendowney.com](mailto:downey%40allendowney.com)*.
     If I make a change based on your feedback, I will add you to the contributor list
     (unless you ask to be omitted).
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
 - en: If you include at least part of the sentence the error appears in, that makes
     it easy for me to search. Page and section numbers are fine, too, but not as easy
     to work with. Thanks!
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
 - en: First, I have to acknowledge David MacKay’s excellent book, *Information Theory,
     Inference, and Learning Algorithms*, which is where I first came to understand
     Bayesian methods. With his permission, I use several problems from his book as
     examples.
+  id: totrans-42
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Several examples and exercises in the second edition are borrowed, with permission,
     from Cameron Davidson-Pilon and one exercise from Rasmus Bååth.
+  id: totrans-43
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: This book also benefited from my interactions with Sanjoy Mahajan, especially
     in Fall 2012, when I audited his class on Bayesian Inference at Olin College.
+  id: totrans-44
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Many examples in this book were developed in collaboration with students in
     my Bayesian Statistics classes at Olin College. In particular, the Red Line example
     started as a class project by Brendan Ritter and Kai Austin.
+  id: totrans-45
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: I wrote parts of this book during project nights with the Boston Python User
     Group, so I would like to thank them for their company and pizza.
+  id: totrans-46
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Jasmine Kwityn and Dan Fauxsmith at O’Reilly Media proofread the first edition
     and found many opportunities for improvement.
+  id: totrans-47
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Linda Pescatore found a typo and made some helpful suggestions.
+  id: totrans-48
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Tomasz Miasko sent many excellent corrections and suggestions.
+  id: totrans-49
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: For the second edition, I want to thank Michele Cronin and Kristen Brown at
     O’Reilly Media and the technical reviewers Ravin Kumar, Thomas Nield, Josh Starmer,
     and Junpeng Lao.
+  id: totrans-50
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: I am grateful to the developers and contributors of the software libraries this
     book is based on, especially Jupyter, NumPy, SciPy, Pandas, PyMC, ArviZ, and Matplotlib.
+  id: totrans-51
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 本书基于的软件库的开发者和贡献者表示感激，特别是Jupyter、NumPy、SciPy、Pandas、PyMC、ArviZ和Matplotlib。
 - en: Other people who spotted typos and errors include Greg Marra, Matt Aasted, Marcus
     Ogren, Tom Pollard, Paul A. Giannaros, Jonathan Edwards, George Purkins, Robert
     Marcus, Ram Limbu, James Lawry, Ben Kahle, Jeffrey Law, Alvaro Sanchez, Olivier
     Yiptong, Yuriy Pasichnyk, Kristopher Overholt, Max Hailperin, Markus Dobler, Brad
     Minch, Allen Minch, Nathan Yee, Michael Mera, Chris Krenn, Daniel Vianna.
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: 其他发现拼写错误和错误的人包括Greg Marra、Matt Aasted、Marcus Ogren、Tom Pollard、Paul A. Giannaros、Jonathan
+    Edwards、George Purkins、Robert Marcus、Ram Limbu、James Lawry、Ben Kahle、Jeffrey Law、Alvaro
+    Sanchez、Olivier Yiptong、Yuriy Pasichnyk、Kristopher Overholt、Max Hailperin、Markus
+    Dobler、Brad Minch、Allen Minch、Nathan Yee、Michael Mera、Chris Krenn、Daniel Vianna。
