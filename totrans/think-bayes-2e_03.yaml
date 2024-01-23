@@ -3,16 +3,19 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 前言
 - en: 原文：[https://allendowney.github.io/ThinkBayes2/preface.html](https://allendowney.github.io/ThinkBayes2/preface.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ThinkBayes2/preface.html](https://allendowney.github.io/ThinkBayes2/preface.html)
 - en: The premise of this book, and the other books in the *Think X* series, is that
     if you know how to program, you can use that skill to learn other topics.
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 这本书的前提，以及*Think X*系列中的其他书籍，是如果你知道如何编程，你可以利用这一技能来学习其他主题。
 - en: Most books on Bayesian statistics use math notation and present ideas using
     mathematical concepts like calculus. This book uses Python code and discrete approximations
     instead of continuous mathematics. As a result, what would be an integral in a
@@ -21,6 +24,7 @@
   id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 大多数关于贝叶斯统计的书籍使用数学符号，并使用数学概念如微积分来呈现思想。这本书使用Python代码和离散逼近代替连续数学。因此，在数学书中的积分变成了求和，而概率分布上的大多数操作都是循环或数组操作。
 - en: I think this presentation is easier to understand, at least for people with
     programming skills. It is also more general, because when we make modeling decisions,
     we can choose the most appropriate model without worrying too much about whether
@@ -28,15 +32,18 @@
   id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 我认为这种表达方式更容易理解，至少对于具有编程技能的人来说是这样。它也更加通用，因为当我们做建模决策时，我们可以选择最合适的模型，而不用太担心模型是否适合数学分析。
 - en: Also, it provides a smooth path from simple examples to real-world problems.
   id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 此外，它提供了从简单示例到现实世界问题的平稳路径。
 - en: Who is this book for?
   id: totrans-6
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 这本书适合谁？
 - en: To start this book, you should be comfortable with Python. If you are familiar
     with NumPy and Pandas, that will help, but I’ll explain what you need as we go.
     You don’t need to know calculus or linear algebra. You don’t need any prior knowledge
@@ -44,12 +51,14 @@
   id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 要开始阅读这本书，你应该对Python感到舒适。如果你熟悉NumPy和Pandas，那会有所帮助，但我会在我们进行时解释你需要的内容。你不需要了解微积分或线性代数。你不需要任何统计学的先验知识。
 - en: In Chapter 1, I define probability and introduce conditional probability, which
     is the foundation of Bayes’s Theorem. Chapter 3 introduces the probability distribution,
     which is the foundation of Bayesian statistics.
   id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 在第1章中，我定义了概率并介绍了条件概率，这是贝叶斯定理的基础。第3章介绍了概率分布，这是贝叶斯统计的基础。
 - en: In later chapters, we use a variety of discrete and continuous distributions,
     including the binomial, exponential, Poisson, beta, gamma, and normal distributions.
     I will explain each distribution when it is introduced, and we will use SciPy
@@ -57,11 +66,13 @@
   id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 在后面的章节中，我们使用各种离散和连续分布，包括二项式、指数、泊松、贝塔、伽玛和正态分布。我会在引入每个分布时解释它们，并且我们将使用SciPy来计算它们，因此你不需要了解它们的数学属性。
 - en: Modeling
   id: totrans-10
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 建模
 - en: Most chapters in this book are motivated by a real-world problem, so they involve
     some degree of modeling. Before we can apply Bayesian methods (or any other analysis),
     we have to make decisions about which parts of the real-world system to include
@@ -69,6 +80,7 @@
   id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 这本书的大多数章节都是由一个现实世界的问题所激发的，因此它们涉及一定程度的建模。在我们应用贝叶斯方法（或任何其他分析）之前，我们必须对包括在模型中的现实世界系统的哪些部分以及我们可以抽象掉的哪些细节做出决策。
 - en: For example, in Chapter 8, the motivating problem is to predict the winner of
     a soccer (football) game. I model goal-scoring as a Poisson process, which implies
     that a goal is equally likely at any point in the game. That is not exactly true,
@@ -76,29 +88,34 @@
   id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，在第8章中，激励问题是预测足球比赛的赢家。我将进球建模为泊松过程，这意味着在比赛的任何时刻进球的可能性都是相等的。这并不完全正确，但对于大多数情况来说，这可能是一个足够好的模型。
 - en: I think it is important to include modeling as an explicit part of problem solving
     because it reminds us to think about modeling errors (that is, errors due to simplifications
     and assumptions of the model).
   id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 我认为将建模作为问题解决的一个明确部分是很重要的，因为它提醒我们要考虑建模误差（即由于简化和模型假设而产生的误差）。
 - en: Many of the methods in this book are based on discrete distributions, which
     makes some people worry about numerical errors. But for real-world problems, numerical
     errors are almost always smaller than modeling errors.
   id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 这本书中的许多方法都是基于离散分布，这让一些人担心数值误差。但对于现实世界的问题，数值误差几乎总是比建模误差要小。
 - en: Furthermore, the discrete approach often allows better modeling decisions, and
     I would rather have an approximate solution to a good model than an exact solution
     to a bad model.
   id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 此外，离散方法通常可以更好地进行建模决策，我宁愿对一个好模型得到一个近似解决方案，也不愿对一个坏模型得到一个精确解决方案。
 - en: Working with the code
   id: totrans-16
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 与代码一起工作
 - en: Reading this book will only get you so far; to really understand it, you have
     to work with the code. The original form of this book is a series of Jupyter notebooks.
     After you read each chapter, I encourage you to run the notebook and work on the
@@ -106,20 +123,24 @@
   id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: 阅读这本书只能让你走得更远；要真正理解它，你必须与代码一起工作。这本书的原始形式是一系列Jupyter笔记本。在阅读每一章之后，我鼓励你运行笔记本并完成练习。
 - en: If you need help, my solutions are available.
   id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你需要帮助，我的解决方案是可用的。
 - en: 'There are several ways to run the notebooks:'
   id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 有几种方法可以运行这些笔记本：
 - en: If you have Python and Jupyter installed, you can download the notebooks and
     run them on your computer.
   id: totrans-20
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果你安装了Python和Jupyter，你可以下载笔记本并在你的计算机上运行它们。
 - en: If you don’t have a programming environment where you can run Jupyter notebooks,
     you can use Colab, which lets you run Jupyter notebooks in a browser without installing
     anything.
@@ -127,11 +148,13 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果你没有可以运行Jupyter笔记本的编程环境，你可以使用Colab，在浏览器中运行Jupyter笔记本而无需安装任何东西。
 - en: To run the notebooks on Colab, start from [this landing page](http://allendowney.github.io/ThinkBayes2/index.html),
     which has links to all of the notebooks.
   id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 要在Colab上运行笔记本，请从[此页面](http://allendowney.github.io/ThinkBayes2/index.html)开始，该页面包含所有笔记本的链接。
 - en: If you already have Python and Jupyter, you can [download the notebooks as a
     Zip file](https://github.com/AllenDowney/ThinkBayes2/raw/master/ThinkBayes2Notebooks.zip).
   id: totrans-23
