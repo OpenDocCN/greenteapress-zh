@@ -3,36 +3,43 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 第14章  分析方法
 - en: 原文：[https://greenteapress.com/thinkstats2/html/thinkstats2015.html](https://greenteapress.com/thinkstats2/html/thinkstats2015.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://greenteapress.com/thinkstats2/html/thinkstats2015.html](https://greenteapress.com/thinkstats2/html/thinkstats2015.html)
 - en: This book has focused on computational methods like simulation and resampling,
     but some of the problems we solved have analytic solutions that can be much faster.
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 这本书侧重于诸如模拟和重采样之类的计算方法，但我们解决的一些问题有解析解，可以快得多。
 - en: I present some of these methods in this chapter, and explain how they work.
     At the end of the chapter, I make suggestions for integrating computational and
     analytic methods for exploratory data analysis.
   id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 我在本章中介绍了一些这些方法，并解释了它们的工作原理。在本章末尾，我提出了整合计算和分析方法进行探索性数据分析的建议。
 - en: The code in this chapter is in `normal.py`. For information about downloading
     and working with this code, see Section [0.2](thinkstats2001.html#code).
   id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章中的代码在`normal.py`中。有关下载和使用此代码的信息，请参阅第0.2节。
 - en: 14.1  Normal distributions
   id: totrans-5
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 14.1  正态分布
 - en: 'As a motivating example, let’s review the problem from Section [8.3](thinkstats2009.html#gorilla):'
   id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为一个激励性的例子，让我们回顾一下第8.3节中的问题：
 - en: Suppose you are a scientist studying gorillas in a wildlife preserve. Having
     weighed 9 gorillas, you find sample mean x=90 kg and sample standard deviation,
     S=7.5 kg. If you use x to estimate the population mean, what is the standard error
@@ -41,6 +48,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 假设你是一名研究野生动物保护区大猩猩的科学家。称重了9只大猩猩后，你发现样本均值x=90千克，样本标准差S=7.5千克。如果你使用x来估计总体均值，估计的标准误差是多少？
 - en: To answer that question, we need the sampling distribution of x. In Section [8.3](thinkstats2009.html#gorilla)
     we approximated this distribution by simulating the experiment (weighing 9 gorillas),
     computing x for each simulated experiment, and accumulating the distribution of
@@ -48,17 +56,20 @@
   id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了回答这个问题，我们需要x的抽样分布。在第8.3节中，我们通过模拟实验（称重9只大猩猩），计算每次模拟实验的x，并累积估计的分布来近似这个分布。
 - en: 'The result is an approximation of the sampling distribution. Then we use the
     sampling distribution to compute standard errors and confidence intervals:'
   id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是对抽样分布的近似。然后我们使用抽样分布来计算标准误差和置信区间：
 - en: The standard deviation of the sampling distribution is the standard error of
     the estimate; in the example, it is about 2.5 kg.
   id: totrans-10
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 抽样分布的标准差是估计的标准误差；在这个例子中，它大约是2.5千克。
 - en: The interval between the 5th and 95th percentile of the sampling distribution
     is a 90% confidence interval. If we run the experiment many times, we expect the
     estimate to fall in this interval 90% of the time. In the example, the 90% CI
@@ -67,6 +78,8 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 抽样分布的第5和第95百分位之间的区间是90%的置信区间。如果我们多次运行实验，我们期望估计值在这个区间内的概率是90%。在这个例子中，90%的置信区间是(86,
+    94)千克。
 - en: 'Now we’ll do the same calculation analytically. We take advantage of the fact
     that the weights of adult female gorillas are roughly normally distributed. Normal
     distributions have two properties that make them amenable for analysis: they are
@@ -75,20 +88,24 @@
   id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们将以相同的方式进行分析计算。我们利用成年雌性大猩猩的体重大致上是正态分布这一事实。正态分布有两个性质使它们适合进行分析：它们在线性变换和加法下是“封闭的”。为了解释这意味着什么，我需要一些符号。
 - en: If the distribution of a quantity, X, is normal with parameters µ and σ, you
     can write
   id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果一个量X的分布是参数为µ和σ的正态分布，你可以写成
 - en: '| X ∼ N (µ, σ²) |'
   id: totrans-14
   prefs: []
   type: TYPE_TB
+  zh: '| X ∼ N (µ, σ²) |'
 - en: where the symbol ∼ means “is distributed” and the script letter N stands for
     “normal.”
   id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 其中符号∼表示“分布”，脚本字母N代表“正态分布”。
 - en: A linear transformation of X is something like X′ = a X + b, where a and b are
     real numbers. A family of distributions is closed under linear transformation
     if X′ is in the same family as X. The normal distribution has this property; if
@@ -96,80 +113,99 @@
   id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: X的线性变换是类似X′ = a X + b的东西，其中a和b是实数。如果X′与X在同一个分布族中，那么这个分布族在线性变换下是封闭的。正态分布具有这个性质；如果X
+    ∼ N (µ, σ²)，
 - en: '| X′ ∼ N (a µ + b, a² σ²)   |'
   id: totrans-17
   prefs: []
   type: TYPE_TB
+  zh: '| X′ ∼ N (a µ + b, a² σ²)   |'
 - en: Normal distributions are also closed under addition. If Z = X + Y and X ∼ N (µ[X],
     σ[X]²) and Y ∼ N (µ[Y], σ[Y]²) then
   id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 正态分布也是封闭的。如果Z = X + Y，且X ∼ N (µ[X], σ[X]²)和Y ∼ N (µ[Y], σ[Y]²)那么
 - en: '| Z ∼ N (µ[X] + µ[Y], σ[X]² + σ[Y]²)   |'
   id: totrans-19
   prefs: []
   type: TYPE_TB
+  zh: '| Z ∼ N (µ[X] + µ[Y], σ[X]² + σ[Y]²)   |'
 - en: In the special case Z = X + X, we have
   id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 在特殊情况Z = X + X中，我们有
 - en: '| Z ∼ N (2 µ[X], 2 σ[X]²)  |'
   id: totrans-21
   prefs: []
   type: TYPE_TB
+  zh: '| Z ∼ N (2 µ[X], 2 σ[X]²)  |'
 - en: and in general if we draw n values of X and add them up, we have
   id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 一般来说，如果我们抽取n个X的值并将它们相加，我们有
 - en: '| Z ∼ N (n µ[X], n σ[X]²)   |'
   id: totrans-23
   prefs: []
   type: TYPE_TB
+  zh: '| Z ∼ N (n µ[X], n σ[X]²)   |'
 - en: 14.2  Sampling distributions
   id: totrans-24
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 14.2  抽样分布
 - en: Now we have everything we need to compute the sampling distribution of x. Remember
     that we compute x by weighing n gorillas, adding up the total weight, and dividing
     by n.
   id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们有了计算x的抽样分布所需的一切。记住我们通过称重n只大猩猩，将总重量相加，然后除以n来计算x。
 - en: 'Assume that the distribution of gorilla weights, X, is approximately normal:'
   id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设大猩猩体重X的分布大致上是正态分布：
 - en: '| X ∼ N (µ, σ²) |'
   id: totrans-27
   prefs: []
   type: TYPE_TB
+  zh: '| X ∼ N (µ, σ²) |'
 - en: If we weigh n gorillas, the total weight, Y, is distributed
   id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们称重n只大猩猩，总重量Y的分布
 - en: '| Y ∼ N (n µ, n σ²)  |'
   id: totrans-29
   prefs: []
   type: TYPE_TB
+  zh: '| Y ∼ N (n µ, n σ²)  |'
 - en: using Equation 3\. And if we divide by n, the sample mean, Z, is distributed
   id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用方程3。如果我们除以n，样本均值Z的分布是
 - en: '| Z ∼ N (µ, σ²/n)  |'
   id: totrans-31
   prefs: []
   type: TYPE_TB
+  zh: '| Z ∼ N (µ, σ²/n)  |'
 - en: using Equation 1 with a = 1/n.
   id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: '使用方程1，其中a = 1/n。 '
 - en: The distribution of Z is the sampling distribution of x. The mean of Z is µ,
     which shows that x is an unbiased estimate of µ. The variance of the sampling
     distribution is σ² / n.
   id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: Z的分布是x的抽样分布。Z的均值是µ，这表明x是µ的无偏估计。抽样分布的方差是σ² / n。
 - en: So the standard deviation of the sampling distribution, which is the standard
     error of the estimate, is σ / √n. In the example, σ is 7.5 kg and n is 9, so the
     standard error is 2.5 kg. That result is consistent with what we estimated by
@@ -177,6 +213,7 @@
   id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，抽样分布的标准差，也就是估计的标准误差，是σ / √n。在这个例子中，σ是7.5千克，n是9，所以标准误差是2.5千克。这个结果与我们通过模拟估计的结果一致，但计算速度更快！
 - en: We can also use the sampling distribution to compute confidence intervals. A
     90% confidence interval for x is the interval between the 5th and 95th percentiles
     of Z. Since Z is normally distributed, we can compute percentiles by evaluating
@@ -395,17 +432,20 @@
   id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了解释这个函数，我将从内部开始，逐步向外展开。每次调用`np.random.exponential`，我们都会得到一个`n`个指数值的序列，并计算其总和。`sample`是这些总和的列表，长度为`iters`。
 - en: 'It is easy to get `n` and `iters` confused: `n` is the number of terms in each
     sum; `iters` is the number of sums we compute in order to characterize the distribution
     of sums.'
   id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: 很容易混淆`n`和`iters`：`n`是每个总和中的项数；`iters`是我们计算的总和的数量，以描述总和的分布。
 - en: 'The return value is a list of `(n, sample)` pairs. For each pair, we make a
     normal probability plot:'
   id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: 返回值是一个`(n, sample)`对的列表。对于每对，我们制作一个正态概率图：
 - en: '[PRE9]'
   id: totrans-72
   prefs: []
@@ -416,11 +456,13 @@
   id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: '`NormalPlotSamples`获取`MakeExpoSamples`生成的对列表，并生成一行正态概率图。'
 - en: '* * *'
   id: totrans-74
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
   id: totrans-75
   prefs:
@@ -431,6 +473,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/b74dd72457286381841c0493623eddb1.png)'
 - en: ''
   id: totrans-77
   prefs:
@@ -442,6 +485,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_TB
+  zh: '| 图14.1：指数值总和分布（顶部行）和对数正态值总和分布（底部行）。|'
 - en: ''
   id: totrans-79
   prefs:
@@ -452,6 +496,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: Figure [14.1](#normal1) (top row) shows the results. With `n=1`, the distribution
     of the sum is still exponential, so the normal probability plot is not a straight
     line. But with `n=10` the distribution of the sum is approximately normal, and
@@ -459,6 +504,7 @@
   id: totrans-81
   prefs: []
   type: TYPE_NORMAL
+  zh: 图[14.1](#normal1)（顶部行）显示了结果。当`n=1`时，总和的分布仍然是指数分布，因此正态概率图不是一条直线。但是当`n=10`时，总和的分布近似正态，当`n=100`时，它几乎无法与正态区分开来。
 - en: Figure [14.1](#normal1) (bottom row) shows similar results for a lognormal distribution.
     Lognormal distributions are generally more skewed than exponential distributions,
     so the distribution of sums takes longer to converge. With `n=10` the normal probability
@@ -466,11 +512,13 @@
   id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: 图[14.1](#normal1)（底部行）显示了对数正态分布的类似结果。对数正态分布通常比指数分布更倾斜，因此总和的分布需要更长时间才能收敛。当`n=10`时，正态概率图远非直线，但当`n=100`时，它近似正态。
 - en: '* * *'
   id: totrans-83
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
   id: totrans-84
   prefs:
@@ -481,6 +529,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/1457d7c5281433f404de9c992a6758fb.png)'
 - en: ''
   id: totrans-86
   prefs:
@@ -492,6 +541,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_TB
+  zh: '| 图14.2：帕累托值总和分布（顶部行）和相关指数值总和分布（底部行）。|'
 - en: ''
   id: totrans-88
   prefs:
@@ -502,6 +552,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: Pareto distributions are even more skewed than lognormal. Depending on the parameters,
     many Pareto distributions do not have finite mean and variance. As a result, the
     Central Limit Theorem does not apply. Figure [14.2](#normal2) (top row) shows
@@ -510,6 +561,7 @@
   id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: 帕累托分布甚至比对数正态分布更倾斜。根据参数的不同，许多帕累托分布没有有限的均值和方差。因此，中心极限定理不适用。图[14.2](#normal2)（顶部行）显示了帕累托值总和分布。即使当`n=100`时，正态概率图也远非直线。
 - en: I also mentioned that CLT does not apply if the values are correlated. To test
     that, I generate correlated values from an exponential distribution. The algorithm
     for generating correlated values is (1) generate correlated normal values, (2)
@@ -518,11 +570,13 @@
   id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: 我还提到了如果值相关，中心极限定理不适用。为了测试这一点，我从指数分布中生成了相关值。生成相关值的算法是：（1）生成相关的正态值，（2）使用正态CDF将值转换为均匀分布，（3）使用逆指数CDF将均匀值转换为指数分布。
 - en: '`GenerateCorrelated` returns an iterator of `n` normal values with serial correlation
     `rho`:'
   id: totrans-92
   prefs: []
   type: TYPE_NORMAL
+  zh: '`GenerateCorrelated`返回一个具有序列相关性`rho`的`n`个正态值的迭代器：'
 - en: '[PRE10]'
   id: totrans-93
   prefs: []
@@ -535,11 +589,13 @@
   id: totrans-94
   prefs: []
   type: TYPE_NORMAL
+  zh: 第一个值是标准正态值。每个后续值都取决于其前一个值：如果前一个值是`x`，则下一个值的均值是`x*rho`，方差为`1-rho**2`。请注意，`random.gauss`将标准差作为第二个参数，而不是方差。
 - en: '`GenerateExpoCorrelated` takes the resulting sequence and transforms it to
     exponential:'
   id: totrans-95
   prefs: []
   type: TYPE_NORMAL
+  zh: '`GenerateExpoCorrelated`将生成的序列转换为指数分布：'
 - en: '[PRE11]'
   id: totrans-96
   prefs: []
@@ -552,6 +608,7 @@
   id: totrans-97
   prefs: []
   type: TYPE_NORMAL
+  zh: '`normal`是一系列相关的正态值。`uniform`是0到1之间的均匀值序列。`expo`是一系列相关的指数值。`ppf`代表“百分位点函数”，这是逆CDF的另一个名称。'
 - en: Figure [14.2](#normal2) (bottom row) shows distributions of sums of correlated
     exponential values with `rho=0.9`. The correlation slows the rate of convergence;
     nevertheless, with `n=100` the normal probability plot is nearly straight. So
@@ -560,16 +617,19 @@
   id: totrans-98
   prefs: []
   type: TYPE_NORMAL
+  zh: 图[14.2](#normal2)（底部行）显示了具有`rho=0.9`的相关指数值的总和分布。相关性减慢了收敛速度；尽管如此，当`n=100`时，正态概率图几乎是直线的。因此，即使在值相关的情况下中心极限定理并不严格适用，但在实践中，适度的相关性很少是一个问题。
 - en: These experiments are meant to show how the Central Limit Theorem works, and
     what happens when it doesn’t. Now let’s see how we can use it.
   id: totrans-99
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些实验旨在展示中心极限定理的工作原理，以及当它不适用时会发生什么。现在让我们看看我们如何使用它。
 - en: 14.6  Applying the CLT
   id: totrans-100
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 14.6  应用中心极限定理
 - en: 'To see why the Central Limit Theorem is useful, let’s get back to the example
     in Section [9.3](thinkstats2010.html#testdiff): testing the apparent difference
     in mean pregnancy length for first babies and others. As we’ve seen, the apparent
@@ -577,6 +637,7 @@
   id: totrans-101
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了了解为什么中心极限定理是有用的，让我们回到第9.3节中的例子：测试第一个孩子和其他孩子的怀孕周期的平均差异。正如我们所见，表面上的差异约为0.078周：
 - en: '[PRE12]'
   id: totrans-102
   prefs: []
@@ -588,12 +649,14 @@
   id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: 记住假设检验的逻辑：我们计算一个p值，这是在零假设下观察到的差异的概率；如果很小，我们就得出结论说观察到的差异不太可能是由于偶然因素造成的。
 - en: 'In this example, the null hypothesis is that the distribution of pregnancy
     lengths is the same for first babies and others. So we can compute the sampling
     distribution of the mean like this:'
   id: totrans-104
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个例子中，零假设是怀孕长度的分布对于第一个宝宝和其他宝宝是相同的。所以我们可以这样计算均值的抽样分布：
 - en: '[PRE13]'
   id: totrans-105
   prefs: []
@@ -605,6 +668,7 @@
   id: totrans-106
   prefs: []
   type: TYPE_NORMAL
+  zh: 两个抽样分布都基于相同的总体，即所有活产的总体。`SamplingDistMean`接受这些值的序列和样本大小，并返回代表抽样分布的正态对象：
 - en: '[PRE14]'
   id: totrans-107
   prefs: []
@@ -615,6 +679,7 @@
   id: totrans-108
   prefs: []
   type: TYPE_NORMAL
+  zh: '`mean`和`var`是`data`的均值和方差。我们用正态分布`dist`来近似数据的分布。'
 - en: In this example, the data are not normally distributed, so this approximation
     is not very good. But then we compute `dist.Sum(n) / n`, which is the sampling
     distribution of the mean of `n` values. Even if the data are not normally distributed,
@@ -622,11 +687,13 @@
   id: totrans-109
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个例子中，数据不是正态分布的，所以这个近似并不是很好。但是我们计算`dist.Sum(n) / n`，这是`n`个值的均值的抽样分布。即使数据不是正态分布的，均值的抽样分布也是由中心极限定理得到的。
 - en: 'Next, we compute the sampling distribution of the difference in the means.
     The `Normal` class knows how to perform subtraction using Equation 2:'
   id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: 接下来，我们计算均值差异的抽样分布。`Normal`类知道如何使用方程2进行减法：
 - en: '[PRE15]'
   id: totrans-111
   prefs: []
@@ -636,6 +703,7 @@
   id: totrans-112
   prefs: []
   type: TYPE_NORMAL
+  zh: 所以我们可以这样计算差异的抽样分布：
 - en: '[PRE16]'
   id: totrans-113
   prefs: []
@@ -647,12 +715,14 @@
   id: totrans-114
   prefs: []
   type: TYPE_NORMAL
+  zh: 均值为0，这是有道理的，因为我们期望来自同一分布的两个样本的均值平均来说是相同的。抽样分布的方差为0.0032。
 - en: '`Normal` provides `Prob`, which evaluates the normal CDF. We can use `Prob`
     to compute the probability of a difference as large as `delta` under the null
     hypothesis:'
   id: totrans-115
   prefs: []
   type: TYPE_NORMAL
+  zh: '`Normal`提供了`Prob`，用于计算正态分布的CDF。我们可以使用`Prob`来计算在零假设下差异与`delta`一样大的概率：'
 - en: '[PRE17]'
   id: totrans-116
   prefs: []
@@ -663,6 +733,7 @@
   id: totrans-117
   prefs: []
   type: TYPE_NORMAL
+  zh: 这意味着一个单侧检验的p值为0.084。对于双侧检验，我们还会计算
 - en: '[PRE18]'
   id: totrans-118
   prefs: []
@@ -674,17 +745,20 @@
   id: totrans-119
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一样的，因为正态分布是对称的。两个尾部的和为0.168，这与第[9.3](thinkstats2010.html#testdiff)节中的估计一致，那里是0.17。
 - en: 14.7  Correlation test
   id: totrans-120
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 14.7  相关性检验
 - en: In Section [9.5](thinkstats2010.html#corrtest) we used a permutation test for
     the correlation between birth weight and mother’s age, and found that it is statistically
     significant, with p-value less than 0.001.
   id: totrans-121
   prefs: []
   type: TYPE_NORMAL
+  zh: 在第[9.5](thinkstats2010.html#corrtest)节中，我们对出生体重和母亲年龄之间的相关性使用了排列检验，并发现它在统计上是显著的，p值小于0.001。
 - en: 'Now we can do the same thing analytically. The method is based on this mathematical
     result: given two variables that are normally distributed and uncorrelated, if
     we generate a sample with size n, compute Pearson’s correlation, r, and then compute
@@ -692,55 +766,68 @@
   id: totrans-122
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以用同样的方法进行分析。这种方法基于这个数学结果：给定两个正态分布且不相关的变量，如果我们生成一个大小为n的样本，计算Pearson相关系数r，然后计算变换后的相关系数
 - en: '| t = r  |'
   id: totrans-123
   prefs: []
   type: TYPE_TB
+  zh: '| t = r  |'
 - en: '&#124;  &#124;'
   id: totrans-124
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124;  &#124;'
 - en: '&#124; √ &#124;'
   id: totrans-125
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124; √ &#124;'
 - en: '|'
   id: totrans-126
   prefs: []
   type: TYPE_NORMAL
+  zh: '|'
 - en: '&#124;  &#124;'
   id: totrans-127
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124;  &#124;'
 - en: '&#124;'
   id: totrans-128
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124;'
 - en: '&#124; n−2 &#124;'
   id: totrans-129
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124; n−2 &#124;'
 - en: '&#124;  &#124;'
   id: totrans-130
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124;  &#124;'
 - en: '&#124; 1−r² &#124;'
   id: totrans-131
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124; 1−r² &#124;'
 - en: '&#124;'
   id: totrans-132
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124;'
 - en: '|   |'
   id: totrans-133
   prefs: []
   type: TYPE_TB
+  zh: '|   |'
 - en: the distribution of t is Student’s t-distribution with parameter n−2\. The t-distribution
     is an analytic distribution; the CDF can be computed efficiently using gamma functions.
   id: totrans-134
   prefs: []
   type: TYPE_NORMAL
+  zh: t的分布是自由度为n−2的学生t分布。t分布是一个解析分布；CDF可以使用gamma函数有效地计算。
 - en: 'We can use this result to compute the sampling distribution of correlation
     under the null hypothesis; that is, if we generate uncorrelated sequences of normal
     values, what is the distribution of their correlation? `StudentCdf` takes the
@@ -748,6 +835,7 @@
   id: totrans-135
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用这个结果来计算零假设下相关性的抽样分布；也就是说，如果我们生成正态值的不相关序列，它们的相关性的分布是什么？`StudentCdf`接受样本大小`n`，并返回相关性的抽样分布：
 - en: '[PRE19]'
   id: totrans-136
   prefs: []
@@ -760,11 +848,13 @@
   id: totrans-137
   prefs: []
   type: TYPE_NORMAL
+  zh: '`ts`是t值的NumPy数组，`ps`包含相应的概率，使用SciPy中实现的学生t分布的CDF计算得到。t分布的参数`df`代表“自由度”。我不会解释这个术语，但你可以在[http://en.wikipedia.org/wiki/Degrees_of_freedom_(statistics)](http://en.wikipedia.org/wiki/Degrees_of_freedom_(statistics))上了解它。'
 - en: '* * *'
   id: totrans-138
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
   id: totrans-139
   prefs:
@@ -775,6 +865,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/68f4bc50e89cc9086bc78620b0b37e6d.png)'
 - en: ''
   id: totrans-141
   prefs:
@@ -786,6 +877,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_TB
+  zh: '| 图14.3：不相关正态变量的相关性抽样分布。 |'
 - en: ''
   id: totrans-143
   prefs:
@@ -796,27 +888,33 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: To get from `ts` to the correlation coefficients, `rs`, we apply the inverse
     transform,
   id: totrans-145
   prefs: []
   type: TYPE_NORMAL
+  zh: 从`ts`到相关系数`rs`的转换，我们应用逆变换，
 - en: '| r = t /  | √ |'
   id: totrans-146
   prefs: []
   type: TYPE_TB
+  zh: '| r = t /  | √ |'
 - en: '&#124;  &#124;'
   id: totrans-147
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124;  &#124;'
 - en: '&#124; n − 2 + t² &#124;'
   id: totrans-148
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124; n − 2 + t² &#124;'
 - en: '|   |'
   id: totrans-149
   prefs: []
   type: TYPE_TB
+  zh: '|   |'
 - en: The result is the sampling distribution of r under the null hypothesis. Figure [14.3](#normal4)
     shows this distribution along with the distribution we generated in Section[9.5](thinkstats2010.html#corrtest)
     by resampling. They are nearly identical. Although the actual distributions are
