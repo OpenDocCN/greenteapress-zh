@@ -3,39 +3,46 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 决策分析
 - en: 原文：[https://allendowney.github.io/ThinkBayes2/chap09.html](https://allendowney.github.io/ThinkBayes2/chap09.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ThinkBayes2/chap09.html](https://allendowney.github.io/ThinkBayes2/chap09.html)
 - en: This chapter presents a problem inspired by the game show *The Price is Right*.
     It is a silly example, but it demonstrates a useful process called Bayesian [decision
     analysis](https://en.wikipedia.org/wiki/Decision_analysis).
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章提出了一个受到电视游戏节目《价格是对的》启发的问题。这是一个愚蠢的例子，但它展示了一种称为贝叶斯[决策分析](https://en.wikipedia.org/wiki/Decision_analysis)的有用过程。
 - en: As in previous examples, we’ll use data and prior distribution to compute a
     posterior distribution; then we’ll use the posterior distribution to choose an
     optimal strategy in a game that involves bidding.
   id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 与以前的例子一样，我们将使用数据和先验分布来计算后验分布；然后我们将使用后验分布来选择一个涉及出价的游戏中的最佳策略。
 - en: As part of the solution, we will use kernel density estimation (KDE) to estimate
     the prior distribution, and a normal distribution to compute the likelihood of
     the data.
   id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为解决方案的一部分，我们将使用核密度估计（KDE）来估计先验分布，并使用正态分布来计算数据的似然。
 - en: And at the end of the chapter, I pose a related problem you can solve as an
     exercise.
   id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本章的最后，我提出了一个相关的问题，你可以把它作为练习来解决。
 - en: The Price Is Right Problem
   id: totrans-6
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 价格就对了问题
 - en: On November 1, 2007, contestants named Letia and Nathaniel appeared on *The
     Price is Right*, an American television game show. They competed in a game called
     “The Showcase”, where the objective is to guess the price of a collection of prizes.
@@ -44,80 +51,97 @@
   id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 2007年11月1日，名为莱蒂亚和纳撒尼尔的参赛者出现在美国电视游戏节目《价格是对的》中。他们参加了一个名为“展示”的游戏，其目标是猜测一系列奖品的价格。离实际价格最接近且不超过的参赛者将赢得奖品。
 - en: Nathaniel went first. His showcase included a dishwasher, a wine cabinet, a
     laptop computer, and a car. He bid \$26,000.
   id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 纳撒尼尔先出手。他的展示包括一个洗碗机、一个酒柜、一个笔记本电脑和一辆汽车。他出价26,000美元。
 - en: Letia’s showcase included a pinball machine, a video arcade game, a pool table,
     and a cruise of the Bahamas. She bid \$21,500.
   id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 莱蒂亚的展示包括一个弹球机、一个街机游戏、一个台球桌和巴哈马的一次巡游。她出价21,500美元。
 - en: The actual price of Nathaniel’s showcase was \$25,347\. His bid was too high,
     so he lost.
   id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 纳撒尼尔的展示的实际价格是25,347美元。他的出价太高了，所以他输了。
 - en: The actual price of Letia’s showcase was \$21,578.
   id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 莱蒂亚的展示的实际价格是21,578美元。
 - en: She was only off by \$78, so she won her showcase and, because her bid was off
     by less than 250, she also won Nathaniel’s showcase.
   id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 她只差了78美元，所以她赢得了她的展示，并且因为她的出价低于250美元，她还赢得了纳撒尼尔的展示。
 - en: 'For a Bayesian thinker, this scenario suggests several questions:'
   id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于一个贝叶斯思想家来说，这种情景提出了几个问题：
 - en: Before seeing the prizes, what prior beliefs should the contestants have about
     the price of the showcase?
   id: totrans-14
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 在看到奖品之前，参赛者对展示的价格应该有什么先验信念？
 - en: After seeing the prizes, how should the contestants update those beliefs?
   id: totrans-15
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 看到奖品后，参赛者应该如何更新这些信念？
 - en: Based on the posterior distribution, what should the contestants bid?
   id: totrans-16
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 根据后验分布，参赛者应该出价多少？
 - en: 'The third question demonstrates a common use of Bayesian methods: decision
     analysis.'
   id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: 第三个问题展示了贝叶斯方法的一个常见用途：决策分析。
 - en: This problem is inspired by [an example](https://nbviewer.jupyter.org/github/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers/blob/master/Chapter5_LossFunctions/Ch5_LossFunctions_PyMC3.ipynb)
     in Cameron Davidson-Pilon’s book, [*Probablistic Programming and Bayesian Methods
     for Hackers*](http://camdavidsonpilon.github.io/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers).
   id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个问题是受到[一个例子](https://nbviewer.jupyter.org/github/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers/blob/master/Chapter5_LossFunctions/Ch5_LossFunctions_PyMC3.ipynb)的启发，该例子出自卡梅伦·戴维森-皮隆的书籍[*Probablistic
+    Programming and Bayesian Methods for Hackers*](http://camdavidsonpilon.github.io/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers)。
 - en: The Prior
   id: totrans-19
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 先验
 - en: To choose a prior distribution of prices, we can take advantage of data from
     previous episodes. Fortunately, [fans of the show keep detailed records](https://web.archive.org/web/20121107204942/http://www.tpirsummaries.8m.com/).
   id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了选择价格的先验分布，我们可以利用以前节目的数据。幸运的是，[节目的粉丝们保留了详细的记录](https://web.archive.org/web/20121107204942/http://www.tpirsummaries.8m.com/)。
 - en: For this example, I downloaded files containing the price of each showcase from
     the 2011 and 2012 seasons and the bids offered by the contestants.
   id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个例子中，我下载了包含2011年和2012年赛季每个展示的价格以及参赛者出价的文件。
 - en: The following function reads the data and cleans it up a little.
   id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数读取数据并对其进行清理。
 - en: '[PRE0]'
   id: totrans-23
   prefs: []
@@ -127,6 +151,7 @@
   id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将读取两个文件并将它们连接起来。
 - en: '[PRE1]'
   id: totrans-25
   prefs: []
@@ -137,6 +162,8 @@
   id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE2]'
   id: totrans-27
   prefs: []
@@ -146,10 +173,12 @@
   id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE3]</details>'
 - en: 'Here’s what the dataset looks like:'
   id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 数据集如下所示：
 - en: '[PRE4]'
   id: totrans-30
   prefs: []
@@ -160,38 +189,46 @@
   id: totrans-31
   prefs: []
   type: TYPE_TB
+  zh: '|  | 展示1 | 展示2 | 出价1 | 出价2 | 差额1 | 差额2 |'
 - en: '| --- | --- | --- | --- | --- | --- | --- |'
   id: totrans-32
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- | --- | --- |'
 - en: '| 0 | 50969.0 | 45429.0 | 42000.0 | 34000.0 | 8969.0 | 11429.0 |'
   id: totrans-33
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 50969.0 | 45429.0 | 42000.0 | 34000.0 | 8969.0 | 11429.0 |'
 - en: '| 1 | 21901.0 | 34061.0 | 14000.0 | 59900.0 | 7901.0 | -25839.0 |'
   id: totrans-34
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 21901.0 | 34061.0 | 14000.0 | 59900.0 | 7901.0 | -25839.0 |'
 - en: '| 2 | 32815.0 | 53186.0 | 32000.0 | 45000.0 | 815.0 | 8186.0 |'
   id: totrans-35
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 32815.0 | 53186.0 | 32000.0 | 45000.0 | 815.0 | 8186.0 |'
 - en: The first two columns, `Showcase 1` and `Showcase 2`, are the values of the
     showcases in dollars. The next two columns are the bids the contestants made.
     The last two columns are the differences between the actual values and the bids.
   id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 前两列“展示1”和“展示2”是以美元计的展示价值。接下来的两列是参赛者的出价。最后两列是实际价值和出价之间的差额。
 - en: Kernel Density Estimation
   id: totrans-37
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 核密度估计
 - en: This dataset contains the prices for 313 previous showcases, which we can think
     of as a sample from the population of possible prices.
   id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个数据集包含了313个以前展示的价格，我们可以把它看作是可能价格的样本。
 - en: We can use this sample to estimate the prior distribution of showcase prices.
     One way to do that is kernel density estimation (KDE), which uses the sample to
     estimate a smooth distribution. If you are not familiar with KDE, you can [read
@@ -199,16 +236,19 @@
   id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用这个样本来估计Showcase价格的先验分布。其中一种方法是核密度估计（KDE），它使用样本来估计平滑分布。如果你不熟悉KDE，你可以[在这里阅读相关内容](https://mathisonian.github.io/kde)。
 - en: SciPy provides `gaussian_kde`, which takes a sample and returns an object that
     represents the estimated distribution.
   id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: SciPy提供了`gaussian_kde`，它接受一个样本并返回一个表示估计分布的对象。
 - en: The following function takes `sample`, makes a KDE, evaluates it at a given
     sequence of quantities, `qs`, and returns the result as a normalized PMF.
   id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数接受`sample`，制作一个KDE，对给定的一系列数量`qs`进行评估，并将结果作为归一化的PMF返回。
 - en: '[PRE5]'
   id: totrans-42
   prefs: []
@@ -218,6 +258,7 @@
   id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用它来估计Showcase 1的值的分布：
 - en: '[PRE6]'
   id: totrans-44
   prefs: []
@@ -227,35 +268,46 @@
   id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 它看起来是这样的：
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE7]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell source Hide code cell source</summary>'
   id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE7]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>'
 - en: '[PRE8]</details> ![_images/ebaa0745d09379dd23ab450b3c00d28fbc9fb9cd3e2cf44daeb54add4c0dd6b3.png](../Images/f5710bb28e58d6b9012587f16bce6520.png)'
   id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE8]</details> ![_images/ebaa0745d09379dd23ab450b3c00d28fbc9fb9cd3e2cf44daeb54add4c0dd6b3.png](../Images/f5710bb28e58d6b9012587f16bce6520.png)'
 - en: '**Exercise:** Use this function to make a `Pmf` that represents the prior distribution
     for Showcase 2, and plot it.'
   id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** 使用这个函数制作一个代表Showcase 2先验分布的`Pmf`，并绘制它。'
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE9]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE9]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE10]'
   id: totrans-52
   prefs: []
@@ -265,26 +317,31 @@
   id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/03e7a17b911a5c8515491255fd219d0d4ad520f22f431b7f9edd96263ac92665.png](../Images/f4f9e3ebe8bbc827836c00a2bbff3bdb.png)</details>'
 - en: Distribution of Error
   id: totrans-54
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 误差的分布
 - en: 'To update these priors, we have to answer these questions:'
   id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: 要更新这些先验，我们必须回答这些问题：
 - en: What data should we consider and how should we quantify it?
   id: totrans-56
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 我们应该考虑什么数据，以及如何量化它？
 - en: Can we compute a likelihood function; that is, for each hypothetical price,
     can we compute the conditional likelihood of the data?
   id: totrans-57
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 我们能计算一个似然函数吗？也就是说，对于每个假设的价格，我们能计算数据的条件似然性吗？
 - en: To answer these questions, I will model each contestant as a price-guessing
     instrument with known error characteristics. In this model, when the contestant
     sees the prizes, they guess the price of each prize and add up the prices. Let’s
@@ -292,22 +349,26 @@
   id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了回答这些问题，我将把每个参赛者建模为一个具有已知误差特性的价格猜测工具。在这个模型中，当参赛者看到奖品时，他们猜测每个奖品的价格并将价格相加。让我们称这个总和为`guess`。
 - en: Now the question we have to answer is, “If the actual price is `price`, what
     is the likelihood that the contestant’s guess would be `guess`?”
   id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们需要回答的问题是，“如果实际价格是`price`，那么参赛者的猜测是`guess`的可能性有多大？”
 - en: Equivalently, if we define `error = guess - price`, we can ask, “What is the
     likelihood that the contestant’s guess is off by `error`?”
   id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 同样，如果我们定义`error = guess - price`，我们可以问，“参赛者的猜测偏离`error`的可能性有多大？”
 - en: 'To answer this question, I’ll use the historical data again. For each showcase
     in the dataset, let’s look at the difference between the contestant’s bid and
     the actual price:'
   id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了回答这个问题，我将再次使用历史数据。对于数据集中的每个Showcase，让我们看看参赛者出价和实际价格之间的差异：
 - en: '[PRE11]'
   id: totrans-62
   prefs: []
@@ -317,6 +378,7 @@
   id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了可视化这些差异的分布，我们可以再次使用KDE。
 - en: '[PRE12]'
   id: totrans-64
   prefs: []
@@ -326,35 +388,43 @@
   id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些分布看起来是这样的：
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
   id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE13]</details> ![_images/38edf57e021b3d3e8ce3a2ddc1a30895a9ccc1658bd4a943befbe2c2bbd9b82e.png](../Images/1f2c4977b6b89234efbc72504e4094b9.png)'
   id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE13]</details> ![_images/38edf57e021b3d3e8ce3a2ddc1a30895a9ccc1658bd4a943befbe2c2bbd9b82e.png](../Images/1f2c4977b6b89234efbc72504e4094b9.png)'
 - en: It looks like the bids are too low more often than too high, which makes sense.
     Remember that under the rules of the game, you lose if you overbid, so contestants
     probably underbid to some degree deliberately.
   id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: 看起来出价太低的情况比出价太高的情况更常见，这是有道理的。请记住，在游戏规则下，如果你出价过高，你就会输掉比赛，所以参赛者可能会故意低估一定程度。
 - en: For example, if they guess that the value of the showcase is \\(40,000, they
     might bid \\\)36,000 to avoid going over.
   id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，如果他们猜测Showcase的价值是\\(40,000，他们可能出价\\)36,000以避免超支。
 - en: It looks like these distributions are well modeled by a normal distribution,
     so we can summarize them with their mean and standard deviation.
   id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: 看起来这些分布很好地符合正态分布，所以我们可以用它们的均值和标准差来总结它们。
 - en: For example, here is the mean and standard deviation of `Diff` for Player 1.
   id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，这是Player 1的`Diff`的均值和标准差。
 - en: '[PRE14]'
   id: totrans-72
   prefs: []
@@ -371,10 +441,12 @@
   id: totrans-74
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以使用这些差异来建模参赛者的误差分布。这一步有点棘手，因为我们实际上并不知道参赛者的猜测；我们只知道他们的出价。
 - en: 'So we have to make some assumptions:'
   id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: 所以我们必须做一些假设：
 - en: I’ll assume that contestants underbid because they are being strategic, and
     that on average their guesses are accurate. In other words, the mean of their
     errors is 0.
@@ -382,6 +454,7 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 我假设参赛者之所以低估是因为他们在策略上，平均而言，他们的猜测是准确的。换句话说，他们的误差的均值是0。
 - en: But I’ll assume that the spread of the differences reflects the actual spread
     of their errors. So, I’ll use the standard deviation of the differences as the
     standard deviation of their errors.
@@ -951,6 +1024,7 @@
   id: totrans-175
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是基于25,000美元出价和后验分布`posterior1`的玩家1获胜的概率。
 - en: '[PRE57]'
   id: totrans-176
   prefs: []
@@ -966,6 +1040,7 @@
   id: totrans-178
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以循环遍历一系列可能的出价，并计算每个出价的获胜概率。
 - en: '[PRE59]'
   id: totrans-179
   prefs: []
@@ -975,19 +1050,24 @@
   id: totrans-180
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些是结果。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
   id: totrans-181
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE60]</details> ![_images/a118051eb20c1b1e1fa32532dac88b183989c32465dd2c54b09fee90ac644590.png](../Images/5468adc006e73cd0ec8165b8c8422cf2.png)'
   id: totrans-182
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE60]</details> ![_images/a118051eb20c1b1e1fa32532dac88b183989c32465dd2c54b09fee90ac644590.png](../Images/5468adc006e73cd0ec8165b8c8422cf2.png)'
 - en: And here’s the bid that maximizes Player 1’s chance of winning.
   id: totrans-183
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是最大化玩家1获胜机会的出价。
 - en: '[PRE61]'
   id: totrans-184
   prefs: []
@@ -1014,20 +1094,26 @@
   id: totrans-188
   prefs: []
   type: TYPE_NORMAL
+  zh: 回想一下，你的猜测是\\(23,000。使用你的猜测来计算后验分布，后验均值约为\\)26,000。但是最大化获胜机会的出价是21,000美元。
 - en: '**Exercise:** Do the same analysis for Player 2.'
   id: totrans-189
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**对玩家2进行相同的分析。'
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-190
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE65]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-191
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE65]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE66]'
   id: totrans-192
   prefs: []
@@ -1039,6 +1125,9 @@
   id: totrans-193
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/c0a1356834ee3205a1df9657db18fef0a9c80ffdd65b4072b09881b624a09e95.png](../Images/389b2238e8f72065bd674acbfd491767.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE67]'
   id: totrans-194
   prefs: []
@@ -1049,6 +1138,8 @@
   id: totrans-195
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE68]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE69]'
   id: totrans-196
   prefs: []
@@ -1058,16 +1149,19 @@
   id: totrans-197
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE70]</details>'
 - en: Maximizing Expected Gain
   id: totrans-198
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 最大化预期收益
 - en: In the previous section we computed the bid that maximizes your chance of winning.
     And if that’s your goal, the bid we computed is optimal.
   id: totrans-199
   prefs: []
   type: TYPE_NORMAL
+  zh: 在前一节中，我们计算了最大化获胜机会的出价。如果这是你的目标，我们计算的出价是最佳的。
 - en: 'But winning isn’t everything. Remember that if your bid is off by \$250 or
     less, you win both showcases. So it might be a good idea to increase your bid
     a little: it increases the chance you overbid and lose, but it also increases
@@ -1075,12 +1169,14 @@
   id: totrans-200
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是获胜并不是一切。请记住，如果你的出价高出250美元或更少，你将赢得两个展示。因此，增加一点出价可能是个好主意：这会增加你超出出价并输掉的机会，但也会增加赢得两个展示的机会。
 - en: Let’s see how that works out. The following function computes how much you will
     win, on average, given your bid, the actual price, and a sample of errors for
     your opponent.
   id: totrans-201
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们看看结果如何。以下函数计算了平均而言，根据你的出价、实际价格和对手的误差样本，你将赢得多少。
 - en: '[PRE71]'
   id: totrans-202
   prefs: []
@@ -1092,6 +1188,7 @@
   id: totrans-203
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，如果实际价格是\\(35000，你出价\\)30000，平均而言你将赢得约23,600美元的奖品，考虑到你输掉的概率、赢得一个展示或赢得两个展示。
 - en: '[PRE72]'
   id: totrans-204
   prefs: []
@@ -1109,11 +1206,13 @@
   id: totrans-206
   prefs: []
   type: TYPE_NORMAL
+  zh: 实际上，我们不知道实际价格，但我们有一个代表我们对其了解的后验分布。通过对后验分布中的价格和概率进行平均，我们可以计算特定出价的预期收益。
 - en: In this context, “expected” means the average over the possible showcase values,
     weighted by their probabilities.
   id: totrans-207
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这种情况下，“预期”意味着可能的展示价值的平均值，按其概率加权。
 - en: '[PRE74]'
   id: totrans-208
   prefs: []
@@ -1124,6 +1223,7 @@
   id: totrans-209
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于我们之前计算的后验，基于\\(23,000的猜测，出价\\)21,000的预期收益约为16,900美元。
 - en: '[PRE75]'
   id: totrans-210
   prefs: []
@@ -1138,11 +1238,13 @@
   id: totrans-212
   prefs: []
   type: TYPE_NORMAL
+  zh: 但我们能做得更好吗？
 - en: To find out, we can loop through a range of bids and find the one that maximizes
     expected gain.
   id: totrans-213
   prefs: []
   type: TYPE_NORMAL
+  zh: 要找出，我们可以循环遍历一系列出价，并找到最大化预期收益的出价。
 - en: '[PRE77]'
   id: totrans-214
   prefs: []
@@ -1152,19 +1254,24 @@
   id: totrans-215
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些是结果。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
   id: totrans-216
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE78]</details> ![_images/5af6f2ee1d12a94b053bbcda95332bfc6757bf389b2ebf6eb448cbc759aa423b.png](../Images/fd2870c0b0ddd8087fe670358dacba4d.png)'
   id: totrans-217
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE78]</details> ![_images/5af6f2ee1d12a94b053bbcda95332bfc6757bf389b2ebf6eb448cbc759aa423b.png](../Images/fd2870c0b0ddd8087fe670358dacba4d.png)'
 - en: Here is the optimal bid.
   id: totrans-218
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是最佳出价。
 - en: '[PRE79]'
   id: totrans-219
   prefs: []
@@ -1179,6 +1286,7 @@
   id: totrans-221
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用该出价，预期收益约为17,400美元。
 - en: '[PRE81]'
   id: totrans-222
   prefs: []
@@ -1194,20 +1302,26 @@
   id: totrans-224
   prefs: []
   type: TYPE_NORMAL
+  zh: 回想一下，你的初始猜测是\\(23,000。最大化获胜机会的出价是\\)21,000。最大化你的预期收益的出价是22,000美元。
 - en: '**Exercise:** Do the same analysis for Player 2.'
   id: totrans-225
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**对玩家2进行相同的分析。'
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-226
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE83]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-227
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE83]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE84]'
   id: totrans-228
   prefs: []
@@ -1219,6 +1333,8 @@
   id: totrans-229
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/fa3190e06341295c604af81707aff93d8ee047523308df3bba4a68565008857a.png](../Images/038f8ef198dbb66ad9477d8d0636264d.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>'
 - en: '[PRE85]'
   id: totrans-230
   prefs: []
@@ -1229,6 +1345,8 @@
   id: totrans-231
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE86]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容隐藏代码单元格内容</summary>'
 - en: '[PRE87]'
   id: totrans-232
   prefs: []
@@ -1238,33 +1356,39 @@
   id: totrans-233
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE88]</details>'
 - en: Summary
   id: totrans-234
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 摘要
 - en: 'There’s a lot going on this this chapter, so let’s review the steps:'
   id: totrans-235
   prefs: []
   type: TYPE_NORMAL
+  zh: 这一章节涉及的内容很多，让我们来回顾一下步骤：
 - en: First we used KDE and data from past shows to estimate prior distributions for
     the values of the showcases.
   id: totrans-236
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 首先，我们使用KDE和过去节目的数据来估计展示价值的先验分布。
 - en: Then we used bids from past shows to model the distribution of errors as a normal
     distribution.
   id: totrans-237
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 然后我们使用过去节目的出价来建模误差分布为正态分布。
 - en: We did a Bayesian update using the distribution of errors to compute the likelihood
     of the data.
   id: totrans-238
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 我们使用误差分布进行贝叶斯更新，计算数据的可能性。
 - en: We used the posterior distribution for the value of the showcase to compute
     the probability of winning for each possible bid, and identified the bid that
     maximizes the chance of winning.
@@ -1272,34 +1396,40 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 我们使用后验分布来计算每个可能出价的获胜概率，并确定最大化获胜机会的出价。
 - en: Finally, we used probability of winning to compute the expected gain for each
     possible bid, and identified the bid that maximizes expected gain.
   id: totrans-240
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 最后，我们使用获胜概率来计算每个可能出价的预期收益，并确定最大化预期收益的出价。
 - en: Incidentally, this example demonstrates the hazard of using the word “optimal”
     without specifying what you are optimizing. The bid that maximizes the chance
     of winning is not generally the same as the bid that maximizes expected gain.
   id: totrans-241
   prefs: []
   type: TYPE_NORMAL
+  zh: 顺便说一句，这个例子展示了在不指定优化目标的情况下使用“最佳”一词的危险。最大化获胜机会的出价通常与最大化预期收益的出价不同。
 - en: Discussion
   id: totrans-242
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 讨论
 - en: When people discuss the pros and cons of Bayesian estimation, as contrasted
     with classical methods sometimes called “frequentist”, they often claim that in
     many cases Bayesian methods and frequentist methods produce the same results.
   id: totrans-243
   prefs: []
   type: TYPE_NORMAL
+  zh: 当人们讨论贝叶斯估计的利弊时，与经典方法（有时称为“频率主义”）相对比，他们经常声称在许多情况下，贝叶斯方法和频率方法产生相同的结果。
 - en: 'In my opinion, this claim is mistaken because Bayesian and frequentist method
     produce different *kinds* of results:'
   id: totrans-244
   prefs: []
   type: TYPE_NORMAL
+  zh: 在我看来，这种说法是错误的，因为贝叶斯和频率方法产生不同的*结果*种类：
 - en: The result of frequentist methods is usually a single value that is considered
     to be the best estimate (by one of several criteria) or an interval that quantifies
     the precision of the estimate.
@@ -1307,24 +1437,28 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 频率方法的结果通常是一个被认为是最佳估计的单个值（根据几个标准之一），或者量化估计精度的区间。
 - en: The result of Bayesian methods is a posterior distribution that represents all
     possible outcomes and their probabilities.
   id: totrans-246
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 贝叶斯方法的结果是一个代表所有可能结果及其概率的后验分布。
 - en: Granted, you can use the posterior distribution to choose a “best” estimate
     or compute an interval. And in that case the result might be the same as the frequentist
     estimate.
   id: totrans-247
   prefs: []
   type: TYPE_NORMAL
+  zh: 可以肯定地说，你可以使用后验分布来选择“最佳”估计或计算一个区间。在这种情况下，结果可能与频率估计相同。
 - en: 'But doing so discards useful information and, in my opinion, eliminates the
     primary benefit of Bayesian methods: the posterior distribution is more useful
     than a single estimate, or even an interval.'
   id: totrans-248
   prefs: []
   type: TYPE_NORMAL
+  zh: 但这样做会丢弃有用的信息，并且在我看来，消除了贝叶斯方法的主要优点：后验分布比单个估计甚至区间更有用。
 - en: The example in this chapter demonstrates the point. Using the entire posterior
     distribution, we can compute the bid that maximizes the probability of winning,
     or the bid that maximizes expected gain, even if the rules for computing the gain
@@ -1332,22 +1466,26 @@
   id: totrans-249
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章的示例证明了这一点。使用整个后验分布，我们可以计算最大化获胜概率的出价，或者最大化预期收益的出价，即使计算收益的规则很复杂（且非线性）。
 - en: With a single estimate or an interval, we can’t do that, even if they are “optimal”
     in some sense. In general, frequentist estimation provides little guidance for
     decision-making.
   id: totrans-250
   prefs: []
   type: TYPE_NORMAL
+  zh: 通过单个估计或区间，我们无法做到这一点，即使它们在某种意义上是“最佳的”。一般来说，频率估计对决策提供的指导很少。
 - en: If you hear someone say that Bayesian and frequentist methods produce the same
     results, you can be confident that they don’t understand Bayesian methods.
   id: totrans-251
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你听到有人说贝叶斯和频率方法产生相同的结果，你可以确信他们不理解贝叶斯方法。
 - en: Exercises
   id: totrans-252
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 练习
 - en: '**Exercise:** When I worked in Cambridge, Massachusetts, I usually took the
     subway to South Station and then a commuter train home to Needham. Because the
     subway was unpredictable, I left the office early enough that I could wait up
@@ -1355,6 +1493,7 @@
   id: totrans-253
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**当我在马萨诸塞州剑桥工作时，我通常乘地铁到南站，然后乘通勤火车回Needham。由于地铁不可预测，我会提前离开办公室，这样我可以等待多达15分钟，然后还能赶上通勤火车。'
 - en: When I got to the subway stop, there were usually about 10 people waiting on
     the platform. If there were fewer than that, I figured I just missed a train,
     so I expected to wait a little longer than usual. And if there there more than
@@ -1362,18 +1501,21 @@
   id: totrans-254
   prefs: []
   type: TYPE_NORMAL
+  zh: 当我到达地铁站时，通常会有大约10个人在站台上等候。如果等待的人少于这个数字，我会认为我刚错过了一班火车，所以我预计会比平常等待更长时间。如果等待的人比这个数字多，我预计很快会有另一班火车。
 - en: But if there were a *lot* more than 10 passengers waiting, I inferred that something
     was wrong, and I expected a long wait. In that case, I might leave and take a
     taxi.
   id: totrans-255
   prefs: []
   type: TYPE_NORMAL
+  zh: 但如果等待的乘客*远远*多于10人，我推断出出了问题，我预计会等很长时间。在这种情况下，我可能会离开并乘坐出租车。
 - en: We can use Bayesian decision analysis to quantify the analysis I did intuitively.
     Given the number of passengers on the platform, how long should we expect to wait?
     And when should we give up and take a taxi?
   id: totrans-256
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用贝叶斯决策分析来量化我直觉上做的分析。考虑到站台上的乘客数量，我们应该期待等待多长时间？什么时候应该放弃，乘坐出租车？
 - en: My analysis of this problem is in `redline.ipynb`, which is in the repository
     for this book. [Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ThinkBayes2/blob/master/notebooks/redline.ipynb).
   id: totrans-257
@@ -1577,20 +1719,26 @@
   id: totrans-288
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE92]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE93]</details>'
   id: totrans-289
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE93]</details>'
 - en: 'To test these functions, suppose we get exactly 10 orders per week for eight
     weeks:'
   id: totrans-290
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了测试这些函数，假设我们每周确切地获得10个订单，持续8周：
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-291
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE94]'
   id: totrans-292
   prefs: []
@@ -1600,15 +1748,19 @@
   id: totrans-293
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE95]</details>'
 - en: If you print 60 books, your net profit is \$200, as in the example.
   id: totrans-294
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你打印60本书，你的净利润是200美元，就像例子中一样。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-295
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE96]'
   id: totrans-296
   prefs: []
@@ -1618,15 +1770,19 @@
   id: totrans-297
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE97]</details>'
 - en: If you print 100 books, your net profit is \$310.
   id: totrans-298
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你打印100本书，你的净利润是310美元。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-299
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE98]'
   id: totrans-300
   prefs: []
@@ -1636,6 +1792,7 @@
   id: totrans-301
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE99]</details>'
 - en: Of course, in the context of the problem you don’t know how many books will
     be ordered in any given week. You don’t even know the average rate of orders.
     However, given the data and some assumptions about the prior, you can compute
@@ -1643,21 +1800,26 @@
   id: totrans-302
   prefs: []
   type: TYPE_NORMAL
+  zh: 当然，在问题的背景下，你不知道每周会订购多少书。你甚至不知道订单的平均速率。但是，根据数据和对先验的一些假设，你可以计算订单速率的分布。
 - en: You’ll have a chance to do that, but to demonstrate the decision analysis part
     of the problem, I’ll start with the arbitrary assumption that order rates come
     from a gamma distribution with mean 9.
   id: totrans-303
   prefs: []
   type: TYPE_NORMAL
+  zh: 你将有机会这样做，但为了演示问题的决策分析部分，我将从一个任意的假设开始，即订单速率来自均值为9的伽马分布。
 - en: Here’s a `Pmf` that represents this distribution.
   id: totrans-304
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个代表这个分布的`Pmf`。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-305
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE100]'
   id: totrans-306
   prefs: []
@@ -1667,15 +1829,19 @@
   id: totrans-307
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE101]</details>'
 - en: 'And here’s what it looks like:'
   id: totrans-308
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是它的样子：
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-309
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE102]'
   id: totrans-310
   prefs: []
@@ -1685,27 +1851,33 @@
   id: totrans-311
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/f0c07feace81ea12a0bd72e74c54165fcf17f2031f3a2fcdd831a65ed6c36fea.png](../Images/895f1f7563ae339842c1238cfccd8c3a.png)</details>'
 - en: Now, we *could* generate a predictive distribution for the number of books ordered
     in a given week, but in this example we have to deal with a complicated cost function.
     In particular, `out_of_stock_cost` depends on the sequence of orders.
   id: totrans-312
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，我们*可以*生成给定周内订购书籍数量的预测分布，但在这个例子中，我们必须处理一个复杂的成本函数。特别是，`out_of_stock_cost`取决于订单的顺序。
 - en: So, rather than generate a predictive distribution, I suggest we run simulations.
     I’ll demonstrate the steps.
   id: totrans-313
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，我们建议不是生成预测分布，而是运行模拟。我将演示这些步骤。
 - en: First, from our hypothetical distribution of rates, we can draw a random sample
     of 1000 values.
   id: totrans-314
   prefs: []
   type: TYPE_NORMAL
+  zh: 首先，从我们的假设速率分布中，我们可以随机抽取1000个值。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-315
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE103]'
   id: totrans-316
   prefs: []
@@ -1715,15 +1887,19 @@
   id: totrans-317
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE104]</details>'
 - en: For each possible rate, we can generate a sequence of 8 orders.
   id: totrans-318
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于每个可能的速率，我们可以生成一个8个订单的序列。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-319
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE105]'
   id: totrans-320
   prefs: []
@@ -1733,34 +1909,43 @@
   id: totrans-321
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE106]</details>'
 - en: Each row of this array is a hypothetical sequence of orders based on a different
     hypothetical order rate.
   id: totrans-322
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个数组的每一行都是基于不同的假设订单速率的假设序列。
 - en: Now, if you tell me how many books you printed, I can compute your expected
     profits, averaged over these 1000 possible sequences.
   id: totrans-323
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，如果你告诉我你打印了多少书，我可以计算你的预期利润，平均分布在这1000个可能的序列上。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-324
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE107]</details>'
   id: totrans-325
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE107]</details>'
 - en: For example, here are the expected profits if you order 70, 80, or 90 books.
   id: totrans-326
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，如果你订购70、80或90本书，这是预期利润。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-327
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE108]'
   id: totrans-328
   prefs: []
@@ -1771,6 +1956,8 @@
   id: totrans-329
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE109]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE110]'
   id: totrans-330
   prefs: []
@@ -1781,6 +1968,8 @@
   id: totrans-331
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE111]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE112]'
   id: totrans-332
   prefs: []
@@ -1790,21 +1979,27 @@
   id: totrans-333
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE113]</details>'
 - en: Now, let’s sweep through a range of values and compute expected profits as a
     function of the number of books you print.
   id: totrans-334
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，让我们扫描一系列值，并计算预期利润作为你打印的书籍数量的函数。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-335
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE114]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-336
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE114]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE115]'
   id: totrans-337
   prefs: []
@@ -1814,15 +2009,19 @@
   id: totrans-338
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/e7bd0c699b0f0d5d3def4bba11e16b0b0f888bb38e04107ae33456cb2593b744.png](../Images/56763189d6ade009952f80fd45745b8a.png)</details>'
 - en: Here is the optimal order and the expected profit.
   id: totrans-339
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是最佳顺序和预期利润。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-340
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE116]'
   id: totrans-341
   prefs: []
@@ -1832,17 +2031,21 @@
   id: totrans-342
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE117]</details>'
 - en: Now it’s your turn. Choose a prior that you think is reasonable, update it with
     the data you are given, and then use the posterior distribution to do the analysis
     I just demonstrated.
   id: totrans-343
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在轮到你了。选择一个你认为合理的先验，用你得到的数据更新它，然后使用后验分布来进行我刚刚演示的分析。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-344
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE118]'
   id: totrans-345
   prefs: []
@@ -1853,6 +2056,8 @@
   id: totrans-346
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE119]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE120]'
   id: totrans-347
   prefs: []
@@ -1864,21 +2069,30 @@
   id: totrans-348
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/a6338a1a0893a7144417ca17ebf2bc03705a6c0f0dc14683682fd835e33ee33f.png](../Images/ad7464144586cf985b0b21156b164db3.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE121]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-349
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE121]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE122]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-350
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE122]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE123]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-351
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE123]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE124]'
   id: totrans-352
   prefs: []
@@ -1889,6 +2103,8 @@
   id: totrans-353
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE125]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE126]'
   id: totrans-354
   prefs: []
@@ -1899,6 +2115,8 @@
   id: totrans-355
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE127]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE128]'
   id: totrans-356
   prefs: []
@@ -1909,11 +2127,15 @@
   id: totrans-357
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE129]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE130]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-358
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE130]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE131]'
   id: totrans-359
   prefs: []
@@ -1925,6 +2147,9 @@
   id: totrans-360
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/f6e8f3aba82c7dc42ab819db153489febe30bd949e0bc8eb661d66f90388cf3a.png](../Images/9a8222c213f96336bc0694b34e3b8deb.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE132]'
   id: totrans-361
   prefs: []
@@ -1934,3 +2159,4 @@
   id: totrans-362
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE133]</details>'
