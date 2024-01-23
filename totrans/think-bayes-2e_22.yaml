@@ -1505,6 +1505,7 @@
   id: totrans-254
   prefs: []
   type: TYPE_NORMAL
+  zh: 看起来GDP与幸福（或满意度）之间的关联最为密切，其次是社会支持、预期寿命和自由。
 - en: After controlling for those other factors, the parameters of the other factors
     are substantially smaller, and since the CI for generosity includes 0, it is plausible
     that generosity is not substantially related to happiness, at least as they were
@@ -1512,26 +1513,31 @@
   id: totrans-255
   prefs: []
   type: TYPE_NORMAL
+  zh: 在控制了其他因素之后，其他因素的参数显著较小，由于慷慨的置信区间包括0，可以认为慷慨与幸福没有显著相关，至少在这项研究中是这样测量的。
 - en: This example demonstrates the power of MCMC to handle models with more than
     a few parameters. But it does not really demonstrate the power of Bayesian regression.
   id: totrans-256
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个例子展示了MCMC处理具有多个参数的模型的能力。但它并没有真正展示贝叶斯回归的能力。
 - en: If the goal of a regression model is to estimate parameters, there is no great
     advantage to Bayesian regression compared to conventional least squares regression.
   id: totrans-257
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果回归模型的目标是估计参数，与传统的最小二乘回归相比，贝叶斯回归并没有太大的优势。
 - en: Bayesian methods are more useful if we plan to use the posterior distribution
     of the parameters as part of a decision analysis process.
   id: totrans-258
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们计划将参数的后验分布作为决策分析过程的一部分使用，贝叶斯方法将更有用。
 - en: Summary
   id: totrans-259
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 总结
 - en: 'In this chapter we used PyMC3 to implement two models we’ve seen before: a
     Poisson model of goal-scoring in soccer and a simple regression model. Then we
     implemented a multiple regression model that would not have been possible to compute
@@ -1539,10 +1545,12 @@
   id: totrans-260
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本章中，我们使用PyMC3实现了我们之前见过的两个模型：足球进球的泊松模型和简单的回归模型。然后我们实现了一个多元回归模型，这是使用网格近似计算不可能的。
 - en: 'MCMC is more powerful than grid methods, but that power comes with some disadvantages:'
   id: totrans-261
   prefs: []
   type: TYPE_NORMAL
+  zh: MCMC比网格方法更强大，但这种力量也伴随着一些缺点：
 - en: MCMC algorithms are fiddly. The same model might behave well with some priors
     and less well with others. And the sampling process often produces warnings about
     tuning steps, divergences, “r-hat statistics”, acceptance rates, and effective
@@ -1551,6 +1559,7 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: MCMC算法很棘手。同一个模型可能对一些先验表现良好，对其他先验表现不佳。采样过程通常会产生有关调整步骤、发散、“r-hat统计”、接受率和有效样本的警告。诊断和纠正这些问题需要一些专业知识。
 - en: I find it easier to develop models incrementally using grid algorithms, checking
     intermediate results along the way. With PyMC3, it is not as easy to be confident
     that you have specified a model correctly.
@@ -1558,6 +1567,7 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 我发现使用网格算法逐步开发模型，并在途中检查中间结果更容易。使用PyMC3，很难确信您已正确指定了模型。
 - en: For these reasons, I recommend a model development process that starts with
     grid algorithms and resorts to MCMC if necessary. As we saw in the previous chapters,
     you can solve a lot of real-world problems with grid methods. But when you need
@@ -1566,37 +1576,45 @@
   id: totrans-264
   prefs: []
   type: TYPE_NORMAL
+  zh: 出于这些原因，我建议从网格算法开始的模型开发过程，并在必要时使用MCMC。正如我们在前几章中看到的，您可以使用网格方法解决许多现实世界的问题。但是当您需要MCMC时，有一个网格算法进行比较是有用的（即使它是基于一个更简单的模型）。
 - en: All of the models in this book can be implemented in PyMC3, but some of them
     are easier to translate than others. In the exercises, you will have a chance
     to practice.
   id: totrans-265
   prefs: []
   type: TYPE_NORMAL
+  zh: 本书中的所有模型都可以在PyMC3中实现，但其中一些比其他模型更容易转换。在练习中，您将有机会进行练习。
 - en: Exercises
   id: totrans-266
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 练习
 - en: '**Exercise:** As a warmup, let’s use PyMC3 to solve the Euro problem. Suppose
     we spin a coin 250 times and it comes up heads 140 times. What is the posterior
     distribution of \(x\), the probability of heads?'
   id: totrans-267
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** 作为热身，让我们使用PyMC3来解决欧元问题。假设我们抛硬币250次，有140次是正面。\(x\)的后验分布是多少，即正面的概率？'
 - en: For the prior, use a beta distribution with parameters \(\alpha=1\) and \(\beta=1\).
   id: totrans-268
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于先验，使用参数\(\alpha=1\)和\(\beta=1\)的贝塔分布。
 - en: See [the PyMC3 documentation](https://docs.pymc.io/api/distributions/continuous.html)
     for the list of continuous distributions.
   id: totrans-269
   prefs: []
   type: TYPE_NORMAL
+  zh: 参见[PyMC3文档](https://docs.pymc.io/api/distributions/continuous.html)以获取连续分布列表。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-270
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE76]'
   id: totrans-271
   prefs: []
@@ -1612,6 +1630,8 @@
   id: totrans-273
   prefs: []
   type: TYPE_NORMAL
+  zh: '<progress value="3000" class="" max="3000" style="width:300px; height:20px;
+    vertical-align: middle;">100.00% [3000/3000 00:00<00:00 Sampling 2 chains, 0 divergences]</progress>'
 - en: '[PRE78]'
   id: totrans-274
   prefs: []
@@ -1621,40 +1641,48 @@
   id: totrans-275
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/9aceeffa47605e83ecf31ae37b480a41d897024e249e5e6400cf268e5aeecd95.png](../Images/76c133082854e9fd2a774b69a9a190a4.png)</details>'
 - en: '**Exercise:** Now let’s use PyMC3 to replicate the solution to the Grizzly
     Bear problem in <<_TheGrizzlyBearProblem>>, which is based on the hypergeometric
     distribution.'
   id: totrans-276
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** 现在让我们使用PyMC3复制<<_TheGrizzlyBearProblem>>中的灰熊问题的解决方案，该问题基于超几何分布。'
 - en: I’ll present the problem with slightly different notation, to make it consistent
     with PyMC3.
   id: totrans-277
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将以略有不同的符号提出问题，以使其与PyMC3保持一致。
 - en: Suppose that during the first session, `k=23` bears are tagged. During the second
     session, `n=19` bears are identified, of which `x=4` had been tagged.
   id: totrans-278
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设在第一次会话期间，有`k=23`只熊被标记。在第二次会话期间，有`n=19`只熊被识别，其中`x=4`只被标记。
 - en: Estimate the posterior distribution of `N`, the number of bears in the environment.
   id: totrans-279
   prefs: []
   type: TYPE_NORMAL
+  zh: 估计环境中熊的数量`N`的后验分布。
 - en: For the prior, use a discrete uniform distribution from 50 to 500.
   id: totrans-280
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于先验，使用从50到500的离散均匀分布。
 - en: See [the PyMC3 documentation](https://docs.pymc.io/api/distributions/discrete.html)
     for the list of discrete distributions.
   id: totrans-281
   prefs: []
   type: TYPE_NORMAL
+  zh: 参见[PyMC3文档](https://docs.pymc.io/api/distributions/discrete.html)以获取离散分布列表。
 - en: 'Note: `HyperGeometric` was added to PyMC3 after version 3.8, so you might need
     to update your installation to do this exercise.'
   id: totrans-282
   prefs: []
   type: TYPE_NORMAL
+  zh: 注意：`HyperGeometric`在版本3.8之后添加到PyMC3中，因此您可能需要更新您的安装来完成这个练习。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-283
