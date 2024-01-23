@@ -137,11 +137,13 @@
   id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果您已经安装了Python和Jupyter，您可以[将笔记本作为Zip文件下载](https://github.com/AllenDowney/ThinkBayes2/raw/master/ThinkBayes2Notebooks.zip)。
 - en: Installing Jupyter
   id: totrans-24
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 安装Jupyter
 - en: If you don’t have Python and Jupyter already, I recommend you install Anaconda,
     which is a free Python distribution that includes all the packages you’ll need.
     I found Anaconda easy to install. By default it installs files in your home directory,
@@ -150,17 +152,20 @@
   id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果您尚未安装Python和Jupyter，我建议您安装Anaconda，这是一个免费的Python发行版，包含了您所需的所有包。我发现Anaconda很容易安装。默认情况下，它会在您的主目录中安装文件，因此您不需要管理员权限。您可以从[此网站](https://www.anaconda.com/products/individual)下载Anaconda。
 - en: Anaconda includes most of the packages you need to run the code in this book.
     But there are a few additional packages you need to install.
   id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: Anaconda包括大部分您在本书中运行代码所需的包。但是还有一些额外的包需要安装。
 - en: To make sure you have everything you need (and the right versions), the best
     option is to create a Conda environment. [Download this Conda environment file](https://github.com/AllenDowney/ThinkBayes2/raw/master/environment.yml)
     and run the following commands to create and activate an environment called `ThinkBayes2.`
   id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了确保您拥有所需的一切（以及正确的版本），最好的选择是创建一个Conda环境。[下载此Conda环境文件](https://github.com/AllenDowney/ThinkBayes2/raw/master/environment.yml)，并运行以下命令来创建和激活一个名为`ThinkBayes2`的环境。
 - en: '[PRE0]'
   id: totrans-28
   prefs: []
@@ -171,6 +176,7 @@
   id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果您不想专门为这本书创建一个环境，您可以使用Conda安装所需的内容。以下命令应该可以获取您所需的一切：
 - en: '[PRE1]'
   id: totrans-30
   prefs: []
@@ -180,37 +186,44 @@
   id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果您不想使用Anaconda，您将需要以下包：
 - en: Jupyter to run the notebooks, [https://jupyter.org/](https://jupyter.org/);
   id: totrans-32
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 用于运行笔记本的Jupyter，[https://jupyter.org/](https://jupyter.org/)；
 - en: NumPy for basic numerical computation, [https://www.numpy.org/](https://www.numpy.org/);
   id: totrans-33
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 用于基本数值计算的NumPy，[https://www.numpy.org/](https://www.numpy.org/)；
 - en: SciPy for scientific computation, [https://www.scipy.org/](https://www.scipy.org/);
   id: totrans-34
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 用于科学计算的SciPy，[https://www.scipy.org/](https://www.scipy.org/)；
 - en: Pandas for working with data, [https://pandas.pydata.org/](https://pandas.pydata.org/);
   id: totrans-35
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 用于处理数据的Pandas，[https://pandas.pydata.org/](https://pandas.pydata.org/)；
 - en: matplotlib for visualization, [https://matplotlib.org/](https://matplotlib.org/);
   id: totrans-36
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 用于可视化的matplotlib，[https://matplotlib.org/](https://matplotlib.org/)；
 - en: empiricaldist for representing distributions, [https://pypi.org/project/empiricaldist/](https://pypi.org/project/empiricaldist/).
     .
   id: totrans-37
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 用于表示分布的empiricaldist，[https://pypi.org/project/empiricaldist/](https://pypi.org/project/empiricaldist/)。
 - en: Although these are commonly used packages, they are not included with all Python
     installations, and they can be hard to install in some environments. If you have
     trouble installing them, I recommend using Anaconda or one of the other Python
@@ -218,23 +231,27 @@
   id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 尽管这些是常用的包，但并非所有Python安装都包含它们，并且在某些环境中安装它们可能很困难。如果您在安装时遇到问题，我建议使用Anaconda或其他包含这些包的Python发行版。
 - en: Contributor List
   id: totrans-39
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 贡献者名单
 - en: If you have a suggestion or correction, please send email to *[downey@allendowney.com](mailto:downey%40allendowney.com)*.
     If I make a change based on your feedback, I will add you to the contributor list
     (unless you ask to be omitted).
   id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果您有建议或更正，请发送电子邮件至*[downey@allendowney.com](mailto:downey%40allendowney.com)*。如果我根据您的反馈进行更改，我将把您加入贡献者名单（除非您要求省略）。
 - en: If you include at least part of the sentence the error appears in, that makes
     it easy for me to search. Page and section numbers are fine, too, but not as easy
     to work with. Thanks!
   id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果您至少包括错误出现的部分句子，那对我来说很容易搜索。页码和章节号也可以，但不太容易处理。谢谢！
 - en: First, I have to acknowledge David MacKay’s excellent book, *Information Theory,
     Inference, and Learning Algorithms*, which is where I first came to understand
     Bayesian methods. With his permission, I use several problems from his book as
@@ -243,18 +260,21 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 首先，我必须感谢David MacKay的优秀著作《信息论、推断和学习算法》，这是我第一次了解贝叶斯方法的地方。在他的许可下，我使用了他书中的一些问题作为例子。
 - en: Several examples and exercises in the second edition are borrowed, with permission,
     from Cameron Davidson-Pilon and one exercise from Rasmus Bååth.
   id: totrans-43
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 第二版中的一些示例和练习是从Cameron Davidson-Pilon那里借用的，并得到了许可。
 - en: This book also benefited from my interactions with Sanjoy Mahajan, especially
     in Fall 2012, when I audited his class on Bayesian Inference at Olin College.
   id: totrans-44
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 这本书还受益于我与Sanjoy Mahajan的互动，特别是在2012年秋季，当时我在Olin College参加了他的贝叶斯推断课程。
 - en: Many examples in this book were developed in collaboration with students in
     my Bayesian Statistics classes at Olin College. In particular, the Red Line example
     started as a class project by Brendan Ritter and Kai Austin.
@@ -262,28 +282,34 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 本书中的许多示例是与我在Olin College的贝叶斯统计课程中的学生合作开发的。特别是，Red Line示例最初是由Brendan Ritter和Kai
+    Austin作为一个课程项目开始的。
 - en: I wrote parts of this book during project nights with the Boston Python User
     Group, so I would like to thank them for their company and pizza.
   id: totrans-46
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 我在波士顿Python用户组的项目夜间写了这本书的部分内容，所以我要感谢他们的陪伴和披萨。
 - en: Jasmine Kwityn and Dan Fauxsmith at O’Reilly Media proofread the first edition
     and found many opportunities for improvement.
   id: totrans-47
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: Jasmine Kwityn和Dan Fauxsmith在O’Reilly Media审校了第一版，并发现了许多改进的机会。
 - en: Linda Pescatore found a typo and made some helpful suggestions.
   id: totrans-48
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: Linda Pescatore发现了一个错别字并提出了一些建议。
 - en: Tomasz Miasko sent many excellent corrections and suggestions.
   id: totrans-49
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: Tomasz Miasko提出了许多出色的更正和建议。
 - en: For the second edition, I want to thank Michele Cronin and Kristen Brown at
     O’Reilly Media and the technical reviewers Ravin Kumar, Thomas Nield, Josh Starmer,
     and Junpeng Lao.
@@ -291,6 +317,8 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 对于第二版，我要感谢O’Reilly Media的Michele Cronin和Kristen Brown以及技术审阅员Ravin Kumar、Thomas
+    Nield、Josh Starmer和Junpeng Lao。
 - en: I am grateful to the developers and contributors of the software libraries this
     book is based on, especially Jupyter, NumPy, SciPy, Pandas, PyMC, ArviZ, and Matplotlib.
   id: totrans-51
