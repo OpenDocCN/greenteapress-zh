@@ -501,12 +501,14 @@
   id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了测试`NormalProbability`，我生成了一些假样本，实际上是从具有不同参数的正态分布中抽取的。图5.5显示了结果。这些线大致是直的，尾部的值偏离程度比接近均值的值更大。
 - en: Now let’s try it with real data. Here’s code to generate a normal probability
     plot for the birth weight data from the previous section. It plots a gray line
     that represents the model and a blue line that represents the data.
   id: totrans-81
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们用真实数据来试试。下面是用于生成前一节中出生体重数据的正态概率图的代码。它绘制了代表模型的灰线和代表数据的蓝线。
 - en: '[PRE5]'
   id: totrans-82
   prefs: []
@@ -517,23 +519,27 @@
   id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: '`weights`是一个pandas Series的出生体重；`mean`和`std`分别是均值和标准差。'
 - en: '`FitLine` takes a sequence of `xs`, an intercept, and a slope; it returns `fxs`
     and `fys` that represent a line with the given parameters, evaluated at the values
     in `xs`.'
   id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: '`FitLine`接受一系列`xs`、一个截距和一个斜率；它返回`fxs`和`fys`，表示具有给定参数的线，在`xs`的值处进行评估。'
 - en: '`NormalProbability` returns `xs` and `ys` that contain values from the standard
     normal distribution and values from `weights`. If the distribution of weights
     is normal, the data should match the model.'
   id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: '`NormalProbability`返回包含标准正态分布值和`weights`值的`xs`和`ys`。如果体重的分布是正态的，数据应该与模型匹配。'
 - en: '* * *'
   id: totrans-86
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
   id: totrans-87
   prefs:
@@ -544,6 +550,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/28feaf05f70cf87a3dfe8f06180ddf9d.png)'
 - en: ''
   id: totrans-89
   prefs:
@@ -554,6 +561,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_TB
+  zh: '| 图5.6：出生体重的正态概率图。 |'
 - en: ''
   id: totrans-91
   prefs:
@@ -564,6 +572,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: Figure [5.6](#analytic_birthwgt_normal) shows the results for all live births,
     and also for full term births (pregnancy length greater than 36 weeks). Both curves
     match the model near the mean and deviate in the tails. The heaviest babies are
@@ -571,32 +580,38 @@
   id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: 图5.6显示了所有活产儿和足月产儿（怀孕超过36周）的结果。两条曲线在均值附近与模型匹配，并在尾部偏离。最重的婴儿比模型预期的更重，最轻的婴儿更轻。
 - en: When we select only full term births, we remove some of the lightest weights,
     which reduces the discrepancy in the lower tail of the distribution.
   id: totrans-94
   prefs: []
   type: TYPE_NORMAL
+  zh: 当我们只选择足月出生时，我们排除了一些最轻的体重，这减少了分布的尾部差异。
 - en: This plot suggests that the normal model describes the distribution well within
     a few standard deviations from the mean, but not in the tails. Whether it is good
     enough for practical purposes depends on the purposes.
   id: totrans-95
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个图表表明，正态模型在距离均值几个标准差的范围内很好地描述了分布，但在尾部不太好。它是否足够好用于实际目的取决于目的。
 - en: 5.4  The lognormal distribution
   id: totrans-96
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 5.4 对数正态分布
 - en: If the logarithms of a set of values have a normal distribution, the values
     have a lognormal distribution. The CDF of the lognormal distribution is the same
     as the CDF of the normal distribution, with logx substituted for x.
   id: totrans-97
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果一组值的对数具有正态分布，那么这些值就具有对数正态分布。对数正态分布的CDF与正态分布的CDF相同，只是用logx代替x。
 - en: '| CDF[lognormal](x) = CDF[normal](logx) |'
   id: totrans-98
   prefs: []
   type: TYPE_TB
+  zh: '| CDF[lognormal](x) = CDF[normal](logx) |'
 - en: The parameters of the lognormal distribution are usually denoted µ and σ. But
     remember that these parameters are *not* the mean and standard deviation; the
     mean of a lognormal distribution is exp(µ +σ²/2) and the standard deviation is
@@ -604,11 +619,13 @@
   id: totrans-99
   prefs: []
   type: TYPE_NORMAL
+  zh: 对数正态分布的参数通常用µ和σ表示。但要记住，这些参数*不是*均值和标准差；对数正态分布的均值是exp(µ +σ²/2)，标准差很复杂（参见[http://wikipedia.org/wiki/Log-normal_distribution](http://wikipedia.org/wiki/Log-normal_distribution)）。
 - en: '* * *'
   id: totrans-100
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
   id: totrans-101
   prefs:
@@ -619,6 +636,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/fabbcf82db90a3bd3f8ef108aa7836ef.png)'
 - en: ''
   id: totrans-103
   prefs:
@@ -630,6 +648,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_TB
+  zh: '| 图5.7：成年体重的CDF（左）；对数成年体重的CDF（右）。 |'
 - en: ''
   id: totrans-105
   prefs:
@@ -640,6 +659,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: If a sample is approximately lognormal and you plot the CDF of its logarithms,
     the result will have the characteristic shape of a normal distribution. To test
     how well the sample fits a lognormal model, you can make a normal probability
@@ -647,11 +667,13 @@
   id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果一个样本大致是对数正态的，并且你绘制其对数的CDF，结果将具有正态分布的特征形状。为了测试样本与对数正态模型的匹配程度，可以使用样本中值的对数制作正态概率图。
 - en: As an example, let’s look at the distribution of adult weights, which is approximately
     lognormal.^([2](#note2))
   id: totrans-108
   prefs: []
   type: TYPE_NORMAL
+  zh: 举个例子，让我们看一下成年人体重的分布，它大致是对数正态的。
 - en: The National Center for Chronic Disease Prevention and Health Promotion conducts
     an annual survey as part of the Behavioral Risk Factor Surveillance System (BRFSS).^([3](#note3))
     In 2008, they interviewed 414,509 respondents and asked about their demographics,
@@ -660,17 +682,20 @@
   id: totrans-109
   prefs: []
   type: TYPE_NORMAL
+  zh: 国家慢性疾病预防和健康促进中心作为行为风险因素监测系统（BRFSS）的一部分，进行了一项年度调查。在2008年，他们采访了414,509名受访者，并询问了他们的人口统计信息、健康状况和健康风险。他们收集的数据包括398,484名受访者的体重（以千克为单位）。
 - en: The repository for this book contains `CDBRFS08.ASC.gz`, a fixed-width ASCII
     file that contains data from the BRFSS, and `brfss.py`, which reads the file and
     analyzes the data.
   id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: 本书的存储库包含`CDBRFS08.ASC.gz`，这是一个固定宽度的ASCII文件，包含了BRFSS的数据，以及`brfss.py`，它可以读取文件并分析数据。
 - en: '* * *'
   id: totrans-111
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
   id: totrans-112
   prefs:
@@ -681,6 +706,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/50957af740795a75877b0522e4657b69.png)'
 - en: ''
   id: totrans-114
   prefs:
@@ -692,6 +718,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_TB
+  zh: '| 图5.8：成年体重的正态概率图（左）和对数比例尺（右）。 |'
 - en: ''
   id: totrans-116
   prefs:
@@ -702,6 +729,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: Figure [5.7](#brfss_weight) (left) shows the distribution of adult weights on
     a linear scale with a normal model. Figure[5.7](#brfss_weight) (right) shows the
     same distribution on a log scale with a lognormal model. The lognormal model is

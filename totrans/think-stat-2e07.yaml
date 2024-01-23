@@ -1,172 +1,223 @@
 - en: Chapter 6  Probability density functions
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
 - en: 原文：[https://greenteapress.com/thinkstats2/html/thinkstats2007.html](https://greenteapress.com/thinkstats2/html/thinkstats2007.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: The code for this chapter is in `density.py`. For information about downloading
     and working with this code, see Section [0.2](thinkstats2001.html#code).
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
 - en: 6.1  PDFs
+  id: totrans-3
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: The derivative of a CDF is called a probability density function, or PDF. For
     example, the PDF of an exponential distribution is
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
 - en: '| PDF[expo](x) = λ e^(−λ x)    |'
+  id: totrans-5
   prefs: []
   type: TYPE_TB
 - en: The PDF of a normal distribution is
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
 - en: '| PDF[normal](x) =  |'
+  id: totrans-7
   prefs: []
   type: TYPE_TB
 - en: '&#124; 1 &#124;'
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124;  &#124;'
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124;'
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124; σ  &#124; √ &#124;'
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124;  &#124;'
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124; 2 π &#124;'
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124;'
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124;'
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
 - en: '| exp | ⎡ ⎢'
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
 - en: ⎢
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
 - en: ⎢
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
 - en: ⎢
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
 - en: ⎢
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
 - en: ⎣ | − |
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124; 1 &#124;'
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124;  &#124;'
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124; 2 &#124;'
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
 - en: '|  | ⎛ ⎜'
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
 - en: ⎜
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
 - en: ⎝ |
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124; x − µ &#124;'
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124;  &#124;'
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124; σ &#124;'
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
 - en: '|   | ⎞ ⎟'
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
 - en: ⎟
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
 - en: ⎠ |
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124; 2 &#124;'
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124;    &#124;'
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
 - en: '&#124;   &#124;'
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
 - en: '|   | ⎤ ⎥'
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
 - en: ⎥
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
 - en: ⎥
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
 - en: ⎥
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
 - en: ⎥
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
 - en: ⎦ |
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
 - en: Evaluating a PDF for a particular value of x is usually not useful. The result
     is not a probability; it is a probability *density*.
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
 - en: In physics, density is mass per unit of volume; in order to get a mass, you
     have to multiply by volume or, if the density is not constant, you have to integrate
     over volume.
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
 - en: Similarly, probability density measures probability per unit of x. In order
     to get a probability mass, you have to integrate over x.
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
 - en: '`thinkstats2` provides a class called Pdf that represents a probability density
     function. Every Pdf object provides the following methods:'
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
 - en: '`Density`, which takes a value, `x`, and returns the density of the distribution
     at `x`.'
+  id: totrans-47
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: '`Render`, which evaluates the density at a discrete set of values and returns
     a pair of sequences: the sorted values, `xs`, and their probability densities,
     `ds`.'
+  id: totrans-48
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: '`MakePmf`, which evaluates `Density` at a discrete set of values and returns
     a normalized Pmf that approximates the Pdf.'
+  id: totrans-49
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: '`GetLinspace`, which returns the default set of points used by `Render` and
     `MakePmf`.'
+  id: totrans-50
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -174,588 +225,836 @@
     that is, you cannot create a Pdf object. Instead, you should define a child class
     that inherits from Pdf and provides definitions of `Density` and `GetLinspace`.
     Pdf provides `Render` and `MakePmf`.
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
 - en: For example, `thinkstats2` provides a class named `NormalPdf` that evaluates
     the normal density function.
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE0]'
+  id: totrans-53
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: The NormalPdf object contains the parameters `mu` and `sigma`. `Density` uses
     `scipy.stats.norm`, which is an object that represents a normal distribution and
     provides `cdf` and `pdf`, among other methods (see Section [5.2](thinkstats2006.html#normal)).
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
 - en: The following example creates a NormalPdf with the mean and variance of adult
     female heights, in cm, from the BRFSS (see Section [5.4](thinkstats2006.html#brfss)).
     Then it computes the density of the distribution at a location one standard deviation
     from the mean.
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE1]'
+  id: totrans-56
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: 'The result is about 0.03, in units of probability mass per cm. Again, a probability
     density doesn’t mean much by itself. But if we plot the Pdf, we can see the shape
     of the distribution:'
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE2]'
+  id: totrans-58
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '`thinkplot.Pdf` plots the Pdf as a smooth function, as contrasted with `thinkplot.Pmf`,
     which renders a Pmf as a step function. Figure [6.1](#pdf_example) shows the result,
     as well as a PDF estimated from a sample, which we’ll compute in the next section.'
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
 - en: 'You can use `MakePmf` to approximate the Pdf:'
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE3]'
+  id: totrans-61
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: By default, the resulting Pmf contains 101 points equally spaced from `mu -
     3*sigma` to `mu + 3*sigma`. Optionally, `MakePmf` and `Render` can take keyword
     arguments `low`, `high`, and `n`.
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-63
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-64
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/6d2ce04600dea5b3a58ad2825c13cb2c.png)'
+  id: totrans-65
   prefs:
   - PREF_BQ
   type: TYPE_IMG
 - en: ''
+  id: totrans-66
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 6.1: A normal PDF that models adult female height in the U.S., and
     the kernel density estimate of a sample with n=500. |'
+  id: totrans-67
   prefs:
   - PREF_BQ
   type: TYPE_TB
 - en: ''
+  id: totrans-68
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-69
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: 6.2  Kernel density estimation
+  id: totrans-70
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: Kernel density estimation (KDE) is an algorithm that takes a sample and finds
     an appropriately smooth PDF that fits the data. You can read details at [http://en.wikipedia.org/wiki/Kernel_density_estimation](http://en.wikipedia.org/wiki/Kernel_density_estimation).
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
 - en: '`scipy` provides an implementation of KDE and `thinkstats2` provides a class
     called `EstimatedPdf` that uses it:'
+  id: totrans-72
   prefs: []
   type: TYPE_NORMAL
+  zh: '`scipy`提供了KDE的实现，`thinkstats2`提供了一个名为`EstimatedPdf`的类来使用它：'
 - en: '[PRE4]'
+  id: totrans-73
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '`__init__` takes a sample and computes a kernel density estimate. The result
     is a `gaussian_kde` object that provides an `evaluate` method.'
+  id: totrans-74
   prefs: []
   type: TYPE_NORMAL
+  zh: '`__init__`接受一个样本并计算核密度估计。结果是一个提供`evaluate`方法的`gaussian_kde`对象。'
 - en: '`Density` takes a value or sequence, calls `gaussian_kde.evaluate`, and returns
     the resulting density. The word “Gaussian” appears in the name because it uses
     a filter based on a Gaussian distribution to smooth the KDE.'
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: '`Density`接受一个值或序列，调用`gaussian_kde.evaluate`，并返回结果密度。名称中出现“高斯”一词是因为它使用基于高斯分布的滤波器来平滑KDE。'
 - en: 'Here’s an example that generates a sample from a normal distribution and then
     makes an EstimatedPdf to fit it:'
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个示例，它从正态分布生成一个样本，然后制作一个EstimatedPdf来适应它：
 - en: '[PRE5]'
+  id: totrans-77
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '`sample` is a list of 500 random heights. `sample_pdf` is a Pdf object that
     contains the estimated KDE of the sample.'
+  id: totrans-78
   prefs: []
   type: TYPE_NORMAL
+  zh: '`sample`是一个包含500个随机身高的列表。`sample_pdf`是一个包含样本的估计KDE的Pdf对象。'
 - en: Figure [6.1](#pdf_example) shows the normal density function and a KDE based
     on a sample of 500 random heights. The estimate is a good match for the original
     distribution.
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: 图[6.1](#pdf_example)显示了正态密度函数和基于500个随机身高样本的KDE。估计结果与原始分布非常匹配。
 - en: 'Estimating a density function with KDE is useful for several purposes:'
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用KDE估计密度函数对于几个目的都是有用的。
 - en: 'Visualization: During the exploration phase of a project, CDFs are usually
     the best visualization of a distribution. After you look at a CDF, you can decide
     whether an estimated PDF is an appropriate model of the distribution. If so, it
     can be a better choice for presenting the distribution to an audience that is
     unfamiliar with CDFs.'
+  id: totrans-81
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 可视化：在项目的探索阶段，CDF通常是分布的最佳可视化方式。查看CDF后，您可以决定估计的PDF是否是分布的适当模型。如果是，它可以成为向不熟悉CDF的观众呈现分布的更好选择。
 - en: 'Interpolation: An estimated PDF is a way to get from a sample to a model of
     the population. If you have reason to believe that the population distribution
     is smooth, you can use KDE to interpolate the density for values that don’t appear
     in the sample.'
+  id: totrans-82
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 插值：估计的PDF是从样本到人口模型的一种方法。如果您有理由相信人口分布是平滑的，可以使用KDE来插值未出现在样本中的值的密度。
 - en: 'Simulation: Simulations are often based on the distribution of a sample. If
     the sample size is small, it might be appropriate to smooth the sample distribution
     using KDE, which allows the simulation to explore more possible outcomes, rather
     than replicating the observed data.'
+  id: totrans-83
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 模拟：模拟通常基于样本的分布。如果样本量较小，可能适合使用KDE平滑样本分布，这样可以使模拟探索更多可能的结果，而不是复制观察到的数据。
 - en: 6.3  The distribution framework
+  id: totrans-84
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 6.3 分布框架
 - en: '* * *'
+  id: totrans-85
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
+  id: totrans-86
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/808ca365c6b044d6dc6d7b54a5c01dbc.png)'
+  id: totrans-87
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/808ca365c6b044d6dc6d7b54a5c01dbc.png)'
 - en: ''
+  id: totrans-88
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 6.2: A framework that relates representations of distribution functions.
     |'
+  id: totrans-89
   prefs:
   - PREF_BQ
   type: TYPE_TB
+  zh: '| 图6.2：关于分布函数表示的框架。|'
 - en: ''
+  id: totrans-90
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-91
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: At this point we have seen PMFs, CDFs and PDFs; let’s take a minute to review.
     Figure [6.2](#dist_framework) shows how these functions relate to each other.
+  id: totrans-92
   prefs: []
   type: TYPE_NORMAL
+  zh: 到目前为止，我们已经看到了PMF、CDF和PDF；让我们花一分钟来回顾一下。图[6.2](#dist_framework)显示了这些函数之间的关系。
 - en: We started with PMFs, which represent the probabilities for a discrete set of
     values. To get from a PMF to a CDF, you add up the probability masses to get cumulative
     probabilities. To get from a CDF back to a PMF, you compute differences in cumulative
     probabilities. We’ll see the implementation of these operations in the next few
     sections.
+  id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们从PMF开始，它代表了一组离散值的概率。要从PMF到CDF，您需要将概率质量相加以获得累积概率。要从CDF返回到PMF，您需要计算累积概率的差异。我们将在接下来的几节中看到这些操作的实现。
 - en: A PDF is the derivative of a continuous CDF; or, equivalently, a CDF is the
     integral of a PDF. Remember that a PDF maps from values to probability densities;
     to get a probability, you have to integrate.
+  id: totrans-94
   prefs: []
   type: TYPE_NORMAL
+  zh: PDF是连续CDF的导数；或者等价地，CDF是PDF的积分。请记住，PDF从值映射到概率密度；要获得概率，您必须进行积分。
 - en: To get from a discrete to a continuous distribution, you can perform various
     kinds of smoothing. One form of smoothing is to assume that the data come from
     an analytic continuous distribution (like exponential or normal) and to estimate
     the parameters of that distribution. Another option is kernel density estimation.
+  id: totrans-95
   prefs: []
   type: TYPE_NORMAL
+  zh: 要从离散到连续分布，可以进行各种形式的平滑。一种平滑的形式是假设数据来自解析连续分布（如指数分布或正态分布），并估计该分布的参数。另一个选项是核密度估计。
 - en: The opposite of smoothing is discretizing, or quantizing. If you evaluate a
     PDF at discrete points, you can generate a PMF that is an approximation of the
     PDF. You can get a better approximation using numerical integration.
+  id: totrans-96
   prefs: []
   type: TYPE_NORMAL
+  zh: 平滑的相反是离散化或量化。如果在离散点上评估PDF，可以生成一个PDF的近似PMF。您可以使用数值积分获得更好的近似。
 - en: To distinguish between continuous and discrete CDFs, it might be better for
     a discrete CDF to be a “cumulative mass function,” but as far as I can tell no
     one uses that term.
+  id: totrans-97
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了区分连续和离散的CDF，离散的CDF最好是“累积质量函数”，但据我所知，没有人使用这个术语。
 - en: 6.4  Hist implementation
+  id: totrans-98
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 6.4 Hist实现
 - en: 'At this point you should know how to use the basic types provided by `thinkstats2`:
     Hist, Pmf, Cdf, and Pdf. The next few sections provide details about how they
     are implemented. This material might help you use these classes more effectively,
     but it is not strictly necessary.'
+  id: totrans-99
   prefs: []
   type: TYPE_NORMAL
+  zh: 到目前为止，您应该知道如何使用`thinkstats2`提供的基本类型：Hist、Pmf、Cdf和Pdf。接下来的几节将提供有关它们如何实现的详细信息。这些材料可能有助于您更有效地使用这些类，但并非绝对必要。
 - en: 'Hist and Pmf inherit from a parent class called `_DictWrapper`. The leading
     underscore indicates that this class is “internal;” that is, it should not be
     used by code in other modules. The name indicates what it is: a dictionary wrapper.
     Its primary attribute is `d`, the dictionary that maps from values to their frequencies.'
+  id: totrans-100
   prefs: []
   type: TYPE_NORMAL
+  zh: Hist和Pmf继承自一个名为`_DictWrapper`的父类。前导下划线表示这个类是“内部的”；也就是说，它不应该被其他模块中的代码使用。名称表明它是什么：一个字典包装器。它的主要属性是`d`，这个字典将值映射到它们的频率。
 - en: The values can be any hashable type. The frequencies should be integers, but
     can be any numeric type.
+  id: totrans-101
   prefs: []
   type: TYPE_NORMAL
+  zh: 值可以是任何可散列类型。频率应该是整数，但可以是任何数值类型。
 - en: '`_DictWrapper` contains methods appropriate for both Hist and Pmf, including
     `__init__`, `Values`, `Items` and `Render`. It also provides modifier methods
     `Set`, `Incr`, `Mult`, and `Remove`. These methods are all implemented with dictionary
     operations. For example:'
+  id: totrans-102
   prefs: []
   type: TYPE_NORMAL
+  zh: '`_DictWrapper`包含适用于Hist和Pmf的方法，包括`__init__`、`Values`、`Items`和`Render`。它还提供修改器方法`Set`、`Incr`、`Mult`和`Remove`。这些方法都是用字典操作实现的。例如：'
 - en: '[PRE6]'
+  id: totrans-103
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: Hist also provides `Freq`, which looks up the frequency of a given value.
+  id: totrans-104
   prefs: []
   type: TYPE_NORMAL
+  zh: Hist还提供了`Freq`，它查找给定值的频率。
 - en: Because Hist operators and methods are based on dictionaries, these methods
     are constant time operations; that is, their run time does not increase as the
     Hist gets bigger.
+  id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: 因为Hist的运算符和方法都是基于字典的，所以这些方法的运行时间是恒定的；也就是说，随着Hist的增大，它们的运行时间不会增加。
 - en: 6.5  Pmf implementation
+  id: totrans-106
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 6.5 Pmf实现
 - en: Pmf and Hist are almost the same thing, except that a Pmf maps values to floating-point
     probabilities, rather than integer frequencies. If the sum of the probabilities
     is 1, the Pmf is normalized.
+  id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: Pmf和Hist几乎是一样的，只是Pmf将值映射到浮点概率，而不是整数频率。如果概率之和为1，Pmf就被归一化了。
 - en: 'Pmf provides `Normalize`, which computes the sum of the probabilities and divides
     through by a factor:'
+  id: totrans-108
   prefs: []
   type: TYPE_NORMAL
+  zh: Pmf提供了`Normalize`，它计算概率的总和并通过一个因子进行除法：
 - en: '[PRE7]'
+  id: totrans-109
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '`fraction` determines the sum of the probabilities after normalizing; the default
     value is 1\. If the total probability is 0, the Pmf cannot be normalized, so `Normalize`
     raises `ValueError`.'
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: '`fraction`确定归一化后的概率之和；默认值为1。如果总概率为0，Pmf无法归一化，因此`Normalize`会引发`ValueError`。'
 - en: Hist and Pmf have the same constructor. It can take as an argument a `dict`,
     Hist, Pmf or Cdf, a pandas Series, a list of (value, frequency) pairs, or a sequence
     of values.
+  id: totrans-111
   prefs: []
   type: TYPE_NORMAL
+  zh: Hist和Pmf有相同的构造函数。它可以接受一个`dict`、Hist、Pmf或Cdf、pandas Series、一个(value, frequency)对的列表或一个值序列作为参数。
 - en: If you instantiate a Pmf, the result is normalized. If you instantiate a Hist,
     it is not. To construct an unnormalized Pmf, you can create an empty Pmf and modify
     it. The Pmf modifiers do not renormalize the Pmf.
+  id: totrans-112
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你实例化一个Pmf，结果是归一化的。如果你实例化一个Hist，它就不是。要构建一个未归一化的Pmf，你可以创建一个空的Pmf并修改它。Pmf修改器不会重新归一化Pmf。
 - en: 6.6  Cdf implementation
+  id: totrans-113
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 6.6 Cdf实现
 - en: A CDF maps from values to cumulative probabilities, so I could have implemented
     Cdf as a `_DictWrapper`. But the values in a CDF are ordered and the values in
     a `_DictWrapper` are not. Also, it is often useful to compute the inverse CDF;
     that is, the map from cumulative probability to value. So the implementaion I
     chose is two sorted lists. That way I can use binary search to do a forward or
     inverse lookup in logarithmic time.
+  id: totrans-114
   prefs: []
   type: TYPE_NORMAL
+  zh: CDF将值映射到累积概率，所以我可以将CDF实现为`_DictWrapper`。但是CDF中的值是有序的，而`_DictWrapper`中的值不是。此外，计算逆CDF通常是有用的；也就是说，从累积概率到值的映射。所以我选择的实现是两个排序列表。这样我就可以使用二分查找以对数时间进行正向或逆向查找。
 - en: The Cdf constructor can take as a parameter a sequence of values or a pandas
     Series, a dictionary that maps from values to probabilities, a sequence of (value,
     probability) pairs, a Hist, Pmf, or Cdf. Or if it is given two parameters, it
     treats them as a sorted sequence of values and the sequence of corresponding cumulative
     probabilities.
+  id: totrans-115
   prefs: []
   type: TYPE_NORMAL
+  zh: Cdf构造函数可以接受一个值序列或pandas Series、一个将值映射到概率的字典、一对(value, probability)序列、Hist、Pmf或Cdf作为参数。或者如果给定两个参数，它会将它们视为排序后的值序列和相应的累积概率序列。
 - en: 'Given a sequence, pandas Series, or dictionary, the constructor makes a Hist.
     Then it uses the Hist to initialize the attributes:'
+  id: totrans-116
   prefs: []
   type: TYPE_NORMAL
+  zh: 给定一个序列、pandas Series或字典，构造函数会生成一个Hist。然后它使用Hist来初始化属性：
 - en: '[PRE8]'
+  id: totrans-117
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '`xs` is the sorted list of values; `freqs` is the list of corresponding frequencies.
     `np.cumsum` computes the cumulative sum of the frequencies. Dividing through by
     the total frequency yields cumulative probabilities. For `n` values, the time
     to construct the Cdf is proportional to n logn.'
+  id: totrans-118
   prefs: []
   type: TYPE_NORMAL
+  zh: '`xs`是值的排序列表；`freqs`是相应频率的列表。`np.cumsum`计算频率的累积和。通过总频率除以得到累积概率。对于`n`个值，构造Cdf的时间与`n
+    logn`成正比。'
 - en: 'Here is the implementation of `Prob`, which takes a value and returns its cumulative
     probability:'
+  id: totrans-119
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是`Prob`的实现，它接受一个值并返回其累积概率：
 - en: '[PRE9]'
+  id: totrans-120
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: 'The `bisect` module provides an implementation of binary search. And here is
     the implementation of `Value`, which takes a cumulative probability and returns
     the corresponding value:'
+  id: totrans-121
   prefs: []
   type: TYPE_NORMAL
+  zh: '`bisect`模块提供了二分查找的实现。这里是`Value`的实现，它接受累积概率并返回相应的值：'
 - en: '[PRE10]'
+  id: totrans-122
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: 'Given a Cdf, we can compute the Pmf by computing differences between consecutive
     cumulative probabilities. If you call the Cdf constructor and pass a Pmf, it computes
     differences by calling `Cdf.Items`:'
+  id: totrans-123
   prefs: []
   type: TYPE_NORMAL
+  zh: 给定一个Cdf，我们可以通过计算连续累积概率之间的差异来计算Pmf。如果你调用Cdf构造函数并传递一个Pmf，它会通过调用`Cdf.Items`来计算差异：
 - en: '[PRE11]'
+  id: totrans-124
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: '`np.roll` shifts the elements of `a` to the right, and “rolls” the last one
     back to the beginning. We replace the first element of `b` with 0 and then compute
     the difference `a-b`. The result is a NumPy array of probabilities.'
+  id: totrans-125
   prefs: []
   type: TYPE_NORMAL
+  zh: '`np.roll`将`a`的元素向右移动，并将最后一个“滚动”回到开头。我们用0替换`b`的第一个元素，然后计算差异`a-b`。结果是一个概率的NumPy数组。'
 - en: Cdf provides `Shift` and `Scale`, which modify the values in the Cdf, but the
     probabilities should be treated as immutable.
+  id: totrans-126
   prefs: []
   type: TYPE_NORMAL
+  zh: Cdf提供了`Shift`和`Scale`，它们修改了Cdf中的值，但概率应该被视为不可变的。
 - en: 6.7  Moments
+  id: totrans-127
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 6.7 Moments
 - en: Any time you take a sample and reduce it to a single number, that number is
     a statistic. The statistics we have seen so far include mean, variance, median,
     and interquartile range.
+  id: totrans-128
   prefs: []
   type: TYPE_NORMAL
+  zh: 每当你对样本进行抽样并将其减少到一个数字时，那个数字就是一个统计量。到目前为止我们看到的统计量包括均值、方差、中位数和四分位距。
 - en: 'A raw moment is a kind of statistic. If you have a sample of values, x[i],
     the kth raw moment is:'
+  id: totrans-129
   prefs: []
   type: TYPE_NORMAL
+  zh: 原始矩是一种统计量。如果你有一组值x[i]的样本，第k个原始矩是：
 - en: '| m′[k] =  |'
+  id: totrans-130
   prefs: []
   type: TYPE_TB
+  zh: '| m′[k] =  |'
 - en: '&#124; 1 &#124;'
+  id: totrans-131
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124; 1 &#124;'
 - en: '&#124;  &#124;'
+  id: totrans-132
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124;  &#124;'
 - en: '&#124; n &#124;'
+  id: totrans-133
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124; n &#124;'
 - en: '|   |'
+  id: totrans-134
   prefs: []
   type: TYPE_TB
+  zh: '|   |'
 - en: '&#124;   &#124;'
+  id: totrans-135
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124;   &#124;'
 - en: '&#124; ∑ &#124;'
+  id: totrans-136
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124; ∑ &#124;'
 - en: '&#124; i &#124;'
+  id: totrans-137
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124; i &#124;'
 - en: '|  x[i]^k  |'
+  id: totrans-138
   prefs: []
   type: TYPE_TB
+  zh: '|  x[i]^k  |'
 - en: 'Or if you prefer Python notation:'
+  id: totrans-139
   prefs: []
   type: TYPE_NORMAL
+  zh: 或者如果你更喜欢Python的表示法：
 - en: '[PRE12]'
+  id: totrans-140
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: When k=1 the result is the sample mean, x. The other raw moments don’t mean
     much by themselves, but they are used in some computations.
+  id: totrans-141
   prefs: []
   type: TYPE_NORMAL
+  zh: 当k=1时，结果是样本均值x。其他原始矩本身意义不大，但它们在一些计算中使用。
 - en: 'The central moments are more useful. The kth central moment is:'
+  id: totrans-142
   prefs: []
   type: TYPE_NORMAL
+  zh: 中心矩更有用。第k个中心矩是：
 - en: '| m[k] =  |'
+  id: totrans-143
   prefs: []
   type: TYPE_TB
+  zh: '| m[k] =  |'
 - en: '&#124; 1 &#124;'
+  id: totrans-144
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124; 1 &#124;'
 - en: '&#124;  &#124;'
+  id: totrans-145
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124;  &#124;'
 - en: '&#124; n &#124;'
+  id: totrans-146
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124; n &#124;'
 - en: '|   |'
+  id: totrans-147
   prefs: []
   type: TYPE_TB
+  zh: '|   |'
 - en: '&#124;   &#124;'
+  id: totrans-148
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124;   &#124;'
 - en: '&#124; ∑ &#124;'
+  id: totrans-149
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124; ∑ &#124;'
 - en: '&#124; i &#124;'
+  id: totrans-150
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124; i &#124;'
 - en: '|  (x[i] − x)^k  |'
+  id: totrans-151
   prefs: []
   type: TYPE_TB
+  zh: '|  (x[i] − x)^k  |'
 - en: 'Or in Python:'
+  id: totrans-152
   prefs: []
   type: TYPE_NORMAL
+  zh: 或者在Python中：
 - en: '[PRE13]'
+  id: totrans-153
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: When k=2 the result is the second central moment, which you might recognize
     as variance. The definition of variance gives a hint about why these statistics
     are called moments. If we attach a weight along a ruler at each location, x[i],
     and then spin the ruler around the mean, the moment of inertia of the spinning
     weights is the variance of the values. If you are not familiar with moment of
     inertia, see [http://en.wikipedia.org/wiki/Moment_of_inertia](http://en.wikipedia.org/wiki/Moment_of_inertia).
+  id: totrans-154
   prefs: []
   type: TYPE_NORMAL
+  zh: 当k=2时，结果是第二个中心矩，你可能会认出它是方差。方差的定义暗示了为什么这些统计量被称为矩。如果我们在每个位置x[i]处沿着标尺附加一个重量，然后围绕均值旋转标尺，旋转重量的惯性矩是值的方差。如果你不熟悉惯性矩，请参见[http://en.wikipedia.org/wiki/Moment_of_inertia](http://en.wikipedia.org/wiki/Moment_of_inertia)。
 - en: When you report moment-based statistics, it is important to think about the
     units. For example, if the values x[i] are in cm, the first raw moment is also
     in cm. But the second moment is in cm², the third moment is in cm³, and so on.
+  id: totrans-155
   prefs: []
   type: TYPE_NORMAL
+  zh: 当你报告基于矩的统计量时，重要的是要考虑单位。例如，如果值x[i]是以厘米为单位的，第一个原始矩也是以厘米为单位的。但第二个矩是以平方厘米为单位，第三个矩是以立方厘米为单位，依此类推。
 - en: Because of these units, moments are hard to interpret by themselves. That’s
     why, for the second moment, it is common to report standard deviation, which is
     the square root of variance, so it is in the same units as x[i].
+  id: totrans-156
   prefs: []
   type: TYPE_NORMAL
+  zh: 由于这些单位，矩本身很难解释。这就是为什么对于第二矩，通常报告标准差，它是方差的平方根，因此与x[i]具有相同的单位。
 - en: 6.8  Skewness
+  id: totrans-157
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 6.8  偏度
 - en: Skewness is a property that describes the shape of a distribution. If the distribution
     is symmetric around its central tendency, it is unskewed. If the values extend
     farther to the right, it is “right skewed” and if the values extend left, it is
     “left skewed.”
+  id: totrans-158
   prefs: []
   type: TYPE_NORMAL
+  zh: 偏度是描述分布形状的属性。如果分布围绕其中心趋势对称，它是无偏的。如果值向右延伸得更远，它是“右偏”，如果值向左延伸，它是“左偏”。
 - en: This use of “skewed” does not have the usual connotation of “biased.” Skewness
     only describes the shape of the distribution; it says nothing about whether the
     sampling process might have been biased.
+  id: totrans-159
   prefs: []
   type: TYPE_NORMAL
+  zh: “偏斜”的使用并不具有“偏倚”的通常含义。偏度只描述分布的形状；它对抽样过程是否可能存在偏倚没有任何说明。
 - en: 'Several statistics are commonly used to quantify the skewness of a distribution.
     Given a sequence of values, x[i], the sample skewness, g[1], can be computed like
     this:'
+  id: totrans-160
   prefs: []
   type: TYPE_NORMAL
+  zh: 通常使用几种统计量来量化分布的偏度。给定一系列值x[i]，可以这样计算样本偏度g[1]：
 - en: '[PRE14]'
+  id: totrans-161
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: g[1] is the third standardized moment, which means that it has been normalized
     so it has no units.
+  id: totrans-162
   prefs: []
   type: TYPE_NORMAL
+  zh: g[1]是第三个标准化矩，这意味着它已经被归一化，因此没有单位。
 - en: Negative skewness indicates that a distribution skews left; positive skewness
     indicates that a distribution skews right. The magnitude of g[1] indicates the
     strength of the skewness, but by itself it is not easy to interpret.
+  id: totrans-163
   prefs: []
   type: TYPE_NORMAL
+  zh: 负偏度表示分布向左偏斜；正偏度表示分布向右偏斜。g[1]的大小表示偏度的强度，但单独来看很难解释。
 - en: In practice, computing sample skewness is usually not a good idea. If there
     are any outliers, they have a disproportionate effect on g[1].
+  id: totrans-164
   prefs: []
   type: TYPE_NORMAL
+  zh: 在实践中，通常计算样本偏度并不是一个好主意。如果有任何异常值，它们对g[1]的影响就会不成比例。
 - en: Another way to evaluate the asymmetry of a distribution is to look at the relationship
     between the mean and median. Extreme values have more effect on the mean than
     the median, so in a distribution that skews left, the mean is less than the median.
     In a distribution that skews right, the mean is greater.
+  id: totrans-165
   prefs: []
   type: TYPE_NORMAL
+  zh: 评估分布的不对称性的另一种方法是看均值和中位数之间的关系。极端值对均值的影响比对中位数的影响更大，因此在左偏的分布中，均值小于中位数。在右偏的分布中，均值大于中位数。
 - en: 'Pearson’s median skewness coefficient is a measure of skewness based on the
     difference between the sample mean and median:'
+  id: totrans-166
   prefs: []
   type: TYPE_NORMAL
+  zh: 皮尔逊中位数偏度系数是基于样本均值和中位数之间的差异而衡量偏度的指标：
 - en: '| g[p] = 3 (x − m) / S  |'
+  id: totrans-167
   prefs: []
   type: TYPE_TB
+  zh: '| g[p] = 3 (x − m) / S  |'
 - en: 'Where x is the sample mean, m is the median, and S is the standard deviation.
     Or in Python:'
+  id: totrans-168
   prefs: []
   type: TYPE_NORMAL
+  zh: 其中x是样本均值，m是中位数，S是标准差。或者在Python中：
 - en: '[PRE15]'
+  id: totrans-169
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: This statistic is robust, which means that it is less vulnerable to the effect
     of outliers.
+  id: totrans-170
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个统计量是健壮的，这意味着它对异常值的影响较小。
 - en: '* * *'
+  id: totrans-171
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
+  id: totrans-172
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/d47a6d01d74a9ce2a54916f37979932b.png)'
+  id: totrans-173
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/d47a6d01d74a9ce2a54916f37979932b.png)'
 - en: ''
+  id: totrans-174
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 6.3: Estimated PDF of birthweight data from the NSFG. |'
+  id: totrans-175
   prefs:
   - PREF_BQ
   type: TYPE_TB
+  zh: '| 图6.3：NSFG出生体重数据的估计概率密度函数。 |'
 - en: ''
+  id: totrans-176
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-177
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: 'As an example, let’s look at the skewness of birth weights in the NSFG pregnancy
     data. Here’s the code to estimate and plot the PDF:'
+  id: totrans-178
   prefs: []
   type: TYPE_NORMAL
+  zh: 举个例子，让我们看一下NSFG怀孕数据中出生体重的偏度。以下是估计和绘制概率密度函数的代码：
 - en: '[PRE16]'
+  id: totrans-179
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: 'Figure [6.3](#density_totalwgt_kde) shows the result. The left tail appears
     longer than the right, so we suspect the distribution is skewed left. The mean,
     7.27 lbs, is a bit less than the median, 7.38 lbs, so that is consistent with
     left skew. And both skewness coefficients are negative: sample skewness is -0.59;
     Pearson’s median skewness is -0.23.'
+  id: totrans-180
   prefs: []
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-181
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-182
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/b210bed78dc5cd25323d63e49b690c77.png)'
+  id: totrans-183
   prefs:
   - PREF_BQ
   type: TYPE_IMG
 - en: ''
+  id: totrans-184
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 6.4: Estimated PDF of adult weight data from the BRFSS. |'
+  id: totrans-185
   prefs:
   - PREF_BQ
   type: TYPE_TB
 - en: ''
+  id: totrans-186
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-187
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: 'Now let’s compare this distribution to the distribution of adult weight in
     the BRFSS. Again, here’s the code:'
+  id: totrans-188
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE17]'
+  id: totrans-189
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: Figure [6.4](#density_wtkg2_kde) shows the result. The distribution appears
     skewed to the right. Sure enough, the mean, 79.0, is bigger than the median, 77.3\.
     The sample skewness is 1.1 and Pearson’s median skewness is 0.26.
+  id: totrans-190
   prefs: []
   type: TYPE_NORMAL
 - en: The sign of the skewness coefficient indicates whether the distribution skews
@@ -763,25 +1062,31 @@
     is less robust; that is, it is more susceptible to outliers. As a result it is
     less reliable when applied to skewed distributions, exactly when it would be most
     relevant.
+  id: totrans-191
   prefs: []
   type: TYPE_NORMAL
 - en: Pearson’s median skewness is based on a computed mean and variance, so it is
     also susceptible to outliers, but since it does not depend on a third moment,
     it is somewhat more robust.
+  id: totrans-192
   prefs: []
   type: TYPE_NORMAL
 - en: 6.9  Exercises
+  id: totrans-193
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: A solution to this exercise is in `chap06soln.py`.
+  id: totrans-194
   prefs: []
   type: TYPE_NORMAL
 - en: Exercise 1
+  id: totrans-195
   prefs: []
   type: TYPE_NORMAL
 - en: '*The distribution of income is famously skewed to the right. In this exercise,
     we’ll measure how strong that skew is.*'
+  id: totrans-196
   prefs: []
   type: TYPE_NORMAL
 - en: '*The Current Population Survey (CPS) is a joint effort of the Bureau of Labor
@@ -791,12 +1096,14 @@
     household income, and converted it to `hinc06.csv`, a CSV file you will find in
     the repository for this book. You will also find `hinc2.py`, which reads this
     file and transforms the data.*'
+  id: totrans-197
   prefs: []
   type: TYPE_NORMAL
 - en: '*The dataset is in the form of a series of income ranges and the number of
     respondents who fell in each range. The lowest range includes respondents who
     reported annual household income “Under $5000.” The highest range includes respondents
     who made “$250,000 or more.”*'
+  id: totrans-198
   prefs: []
   type: TYPE_NORMAL
 - en: '*To estimate mean and other statistics from these data, we have to make some
@@ -805,76 +1112,100 @@
     model this data. It takes a DataFrame with a column, `income`, that contains the
     upper bound of each range, and `freq`, which contains the number of respondents
     in each frame.*'
+  id: totrans-199
   prefs: []
   type: TYPE_NORMAL
 - en: '*It also takes `log_upper`, which is an assumed upper bound on the highest
     range, expressed in `log10` dollars. The default value, `log_upper=6.0` represents
     the assumption that the largest income among the respondents is* 10⁶*, or one
     million dollars.*'
+  id: totrans-200
   prefs: []
   type: TYPE_NORMAL
 - en: '*`InterpolateSample` generates a pseudo-sample; that is, a sample of household
     incomes that yields the same number of respondents in each range as the actual
     data. It assumes that incomes in each range are equally spaced on a log10 scale.*'
+  id: totrans-201
   prefs: []
   type: TYPE_NORMAL
 - en: '*Compute the median, mean, skewness and Pearson’s skewness of the resulting
     sample. What fraction of households reports a taxable income below the mean? How
     do the results depend on the assumed upper bound?*'
+  id: totrans-202
   prefs: []
   type: TYPE_NORMAL
 - en: 6.10  Glossary
+  id: totrans-203
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: 'Probability density function (PDF): The derivative of a continuous CDF, a function
     that maps a value to its probability density.'
+  id: totrans-204
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'Probability density: A quantity that can be integrated over a range of values
     to yield a probability. If the values are in units of cm, for example, probability
     density is in units of probability per cm.'
+  id: totrans-205
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'Kernel density estimation (KDE): An algorithm that estimates a PDF based on
     a sample.'
+  id: totrans-206
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'discretize: To approximate a continuous function or distribution with a discrete
     function. The opposite of smoothing.'
+  id: totrans-207
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 离散化：用离散函数近似连续函数或分布。与平滑相反。
 - en: 'raw moment: A statistic based on the sum of data raised to a power.'
+  id: totrans-208
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 原始矩：基于数据求和的统计量，其次方。
 - en: 'central moment: A statistic based on deviation from the mean, raised to a power.'
+  id: totrans-209
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 中心矩：基于与均值的偏差的统计量，其次方。
 - en: 'standardized moment: A ratio of moments that has no units.'
+  id: totrans-210
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 标准化矩：没有单位的矩的比率。
 - en: 'skewness: A measure of how asymmetric a distribution is.'
+  id: totrans-211
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 偏度：衡量分布的不对称程度的指标。
 - en: 'sample skewness: A moment-based statistic intended to quantify the skewness
     of a distribution.'
+  id: totrans-212
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 样本偏度：基于矩的统计量，旨在量化分布的偏度。
 - en: 'Pearson’s median skewness coefficient: A statistic intended to quantify the
     skewness of a distribution based on the median, mean, and standard deviation.'
+  id: totrans-213
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 皮尔逊中位数偏度系数：一种旨在基于中位数、均值和标准差量化分布偏度的统计量。
 - en: 'robust: A statistic is robust if it is relatively immune to the effect of outliers.'
+  id: totrans-214
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 健壮：如果统计量相对不受异常值影响，则称其为健壮。
