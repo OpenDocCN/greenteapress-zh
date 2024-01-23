@@ -1,29 +1,35 @@
 - en: Hypothesis Testing
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
 - en: 原文：[https://allendowney.github.io/ElementsOfDataScience/13_hypothesis.html](https://allendowney.github.io/ElementsOfDataScience/13_hypothesis.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/13_hypothesis.ipynb)
     or [click here to download it](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/13_hypothesis.ipynb).'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
 - en: This chapter introduces statistical hypothesis testing, which is such a contentious
     topic in the history of statistics, it’s hard to provide a simple definition.
     Instead, I’ll start with an example, present the problem hypothesis testing is
     intended to solve, and then show a solution.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
 - en: 'The solution I’ll show is different from what you might find in a statistics
     book. Instead of mathematical analysis, we will use computational simulations.
     This approach has two advantages and one disadvantage:'
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
 - en: 'Advantage: The standard statistics curriculum includes many different tests,
     and many people find it hard to remember which one to use. In my opinion, simulation
     makes it clearer that there is only one testing framework.'
+  id: totrans-5
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -31,21 +37,25 @@
     are based on models, but when we use mathematical methods, it is easy to forget
     the assumptions they are based on. With computation, the assumptions are more
     visible, and it is easier to try different models.'
+  id: totrans-6
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'Disadvantage: Simulation uses a lot of computation. Some of the examples in
     this notebook take several seconds to run and the results are only approximate.
     For some problems, there are analytic methods that are faster and more accurate.'
+  id: totrans-7
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: The examples in this chapter include results from a clinical trial related to
     peanut allergies, and survey data from the National Survey of Family Growth (NSFG)
     and the Behavioral Risk Factor Surveillance System (BRFSS).
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
 - en: Testing Medical Treatments
+  id: totrans-9
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -55,9 +65,11 @@
     because they had been diagnosed with other food allergies. Over a period of several
     years, half of the subjects were periodically given a snack containing peanuts;
     the other half were given no peanuts at all.
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
 - en: 'The conclusion of the study, reported in 2015 is:'
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
 - en: Of the children who avoided peanut, 17% developed peanut allergy by the age
@@ -65,6 +77,7 @@
     the peanut snack developed allergy by age 5\. Therefore, in high-risk infants,
     sustained consumption of peanut beginning in the first 11 months of life was highly
     effective in preventing the development of peanut allergy.
+  id: totrans-12
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
@@ -74,278 +87,405 @@
     To see whether this is likely, we will simulate the experiment using a model where
     the treatment has no effect, and see how often we see such a big difference between
     the groups.
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
 - en: Detailed results of the study are reported in the *New England Journal of Medicine*
     (see [https://www.nejm.org/doi/full/10.1056/NEJMoa1414850](https://www.nejm.org/doi/full/10.1056/NEJMoa1414850)).
     In that article, Figure 1 shows the number of subjects in the treatment and control
     groups, which happened to be equal.
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE0]'
+  id: totrans-15
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: And from Figure 2 we can extract the number of subjects who developed peanut
     allergies in each group. Specifically, we’ll use the numbers from the “intention
     to treat analysis for both cohorts”.
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE1]'
+  id: totrans-17
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: Using these numbers, we can compute the risk in each group as a percentage.
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE2]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '[PRE3]'
+  id: totrans-20
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '[PRE4]'
+  id: totrans-21
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '[PRE5]'
+  id: totrans-22
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: These are consistent with the percentages reported in the paper. To quantify
     the difference between the groups, we’ll use relative risk, which is the ratio
     of the risks in the two groups.
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些与论文中报告的百分比一致。为了量化两组之间的差异，我们将使用相对风险，即两组风险的比率。
 - en: '[PRE6]'
+  id: totrans-24
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '[PRE7]'
+  id: totrans-25
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: 'The risk in the treatment group is about 18% of the risk in the control group.
     So it seems like the treatment is highly effective. To check, let’s imagine a
     world where the treatment is completely ineffective, so the risk is actually the
     same in both groups, and the difference we saw is due to chance. If that’s true,
     we can estimate the hypothetical risk by combining the two groups:'
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 治疗组的风险约为对照组风险的18%。因此似乎治疗效果非常好。为了检查，让我们想象一个情况，即治疗完全无效，因此两组的风险实际上是相同的，我们观察到的差异是由于偶然因素造成的。如果是这样，我们可以通过合并两组来估计假设风险：
 - en: '[PRE8]'
+  id: totrans-27
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '[PRE9]'
+  id: totrans-28
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: If the risk is the same for both groups, it is close to 10%. Now we can use
     this hypothetical risk to simulate the experiment. Here’s `simulate_group_percent`,
     which we saw in Chapter 11. It takes as parameters the size of the group, `n`,
     and the risk, `p`. It simulates the experiment and returns the number of cases
     as a percentage of the group, which is the observed risk.
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果两组的风险相同，那么接近10%。现在我们可以使用这个假设风险来模拟实验。这是`simulate_group_percent`，我们在第11章中看到的。它以组的大小`n`和风险`p`作为参数。它模拟实验并返回作为组的百分比的病例数，这就是观察到的风险。
 - en: '[PRE10]'
+  id: totrans-30
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: If we call this function many times, the result is a list of observed risks,
     one for each simulated experiment. Here’s the list for the treatment group.
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们多次调用这个函数，结果是一系列观察到的风险，每个模拟实验一个。这是治疗组的列表。
 - en: '[PRE11]'
+  id: totrans-32
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: And the control group.
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: 还有对照组。
 - en: '[PRE12]'
+  id: totrans-34
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: If we divide these lists elementwise, the result is a list of relative risks,
     one for each simulated experiment.
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们对这些列表进行逐元素划分，结果是相对风险的列表，每个模拟实验一个。
 - en: '[PRE13]'
+  id: totrans-36
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: We can use a KDE plot to visualize the distribution of these results.
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用KDE图来可视化这些结果的分布。
 - en: '[PRE14]'
+  id: totrans-38
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '![_images/13_hypothesis_26_0.png](../Images/652fdb0bede9a612fa25c7dfa01e0feb.png)'
+  id: totrans-39
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/13_hypothesis_26_0.png](../Images/652fdb0bede9a612fa25c7dfa01e0feb.png)'
 - en: Remember that these simulations are based on the assumption that the risk is
     the same for both groups, so we expect the relative risk to be near 1 most of
     the time. And it is.
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: 请记住，这些模拟是基于风险对两组相同的假设，因此我们期望相对风险大部分时间接近1。而且确实如此。
 - en: In some simulated experiments, the relative risk is as low as 0.5 or as high
     as 2, which means it is plausible we could see results like that by chance, even
     if there is no difference between groups.
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: 在一些模拟实验中，相对风险低至0.5或高至2，这意味着我们可能会看到这样的结果，即使两组之间没有差异，也是合理的。
 - en: But the relative risk in the actual experiment was 0.18, and we never see a
     result as small as that in the simulated experiment. We can conclude that the
     relative risk we saw is unlikely if the risk is actually the same in both groups.
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: 但实际实验中的相对风险是0.18，我们在模拟实验中从未看到过如此小的结果。我们可以得出结论，如果两组的风险实际上是相同的，我们观察到的相对风险是不太可能的。
 - en: Computing p-values
+  id: totrans-43
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 计算p值
 - en: Now suppose that in addition to the treatment and control groups, the experiment
     included a placebo group that was given a snack that contained no peanuts. Suppose
     this group was the same size as the others, and 42 of the subjects developed peanut
     allergies.
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在假设除了治疗组和对照组之外，实验还包括一个安慰剂组，该组被给予不含花生的小吃。假设这个组与其他组的大小相同，有42名受试者患有花生过敏。
 - en: To be clear, there was no third group, and I made up these numbers, but let’s
     see how this hypothetical works out. Here’s the risk in the placebo group.
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 要清楚，没有第三组，我编造了这些数字，但让我们看看这个假设是如何运作的。这是安慰剂组的风险。
 - en: '[PRE15]'
+  id: totrans-46
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '[PRE16]'
+  id: totrans-47
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: And here’s the relative risk compared to the control group.
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是相对风险与对照组的比较。
 - en: '[PRE17]'
+  id: totrans-49
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: '[PRE18]'
+  id: totrans-50
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: The relative risk is less than 1, which means the risk in the placebo group
     is a bit lower than in the control group. So we might wonder whether the placebo
     was actually effective. To answer that question, at least partially, we can go
     back to the results from the simulated experiment.
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: 相对风险小于1，这意味着安慰剂组的风险略低于对照组。因此我们可能会想知道安慰剂是否真的有效。为了至少部分回答这个问题，我们可以回到模拟实验的结果。
 - en: 'Under the assumption that there is actually no difference between the groups,
     it would not be unusual to see a relative risk as low as 0.77 by chance. In fact,
     we can compute the probability of seeing a relative risk as low or lower than
     `relative_risk_placebo`, even if the two groups are the same, like this:'
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: 在假设两组实际上没有差异的情况下，即使两组相同，看到相对风险低至0.77也不会不寻常。事实上，我们可以计算看到相对风险低于或等于`relative_risk_placebo`的概率，即使两组相同，如下所示：
 - en: '[PRE19]'
+  id: totrans-53
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '[PRE20]'
+  id: totrans-54
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: This probability is called a **p-value** (see [https://en.wikipedia.org/wiki/P-value](https://en.wikipedia.org/wiki/P-value)).
     In this case, the p-value is about 14%, which means that even if the two groups
     are the same, we expect to see a relative risk as low as 0.77 about 14% of the
     time. So, for this imagined experiment, we can’t rule out the possibility that
     the apparent difference is due to chance.
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个概率被称为**p值**（参见[https://en.wikipedia.org/wiki/P-value](https://en.wikipedia.org/wiki/P-value)）。在这种情况下，p值约为14%，这意味着即使两组相同，我们也期望看到相对风险低至0.77的情况约14%的时间。因此，对于这个想象的实验，我们不能排除明显差异是由于偶然因素造成的可能性。
 - en: Are first babies more likely to be late?
+  id: totrans-56
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 第一个宝宝更可能晚到吗？
 - en: In the previous example, we saw a difference in proportion between two groups.
     As a second example, let’s consider a difference in means.
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 在前面的例子中，我们看到两组之间的比例差异。作为第二个例子，让我们考虑均值的差异。
 - en: When my wife and I were expecting our first child, we heard that first babies
     are more likely to be born late. But we also heard that first babies are more
     likely to be born early. So which is it? As a data scientist with too much time
     on my hands, I decided to find out. I got data from the National Survey of Family
     Growth (NSFG), the same survey we have used in previous chapters. I’ve put the
     results from the 2015-2017 survey in an HDF file. Here are the first few rows.
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE21]'
+  id: totrans-59
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: '|  | CASEID | OUTCOME | BIRTHWGT_LB1 | BIRTHWGT_OZ1 | PRGLNGTH | NBRNALIV |
     AGECON | AGEPREG | BIRTHORD | HPAGELB | WGT2015_2017 |'
+  id: totrans-60
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  id: totrans-61
   prefs: []
   type: TYPE_TB
 - en: '| 0 | 70627 | 1 | 7.0 | 8.0 | 40 | 1.0 | 28 | 29.0 | 1.0 | 5.0 | 19877.457610
     |'
+  id: totrans-62
   prefs: []
   type: TYPE_TB
 - en: '| 1 | 70627 | 4 | NaN | NaN | 14 | NaN | 32 | 32.0 | NaN | NaN | 19877.457610
     |'
+  id: totrans-63
   prefs: []
   type: TYPE_TB
 - en: '| 2 | 70627 | 1 | 9.0 | 2.0 | 39 | 1.0 | 33 | 33.0 | 2.0 | 5.0 | 19877.457610
     |'
+  id: totrans-64
   prefs: []
   type: TYPE_TB
 - en: '| 3 | 70628 | 1 | 6.0 | 9.0 | 39 | 1.0 | 17 | 18.0 | 1.0 | 1.0 | 4221.017695
     |'
+  id: totrans-65
   prefs: []
   type: TYPE_TB
 - en: '| 4 | 70628 | 1 | 7.0 | 0.0 | 39 | 1.0 | 19 | 20.0 | 2.0 | 2.0 | 4221.017695
     |'
+  id: totrans-66
   prefs: []
   type: TYPE_TB
 - en: We’ll use the `OUTCOME` column to select pregnancies that ended with a live
     birth.
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE22]'
+  id: totrans-68
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: '[PRE23]'
+  id: totrans-69
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: And use `PRGLNGTH` to select babies that were born full term, that is, during
     or after the 37th week of pregnancy.
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE24]'
+  id: totrans-71
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: This dataset includes data from 2724 first babies.
+  id: totrans-72
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE25]'
+  id: totrans-73
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: '[PRE26]'
+  id: totrans-74
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: And 3115 other (not first) babies.
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE27]'
+  id: totrans-76
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: '[PRE28]'
+  id: totrans-77
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: Now we can select pregnancy lengths for the first babies and others.
+  id: totrans-78
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE29]'
+  id: totrans-79
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: Here are the mean pregnancy lengths for the two groups, in weeks.
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE30]'
+  id: totrans-81
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: '[PRE31]'
+  id: totrans-82
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: In this dataset, first babies are born a little later on average. The difference
     is about 0.2 weeks, or 33 hours.
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE32]'
+  id: totrans-84
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: '[PRE33]'
+  id: totrans-85
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: 'Relative to an average length of 39 weeks, that’s not a very big difference.
     We might wonder if a difference as big as this would be likely, even if the two
     groups are the same. To answer that question, let’s imagine a world where there
@@ -353,56 +493,78 @@
     we model a world like that? As always with modeling decisions, there are many
     options. A simple one is to combine the two groups and compute the mean and standard
     deviation of pregnancy length, like this:'
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE34]'
+  id: totrans-87
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: '[PRE35]'
+  id: totrans-88
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: Now we can use `simulate_sample_mean` from Chapter 11 to draw a random sample
     from a normal distribution with the given parameters and return the mean.
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE36]'
+  id: totrans-90
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: 'If we run it 1000 times, it simulates the sampling and measurement process
     and returns a list of results from 1000 simulated experiments. Here are the simulated
     results with sample size `n_first`:'
+  id: totrans-91
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE37]'
+  id: totrans-92
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE37]'
 - en: And with sample size `n_other`.
+  id: totrans-93
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE38]'
+  id: totrans-94
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: If we subtract the simulated means elementwise, the result is a list of observed
     differences from simulated experiments where the distribution is the same for
     both groups.
+  id: totrans-95
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE39]'
+  id: totrans-96
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: We can use a KDE plot to visualize the distribution of these values.
+  id: totrans-97
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE40]'
+  id: totrans-98
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE40]'
 - en: '![_images/13_hypothesis_64_0.png](../Images/31bd3f643026950fd3321396b7ab9c9c.png)'
+  id: totrans-99
   prefs: []
   type: TYPE_IMG
 - en: The center of this distribution is near zero, which makes sense if the distribution
     in both group is the same. Just by chance, we sometimes see differences as big
     as 0.1 weeks, but in 1000 simulations, we never see a difference as big as the
     observed difference in the data, which is almost 0.2 weeks.
+  id: totrans-100
   prefs: []
   type: TYPE_NORMAL
 - en: Based on this result, we can pretty much rule out the possibility that the difference
@@ -411,6 +573,7 @@
     When the respondents are interviewed, their recollection of first babies might
     be less accurate than their recollection of more recent babies. Or the estimation
     of pregnancy length might be less accurate with less experienced mothers.
+  id: totrans-101
   prefs: []
   type: TYPE_NORMAL
 - en: A correspondent of mine, who knows more than me about giving birth, suggested
@@ -418,294 +581,436 @@
     it is more likely that subsequent deliveries will be scheduled, and less likely
     that they will go much past 39 weeks. So that could bring the average down for
     non-first babies.
+  id: totrans-102
   prefs: []
   type: TYPE_NORMAL
 - en: In summary, the results in this section suggest that the observed difference
     is unlikely to be due to chance, but there are other possible explanations.
+  id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: 总之，本节的结果表明观察到的差异不太可能是由于偶然造成的，但还有其他可能的解释。
 - en: The Hypothesis Testing Framework
+  id: totrans-104
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 假设检验框架
 - en: 'The examples we’ve done so far fit into the framework shown in this diagram:'
+  id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: 到目前为止，我们所做的例子都符合这个图示中所示的框架：
 - en: '![](../Images/1c42ca862250a8d3991037dae13796c8.png)'
+  id: totrans-106
   prefs: []
   type: TYPE_IMG
+  zh: '![](../Images/1c42ca862250a8d3991037dae13796c8.png)'
 - en: Using data from an experiment, we compute the observed **test statistic**, denoted
     \(\delta^*\) in the diagram, which quantifies the size of the observed effect.
     In the peanut allergy example, the test statistic is relative risk. In the pregnancy
     length example, it is the difference in the means.
+  id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用实验数据，我们计算观察到的**检验统计量**，在图示中用\(\delta^*\)表示，它量化了观察到的效应的大小。在花生过敏的例子中，检验统计量是相对风险。在怀孕期长度的例子中，它是均值的差异。
 - en: Then we build a model of a world where the effect does not exist. This model
     is called the **null hypothesis** and denoted \(H_0\). In the peanut allergy example,
     the model assumes that the risk is the same in both groups. In the pregnancy example,
     it assumes that the lengths are drawn from the same normal distribution.
+  id: totrans-108
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后我们建立一个不存在效应的世界的模型。这个模型被称为**零假设**，在图示中表示为\(H_0\)。在花生过敏的例子中，该模型假设两组的风险是相同的。在怀孕的例子中，它假设长度是从相同的正态分布中抽取的。
 - en: Next we use the model to simulate the experiment many times. Each simulation
     generates a dataset which we use to compute a test statistic, \(\delta\). Finally,
     we collect the test statistics from the simulations and compute a p-value, which
     is the probability under the null hypothesis of seeing a test statistic as big
     as the observed effect, \(\delta*\).
+  id: totrans-109
   prefs: []
   type: TYPE_NORMAL
+  zh: 接下来，我们使用模型多次模拟实验。每次模拟都会生成一个数据集，我们用它来计算一个检验统计量\(\delta\)。最后，我们收集模拟中的检验统计量，并计算一个p值，这是在零假设下观察到的效应\(\delta^*\)一样大的概率。
 - en: If the p-value is small, we can usually rule out the possibility that the observed
     effect is due to random variation. But often there are other explanations we can’t
     rule out, including measurement error and unrepresentative sampling.
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果p值很小，我们通常可以排除观察到的效应是由于随机变化造成的可能性。但通常还有其他我们无法排除的解释，包括测量误差和不具代表性的抽样。
 - en: I emphasize the role of the model in this framework because for a given experiment
     there might be several possible models, each including some elements of the real
     world and ignoring others. For example, we used a normal distribution to model
     variation in pregnancy length. If we don’t want to make this assumption, an alternative
     is to simulate the null hypothesis by shuffling the pregnancy lengths.
+  id: totrans-111
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个框架中，我强调了模型的作用，因为对于一个给定的实验，可能会有几种可能的模型，每个模型都包括一些真实世界的元素，忽略其他元素。例如，我们使用正态分布来模拟怀孕期长度的变化。如果我们不想做出这个假设，另一种选择是通过对怀孕期长度进行洗牌来模拟零假设。
 - en: The following function takes two sequences representing the pregnancy lengths
     for the two groups. It appends them into a single sequence, shuffles it, and then
     splits it again into groups with the same size as the originals. The return value
     is the difference in means between the groups.
+  id: totrans-112
   prefs: []
   type: TYPE_NORMAL
+  zh: 下面的函数接受两个表示两组怀孕期长度的序列。它将它们附加到一个单一的序列中，然后对其进行洗牌，然后再次将其分成与原始序列相同大小的组。返回值是两组之间的均值差异。
 - en: '[PRE41]'
+  id: totrans-113
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE41]'
 - en: If we call this function once, we get a random difference in means from a simulated
     world where the distribution of pregnancy lengths is the same in both groups.
+  id: totrans-114
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们调用这个函数一次，我们会从一个模拟的世界中得到一个随机的均值差异，其中怀孕期长度的分布在两组中是相同的。
 - en: '[PRE42]'
+  id: totrans-115
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE42]'
 - en: '[PRE43]'
+  id: totrans-116
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE43]'
 - en: '**Exercise:** Using this function to run 1000 simulations of the null hypothesis
     and save the results as `diff2`. Make a KDE plot to compare the distribution of
     `diff2` to the results from the normal model, `diff`.'
+  id: totrans-117
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**使用这个函数运行1000次零假设的模拟，并将结果保存为`diff2`。制作一个KDE图来比较`diff2`的分布和正态模型`diff`的结果。'
 - en: Compute the probability of seeing a difference as big as `diff_actual`. Is this
     p-value consistent with the results we got with the normal model?
+  id: totrans-118
   prefs: []
   type: TYPE_NORMAL
+  zh: 计算看到`diff_actual`这么大的差异的概率。这个p值是否与我们用正态模型得到的结果一致？
 - en: '**Exercise:** Are first babies more likely to be *light*? To find out, we can
     use the birth weight data from the NSFG. The variables we need use special codes
     to represent missing data, so let’s replace them with `NaN`.'
+  id: totrans-119
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**第一个宝宝更有可能是*轻的*吗？要找出答案，我们可以使用NSFG的出生体重数据。我们需要的变量使用特殊代码来表示缺失数据，所以让我们用`NaN`来替换它们。'
 - en: '[PRE44]'
+  id: totrans-120
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE44]'
 - en: And combine pounds and ounces into a single variable.
+  id: totrans-121
   prefs: []
   type: TYPE_NORMAL
+  zh: 并将磅和盎司合并成一个单一的变量。
 - en: '[PRE45]'
+  id: totrans-122
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE45]'
 - en: We can use `first` and `other` to select birth weights for first babies and
     others, dropping the `NaN` values.
+  id: totrans-123
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用`first`和`other`来选择第一个宝宝和其他宝宝的出生体重，去掉`NaN`值。
 - en: '[PRE46]'
+  id: totrans-124
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE46]'
 - en: In this dataset, it looks like first babies are a little lighter, on average.
+  id: totrans-125
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个数据集中，第一个宝宝的平均体重似乎要轻一些。
 - en: '[PRE47]'
+  id: totrans-126
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE47]'
 - en: '[PRE48]'
+  id: totrans-127
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE48]'
 - en: But as usual, we should wonder whether we are being fooled by randomness. To
     find out, compute the actual difference between the means. Then use `simulate_two_groups`
     to simulate a world where birth weights for both groups are drawn from the same
     distribution. Under the null hypothesis, how often does the difference in means
     exceed the actual difference in the dataset? What conclusion can you draw from
     this result?
+  id: totrans-128
   prefs: []
   type: TYPE_NORMAL
+  zh: 但通常情况下，我们应该怀疑是否被随机性愚弄了。要找出答案，计算实际均值之间的差异。然后使用`simulate_two_groups`来模拟一个世界，其中两组的出生体重都是从相同的分布中抽取的。在零假设下，均值之间的差异有多少次超过了数据集中的实际差异？你能从这个结果得出什么结论？
 - en: Testing Correlation
+  id: totrans-129
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 检验相关性
 - en: The method we used in the previous section is called a **permutation test**
     because we permuted the pregnancy lengths before dividing them into groups (“permute”
     is another word for shuffle). As another example, in this section we’ll use a
     permutation tests to check whether an observed correlation might be due to chance.
+  id: totrans-130
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们在前一节中使用的方法称为**置换检验**，因为我们在将它们分成组之前对怀孕期长度进行了置换（“置换”是洗牌的另一个词）。作为另一个例子，在本节中，我们将使用置换检验来检查观察到的相关性是否可能是由于偶然造成的。
 - en: As an example, let’s look again at the correlations we computed in Chapter 9,
     using data from the Behavioral Risk Factor Surveillance System (BRFSS). The following
     cell reads the data.
+  id: totrans-131
   prefs: []
   type: TYPE_NORMAL
+  zh: 举个例子，让我们再次看一下我们在第9章计算的相关性，使用的是行为风险因素监测系统（BRFSS）的数据。以下单元格读取数据。
 - en: '[PRE49]'
+  id: totrans-132
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE49]'
 - en: '[PRE50]'
+  id: totrans-133
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE50]'
 - en: The correlations we computed were between height, weight and age.
+  id: totrans-134
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们计算的相关性是身高、体重和年龄之间的。
 - en: '[PRE51]'
+  id: totrans-135
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE51]'
 - en: '|  | HTM4 | WTKG3 | AGE |'
+  id: totrans-136
   prefs: []
   type: TYPE_TB
+  zh: '|  | HTM4 | WTKG3 | AGE |'
 - en: '| --- | --- | --- | --- |'
+  id: totrans-137
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- |'
 - en: '| HTM4 | 1.000000 | 0.477151 | -0.135980 |'
+  id: totrans-138
   prefs: []
   type: TYPE_TB
+  zh: '| HTM4 | 1.000000 | 0.477151 | -0.135980 |'
 - en: '| WTKG3 | 0.477151 | 1.000000 | -0.064951 |'
+  id: totrans-139
   prefs: []
   type: TYPE_TB
+  zh: '| WTKG3 | 0.477151 | 1.000000 | -0.064951 |'
 - en: '| AGE | -0.135980 | -0.064951 | 1.000000 |'
+  id: totrans-140
   prefs: []
   type: TYPE_TB
+  zh: '| AGE | -0.135980 | -0.064951 | 1.000000 |'
 - en: The correlation between height and weight is about 0.48, which is moderately
     strong; if you know someone’s height, you can make a better guess about their
     weight. The other correlations are weaker; for example, knowing someone’s age
     would not substantially improve your guesses about their height or weight.
+  id: totrans-141
   prefs: []
   type: TYPE_NORMAL
+  zh: 身高和体重之间的相关性约为0.48，相当强；如果你知道某人的身高，你可以更好地猜测他们的体重。其他相关性较弱；例如，知道某人的年龄不会显著提高你对他们身高或体重的猜测。
 - en: Because these correlations are so small, we might wonder whether they are due
     to chance. To answer this question, we can use permutation to simulate a world
     where there is actually no correlation between two variables.
+  id: totrans-142
   prefs: []
   type: TYPE_NORMAL
+  zh: 由于这些相关性很小，我们可能会想知道它们是否是由于偶然性造成的。为了回答这个问题，我们可以使用排列来模拟一个实际上两个变量之间没有相关性的世界。
 - en: But first we have to take a detour to figure out how to shuffle a Pandas `Series`.
     As an example, I’ll extract the height data.
+  id: totrans-143
   prefs: []
   type: TYPE_NORMAL
+  zh: 但首先我们必须绕个弯来弄清楚如何洗牌Pandas `Series`。举个例子，我将提取身高数据。
 - en: '[PRE52]'
+  id: totrans-144
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE52]'
 - en: '[PRE53]'
+  id: totrans-145
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE53]'
 - en: The idiomatic way to shuffle a `Series` is to use `sample` with the argument
     `frac=1`, which means that the fraction of the elements we want is `1`, that is,
     all of them (see [https://stackoverflow.com/questions/29576430/shuffle-dataframe-rows](https://stackoverflow.com/questions/29576430/shuffle-dataframe-rows)).
     By default, `sample` chooses elements without replacement, so the result contains
     all of the elements in a random order.
+  id: totrans-146
   prefs: []
   type: TYPE_NORMAL
+  zh: 洗牌`Series`的惯用方法是使用`sample`，参数是`frac=1`，这意味着我们想要的元素的比例是`1`，也就是全部元素（参见[https://stackoverflow.com/questions/29576430/shuffle-dataframe-rows](https://stackoverflow.com/questions/29576430/shuffle-dataframe-rows)）。默认情况下，`sample`选择元素时不会重复，因此结果以随机顺序包含所有元素。
 - en: '[PRE54]'
+  id: totrans-147
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE54]'
 - en: '[PRE55]'
+  id: totrans-148
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE55]'
 - en: If we check the first few elements, it seems like a random sample, so that’s
     good. But let’s see what happens if we use the shuffled `Series` to compute a
     correlation.
+  id: totrans-149
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们检查前几个元素，看起来像是一个随机样本，所以很好。但让我们看看如果我们使用洗牌`Series`来计算相关性会发生什么。
 - en: '[PRE56]'
+  id: totrans-150
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE56]'
 - en: '[PRE57]'
+  id: totrans-151
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE57]'
 - en: 'That result looks familiar: it is the correlation of the unshuffled columns.
     The problem is that when we shuffle a `Series`, the index gets shuffled along
     with it. When we compute a correlation, Pandas uses the index to line up the elements
     from the first `Series` with the elements of the second `Series`. For many operations,
     that’s the behavior we want, but in this case it defeats the purpose of shuffling!'
+  id: totrans-152
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个结果看起来很熟悉：它是未洗牌列的相关性。问题在于，当我们洗牌一个`Series`时，索引也会随之洗牌。当我们计算相关性时，Pandas使用索引将第一个`Series`的元素与第二个`Series`的元素对齐。对于许多操作来说，这是我们想要的行为，但在这种情况下，它破坏了洗牌的目的！
 - en: The solution is to use `reset_index`, which gives the `Series` a new index,
     with the argument `drop=True`, which drops the old one. So we have to shuffle
     `series` like this.
+  id: totrans-153
   prefs: []
   type: TYPE_NORMAL
+  zh: 解决方法是使用`reset_index`，它给`Series`一个新的索引，参数是`drop=True`，它会删除旧的索引。所以我们必须这样洗牌`series`。
 - en: '[PRE58]'
+  id: totrans-154
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE58]'
 - en: Now we can compute a correlation with the shuffled `Series`.
+  id: totrans-155
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以计算与洗牌`Series`的相关性。
 - en: '[PRE59]'
+  id: totrans-156
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE59]'
 - en: '[PRE60]'
+  id: totrans-157
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE60]'
 - en: The result is small, as we expect it to be when the elements are aligned at
     random.
+  id: totrans-158
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果很小，正如我们预期的那样，当元素随机排列时。
 - en: Rather than repeat this awful idiom, let’s put it in a function and never speak
     of it again.
+  id: totrans-159
   prefs: []
   type: TYPE_NORMAL
+  zh: 与其重复这个可怕的习语，不如把它放在一个函数中，再也不提及它了。
 - en: '[PRE61]'
+  id: totrans-160
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE61]'
 - en: The following function takes a `DataFrame` and two column names, makes a shuffled
     copy of one column, and computes its correlation with the other.
+  id: totrans-161
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数接受一个`DataFrame`和两个列名，制作一个洗牌副本，然后计算它与另一个的相关性。
 - en: '[PRE62]'
+  id: totrans-162
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE62]'
 - en: We only have to shuffle one of the columns; it doesn’t get any more random if
     we shuffle both. Now we can use this function to generate a sample of correlations
     with shuffled columns.
+  id: totrans-163
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们只需要洗牌其中一列；如果我们洗牌两列，它就不会变得更随机。现在我们可以使用这个函数来生成一个与洗牌列相关的样本。
 - en: '[PRE63]'
+  id: totrans-164
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE63]'
 - en: Here’s the distribution of the correlations.
+  id: totrans-165
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是相关性的分布。
 - en: '[PRE64]'
+  id: totrans-166
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE64]'
 - en: '![_images/13_hypothesis_112_0.png](../Images/c7c1084d9f7d4b0a4d4f93e0ec568d8a.png)'
+  id: totrans-167
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/13_hypothesis_112_0.png](../Images/c7c1084d9f7d4b0a4d4f93e0ec568d8a.png)'
 - en: The center of the distribution is near 0, and the largest values (positive or
     negative) are around 0.005. If we compute the same distribution with different
     columns, the results are pretty much the same. With samples this big, the correlation
     between shuffled columns is generally small.
+  id: totrans-168
   prefs: []
   type: TYPE_NORMAL
+  zh: 分布的中心接近0，最大值（正数或负数）在0.005左右。如果我们用不同的列计算相同的分布，结果基本上是一样的。对于这么大的样本，洗牌列之间的相关性通常很小。
 - en: How do these values compare to the observed correlations?
+  id: totrans-169
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些值与观察到的相关性相比如何？
 - en: The correlation of height and weight is about 0.48, so it’s extremely unlikely
     we would see a correlation as big as that by chance.
+  id: totrans-170
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 身高和体重之间的相关性约为0.48，因此我们极不可能看到像那样大的相关性。
 - en: The correlation of height and age is smaller, around -0.14, but even that value
     would be unlikely by chance.
+  id: totrans-171
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 身高和年龄的相关性更小，大约为-0.14，但即使这个值也不太可能是偶然的。
 - en: And the correlation of weight and age is even smaller, about -0.06, but that’s
     still 10 times bigger than the biggest correlation in the simulations.
+  id: totrans-172
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 体重和年龄之间的相关性甚至更小，约为-0.06，但仍然比模拟中最大相关性大10倍。
 - en: We can conclude that these correlations are probably not due to chance. And
     that’s useful in the sense that it rules out one possible explanation. But this
     example also demonstrates a limitation of this kind of hypothesis testing. With
     large sample sizes, variability due to randomness tends to be small, so it seldom
     explains the effects we see in real data.
+  id: totrans-173
   prefs: []
   type: TYPE_NORMAL
 - en: And hypothesis testing can be a distraction from more important questions. In
@@ -714,154 +1019,214 @@
     not capture the real strength of the relationship. So testing a correlation might
     not be the more useful thing to do in the first place. We can do better by testing
     a regression model.
+  id: totrans-174
   prefs: []
   type: TYPE_NORMAL
 - en: Testing Regression Models
+  id: totrans-175
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: In the previous sections we used permutation to simulate a world where there
     is no correlation between two variables. In this section we’ll apply the same
     method to regression models.
+  id: totrans-176
   prefs: []
   type: TYPE_NORMAL
 - en: As an example, we’ll use NSFG data to explore the relationship between a mother’s
     age and her baby’s birth weight.
+  id: totrans-177
   prefs: []
   type: TYPE_NORMAL
 - en: In previous sections we computed birth weight and a Boolean variable that identifies
     first babies. Now we’ll store them as columns in `nsfg`, so we can use them with
     StatsModels.
+  id: totrans-178
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE65]'
+  id: totrans-179
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE65]'
 - en: We can select the subset of the rows that represent live, full-term births,
     and make a copy so we can modify the subset without affecting the original.
+  id: totrans-180
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE66]'
+  id: totrans-181
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE66]'
 - en: '[PRE67]'
+  id: totrans-182
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE67]'
 - en: To visualize the relationship between mother’s age and birth weight, we’ll use
     a box plot with mother’s age grouped into 3-year bins. We can use `np.arange`
     to make the bin boundaries, and `pd.cut` to put the values from `AGECON` into
     bins.
+  id: totrans-183
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE68]'
+  id: totrans-184
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE68]'
 - en: The label for each bin is the midpoint of the range; I used a slice to remove
     the last label because the number of bins is one less than the number of bin boundaries.
+  id: totrans-185
   prefs: []
   type: TYPE_NORMAL
 - en: Here’s the box plot.
+  id: totrans-186
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE69]'
+  id: totrans-187
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE69]'
 - en: '![_images/13_hypothesis_122_0.png](../Images/bb32adbc00fbb9808d3b47dac0ec3ebc.png)'
+  id: totrans-188
   prefs: []
   type: TYPE_IMG
 - en: It looks like the average birth weight is highest if the mother is 25-31 years
     old, and lower if she is younger or older. So the relationship might be nonlinear.
     Nevertheless, let’s start with a linear model and work our way up. Here’s a simple
     regression of birth weight as a function of the mother’s age at conception.
+  id: totrans-189
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE70]'
+  id: totrans-190
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE70]'
 - en: '[PRE71]'
+  id: totrans-191
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE71]'
 - en: The slope of the regression line is 0.016 pounds per year, which means that
     if one mother is a year older than another, we expect her baby to be about 0.016
     pounds heavier, which is about a quarter of an ounce.
+  id: totrans-192
   prefs: []
   type: TYPE_NORMAL
 - en: This parameter is small, so we might wonder whether the apparent effect is due
     to chance. To answer that question, we will use permutation to simulate a world
     where there is no relationship between mother’s age and birth weight.
+  id: totrans-193
   prefs: []
   type: TYPE_NORMAL
 - en: As a test statistic, we’ll use the coefficient of determination, denoted \(R^2\),
     which quantifies the predictive power of the model (see [https://en.wikipedia.org/wiki/Coefficient_of_determination](https://en.wikipedia.org/wiki/Coefficient_of_determination)).
     The regression results include \(R^2\) in a variable called `rsquared`.
+  id: totrans-194
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE72]'
+  id: totrans-195
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE72]'
 - en: '[PRE73]'
+  id: totrans-196
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE73]'
 - en: The value of \(R^2\) for this model is very small, which means that our guesses
     about a baby’s weight are barely improved if we know the mother’s age (and use
     a linear model). So it seems possible that the apparent relationship between these
     variables is due to chance. We can test this possibility by using permutation
     to simulate a world where there is no such relationship.
+  id: totrans-197
   prefs: []
   type: TYPE_NORMAL
 - en: The following function takes a `DataFrame`, shuffles the `AGECON` column, computes
     a linear regression model, and returns \(R^2\).
+  id: totrans-198
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE74]'
+  id: totrans-199
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE74]'
 - en: If we call it many times, we get a sample from the distribution of \(R^2\) under
     the null hypothesis.
+  id: totrans-200
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE75]'
+  id: totrans-201
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE75]'
 - en: After 200 attempts, the largest value of \(R^2\) is about 0.003, which is smaller
     than the observed value of \(R^2\), about 0.008. We conclude that the observed
     effect is bigger than we would expect to see by chance.
+  id: totrans-202
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE76]'
+  id: totrans-203
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE76]'
 - en: '[PRE77]'
+  id: totrans-204
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE77]'
 - en: '**Exercise:** The box plot suggests that the relationship between mother’s
     age and birth weight is nonlinear, so let’s try a nonlinear model. I’ll add a
     column to the `DataFrame` with the square of mother’s age.'
+  id: totrans-205
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**箱线图表明母亲年龄和出生体重之间的关系是非线性的，所以让我们尝试一个非线性模型。我将在`DataFrame`中添加一个母亲年龄的平方列。'
 - en: '[PRE78]'
+  id: totrans-206
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE78]'
 - en: And run the model again with both the linear and quadratic terms.
+  id: totrans-207
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后再次用线性和二次项运行模型。
 - en: '[PRE79]'
+  id: totrans-208
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE79]'
 - en: '[PRE80]'
+  id: totrans-209
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE80]'
 - en: The parameter of `AGECON2` is quite small, so we might wonder whether it actually
     improves the model, or might be the product of randomness. One way to answer this
     question is to look at the improvement in \(R^2\).
+  id: totrans-210
   prefs: []
   type: TYPE_NORMAL
+  zh: '`AGECON2`的参数非常小，所以我们可能会怀疑它是否真的改善了模型，或者可能是随机性的产物。回答这个问题的一种方法是看\(R^2\)的改善。'
 - en: '[PRE81]'
+  id: totrans-211
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE81]'
 - en: '[PRE82]'
+  id: totrans-212
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE82]'
 - en: The value of \(R^2\) is about 0.012, compared to 0.008 with the linear model.
     By this criterion, the quadratic model is a better, but when we add variables
     to a model, we might get some improvement just by chance. To see how much, write
@@ -870,70 +1235,102 @@
     and returns \(R^2\). Run your function 200 times and count how often \(R^2\) from
     the model exceeds the observed value from the dataset. What conclusion can you
     draw?
+  id: totrans-213
   prefs: []
   type: TYPE_NORMAL
+  zh: \(R^2\)的值约为0.012，而线性模型的值为0.008。按照这个标准，二次模型更好，但当我们向模型添加变量时，我们可能会因偶然性而获得一些改进。为了了解有多少改进，编写一个名为`simulate_rsquared2`的函数，该函数以`DataFrame`作为参数，洗牌`AGECON2`，运行带有`AGECON`和洗牌值的回归模型，并返回\(R^2\)。运行你的函数200次，并计算模型中\(R^2\)超过数据集观察值的次数。你能得出什么结论？
 - en: Controlling for Age
+  id: totrans-214
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 控制年龄
 - en: In a previous exercise, you computed the difference in birth weight between
     first babies and others, which is about 0.17 pounds, and you checked whether we
     are likely to see a difference as big as that by chance. If things went according
     to plan, you found that it is very unlikely.
+  id: totrans-215
   prefs: []
   type: TYPE_NORMAL
+  zh: 在之前的练习中，你计算了头胎婴儿和其他婴儿的出生体重差异，大约为0.17磅，然后检查我们是否可能偶然看到这么大的差异。如果一切按计划进行，你会发现这是非常不可能的。
 - en: But that doesn’t necessarily mean that there is anything special about first
     babies that makes them lighter than others. Rather, knowing a baby’s birth order
     might provide information about some other factor that is related to birth weight.
     The mother’s age could be that factor.
+  id: totrans-216
   prefs: []
   type: TYPE_NORMAL
+  zh: 但这并不一定意味着头胎婴儿有什么特别之处，使它们比其他婴儿更轻。相反，知道一个婴儿的出生顺序可能提供有关与出生体重相关的其他因素的信息。母亲的年龄可能是这个因素。
 - en: First babies are likely to have younger mothers than other babies, and younger
     mothers tend to have lighter babies. The difference we see in first babies might
     be explained by their mothers’ ages. So let’s see what happens if we control for
     age. Here’s a simple regression of birth weight as a function of the Boolean variable
     `FIRST`.
+  id: totrans-217
   prefs: []
   type: TYPE_NORMAL
+  zh: 头胎婴儿可能比其他婴儿的母亲更年轻，而年轻的母亲 tend to 有更轻的婴儿。我们在头胎婴儿中看到的差异可能可以通过他们母亲的年龄来解释。因此，让我们看看如果控制年龄会发生什么。这是一个简单的出生体重回归，作为布尔变量`FIRST`的函数。
 - en: '[PRE83]'
+  id: totrans-218
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE83]'
 - en: '[PRE84]'
+  id: totrans-219
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE84]'
 - en: The parameter associated with `FIRST` is -0.17 pounds, which is the same as
     the difference in means we computed. But now we can add `AGECON` as a control
     variable.
+  id: totrans-220
   prefs: []
   type: TYPE_NORMAL
+  zh: 与`FIRST`相关的参数是-0.17磅，与我们计算的均值差异相同。但现在我们可以添加`AGECON`作为控制变量。
 - en: '[PRE85]'
+  id: totrans-221
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE85]'
 - en: '[PRE86]'
+  id: totrans-222
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE86]'
 - en: The age effect accounts for some of the difference between first babies and
     others. After controlling for age, the remaining difference is about 0.12 pounds.
     Since the age effect is nonlinear, we can can control for age more effectively
     by adding `AGECON2`.
+  id: totrans-223
   prefs: []
   type: TYPE_NORMAL
+  zh: 年龄效应解释了头胎婴儿和其他婴儿之间的一些差异。在控制年龄之后，剩下的差异约为0.12磅。由于年龄效应是非线性的，我们可以通过添加`AGECON2`更有效地控制年龄。
 - en: '[PRE87]'
+  id: totrans-224
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE87]'
 - en: '[PRE88]'
+  id: totrans-225
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE88]'
 - en: '[PRE89]'
+  id: totrans-226
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE89]'
 - en: '[PRE90]'
+  id: totrans-227
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE90]'
 - en: When we use a quadratic model to control for the age effect, the remaining difference
     between first babies and others is smaller again, about 0.10 pounds.
+  id: totrans-228
   prefs: []
   type: TYPE_NORMAL
+  zh: 当我们使用二次模型来控制年龄效应时，头胎婴儿和其他婴儿之间的剩余差异再次变小，约为0.10磅。
 - en: One of the warning signs of a spurious relationship between two variables is
     that the effect gradually disappears as you add control variables. So we should
     wonder whether the remaining effect might be due to chance. To find out, we’ll
@@ -941,181 +1338,265 @@
     in weight between first babies and others. It takes a `DataFrame` as a parameter,
     shuffles the `FIRST` column, runs the regression model with `AGECON` and `AGECON2`,
     and returns the estimated difference.
+  id: totrans-229
   prefs: []
   type: TYPE_NORMAL
+  zh: 两个变量之间虚假关系的一个警告信号是，随着你增加控制变量，效应逐渐消失。因此，我们应该怀疑剩下的效应可能是由于偶然性。为了找出答案，我们将使用以下函数，该函数模拟一个世界，在这个世界中，头胎婴儿和其他婴儿的体重没有差异。它以`DataFrame`作为参数，洗牌`FIRST`列，使用`AGECON`和`AGECON2`运行回归模型，并返回估计的差异。
 - en: '[PRE91]'
+  id: totrans-230
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE91]'
 - en: If we run it many times, we get a sample from the distribution of the test statistic
     under the null hypothesis.
+  id: totrans-231
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们多次运行它，我们将得到一个在零假设下的检验统计量分布的样本。
 - en: '[PRE92]'
+  id: totrans-232
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE92]'
 - en: The range of values is wide enough that it occasionally exceeds the observed
     effect size.
+  id: totrans-233
   prefs: []
   type: TYPE_NORMAL
+  zh: 值的范围足够宽，以至于偶尔会超过观察到的效应大小。
 - en: '[PRE93]'
+  id: totrans-234
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE93]'
 - en: '[PRE94]'
+  id: totrans-235
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE94]'
 - en: Our estimate of the p-value is only approximate, but it looks like it’s between
     1% and 2%.
+  id: totrans-236
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们对p值的估计只是近似值，但看起来它在1%到2%之间。
 - en: '[PRE95]'
+  id: totrans-237
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE95]'
 - en: '[PRE96]'
+  id: totrans-238
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE96]'
 - en: This result indicates that an observed difference of 0.1 pounds is possible,
     but not likely, if the actual difference between the groups is zero.
+  id: totrans-239
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个结果表明，如果两组之间的实际差异为零，观察到的0.1磅的差异是可能的，但不太可能。
 - en: So how should we interpret a result like this? In the tradition of statistical
     hypothesis testing, it is common to use 5% as the threshold between results that
     are considered “statistically significant” or not (see [https://en.wikipedia.org/wiki/Statistical_hypothesis_testing](https://en.wikipedia.org/wiki/Statistical_hypothesis_testing)).
     By that standard, the weight difference between first babies and others is statistically
     significant.
+  id: totrans-240
   prefs: []
   type: TYPE_NORMAL
+  zh: 那么我们应该如何解释这样的结果呢？在统计假设检验的传统中，通常使用5%作为被认为是“统计显著”的结果的阈值（参见[https://en.wikipedia.org/wiki/Statistical_hypothesis_testing](https://en.wikipedia.org/wiki/Statistical_hypothesis_testing)）。按照这个标准，头胎婴儿和其他婴儿之间的体重差异是统计显著的。
 - en: 'However, there are several problems with this practice:'
+  id: totrans-241
   prefs: []
   type: TYPE_NORMAL
+  zh: 然而，这种做法存在几个问题：
 - en: First, the choice of the threshold should depend on the context. For a life-and-death
     decision, we might choose a more stringent threshold. For a topic of idle curiosity,
     like this one, we could be more relaxed.
+  id: totrans-242
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 首先，阈值的选择应取决于上下文。对于生死决定，我们可能会选择更严格的阈值。对于像这样的闲聊话题，我们可以更加放松。
 - en: But it might not be useful to apply a threshold at all. An alternative (which
     is common in practice) is to report the p-value and let it speak for itself. It
     provides no additional value to declare that the result is significant or not.
+  id: totrans-243
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 但是，可能根本没有必要应用阈值。另一种选择（在实践中很常见）是报告p值并让其自己说明。宣称结果是否显著并没有提供额外的价值。
 - en: Finally, the use of the word “significant” is dangerously misleading, because
     it implies that the result is important in practice. But a small p-value only
     means that an observed effect would be unlikely to happen by chance. It doesn’t
     mean it is important.
+  id: totrans-244
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 最后，使用“显著”这个词是非常误导的，因为它暗示着结果在实践中是重要的。但是小的p值只意味着观察到的效应不太可能是偶然发生的。这并不意味着它是重要的。
 - en: This last point is particularly problematic with large datasets, because very
     small effects can be statistically significant. We saw an example with the BRFSS
     dataset, where the correlations we tested were *all* statistically significant,
     even the ones that are too small to matter in practice.
+  id: totrans-245
   prefs: []
   type: TYPE_NORMAL
+  zh: 这最后一点在大型数据集中尤其有问题，因为非常小的效应也可能是统计显著的。我们在BRFSS数据集中看到了一个例子，我们测试的相关性*全部*是统计显著的，即使实际上对实践没有影响。
 - en: Summary
+  id: totrans-246
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 总结
 - en: 'Let’s review the examples in this chapter:'
+  id: totrans-247
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们回顾本章中的例子：
 - en: We started with data from LEAP, which studied the effect of eating peanuts on
     the development of peanut allergies. The test statistic was relative risk, and
     the null hypothesis was that the treatment was ineffective.
+  id: totrans-248
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 我们从LEAP的数据开始，该数据研究了食用花生对花生过敏的影响。检验统计量是相对风险，零假设是治疗无效。
 - en: 'Then we looked at the difference in pregnancy length for first babies and others.
     We used the difference in means as the test statistic, and two models of the null
     hypothesis: one based on a normal model and the other based on permutation of
     the data. As an exercise, you tested the difference in weight between first babies
     and others.'
+  id: totrans-249
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 然后我们研究了第一胎和其他胎儿的怀孕期长的差异。我们使用均值差作为检验统计量，并使用了两种零假设模型：一种基于正态模型，另一种基于数据的排列。作为练习，您测试了第一胎和其他胎儿的体重差异。
 - en: Next we used permutation to test correlations, using height, weight, and age
     data from the BRFSS. This example shows that with large sample sizes, observed
     effects are often “statistically significant”, even if they are too small to matter
     in practice.
+  id: totrans-250
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，我们使用排列来测试相关性，使用BRFSS的身高、体重和年龄数据。这个例子表明，对于大样本量，即使实际上对实践没有影响，观察到的效应通常也是“统计显著”的。
 - en: We used regression models to explore the maternal age effect on birth weight.
     To see whether the effect might be due to chance, we used permutation to model
     the null hypothesis and \(R^2\) as a test statistic.
+  id: totrans-251
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 我们使用回归模型探索了母亲年龄对出生体重的影响。为了查看效应是否可能是由于偶然发生的，我们使用排列来模拟零假设，\(R^2\)作为检验统计量。
 - en: Finally, we explored the possibility that the first baby effect is actually
     an indirect maternal age effect. After controlling for the mother’s age, we tested
     whether the remaining difference between first babies and others might happen
     by chance. We used permutation to model the null hypothesis and the estimated
     slope as a test statistic.
+  id: totrans-252
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 最后，我们探讨了第一胎效应实际上是一种间接的母亲年龄效应的可能性。在控制了母亲年龄后，我们测试了第一胎和其他胎儿之间的剩余差异是否可能是偶然发生的。我们使用排列来模拟零假设和估计的斜率作为检验统计量。
 - en: As a final exercise, below, you can use the same methods to explore the paternal
     age effect.
+  id: totrans-253
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为最后一个练习，您可以使用相同的方法来探索父亲年龄效应。
 - en: '**Exercise:** A paternal age effect is a relationship between the age of a
     father and a variety of outcomes for their children (see [https://en.wikipedia.org/wiki/Paternal_age_effect](https://en.wikipedia.org/wiki/Paternal_age_effect)).
     There is some evidence that young fathers and old fathers tend to have lighter
     babies than fathers in the middle. Let’s see if that’s true for the babies in
     the NSFG dataset. The `HPAGELB` column encodes the father’s age. Here are the
     values, after replacing the codes for missing data with `NaN`.'
+  id: totrans-254
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** 父亲年龄效应是父亲年龄与子女各种结果之间的关系（参见[https://en.wikipedia.org/wiki/Paternal_age_effect](https://en.wikipedia.org/wiki/Paternal_age_effect)）。有证据表明，年轻父亲和老年父亲生的婴儿比中年父亲生的婴儿要轻。让我们看看NSFG数据集中的婴儿是否符合这一规律。`HPAGELB`列编码了父亲的年龄。以下是值，在用`NaN`替换缺失数据的代码后。'
 - en: '[PRE97]'
+  id: totrans-255
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE97]'
 - en: '[PRE98]'
+  id: totrans-256
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE98]'
 - en: 'And here’s what the codes mean:'
+  id: totrans-257
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是代码的含义：
 - en: '| Code | Age |'
+  id: totrans-258
   prefs: []
   type: TYPE_TB
+  zh: '| 代码 | 年龄 |'
 - en: '| --- | --- |'
+  id: totrans-259
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| 1 | Under 20 years |'
+  id: totrans-260
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 20岁以下 |'
 - en: '| 2 | 20-24 years |'
+  id: totrans-261
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 20-24岁 |'
 - en: '| 3 | 25-29 years |'
+  id: totrans-262
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 25-29岁 |'
 - en: '| 4 | 30-34 years |'
+  id: totrans-263
   prefs: []
   type: TYPE_TB
+  zh: '| 4 | 30-34岁 |'
 - en: '| 5 | 35-39 years |'
+  id: totrans-264
   prefs: []
   type: TYPE_TB
+  zh: '| 5 | 35-39岁 |'
 - en: '| 6 | 40 years or older |'
+  id: totrans-265
   prefs: []
   type: TYPE_TB
+  zh: '| 6 | 40岁或以上 |'
 - en: Let’s create a new column that’s true for the fathers in the youngest and oldest
     groups.
+  id: totrans-266
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们创建一个新的列，对于最年轻和最年长的父亲为真。
 - en: '[PRE99]'
+  id: totrans-267
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE99]'
 - en: We can use this column in a regression model to compute the difference in birth
     weight for young and old fathers compared to the others.
+  id: totrans-268
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以在回归模型中使用这一列来计算年轻和老年父亲与其他父亲之间出生体重的差异。
 - en: '[PRE100]'
+  id: totrans-269
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE100]'
 - en: '[PRE101]'
+  id: totrans-270
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE101]'
 - en: The difference is negative, which is consistent with the theory, and about 0.14
     pounds, which is comparable in size to the (apparent) first baby effect. But there
     is a strong correlation between father’s age and mother’s age. So what seems like
@@ -1123,11 +1604,15 @@
     out, let’s see what happens if we control for the mother’s age. Run this model
     again with `AGECON` and `AGECON2` as predictors. Does the observed effect of paternal
     age get smaller?
+  id: totrans-271
   prefs: []
   type: TYPE_NORMAL
+  zh: 差异为负，与理论一致，约为0.14磅，与（明显的）第一个宝宝效应相当。但父亲年龄和母亲年龄之间存在很强的相关性。因此，看起来像是父亲年龄效应的可能实际上是间接的母亲年龄效应。为了找出答案，让我们看看如果控制母亲的年龄会发生什么。再次运行这个模型，以`AGECON`和`AGECON2`作为预测变量。父亲年龄的观察效应是否变小？
 - en: To see if the remaining effect could be due to randomness, write a function
     that shuffles `YO_DAD`, runs the regression model, and returns the parameter associated
     with the shuffled column. How often does this parameter exceed the observed value?
     What conclusion can we draw from the results?
+  id: totrans-272
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了确定剩余效应是否可能是由于随机性，编写一个函数来洗牌`YO_DAD`，运行回归模型，并返回与洗牌列相关的参数。这个参数超过观察到的值的频率是多少？从结果中我们可以得出什么结论？
