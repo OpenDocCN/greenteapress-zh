@@ -1,132 +1,180 @@
 - en: Quiz 7
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
 - en: 原文：[https://allendowney.github.io/DSIRP/quiz07.html](https://allendowney.github.io/DSIRP/quiz07.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: 'BEFORE YOU START THIS QUIZ:'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
 - en: Click on “Copy to Drive” to make a copy of the quiz,
+  id: totrans-3
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: Click on “Share”,
+  id: totrans-4
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: Click on “Change” and select “Anyone with this link can edit”
+  id: totrans-5
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: Click “Copy link” and
+  id: totrans-6
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: Paste the link into [this Canvas assignment](https://canvas.olin.edu/courses/313/assignments/5183).
+  id: totrans-7
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: This quiz is open notes, open internet.
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
 - en: You can ask for help from the instructor, but not from anyone else.
+  id: totrans-9
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: You can use code you find on the internet, but if you use more than a couple
     of lines from a single source, you should attribute the source.
+  id: totrans-10
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Question 1
+  id: totrans-11
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: 'A certain function is defined recursively like this:'
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
 - en: \[ f(n, m) = f(n-1, m-1) + f(n-1, m) \]
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
 - en: 'with two special cases: if \(m=0\) or \(m=n\), the value of the function is
     1.'
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
 - en: Write a (Python) function called `f` that computes this (mathematical) function.
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
 - en: You can use the following examples to test your function.
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE0]'
+  id: totrans-17
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '[PRE1]'
+  id: totrans-18
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '[PRE2]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '[PRE3]'
+  id: totrans-20
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '[PRE4]'
+  id: totrans-21
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: If you try to run the following example, you will find that it runs for a long
     time.
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE5]'
+  id: totrans-23
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: Question 2
+  id: totrans-24
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: Write a version of `f` called `f_memo` that uses an appropriate Python data
     structure to “memoize” `f`. In other words, you should keep a record of results
     you have already computed and look them up rather than compute them again.
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
 - en: There’s an example of memoization in recursion.ipynb.
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
 - en: You can use this example to confirm that the function still works.
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE6]'
+  id: totrans-28
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '[PRE7]'
+  id: totrans-29
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: And use this one to confirm that it is faster. It should take less than a second,
     and the result should be `100891344545564193334812497256`.
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE8]'
+  id: totrans-31
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '[PRE9]'
+  id: totrans-32
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '[PRE10]'
+  id: totrans-33
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: LetterSet
+  id: totrans-34
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: The next two questions are based on a set implementation I’ll call a `LetterSet`.
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
 - en: 'Note: In this problem statement, “set” refers to the concept of a set, not
     the Python object called `set`. We won’t use any Python `set` objects in these
     problems.'
+  id: totrans-36
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
@@ -134,242 +182,370 @@
     the set efficiently using a [bit array](https://en.wikipedia.org/wiki/Bit_array).
     For example, to represent a set of letters, you can use a list of 26 Boolean values,
     one for each letter in the Roman alphabet (ignoring upper and lower case).
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
 - en: Here’s a class definition for this representation of a set.
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE11]'
+  id: totrans-39
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: If all of the elements in the list are False, the set is empty.
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE12]'
+  id: totrans-41
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '[PRE13]'
+  id: totrans-42
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: To add a letter to a set, we have to compute the index that corresponds to a
     given letter. The following function uses `ord`, which is a built-in Python function,
     to compute the index of a given letter.
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE14]'
+  id: totrans-44
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: The index of `a` is 0, and the index of `Z` is 25.
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE15]'
+  id: totrans-46
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '[PRE16]'
+  id: totrans-47
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: To add a letter, we set the corresponding element of the list to `True`.
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE17]'
+  id: totrans-49
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: '[PRE18]'
+  id: totrans-50
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: '[PRE19]'
+  id: totrans-51
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: 'To count the elements of a set, we can use the built-in `sum` function:'
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE20]'
+  id: totrans-53
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '[PRE21]'
+  id: totrans-54
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: '[PRE22]'
+  id: totrans-55
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: Question 3
+  id: totrans-56
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: Write a function called `is_in` that takes a set and a letter and returns `True`
     if the letter is in the set. In a comment, identify the order of growth of this
     function.
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
 - en: Use the following examples to test your code.
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE23]'
+  id: totrans-59
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: '[PRE24]'
+  id: totrans-60
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: Question 4
+  id: totrans-61
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: Write a function called `intersect` that takes two `LetterSet` objects and returns
     a new `LetterSet` that represents the intersection of the two sets. In other words,
     the new `LetterSet` should contain only elements that appear in both sets.
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
 - en: In a comment, identify the order of growth of this function.
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
 - en: Use the following examples to test your code.
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE25]'
+  id: totrans-65
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: '[PRE26]'
+  id: totrans-66
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: '[PRE27]'
+  id: totrans-67
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: '[PRE28]'
+  id: totrans-68
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: '[PRE29]'
+  id: totrans-69
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: '[PRE30]'
+  id: totrans-70
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: '[PRE31]'
+  id: totrans-71
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: Just for fun bonus question
+  id: totrans-72
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: One way to represent large numbers is to use a linked list where each node contains
     a digit.
+  id: totrans-73
   prefs: []
   type: TYPE_NORMAL
 - en: Here are class definitions for `DigitList`, which represents a list of digits,
     and `Node`, which contains one digit and a reference to the next `Node` in the
     list.
+  id: totrans-74
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE32]'
+  id: totrans-75
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: '[PRE33]'
+  id: totrans-76
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: In a `DigitList`, digits are stored in reverse order, so a list that contains
     the digits `1`, `2`, and `3`, in that order, represents the number `321`.
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE34]'
+  id: totrans-78
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: '[PRE35]'
+  id: totrans-79
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: '[PRE36]'
+  id: totrans-80
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: '[PRE37]'
+  id: totrans-81
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE37]'
 - en: The following function takes a `DigitList` and prints the digits in reverse
     order.
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE38]'
+  id: totrans-83
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: '[PRE39]'
+  id: totrans-84
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: '[PRE40]'
+  id: totrans-85
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE40]'
 - en: '[PRE41]'
+  id: totrans-86
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE41]'
 - en: '[PRE42]'
+  id: totrans-87
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE42]'
 - en: Write a function called `add` that takes two `DigitList` objects and returns
     a new `DigitList` that represents their sum.
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE43]'
+  id: totrans-89
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE43]'
 - en: '[PRE44]'
+  id: totrans-90
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE44]'
 - en: You can use the following examples to test your code.
+  id: totrans-91
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE45]'
+  id: totrans-92
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE45]'
 - en: '[PRE46]'
+  id: totrans-93
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE46]'
 - en: '[PRE47]'
+  id: totrans-94
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE47]'
 - en: '[PRE48]'
+  id: totrans-95
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE48]'
 - en: '[PRE49]'
+  id: totrans-96
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE49]'
 - en: '[PRE50]'
+  id: totrans-97
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE50]'
 - en: '[PRE51]'
+  id: totrans-98
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE51]'
 - en: '[PRE52]'
+  id: totrans-99
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE52]'
 - en: '[PRE53]'
+  id: totrans-100
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE53]'
 - en: '[PRE54]'
+  id: totrans-101
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE54]'
 - en: '[PRE55]'
+  id: totrans-102
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE55]'
 - en: '[PRE56]'
+  id: totrans-103
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE56]'
 - en: '[PRE57]'
+  id: totrans-104
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE57]'
 - en: '[PRE58]'
+  id: totrans-105
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE58]'
 - en: '[PRE59]'
+  id: totrans-106
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE59]'
 - en: '[PRE60]'
+  id: totrans-107
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE60]'
 - en: '[PRE61]'
+  id: totrans-108
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE61]'
 - en: '*Data Structures and Information Retrieval in Python*'
+  id: totrans-109
   prefs: []
   type: TYPE_NORMAL
 - en: Copyright 2021 Allen Downey
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: 版权所有 2021 年 Allen Downey
 - en: 'License: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  id: totrans-111
   prefs: []
   type: TYPE_NORMAL
+  zh: 许可证：[知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议](https://creativecommons.org/licenses/by-nc-sa/4.0/)

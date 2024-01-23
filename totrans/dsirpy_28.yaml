@@ -3,64 +3,77 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 归并排序
 - en: 原文：[https://allendowney.github.io/DSIRP/mergesort.html](https://allendowney.github.io/DSIRP/mergesort.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/DSIRP/mergesort.html](https://allendowney.github.io/DSIRP/mergesort.html)
 - en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/mergesort.ipynb)'
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: '[点击这里在Colab上运行本章](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/mergesort.ipynb)'
 - en: Implementing Merge Sort
   id: totrans-3
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 实现归并排序
 - en: '[Merge sort](https://en.wikipedia.org/wiki/Merge_sort) is a divide and conquer
     strategy:'
   id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: '[归并排序](https://en.wikipedia.org/wiki/Merge_sort)是一种分而治之的策略：'
 - en: Divide the sequence into two halves,
   id: totrans-5
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 将序列分成两半，
 - en: Sort the halves, and
   id: totrans-6
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 对两半进行排序，并
 - en: Merge the sorted sub-sequences into a single sequence.
   id: totrans-7
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 将排序好的子序列合并成一个序列。
 - en: 'Since step 2 involves sorting, this algorithm is recursive, so we need a base
     case. There are two options:'
   id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 由于步骤2涉及排序，这个算法是递归的，所以我们需要一个基本情况。有两种选择：
 - en: If the size falls below some threshold, we can use another sort algorithm.
   id: totrans-9
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如果大小低于某个阈值，我们可以使用另一种排序算法。
 - en: If the size of a sub-sequence is 1, it is already sorted.
   id: totrans-10
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如果子序列的大小为1，则它已经排序好了。
 - en: '[Comparison with other sort algorithms](https://en.wikipedia.org/wiki/Merge_sort#Comparison_with_other_sort_algorithms)'
   id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: '[与其他排序算法的比较](https://en.wikipedia.org/wiki/Merge_sort#Comparison_with_other_sort_algorithms)'
 - en: To implement merge sort, I think it’s helpful to start with a non-recursive
     version that uses the Python `sort` function to sort the sub-sequences.
   id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 要实现归并排序，我认为从使用Python的`sort`函数对子序列进行排序的非递归版本开始会很有帮助。
 - en: '[PRE0]'
   id: totrans-13
   prefs: []
@@ -72,6 +85,7 @@
   id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**编写一个名为`merge`的函数，它接受两个排序好的序列`left`和`right`，并返回一个包含`left`和`right`中所有元素的序列，按升序（或非递减）排序。'
 - en: 'Note: this function is not conceptually difficult, but it is notoriously tricky
     to get all of the edge cases right without making the function unreadable. Take
     it as a challenge to write a version that is correct, concise, and readable. I
@@ -79,10 +93,12 @@
   id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 注意：这个函数在概念上并不难，但是要在不使函数难以阅读的情况下正确处理所有边缘情况是非常棘手的。把它当作一个挑战，写一个正确、简洁和可读的版本。我发现我可以把它写得更简洁一些，作为一个生成器函数。
 - en: You can use the following example to test your code.
   id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 你可以使用以下示例来测试你的代码。
 - en: '[PRE1]'
   id: totrans-17
   prefs: []
@@ -130,11 +146,13 @@
   id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**从`merge_sort_norec`开始，编写一个名为`merge_sort_rec`的函数，它是完全递归的；也就是说，它应该使用`merge_sort_rec`而不是使用Python的`sort`函数来对两半进行排序。当然，你需要一个基本情况来避免无限递归。'
 - en: Test your method by running the code in the next cell, then use `test_merge_sort_rec`,
     below, to check the performance of your function.
   id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 通过运行下一个单元格中的代码来测试你的方法，然后使用下面的`test_merge_sort_rec`来检查你的函数的性能。
 - en: '[PRE9]'
   id: totrans-27
   prefs: []
@@ -170,11 +188,13 @@
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 堆合并
 - en: Suppose we want to merge more than two sub-sequences. A convenient way to do
     that is to use a heap. For example, here are three sorted sub-sequences.
   id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设我们想要合并两个以上的子序列。一个方便的方法是使用堆。例如，这里有三个排序好的子序列。
 - en: '[PRE15]'
   id: totrans-35
   prefs: []
@@ -195,27 +215,32 @@
   id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于每个序列，我将创建一个迭代器，并将一个包含以下内容的元组推入堆中：
 - en: The first element from the iterator,
   id: totrans-39
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 迭代器的第一个元素，
 - en: An index that’s different for each iterator, and
   id: totrans-40
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 每个迭代器都有一个不同的索引，
 - en: The iterator itself.
   id: totrans-41
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 迭代器本身。
 - en: When the heap compares two of these tuples, it compares the elements first.
     If there’s a tie, it compares the indices. Since the indices are unique, there
     can’t be a tie, so we never have to compare iterators (which would be an error).
   id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: 当堆比较这两个元组时，首先比较元素。如果有平局，它会比较索引。由于索引是唯一的，所以不可能有平局，所以我们永远不必比较迭代器（这将是一个错误）。
 - en: '[PRE18]'
   id: totrans-43
   prefs: []
@@ -230,6 +255,7 @@
   id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 当我们从堆中弹出一个值时，我们得到的是具有最小值的元组。
 - en: '[PRE20]'
   id: totrans-46
   prefs: []
@@ -245,6 +271,7 @@
   id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们知道迭代器还有更多的值，我们可以使用`next`来获取下一个值，然后将一个元组推回到堆中。
 - en: '[PRE22]'
   id: totrans-49
   prefs: []
@@ -255,6 +282,7 @@
   id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们重复这个过程，我们将按升序得到所有子序列的所有元素。
 - en: 'However, we have to deal with the case where the iterator is empty. In Python,
     the only way to check is to call `next` and take your chances! If there are no
     more elements in the iterator, `next` raises a `StopIteration` exception, which
@@ -262,6 +290,7 @@
   id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: 然而，我们必须处理迭代器为空的情况。在Python中，检查的唯一方法是调用`next`并冒险！如果迭代器中没有更多的元素，`next`会引发一个`StopIteration`异常，你可以用一个`try`语句来处理，就像这样：
 - en: '[PRE23]'
   id: totrans-52
   prefs: []
@@ -277,10 +306,12 @@
   id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**编写一个名为`heapmerge`的生成器函数，它接受一个序列列表，并按升序从序列中产生元素。'
 - en: You can use the following examples to test your function.
   id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: 你可以使用以下示例来测试你的函数。
 - en: '[PRE25]'
   id: totrans-56
   prefs: []
@@ -305,21 +336,25 @@
   id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: '`heapq`模块提供了一个名为`merge`的函数，它实现了这个算法。'
 - en: Comparing sort algorithms
   id: totrans-61
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 比较排序算法
 - en: NumPy provides implementations of three sorting algorithms, quicksort, mergesort,
     and heapsort.
   id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: NumPy提供了三种排序算法的实现，快速排序、归并排序和堆排序。
 - en: In theory that are all in `O(n log n)`. Let’s see what that looks like when
     we plot runtime versus problem size.
   id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 在理论上，它们都是`O(n log n)`。让我们看看当我们绘制运行时间与问题大小的关系时会是什么样子。
 - en: '[PRE29]'
   id: totrans-64
   prefs: []
@@ -344,10 +379,12 @@
   id: totrans-68
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/mergesort_40_1.png](../Images/4f0cc84b465ad18914fad171735ade35.png)'
 - en: quicksort is hard to distinguish from linear, up to about 10 million elements.
   id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: 快速排序很难与线性区分，直到大约1000万个元素。
 - en: '[PRE33]'
   id: totrans-70
   prefs: []
@@ -362,6 +399,7 @@
   id: totrans-72
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/mergesort_42_1.png](../Images/3030a678a5c410add211f7edc25a32c8.png)'
 - en: Merge sort is similar, maybe with some upward curvature.
   id: totrans-73
   prefs: []
