@@ -3,81 +3,98 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 测验7
 - en: 原文：[https://allendowney.github.io/DSIRP/quiz07.html](https://allendowney.github.io/DSIRP/quiz07.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/DSIRP/quiz07.html](https://allendowney.github.io/DSIRP/quiz07.html)
 - en: 'BEFORE YOU START THIS QUIZ:'
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 在开始这个测验之前：
 - en: Click on “Copy to Drive” to make a copy of the quiz,
   id: totrans-3
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 点击“复制到驱动器”以复制测验，
 - en: Click on “Share”,
   id: totrans-4
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 点击“分享”，
 - en: Click on “Change” and select “Anyone with this link can edit”
   id: totrans-5
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 点击“更改”，然后选择“任何人都可以编辑”
 - en: Click “Copy link” and
   id: totrans-6
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 点击“复制链接”和
 - en: Paste the link into [this Canvas assignment](https://canvas.olin.edu/courses/313/assignments/5183).
   id: totrans-7
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 将链接粘贴到[此Canvas作业](https://canvas.olin.edu/courses/313/assignments/5183)中。
 - en: This quiz is open notes, open internet.
   id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个测验是开放笔记，开放互联网。
 - en: You can ask for help from the instructor, but not from anyone else.
   id: totrans-9
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 你可以向导师寻求帮助，但不能向其他人寻求帮助。
 - en: You can use code you find on the internet, but if you use more than a couple
     of lines from a single source, you should attribute the source.
   id: totrans-10
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 你可以使用在互联网上找到的代码，但如果你从单个来源使用了超过几行，你应该注明出处。
 - en: Question 1
   id: totrans-11
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 问题1
 - en: 'A certain function is defined recursively like this:'
   id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 某个函数被递归地定义如下：
 - en: \[ f(n, m) = f(n-1, m-1) + f(n-1, m) \]
   id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: \[ f(n, m) = f(n-1, m-1) + f(n-1, m) \]
 - en: 'with two special cases: if \(m=0\) or \(m=n\), the value of the function is
     1.'
   id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 有两种特殊情况：如果\(m=0\)或者\(m=n\)，函数的值为1。
 - en: Write a (Python) function called `f` that computes this (mathematical) function.
   id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 编写一个名为`f`的（Python）函数来计算这个（数学）函数。
 - en: You can use the following examples to test your function.
   id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 你可以使用以下示例来测试你的函数。
 - en: '[PRE0]'
   id: totrans-17
   prefs: []
@@ -108,6 +125,7 @@
   id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你尝试运行以下示例，你会发现它运行了很长时间。
 - en: '[PRE5]'
   id: totrans-23
   prefs: []
@@ -118,20 +136,24 @@
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 问题2
 - en: Write a version of `f` called `f_memo` that uses an appropriate Python data
     structure to “memoize” `f`. In other words, you should keep a record of results
     you have already computed and look them up rather than compute them again.
   id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 编写一个名为`f_memo`的`f`版本，它使用适当的Python数据结构来“记忆化”`f`。换句话说，你应该记录你已经计算过的结果，并查找它们，而不是重新计算它们。
 - en: There’s an example of memoization in recursion.ipynb.
   id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 在recursion.ipynb中有一个记忆化的例子。
 - en: You can use this example to confirm that the function still works.
   id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 你可以使用这个示例来确认函数仍然有效。
 - en: '[PRE6]'
   id: totrans-28
   prefs: []
@@ -147,6 +169,7 @@
   id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: 并使用这个示例来确认它更快。它应该少于一秒，结果应该是`100891344545564193334812497256`。
 - en: '[PRE8]'
   id: totrans-31
   prefs: []
@@ -167,10 +190,12 @@
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: LetterSet
 - en: The next two questions are based on a set implementation I’ll call a `LetterSet`.
   id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 接下来的两个问题基于我将称之为`LetterSet`的集合实现。
 - en: 'Note: In this problem statement, “set” refers to the concept of a set, not
     the Python object called `set`. We won’t use any Python `set` objects in these
     problems.'
@@ -178,6 +203,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 注意：在这个问题陈述中，“集合”指的是集合的概念，而不是Python对象`set`。在这些问题中，我们不会使用任何Python`set`对象。
 - en: If you know ahead of time what elements can appear in a set, you can represent
     the set efficiently using a [bit array](https://en.wikipedia.org/wiki/Bit_array).
     For example, to represent a set of letters, you can use a list of 26 Boolean values,
@@ -185,10 +211,12 @@
   id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你提前知道集合中可能出现的元素，你可以使用[位数组](https://en.wikipedia.org/wiki/Bit_array)来有效地表示集合。例如，要表示一组字母，你可以使用一个包含26个布尔值的列表，每个字母在罗马字母表中都有一个（忽略大小写）。
 - en: Here’s a class definition for this representation of a set.
   id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个表示集合的类定义。
 - en: '[PRE11]'
   id: totrans-39
   prefs: []
@@ -198,6 +226,7 @@
   id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果列表中的所有元素都为False，则集合为空。
 - en: '[PRE12]'
   id: totrans-41
   prefs: []
@@ -214,6 +243,7 @@
   id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 要向集合添加一个字母，我们必须计算与给定字母对应的索引。以下函数使用内置的Python函数`ord`来计算给定字母的索引。
 - en: '[PRE14]'
   id: totrans-44
   prefs: []
@@ -223,6 +253,7 @@
   id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: '`a`的索引为0，`Z`的索引为25。'
 - en: '[PRE15]'
   id: totrans-46
   prefs: []
@@ -237,6 +268,7 @@
   id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 要添加一个字母，我们将列表的相应元素设置为`True`。
 - en: '[PRE17]'
   id: totrans-49
   prefs: []
@@ -256,6 +288,7 @@
   id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: 要计算集合的元素数，我们可以使用内置的`sum`函数：
 - en: '[PRE20]'
   id: totrans-53
   prefs: []
@@ -276,16 +309,19 @@
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 问题3
 - en: Write a function called `is_in` that takes a set and a letter and returns `True`
     if the letter is in the set. In a comment, identify the order of growth of this
     function.
   id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 编写一个名为`is_in`的函数，它接受一个集合和一个字母，并在字母在集合中时返回`True`。在注释中，确定这个函数的增长顺序。
 - en: Use the following examples to test your code.
   id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用以下示例来测试你的代码。
 - en: '[PRE23]'
   id: totrans-59
   prefs: []
@@ -301,20 +337,24 @@
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 问题4
 - en: Write a function called `intersect` that takes two `LetterSet` objects and returns
     a new `LetterSet` that represents the intersection of the two sets. In other words,
     the new `LetterSet` should contain only elements that appear in both sets.
   id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: 编写一个名为`intersect`的函数，它接受两个`LetterSet`对象，并返回一个表示两个集合交集的新的`LetterSet`。换句话说，新的`LetterSet`应该只包含出现在两个集合中的元素。
 - en: In a comment, identify the order of growth of this function.
   id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 在注释中，确定这个函数的增长顺序。
 - en: Use the following examples to test your code.
   id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用以下示例来测试你的代码。
 - en: '[PRE25]'
   id: totrans-65
   prefs: []
@@ -355,17 +395,20 @@
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 只是为了有趣的奖励问题
 - en: One way to represent large numbers is to use a linked list where each node contains
     a digit.
   id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: 表示大数字的一种方法是使用一个链表，其中每个节点包含一个数字。
 - en: Here are class definitions for `DigitList`, which represents a list of digits,
     and `Node`, which contains one digit and a reference to the next `Node` in the
     list.
   id: totrans-74
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里有`DigitList`的类定义，它表示一个数字列表，以及`Node`，它包含一个数字和对列表中下一个`Node`的引用。
 - en: '[PRE32]'
   id: totrans-75
   prefs: []
@@ -381,6 +424,7 @@
   id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: 在`DigitList`中，数字以相反的顺序存储，因此一个包含数字`1`、`2`和`3`的列表，按照顺序表示数字`321`。
 - en: '[PRE34]'
   id: totrans-78
   prefs: []
@@ -406,6 +450,7 @@
   id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数接受一个`DigitList`并以相反的顺序打印数字。
 - en: '[PRE38]'
   id: totrans-83
   prefs: []
@@ -436,6 +481,7 @@
   id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: 编写一个名为`add`的函数，它接受两个`DigitList`对象，并返回一个表示它们之和的新的`DigitList`。
 - en: '[PRE43]'
   id: totrans-89
   prefs: []
@@ -450,6 +496,7 @@
   id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: 你可以使用以下示例来测试你的代码。
 - en: '[PRE45]'
   id: totrans-92
   prefs: []
@@ -539,6 +586,7 @@
   id: totrans-109
   prefs: []
   type: TYPE_NORMAL
+  zh: '*Python中的数据结构和信息检索*'
 - en: Copyright 2021 Allen Downey
   id: totrans-110
   prefs: []
