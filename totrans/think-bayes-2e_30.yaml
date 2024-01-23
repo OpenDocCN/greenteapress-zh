@@ -1,19 +1,24 @@
 - en: The Emitter-Detector Problem
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
 - en: 原文：[https://allendowney.github.io/ThinkBayes2/radiation.html](https://allendowney.github.io/ThinkBayes2/radiation.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ThinkBayes2/blob/master/examples/radiation.ipynb)'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
 - en: Modeling a radiation sensor
+  id: totrans-3
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: 'Here’s an example from Jaynes, *Probability Theory*, page 168:'
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
 - en: We have a radioactive source … which is emitting particles of some sort … There
@@ -22,6 +27,7 @@
     at the rate \(\theta\). From measuring the number {c1 , c2 , …} of counts in different
     seconds, what can we say about the numbers {n1 , n2 , …} actually passing through
     the counter in each second, and what can we say about the strength of the source?
+  id: totrans-5
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
@@ -30,6 +36,7 @@
     and my solution was a bit of a mess. In the second edition, I use more NumPy and
     SciPy, which makes it possible to express the solution more clearly and concisely,
     so let me give it another try.
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
 - en: As a model of the radioactive source, Jaynes suggests we imagine “\(N\) nuclei,
@@ -37,12 +44,14 @@
     our counter in any one second”. If \(N\) is large and \(r\) is small, the number
     or particles emitted in a given second is well modeled by a Poisson distribution
     with parameter \(s = N r\), where \(s\) is the strength of the source.
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
 - en: As a model of the sensor, we’ll assume that “each particle passing through the
     counter has independently the probability \(\phi\) of making a count”. So if we
     know the actual number of particles, \(n\), and the efficiency of the sensor,
     \(\phi\), the distribution of the count is \(\mathrm{Binomial}(n, \phi)\).
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
 - en: 'With that, we are ready to solve the problem, but first, an aside: I am not
@@ -51,416 +60,592 @@
     there might be subtle distinction he intended to draw the reader’s attention to.
     The book is full of dire warnings about distinctions like this, but in this case
     I don’t see an explanation.'
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
 - en: Anyway, following Jaynes, I’ll start with a uniform prior for \(s\), over a
     range of values wide enough to cover the region where the likelihood of the data
     is non-negligible.
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE0]'
+  id: totrans-11
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '|  | probs |'
+  id: totrans-12
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- |'
+  id: totrans-13
   prefs: []
   type: TYPE_TB
 - en: '| 0.0 | 1 |'
+  id: totrans-14
   prefs: []
   type: TYPE_TB
 - en: '| 3.5 | 1 |'
+  id: totrans-15
   prefs: []
   type: TYPE_TB
 - en: '| 7.0 | 1 |'
+  id: totrans-16
   prefs: []
   type: TYPE_TB
 - en: For each value of \(s\), the distribution of \(n\) is Poisson, so we can form
     the joint prior of \(s\) and \(n\) using the `poisson` function from SciPy. I’ll
     use a range of values for \(n\) that, again, covers the region where the likelihood
     of the data is non-negligible.
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE1]'
+  id: totrans-18
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '[PRE2]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: The result is an array with one row for each value of \(n\) and one column for
     each value of \(s\). To get the prior probability for each pair, we multiply each
     row by the prior probabilities of \(s\). The following function encapsulates this
     computation and puts the result in a Pandas `DataFrame` that represents the joint
     prior.
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE3]'
+  id: totrans-21
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: 'Here’s the joint prior:'
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE4]'
+  id: totrans-23
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '| s | 0.0 | 3.5 | 7.0 | 10.5 | 14.0 | 17.5 | 21.0 | 24.5 | 28.0 | 31.5 | ...
     | 318.5 | 322.0 | 325.5 | 329.0 | 332.5 | 336.0 | 339.5 | 343.0 | 346.5 | 350.0
     |'
+  id: totrans-24
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
     | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  id: totrans-25
   prefs: []
   type: TYPE_TB
 - en: '| n |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |'
+  id: totrans-26
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
     | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  id: totrans-27
   prefs: []
   type: TYPE_TB
 - en: '| 0 | 1.0 | 0.030197 | 0.000912 | 0.000028 | 8.315287e-07 | 2.510999e-08 |
     7.582560e-10 | 2.289735e-11 | 6.914400e-13 | 2.087968e-14 | ... | 4.755624e-139
     | 1.436074e-140 | 4.336568e-142 | 1.309530e-143 | 3.954438e-145 | 1.194137e-146
     | 3.605981e-148 | 1.088912e-149 | 3.288229e-151 | 9.929590e-153 |'
+  id: totrans-28
   prefs: []
   type: TYPE_TB
 - en: '| 1 | 0.0 | 0.105691 | 0.006383 | 0.000289 | 1.164140e-05 | 4.394249e-07 |
     1.592338e-08 | 5.609850e-10 | 1.936032e-11 | 6.577099e-13 | ... | 1.514666e-136
     | 4.624158e-138 | 1.411553e-139 | 4.308354e-141 | 1.314851e-142 | 4.012300e-144
     | 1.224230e-145 | 3.734968e-147 | 1.139371e-148 | 3.475357e-150 |'
+  id: totrans-29
   prefs: []
   type: TYPE_TB
 - en: '| 2 | 0.0 | 0.184959 | 0.022341 | 0.001518 | 8.148981e-05 | 3.844967e-06 |
     1.671955e-07 | 6.872067e-09 | 2.710445e-10 | 1.035893e-11 | ... | 2.412106e-134
     | 7.444895e-136 | 2.297302e-137 | 7.087242e-139 | 2.185939e-140 | 6.740663e-142
     | 2.078131e-143 | 6.405469e-145 | 1.973961e-146 | 6.081874e-148 |'
+  id: totrans-30
   prefs: []
   type: TYPE_TB
 - en: '| 3 | 0.0 | 0.215785 | 0.052129 | 0.005313 | 3.802858e-04 | 2.242898e-05 |
     1.170368e-06 | 5.612188e-08 | 2.529749e-09 | 1.087688e-10 | ... | 2.560853e-132
     | 7.990854e-134 | 2.492573e-135 | 7.772342e-137 | 2.422749e-138 | 7.549543e-140
     | 2.351752e-141 | 7.323587e-143 | 2.279925e-144 | 7.095520e-146 |'
+  id: totrans-31
   prefs: []
   type: TYPE_TB
 - en: '| 4 | 0.0 | 0.188812 | 0.091226 | 0.013946 | 1.331000e-03 | 9.812677e-05 |
     6.144433e-06 | 3.437465e-07 | 1.770824e-08 | 8.565541e-10 | ... | 2.039079e-130
     | 6.432637e-132 | 2.028331e-133 | 6.392751e-135 | 2.013910e-136 | 6.341616e-138
     | 1.996049e-139 | 6.279975e-141 | 1.974985e-142 | 6.208580e-144 |'
+  id: totrans-32
   prefs: []
   type: TYPE_TB
 - en: 5 rows × 101 columns
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
 - en: Now we’re ready to compute the likelihood of the data. In this problem, it depends
     only on \(n\), regardless of \(s\), so we only have to compute it once for each
     value of \(n\).
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE5]'
+  id: totrans-35
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '[PRE6]'
+  id: totrans-36
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: The result is an array of likelihoods, one for each value of \(n\). To do the
     Bayesian update, we need to multiply each column in the prior by this array of
     likelihoods. We can do that using the `multiply` method with the `axis` argument.
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE7]'
+  id: totrans-38
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '| s | 0.0 | 3.5 | 7.0 | 10.5 | 14.0 | 17.5 | 21.0 | 24.5 | 28.0 | 31.5 | ...
     | 318.5 | 322.0 | 325.5 | 329.0 | 332.5 | 336.0 | 339.5 | 343.0 | 346.5 | 350.0
     |'
+  id: totrans-39
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
     | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  id: totrans-40
   prefs: []
   type: TYPE_TB
 - en: '| n |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |'
+  id: totrans-41
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
     | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  id: totrans-42
   prefs: []
   type: TYPE_TB
 - en: '| 0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | ... | 0.0
     | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 |'
+  id: totrans-43
   prefs: []
   type: TYPE_TB
 - en: '| 1 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | ... | 0.0
     | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 |'
+  id: totrans-44
   prefs: []
   type: TYPE_TB
 - en: '| 2 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | ... | 0.0
     | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 |'
+  id: totrans-45
   prefs: []
   type: TYPE_TB
 - en: '| 3 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | ... | 0.0
     | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 |'
+  id: totrans-46
   prefs: []
   type: TYPE_TB
 - en: '| 4 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | ... | 0.0
     | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 |'
+  id: totrans-47
   prefs: []
   type: TYPE_TB
 - en: 5 rows × 101 columns
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
 - en: The following function encapsulates this computation, normalizes the result,
     and returns the posterior distribution.
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE8]'
+  id: totrans-50
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: First update
+  id: totrans-51
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: 'Let’s test the update function with the first example, on page 178 of *Probability
     Theory*:'
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
 - en: During the first second, `c1 = 10` counts are registered. What can [we] say
     about the number `n1` of particles?
+  id: totrans-53
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: 'Here’s the update:'
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE9]'
+  id: totrans-55
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '| s | 0.0 | 3.5 | 7.0 | 10.5 | 14.0 | 17.5 | 21.0 | 24.5 | 28.0 | 31.5 | ...
     | 318.5 | 322.0 | 325.5 | 329.0 | 332.5 | 336.0 | 339.5 | 343.0 | 346.5 | 350.0
     |'
+  id: totrans-56
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
     | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  id: totrans-57
   prefs: []
   type: TYPE_TB
 - en: '| n |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |'
+  id: totrans-58
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
     | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  id: totrans-59
   prefs: []
   type: TYPE_TB
 - en: '| 0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | ... | 0.0
     | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 |'
+  id: totrans-60
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | ...
+    | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 |'
 - en: '| 1 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | ... | 0.0
     | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 |'
+  id: totrans-61
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | ... | 0.0
+    | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 |'
 - en: '| 2 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | ... | 0.0
     | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 |'
+  id: totrans-62
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | ... | 0.0
+    | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 |'
 - en: '| 3 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | ... | 0.0
     | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 |'
+  id: totrans-63
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | ... | 0.0
+    | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 |'
 - en: '| 4 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | ... | 0.0
     | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 |'
+  id: totrans-64
   prefs: []
   type: TYPE_TB
+  zh: '| 4 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | ... | 0.0
+    | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 |'
 - en: 5 rows × 101 columns
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: 5行×101列
 - en: The following figure is a contour plot of the joint posterior distribution.
     As you might expect, \(s\) and \(n\) are highly correlated; that is, if we believe
     \(s\) is low, we should believe that \(n\) is low, and contrariwise if \(s\) is
     high.
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: 下图是联合后验分布的等高线图。正如你所预料的，\(s\)和\(n\)高度相关；也就是说，如果我们相信\(s\)很低，我们应该相信\(n\)也很低，反之亦然，如果\(s\)很高。
 - en: '[PRE10]'
+  id: totrans-67
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '![_images/b5cc8230c348ba4b83c235c20afe353243cada64c8a17e899620331c993a21bb.png](../Images/3743eb4391247cf26464d2e09bbc9340.png)'
+  id: totrans-68
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/b5cc8230c348ba4b83c235c20afe353243cada64c8a17e899620331c993a21bb.png](../Images/3743eb4391247cf26464d2e09bbc9340.png)'
 - en: From the posterior distribution, we can extract the marginal distributions of
     \(s\) and \(n\).
+  id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: 从后验分布中，我们可以提取\(s\)和\(n\)的边际分布。
 - en: '[PRE11]'
+  id: totrans-70
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: '[PRE12]'
+  id: totrans-71
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '![_images/f3655c7e8ac622ed2137103e8ec175d15721f4c402798c4b7794f59f58746e51.png](../Images/00afa676cb24332069d97ed385ab5a38.png)'
+  id: totrans-72
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/f3655c7e8ac622ed2137103e8ec175d15721f4c402798c4b7794f59f58746e51.png](../Images/00afa676cb24332069d97ed385ab5a38.png)'
 - en: '[PRE13]'
+  id: totrans-73
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: '[PRE14]'
+  id: totrans-74
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '![_images/59df8b33ca4bd09abf77ddcc0aeaaaa817667e393a1ca03598e118c9371298cb.png](../Images/34f9ba44369bca6d197637fc0ed58d7e.png)'
+  id: totrans-75
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/59df8b33ca4bd09abf77ddcc0aeaaaa817667e393a1ca03598e118c9371298cb.png](../Images/34f9ba44369bca6d197637fc0ed58d7e.png)'
 - en: The posterior mean of \(n\) is close to 109, which is consistent with Equation
     6.116.
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
+  zh: \(n\)的后验均值接近109，与方程6.116的结果一致。
 - en: '[PRE15]'
+  id: totrans-77
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '[PRE16]'
+  id: totrans-78
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: The MAP is 99, which is one less than the analytic result in Equation 6.113,
     which is 100. It looks like the posterior probabilities for 99 and 100 are the
     same, but the floating-point results differ slightly.
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: MAP为99，比方程6.113的解析结果少1，即100。看起来99和100的后验概率是相同的，但浮点结果略有不同。
 - en: '[PRE17]'
+  id: totrans-80
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: '[PRE18]'
+  id: totrans-81
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: Jeffreys prior
+  id: totrans-82
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: Jeffreys先验
 - en: Instead of a uniform prior for \(s\), we can use a Jeffreys prior, in which
     the prior probability for each value of \(s\) is proportional to \(1/s\). This
     has the advantage of “invariance under certain changes of parameters”, which is
     “the only correct way to express complete ignorance of a scale parameter.” However,
     Jaynes suggests that it is not clear “whether \(s\) can properly be regarded as
     a scale parameter in this problem.”
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于\(s\)的先验分布，我们可以使用Jeffreys先验，其中每个\(s\)值的先验概率与\(1/s\)成比例。这有“在某些参数变化下的不变性”的优点，这是“表达对比例参数的完全无知的唯一正确方式。”然而，杰恩斯建议，不清楚“在这个问题中\(s\)是否可以适当地被视为比例参数。”
 - en: Nevertheless, he suggests we try it and see what happens. Here’s the Jeffreys
     prior for \(s\).
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: 尽管如此，他建议我们尝试一下，看看会发生什么。这是\(s\)的Jeffreys先验。
 - en: '[PRE19]'
+  id: totrans-85
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '|  | probs |'
+  id: totrans-86
   prefs: []
   type: TYPE_TB
+  zh: '|  | probs |'
 - en: '| --- | --- |'
+  id: totrans-87
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| 3.5 | 0.285714 |'
+  id: totrans-88
   prefs: []
   type: TYPE_TB
+  zh: '| 3.5 | 0.285714 |'
 - en: '| 7.0 | 0.142857 |'
+  id: totrans-89
   prefs: []
   type: TYPE_TB
+  zh: '| 7.0 | 0.142857 |'
 - en: '| 10.5 | 0.095238 |'
+  id: totrans-90
   prefs: []
   type: TYPE_TB
+  zh: '| 10.5 | 0.095238 |'
 - en: We can use it to compute the joint prior of \(s\) and \(n\), and update it with
     `c1`.
+  id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以用它来计算\(s\)和\(n\)的联合先验，并用`c1`更新它。
 - en: '[PRE20]'
+  id: totrans-92
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: 'Here’s the marginal posterior distribution of \(n\):'
+  id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是\(n\)的边际后验分布：
 - en: '[PRE21]'
+  id: totrans-94
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: '[PRE22]'
+  id: totrans-95
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: '![_images/7101eedd63277d78a54f25477a6f60c9c2234af947ed9755dd213aafca0854ea.png](../Images/16df9c76bb5dcab9c1e0a0f1ce6ec221.png)'
+  id: totrans-96
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/7101eedd63277d78a54f25477a6f60c9c2234af947ed9755dd213aafca0854ea.png](../Images/16df9c76bb5dcab9c1e0a0f1ce6ec221.png)'
 - en: '[PRE23]'
+  id: totrans-97
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: '[PRE24]'
+  id: totrans-98
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: The posterior mean is close to 100 and the MAP is 91; both are consistent with
     the results in Equation 6.122.
+  id: totrans-99
   prefs: []
   type: TYPE_NORMAL
+  zh: 后验均值接近100，MAP为91；两者都与方程6.122的结果一致。
 - en: Robot A
+  id: totrans-100
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 机器人A
 - en: 'Now we get to what I think is the most interesting part of this example, which
     is to take into account a second observation under two models of the scenario:'
+  id: totrans-101
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们来到我认为这个例子最有趣的部分，即考虑在两种情景模型下的第二次观察：
 - en: Two robots, [A and B], have different prior information about the source of
     the particles. The source is hidden in another room which A and B are not allowed
     to enter. A has no knowledge at all about the source of particles; for all [it]
     knows, … the other room might be full of little [people] who run back and forth,
     holding first one radioactive source, then another, up to the exit window.
+  id: totrans-102
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 两个机器人[A和B]对粒子源的先验信息不同。源隐藏在另一个房间，A和B不被允许进入。A对粒子源一无所知；就其所知，...另一个房间可能充满了来回奔跑的小[人]，他们先拿一个放射性源，然后又拿另一个，一直到出口窗口。
 - en: ''
+  id: totrans-103
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: 'B has one additional qualitative fact: [it] knows that the source is a radioactive
     sample of long lifetime, in a fixed position.'
+  id: totrans-104
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: B有一个额外的定性事实：[它]知道源是一个长寿命的放射性样本，在一个固定的位置。
 - en: In other words, B has reason to believe that the source strength \(s\) is constant
     from one interval to the next, while A admits the possibility that \(s\) is different
     for each interval.
+  id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: 换句话说，B有理由相信源强度\(s\)从一个时间间隔到下一个是恒定的，而A承认\(s\)在每个时间间隔可能是不同的。
 - en: The following figure, from Jaynes, represents these models graphically (Jaynes
     calls them “logical situations” because he seems to be allergic to the word “model”).
+  id: totrans-106
   prefs: []
   type: TYPE_NORMAL
+  zh: 下图来自杰恩斯，图形地表示了这些模型（杰恩斯称它们为“逻辑情况”，因为他似乎对“模型”这个词过敏）。
 - en: '[![https://github.com/AllenDowney/ThinkBayes2/raw/master/examples/jaynes177.png](../Images/f3caa3b6e53230edf4b31011c64e9017.png)](https://github.com/AllenDowney/ThinkBayes2/raw/master/examples/jaynes177.png)'
+  id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: '[![https://github.com/AllenDowney/ThinkBayes2/raw/master/examples/jaynes177.png](../Images/f3caa3b6e53230edf4b31011c64e9017.png)](https://github.com/AllenDowney/ThinkBayes2/raw/master/examples/jaynes177.png)'
 - en: For A, the “different intervals are logically independent”, so the update with
     `c2 = 16` starts with the same prior.
+  id: totrans-108
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE25]'
+  id: totrans-109
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: Here’s the posterior marginal distribution of `n2`.
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE26]'
+  id: totrans-111
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: '[PRE27]'
+  id: totrans-112
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: '![_images/08e991dae10108d2fbefe797ad82aaba68f40c89ab3c91309740f4f0bd085ed7.png](../Images/4d62953b9997f3f8f0be05fd93c7f5d5.png)'
+  id: totrans-113
   prefs: []
   type: TYPE_IMG
 - en: '[PRE28]'
+  id: totrans-114
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: '[PRE29]'
+  id: totrans-115
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: The posterior mean is close to 169, which is consistent with the result in Equation
     6.124. The MAP is 160, which is consistent with 6.123.
+  id: totrans-116
   prefs: []
   type: TYPE_NORMAL
 - en: Robot B
+  id: totrans-117
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -469,39 +654,56 @@
     when we perform the second update. We can do that by using the posterior distribution
     of \(s\) from the first update to form the joint prior for the second update,
     like this:'
+  id: totrans-118
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE30]'
+  id: totrans-119
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: '[PRE31]'
+  id: totrans-120
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: '![_images/4b50d9a60cf899178330dfb1199ffb2945f405006de59bcf8dc1cc49cf943f2e.png](../Images/d351fa149f9d84d4c70083fda32a1562.png)'
+  id: totrans-121
   prefs: []
   type: TYPE_IMG
 - en: The posterior mean of \(n\) is close to 137.5, which is consistent with Equation
     6.134. The MAP is 132, which is one less than the analytic result, 133. But again,
     there are two values with the same probability except for floating-point errors.
+  id: totrans-122
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE32]'
+  id: totrans-123
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: '[PRE33]'
+  id: totrans-124
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: '[PRE34]'
+  id: totrans-125
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: '[PRE35]'
+  id: totrans-126
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: Under B’s model, the data from the first interval updates our belief about \(s\),
     which influences what we believe about `n2`.
+  id: totrans-127
   prefs: []
   type: TYPE_NORMAL
 - en: Going the other way
+  id: totrans-128
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -509,83 +711,116 @@
     with this example, which is that it also works the other way around: Having seen
     `c2`, we have more information about \(s\), which means we can – and should! –
     go back and reconsider what we concluded about `n1`.'
+  id: totrans-129
   prefs: []
   type: TYPE_NORMAL
 - en: We can do that by imagining we did the experiments in the opposite order, so
+  id: totrans-130
   prefs: []
   type: TYPE_NORMAL
 - en: We’ll start again with a joint prior based on a uniform distribution for \(s\),
+  id: totrans-131
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: Update it based on `c2`,
+  id: totrans-132
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: Use the posterior distribution of \(s\) to form a new joint prior,
+  id: totrans-133
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: Update it based on `c1`, and
+  id: totrans-134
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: Extract the marginal posterior for `n1`.
+  id: totrans-135
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: '[PRE36]'
+  id: totrans-136
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: '[PRE37]'
+  id: totrans-137
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE37]'
 - en: '[PRE38]'
+  id: totrans-138
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: '[PRE39]'
+  id: totrans-139
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: The posterior mean is close to 131.5, which is consistent with Equation 6.133.
     And the MAP is 126, which is one less than the result in Equation 6.132, again
     due to floating-point error.
+  id: totrans-140
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE40]'
+  id: totrans-141
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE40]'
 - en: '[PRE41]'
+  id: totrans-142
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE41]'
 - en: '[PRE42]'
+  id: totrans-143
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE42]'
 - en: '[PRE43]'
+  id: totrans-144
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE43]'
 - en: Here’s what the new distribution of `n1` looks like compared to the original,
     which was based on `c1` only.
+  id: totrans-145
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE44]'
+  id: totrans-146
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE44]'
 - en: '[PRE45]'
+  id: totrans-147
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE45]'
 - en: '![_images/2293d73b99596e9fda0e513eab50d159e0e4e484ce95a38d399835f483c2c60e.png](../Images/88d23094b3b21dddeee94fb48d444b50.png)'
+  id: totrans-148
   prefs: []
   type: TYPE_IMG
 - en: 'With the additional information from `c2`:'
+  id: totrans-149
   prefs: []
   type: TYPE_NORMAL
 - en: We give higher probability to large values of \(s\), so we also give higher
     probability to large values of `n1`, and
+  id: totrans-150
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: The width of the distribution is narrower, which shows that with more information
     about \(s\), we have more information about `n1`.
+  id: totrans-151
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -593,26 +828,31 @@
     and causal dependence.” In this example, causal dependence only goes in the forward
     direction: “\(s\) is the physical cause which partially determines \(n\); and
     then \(n\) in turn is the physical cause which partially determines \(c\)”.'
+  id: totrans-152
   prefs: []
   type: TYPE_NORMAL
 - en: 'Therefore, `c1` and `c2` are causally independent: if the number of particles
     counted in one interval is unusually high (or low), that does not cause the number
     of particles during any other interval to be higher or lower.'
+  id: totrans-153
   prefs: []
   type: TYPE_NORMAL
 - en: But if \(s\) is unknown, they are not *logically* independent. For example,
     if `c1` is lower than expected, that implies that lower values of \(s\) are more
     likely, which implies that lower values of `n2` are more likely, which implies
     that lower values of `c2` are more likely.
+  id: totrans-154
   prefs: []
   type: TYPE_NORMAL
 - en: And, as we’ve seen, it works the other way, too. For example, if `c2` is higher
     than expected, that implies that higher values of \(s\), `n1`, and `c1` are more
     likely.
+  id: totrans-155
   prefs: []
   type: TYPE_NORMAL
 - en: If you find the second result more surprising – that is, if you think it’s weird
     that `c2` changes what we believe about `n1` – that implies that you are not (yet)
     distinguishing between logical and causal dependence.
+  id: totrans-156
   prefs: []
   type: TYPE_NORMAL
