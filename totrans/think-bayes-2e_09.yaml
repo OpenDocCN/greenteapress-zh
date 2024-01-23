@@ -3,11 +3,13 @@
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 赔率和加数
 - en: 原文：[https://allendowney.github.io/ThinkBayes2/chap06.html](https://allendowney.github.io/ThinkBayes2/chap06.html)
   id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ThinkBayes2/chap06.html](https://allendowney.github.io/ThinkBayes2/chap06.html)
 - en: This chapter presents a new way to represent a degree of certainty, **odds**,
     and a new form of Bayes’s Theorem, called **Bayes’s Rule**. Bayes’s Rule is convenient
     if you want to do a Bayesian update on paper or in your head. It also sheds light
@@ -16,6 +18,7 @@
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章介绍了表示确定度的一种新方式，**赔率**，以及贝叶斯定理的一种新形式，称为**贝叶斯定理**。如果你想在纸上或脑海中进行贝叶斯更新，贝叶斯定理是方便的。它还阐明了**证据**的重要概念以及我们如何量化证据的强度。
 - en: The second part of the chapter is about “addends”, that is, quantities being
     added, and how we can compute their distributions. We’ll define functions that
     compute the distribution of sums, differences, products, and other operations.
@@ -23,27 +26,32 @@
   id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章的第二部分是关于“加数”，即被加的数量，以及我们如何计算它们的分布。我们将定义计算总和、差异、乘积和其他操作的函数。然后我们将使用这些分布作为贝叶斯更新的一部分。
 - en: Odds
   id: totrans-4
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 赔率
 - en: One way to represent a probability is with a number between 0 and 1, but that’s
     not the only way. If you have ever bet on a football game or a horse race, you
     have probably encountered another representation of probability, called **odds**.
   id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 表示概率的一种方式是用0到1之间的数字，但这不是唯一的方式。如果你曾经在足球比赛或赛马中下注过，你可能遇到过另一种概率表示，称为**赔率**。
 - en: You might have heard expressions like “the odds are three to one”, but you might
     not know what that means. The **odds in favor** of an event are the ratio of the
     probability it will occur to the probability that it will not.
   id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 你可能听过“赔率是三比一”之类的表达，但你可能不知道这意味着什么。一个事件的**有利赔率**是它发生的概率与不发生的概率的比值。
 - en: The following function does this calculation.
   id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数执行这个计算。
 - en: '[PRE0]'
   id: totrans-8
   prefs: []
@@ -54,6 +62,7 @@
   id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，如果我的团队有75%的获胜几率，他们有利的赔率是三比一，因为获胜的几率是失败的三倍。
 - en: '[PRE1]'
   id: totrans-10
   prefs: []
@@ -69,12 +78,14 @@
   id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 你可以用小数形式写赔率，但通常也会将它们写成整数的比例。所以“三比一”有时会写成\(3:1\)。
 - en: When probabilities are low, it is more common to report the **odds against**
     rather than the odds in favor. For example, if my horse has a 10% chance of winning,
     the odds in favor are \(1:9\).
   id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 当概率很低时，更常见的是报告**不利的赔率**而不是有利的赔率。例如，如果我的马有10%的获胜几率，有利的赔率是\(1:9\)。
 - en: '[PRE3]'
   id: totrans-14
   prefs: []
@@ -90,6 +101,7 @@
   id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 但在这种情况下，更常见的是说不利的赔率是\(9:1\)。
 - en: '[PRE5]'
   id: totrans-17
   prefs: []
@@ -105,6 +117,7 @@
   id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 给定有利的赔率，以小数形式，你可以这样转换成概率：
 - en: '[PRE7]'
   id: totrans-20
   prefs: []
@@ -114,6 +127,7 @@
   id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，如果赔率是\(3/2\)，相应的概率是\(3/5\)：
 - en: '[PRE8]'
   id: totrans-22
   prefs: []
@@ -129,6 +143,7 @@
   id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 或者，如果你用分子和分母来表示赔率，你可以这样转换成概率：
 - en: '[PRE10]'
   id: totrans-25
   prefs: []
@@ -151,34 +166,41 @@
   id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: 概率和赔率是相同信息的不同表示；给定其中一个，你可以计算另一个。但有些计算在我们使用赔率时更容易，正如我们将在下一节中看到的那样，有些计算甚至在使用对数赔率时更容易，我们稍后会看到。
 - en: Bayes’s Rule
   id: totrans-29
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 贝叶斯定理
 - en: 'So far we have worked with Bayes’s theorem in the “probability form”:'
   id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: 到目前为止，我们已经在“概率形式”下使用了贝叶斯定理：
 - en: \[P(H|D) = \frac{P(H)~P(D|H)}{P(D)}\]
   id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: \[P(H|D) = \frac{P(H)~P(D|H)}{P(D)}\]
 - en: 'Writing \(\mathrm{odds}(A)\) for odds in favor of \(A\), we can express Bayes’s
     Theorem in “odds form”:'
   id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 用\(\mathrm{odds}(A)\)表示\(A\)的有利赔率，我们可以用“赔率形式”表达贝叶斯定理：
 - en: \[\mathrm{odds}(A|D) = \mathrm{odds}(A)~\frac{P(D|A)}{P(D|B)}\]
   id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\mathrm{odds}(A|D) = \mathrm{odds}(A)~\frac{P(D|A)}{P(D|B)}\]
 - en: 'This is Bayes’s Rule, which says that the posterior odds are the prior odds
     times the likelihood ratio. Bayes’s Rule is convenient for computing a Bayesian
     update on paper or in your head. For example, let’s go back to the cookie problem:'
   id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是贝叶斯定理，它说后验赔率是先验赔率乘以似然比。贝叶斯定理方便在纸上或脑海中进行贝叶斯更新。例如，让我们回到饼干问题：
 - en: Suppose there are two bowls of cookies. Bowl 1 contains 30 vanilla cookies and
     10 chocolate cookies. Bowl 2 contains 20 of each. Now suppose you choose one of
     the bowls at random and, without looking, select a cookie at random. The cookie
@@ -187,12 +209,14 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 假设有两碗饼干。碗1里有30块香草饼干和10块巧克力饼干。碗2里每种饼干都有20块。现在假设你随机选择其中一碗饼干，并且不看的情况下随机选择一块饼干。这块饼干是香草味的。那么它来自碗1的概率是多少？
 - en: The prior probability is 50%, so the prior odds are 1\. The likelihood ratio
     is \(\frac{3}{4} / \frac{1}{2}\), or \(3/2\). So the posterior odds are \(3/2\),
     which corresponds to probability \(3/5\).
   id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 先验概率是50%，所以先验赔率是1。似然比是\(\frac{3}{4} / \frac{1}{2}\)，或\(3/2\)。所以后验赔率是\(3/2\)，对应的概率是\(3/5\)。
 - en: '[PRE13]'
   id: totrans-37
   prefs: []
@@ -217,6 +241,7 @@
   id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们再拿出一块饼干，是巧克力味的，我们可以再进行一次更新：
 - en: '[PRE17]'
   id: totrans-42
   prefs: []
@@ -231,6 +256,7 @@
   id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后转换回概率。
 - en: '[PRE19]'
   id: totrans-45
   prefs: []
@@ -246,11 +272,13 @@
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 奥利弗的血
 - en: 'I’ll use Bayes’s Rule to solve another problem from MacKay’s [*Information
     Theory, Inference, and Learning Algorithms*](https://www.inference.org.uk/mackay/itila/):'
   id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将使用贝叶斯定理来解决MacKay的[*信息论、推理和学习算法*](https://www.inference.org.uk/mackay/itila/)中的另一个问题：
 - en: Two people have left traces of their own blood at the scene of a crime. A suspect,
     Oliver, is tested and found to have type ‘O’ blood. The blood groups of the two
     traces are found to be of type ‘O’ (a common type in the local population, having
