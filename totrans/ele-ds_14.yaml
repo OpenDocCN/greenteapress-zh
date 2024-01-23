@@ -919,17 +919,20 @@
   id: totrans-169
   prefs: []
   type: TYPE_NORMAL
+  zh: 加权和未加权平均值之间的差异大于置信区间的宽度。因此，在这个例子中，如果我们未能校正过抽样，错误将大于由随机抽样引起的变异性。
 - en: Correlation and Regression
   id: totrans-170
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 相关性和回归
 - en: Bootstrap resampling can be used to estimate other statistics and their sampling
     distributions. For example, in Chapter 9 we computed the correlation between height
     and weight, which is about 0.48.
   id: totrans-171
   prefs: []
   type: TYPE_NORMAL
+  zh: 自助法重采样可用于估计其他统计量及其抽样分布。例如，在第9章中，我们计算了身高和体重之间的相关性，约为0.48。
 - en: '[PRE57]'
   id: totrans-172
   prefs: []
@@ -946,6 +949,7 @@
   id: totrans-174
   prefs: []
   type: TYPE_NORMAL
+  zh: 该相关性未考虑过抽样。我们可以使用此函数进行校正，该函数生成加权的自助采样，并用它来计算具有名称`var1`和`var2`的列的相关性。
 - en: '[PRE59]'
   id: totrans-175
   prefs: []
@@ -959,11 +963,13 @@
   id: totrans-176
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**使用此函数从身高和体重的相关性抽样分布中绘制101个值。这些值的均值是多少？与我们未校正过抽样的相关性相比，它是否有很大不同？计算估计相关性的标准误差和90%置信区间。'
 - en: '**Exercise:** In Chapter 9 we also computed the slope of the regression line
     for weight as a function of height. Here’s the result with with 2019 data.'
   id: totrans-177
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**在第9章中，我们还计算了体重随身高的回归线斜率。以下是2019年的结果。'
 - en: '[PRE60]'
   id: totrans-178
   prefs: []
@@ -979,22 +985,26 @@
   id: totrans-180
   prefs: []
   type: TYPE_NORMAL
+  zh: 估计的斜率为0.93千克/厘米，这意味着我们预计比平均身高高1厘米的人体重会比平均体重重0.93千克。
 - en: Write a function called `weighted_bootstrap_slope` that takes a `DataFrame`,
     generates a weighted bootstrapped sample, runs `linregress` with height and weight,
     and returns the slope of the regression line.
   id: totrans-181
   prefs: []
   type: TYPE_NORMAL
+  zh: 编写一个名为`weighted_bootstrap_slope`的函数，该函数接受一个`DataFrame`，生成一个加权的自助采样，使用身高和体重运行`linregress`，并返回回归线的斜率。
 - en: Run it 101 times and collect the results. Use the sampling distribution to compute
     the mean of the slope estimates, standard error, and a 90% confidence interval.
   id: totrans-182
   prefs: []
   type: TYPE_NORMAL
+  zh: 运行101次并收集结果。使用抽样分布计算斜率估计的均值、标准误差和90%置信区间。
 - en: Limitations of Bootstrapping
   id: totrans-183
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 自助法的局限性
 - en: One limitation of bootstrapping is that it can be computationally expensive.
     With small datasets, it is usually fast enough that we can generate 1000 values
     from the sampling distribution, which means that we can compute standard errors
@@ -1005,12 +1015,14 @@
   id: totrans-184
   prefs: []
   type: TYPE_NORMAL
+  zh: 自助法的一个局限性是它可能计算成本很高。对于小数据集，通常足够快，我们可以从抽样分布中生成1000个值，这意味着我们可以精确计算标准误差和置信区间。对于较大的数据集，我们可以通过生成更少的值来减少计算时间。使用100-200个值，我们得到的标准误通常足够精确，但置信区间的边界可能会更嘈杂。
 - en: 'The other limitation, which can be more problematic, is that bootstrap sampling
     does not work well with datasets that contain a small number of different values.
     To demonstrate, I’ll select data from the GSS for one year, 2018:'
   id: totrans-185
   prefs: []
   type: TYPE_NORMAL
+  zh: 另一个可能更为严重的局限性是，自助法采样在包含少量不同值的数据集中效果不佳。为了演示，我将从2018年的GSS数据中选择数据：
 - en: '[PRE62]'
   id: totrans-186
   prefs: []
@@ -1021,6 +1033,7 @@
   id: totrans-187
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将使用自助法从收入的抽样分布中生成值。
 - en: '[PRE63]'
   id: totrans-188
   prefs: []
@@ -1030,6 +1043,7 @@
   id: totrans-189
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是结果。
 - en: '[PRE64]'
   id: totrans-190
   prefs: []
@@ -1039,26 +1053,31 @@
   id: totrans-191
   prefs: []
   type: TYPE_TB
+  zh: '|  | 估计 | 标准误 | CI90 |'
 - en: '| --- | --- | --- | --- |'
   id: totrans-192
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- |'
 - en: '|  | 5158.3 | 232.53 | [5107.5, 5107.5] |'
   id: totrans-193
   prefs: []
   type: TYPE_TB
+  zh: '|  | 5158.3 | 232.53 | [5107.5, 5107.5] |'
 - en: The estimate and the standard error look plausible at first glance, but the
     width of the confidence interval is 0, which suggests that something has gone
     wrong!
   id: totrans-194
   prefs: []
   type: TYPE_NORMAL
+  zh: 估计值和标准误看起来乍一看是合理的，但置信区间的宽度为0，这表明出了问题！
 - en: The problem is that `REALINC` is not a numerical variable; it is a categorical
     variable in disguise. Using `value_counts`, we can see that there are only 26
     distinct values in this column.
   id: totrans-195
   prefs: []
   type: TYPE_NORMAL
+  zh: 问题在于`REALINC`不是一个数值变量；它是一个伪装的分类变量。使用`value_counts`，我们可以看到这一列中只有26个不同的值。
 - en: '[PRE65]'
   id: totrans-196
   prefs: []
@@ -1076,17 +1095,20 @@
   id: totrans-198
   prefs: []
   type: TYPE_NORMAL
+  zh: 原因是GSS不要求受访者报告他们的收入。相反，它给他们一个收入范围的列表，并要求他们选择其收入所在范围。这些范围在相关变量`INCOME`的文档中有描述（参见[https://gssdataexplorer.norc.org/variables/104/vshow](https://gssdataexplorer.norc.org/variables/104/vshow)）。
 - en: Then GSS analysts compute the midpoint of each range and convert to 1986 dollars
     by adjusting for inflation. Details of the methodology are in available from [https://gss.norc.org/Documents/reports/methodological-reports/MR101%20Getting%20the%20Most%20Out%20of%20the%20GSS%20Income%20Measures.pdf](https://gss.norc.org/Documents/reports/methodological-reports/MR101%20Getting%20the%20Most%20Out%20of%20the%20GSS%20Income%20Measures.pdf).
   id: totrans-199
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后GSS分析师计算每个范围的中点，并通过通货膨胀调整为1986年的美元。方法的详细信息可从[https://gss.norc.org/Documents/reports/methodological-reports/MR101%20Getting%20the%20Most%20Out%20of%20the%20GSS%20Income%20Measures.pdf](https://gss.norc.org/Documents/reports/methodological-reports/MR101%20Getting%20the%20Most%20Out%20of%20the%20GSS%20Income%20Measures.pdf)获取。
 - en: 'As a result, there are only 26 distinct values in `REALINC`. When we generate
     a bootstrapped sample and compute the 10th percentile, we get a small subset of
     them. Here are the values that appear in our sample:'
   id: totrans-200
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是`REALINC`中只有26个不同的值。当我们生成一个自助抽样样本并计算第10个百分位数时，我们得到其中的一个小子集。以下是出现在我们样本中的值：
 - en: '[PRE67]'
   id: totrans-201
   prefs: []
@@ -1103,6 +1125,7 @@
   id: totrans-203
   prefs: []
   type: TYPE_NORMAL
+  zh: 只有5个不同的值，其中一个出现的概率超过95%。当我们计算90%的置信区间时，这个值既是第5个百分位数，也是第95个百分位数。
 - en: Bootstrapping works well for most distributions and most statistics; the one
     thing it can’t handle is lack of diversity in the data. However, even this problem
     can be solved. The fundamental cause is that the data have been discretized excessively,
@@ -1111,22 +1134,26 @@
   id: totrans-204
   prefs: []
   type: TYPE_NORMAL
+  zh: 自助法适用于大多数分布和大多数统计量；它无法处理的唯一问题是数据缺乏多样性。然而，即使这个问题也可以解决。根本原因是数据被过度离散化，因此解决方案是对其进行平滑处理。抖动是一种选择。另一种选择是使用核密度估计（KDE）。
 - en: Resampling with KDE
   id: totrans-205
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: KDE重采样
 - en: We have used KDE several times to estimate and plot a probability density based
     on a sample. We can also use it to smooth data that have been discretized.
   id: totrans-206
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们已经多次使用KDE来估计和绘制基于样本的概率密度。我们还可以用它来平滑离散化的数据。
 - en: In Chapter 8 we saw that the distribution of income is well modeled by a lognormal
     distribution, so if we take the log of income, it is well modeled by a normal
     distribution. Here are the logarithms of the income data.
   id: totrans-207
   prefs: []
   type: TYPE_NORMAL
+  zh: 在第8章中，我们看到收入的分布很好地符合对数正态分布的模型，因此如果我们取收入的对数，它就很好地符合正态分布。以下是收入数据的对数。
 - en: '[PRE69]'
   id: totrans-208
   prefs: []
@@ -1136,6 +1163,7 @@
   id: totrans-209
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是估计的密度的样子。
 - en: '[PRE70]'
   id: totrans-210
   prefs: []
@@ -1145,11 +1173,13 @@
   id: totrans-211
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/12_bootstrap_124_0.png](../Images/e4ca569f1efb4e7d080c22779ad6e3af.png)'
 - en: To draw samples from this distribution, we’ll use a Scipy function called `gaussian_kde`,
     which takes the data and returns an object that represents the estimated density.
   id: totrans-212
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了从这个分布中抽取样本，我们将使用一个名为`gaussian_kde`的Scipy函数，它接受数据并返回一个表示估计密度的对象。
 - en: '[PRE71]'
   id: totrans-213
   prefs: []
@@ -1161,6 +1191,7 @@
   id: totrans-214
   prefs: []
   type: TYPE_NORMAL
+  zh: '`kde`提供了一个名为`resample`的方法，从估计的密度中抽取随机值。就像我们在之前的例子中所做的那样，我们将生成一个与原始数据大小相同的重采样数据集。'
 - en: '[PRE72]'
   id: totrans-215
   prefs: []
@@ -1176,6 +1207,7 @@
   id: totrans-217
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以抽取一个样本，计算第10个百分位数，并将其从对数转换为美元值。
 - en: '[PRE74]'
   id: totrans-218
   prefs: []
@@ -1191,6 +1223,7 @@
   id: totrans-220
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是第10个百分位数的抽样分布中的一个随机值。以下函数封装了这些步骤。
 - en: '[PRE76]'
   id: totrans-221
   prefs: []
@@ -1200,6 +1233,7 @@
   id: totrans-222
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以从抽样分布中生成一个样本。
 - en: '[PRE77]'
   id: totrans-223
   prefs: []
@@ -1210,6 +1244,7 @@
   id: totrans-224
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下表格将KDE重采样的结果与之前的自助法结果进行了比较。
 - en: '[PRE78]'
   id: totrans-225
   prefs: []
@@ -1219,38 +1254,46 @@
   id: totrans-226
   prefs: []
   type: TYPE_TB
+  zh: '|  | 估计 | 标准误 | CI90 |'
 - en: '| --- | --- | --- | --- |'
   id: totrans-227
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- |'
 - en: '| bootstrapping | 5158.30 | 232.53 | [5107.5, 5107.5] |'
   id: totrans-228
   prefs: []
   type: TYPE_TB
+  zh: '| 自助法 | 5158.30 | 232.53 | [5107.5, 5107.5] |'
 - en: '| KDE resampling | 5092.02 | 270.36 | [4674.41, 5560.08] |'
   id: totrans-229
   prefs: []
   type: TYPE_TB
+  zh: '| KDE重采样 | 5092.02 | 270.36 | [4674.41, 5560.08] |'
 - en: The means and standard errors are about the same with either method. The difference
     is that the confidence interval we get from KDE resampling is much more reasonable.
   id: totrans-230
   prefs: []
   type: TYPE_NORMAL
+  zh: 两种方法的均值和标准误差大致相同。不同之处在于，我们从KDE重采样得到的置信区间要合理得多。
 - en: Summary
   id: totrans-231
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 总结
 - en: 'There are ten examples in this chapter so far; let’s review them:'
   id: totrans-232
   prefs: []
   type: TYPE_NORMAL
+  zh: 到目前为止，本章中有十个例子；让我们来回顾一下：
 - en: First we used resampling based on a normal model to estimate average family
     income in the GSS and compute a confidence interval.
   id: totrans-233
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 首先，我们使用基于正态模型的重采样来估计GSS中家庭收入的平均值并计算置信区间。
 - en: Then we used the same method to estimate the 10th percentile of income, and
     we found that all of the values in the sampling distribution are negative. The
     problem is that the normal model does not fit the distribution of income.
@@ -1258,6 +1301,7 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 然后我们使用相同的方法来估计收入的第10个百分位数，发现抽样分布中的所有值都是负数。问题在于正态模型不适合收入分布。
 - en: To solve this problem, we switched to bootstrap sampling. First we estimated
     average family income and confirmed that the results are consistent with the results
     based on the normal model.
@@ -1265,12 +1309,14 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 为了解决这个问题，我们转而使用自助抽样。首先我们估计了家庭收入的平均值，并确认结果与基于正态模型的结果一致。
 - en: Then we used bootstrapping to estimate the 10th percentile of income. The results
     are much more plausible.
   id: totrans-236
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 然后我们使用自助法估计收入的第10个百分位数。结果更加合理。
 - en: Next we used data from the BRFSS to estimate the average height of men in the
     U.S. Since this dataset is large, the confidence interval is very small. That
     means that the estimate is precise, in the sense that variability due to random
@@ -1280,6 +1326,7 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，我们使用BRFSS的数据来估计美国男性的平均身高。由于这个数据集很大，置信区间非常小。这意味着估计是精确的，因为由于随机抽样引起的变异性很小，但我们不知道它是否准确，因为还有其他可能的误差来源。
 - en: One of those sources of error is oversampling; that is, some people are more
     likely to appear in the sample than others. In the BFRSS, each respondent has
     a sampling weight that indicates how many people in the population they represent.
@@ -1289,12 +1336,14 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 其中一个误差来源是过度抽样；也就是说，有些人出现在样本中的可能性比其他人更高。在BFRSS中，每个受访者都有一个抽样权重，表示他们在人口中代表多少人。我们使用这些权重进行加权自助法，并发现由于过度抽样而产生的误差大于由随机抽样引起的变异性。
 - en: In one exercise you used weighted bootstrapping to estimate the correlation
     of height and weight and compute a confidence interval.
   id: totrans-239
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 在一个练习中，您使用了加权自助法来估计身高和体重的相关性，并计算置信区间。
 - en: In another exercise you estimated the slope of a regression line and computed
     a confidence interval.
   id: totrans-240
