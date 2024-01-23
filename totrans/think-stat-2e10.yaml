@@ -1,22 +1,27 @@
 - en: Chapter 9  Hypothesis testing
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
 - en: 原文：[https://greenteapress.com/thinkstats2/html/thinkstats2010.html](https://greenteapress.com/thinkstats2/html/thinkstats2010.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: The code for this chapter is in `hypothesis.py`. For information about downloading
     and working with this code, see Section [0.2](thinkstats2001.html#code).
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
 - en: 9.1  Classical hypothesis testing
+  id: totrans-3
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: Exploring the data from the NSFG, we saw several “apparent effects,” including
     differences between first babies and others. So far we have taken these effects
     at face value; in this chapter, we put them to the test.
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
 - en: The fundamental question we want to address is whether the effects we see in
@@ -24,23 +29,27 @@
     sample we see a difference in mean pregnancy length for first babies and others.
     We would like to know if that effect reflects a real difference for women in the
     U.S., or if it might appear in the sample by chance.
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
 - en: There are several ways we could formulate this question, including Fisher null
     hypothesis testing, Neyman-Pearson decision theory, and Bayesian inference^([1](#note4)).
     What I present here is a subset of all three that makes up most of what people
     use in practice, which I will call classical hypothesis testing.
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
 - en: 'The goal of classical hypothesis testing is to answer the question, “Given
     a sample and an apparent effect, what is the probability of seeing such an effect
     by chance?” Here’s how we answer that question:'
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
 - en: The first step is to quantify the size of the apparent effect by choosing a
     test statistic. In the NSFG example, the apparent effect is a difference in pregnancy
     length between first babies and others, so a natural choice for the test statistic
     is the difference in means between the two groups.
+  id: totrans-8
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -48,6 +57,7 @@
     based on the assumption that the apparent effect is not real. In the NSFG example
     the null hypothesis is that there is no difference between first babies and others;
     that is, that pregnancy lengths for both groups have the same distribution.
+  id: totrans-9
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -55,6 +65,7 @@
     apparent effect if the null hypothesis is true. In the NSFG example, we would
     compute the actual difference in means, then compute the probability of seeing
     a difference as big, or bigger, under the null hypothesis.
+  id: totrans-10
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -62,40 +73,49 @@
     is said to be statistically significant, which means that it is unlikely to have
     occurred by chance. In that case we infer that the effect is more likely to appear
     in the larger population.
+  id: totrans-11
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: The logic of this process is similar to a proof by contradiction. To prove a
     mathematical statement, A, you assume temporarily that A is false. If that assumption
     leads to a contradiction, you conclude that A must actually be true.
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
 - en: Similarly, to test a hypothesis like, “This effect is real,” we assume, temporarily,
     that it is not. That’s the null hypothesis. Based on that assumption, we compute
     the probability of the apparent effect. That’s the p-value. If the p-value is
     low, we conclude that the null hypothesis is unlikely to be true.
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
 - en: 9.2  HypothesisTest
+  id: totrans-14
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: '`thinkstats2` provides `HypothesisTest`, a class that represents the structure
     of a classical hypothesis test. Here is the definition:'
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE0]'
+  id: totrans-16
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '`HypothesisTest` is an abstract parent class that provides complete definitions
     for some methods and place-keepers for others. Child classes based on `HypothesisTest`
     inherit `__init__` and `PValue` and provide `TestStatistic`, `RunModel`, and optionally
     `MakeModel`.'
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
 - en: '`__init__` takes the data in whatever form is appropriate. It calls `MakeModel`,
     which builds a representation of the null hypothesis, then passes the data to
     `TestStatistic`, which computes the size of the effect in the sample.'
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
 - en: '`PValue` computes the probability of the apparent effect under the null hypothesis.
@@ -103,693 +123,1001 @@
     first line generates simulated data, computes test statistics, and stores them
     in `test_stats`. The result is the fraction of elements in `test_stats` that exceed
     or equal the observed test statistic, `self.actual`.'
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: '`PValue`计算在零假设下显著效应的概率。它以`iters`作为参数，这是要运行的模拟次数。第一行生成模拟数据，计算检验统计量，并将它们存储在`test_stats`中。结果是`test_stats`中的元素比观察到的检验统计量`self.actual`大或等于的比例。'
 - en: 'As a simple example^([2](#note5)), suppose we toss a coin 250 times and see
     140 heads and 110 tails. Based on this result, we might suspect that the coin
     is biased; that is, more likely to land heads. To test this hypothesis, we compute
     the probability of seeing such a difference if the coin is actually fair:'
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为一个简单的例子^([2](#note5))，假设我们抛一枚硬币250次，看到140次正面和110次反面。基于这个结果，我们可能怀疑硬币是有偏的；也就是说，更有可能落在正面。为了测试这个假设，我们计算如果硬币实际上是公平的，看到这样的差异的概率：
 - en: '[PRE1]'
+  id: totrans-21
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: 'The parameter, `data`, is a pair of integers: the number of heads and tails.
     The test statistic is the absolute difference between them, so `self.actual` is
     30.'
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 参数`data`是一对整数：正反面的次数。检验统计量是它们之间的绝对差异，因此`self.actual`是30。
 - en: '`RunModel` simulates coin tosses assuming that the coin is actually fair. It
     generates a sample of 250 tosses, uses Hist to count the number of heads and tails,
     and returns a pair of integers.'
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: '`RunModel`模拟假设硬币实际上是公平的。它生成250次抛硬币的样本，使用Hist来计算正反面的次数，并返回一对整数。'
 - en: 'Now all we have to do is instantiate `CoinTest` and call `PValue`:'
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们只需要实例化`CoinTest`并调用`PValue`：
 - en: '[PRE2]'
+  id: totrans-25
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: The result is about 0.07, which means that if the coin is fair, we expect to
     see a difference as big as 30 about 7% of the time.
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果约为0.07，这意味着如果硬币是公平的，我们预计大约有7%的时间会看到30这么大的差异。
 - en: How should we interpret this result? By convention, 5% is the threshold of statistical
     significance. If the p-value is less than 5%, the effect is considered significant;
     otherwise it is not.
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们应该如何解释这个结果？按照惯例，5%是统计显著性的阈值。如果p值小于5%，则认为效应是显著的；否则不是。
 - en: But the choice of 5% is arbitrary, and (as we will see later) the p-value depends
     on the choice of the test statistics and the model of the null hypothesis. So
     p-values should not be considered precise measurements.
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是5%的选择是任意的，而且（正如我们将在后面看到的）p值取决于检验统计量和零假设模型的选择。因此，p值不应被视为精确的测量。
 - en: 'I recommend interpreting p-values according to their order of magnitude: if
     the p-value is less than 1%, the effect is unlikely to be due to chance; if it
     is greater than 10%, the effect can plausibly be explained by chance. P-values
     between 1% and 10% should be considered borderline. So in this example I conclude
     that the data do not provide strong evidence that the coin is biased or not.'
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 我建议根据p值的数量级来解释p值：如果p值小于1%，效应不太可能是由于偶然性引起的; 如果大于10%，效应可能可以用偶然性解释。1%到10%之间的p值应被视为边际的。因此，在这个例子中，我得出结论，数据并没有提供强有力的证据表明硬币是有偏的还是没有。
 - en: 9.3  Testing a difference in means
+  id: totrans-30
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 9.3  测试均值的差异
 - en: One of the most common effects to test is a difference in mean between two groups.
     In the NSFG data, we saw that the mean pregnancy length for first babies is slightly
     longer, and the mean birth weight is slightly smaller. Now we will see if those
     effects are statistically significant.
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 最常见的效应之一是测试两组之间的均值差异。在NSFG数据中，我们看到第一个婴儿的平均怀孕期略长，出生体重略小。现在我们将看看这些效应是否在统计上显著。
 - en: 'For these examples, the null hypothesis is that the distributions for the two
     groups are the same. One way to model the null hypothesis is by permutation; that
     is, we can take values for first babies and others and shuffle them, treating
     the two groups as one big group:'
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于这些例子，零假设是两组的分布相同。建模零假设的一种方法是通过排列; 也就是说，我们可以取第一个婴儿和其他人的值并对它们进行洗牌，将这两组视为一个大组：
 - en: '[PRE3]'
+  id: totrans-33
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '`data` is a pair of sequences, one for each group. The test statistic is the
     absolute difference in the means.'
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: '`data`是一对序列，每组一个。检验统计量是均值的绝对差。'
 - en: '`MakeModel` records the sizes of the groups, `n` and `m`, and combines the
     groups into one NumPy array, `self.pool`.'
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: '`MakeModel`记录了组的大小，`n`和`m`，并将组合成一个NumPy数组`self.pool`。'
 - en: '`RunModel` simulates the null hypothesis by shuffling the pooled values and
     splitting them into two groups with sizes `n` and `m`. As always, the return value
     from `RunModel` has the same format as the observed data.'
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: '`RunModel`通过对汇总值进行洗牌并将其分成大小为`n`和`m`的两组来模拟零假设。与往常一样，`RunModel`的返回值与观察数据的格式相同。'
 - en: 'To test the difference in pregnancy length, we run:'
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了测试怀孕长度的差异，我们运行：
 - en: '[PRE4]'
+  id: totrans-38
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '`MakeFrames` reads the NSFG data and returns DataFrames representing all live
     births, first babies, and others. We extract pregnancy lengths as NumPy arrays,
     pass them as data to `DiffMeansPermute`, and compute the p-value. The result is
     about 0.17, which means that we expect to see a difference as big as the observed
     effect about 17% of the time. So this effect is not statistically significant.'
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: '`MakeFrames`读取NSFG数据并返回表示所有活产、第一个婴儿和其他人的数据框。我们将怀孕长度提取为NumPy数组，将它们作为数据传递给`DiffMeansPermute`，并计算p值。结果约为0.17，这意味着我们预计大约有17%的时间会看到观察到的效果一样大的差异。因此，这种效应在统计上并不显著。'
 - en: '* * *'
+  id: totrans-40
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
+  id: totrans-41
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '![](../Images/bc93e63f2becf3d667655bd41f74599f.png)'
+  id: totrans-42
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/bc93e63f2becf3d667655bd41f74599f.png)'
 - en: ''
+  id: totrans-43
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '| Figure 9.1: CDF of difference in mean pregnancy length under the null hypothesis.
     |'
+  id: totrans-44
   prefs:
   - PREF_BQ
   type: TYPE_TB
+  zh: '| 图9.1：零假设下怀孕期长度均值差异的CDF。 |'
 - en: ''
+  id: totrans-45
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-46
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: '`HypothesisTest` provides `PlotCdf`, which plots the distribution of the test
     statistic and a gray line indicating the observed effect size:'
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: '`HypothesisTest`提供了`PlotCdf`，它绘制了检验统计量的分布和一个灰色线，表示观察到的效应大小：'
 - en: '[PRE5]'
+  id: totrans-48
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: Figure [9.1](#hypothesis1) shows the result. The CDF intersects the observed
     difference at 0.83, which is the complement of the p-value, 0.17.
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: 图 [9.1](#hypothesis1) 显示了结果。CDF在0.83处与观察到的差异相交，这是p值的补数，0.17。
 - en: If we run the same analysis with birth weight, the computed p-value is 0; after
     1000 attempts, the simulation never yields an effect as big as the observed difference,
     0.12 lbs. So we would report p < 0.001, and conclude that the difference in birth
     weight is statistically significant.
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们用出生体重进行相同的分析，计算得到的p值为0；经过1000次尝试，模拟从未产生与观察到的差异0.12磅一样大的效应。因此，我们会报告p < 0.001，并得出结论，出生体重的差异在统计上是显著的。
 - en: 9.4  Other test statistics
+  id: totrans-51
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 9.4  其他检验统计量
 - en: Choosing the best test statistic depends on what question you are trying to
     address. For example, if the relevant question is whether pregnancy lengths are
     different for first babies, then it makes sense to test the absolute difference
     in means, as we did in the previous section.
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: 选择最佳的检验统计量取决于你试图解决的问题。例如，如果相关问题是第一个宝宝的怀孕期是否不同，那么测试均值的绝对差异是有意义的，就像我们在前一节中所做的那样。
 - en: 'If we had some reason to think that first babies are likely to be late, then
     we would not take the absolute value of the difference; instead we would use this
     test statistic:'
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们有理由认为第一个宝宝可能会迟到，那么我们就不会取差值的绝对值；相反，我们会使用这个检验统计量：
 - en: '[PRE6]'
+  id: totrans-54
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '`DiffMeansOneSided` inherits `MakeModel` and `RunModel` from `DiffMeansPermute`;
     the only difference is that `TestStatistic` does not take the absolute value of
     the difference. This kind of test is called one-sided because it only counts one
     side of the distribution of differences. The previous test, using both sides,
     is two-sided.'
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: '`DiffMeansOneSided`继承了`DiffMeansPermute`的`MakeModel`和`RunModel`；唯一的区别是`TestStatistic`不取差值的绝对值。这种测试被称为单侧，因为它只计算差异分布的一侧。之前的测试，使用了两侧，是双侧的。'
 - en: For this version of the test, the p-value is 0.09\. In general the p-value for
     a one-sided test is about half the p-value for a two-sided test, depending on
     the shape of the distribution.
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于这个版本的检验统计量，p值为0.09。通常，单侧检验的p值约为双侧检验的一半，这取决于分布的形状。
 - en: The one-sided hypothesis, that first babies are born late, is more specific
     than the two-sided hypothesis, so the p-value is smaller. But even for the stronger
     hypothesis, the difference is not statistically significant.
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 单侧假设，即第一个宝宝出生较晚，比双侧假设更具体，因此p值更小。但即使对于更强的假设，差异也不具有统计学意义。
 - en: 'We can use the same framework to test for a difference in standard deviation.
     In Section [3.3](thinkstats2004.html#visualization), we saw some evidence that
     first babies are more likely to be early or late, and less likely to be on time.
     So we might hypothesize that the standard deviation is higher. Here’s how we can
     test that:'
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用相同的框架来测试标准差的差异。在第3.3节中，我们看到一些证据表明第一个宝宝更有可能早产或晚产，而不太可能准时出生。因此，我们可能会假设标准差更高。下面是我们如何测试的方法：
 - en: '[PRE7]'
+  id: totrans-59
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: This is a one-sided test because the hypothesis is that the standard deviation
     for first babies is higher, not just different. The p-value is 0.09, which is
     not statistically significant.
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个单侧检验，因为假设是第一个宝宝的标准差更高，而不仅仅是不同。p值为0.09，这在统计上不显著。
 - en: 9.5  Testing a correlation
+  id: totrans-61
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 9.5  测试相关性
 - en: This framework can also test correlations. For example, in the NSFG data set,
     the correlation between birth weight and mother’s age is about 0.07\. It seems
     like older mothers have heavier babies. But could this effect be due to chance?
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个框架也可以测试相关性。例如，在NSFG数据集中，出生体重和母亲年龄之间的相关性约为0.07。似乎年龄较大的母亲会生下更重的宝宝。但这种效应可能是由于偶然造成的吗？
 - en: For the test statistic, I use Pearson’s correlation, but Spearman’s would work
     as well. If we had reason to expect positive correlation, we would do a one-sided
     test. But since we have no such reason, I’ll do a two-sided test using the absolute
     value of correlation.
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于检验统计量，我使用Pearson相关性，但Spearman相关性也可以。如果我们有理由期望正相关，我们将进行单侧检验。但由于我们没有这样的理由，我将使用绝对值相关性进行双侧检验。
 - en: 'The null hypothesis is that there is no correlation between mother’s age and
     birth weight. By shuffling the observed values, we can simulate a world where
     the distributions of age and birth weight are the same, but where the variables
     are unrelated:'
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: 零假设是母亲年龄和新生儿体重之间没有相关性。通过洗牌观察到的值，我们可以模拟一个世界，在这个世界中，年龄和出生体重的分布是相同的，但变量是不相关的。
 - en: '[PRE8]'
+  id: totrans-65
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '`data` is a pair of sequences. `TestStatistic` computes the absolute value
     of Pearson’s correlation. `RunModel` shuffles the `xs` and returns simulated data.'
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: '`data`是一对序列。`TestStatistic`计算Pearson相关性的绝对值。`RunModel`洗牌`xs`并返回模拟数据。'
 - en: 'Here’s the code that reads the data and runs the test:'
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是读取数据并运行测试的代码：
 - en: '[PRE9]'
+  id: totrans-68
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: I use `dropna` with the `subset` argument to drop rows that are missing either
     of the variables we need.
+  id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: 我使用`dropna`和`subset`参数删除缺少我们需要的变量的行。
 - en: The actual correlation is 0.07\. The computed p-value is 0; after 1000 iterations
     the largest simulated correlation is 0.04\. So although the observed correlation
     is small, it is statistically significant.
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: 实际相关性为0.07。计算得到的p值为0；经过1000次迭代，最大的模拟相关性为0.04。因此，尽管观察到的相关性很小，但在统计上是显著的。
 - en: This example is a reminder that “statistically significant” does not always
     mean that an effect is important, or significant in practice. It only means that
     it is unlikely to have occurred by chance.
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个例子提醒我们，“统计上显著”并不总是意味着一个效应是重要的，或者在实践中是显著的。它只意味着它不太可能是偶然发生的。
 - en: 9.6  Testing proportions
+  id: totrans-72
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 9.6  测试比例
 - en: 'Suppose you run a casino and you suspect that a customer is using a crooked
     die; that is, one that has been modified to make one of the faces more likely
     than the others. You apprehend the alleged cheater and confiscate the die, but
     now you have to prove that it is crooked. You roll the die 60 times and get the
     following results:'
+  id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设你经营一家赌场，你怀疑一位顾客正在使用一个不正当的骰子；也就是说，一个面比其他面更有可能出现。你逮捕了这名涉嫌作弊的人，并没收了骰子，但现在你必须证明它是不正当的。你掷了60次骰子，得到了以下结果：
 - en: '| Value | 1 | 2 | 3 | 4 | 5 | 6 |'
+  id: totrans-74
   prefs: []
   type: TYPE_TB
+  zh: '| 值 | 1 | 2 | 3 | 4 | 5 | 6 |'
 - en: '| Frequency | 8 | 9 | 19 | 5 | 8 | 11 |'
+  id: totrans-75
   prefs: []
   type: TYPE_TB
+  zh: '| 频率 | 8 | 9 | 19 | 5 | 8 | 11 |'
 - en: On average you expect each value to appear 10 times. In this dataset, the value
     3 appears more often than expected, and the value 4 appears less often. But are
     these differences statistically significant?
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
+  zh: 平均而言，你期望每个值出现10次。在这个数据集中，值3出现的次数比预期的要多，而值4出现的次数比预期的要少。但这些差异在统计上显著吗？
 - en: To test this hypothesis, we can compute the expected frequency for each value,
     the difference between the expected and observed frequencies, and the total absolute
     difference. In this example, we expect each side to come up 10 times out of 60;
     the deviations from this expectation are -2, -1, 9, -5, -2, and 1; so the total
     absolute difference is 20\. How often would we see such a difference by chance?
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了检验这个假设，我们可以计算每个值的期望频率，期望频率和观察频率之间的差异，以及总的绝对差异。在这个例子中，我们期望每一面出现60次中的10次；与这个期望的偏差是-2，-1，9，-5，-2和1；因此总的绝对差异是20。我们会有多少次看到这样的差异？
 - en: 'Here’s a version of `HypothesisTest` that answers that question:'
+  id: totrans-78
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个回答这个问题的`HypothesisTest`版本：
 - en: '[PRE10]'
+  id: totrans-79
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: 'The data are represented as a list of frequencies: the observed values are
     `[8, 9, 19, 5, 8, 11]`; the expected frequencies are all 10\. The test statistic
     is the sum of the absolute differences.'
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 数据表示为频率列表：观察值为`[8, 9, 19, 5, 8, 11]`；期望频率都是10。检验统计量是绝对差异的总和。
 - en: The null hypothesis is that the die is fair, so we simulate that by drawing
     random samples from `values`. `RunModel` uses `Hist` to compute and return the
     list of frequencies.
+  id: totrans-81
   prefs: []
   type: TYPE_NORMAL
+  zh: 零假设是骰子是公平的，因此我们通过从`values`中随机抽取样本来模拟。`RunModel`使用`Hist`来计算并返回频率列表。
 - en: The p-value for this data is 0.13, which means that if the die is fair we expect
     to see the observed total deviation, or more, about 13% of the time. So the apparent
     effect is not statistically significant.
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些数据的p值为0.13，这意味着如果骰子是公平的，我们预计会有观察到的总偏差，或者更多，大约13%的时间。因此，明显的效应在统计上并不显著。
 - en: 9.7  Chi-squared tests
+  id: totrans-83
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 9.7  卡方检验
 - en: 'In the previous section we used total deviation as the test statistic. But
     for testing proportions it is more common to use the chi-squared statistic:'
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: 在前一节中，我们使用总偏差作为检验统计量。但是对于测试比例，更常见的是使用卡方统计量：
 - en: '| χ² =  |'
+  id: totrans-85
   prefs: []
   type: TYPE_TB
+  zh: '| χ² =  |'
 - en: '&#124;   &#124;'
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124;   &#124;'
 - en: '&#124; ∑ &#124;'
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124; ∑ &#124;'
 - en: '&#124; i &#124;'
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124; i &#124;'
 - en: '|   |'
+  id: totrans-89
   prefs: []
   type: TYPE_TB
+  zh: '|   |'
 - en: '&#124; (O[i] − E[i])² &#124;'
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124; (O[i] − E[i])² &#124;'
 - en: '&#124;  &#124;'
+  id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124;  &#124;'
 - en: '&#124; E[i] &#124;'
+  id: totrans-92
   prefs: []
   type: TYPE_NORMAL
+  zh: '&#124; E[i] &#124;'
 - en: '|   |'
+  id: totrans-93
   prefs: []
   type: TYPE_TB
+  zh: '|   |'
 - en: 'Where O[i] are the observed frequencies and E[i] are the expected frequencies.
     Here’s the Python code:'
+  id: totrans-94
   prefs: []
   type: TYPE_NORMAL
+  zh: 其中O[i]是观察频率，E[i]是期望频率。以下是Python代码：
 - en: '[PRE11]'
+  id: totrans-95
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: Squaring the deviations (rather than taking absolute values) gives more weight
     to large deviations. Dividing through by `expected` standardizes the deviations,
     although in this case it has no effect because the expected frequencies are all
     equal.
+  id: totrans-96
   prefs: []
   type: TYPE_NORMAL
+  zh: 对偏差进行平方（而不是取绝对值）会更加重视大的偏差。通过`expected`除以标准化偏差，尽管在这种情况下没有影响，因为期望频率都是相等的。
 - en: The p-value using the chi-squared statistic is 0.04, substantially smaller than
     what we got using total deviation, 0.13. If we take the 5% threshold seriously,
     we would consider this effect statistically significant. But considering the two
     tests together, I would say that the results are borderline. I would not rule
     out the possibility that the die is crooked, but I would not convict the accused
     cheater.
+  id: totrans-97
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用卡方统计量的p值为0.04，远小于我们使用总偏差得到的0.13。如果我们认真对待5%的阈值，我们会认为这种效应在统计上是显著的。但考虑到这两个检验，我会说结果是边缘的。我不会排除骰子是歪的可能性，但我也不会定罪被告作弊者。
 - en: 'This example demonstrates an important point: the p-value depends on the choice
     of test statistic and the model of the null hypothesis, and sometimes these choices
     determine whether an effect is statistically significant or not.'
+  id: totrans-98
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个例子证明了一个重要的观点：p值取决于检验统计量的选择和零假设模型，有时这些选择决定了效应是否在统计上显著。
 - en: 9.8  First babies again
+  id: totrans-99
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 9.8  再次第一个宝宝
 - en: Earlier in this chapter we looked at pregnancy lengths for first babies and
     others, and concluded that the apparent differences in mean and standard deviation
     are not statistically significant. But in Section [3.3](thinkstats2004.html#visualization),
     we saw several apparent differences in the distribution of pregnancy length, especially
     in the range from 35 to 43 weeks. To see whether those differences are statistically
     significant, we can use a test based on a chi-squared statistic.
+  id: totrans-100
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本章的前面，我们看过第一个宝宝和其他宝宝的怀孕时长，并得出结论，平均值和标准差的明显差异在统计上并不显著。但在第3.3节中，我们看到了怀孕时长分布中的几个明显差异，特别是在35到43周的范围内。为了确定这些差异是否在统计上显著，我们可以使用基于卡方统计量的检验。
 - en: 'The code combines elements from previous examples:'
+  id: totrans-101
   prefs: []
   type: TYPE_NORMAL
+  zh: 代码结合了以前示例的元素：
 - en: '[PRE12]'
+  id: totrans-102
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: The data are represented as two lists of pregnancy lengths. The null hypothesis
     is that both samples are drawn from the same distribution. `MakeModel` models
     that distribution by pooling the two samples using `hstack`. Then `RunModel` generates
     simulated data by shuffling the pooled sample and splitting it into two parts.
+  id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: 数据表示为两个怀孕时长的列表。零假设是两个样本都是从相同的分布中抽取的。`MakeModel`通过使用`hstack`汇总两个样本来模拟该分布。然后`RunModel`通过对汇总样本进行洗牌并将其分成两部分来生成模拟数据。
 - en: '`MakeModel` also defines `values`, which is the range of weeks we’ll use, and
     `expected_probs`, which is the probability of each value in the pooled distribution.'
+  id: totrans-104
   prefs: []
   type: TYPE_NORMAL
+  zh: '`MakeModel`还定义了`values`，这是我们将使用的周数范围，以及`expected_probs`，这是汇总分布中每个值的概率。'
 - en: 'Here’s the code that computes the test statistic:'
+  id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是计算检验统计量的代码：
 - en: '[PRE13]'
+  id: totrans-106
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: '`TestStatistic` computes the chi-squared statistic for first babies and others,
     and adds them.'
+  id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: '`TestStatistic`计算了第一个宝宝和其他宝宝的卡方统计量，并将它们相加。'
 - en: '`ChiSquared` takes a sequence of pregnancy lengths, computes its histogram,
     and computes `observed`, which is a list of frequencies corresponding to `self.values`.
     To compute the list of expected frequencies, it multiplies the pre-computed probabilities,
     `expected_probs`, by the sample size. It returns the chi-squared statistic, `stat`.'
+  id: totrans-108
   prefs: []
   type: TYPE_NORMAL
+  zh: '`ChiSquared`接受怀孕长度的序列，计算其直方图，并计算`observed`，它是与`self.values`对应的频率列表。为了计算预期频率列表，它将预先计算的概率`expected_probs`乘以样本大小。它返回卡方统计量`stat`。'
 - en: For the NSFG data the total chi-squared statistic is 102, which doesn’t mean
     much by itself. But after 1000 iterations, the largest test statistic generated
     under the null hypothesis is 32\. We conclude that the observed chi-squared statistic
     is unlikely under the null hypothesis, so the apparent effect is statistically
     significant.
+  id: totrans-109
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于NSFG数据，总卡方统计量为102，这本身并没有太多意义。但经过1000次迭代后，在零假设下生成的最大检验统计量为32。我们得出结论，观察到的卡方统计量在零假设下是不太可能的，因此这个明显的效应具有统计学意义。
 - en: 'This example demonstrates a limitation of chi-squared tests: they indicate
     that there is a difference between the two groups, but they don’t say anything
     specific about what the difference is.'
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个例子展示了卡方检验的一个局限性：它们表明两组之间存在差异，但并不具体说明差异是什么。
 - en: 9.9  Errors
+  id: totrans-111
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 9.9 错误
 - en: 'In classical hypothesis testing, an effect is considered statistically significant
     if the p-value is below some threshold, commonly 5%. This procedure raises two
     questions:'
+  id: totrans-112
   prefs: []
   type: TYPE_NORMAL
+  zh: 在经典假设检验中，如果p值低于某个阈值，通常是5%，则认为效应具有统计学意义。这个过程引发了两个问题：
 - en: If the effect is actually due to chance, what is the probability that we will
     wrongly consider it significant? This probability is the false positive rate.
+  id: totrans-113
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果效应实际上是由于偶然发生的，那么我们错误地认为它具有统计学意义的概率是多少？这个概率就是假阳性率。
 - en: If the effect is real, what is the chance that the hypothesis test will fail?
     This probability is the false negative rate.
+  id: totrans-114
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果效应是真实的，那么假设检验失败的概率是多少？这个概率就是假阴性率。
 - en: 'The false positive rate is relatively easy to compute: if the threshold is
     5%, the false positive rate is 5%. Here’s why:'
+  id: totrans-115
   prefs: []
   type: TYPE_NORMAL
+  zh: 假阳性率相对容易计算：如果阈值为5%，假阳性率为5%。原因如下：
 - en: If there is no real effect, the null hypothesis is true, so we can compute the
     distribution of the test statistic by simulating the null hypothesis. Call this
     distribution CDF [T].
+  id: totrans-116
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果没有真实效应，那么零假设是成立的，因此我们可以通过模拟零假设来计算检验统计量的分布。将这个分布称为CDF [T]。
 - en: Each time we run an experiment, we get a test statistic, t, which is drawn from
     CDF [T]. Then we compute a p-value, which is the probability that a random value
     from CDF [T] exceeds `t`, so that’s 1 − CDF [T](t).
+  id: totrans-117
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 每次运行实验，我们得到一个检验统计量t，它是从CDF [T]中抽取的。然后我们计算一个p值，即从CDF [T]中抽取的随机值超过`t`的概率，即1 −
+    CDF [T](t)。
 - en: The p-value is less than 5% if CDF [T](t) is greater than 95%; that is, if t
     exceeds the 95th percentile. And how often does a value chosen from CDF [T] exceed
     the 95th percentile? 5% of the time.
+  id: totrans-118
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果p值小于5%，那么CDF [T](t)大于95%；也就是说，t超过了95th百分位数。那么从CDF [T]中选择的值超过95th百分位数的概率有多大？是5%。
 - en: So if you perform one hypothesis test with a 5% threshold, you expect a false
     positive 1 time in 20.
+  id: totrans-119
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，如果使用5%的阈值进行一次假设检验，你期望20次中有1次是假阳性。
 - en: 9.10  Power
+  id: totrans-120
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 9.10 功效
 - en: The false negative rate is harder to compute because it depends on the actual
     effect size, and normally we don’t know that. One option is to compute a rate
     conditioned on a hypothetical effect size.
+  id: totrans-121
   prefs: []
   type: TYPE_NORMAL
+  zh: 假阴性率更难计算，因为它取决于实际效应大小，而通常我们并不知道。一种选择是计算基于假设效应大小的率。
 - en: 'For example, if we assume that the observed difference between groups is accurate,
     we can use the observed samples as a model of the population and run hypothesis
     tests with simulated data:'
+  id: totrans-122
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，如果我们假设两组之间的观察差异是准确的，我们可以使用观察样本作为总体的模型，并使用模拟数据进行假设检验：
 - en: '[PRE14]'
+  id: totrans-123
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '`FalseNegRate` takes data in the form of two sequences, one for each group.
     Each time through the loop, it simulates an experiment by drawing a random sample
     from each group and running a hypothesis test. Then it checks the result and counts
     the number of false negatives.'
+  id: totrans-124
   prefs: []
   type: TYPE_NORMAL
+  zh: '`FalseNegRate`接受两个序列的数据，每次循环时，它通过从每组中抽取随机样本并运行假设检验来模拟实验。然后它检查结果并计算假阴性的数量。'
 - en: '`Resample` takes a sequence and draws a sample with the same length, with replacement:'
+  id: totrans-125
   prefs: []
   type: TYPE_NORMAL
+  zh: '`Resample`接受一个序列并抽取一个与之相同长度的样本，可以进行替换：'
 - en: '[PRE15]'
+  id: totrans-126
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: 'Here’s the code that tests pregnancy lengths:'
+  id: totrans-127
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是测试怀孕长度的代码：
 - en: '[PRE16]'
+  id: totrans-128
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: The result is about 70%, which means that if the actual difference in mean pregnancy
     length is 0.078 weeks, we expect an experiment with this sample size to yield
     a negative test 70% of the time.
+  id: totrans-129
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果约为70%，这意味着如果实际的怀孕期长度的平均差异为0.078周，我们期望使用这个样本大小进行的实验有70%的可能性产生负面测试结果。
 - en: 'This result is often presented the other way around: if the actual difference
     is 0.078 weeks, we should expect a positive test only 30% of the time. This “correct
     positive rate” is called the power of the test, or sometimes “sensitivity”. It
     reflects the ability of the test to detect an effect of a given size.'
+  id: totrans-130
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个结果通常是反过来呈现的：如果实际差异为0.078周，我们只有30%的几率期望得到积极的测试结果。这个“正确的积极率”被称为测试的功效，有时也称为“敏感性”。它反映了测试检测特定大小效应的能力。
 - en: In this example, the test had only a 30% chance of yielding a positive result
     (again, assuming that the difference is 0.078 weeks). As a rule of thumb, a power
     of 80% is considered acceptable, so we would say that this test was “underpowered.”
+  id: totrans-131
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个例子中，测试只有30%的几率产生积极的结果（同样，假设差异为0.078周）。一般来说，80%的功效被认为是可以接受的，因此我们会说这个测试“功效不足”。
 - en: In general a negative hypothesis test does not imply that there is no difference
     between the groups; instead it suggests that if there is a difference, it is too
     small to detect with this sample size.
+  id: totrans-132
   prefs: []
   type: TYPE_NORMAL
+  zh: 一般来说，负假设检验并不意味着两组之间没有差异；相反，它表明如果有差异，那么它太小以至于无法用这个样本大小检测出来。
 - en: 9.11  Replication
+  id: totrans-133
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 9.11 复制
 - en: The hypothesis testing process I demonstrated in this chapter is not, strictly
     speaking, good practice.
+  id: totrans-134
   prefs: []
   type: TYPE_NORMAL
+  zh: 我在本章中演示的假设检验过程严格来说并不是一个好的做法。
 - en: First, I performed multiple tests. If you run one hypothesis test, the chance
     of a false positive is about 1 in 20, which might be acceptable. But if you run
     20 tests, you should expect at least one false positive, most of the time.
+  id: totrans-135
   prefs: []
   type: TYPE_NORMAL
+  zh: 首先，我进行了多次测试。如果您进行一次假设检验，那么发生假阳性的几率约为20分之1，这可能是可以接受的。但是如果您进行20次测试，您应该至少期望有一个假阳性，大多数情况下都会发生。
 - en: Second, I used the same dataset for exploration and testing. If you explore
     a large dataset, find a surprising effect, and then test whether it is significant,
     you have a good chance of generating a false positive.
+  id: totrans-136
   prefs: []
   type: TYPE_NORMAL
+  zh: 其次，我在探索和测试中使用了相同的数据集。如果您探索一个大型数据集，发现了一个令人惊讶的效应，然后测试它是否显著，您很有可能产生假阳性。
 - en: To compensate for multiple tests, you can adjust the p-value threshold (see
     [https://en.wikipedia.org/wiki/Holm-Bonferroni_method](https://en.wikipedia.org/wiki/Holm-Bonferroni_method)).
     Or you can address both problems by partitioning the data, using one set for exploration
     and the other for testing.
+  id: totrans-137
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了补偿多重检验，您可以调整p值阈值（参见[https://en.wikipedia.org/wiki/Holm-Bonferroni_method](https://en.wikipedia.org/wiki/Holm-Bonferroni_method)）。或者您可以通过将数据分区，使用一个集合进行探索，另一个集合进行测试来解决这两个问题。
 - en: In some fields these practices are required or at least encouraged. But it is
     also common to address these problems implicitly by replicating published results.
     Typically the first paper to report a new result is considered exploratory. Subsequent
     papers that replicate the result with new data are considered confirmatory.
+  id: totrans-138
   prefs: []
   type: TYPE_NORMAL
+  zh: 在某些领域，这些做法是必需的，或者至少是受鼓励的。但是通过复制已发表的结果来隐式解决这些问题也很常见。通常，第一篇报告新结果的论文被认为是探索性的。随后使用新数据复制结果的论文被认为是验证性的。
 - en: 'As it happens, we have an opportunity to replicate the results in this chapter.
     The first edition of this book is based on Cycle 6 of the NSFG, which was released
     in 2002\. In October 2011, the CDC released additional data based on interviews
     conducted from 2006–2010\. `nsfg2.py` contains code to read and clean this data.
     In the new dataset:'
+  id: totrans-139
   prefs: []
   type: TYPE_NORMAL
+  zh: 恰好，我们有机会复制本章中的结果。本书的第一版基于2002年发布的NSFG第6周期。2011年10月，CDC发布了基于2006-2010年进行的访谈的额外数据。`nsfg2.py`包含用于读取和清理这些数据的代码。在新数据集中：
 - en: The difference in mean pregnancy length is 0.16 weeks and statistically significant
     with p < 0.001 (compared to 0.078 weeks in the original dataset).
+  id: totrans-140
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 妊娠期长度的平均差异为0.16周，p <0.001，具有统计学意义（与原始数据集中的0.078周相比）。
 - en: The difference in birth weight is 0.17 pounds with p < 0.001 (compared to 0.12
     lbs in the original dataset).
+  id: totrans-141
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 出生体重的差异为0.17磅，p <0.001（与原始数据集中的0.12磅相比）。
 - en: The correlation between birth weight and mother’s age is 0.08 with p < 0.001
     (compared to 0.07).
+  id: totrans-142
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 出生体重与母亲年龄之间的相关性为0.08，p <0.001（与0.07相比）。
 - en: The chi-squared test is statistically significant with p < 0.001 (as it was
     in the original).
+  id: totrans-143
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 卡方检验具有统计学意义，p <0.001（与原始数据集中的情况一样）。
 - en: In summary, all of the effects that were statistically significant in the original
     dataset were replicated in the new dataset, and the difference in pregnancy length,
     which was not significant in the original, is bigger in the new dataset and significant.
+  id: totrans-144
   prefs: []
   type: TYPE_NORMAL
+  zh: 总之，在新数据集中，所有在原始数据集中具有统计学意义的效应都在新数据集中得到了复制，而在原始数据集中不显著的妊娠期长度差异在新数据集中更大且显著。
 - en: 9.12  Exercises
+  id: totrans-145
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 9.12 练习
 - en: A solution to these exercises is in `chap09soln.py`.
+  id: totrans-146
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些练习的解决方案在`chap09soln.py`中。
 - en: Exercise 1   *As sample size increases, the power of a hypothesis test increases,
     which means it is more likely to be positive if the effect is real. Conversely,
     as sample size decreases, the test is less likely to be positive even if the effect
     is real.*
+  id: totrans-147
   prefs: []
   type: TYPE_NORMAL
+  zh: 练习1  随着样本大小的增加，假设检验的功效会增加，这意味着如果效应是真实的，它更有可能是积极的。相反，随着样本大小的减小，即使效应是真实的，测试也不太可能是积极的。
 - en: '*To investigate this behavior, run the tests in this chapter with different
     subsets of the NSFG data. You can use `thinkstats2.SampleRows` to select a random
     subset of the rows in a DataFrame.*'
+  id: totrans-148
   prefs: []
   type: TYPE_NORMAL
+  zh: '*为了调查这种行为，使用NSFG数据的不同子集运行本章中的测试。您可以使用`thinkstats2.SampleRows`来选择DataFrame中行的随机子集。*'
 - en: '*What happens to the p-values of these tests as sample size decreases? What
     is the smallest sample size that yields a positive test?*'
+  id: totrans-149
   prefs: []
   type: TYPE_NORMAL
+  zh: '*随着样本大小的减小，这些检验的p值会发生什么变化？能够产生积极测试的最小样本量是多少？*'
 - en: Exercise 2
+  id: totrans-150
   prefs: []
   type: TYPE_NORMAL
+  zh: 练习2
 - en: '*In Section *[*9.3*](#testdiff)*, we simulated the null hypothesis by permutation;
     that is, we treated the observed values as if they represented the entire population,
     and randomly assigned the members of the population to the two groups.*'
+  id: totrans-151
   prefs: []
   type: TYPE_NORMAL
+  zh: '*在第9.3节中，我们通过置换来模拟零假设；也就是说，我们将观察到的值视为代表整个人口，并随机将人口的成员分配到两个组中。*'
 - en: '*An alternative is to use the sample to estimate the distribution for the population,
     then draw a random sample from that distribution. This process is called resampling.
     There are several ways to implement resampling, but one of the simplest is to
     draw a sample with replacement from the observed values, as in Section *[*9.10*](#power)*.*'
+  id: totrans-152
   prefs: []
   type: TYPE_NORMAL
+  zh: '*另一种方法是使用样本来估计人口的分布，然后从该分布中随机抽取一个样本。这个过程称为重新采样。有几种实现重新采样的方法，但其中一种最简单的方法是从观察到的值中有放回地抽取样本，就像第9.10节中那样。*'
 - en: '*Write a class named `DiffMeansResample` that inherits from `DiffMeansPermute`
     and overrides `RunModel` to implement resampling, rather than permutation.*'
+  id: totrans-153
   prefs: []
   type: TYPE_NORMAL
+  zh: '*编写一个名为`DiffMeansResample`的类，该类继承自`DiffMeansPermute`并覆盖`RunModel`以实现重新采样，而不是置换。*'
 - en: '*Use this model to test the differences in pregnancy length and birth weight.
     How much does the model affect the results?*'
+  id: totrans-154
   prefs: []
   type: TYPE_NORMAL
+  zh: '*使用此模型测试妊娠期长度和出生体重的差异。模型对结果有多大影响？*'
 - en: 9.13  Glossary
+  id: totrans-155
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 9.13 术语表
 - en: 'hypothesis testing: The process of determining whether an apparent effect is
     statistically significant.'
+  id: totrans-156
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 假设检验：确定明显效应是否具有统计学意义的过程。
 - en: 'test statistic: A statistic used to quantify an effect size.'
+  id: totrans-157
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 检验统计量：用于量化效应大小的统计量。
 - en: 'null hypothesis: A model of a system based on the assumption that an apparent
     effect is due to chance.'
+  id: totrans-158
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 零假设：基于假设明显效应是由偶然引起的系统模型。
 - en: 'p-value: The probability that an effect could occur by chance.'
+  id: totrans-159
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: p值：一个效应可能是偶然发生的概率。
 - en: 'statistically significant: An effect is statistically significant if it is
     unlikely to occur by chance.'
+  id: totrans-160
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 统计学上显著：如果一个效应不太可能是偶然发生的，那么它就是统计学上显著的。
 - en: 'permutation test: A way to compute p-values by generating permutations of an
     observed dataset.'
+  id: totrans-161
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 排列检验：通过生成观察到的数据集的排列来计算p值的一种方法。
 - en: 'resampling test: A way to compute p-values by generating samples, with replacement,
     from an observed dataset.'
+  id: totrans-162
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 重抽样检验：通过从观察到的数据集中生成带有替换的样本来计算p值的一种方法。
 - en: 'two-sided test: A test that asks, “What is the chance of an effect as big as
     the observed effect, positive or negative?”'
+  id: totrans-163
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 双侧检验：一个检验，问：“观察到的效应有多大几率是正的或负的？”
 - en: 'one-sided test: A test that asks, “What is the chance of an effect as big as
     the observed effect, and with the same sign?”'
+  id: totrans-164
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 单侧检验：一个检验，问：“观察到的效应有多大几率和同样的符号一样大？”
 - en: 'chi-squared test: A test that uses the chi-squared statistic as the test statistic.'
+  id: totrans-165
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 卡方检验：使用卡方统计量作为检验统计量的一种检验方法。
 - en: 'false positive: The conclusion that an effect is real when it is not.'
+  id: totrans-166
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 假阳性：当一个效应并不存在时得出结论说它是真实的。
 - en: 'false negative: The conclusion that an effect is due to chance when it is not.'
+  id: totrans-167
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 假阴性：当一个效应并非由偶然引起时得出结论说它是由偶然引起的。
 - en: 'power: The probability of a positive test if the null hypothesis is false.'
+  id: totrans-168
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 功效：如果零假设是错误的，进行正检验的概率。
 - en: '* * *'
+  id: totrans-169
   prefs: []
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: '[1](#text4)'
+  id: totrans-170
   prefs: []
   type: TYPE_NORMAL
+  zh: '[1](#text4)'
 - en: For more about Bayesian inference, see the sequel to this book, Think Bayes.
+  id: totrans-171
   prefs: []
   type: TYPE_NORMAL
+  zh: 有关贝叶斯推断的更多信息，请参阅本书的续集《Bayes思维》。
 - en: '[2](#text5)'
+  id: totrans-172
   prefs: []
   type: TYPE_NORMAL
+  zh: '[2](#text5)'
 - en: Adapted from MacKay, Information Theory, Inference, and Learning Algorithms,
     2003.
+  id: totrans-173
   prefs: []
   type: TYPE_NORMAL
+  zh: 改编自MacKay，《信息论、推断和学习算法》，2003年。
