@@ -1023,6 +1023,7 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 抽样误差：预测是基于估计参数的，这些参数取决于样本中的随机变化。如果我们再次运行实验，我们预计估计值会有所变化。
 - en: 'Random variation: Even if the estimated parameters are perfect, the observed
     data varies randomly around the long-term trend, and we expect this variation
     to continue in the future.'
@@ -1030,12 +1031,14 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 随机变化：即使估计的参数是完美的，观察到的数据也会围绕长期趋势随机变化，我们预计这种变化将在未来继续。
 - en: 'Modeling error: We have already seen evidence that the long-term trend is not
     linear, so predictions based on a linear model will eventually fail.'
   id: totrans-162
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 建模误差：我们已经看到长期趋势不是线性的证据，因此基于线性模型的预测最终会失败。
 - en: Another source of error to consider is unexpected future events. Agricultural
     prices are affected by weather, and all prices are affected by politics and law.
     As I write this, cannabis is legal in two states and legal for medical purposes
@@ -1044,11 +1047,13 @@
   id: totrans-163
   prefs: []
   type: TYPE_NORMAL
+  zh: 需要考虑的另一个错误来源是意外的未来事件。农产品价格受天气影响，所有价格都受政治和法律影响。在我写这篇文章时，大麻在两个州是合法的，在另外20个州是合法的医疗用途。如果更多的州合法化，价格可能会下降。但如果联邦政府打击，价格可能会上涨。
 - en: Modeling errors and unexpected future events are hard to quantify. Sampling
     error and random variation are easier to deal with, so we’ll do that first.
   id: totrans-164
   prefs: []
   type: TYPE_NORMAL
+  zh: 建模误差和意外未来事件很难量化。抽样误差和随机变化更容易处理，所以我们将首先处理这些。
 - en: 'To quantify sampling error, I use resampling, as we did in Section [10.4](thinkstats2011.html#regest).
     As always, the goal is to use the actual observations to simulate what would happen
     if we ran the experiment again. The simulations are based on the assumption that
@@ -1057,6 +1062,7 @@
   id: totrans-165
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了量化抽样误差，我使用重新采样，就像我们在第[10.4](thinkstats2011.html#regest)节中所做的那样。与往常一样，目标是使用实际观察结果来模拟如果我们再次运行实验会发生什么。这些模拟是基于估计参数是正确的假设，但随机残差可能是不同的。这是一个运行模拟的函数：
 - en: '[PRE19]'
   id: totrans-166
   prefs: []
@@ -1067,21 +1073,25 @@
   id: totrans-167
   prefs: []
   type: TYPE_NORMAL
+  zh: '`daily`是包含观察价格的DataFrame；`iters`是要运行的模拟次数。'
 - en: '`SimulateResults` uses `RunLinearModel`, from Section [12.3](#timeregress),
     to estimate the slope and intercept of the observed values.'
   id: totrans-168
   prefs: []
   type: TYPE_NORMAL
+  zh: '`SimulateResults`使用`RunLinearModel`，来自第[12.3](#timeregress)节，来估计观察值的斜率和截距。'
 - en: Each time through the loop, it generates a “fake” dataset by resampling the
     residuals and adding them to the fitted values. Then it runs a linear model on
     the fake data and stores the RegressionResults object.
   id: totrans-169
   prefs: []
   type: TYPE_NORMAL
+  zh: 每次循环时，它通过重新采样残差并将其添加到拟合值来生成“假”数据集。然后它在假数据上运行线性模型并存储RegressionResults对象。
 - en: 'The next step is to use the simulated results to generate predictions:'
   id: totrans-170
   prefs: []
   type: TYPE_NORMAL
+  zh: 下一步是使用模拟结果生成预测：
 - en: '[PRE20]'
   id: totrans-171
   prefs: []
@@ -1096,11 +1106,13 @@
   id: totrans-172
   prefs: []
   type: TYPE_NORMAL
+  zh: '`GeneratePredictions`获取前一步结果的序列，以及`years`，这是一个指定要生成预测的区间的浮点数序列，以及`add_resid`，它指示是否应将重新采样的残差添加到直线预测中。`GeneratePredictions`遍历RegressionResults序列并生成预测序列。'
 - en: '* * *'
   id: totrans-173
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: ''
   id: totrans-174
   prefs:
@@ -1111,6 +1123,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_IMG
+  zh: '![](../Images/e02e8f5248569ee65ddd5a624335c5e0.png)'
 - en: ''
   id: totrans-176
   prefs:
@@ -1122,6 +1135,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_TB
+  zh: '| 图12.6：基于线性拟合的预测，显示由于抽样误差和预测误差的变化。|'
 - en: ''
   id: totrans-178
   prefs:
@@ -1132,10 +1146,12 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: 'Finally, here’s the code that plots a 90% confidence interval for the predictions:'
   id: totrans-180
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，这是绘制预测的90%置信区间的代码：
 - en: '[PRE21]'
   id: totrans-181
   prefs: []
@@ -1147,23 +1163,27 @@
   id: totrans-182
   prefs: []
   type: TYPE_NORMAL
+  zh: '`PlotPredictions`两次调用`GeneratePredictions`：一次是`add_resid=True`，另一次是`add_resid=False`。它使用`PercentileRows`来选择每年的第5和第95百分位数，然后在这些边界之间绘制一个灰色区域。'
 - en: Figure [12.6](#timeseries4) shows the result. The dark gray region represents
     a 90% confidence interval for the sampling error; that is, uncertainty about the
     estimated slope and intercept due to sampling.
   id: totrans-183
   prefs: []
   type: TYPE_NORMAL
+  zh: 图[12.6](#timeseries4)显示了结果。深灰色区域表示抽样误差的90%置信区间；即由于抽样而对估计的斜率和截距的不确定性。
 - en: The lighter region shows a 90% confidence interval for prediction error, which
     is the sum of sampling error and random variation.
   id: totrans-184
   prefs: []
   type: TYPE_NORMAL
+  zh: 浅色区域显示了预测误差的90%置信区间，这是抽样误差和随机变化的总和。
 - en: These regions quantify sampling error and random variation, but not modeling
     error. In general modeling error is hard to quantify, but in this case we can
     address at least one source of error, unpredictable external events.
   id: totrans-185
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些区域量化了抽样误差和随机变化，但没有建模误差。一般来说，建模误差很难量化，但在这种情况下，我们至少可以解决一个错误来源，即不可预测的外部事件。
 - en: The regression model is based on the assumption that the system is stationary;
     that is, that the parameters of the model don’t change over time. Specifically,
     it assumes that the slope and intercept are constant, as well as the distribution
@@ -1171,12 +1191,14 @@
   id: totrans-186
   prefs: []
   type: TYPE_NORMAL
+  zh: 回归模型基于系统是稳态的假设；也就是说，模型的参数随时间不会改变。具体来说，它假设斜率和截距是恒定的，以及残差的分布也是恒定的。
 - en: But looking at the moving averages in Figure [12.3](#timeseries10), it seems
     like the slope changes at least once during the observed interval, and the variance
     of the residuals seems bigger in the first half than the second.
   id: totrans-187
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是看图[12.3](#timeseries10)中的移动平均线，似乎斜率在观察区间内至少改变了一次，并且残差的方差在前半部分似乎比后半部分大。
 - en: As a result, the parameters we get depend on the interval we observe. To see
     how much effect this has on the predictions, we can extend `SimulateResults` to
     use intervals of observation with different start and end dates. My implementation
