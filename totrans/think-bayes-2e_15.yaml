@@ -1,1075 +1,1655 @@
 - en: Classification
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 分类
 - en: 原文：[https://allendowney.github.io/ThinkBayes2/chap12.html](https://allendowney.github.io/ThinkBayes2/chap12.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ThinkBayes2/chap12.html](https://allendowney.github.io/ThinkBayes2/chap12.html)
 - en: Classification might be the most well-known application of Bayesian methods,
     made famous in the 1990s as the basis of the first generation of [spam filters](https://en.wikipedia.org/wiki/Naive_Bayes_spam_filtering).
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 分类可能是贝叶斯方法最著名的应用，它在1990年代作为第一代[垃圾邮件过滤器](https://en.wikipedia.org/wiki/Naive_Bayes_spam_filtering)的基础而闻名。
 - en: In this chapter, I’ll demonstrate Bayesian classification using data collected
     and made available by Dr. Kristen Gorman at the Palmer Long-Term Ecological Research
     Station in Antarctica (see Gorman, Williams, and Fraser, [“Ecological Sexual Dimorphism
     and Environmental Variability within a Community of Antarctic Penguins (Genus
     *Pygoscelis*)”](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0090081),
     March 2014). We’ll use this data to classify penguins by species.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本章中，我将演示使用由Kristen Gorman博士在南极洲帕尔默长期生态研究站收集并提供的数据进行贝叶斯分类（请参见Gorman、Williams和Fraser的[“南极企鹅（*Pygoscelis*属）群落中的生态性异形和环境变异”](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0090081)，2014年3月）。我们将使用这些数据对企鹅进行物种分类。
 - en: Penguin Data
+  id: totrans-4
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 企鹅数据
 - en: I’ll use Pandas to load the data into a `DataFrame`.
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将使用Pandas将数据加载到“DataFrame”中。
 - en: '[PRE0]'
+  id: totrans-6
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '[PRE1]'
+  id: totrans-7
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: The dataset contains one row for each penguin and one column for each variable.
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 数据集中每只企鹅一行，每个变量一列。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
 - en: '[PRE2]'
+  id: totrans-10
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '|  | studyName | Sample Number | Species | Region | Island | Stage | Individual
     ID | Clutch Completion | Date Egg | Culmen Length (mm) | Culmen Depth (mm) | Flipper
     Length (mm) | Body Mass (g) | Sex | Delta 15 N (o/oo) | Delta 13 C (o/oo) | Comments
     |'
+  id: totrans-11
   prefs: []
   type: TYPE_TB
+  zh: '|  | studyName | Sample Number | Species | Region | Island | Stage | Individual
+    ID | Clutch Completion | Date Egg | Culmen Length (mm) | Culmen Depth (mm) | Flipper
+    Length (mm) | Body Mass (g) | Sex | Delta 15 N (o/oo) | Delta 13 C (o/oo) | Comments
+    |'
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
     | --- | --- | --- | --- | --- |'
+  id: totrans-12
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+    | --- | --- | --- | --- | --- |'
 - en: '| 0 | PAL0708 | 1 | Adelie Penguin (Pygoscelis adeliae) | Anvers | Torgersen
     | Adult, 1 Egg Stage | N1A1 | Yes | 2007-11-11 | 39.1 | 18.7 | 181.0 | 3750.0
     | MALE | NaN | NaN | Not enough blood for isotopes. |'
+  id: totrans-13
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | PAL0708 | 1 | Adelie Penguin (Pygoscelis adeliae) | Anvers | Torgersen
+    | Adult, 1 Egg Stage | N1A1 | Yes | 2007-11-11 | 39.1 | 18.7 | 181.0 | 3750.0
+    | MALE | NaN | NaN | Not enough blood for isotopes. |'
 - en: '| 1 | PAL0708 | 2 | Adelie Penguin (Pygoscelis adeliae) | Anvers | Torgersen
     | Adult, 1 Egg Stage | N1A2 | Yes | 2007-11-11 | 39.5 | 17.4 | 186.0 | 3800.0
     | FEMALE | 8.94956 | -24.69454 | NaN |'
+  id: totrans-14
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | PAL0708 | 2 | Adelie Penguin (Pygoscelis adeliae) | Anvers | Torgersen
+    | Adult, 1 Egg Stage | N1A2 | Yes | 2007-11-11 | 39.5 | 17.4 | 186.0 | 3800.0
+    | FEMALE | 8.94956 | -24.69454 | NaN |'
 - en: '| 2 | PAL0708 | 3 | Adelie Penguin (Pygoscelis adeliae) | Anvers | Torgersen
     | Adult, 1 Egg Stage | N2A1 | Yes | 2007-11-16 | 40.3 | 18.0 | 195.0 | 3250.0
     | FEMALE | 8.36821 | -25.33302 | NaN |'
+  id: totrans-15
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | PAL0708 | 3 | Adelie Penguin (Pygoscelis adeliae) | Anvers | Torgersen
+    | Adult, 1 Egg Stage | N2A1 | Yes | 2007-11-16 | 40.3 | 18.0 | 195.0 | 3250.0
+    | FEMALE | 8.36821 | -25.33302 | NaN |'
 - en: '| 4 | PAL0708 | 5 | Adelie Penguin (Pygoscelis adeliae) | Anvers | Torgersen
     | Adult, 1 Egg Stage | N3A1 | Yes | 2007-11-16 | 36.7 | 19.3 | 193.0 | 3450.0
     | FEMALE | 8.76651 | -25.32426 | NaN |'
+  id: totrans-16
   prefs: []
   type: TYPE_TB
+  zh: '| 4 | PAL0708 | 5 | Adelie Penguin (Pygoscelis adeliae) | Anvers | Torgersen
+    | Adult, 1 Egg Stage | N3A1 | Yes | 2007-11-16 | 36.7 | 19.3 | 193.0 | 3450.0
+    | FEMALE | 8.76651 | -25.32426 | NaN |'
 - en: '| 5 | PAL0708 | 6 | Adelie Penguin (Pygoscelis adeliae) | Anvers | Torgersen
     | Adult, 1 Egg Stage | N3A2 | Yes | 2007-11-16 | 39.3 | 20.6 | 190.0 | 3650.0
     | MALE | 8.66496 | -25.29805 | NaN |</details>'
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: '| 5 | PAL0708 | 6 | Adelie Penguin (Pygoscelis adeliae) | Anvers | Torgersen
+    | Adult, 1 Egg Stage | N3A2 | Yes | 2007-11-16 | 39.3 | 20.6 | 190.0 | 3650.0
+    | MALE | 8.66496 | -25.29805 | NaN |</details>'
 - en: 'Three species of penguins are represented in the dataset: Adélie, Chinstrap
     and Gentoo.'
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 数据集中包含三种企鹅：阿德利企鹅、燕鸥企鹅和根趾企鹅。
 - en: 'The measurements we’ll use are:'
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将使用的测量值是：
 - en: Body Mass in grams (g).
+  id: totrans-20
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 以克（g）为单位的体重。
 - en: Flipper Length in millimeters (mm).
+  id: totrans-21
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 以毫米（mm）为单位的鳍长。
 - en: Culmen Length in millimeters.
+  id: totrans-22
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 以毫米为单位的culmen长度。
 - en: Culmen Depth in millimeters.
+  id: totrans-23
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 以毫米为单位的culmen深度。
 - en: If you are not familiar with the word “culmen”, it refers to the [top margin
     of the beak](https://en.wikipedia.org/wiki/Bird_measurement#Culmen).
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果您对“culmen”一词不熟悉，它指的是[鸟嘴的顶部边缘](https://en.wikipedia.org/wiki/Bird_measurement#Culmen)。
 - en: These measurements will be most useful for classification if there are substantial
     differences between species and small variation within species. To see whether
     that is true, and to what degree, I’ll plot cumulative distribution functions
     (CDFs) of each measurement for each species.
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果物种之间存在实质差异并且物种内变异较小，则这些测量将对分类最有用。为了查看这一点是否成立，以及程度如何，我将为每个物种的每个测量绘制累积分布函数（CDF）。
 - en: The following function takes the `DataFrame` and a column name. It returns a
     dictionary that maps from each species name to a `Cdf` of the values in the column
     named `colname`.
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数接受“DataFrame”和列名。它返回一个字典，将每个物种名称映射到名为“colname”的列中值的“Cdf”。
 - en: '[PRE3]'
+  id: totrans-27
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: 'The following function plots a `Cdf` of the values in the given column for
     each species:'
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数绘制了给定列中每个物种的“Cdf”：
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
 - en: '[PRE4]</details>'
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE4]</details>'
 - en: Here’s what the distributions look like for culmen length.
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是culmen长度的分布。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
 - en: '[PRE5]</details> ![_images/5ab5a7f798da6866fe44a8dafc0c49397cfd4f7e232ed60472f2dde56db06b37.png](../Images/b8c137a38b5c6f3c2e546ece3011011d.png)'
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE5]</details> ![_images/5ab5a7f798da6866fe44a8dafc0c49397cfd4f7e232ed60472f2dde56db06b37.png](../Images/b8c137a38b5c6f3c2e546ece3011011d.png)'
 - en: It looks like we can use culmen length to identify Adélie penguins, but the
     distributions for the other two species almost entirely overlap.
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 看起来我们可以使用Culmen长度来识别Adélie企鹅，但其他两个物种的分布几乎完全重叠。
 - en: Here are the distributions for flipper length.
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是翻转长度的分布。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码隐藏代码单元格源代码</summary>
 - en: '[PRE6]</details> ![_images/a80e125cfdfe3dce6670cd38ddc6e2979b6337b9e02e863814498185ffb511d8.png](../Images/4a99d73ebdecfc30ee33286333f883ab.png)'
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE6]</details> ![_images/a80e125cfdfe3dce6670cd38ddc6e2979b6337b9e02e863814498185ffb511d8.png](../Images/4a99d73ebdecfc30ee33286333f883ab.png)'
 - en: Using flipper length, we can distinguish Gentoo penguins from the other two
     species. So with just these two features, it seems like we should be able to classify
     penguins with some accuracy.
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用翻转长度，我们可以将Gentoo企鹅与其他两个物种区分开来。因此，只有这两个特征，似乎我们应该能够以一定的准确度对企鹅进行分类。
 - en: All of these CDFs show the sigmoid shape characteristic of the normal distribution;
     I will take advantage of that observation in the next section.
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 所有这些CDF都显示了正态分布的S形特征；我将在下一节中利用这一观察结果。
 - en: Here are the distributions for culmen depth.
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是Culmen深度的分布。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
 - en: '[PRE7]'
+  id: totrans-42
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '![_images/f46f0996d70e07608878a6c5ba386bbe9d8e8f82ad722907e1b56bc241b32a5d.png](../Images/b323583fb9232123a6225fc7bf2534da.png)</details>'
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/f46f0996d70e07608878a6c5ba386bbe9d8e8f82ad722907e1b56bc241b32a5d.png](../Images/b323583fb9232123a6225fc7bf2534da.png)</details>'
 - en: And here are the distributions of body mass.
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是体重的分布。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
 - en: '[PRE8]'
+  id: totrans-46
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '![_images/bf89e4f54544ba5a119c06047fc01d36885bdcb9e1049ed5bb58d827a108a394.png](../Images/f2b66ccc02c0cfdaf0c50274c3a0ca2f.png)</details>'
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/bf89e4f54544ba5a119c06047fc01d36885bdcb9e1049ed5bb58d827a108a394.png](../Images/f2b66ccc02c0cfdaf0c50274c3a0ca2f.png)</details>'
 - en: Culmen depth and body mass distinguish Gentoo penguins from the other two species,
     but these features might not add a lot of additional information, beyond what
     we get from flipper length and culmen length.
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: Culmen深度和体重可以将Gentoo企鹅与其他两个物种区分开来，但这些特征可能并没有提供太多额外的信息，超出我们从翻转长度和Culmen长度中获得的信息。
 - en: Normal Models
+  id: totrans-49
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 正态模型
 - en: 'Let’s use these features to classify penguins. We’ll proceed in the usual Bayesian
     way:'
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们使用这些特征来对企鹅进行分类。我们将按照通常的贝叶斯方式进行：
 - en: Define a prior distribution with the three possible species and a prior probability
     for each,
+  id: totrans-51
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 使用三种可能的物种和每种物种的先验概率定义一个先验分布，
 - en: Compute the likelihood of the data for each hypothetical species, and then
+  id: totrans-52
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 计算每个假设物种的数据可能性，然后
 - en: Compute the posterior probability of each hypothesis.
+  id: totrans-53
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 计算每个假设的后验概率。
 - en: To compute the likelihood of the data under each hypothesis, I’ll use the data
     to estimate the parameters of a normal distribution for each species.
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了计算每个假设下数据的可能性，我将使用数据来估计每个物种的正态分布的参数。
 - en: The following function takes a `DataFrame` and a column name; it returns a dictionary
     that maps from each species name to a `norm` object.
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数接受一个`DataFrame`和一个列名；它返回一个从每个物种名称到`norm`对象的映射的字典。
 - en: '`norm` is defined in SciPy; it represents a normal distribution with a given
     mean and standard deviation.'
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: '`norm`在SciPy中定义；它表示具有给定均值和标准差的正态分布。'
 - en: '[PRE9]'
+  id: totrans-57
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: 'For example, here’s the dictionary of `norm` objects for flipper length:'
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，这是翻转长度的`norm`对象字典：
 - en: '[PRE10]'
+  id: totrans-59
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '[PRE11]'
+  id: totrans-60
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: Now suppose we measure a penguin and find that its flipper is 193 cm. What is
     the probability of that measurement under each hypothesis?
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在假设我们测量一只企鹅，发现它的翻转长度为193厘米。在每个假设下，这个测量的概率是多少？
 - en: The `norm` object provides `pdf`, which computes the probability density function
     (PDF) of the normal distribution. We can use it to compute the likelihood of the
     observed data in a given distribution.
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: '`norm`对象提供`pdf`，它计算正态分布的概率密度函数（PDF）。我们可以使用它来计算在给定分布中观察到的数据的可能性。'
 - en: '[PRE12]'
+  id: totrans-63
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '[PRE13]'
+  id: totrans-64
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: The result is a probability density, so we can’t interpret it as a probability.
     But it is proportional to the likelihood of the data, so we can use it to update
     the prior.
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是概率密度，因此我们不能将其解释为概率。但它与数据的可能性成正比，因此我们可以使用它来更新先验。
 - en: Here’s how we compute the likelihood of the data in each distribution.
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是我们如何计算每个分布中数据的可能性。
 - en: '[PRE14]'
+  id: totrans-67
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '[PRE15]'
+  id: totrans-68
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: Now we’re ready to do the update.
+  id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们准备好进行更新了。
 - en: The Update
+  id: totrans-70
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 更新
 - en: As usual I’ll use a `Pmf` to represent the prior distribution. For simplicity,
     let’s assume that the three species are equally likely.
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: 像往常一样，我将使用`Pmf`来表示先验分布。为简单起见，让我们假设这三种物种是等可能的。
 - en: '[PRE16]'
+  id: totrans-72
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '|  | probs |'
+  id: totrans-73
   prefs: []
   type: TYPE_TB
+  zh: '|  | probs |'
 - en: '| --- | --- |'
+  id: totrans-74
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| Adelie | 0.333333 |'
+  id: totrans-75
   prefs: []
   type: TYPE_TB
+  zh: '| Adelie | 0.333333 |'
 - en: '| Chinstrap | 0.333333 |'
+  id: totrans-76
   prefs: []
   type: TYPE_TB
+  zh: '| Chinstrap | 0.333333 |'
 - en: '| Gentoo | 0.333333 |'
+  id: totrans-77
   prefs: []
   type: TYPE_TB
+  zh: '| Gentoo | 0.333333 |'
 - en: Now we can do the update in the usual way.
+  id: totrans-78
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以按照通常的方式进行更新。
 - en: '[PRE17]'
+  id: totrans-79
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: '|  | probs |'
+  id: totrans-80
   prefs: []
   type: TYPE_TB
+  zh: '|  | probs |'
 - en: '| --- | --- |'
+  id: totrans-81
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| Adelie | 0.513860 |'
+  id: totrans-82
   prefs: []
   type: TYPE_TB
+  zh: '| Adelie | 0.513860 |'
 - en: '| Chinstrap | 0.485589 |'
+  id: totrans-83
   prefs: []
   type: TYPE_TB
+  zh: '| Chinstrap | 0.485589 |'
 - en: '| Gentoo | 0.000551 |'
+  id: totrans-84
   prefs: []
   type: TYPE_TB
+  zh: '| Gentoo | 0.000551 |'
 - en: A penguin with a 193 mm flipper is unlikely to be a Gentoo, but might be either
     an Adélie or Chinstrap (assuming that the three species were equally likely before
     the measurement).
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: 一只翻转长度为193毫米的企鹅不太可能是Gentoo，但可能是Adélie或Chinstrap（假设在测量之前这三种物种是等可能的）。
 - en: The following function encapsulates the steps we just ran. It takes a `Pmf`
     representing the prior distribution, the observed data, and a map from each hypothesis
     to the distribution of the feature.
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数封装了我们刚刚运行的步骤。它接受一个代表先验分布的`Pmf`，观察到的数据，以及从每个假设到特征分布的映射。
 - en: '[PRE18]'
+  id: totrans-87
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: The return value is the posterior distribution.
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: 返回值是后验分布。
 - en: 'Here’s the previous example again, using `update_penguin`:'
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是先前的例子，再次使用`update_penguin`：
 - en: '[PRE19]'
+  id: totrans-90
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '|  | probs |'
+  id: totrans-91
   prefs: []
   type: TYPE_TB
+  zh: '|  | probs |'
 - en: '| --- | --- |'
+  id: totrans-92
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| Adelie | 0.513860 |'
+  id: totrans-93
   prefs: []
   type: TYPE_TB
+  zh: '| Adelie | 0.513860 |'
 - en: '| Chinstrap | 0.485589 |'
+  id: totrans-94
   prefs: []
   type: TYPE_TB
+  zh: '| Chinstrap | 0.485589 |'
 - en: '| Gentoo | 0.000551 |'
+  id: totrans-95
   prefs: []
   type: TYPE_TB
 - en: As we saw in the CDFs, flipper length does not distinguish strongly between
     Adélie and Chinstrap penguins.
+  id: totrans-96
   prefs: []
   type: TYPE_NORMAL
 - en: 'But culmen length *can* make this distinction, so let’s use it to do a second
     round of classification. First we estimate distributions of culmen length for
     each species like this:'
+  id: totrans-97
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE20]'
+  id: totrans-98
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: Now suppose we see a penguin with culmen length 48 mm. We can use this data
     to update the prior.
+  id: totrans-99
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE21]'
+  id: totrans-100
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: '|  | probs |'
+  id: totrans-101
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- |'
+  id: totrans-102
   prefs: []
   type: TYPE_TB
 - en: '| Adelie | 0.001557 |'
+  id: totrans-103
   prefs: []
   type: TYPE_TB
 - en: '| Chinstrap | 0.474658 |'
+  id: totrans-104
   prefs: []
   type: TYPE_TB
 - en: '| Gentoo | 0.523785 |'
+  id: totrans-105
   prefs: []
   type: TYPE_TB
 - en: A penguin with culmen length 48 mm is about equally likely to be a Chinstrap
     or Gentoo.
+  id: totrans-106
   prefs: []
   type: TYPE_NORMAL
 - en: Using one feature at a time, we can often rule out one species or another, but
     we generally can’t identify species with confidence. We can do better using multiple
     features.
+  id: totrans-107
   prefs: []
   type: TYPE_NORMAL
 - en: Naive Bayesian Classification
+  id: totrans-108
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: To make it easier to do multiple updates, I’ll use the following function, which
     takes a prior `Pmf`, a sequence of measurements and a corresponding sequence of
     dictionaries containing estimated distributions.
+  id: totrans-109
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE22]'
+  id: totrans-110
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: It performs a series of updates, using one variable at a time, and returns the
     posterior `Pmf`.
+  id: totrans-111
   prefs: []
   type: TYPE_NORMAL
 - en: 'To test it, I’ll use the same features we looked at in the previous section:
     culmen length and flipper length.'
+  id: totrans-112
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE23]'
+  id: totrans-113
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: 'Now suppose we find a penguin with flipper length 193 mm and culmen length
     48. Here’s the update:'
+  id: totrans-114
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE24]'
+  id: totrans-115
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: '|  | probs |'
+  id: totrans-116
   prefs: []
   type: TYPE_TB
 - en: '| --- | --- |'
+  id: totrans-117
   prefs: []
   type: TYPE_TB
 - en: '| Adelie | 0.003455 |'
+  id: totrans-118
   prefs: []
   type: TYPE_TB
 - en: '| Chinstrap | 0.995299 |'
+  id: totrans-119
   prefs: []
   type: TYPE_TB
 - en: '| Gentoo | 0.001246 |'
+  id: totrans-120
   prefs: []
   type: TYPE_TB
 - en: It is almost certain to be a Chinstrap.
+  id: totrans-121
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE25]'
+  id: totrans-122
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: '[PRE26]'
+  id: totrans-123
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: We can loop through the dataset and classify each penguin with these two features.
+  id: totrans-124
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE27]'
+  id: totrans-125
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: This loop adds a column called `Classification` to the `DataFrame`; it contains
     the species with the maximum posterior probability for each penguin.
+  id: totrans-126
   prefs: []
   type: TYPE_NORMAL
 - en: So let’s see how many we got right.
+  id: totrans-127
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-128
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE28]'
+  id: totrans-129
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: '[PRE29]</details>'
+  id: totrans-130
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE30]'
+  id: totrans-131
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: '[PRE31]'
+  id: totrans-132
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: '[PRE32]'
+  id: totrans-133
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: '[PRE33]'
+  id: totrans-134
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: There are 344 penguins in the dataset, but two of them are missing measurements,
     so we have 342 valid cases. Of those, 324 are classified correctly, which is almost
     95%.
+  id: totrans-135
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE34]'
+  id: totrans-136
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: '[PRE35]'
+  id: totrans-137
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: The following function encapsulates these steps.
+  id: totrans-138
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE36]'
+  id: totrans-139
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: 'The classifier we used in this section is called “naive” because it ignores
     correlations between the features. To see why that matters, I’ll make a less naive
     classifier: one that takes into account the joint distribution of the features.'
+  id: totrans-140
   prefs: []
   type: TYPE_NORMAL
 - en: Joint Distributions
+  id: totrans-141
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: I’ll start by making a scatter plot of the data.
+  id: totrans-142
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE37]'
+  id: totrans-143
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE37]'
 - en: Here’s a scatter plot of culmen length and flipper length for the three species.
+  id: totrans-144
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE38]'
+  id: totrans-145
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: '![_images/d96a227c04944a1a0218d1fa9e149290f1b76c465aed44f063e014a885c7da90.png](../Images/05e910ded4f9a2362d822d7dd7c7567e.png)'
+  id: totrans-146
   prefs: []
   type: TYPE_IMG
 - en: Within each species, the joint distribution of these measurements forms an oval
     shape, at least roughly. The orientation of the ovals is along a diagonal, which
     indicates that there is a correlation between culmen length and flipper length.
+  id: totrans-147
   prefs: []
   type: TYPE_NORMAL
 - en: If we ignore these correlations, we are assuming that the features are independent.
     To see what that looks like, I’ll make a joint distribution for each species assuming
     independence.
+  id: totrans-148
   prefs: []
   type: TYPE_NORMAL
 - en: The following function makes a discrete `Pmf` that approximates a normal distribution.
+  id: totrans-149
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE39]'
+  id: totrans-150
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: We can use it, along with `make_joint`, to make a joint distribution of culmen
     length and flipper length for each species.
+  id: totrans-151
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE40]'
+  id: totrans-152
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE40]'
 - en: The following figure compares a scatter plot of the data to the contours of
     the joint distributions, assuming independence.
+  id: totrans-153
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE41]'
+  id: totrans-154
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE41]'
 - en: '![_images/0e26242ba1711182e3b00a74d762ad21182ab3b9d34bde74b0516a1e48f57d75.png](../Images/3852694f6babd3aaccf3151fc6949f89.png)'
+  id: totrans-155
   prefs: []
   type: TYPE_IMG
 - en: The contours of a joint normal distribution form ellipses. In this example,
     because the features are uncorrelated, the ellipses are aligned with the axes.
     But they are not well aligned with the data.
+  id: totrans-156
   prefs: []
   type: TYPE_NORMAL
 - en: We can make a better model of the data, and use it to compute better likelihoods,
     with a multivariate normal distribution.
+  id: totrans-157
   prefs: []
   type: TYPE_NORMAL
 - en: Multivariate Normal Distribution
+  id: totrans-158
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: As we have seen, a univariate normal distribution is characterized by its mean
     and standard deviation.
+  id: totrans-159
   prefs: []
   type: TYPE_NORMAL
 - en: A multivariate normal distribution is characterized by the means of the features
     and the **covariance matrix**, which contains **variances**, which quantify the
     spread of the features, and the **covariances**, which quantify the relationships
     among them.
+  id: totrans-160
   prefs: []
   type: TYPE_NORMAL
+  zh: 多元正态分布的特征是特征的均值和**协方差矩阵**，其中包含**方差**，用于量化特征的扩展，以及**协方差**，用于量化它们之间的关系。
 - en: We can use the data to estimate the means and covariance matrix for the population
     of penguins. First I’ll select the columns we want.
+  id: totrans-161
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用数据来估计企鹅种群的均值和协方差矩阵。首先我会选择我们想要的列。
 - en: '[PRE42]'
+  id: totrans-162
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE42]'
 - en: And compute the means.
+  id: totrans-163
   prefs: []
   type: TYPE_NORMAL
+  zh: 并计算均值。
 - en: '[PRE43]'
+  id: totrans-164
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE43]'
 - en: '[PRE44]'
+  id: totrans-165
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE44]'
 - en: 'We can also compute the covariance matrix:'
+  id: totrans-166
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们还可以计算协方差矩阵：
 - en: '[PRE45]'
+  id: totrans-167
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE45]'
 - en: '|  | Flipper Length (mm) | Culmen Length (mm) |'
+  id: totrans-168
   prefs: []
   type: TYPE_TB
+  zh: '|  | 脚蹼长度（mm） | 喙长度（mm） |'
 - en: '| --- | --- | --- |'
+  id: totrans-169
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- |'
 - en: '| Flipper Length (mm) | 197.731792 | 50.375765 |'
+  id: totrans-170
   prefs: []
   type: TYPE_TB
+  zh: '| 脚蹼长度（mm） | 197.731792 | 50.375765 |'
 - en: '| Culmen Length (mm) | 50.375765 | 29.807054 |'
+  id: totrans-171
   prefs: []
   type: TYPE_TB
+  zh: '| 喙长度（mm） | 50.375765 | 29.807054 |'
 - en: The result is a `DataFrame` with one row and one column for each feature. The
     elements on the diagonal are the variances; the elements off the diagonal are
     covariances.
+  id: totrans-172
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个`DataFrame`，每个特征都有一行和一列。对角线上的元素是方差；对角线外的元素是协方差。
 - en: By themselves, variances and covariances are hard to interpret. We can use them
     to compute standard deviations and correlation coefficients, which are easier
     to interpret, but the details of that calculation are not important right now.
+  id: totrans-173
   prefs: []
   type: TYPE_NORMAL
+  zh: 单独来看，方差和协方差很难解释。我们可以使用它们来计算标准差和相关系数，这样更容易解释，但是这种计算的细节现在并不重要。
 - en: Instead, we’ll pass the covariance matrix to `multivariate_normal`, which is
     a SciPy function that creates an object that represents a multivariate normal
     distribution.
+  id: totrans-174
   prefs: []
   type: TYPE_NORMAL
+  zh: 相反，我们将把协方差矩阵传递给`multivariate_normal`，这是一个SciPy函数，它创建一个表示多元正态分布的对象。
 - en: 'As arguments it takes a sequence of means and a covariance matrix:'
+  id: totrans-175
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为参数，它接受一系列均值和一个协方差矩阵：
 - en: '[PRE46]'
+  id: totrans-176
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE46]'
 - en: The following function makes a `multivariate_normal` object for each species.
+  id: totrans-177
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数为每个物种创建一个`multivariate_normal`对象。
 - en: '[PRE47]'
+  id: totrans-178
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE47]'
 - en: Here’s how we make this map for the first two features, flipper length and culmen
     length.
+  id: totrans-179
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是我们为前两个特征，脚蹼长度和喙长度制作这张地图的方法。
 - en: '[PRE48]'
+  id: totrans-180
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE48]'
 - en: Visualizing a Multivariate Normal Distribution
+  id: totrans-181
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 可视化多元正态分布
 - en: This section uses some NumPy magic to generate contour plots for multivariate
     normal distributions. If that’s interesting for you, great! Otherwise, feel free
     to skip to the results. In the next section we’ll do the actual classification,
     which turns out to be easier than the visualization.
+  id: totrans-182
   prefs: []
   type: TYPE_NORMAL
+  zh: 本节使用一些NumPy魔术来生成多元正态分布的轮廓图。如果这对您有兴趣，太好了！否则，可以直接跳到结果。在下一节中，我们将进行实际的分类，结果证明比可视化更容易。
 - en: I’ll start by making a contour map for the distribution of features among Adélie
     penguins.
+  id: totrans-183
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将首先制作一个轮廓图，显示Adélie企鹅特征的分布。
 - en: Here are the univariate distributions for the two features we’ll use and the
     multivariate distribution we just computed.
+  id: totrans-184
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里是我们将使用的两个特征的单变量分布和我们刚刚计算的多元分布。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-185
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE49]</details>'
+  id: totrans-186
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE49]</details>'
 - en: I’ll make a discrete `Pmf` approximation for each of the univariate distributions.
+  id: totrans-187
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将为每个单变量分布制作一个离散的`Pmf`近似。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-188
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE50]</details>'
+  id: totrans-189
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE50]</details>'
 - en: And use them to make a mesh grid that contains all pairs of values.
+  id: totrans-190
   prefs: []
   type: TYPE_NORMAL
+  zh: 并使用它们制作一个包含所有值对的网格。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-191
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE51]'
+  id: totrans-192
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE51]'
 - en: '[PRE52]</details>'
+  id: totrans-193
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE52]</details>'
 - en: 'The mesh is represented by two arrays: the first contains the quantities from
     `pmf1` along the `x` axis; the second contains the quantities from `pmf2` along
     the `y` axis.'
+  id: totrans-194
   prefs: []
   type: TYPE_NORMAL
+  zh: 网格由两个数组表示：第一个包含沿`x`轴的`pmf1`的数量；第二个包含沿`y`轴的`pmf2`的数量。
 - en: In order to evaluate the multivariate distribution for each pair of values,
     we have to “stack” the arrays.
+  id: totrans-195
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了评估每对值的多元分布，我们必须“堆叠”数组。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-196
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE53]'
+  id: totrans-197
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE53]'
 - en: '[PRE54]</details>'
+  id: totrans-198
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE54]</details>'
 - en: The result is a 3-D array that you can think of as a 2-D array of pairs. When
     we pass this array to `multinorm.pdf`, it evaluates the probability density function
     of the distribution for each pair of values.
+  id: totrans-199
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个3-D数组，你可以把它看作是一对二维数组。当我们将这个数组传递给`multinorm.pdf`时，它会评估每对值的分布的概率密度函数。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-200
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE55]'
+  id: totrans-201
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE55]'
 - en: '[PRE56]</details>'
+  id: totrans-202
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE56]</details>'
 - en: The result is an array of probability densities. If we put them in a `DataFrame`
     and normalize them, the result is a discrete approximation of the joint distribution
     of the two features.
+  id: totrans-203
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个概率密度数组。如果我们把它们放在一个`DataFrame`中并对它们进行归一化，结果就是两个特征的联合分布的离散近似。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-204
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE57]'
+  id: totrans-205
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE57]'
 - en: '[PRE58]</details>'
+  id: totrans-206
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE58]</details>'
 - en: Here’s what the result looks like.
+  id: totrans-207
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是结果的样子。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-208
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE59]'
+  id: totrans-209
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE59]'
 - en: '![_images/f3a72939d6d0caab91885ed82624e972b4ec70bbf8414ced4530d78dc006626f.png](../Images/b9c688d93ec6509847a39b2b77b5523f.png)</details>'
+  id: totrans-210
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/f3a72939d6d0caab91885ed82624e972b4ec70bbf8414ced4530d78dc006626f.png](../Images/b9c688d93ec6509847a39b2b77b5523f.png)</details>'
 - en: The contours of a multivariate normal distribution are still ellipses, but now
     that we have taken into account the correlation between the features, the ellipses
     are no longer aligned with the axes.
+  id: totrans-211
   prefs: []
   type: TYPE_NORMAL
+  zh: 多元正态分布的轮廓仍然是椭圆形，但现在我们已经考虑了特征之间的相关性，这些椭圆不再与坐标轴对齐。
 - en: The following function encapsulate the steps we just did.
+  id: totrans-212
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数封装了我们刚刚做的步骤。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-213
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
 - en: '[PRE60]</details>'
+  id: totrans-214
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE60]</details>'
 - en: The following figure shows a scatter plot of the data along with the contours
     of the multivariate normal distribution for each species.
+  id: totrans-215
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下图显示了数据的散点图以及每个物种多元正态分布的轮廓。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-216
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格源代码 隐藏代码单元格源代码</summary>
 - en: '[PRE61]</details> ![_images/08de60fde36512b3133ebdbb5b01ec9ca075bca22b44eae1e7dab0dc614b04e7.png](../Images/57660d1dd8078042b67f801db25b8a03.png)'
+  id: totrans-217
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE61]</details> ![_images/08de60fde36512b3133ebdbb5b01ec9ca075bca22b44eae1e7dab0dc614b04e7.png](../Images/57660d1dd8078042b67f801db25b8a03.png)'
 - en: Because the multivariate normal distribution takes into account the correlations
     between features, it is a better model for the data. And there is less overlap
     in the contours of the three distributions, which suggests that they should yield
     better classifications.
+  id: totrans-218
   prefs: []
   type: TYPE_NORMAL
+  zh: 因为多元正态分布考虑了特征之间的相关性，它是数据的更好模型。而且三个分布的轮廓重叠较少，这表明它们应该产生更好的分类。
 - en: A Less Naive Classifier
+  id: totrans-219
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 一个不那么朴素的分类器
 - en: 'In a previous section we used `update_penguin` to update a prior `Pmf` based
     on observed data and a collection of `norm` objects that model the distribution
     of observations under each hypothesis. Here it is again:'
+  id: totrans-220
   prefs: []
   type: TYPE_NORMAL
+  zh: 在之前的一节中，我们使用`update_penguin`根据观察到的数据和模拟每个假设下观察分布的`norm`对象的集合来更新先验`Pmf`。这里是它的代码：
 - en: '[PRE62]'
+  id: totrans-221
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE62]'
 - en: Last time we used this function, the values in `norm_map` were `norm` objects,
     but it also works if they are `multivariate_normal` objects.
+  id: totrans-222
   prefs: []
   type: TYPE_NORMAL
+  zh: 上次我们使用这个函数时，`norm_map`中的值是`norm`对象，但如果它们是`multivariate_normal`对象，它也可以工作。
 - en: 'We can use it to classify a penguin with flipper length 193 and culmen length
     48:'
+  id: totrans-223
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以用它来对鳍长193、喙长48的企鹅进行分类：
 - en: '[PRE63]'
+  id: totrans-224
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE63]'
 - en: '|  | probs |'
+  id: totrans-225
   prefs: []
   type: TYPE_TB
+  zh: '|  | 概率 |'
 - en: '| --- | --- |'
+  id: totrans-226
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| Adelie | 0.002740 |'
+  id: totrans-227
   prefs: []
   type: TYPE_TB
+  zh: '| 阿德利 | 0.002740 |'
 - en: '| Chinstrap | 0.997257 |'
+  id: totrans-228
   prefs: []
   type: TYPE_TB
+  zh: '| 领带企鹅 | 0.997257 |'
 - en: '| Gentoo | 0.000003 |'
+  id: totrans-229
   prefs: []
   type: TYPE_TB
+  zh: '| 坚尼 | 0.000003 |'
 - en: A penguin with those measurements is almost certainly a Chinstrap.
+  id: totrans-230
   prefs: []
   type: TYPE_NORMAL
+  zh: 具有这些测量的企鹅几乎可以肯定是领带企鹅。
 - en: 'Now let’s see if this classifier does any better than the naive Bayesian classifier.
     I’ll apply it to each penguin in the dataset:'
+  id: totrans-231
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们看看这个分类器是否比朴素贝叶斯分类器更好。我将把它应用到数据集中的每只企鹅：
 - en: '[PRE64]'
+  id: totrans-232
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE64]'
 - en: 'And compute the accuracy:'
+  id: totrans-233
   prefs: []
   type: TYPE_NORMAL
+  zh: 并计算准确率：
 - en: '[PRE65]'
+  id: totrans-234
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE65]'
 - en: '[PRE66]'
+  id: totrans-235
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE66]'
 - en: 'It turns out to be only a little better: the accuracy is 95.3%, compared to
     94.7% for the naive Bayesian classifier.'
+  id: totrans-236
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果只是稍微好一点：准确率为95.3%，而朴素贝叶斯分类器为94.7%。
 - en: Summary
+  id: totrans-237
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 总结
 - en: In this chapter, we implemented a naive Bayesian classifier, which is “naive”
     in the sense that it assumes that the features it uses for classification are
     independent.
+  id: totrans-238
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本章中，我们实现了一个朴素贝叶斯分类器，它“朴素”是指它假设用于分类的特征是独立的。
 - en: To see how bad that assumption is, we also implemented a classifier that uses
     a multivariate normal distribution to model the joint distribution of the features,
     which includes their dependencies.
+  id: totrans-239
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了看出这个假设有多糟糕，我们还实现了一个使用多元正态分布来模拟特征的联合分布（包括它们的依赖关系）的分类器。
 - en: In this example, the non-naive classifier is only marginally better. In one
     way, that’s disappointing. After all that work, it would have been nice to see
     a bigger improvement. But in another way, it’s good news. In general, a naive
     Bayesian classifier is easier to implement and requires less computation. If it
     works nearly as well as a more complex algorithm, it might be a good choice for
     practical purposes.
+  id: totrans-240
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个例子中，非朴素分类器只是略微更好。在某种程度上，这令人失望。毕竟那么多工作，看到更大的改进会更好。但从另一个方面来说，这是个好消息。一般来说，朴素贝叶斯分类器更容易实现，需要的计算量更少。如果它几乎和更复杂的算法一样有效，那么它可能是实际用途的一个不错选择。
 - en: Speaking of practical purposes, you might have noticed that this example isn’t
     very useful. If we want to identify the species of a penguin, there are easier
     ways than measuring its flippers and beak.
+  id: totrans-241
   prefs: []
   type: TYPE_NORMAL
+  zh: 说到实际用途，您可能已经注意到这个例子并不是很有用。如果我们想要识别企鹅的物种，有比测量它的鳍和喙更简单的方法。
 - en: 'But there *are* scientific uses for this type of classification. One of them
     is the subject of the research paper we started with: [sexual dimorphism](https://en.wikipedia.org/wiki/Sexual_dimorphism),
     that is, differences in shape between male and female animals.'
+  id: totrans-242
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是*有*这种分类的科学用途。其中之一是我们开始的研究论文的主题：[性二态](https://en.wikipedia.org/wiki/Sexual_dimorphism)，也就是雄性和雌性动物之间的形态差异。
 - en: In some species, like angler fish, males and females look very different. In
     other species, like mockingbirds, they are difficult to tell apart. And dimorphism
     is worth studying because it provides insight into social behavior, sexual selection,
     and evolution.
+  id: totrans-243
   prefs: []
   type: TYPE_NORMAL
+  zh: 在一些物种中，如躄鱼，雄性和雌性看起来非常不同。在其他物种中，如模仿鸟，它们很难区分。性二态值得研究，因为它可以提供关于社会行为、性选择和进化的见解。
 - en: One way to quantify the degree of sexual dimorphism in a species is to use a
     classification algorithm like the one in this chapter. If you can find a set of
     features that makes it possible to classify individuals by sex with high accuracy,
     that’s evidence of high dimorphism.
+  id: totrans-244
   prefs: []
   type: TYPE_NORMAL
+  zh: 衡量物种性二态程度的一种方法是使用本章中的分类算法。如果您能找到一组特征，使得可以高准确度地按性别对个体进行分类，那就是高性二态的证据。
 - en: As an exercise, you can use the dataset from this chapter to classify penguins
     by sex and see which of the three species is the most dimorphic.
+  id: totrans-245
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为练习，你可以使用本章的数据集按性别对企鹅进行分类，并看看哪种物种是最二态的。
 - en: Exercises
+  id: totrans-246
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 练习
 - en: '**Exercise:** In my example I used culmen length and flipper length because
     they seemed to provide the most power to distinguish the three species. But maybe
     we can do better by using more features.'
+  id: totrans-247
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** 在我的例子中，我使用了喙长和鳍长，因为它们似乎提供了最大的区分三种物种的能力。但也许我们可以通过使用更多特征来做得更好。'
 - en: 'Make a naive Bayesian classifier that uses all four measurements in the dataset:
     culmen length and depth, flipper length, and body mass. Is it more accurate than
     the model with two features?'
+  id: totrans-248
   prefs: []
   type: TYPE_NORMAL
+  zh: 制作一个使用数据集中所有四个测量值的朴素贝叶斯分类器：喙长和深度、鳍长和体重。它比使用两个特征的模型更准确吗？
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-249
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
 - en: '[PRE67]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-250
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE67]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容隐藏代码单元格内容</summary>'
 - en: '[PRE68]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-251
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE68]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容隐藏代码单元格内容</summary>'
 - en: '[PRE69]'
+  id: totrans-252
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE69]'
 - en: '[PRE70]</details>'
+  id: totrans-253
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE70]</details>'
 - en: '**Exercise:** One of the reasons the penguin dataset was collected was to quantify
     sexual dimorphism in different penguin species, that is, physical differences
     between male and female penguins. One way to quantify dimorphism is to use measurements
     to classify penguins by sex. If a species is more dimorphic, we expect to be able
     to classify them more accurately.'
+  id: totrans-254
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** 收集企鹅数据集的一个原因是为了量化不同企鹅物种之间的性二态性，即雄性和雌性企鹅之间的物理差异。量化二态性的一种方法是使用测量值来按性别对企鹅进行分类。如果一种物种的二态性更强，我们希望能够更准确地对它们进行分类。'
 - en: As an exercise, pick a species and use a Bayesian classifier (naive or not)
     to classify the penguins by sex. Which features are most useful? What accuracy
     can you achieve?
+  id: totrans-255
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为练习，选择一种物种并使用贝叶斯分类器（朴素或非朴素）来按性别对企鹅进行分类。哪些特征最有用？你能达到什么准确度？
 - en: 'Note: One Gentoo penguin has an invalid value for `Sex`. I used the following
     code to select one species and filter out invalid data.'
+  id: totrans-256
   prefs: []
   type: TYPE_NORMAL
+  zh: 注意：一只Gentoo企鹅的`性别`值无效。我使用以下代码选择了一种物种并过滤掉无效数据。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-257
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
 - en: '[PRE71]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-258
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE71]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容隐藏代码单元格内容</summary>'
 - en: '[PRE72]'
+  id: totrans-259
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE72]'
 - en: '[PRE73]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-260
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE73]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容隐藏代码单元格内容</summary>'
 - en: '[PRE74]'
+  id: totrans-261
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE74]'
 - en: '[PRE75]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-262
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE75]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容隐藏代码单元格内容</summary>'
 - en: '[PRE76]</details>'
+  id: totrans-263
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE76]</details>'
 - en: OK, you can finish it off from here.
+  id: totrans-264
   prefs: []
   type: TYPE_NORMAL
+  zh: 好的，你可以从这里完成。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-265
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
 - en: '[PRE77]'
+  id: totrans-266
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE77]'
 - en: '![_images/593695247d65a10544511b5927c317a34961b74aa28b0b8262f09e23dc689ed0.png](../Images/6f185a1764714033ce3fadae7faa3dd2.png)</details><details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-267
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/593695247d65a10544511b5927c317a34961b74aa28b0b8262f09e23dc689ed0.png](../Images/6f185a1764714033ce3fadae7faa3dd2.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>'
 - en: '[PRE78]'
+  id: totrans-268
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE78]'
 - en: '![_images/849af936f99c3a4d8967490da0ee99cf202b4ae1d50a9228de5bd1cf929ff2c6.png](../Images/478c601e168af9c1103e0a86f2b8ee43.png)</details><details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-269
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/849af936f99c3a4d8967490da0ee99cf202b4ae1d50a9228de5bd1cf929ff2c6.png](../Images/478c601e168af9c1103e0a86f2b8ee43.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>'
 - en: '[PRE79]'
+  id: totrans-270
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE79]'
 - en: '![_images/00a72695a4dabd6313d863e44bab5a4aa428ed6f1190b4fb1ad50bc1dd4e7785.png](../Images/a8ee412d8b0bfcc92548ac420df21575.png)</details><details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-271
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/00a72695a4dabd6313d863e44bab5a4aa428ed6f1190b4fb1ad50bc1dd4e7785.png](../Images/a8ee412d8b0bfcc92548ac420df21575.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>'
 - en: '[PRE80]'
+  id: totrans-272
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE80]'
 - en: '![_images/ff52a4c0adc07d4e1fa5c37434ef6ce625f9b8f831b1ea9da492b30eb5ee5a05.png](../Images/de3f103c40a5b9d88fda92d0ad0b3c28.png)</details><details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-273
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/ff52a4c0adc07d4e1fa5c37434ef6ce625f9b8f831b1ea9da492b30eb5ee5a05.png](../Images/de3f103c40a5b9d88fda92d0ad0b3c28.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>'
 - en: '[PRE81]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-274
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE81]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容隐藏代码单元格内容</summary>'
 - en: '[PRE82]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-275
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE82]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容隐藏代码单元格内容</summary>'
 - en: '[PRE83]'
+  id: totrans-276
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE83]'
 - en: '|  | probs |'
+  id: totrans-277
   prefs: []
   type: TYPE_TB
+  zh: '|  | 概率 |'
 - en: '| --- | --- |'
+  id: totrans-278
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| FEMALE | 0.5 |'
+  id: totrans-279
   prefs: []
   type: TYPE_TB
+  zh: '| 女性 | 0.5 |'
 - en: '| MALE | 0.5 |</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-280
   prefs: []
   type: TYPE_NORMAL
+  zh: '| MALE | 0.5 |</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE84]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-281
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE84]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE85]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-282
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE85]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE86]'
+  id: totrans-283
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE86]'
 - en: '[PRE87]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-284
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE87]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE88]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-285
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE88]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE89]'
+  id: totrans-286
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE89]'
 - en: '[PRE90]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-287
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE90]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE91]'
+  id: totrans-288
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE91]'
 - en: '[PRE92]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-289
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE92]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE93]</details>'
+  id: totrans-290
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE93]</details>'
