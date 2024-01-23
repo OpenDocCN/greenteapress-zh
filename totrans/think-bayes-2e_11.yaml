@@ -1,770 +1,1174 @@
 - en: Poisson Processes
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 泊松过程
 - en: 原文：[https://allendowney.github.io/ThinkBayes2/chap08.html](https://allendowney.github.io/ThinkBayes2/chap08.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ThinkBayes2/chap08.html](https://allendowney.github.io/ThinkBayes2/chap08.html)
 - en: This chapter introduces the [Poisson process](https://en.wikipedia.org/wiki/Poisson_point_process),
     which is a model used to describe events that occur at random intervals. As an
     example of a Poisson process, we’ll model goal-scoring in soccer, which is American
     English for the game everyone else calls “football”. We’ll use goals scored in
     a game to estimate the parameter of a Poisson process; then we’ll use the posterior
     distribution to make predictions.
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章介绍了[泊松过程](https://en.wikipedia.org/wiki/Poisson_point_process)，这是用来描述在随机间隔发生的事件的模型。作为泊松过程的一个例子，我们将对足球中的进球进行建模，这是美式英语中对其他人称为“足球”的比赛的称呼。我们将使用比赛中的进球数来估计泊松过程的参数；然后我们将使用后验分布来进行预测。
 - en: And we’ll solve The World Cup Problem.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后我们将解决世界杯问题。
 - en: The World Cup Problem
+  id: totrans-4
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 世界杯问题
 - en: 'In the 2018 FIFA World Cup final, France defeated Croatia 4 goals to 2\. Based
     on this outcome:'
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 2018年FIFA世界杯决赛中，法国以4比2击败克罗地亚。根据这个结果：
 - en: How confident should we be that France is the better team?
+  id: totrans-6
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 我们应该对法国是更好的球队有多有信心？
 - en: If the same teams played again, what is the chance France would win again?
+  id: totrans-7
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如果同样的球队再次比赛，法国再次获胜的机会是多少？
 - en: To answer these questions, we have to make some modeling decisions.
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 要回答这些问题，我们必须做出一些建模决策。
 - en: First, I’ll assume that for any team against another team there is some unknown
     goal-scoring rate, measured in goals per game, which I’ll denote with the Python
     variable `lam` or the Greek letter \(\lambda\), pronounced “lambda”.
+  id: totrans-9
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 首先，我假设对于任何一支球队对抗另一支球队，都存在一些未知的进球率，以每场比赛的进球数来衡量，我将用Python变量`lam`或希腊字母\(\lambda\)来表示，发音为“lambda”。
 - en: Second, I’ll assume that a goal is equally likely during any minute of a game.
     So, in a 90 minute game, the probability of scoring during any minute is \(\lambda/90\).
+  id: totrans-10
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 其次，我假设在比赛的任何一分钟内进球的概率是相等的。因此，在一场90分钟的比赛中，任何一分钟进球的概率是\(\lambda/90\)。
 - en: Third, I’ll assume that a team never scores twice during the same minute.
+  id: totrans-11
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 第三，我假设一支球队在同一分钟内永远不会进两球。
 - en: Of course, none of these assumptions is completely true in the real world, but
     I think they are reasonable simplifications. As George Box said, “All models are
     wrong; some are useful.” ([https://en.wikipedia.org/wiki/All_models_are_wrong](https://en.wikipedia.org/wiki/All_models_are_wrong)).
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 当然，这些假设都不完全符合现实世界，但我认为它们是合理的简化。正如George Box所说的，“所有模型都是错误的；但有些是有用的。” ([https://en.wikipedia.org/wiki/All_models_are_wrong](https://en.wikipedia.org/wiki/All_models_are_wrong))。
 - en: In this case, the model is useful because if these assumptions are true, at
     least roughly, the number of goals scored in a game follows a Poisson distribution,
     at least roughly.
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这种情况下，这个模型是有用的，因为如果这些假设至少在某种程度上是正确的，那么比赛中进球数遵循泊松分布，至少在某种程度上是正确的。
 - en: The Poisson Distribution
+  id: totrans-14
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 泊松分布
 - en: If the number of goals scored in a game follows a [Poisson distribution](https://en.wikipedia.org/wiki/Poisson_distribution)
     with a goal-scoring rate, \(\lambda\), the probability of scoring \(k\) goals
     is
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果比赛中进球数遵循[泊松分布](https://en.wikipedia.org/wiki/Poisson_distribution)，进球率为\(\lambda\)，则进球\(k\)的概率是
 - en: \[\lambda^k \exp(-\lambda) ~/~ k!\]
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\lambda^k \exp(-\lambda) ~/~ k!\]
 - en: for any non-negative value of \(k\).
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于任何非负的\(k\)值。
 - en: 'SciPy provides a `poisson` object that represents a Poisson distribution. We
     can create one with \(\lambda=1.4\) like this:'
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: SciPy提供了一个代表泊松分布的`poisson`对象。我们可以像这样创建一个\(\lambda=1.4\)的对象：
 - en: '[PRE0]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '[PRE1]'
+  id: totrans-20
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: The result is an object that represents a “frozen” random variable and provides
     `pmf`, which evaluates the probability mass function of the Poisson distribution.
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个代表“冻结”随机变量的对象，并提供`pmf`，用于评估泊松分布的概率质量函数。
 - en: '[PRE2]'
+  id: totrans-22
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '[PRE3]'
+  id: totrans-23
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: This result implies that if the average goal-scoring rate is 1.4 goals per game,
     the probability of scoring 4 goals in a game is about 4%.
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个结果意味着，如果平均进球率是每场比赛1.4个进球，那么在一场比赛中进4个进球的概率约为4%。
 - en: We’ll use the following function to make a `Pmf` that represents a Poisson distribution.
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将使用以下函数来创建一个代表泊松分布的`Pmf`。
 - en: '[PRE4]'
+  id: totrans-26
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '`make_poisson_pmf` takes as parameters the goal-scoring rate, `lam`, and an
     array of quantities, `qs`, where it should evaluate the Poisson PMF. It returns
     a `Pmf` object.'
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: '`make_poisson_pmf`接受进球率`lam`和一个数量数组`qs`作为参数，它应该评估泊松PMF。它返回一个`Pmf`对象。'
 - en: For example, here’s the distribution of goals scored for `lam=1.4`, computed
     for values of `k` from 0 to 9.
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，这是对于`lam=1.4`得分的分布，计算了从0到9的`k`值。
 - en: '[PRE5]'
+  id: totrans-29
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: And here’s what it looks like.
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是它的样子。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE6]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell source Hide code cell source</summary>'
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE6]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>'
 - en: '[PRE7]</details> ![_images/58c54aa34d3731e8b80f04a10b301b1ece4e10316ef4a35fd1a70b4332219d71.png](../Images/5302f3f1e12bf32d1b9c9773338d78bd.png)'
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE7]</details> ![_images/58c54aa34d3731e8b80f04a10b301b1ece4e10316ef4a35fd1a70b4332219d71.png](../Images/5302f3f1e12bf32d1b9c9773338d78bd.png)'
 - en: The most likely outcomes are 0, 1, and 2; higher values are possible but increasingly
     unlikely. Values above 7 are negligible. This distribution shows that if we know
     the goal scoring rate, we can predict the number of goals.
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 最可能的结果是0、1和2；更高的值是可能的，但越来越不太可能。超过7的值是可以忽略的。这个分布表明，如果我们知道进球率，我们就可以预测进球数。
 - en: 'Now let’s turn it around: given a number of goals, what can we say about the
     goal-scoring rate?'
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们换个角度来看：给定一个进球数，我们能说出关于进球率的什么？
 - en: To answer that, we need to think about the prior distribution of `lam`, which
     represents the range of possible values and their probabilities before we see
     the score.
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 要回答这个问题，我们需要考虑`lam`的先验分布，它表示在我们看到比分之前可能值及其概率的范围。
 - en: The Gamma Distribution
+  id: totrans-37
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 伽玛分布
 - en: If you have ever seen a soccer game, you have some information about `lam`.
     In most games, teams score a few goals each. In rare cases, a team might score
     more than 5 goals, but they almost never score more than 10.
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你曾经看过一场足球比赛，你对 `lam` 有一些了解。在大多数比赛中，球队每场比赛都会进几个球。在罕见的情况下，一支球队可能进超过 5 个球，但他们几乎不会进超过
+    10 个球。
 - en: Using [data from previous World Cups](https://www.statista.com/statistics/269031/goals-scored-per-game-at-the-fifa-world-cup-since-1930/),
     I estimate that each team scores about 1.4 goals per game, on average. So I’ll
     set the mean of `lam` to be 1.4.
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用[以前世界杯的数据](https://www.statista.com/statistics/269031/goals-scored-per-game-at-the-fifa-world-cup-since-1930/)，我估计每支球队平均每场比赛进球约为
+    1.4 球。所以我将 `lam` 的平均值设为 1.4。
 - en: For a good team against a bad one, we expect `lam` to be higher; for a bad team
     against a good one, we expect it to be lower.
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于一支强队对阵一支弱队，我们期望 `lam` 更高；对于一支弱队对阵一支强队，我们期望它更低。
 - en: 'To model the distribution of goal-scoring rates, I’ll use a [gamma distribution](https://en.wikipedia.org/wiki/Gamma_distribution),
     which I chose because:'
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了模拟进球率的分布，我将使用[伽玛分布](https://en.wikipedia.org/wiki/Gamma_distribution)，我之所以选择它是因为：
 - en: The goal scoring rate is continuous and non-negative, and the gamma distribution
     is appropriate for this kind of quantity.
+  id: totrans-42
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 进球率是连续的且非负的，伽玛分布适用于这种类型的数量。
 - en: The gamma distribution has only one parameter, `alpha`, which is the mean. So
     it’s easy to construct a gamma distribution with the mean we want.
+  id: totrans-43
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 伽玛分布只有一个参数 `alpha`，即平均值。所以我们可以很容易地构造一个具有我们想要的平均值的伽玛分布。
 - en: As we’ll see, the shape of the gamma distribution is a reasonable choice, given
     what we know about soccer.
+  id: totrans-44
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 正如我们将看到的，伽玛分布的形状是一个合理的选择，考虑到我们对足球的了解。
 - en: And there’s one more reason, which I will reveal in <<_ConjugatePriors>>.
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 还有一个原因，我将在 <<_ConjugatePriors>> 中透露。
 - en: SciPy provides `gamma`, which creates an object that represents a gamma distribution.
     And the `gamma` object provides provides `pdf`, which evaluates the **probability
     density function** (PDF) of the gamma distribution.
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: SciPy 提供了 `gamma`，它创建了一个表示伽玛分布的对象。`gamma` 对象提供了 `pdf`，用于评估伽玛分布的**概率密度函数**（PDF）。
 - en: Here’s how we use it.
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是我们如何使用它的方式。
 - en: '[PRE8]'
+  id: totrans-48
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: The parameter, `alpha`, is the mean of the distribution. The `qs` are possible
     values of `lam` between 0 and 10. The `ps` are **probability densities**, which
     we can think of as unnormalized probabilities.
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: 参数 `alpha` 是分布的平均值。`qs` 是 `lam` 在 0 到 10 之间的可能值。`ps` 是**概率密度**，我们可以将其视为未归一化的概率。
 - en: 'To normalize them, we can put them in a `Pmf` and call `normalize`:'
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了使它们归一化，我们可以将它们放入 `Pmf` 中并调用 `normalize`：
 - en: '[PRE9]'
+  id: totrans-51
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: The result is a discrete approximation of a gamma distribution. Here’s what
     it looks like.
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是伽玛分布的离散近似。看起来是这样的。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
 - en: '[PRE10]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell source Hide code cell source</summary>'
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE10]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell source Hide code cell source</summary>'
 - en: '[PRE11]</details> ![_images/7ba78434be5f44d022795ae6c9f5d4277050e2da9534b44be608bda840475700.png](../Images/02390b3b82770114a9b2194393796dc3.png)'
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE11]</details> ![_images/7ba78434be5f44d022795ae6c9f5d4277050e2da9534b44be608bda840475700.png](../Images/02390b3b82770114a9b2194393796dc3.png)'
 - en: 'This distribution represents our prior knowledge about goal scoring: `lam`
     is usually less than 2, occasionally as high as 6, and seldom higher than that.'
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个分布代表了我们对进球的先验知识：`lam` 通常小于 2，偶尔高达 6，很少会更高。
 - en: And we can confirm that the mean is about 1.4.
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以确认平均值约为 1.4。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
 - en: '[PRE12]'
+  id: totrans-59
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '[PRE13]</details>'
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE13]</details>'
 - en: As usual, reasonable people could disagree about the details of the prior, but
     this is good enough to get started. Let’s do an update.
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: 像往常一样，对于先验的细节，有理智的人可能会有不同的看法，但这已经足够开始了。让我们进行一次更新。
 - en: The Update
+  id: totrans-62
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 更新
 - en: Suppose you are given the goal-scoring rate, \(\lambda\), and asked to compute
     the probability of scoring a number of goals, \(k\). That is precisely the question
     we answered by computing the Poisson PMF.
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设你已经知道了进球率 \(\lambda\)，并且被要求计算进 \(k\) 球的概率。这正是我们通过计算泊松 PMF 来回答的问题。
 - en: 'For example, if \(\lambda\) is 1.4, the probability of scoring 4 goals in a
     game is:'
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，如果 \(\lambda\) 是 1.4，那么在一场比赛中进 4 球的概率是：
 - en: '[PRE14]'
+  id: totrans-65
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '[PRE15]'
+  id: totrans-66
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: 'Now suppose we are have an array of possible values for \(\lambda\); we can
     compute the likelihood of the data for each hypothetical value of `lam`, like
     this:'
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在假设我们有一个可能值数组 \(\lambda\)；我们可以计算每个 `lam` 的数据的可能性，就像这样：
 - en: '[PRE16]'
+  id: totrans-68
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: And that’s all we need to do the update. To get the posterior distribution,
     we multiply the prior by the likelihoods we just computed and normalize the result.
+  id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是我们需要做的更新。为了得到后验分布，我们将先验乘以我们刚刚计算的可能性，并将结果归一化。
 - en: The following function encapsulates these steps.
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数封装了这些步骤。
 - en: '[PRE17]'
+  id: totrans-71
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: The first parameter is the prior; the second is the number of goals.
+  id: totrans-72
   prefs: []
   type: TYPE_NORMAL
+  zh: 第一个参数是先验；第二个是进球数。
 - en: In the example, France scored 4 goals, so I’ll make a copy of the prior and
     update it with the data.
+  id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个例子中，法国进了 4 个球，所以我将先验的副本并更新它与数据。
 - en: '[PRE18]'
+  id: totrans-74
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: Here’s what the posterior distribution looks like, along with the prior.
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是后验分布的样子，以及先验。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
 - en: '[PRE19]</details> ![_images/8a3342b969ad573b94b1b8e696c887e4f7ee6b38a3b746430e6b92396d756742.png](../Images/882f5262ce4230869ad254016188d3d1.png)'
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE19]</details> ![_images/8a3342b969ad573b94b1b8e696c887e4f7ee6b38a3b746430e6b92396d756742.png](../Images/882f5262ce4230869ad254016188d3d1.png)'
 - en: The data, `k=4`, makes us think higher values of `lam` are more likely and lower
     values are less likely. So the posterior distribution is shifted to the right.
+  id: totrans-78
   prefs: []
   type: TYPE_NORMAL
+  zh: 数据`k=4`使我们认为更高的`lam`值更可能，更低的值更不可能。因此后验分布向右移动。
 - en: 'Let’s do the same for Croatia:'
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们对克罗地亚也做同样的操作：
 - en: '[PRE20]'
+  id: totrans-80
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: And here are the results.
+  id: totrans-81
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是结果。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE21]</details> ![_images/d5a935a0a5ac15c7cef65b49f17499e8f84f352a4439e1461a9dd40ae0c830de.png](../Images/656cc186025415b771822c80241a93e4.png)'
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE21]</details> ![_images/d5a935a0a5ac15c7cef65b49f17499e8f84f352a4439e1461a9dd40ae0c830de.png](../Images/656cc186025415b771822c80241a93e4.png)'
 - en: Here are the posterior means for these distributions.
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是这些分布的后验均值。
 - en: '[PRE22]'
+  id: totrans-85
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: '[PRE23]'
+  id: totrans-86
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: The mean of the prior distribution is about 1.4. After Croatia scores 2 goals,
     their posterior mean is 1.7, which is near the midpoint of the prior and the data.
     Likewise after France scores 4 goals, their posterior mean is 2.7.
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: 先验分布的均值约为1.4。克罗地亚进球2个后，他们的后验均值为1.7，接近先验和数据的中点。同样，法国进球4个后，他们的后验均值为2.7。
 - en: 'These results are typical of a Bayesian update: the location of the posterior
     distribution is a compromise between the prior and the data.'
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些结果是贝叶斯更新的典型特征：后验分布的位置是先验和数据之间的折衷。
 - en: Probability of Superiority
+  id: totrans-89
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 优势概率
 - en: 'Now that we have a posterior distribution for each team, we can answer the
     first question: How confident should we be that France is the better team?'
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们对每支球队都有了一个后验分布，我们可以回答第一个问题：我们对法国更好的球队有多有信心？
 - en: In the model, “better” means having a higher goal-scoring rate against the opponent.
     We can use the posterior distributions to compute the probability that a random
     value drawn from France’s distribution exceeds a value drawn from Croatia’s.
+  id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: 在模型中，“更好”意味着对手的进球率更高。我们可以使用后验分布来计算从法国分布中抽取的随机值超过从克罗地亚分布中抽取的值的概率。
 - en: One way to do that is to enumerate all pairs of values from the two distributions,
     adding up the total probability that one value exceeds the other.
+  id: totrans-92
   prefs: []
   type: TYPE_NORMAL
+  zh: 一种方法是枚举两个分布的所有值对，累加一个值超过另一个值的总概率。
 - en: '[PRE24]'
+  id: totrans-93
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: 'This is similar to the method we use in <<_Addends>> to compute the distribution
     of a sum. Here’s how we use it:'
+  id: totrans-94
   prefs: []
   type: TYPE_NORMAL
+  zh: 这类似于我们在<<_Addends>>中使用的方法来计算总和的分布。这是我们使用它的方式：
 - en: '[PRE25]'
+  id: totrans-95
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: '[PRE26]'
+  id: totrans-96
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: '`Pmf` provides a function that does the same thing.'
+  id: totrans-97
   prefs: []
   type: TYPE_NORMAL
+  zh: '`Pmf`提供了一个执行相同操作的函数。'
 - en: '[PRE27]'
+  id: totrans-98
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: '[PRE28]'
+  id: totrans-99
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: The results are slightly different because `Pmf.prob_gt` uses array operators
     rather than `for` loops.
+  id: totrans-100
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果略有不同，因为`Pmf.prob_gt`使用数组操作符而不是`for`循环。
 - en: Either way, the result is close to 75%. So, on the basis of one game, we have
     moderate confidence that France is actually the better team.
+  id: totrans-101
   prefs: []
   type: TYPE_NORMAL
+  zh: 无论哪种方式，结果都接近75%。因此，基于一场比赛，我们有中等的信心认为法国实际上是更好的球队。
 - en: Of course, we should remember that this result is based on the assumption that
     the goal-scoring rate is constant. In reality, if a team is down by one goal,
     they might play more aggressively toward the end of the game, making them more
     likely to score, but also more likely to give up an additional goal.
+  id: totrans-102
   prefs: []
   type: TYPE_NORMAL
+  zh: 当然，我们应该记住，这个结果是基于进球率恒定的假设。实际上，如果一支球队落后一个进球，他们可能会在比赛结束时更积极地比赛，这使得他们更有可能得分，但也更有可能失去额外的进球。
 - en: As always, the results are only as good as the model.
+  id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: 和往常一样，结果只有模型一样好。
 - en: Predicting the Rematch
+  id: totrans-104
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 预测复赛
 - en: 'Now we can take on the second question: If the same teams played again, what
     is the chance Croatia would win? To answer this question, we’ll generate the “posterior
     predictive distribution”, which is the number of goals we expect a team to score.'
+  id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以回答第二个问题：如果同样的球队再次比赛，克罗地亚获胜的机会有多大？为了回答这个问题，我们将生成“后验预测分布”，即我们期望一支球队得分的进球数。
 - en: If we knew the goal scoring rate, `lam`, the distribution of goals would be
     a Poisson distribution with parameter `lam`. Since we don’t know `lam`, the distribution
     of goals is a mixture of a Poisson distributions with different values of `lam`.
+  id: totrans-106
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们知道进球率`lam`，进球的分布将是参数为`lam`的泊松分布。由于我们不知道`lam`，进球的分布是具有不同`lam`值的泊松分布的混合。
 - en: First I’ll generate a sequence of `Pmf` objects, one for each value of `lam`.
+  id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: 首先，我将生成一个`Pmf`对象的序列，每个值对应一个`lam`值。
 - en: '[PRE29]'
+  id: totrans-108
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: The following figure shows what these distributions look like for a few values
     of `lam`.
+  id: totrans-109
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下图显示了这些分布在几个`lam`值下的情况。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE30]</details> ![_images/62062c40c6a4a2831a237ab2924b29f91d3f6e61a7de23f3dc1237010380f9dd.png](../Images/fa119384238cf3adbcebd721047f6094.png)'
+  id: totrans-111
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE30]</details> ![_images/62062c40c6a4a2831a237ab2924b29f91d3f6e61a7de23f3dc1237010380f9dd.png](../Images/fa119384238cf3adbcebd721047f6094.png)'
 - en: The predictive distribution is a mixture of these `Pmf` objects, weighted with
     the posterior probabilities. We can use `make_mixture` from <<_GeneralMixtures>>
     to compute this mixture.
+  id: totrans-112
   prefs: []
   type: TYPE_NORMAL
+  zh: 预测分布是这些`Pmf`对象的混合，根据后验概率加权。我们可以使用<<_GeneralMixtures>>中的`make_mixture`来计算这个混合。
 - en: '[PRE31]'
+  id: totrans-113
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: Here’s the predictive distribution for the number of goals France would score
     in a rematch.
+  id: totrans-114
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是法国在复赛中进球数的预测分布。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell source Hide code cell source</summary>
+  id: totrans-115
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码
+    隐藏代码单元格源代码</summary>
 - en: '[PRE32]</details> ![_images/59075d25fad64df15f9e94a861a4486a16b91f6bad681d050dc3290afca3698d.png](../Images/a0ea95a1903ab36205deca76851c6d7a.png)'
+  id: totrans-116
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE32]</details> ![_images/59075d25fad64df15f9e94a861a4486a16b91f6bad681d050dc3290afca3698d.png](../Images/a0ea95a1903ab36205deca76851c6d7a.png)'
 - en: 'This distribution represents two sources of uncertainty: we don’t know the
     actual value of `lam`, and even if we did, we would not know the number of goals
     in the next game.'
+  id: totrans-117
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个分布代表了两种不确定性：我们不知道`lam`的实际值，即使知道了，我们也不知道下一场比赛的进球数。
 - en: Here’s the predictive distribution for Croatia.
+  id: totrans-118
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是克罗地亚的预测分布。
 - en: '[PRE33]'
+  id: totrans-119
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-120
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE34]'
+  id: totrans-121
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: '![_images/3c5c1e25e759daa7d773f22210dbfb08b6f53081a393466e75c90808850d29c0.png](../Images/99e85c8bf46cc101de4790585f805568.png)</details>'
+  id: totrans-122
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/3c5c1e25e759daa7d773f22210dbfb08b6f53081a393466e75c90808850d29c0.png](../Images/99e85c8bf46cc101de4790585f805568.png)</details>'
 - en: We can use these distributions to compute the probability that France wins,
     loses, or ties the rematch.
+  id: totrans-123
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用这些分布来计算法国赢得、输掉或打平复赛的概率。
 - en: '[PRE35]'
+  id: totrans-124
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: '[PRE36]'
+  id: totrans-125
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: '[PRE37]'
+  id: totrans-126
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE37]'
 - en: '[PRE38]'
+  id: totrans-127
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: '[PRE39]'
+  id: totrans-128
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: '[PRE40]'
+  id: totrans-129
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE40]'
 - en: Assuming that France wins half of the ties, their chance of winning the rematch
     is about 65%.
+  id: totrans-130
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设法国赢得一半的比赛，他们在复赛中获胜的机会约为65%。
 - en: '[PRE41]'
+  id: totrans-131
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE41]'
 - en: '[PRE42]'
+  id: totrans-132
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE42]'
 - en: This is a bit lower than their probability of superiority, which is 75%. And
     that makes sense, because we are less certain about the outcome of a single game
     than we are about the goal-scoring rates. Even if France is the better team, they
     might lose the game.
+  id: totrans-133
   prefs: []
   type: TYPE_NORMAL
+  zh: 这比他们的优势概率低一点，为75%。这是有道理的，因为我们对于单场比赛的结果不太确定，而对于进球率我们更有把握。即使法国是更好的球队，他们也可能输掉比赛。
 - en: The Exponential Distribution
+  id: totrans-134
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 指数分布
 - en: 'As an exercise at the end of this notebook, you’ll have a chance to work on
     the following variation on the World Cup Problem:'
+  id: totrans-135
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本笔记本的最后一个练习中，你将有机会解决世界杯问题的以下变种：
 - en: In the 2014 FIFA World Cup, Germany played Brazil in a semifinal match. Germany
     scored after 11 minutes and again at the 23 minute mark. At that point in the
     match, how many goals would you expect Germany to score after 90 minutes? What
     was the probability that they would score 5 more goals (as, in fact, they did)?
+  id: totrans-136
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 在2014年FIFA世界杯中，德国在半决赛中与巴西对阵。德国在11分钟后进球，然后在23分钟处再次进球。在比赛的这一时刻，你预计德国在90分钟后会进多少球？他们进5个以上的球的概率是多少（事实上，他们确实进了）？
 - en: In this version, notice that the data is not the number of goals in a fixed
     period of time, but the time between goals.
+  id: totrans-137
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个版本中，请注意数据不是在固定时间段内的进球数，而是进球之间的时间。
 - en: To compute the likelihood of data like this, we can take advantage of the theory
     of Poisson processes again. If each team has a constant goal-scoring rate, we
     expect the time between goals to follow an [exponential distribution](https://en.wikipedia.org/wiki/Exponential_distribution).
+  id: totrans-138
   prefs: []
   type: TYPE_NORMAL
+  zh: 要计算这样的数据的可能性，我们可以再次利用泊松过程的理论。如果每个团队都有一个恒定的进球率，我们期望进球之间的时间遵循[指数分布](https://en.wikipedia.org/wiki/Exponential_distribution)。
 - en: 'If the goal-scoring rate is \(\lambda\), the probability of seeing an interval
     between goals of \(t\) is proportional to the PDF of the exponential distribution:'
+  id: totrans-139
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果进球率是\(\lambda\)，那么在\(t\)时间间隔内看到进球的概率与指数分布的概率密度函数成正比：
 - en: \[\lambda \exp(-\lambda t)\]
+  id: totrans-140
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\lambda \exp(-\lambda t)\]
 - en: Because \(t\) is a continuous quantity, the value of this expression is not
     a probability; it is a probability density. However, it is proportional to the
     probability of the data, so we can use it as a likelihood in a Bayesian update.
+  id: totrans-141
   prefs: []
   type: TYPE_NORMAL
+  zh: 因为\(t\)是一个连续的量，这个表达式的值不是概率；它是概率密度。然而，它与数据的概率成正比，所以我们可以将其用作贝叶斯更新中的似然。
 - en: SciPy provides `expon`, which creates an object that represents an exponential
     distribution. However, it does not take `lam` as a parameter in the way you might
     expect, which makes it awkward to work with. Since the PDF of the exponential
     distribution is so easy to evaluate, I’ll use my own function.
+  id: totrans-142
   prefs: []
   type: TYPE_NORMAL
+  zh: SciPy提供了`expon`，它创建了一个表示指数分布的对象。然而，它并没有像你期望的那样将`lam`作为参数，这使得它难以使用。由于指数分布的概率密度函数很容易计算，我将使用自己的函数。
 - en: '[PRE43]'
+  id: totrans-143
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE43]'
 - en: 'To see what the exponential distribution looks like, let’s assume again that
     `lam` is 1.4; we can compute the distribution of \(t\) like this:'
+  id: totrans-144
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了看看指数分布的样子，让我们再次假设`lam`为1.4；我们可以这样计算\(t\)的分布：
 - en: '[PRE44]'
+  id: totrans-145
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE44]'
 - en: '[PRE45]'
+  id: totrans-146
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE45]'
 - en: 'And here’s what it looks like:'
+  id: totrans-147
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是它的样子：
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-148
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容
+    隐藏代码单元格内容</summary>
 - en: '[PRE46]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell source Hide code cell source</summary>'
+  id: totrans-149
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE46]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>'
 - en: '[PRE47]</details> ![_images/96ec4c44d1ecd930473d03903142cfd3b9249ca8650f4d696d5463fa14032e4b.png](../Images/bbb9f0b99d523d99aad1d28134d9c9a9.png)'
+  id: totrans-150
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE47]</details> ![_images/96ec4c44d1ecd930473d03903142cfd3b9249ca8650f4d696d5463fa14032e4b.png](../Images/bbb9f0b99d523d99aad1d28134d9c9a9.png)'
 - en: It is counterintuitive, but true, that the most likely time to score a goal
     is immediately. After that, the probability of each successive interval is a little
     lower.
+  id: totrans-151
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是反直觉的，但事实上，最有可能进球的时间是立即。之后，每个连续时间间隔的概率都会略微降低。
 - en: With a goal-scoring rate of 1.4, it is possible that a team will take more than
     one game to score a goal, but it is unlikely that they will take more than two
     games.
+  id: totrans-152
   prefs: []
   type: TYPE_NORMAL
+  zh: 以1.4的进球率来说，一个球队可能需要超过一场比赛来进球，但他们很少需要超过两场比赛。
 - en: Summary
+  id: totrans-153
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 总结
 - en: 'This chapter introduces three new distributions, so it can be hard to keep
     them straight. Let’s review:'
+  id: totrans-154
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章介绍了三种新的分布，因此很难将它们区分开来。让我们来回顾一下：
 - en: If a system satisfies the assumptions of a Poisson model, the number of events
     in a period of time follows a Poisson distribution, which is a discrete distribution
     with integer quantities from 0 to infinity. In practice, we can usually ignore
     low-probability quantities above a finite limit.
+  id: totrans-155
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果一个系统满足泊松模型的假设，那么在一段时间内的事件数量遵循泊松分布，这是一个从0到无穷大的整数数量的离散分布。在实践中，我们通常可以忽略有限限制之上的低概率数量。
 - en: Also under the Poisson model, the interval between events follows an exponential
     distribution, which is a continuous distribution with quantities from 0 to infinity.
     Because it is continuous, it is described by a probability density function (PDF)
     rather than a probability mass function (PMF). But when we use an exponential
     distribution to compute the likelihood of the data, we can treat densities as
     unnormalized probabilities.
+  id: totrans-156
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 同样在泊松模型下，事件之间的间隔遵循指数分布，这是一个从0到无穷大的连续分布。因为它是连续的，所以它由概率密度函数（PDF）描述，而不是概率质量函数（PMF）。但当我们使用指数分布来计算数据的可能性时，我们可以将密度视为未归一化的概率。
 - en: The Poisson and exponential distributions are parameterized by an event rate,
     denoted \(\lambda\) or `lam`.
+  id: totrans-157
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 泊松分布和指数分布由事件率参数化，表示为\(\lambda\)或`lam`。
 - en: For the prior distribution of \(\lambda\), I used a gamma distribution, which
     is a continuous distribution with quantities from 0 to infinity, but I approximated
     it with a discrete, bounded PMF. The gamma distribution has one parameter, denoted
     \(\alpha\) or `alpha`, which is also its mean.
+  id: totrans-158
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 对于\(\lambda\)的先验分布，我使用了伽玛分布，这是一个从0到无穷大的连续分布，但我用一个离散的、有界的PMF来近似它。伽玛分布有一个参数，表示为\(\alpha\)或`alpha`，它也是它的均值。
 - en: I chose the gamma distribution because the shape is consistent with our background
     knowledge about goal-scoring rates. There are other distributions we could have
     used; however, we will see in <<_ConjugatePriors>> that the gamma distribution
     can be a particularly good choice.
+  id: totrans-159
   prefs: []
   type: TYPE_NORMAL
+  zh: 我选择了伽玛分布，因为其形状与我们对进球率的背景知识一致。还有其他分布可以使用；然而，我们将在<<_ConjugatePriors>>中看到，伽玛分布可能是一个特别好的选择。
 - en: But we have a few things to do before we get there, starting with these exercises.
+  id: totrans-160
   prefs: []
   type: TYPE_NORMAL
+  zh: 但在我们到达那里之前，我们还有一些事情要做，从这些练习开始。
 - en: Exercises
+  id: totrans-161
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 练习
 - en: '**Exercise:** Let’s finish the exercise we started:'
+  id: totrans-162
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** 让我们完成我们开始的练习：'
 - en: In the 2014 FIFA World Cup, Germany played Brazil in a semifinal match. Germany
     scored after 11 minutes and again at the 23 minute mark. At that point in the
     match, how many goals would you expect Germany to score after 90 minutes? What
     was the probability that they would score 5 more goals (as, in fact, they did)?
+  id: totrans-163
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 在2014年FIFA世界杯上，德国在半决赛中与巴西对阵。德国在11分钟后进球，然后在第23分钟再次进球。在比赛的那一刻，你期望德国在90分钟后进球多少个？他们有多大概率会再进5个球（事实上，他们确实进了）？
 - en: 'Here are the steps I recommend:'
+  id: totrans-164
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是我建议的步骤：
 - en: Starting with the same gamma prior we used in the previous problem, compute
     the likelihood of scoring a goal after 11 minutes for each possible value of `lam`.
     Don’t forget to convert all times into games rather than minutes.
+  id: totrans-165
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 从我们在上一个问题中使用的相同的伽玛先验开始，计算每个可能的`lam`值在11分钟后进球的可能性。不要忘记将所有时间转换为游戏而不是分钟。
 - en: Compute the posterior distribution of `lam` for Germany after the first goal.
+  id: totrans-166
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 计算德国在第一个进球后`lam`的后验分布。
 - en: Compute the likelihood of scoring another goal after 12 more minutes and do
     another update. Plot the prior, posterior after one goal, and posterior after
     two goals.
+  id: totrans-167
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 计算再过12分钟后再进球的可能性并进行另一个更新。绘制先验、一个进球后的后验和两个进球后的后验。
 - en: 'Compute the posterior predictive distribution of goals Germany might score
     during the remaining time in the game, `90-23` minutes. Note: You will have to
     think about how to generate predicted goals for a fraction of a game.'
+  id: totrans-168
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 计算德国在比赛剩余时间内可能进球的后验预测分布，`90-23`分钟。注意：您将不得不考虑如何为比赛的一部分生成预测进球。
 - en: Compute the probability of scoring 5 or more goals during the remaining time.
+  id: totrans-169
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 计算在剩下的时间内进球5个或更多的概率。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-170
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
 - en: '[PRE48]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-171
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE48]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE49]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-172
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE49]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE50]'
+  id: totrans-173
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE50]'
 - en: '[PRE51]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-174
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE51]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE52]'
+  id: totrans-175
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE52]'
 - en: '![_images/0740f0e6f3f0aac3874b6c1f90f5771a7972aa50727a230b24702f1dc46f999f.png](../Images/d1fcdb7ef8f59f9372467e3f7169a89f.png)</details><details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-176
   prefs: []
   type: TYPE_NORMAL
+  zh: '![ _images/0740f0e6f3f0aac3874b6c1f90f5771a7972aa50727a230b24702f1dc46f999f.png](../Images/d1fcdb7ef8f59f9372467e3f7169a89f.png)</details><details
+    class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE53]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-177
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE53]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE54]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-178
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE54]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE55]'
+  id: totrans-179
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE55]'
 - en: '![_images/0cecd0c7ba065fb6b2658efe96e68f30cb0ac638e3b23059c2fd7a58b1978682.png](../Images/cf03ebe34f639a6f56d7acd81816206b.png)</details><details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-180
   prefs: []
   type: TYPE_NORMAL
+  zh: '![ _images/0cecd0c7ba065fb6b2658efe96e68f30cb0ac638e3b23059c2fd7a58b1978682.png](../Images/cf03ebe34f639a6f56d7acd81816206b.png)</details><details
+    class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE56]'
+  id: totrans-181
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE56]'
 - en: '[PRE57]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-182
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE57]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE58]'
+  id: totrans-183
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE58]'
 - en: '[PRE59]</details>'
+  id: totrans-184
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE59]</details>'
 - en: '**Exercise:** Returning to the first version of the World Cup Problem. Suppose
     France and Croatia play a rematch. What is the probability that France scores
     first?'
+  id: totrans-185
   prefs: []
   type: TYPE_NORMAL
 - en: 'Hint: Compute the posterior predictive distribution for the time until the
     first goal by making a mixture of exponential distributions. You can use the following
     function to make a PMF that approximates an exponential distribution.'
+  id: totrans-186
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-187
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE60]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-188
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE61]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-189
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE62]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-190
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE63]'
+  id: totrans-191
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE63]'
 - en: '![_images/c6056f1c8681d9a55bbb7434ffbf28fd8676cf8e71f1e833edec65ca92f43b2f.png](../Images/bc7bd8003dc80e838f43d3190f7ed3f4.png)</details><details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-192
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE64]'
+  id: totrans-193
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE64]'
 - en: '[PRE65]</details>'
+  id: totrans-194
   prefs: []
   type: TYPE_NORMAL
 - en: '**Exercise:** In the 2010-11 National Hockey League (NHL) Finals, my beloved
@@ -772,102 +1176,147 @@
     Vancouver Canucks. Boston lost the first two games 0-1 and 2-3, then won the next
     two games 8-1 and 4-0\. At this point in the series, what is the probability that
     Boston will win the next game, and what is their probability of winning the championship?'
+  id: totrans-195
   prefs: []
   type: TYPE_NORMAL
 - en: To choose a prior distribution, I got some statistics from [http://www.nhl.com](http://www.nhl.com),
     specifically the average goals per game for each team in the 2010-11 season. The
     distribution is well modeled by a gamma distribution with mean 2.8.
+  id: totrans-196
   prefs: []
   type: TYPE_NORMAL
 - en: In what ways do you think the outcome of these games might violate the assumptions
     of the Poisson model? How would these violations affect your predictions?
+  id: totrans-197
   prefs: []
   type: TYPE_NORMAL
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
+  id: totrans-198
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE66]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-199
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE67]'
+  id: totrans-200
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE67]'
 - en: '[PRE68]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-201
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE69]'
+  id: totrans-202
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE69]'
 - en: '[PRE70]'
+  id: totrans-203
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE70]'
 - en: '![_images/8961cb45c2d1db771b78e9c4b438312f7dce1565f33644f678a6f2463f8a0a2f.png](../Images/3575c4c5dd177b425f14969172ffe9c4.png)</details><details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-204
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE71]'
+  id: totrans-205
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE71]'
 - en: '[PRE72]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-206
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE73]'
+  id: totrans-207
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE73]'
 - en: '[PRE74]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-208
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE75]'
+  id: totrans-209
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE75]'
 - en: '![_images/c60ceceee189a52422bbfd1fa049ebb442236f4beb2ea4762ef515d24343ffbe.png](../Images/05d43fbce560d31a5916b25fb4940199.png)</details><details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-210
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE76]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-211
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE77]'
+  id: totrans-212
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE77]'
 - en: '![_images/aacd06863c73f0847d6ec939ef6c81a6bafb123c3163fd62b93fa43e0cf9d227.png](../Images/5bb78125c1a8e5bf4e5d784b719b0c13.png)</details><details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-213
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE78]'
+  id: totrans-214
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE78]'
 - en: '![_images/325cc125fc2ae0889f9548b61f17be3f2cfd34d5a5f974a9951b5b3ffba5321f.png](../Images/5070d0fd39af5e813613121681f488d2.png)</details><details
     class="hide above-input"><summary aria-label="Toggle hidden content">Show code
     cell content Hide code cell content</summary>'
+  id: totrans-215
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/325cc125fc2ae0889f9548b61f17be3f2cfd34d5a5f974a9951b5b3ffba5321f.png](../Images/5070d0fd39af5e813613121681f488d2.png)</details><details
+    class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE79]'
+  id: totrans-216
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE79]'
 - en: '[PRE80]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-217
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE80]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE81]'
+  id: totrans-218
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE81]'
 - en: '[PRE82]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
+  id: totrans-219
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE82]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE83]'
+  id: totrans-220
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE83]'
 - en: '[PRE84]</details>'
+  id: totrans-221
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE84]</details>'
