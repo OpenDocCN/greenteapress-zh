@@ -1,300 +1,436 @@
 - en: Merge Sort
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
 - en: 原文：[https://allendowney.github.io/DSIRP/mergesort.html](https://allendowney.github.io/DSIRP/mergesort.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/mergesort.ipynb)'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
 - en: Implementing Merge Sort
+  id: totrans-3
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: '[Merge sort](https://en.wikipedia.org/wiki/Merge_sort) is a divide and conquer
     strategy:'
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
 - en: Divide the sequence into two halves,
+  id: totrans-5
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: Sort the halves, and
+  id: totrans-6
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: Merge the sorted sub-sequences into a single sequence.
+  id: totrans-7
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: 'Since step 2 involves sorting, this algorithm is recursive, so we need a base
     case. There are two options:'
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
 - en: If the size falls below some threshold, we can use another sort algorithm.
+  id: totrans-9
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: If the size of a sub-sequence is 1, it is already sorted.
+  id: totrans-10
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: '[Comparison with other sort algorithms](https://en.wikipedia.org/wiki/Merge_sort#Comparison_with_other_sort_algorithms)'
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
 - en: To implement merge sort, I think it’s helpful to start with a non-recursive
     version that uses the Python `sort` function to sort the sub-sequences.
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE0]'
+  id: totrans-13
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '**Exercise:** Write a function called `merge` that takes two sorted sequences,
     `left` and `right`, and returns a sequence that contains all elements from `left`
     and `right`, in ascending order (or non-decreasing order, to be more precise).'
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
 - en: 'Note: this function is not conceptually difficult, but it is notoriously tricky
     to get all of the edge cases right without making the function unreadable. Take
     it as a challenge to write a version that is correct, concise, and readable. I
     found that I could write it more concisely as a generator function.'
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
 - en: You can use the following example to test your code.
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE1]'
+  id: totrans-17
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '[PRE2]'
+  id: totrans-18
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '[PRE3]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '[PRE4]'
+  id: totrans-20
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '[PRE5]'
+  id: totrans-21
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '[PRE6]'
+  id: totrans-22
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '[PRE7]'
+  id: totrans-23
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '[PRE8]'
+  id: totrans-24
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '**Exercise:** Starting with `merge_sort_norec`, write a function called `merge_sort_rec`
     that’s fully recursive; that is, instead of using Python’s `sort` function to
     sort the halves, it should use `merge_sort_rec`. Of course, you will need a base
     case to avoid an infinite recursion.'
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
 - en: Test your method by running the code in the next cell, then use `test_merge_sort_rec`,
     below, to check the performance of your function.
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE9]'
+  id: totrans-27
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '[PRE10]'
+  id: totrans-28
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '[PRE11]'
+  id: totrans-29
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: '[PRE12]'
+  id: totrans-30
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '[PRE13]'
+  id: totrans-31
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: '[PRE14]'
+  id: totrans-32
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: Heap Merge
+  id: totrans-33
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: Suppose we want to merge more than two sub-sequences. A convenient way to do
     that is to use a heap. For example, here are three sorted sub-sequences.
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE15]'
+  id: totrans-35
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '[PRE16]'
+  id: totrans-36
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '[PRE17]'
+  id: totrans-37
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: 'For each sequence, I’ll make an iterator and push onto the heap a tuple that
     contains:'
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
 - en: The first element from the iterator,
+  id: totrans-39
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: An index that’s different for each iterator, and
+  id: totrans-40
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: The iterator itself.
+  id: totrans-41
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: When the heap compares two of these tuples, it compares the elements first.
     If there’s a tie, it compares the indices. Since the indices are unique, there
     can’t be a tie, so we never have to compare iterators (which would be an error).
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE18]'
+  id: totrans-43
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: '[PRE19]'
+  id: totrans-44
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: When we pop a value from the heap, we get the tuple with the smallest value.
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE20]'
+  id: totrans-46
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '[PRE21]'
+  id: totrans-47
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: If we know that the iterator has more values, we can use `next` to get the next
     one and then push a tuple back into the heap.
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE22]'
+  id: totrans-49
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: If we repeat this process, we’ll get all elements from all sub-sequences in
     ascending order.
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
 - en: 'However, we have to deal with the case where the iterator is empty. In Python,
     the only way to check is to call `next` and take your chances! If there are no
     more elements in the iterator, `next` raises a `StopIteration` exception, which
     you can handle with a `try` statement, like this:'
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE23]'
+  id: totrans-52
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: '[PRE24]'
+  id: totrans-53
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: '**Exercise:** Write a generator function called `heapmerge` that takes a list
     of sequences and yields the elements from the sequences in increasing order.'
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
 - en: You can use the following examples to test your function.
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE25]'
+  id: totrans-56
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: '[PRE26]'
+  id: totrans-57
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: '[PRE27]'
+  id: totrans-58
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: '[PRE28]'
+  id: totrans-59
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: The `heapq` module provides a function called `merge` that implements this algorithm.
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
 - en: Comparing sort algorithms
+  id: totrans-61
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: NumPy provides implementations of three sorting algorithms, quicksort, mergesort,
     and heapsort.
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
 - en: In theory that are all in `O(n log n)`. Let’s see what that looks like when
     we plot runtime versus problem size.
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE29]'
+  id: totrans-64
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: '[PRE30]'
+  id: totrans-65
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: '[PRE31]'
+  id: totrans-66
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: '[PRE32]'
+  id: totrans-67
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: '![_images/mergesort_40_1.png](../Images/4f0cc84b465ad18914fad171735ade35.png)'
+  id: totrans-68
   prefs: []
   type: TYPE_IMG
 - en: quicksort is hard to distinguish from linear, up to about 10 million elements.
+  id: totrans-69
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE33]'
+  id: totrans-70
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: '[PRE34]'
+  id: totrans-71
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: '![_images/mergesort_42_1.png](../Images/3030a678a5c410add211f7edc25a32c8.png)'
+  id: totrans-72
   prefs: []
   type: TYPE_IMG
 - en: Merge sort is similar, maybe with some upward curvature.
+  id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: 归并排序类似，也许有一些上升的曲线。
 - en: '[PRE35]'
+  id: totrans-74
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: '[PRE36]'
+  id: totrans-75
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: '![_images/mergesort_44_1.png](../Images/dc01af810014291c022b7d3fb58ee825.png)'
+  id: totrans-76
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/mergesort_44_1.png](../Images/dc01af810014291c022b7d3fb58ee825.png)'
 - en: The three methods are effectively linear over this range of problem sizes.
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: 这三种方法在问题规模范围内都是有效的线性方法。
 - en: And their run times are about the same, with quicksort being the fastest, despite
     being the one with the worst asympotic performance in the worst case.
+  id: totrans-78
   prefs: []
   type: TYPE_NORMAL
+  zh: 它们的运行时间大致相同，其中快速排序是最快的，尽管在最坏情况下性能最差。
 - en: Now let’s see how our implementation of merge sort does.
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们看看我们的归并排序实现如何。
 - en: '[PRE37]'
+  id: totrans-80
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE37]'
 - en: '[PRE38]'
+  id: totrans-81
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: '![_images/mergesort_46_1.png](../Images/3d35c7c30b9c019bf699a84cd9d5f8f6.png)'
+  id: totrans-82
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/mergesort_46_1.png](../Images/3d35c7c30b9c019bf699a84cd9d5f8f6.png)'
 - en: If things go according to plan, our implementation of merge sort should be close
     to linear, or a little steeper.
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果一切按计划进行，我们的归并排序实现应该接近线性，或者稍微陡一点。
 - en: '*Data Structures and Information Retrieval in Python*'
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: '*Python中的数据结构和信息检索*'
 - en: Copyright 2021 Allen Downey
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: 版权所有 2021 Allen Downey
 - en: 'License: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: 许可：[知识共享署名-非商业性使用-相同方式共享4.0国际许可协议](https://creativecommons.org/licenses/by-nc-sa/4.0/)

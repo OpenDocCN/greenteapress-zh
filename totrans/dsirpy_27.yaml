@@ -1,381 +1,601 @@
 - en: Crawler
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 爬虫
 - en: 原文：[https://allendowney.github.io/DSIRP/crawler.html](https://allendowney.github.io/DSIRP/crawler.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/DSIRP/crawler.html](https://allendowney.github.io/DSIRP/crawler.html)
 - en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/crawler.ipynb)'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: '[点击此处在Colab上运行本章](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/crawler.ipynb)'
 - en: Crawling the web
+  id: totrans-3
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 爬取网络
 - en: At this point we have all the pieces we need to build a web crawler; it’s time
     to bring them together.
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这一点上，我们已经有了构建网络爬虫所需的所有部分；是时候把它们放在一起了。
 - en: First, from `philosophy.ipynb`, we have `WikiFetcher`, which we’ll use to download
     pages from Wikipedia while limiting requests to about one per second.
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 首先，从`philosophy.ipynb`中，我们有`WikiFetcher`，我们将使用它从维基百科下载页面，同时限制每秒约一次的请求。
 - en: '[PRE0]'
+  id: totrans-6
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: 'Here’s an example:'
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里有一个例子：
 - en: '[PRE1]'
+  id: totrans-8
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: The result is a BeautifulSoup object that represents the document object model
     (DOM) of the page.
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个表示页面文档对象模型（DOM）的BeautifulSoup对象。
 - en: Note that `WikiFetcher` won’t work if `url` is a bytearray, because `urlopen`
     doesn’t work with bytearrays.
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 请注意，如果`url`是一个字节数组，`WikiFetcher`将无法工作，因为`urlopen`不适用于字节数组。
 - en: '[PRE2]'
+  id: totrans-11
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: To convert a bytearray to a string, you have to decode it.
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 要将字节数组转换为字符串，您必须对其进行解码。
 - en: '[PRE3]'
+  id: totrans-13
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: Usually when you call `decode`, you should [specify which encoding to use](https://docs.python.org/3.8/library/stdtypes.html#bytes.decode).
     But in this case we know that the original strings were URLs, so the default encoding
     will work.
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 通常当您调用`decode`时，您应该[指定要使用的编码](https://docs.python.org/3.8/library/stdtypes.html#bytes.decode)。但在这种情况下，我们知道原始字符串是URL，所以默认编码将起作用。
 - en: Wikipedia pages contain boilerplate content that we don’t want to index, so
     we’ll select the `div` element that contains the “body content” of the page.
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 维基百科页面包含我们不想索引的样板内容，因此我们将选择包含页面“正文内容”的`div`元素。
 - en: '[PRE4]'
+  id: totrans-16
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: Finding links
+  id: totrans-17
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 查找链接
 - en: From `philosophy.ipynb`, we have the following function that traverses the DOM
     and finds links.
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 从`philosophy.ipynb`中，我们有一个遍历DOM并查找链接的函数。
 - en: '[PRE5]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: This version includes links to images and other links we probably don’t want
     to index.
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个版本包括指向图像和其他我们可能不想索引的链接。
 - en: The following version includes a condition that checks whether the link has
     a `title` attribute, which seems to select mostly “good” links.
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下版本包括一个条件，检查链接是否具有`title`属性，这似乎选择了大部分“好”链接。
 - en: '[PRE6]'
+  id: totrans-22
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: Here are the first few links from the page we downloaded.
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是我们下载的页面的前几个链接。
 - en: '[PRE7]'
+  id: totrans-24
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '[PRE8]'
+  id: totrans-25
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: Finding words
+  id: totrans-26
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 查找单词
 - en: From `indexer.ipynb`, we have the following function, which traverses the DOM
     and yields individual words, stripped of punctuation and converted to lowercase.
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 从`indexer.ipynb`中，我们有以下函数，它遍历DOM并产生单词，去除标点并转换为小写。
 - en: '[PRE9]'
+  id: totrans-28
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: Here are the first words from the page we downloaded. They include keywords
     from the sidebar on the right side of the page, which are not part of the main
     text, but might be good to index anyway, since they indicate the topic of the
     page.
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是我们下载的页面的前几个单词。它们包括页面右侧边栏中的关键字，这些关键字不是主要文本的一部分，但可能是很好的索引，因为它们指示了页面的主题。
 - en: '[PRE10]'
+  id: totrans-30
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '[PRE11]'
+  id: totrans-31
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: Redis
+  id: totrans-32
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: Redis
 - en: Let’s get Redis started.
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们开始Redis。
 - en: '[PRE12]'
+  id: totrans-34
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '[PRE13]'
+  id: totrans-35
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: And make sure the Redis client is installed.
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 并确保安装了Redis客户端。
 - en: '[PRE14]'
+  id: totrans-37
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: We’ll make a `Redis` object that creates the connection to the Redis database.
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将创建一个`Redis`对象，它创建到Redis数据库的连接。
 - en: '[PRE15]'
+  id: totrans-39
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: If you have a Redis database running on a different machine, you can create
     a `Redis` object using the URL of the database, like this
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果您的Redis数据库在另一台机器上运行，您可以使用数据库的URL创建一个`Redis`对象，就像这样
 - en: '[PRE16]'
+  id: totrans-41
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: If your database contains values from previous exercises, or if you make a mistake
     and want to start over, you can use the following function to clear the database.
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果您的数据库包含以前练习的值，或者如果您犯了一个错误并想重新开始，您可以使用以下函数来清除数据库。
 - en: '[PRE17]'
+  id: totrans-43
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: Indexing
+  id: totrans-44
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 索引
 - en: From `indexer.ipynb`, here’s the function that counts the words on a page and
     adds the results to a Redis hash.
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 从`indexer.ipynb`中，这是一个计算页面上单词数量并将结果添加到Redis哈希的函数。
 - en: For each word, it creates or updates a hash in the database that maps from URLs
     to word counts. For example if the word `python` appears 428 times on a page,
     we could find the hash with key `Index:python` and add an entry that maps from
     the URL to the number 428.
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于每个单词，它在数据库中创建或更新一个哈希，将URL映射到单词计数。例如，如果单词`python`在页面上出现了428次，我们可以找到键为`Index:python`的哈希，并添加一个将URL映射到数字428的条目。
 - en: '[PRE18]'
+  id: totrans-47
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: 'The previous version is likely to be slow because it makes many small requests
     to the database. We can speed it up using a pipeline object, like this:'
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 之前的版本可能会很慢，因为它会向数据库发出许多小请求。我们可以使用管道对象来加快速度，就像这样：
 - en: '[PRE19]'
+  id: totrans-49
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: Let’s see which version is faster.
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们看看哪个版本更快。
 - en: '[PRE20]'
+  id: totrans-51
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '[PRE21]'
+  id: totrans-52
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: '[PRE22]'
+  id: totrans-53
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: '[PRE23]'
+  id: totrans-54
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: '[PRE24]'
+  id: totrans-55
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: We can use `hscan_iter` to iterate the field-values pairs in the index for the
     word `python`, and print the URLs of the pages where this word appears and the
     number of times it appears on each page.
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用`hscan_iter`来迭代单词`python`的索引中的字段-值对，并打印出这个单词出现的页面的URL以及它在每个页面上出现的次数。
 - en: '[PRE25]'
+  id: totrans-57
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: '[PRE26]'
+  id: totrans-58
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: Notice that when we get the number back, it’s a bytearray. If we want to work
     with it as a number, we have to convert back to int.
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 请注意，当我们得到数字时，它是一个字节数组。如果我们想将其作为数字处理，我们必须转换为整数。
 - en: Crawling
+  id: totrans-60
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 爬行
 - en: In `philosophy.ipynb` we wrote a simple crawler that always follows the first
     link.
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: 在`philosophy.ipynb`中，我们编写了一个简单的爬虫，它总是跟随第一个链接。
 - en: '[PRE27]'
+  id: totrans-62
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: '[PRE28]'
+  id: totrans-63
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: '[PRE29]'
+  id: totrans-64
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: '[PRE30]'
+  id: totrans-65
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: 'Now we want a crawler that runs a breadth-first search. Here’s the implementation
     of BFS from `bfs.ipynb`:'
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们想要一个运行广度优先搜索的爬虫。这是从`bfs.ipynb`中实现的BFS：
 - en: '[PRE31]'
+  id: totrans-67
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: '**Exercise:** Write a function called `crawl` that takes a starting URL as
     a parameter, and an optional number of pages to crawl.'
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**编写一个名为`crawl`的函数，它以起始URL作为参数，并可选地指定要爬取的页面数。'
 - en: It should create a queue of URLs and work it’s way through the queue, indexing
     pages as it goes and adding new links to the queue.
+  id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: 它应该创建一个URL队列，并逐个处理队列，索引页面并将新链接添加到队列中。
 - en: For a first draft, I suggest using Python data structures to keep track of the
     queue and the set of URLs that have already been seen/indexed.
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于初稿，我建议使用Python数据结构来跟踪队列和已经看到/索引的URL集合。
 - en: '[PRE32]'
+  id: totrans-71
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: '[PRE33]'
+  id: totrans-72
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: '[PRE34]'
+  id: totrans-73
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: '[PRE35]'
+  id: totrans-74
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: For a second draft, consider storing these structures in Redis so they are persistent;
     that way, you can call `crawl` later and it will pick up from where it left off.
     Or you could have multiple crawlers running at the same time.
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于第二稿，考虑将这些结构存储在Redis中，这样它们就是持久的；这样，你可以稍后调用`crawl`，它将从离开的地方继续。或者你可以同时运行多个爬虫。
 - en: 'Hint: When you read a URL from Redis, you might have to decode it to make a
     string.'
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
+  zh: 提示：当你从Redis读取一个URL时，你可能需要解码它以使其成为一个字符串。
 - en: '[PRE36]'
+  id: totrans-77
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: '[PRE37]'
+  id: totrans-78
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE37]'
 - en: '[PRE38]'
+  id: totrans-79
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: '[PRE39]'
+  id: totrans-80
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: '[PRE40]'
+  id: totrans-81
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE40]'
 - en: '[PRE41]'
+  id: totrans-82
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE41]'
 - en: '[PRE42]'
+  id: totrans-83
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE42]'
 - en: '[PRE43]'
+  id: totrans-84
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE43]'
 - en: '[PRE44]'
+  id: totrans-85
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE44]'
 - en: '[PRE45]'
+  id: totrans-86
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE45]'
 - en: '[PRE46]'
+  id: totrans-87
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE46]'
 - en: Stop words
+  id: totrans-88
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 停用词
 - en: The most common English words are likely to appear on every page. They don’t
     indicate what the page is about, and we might not want to index them. Words that
     we don’t index are sometimes called [stop words](https://en.wikipedia.org/wiki/Stop_word).
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: 最常见的英语单词可能会出现在每个页面上。它们并不表示页面的内容，我们可能不想对它们进行索引。有时我们不索引的单词被称为[停用词](https://en.wikipedia.org/wiki/Stop_word)。
 - en: Once you have indexed a few pages, use the index to identify the words that
     have appeared the most times, totaled across all pages.
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: 一旦你索引了一些页面，就可以使用索引来识别出现次数最多的单词，总计在所有页面中出现的次数。
 - en: '[PRE47]'
+  id: totrans-91
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE47]'
 - en: '[PRE48]'
+  id: totrans-92
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE48]'
 - en: '[PRE49]'
+  id: totrans-93
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE49]'
 - en: '[PRE50]'
+  id: totrans-94
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE50]'
 - en: '[PRE51]'
+  id: totrans-95
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE51]'
 - en: '[PRE52]'
+  id: totrans-96
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE52]'
 - en: '[PRE53]'
+  id: totrans-97
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE53]'
 - en: The following cells use the results to make a Zipf plot, which shows counts
     versus “rank” on a log-log scale (the most common word has rank 1, the next most
     common has rank 2, and so on).
+  id: totrans-98
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下单元格使用结果制作Zipf图，该图显示计数与“排名”在对数-对数尺度上的关系（最常见的单词排名为1，下一个最常见的单词排名为2，依此类推）。
 - en: Zipf’s law asserts that the distribution of word frequencies follows a power
     law, which implies that the Zipf plot is approximately a straight line.
+  id: totrans-99
   prefs: []
   type: TYPE_NORMAL
+  zh: Zipf定律断言单词频率的分布遵循幂律，这意味着Zipf图大致上是一条直线。
 - en: '[PRE54]'
+  id: totrans-100
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE54]'
 - en: '[PRE55]'
+  id: totrans-101
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE55]'
 - en: '![_images/crawler_66_0.png](../Images/8dd14149b85e7d84c3e23e05ac0bbc2c.png)'
+  id: totrans-102
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/crawler_66_0.png](../Images/8dd14149b85e7d84c3e23e05ac0bbc2c.png)'
 - en: Shutdown
+  id: totrans-103
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 关闭
 - en: If you are running this notebook on your own computer, you can use the following
     command to shut down the Redis server.
+  id: totrans-104
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你在自己的计算机上运行这个笔记本，你可以使用以下命令关闭Redis服务器。
 - en: 'If you are running on Colab, it’s not really necessary: the Redis server will
     get shut down when the Colab runtime shuts down (and everything stored in it will
     disappear).'
+  id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你在Colab上运行，这并不是真正必要的：当Colab运行时关闭时，Redis服务器也会关闭（其中存储的所有内容都会消失）。
 - en: '[PRE56]'
+  id: totrans-106
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE56]'
 - en: '*Data Structures and Information Retrieval in Python*'
+  id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: '*Python中的数据结构和信息检索*'
 - en: Copyright 2021 Allen Downey
+  id: totrans-108
   prefs: []
   type: TYPE_NORMAL
+  zh: 版权所有 2021 Allen Downey
 - en: 'License: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  id: totrans-109
   prefs: []
   type: TYPE_NORMAL
+  zh: 许可证：[知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议](https://creativecommons.org/licenses/by-nc-sa/4.0/)
