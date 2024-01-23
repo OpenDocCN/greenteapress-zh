@@ -1,579 +1,859 @@
 - en: Plotting
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 绘图
 - en: 原文：[https://allendowney.github.io/ElementsOfDataScience/06_plotting.html](https://allendowney.github.io/ElementsOfDataScience/06_plotting.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ElementsOfDataScience/06_plotting.html](https://allendowney.github.io/ElementsOfDataScience/06_plotting.html)
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/06_plotting.ipynb)
     or [click here to download it](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/06_plotting.ipynb).'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: '[点击这里在Colab上运行这个笔记本](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/06_plotting.ipynb)或[点击这里下载](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/06_plotting.ipynb)。'
 - en: 'This chapter presents ways to create figures and graphs, more generally called
     **data visualizations**. As examples, we’ll generate three figures:'
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章介绍了创建图和图表的方法，更一般地称为**数据可视化**。例如，我们将生成三个图：
 - en: We’ll replicate a figure from the Pew Research Center that shows changes in
     religious affiliation in the U.S. over time.
+  id: totrans-4
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 我们将复制一张来自皮尤研究中心的图表，显示了美国宗教信仰随时间的变化。
 - en: We’ll replicate the figure from *The Economist* that shows the prices of sandwiches
     in Boston and London (we saw this data back in Chapter 3).
+  id: totrans-5
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 我们将复制*经济学人*上显示波士顿和伦敦三明治价格的图表（我们在第3章中看到了这些数据）。
 - en: We’ll make a plot to test Zipf’s law, which describes the relationship between
     word frequencies and their ranks.
+  id: totrans-6
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 我们将制作一个图来测试Zipf定律，它描述了单词频率和它们的排名之间的关系。
 - en: 'With the tools in this chapter, you can generate a variety of simple graphs.
     We will see more visualization tools in later chapters. But before we get started
     with plotting, we need a new language feature: keyword arguments.'
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用本章的工具，你可以生成各种简单的图表。我们将在后面的章节中看到更多的可视化工具。但在我们开始绘图之前，我们需要一个新的语言特性：关键字参数。
 - en: Keyword Arguments
+  id: totrans-8
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 关键字参数
 - en: 'When you call most functions, you have to provide values. For example, when
     you call `np.exp`, which raises \(e\) to a given power, the value you provide
     is a number:'
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 当你调用大多数函数时，你必须提供值。例如，当你调用`np.exp`时，它会将\(e\)提高到给定的幂，你提供的值是一个数字：
 - en: '[PRE0]'
+  id: totrans-10
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '[PRE1]'
+  id: totrans-11
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: 'When you call `np.power`, you have to provide two numbers:'
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 当你调用`np.power`时，你必须提供两个数字：
 - en: '[PRE2]'
+  id: totrans-13
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '[PRE3]'
+  id: totrans-14
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: The values you provide are called **arguments**. Specifically, the values in
     these examples are **positional arguments** because their position determines
     how they are used. In the second example, `power` computes `10` to the sixth power,
     not `6` to the 10th power because of the order of the arguments.
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 你提供的值被称为**参数**。具体来说，这些例子中的值是**位置参数**，因为它们的位置决定了它们的使用方式。在第二个例子中，`power`计算`10`的六次方，而不是`6`的10次方，因为参数的顺序。
 - en: 'Many functions also take **keyword arguments**, which are identified by name.
     For example, we have previously used `int` to convert a string to an integer.
     Here’s how we use it with a string as a positional argument:'
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 许多函数还接受**关键字参数**，这些参数通过名称来识别。例如，我们之前使用`int`将字符串转换为整数。下面是我们如何将它与字符串一起使用作为位置参数：
 - en: '[PRE4]'
+  id: totrans-17
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '[PRE5]'
+  id: totrans-18
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: By default, `int` assumes that the number is in base 10\. But you can provide
     a keyword argument that specifies a different base. For example, the string `'21'`,
     interpreted in base 8, represents the number `2 * 8 + 1 = 17`. Here’s how we do
     this conversion using `int`.
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 默认情况下，`int`假定数字是以10进制。但你可以提供一个指定不同进制的关键字参数。例如，字符串`'21'`，在8进制中表示数字`2 * 8 + 1
+    = 17`。下面是我们如何使用`int`进行这种转换。
 - en: '[PRE6]'
+  id: totrans-20
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '[PRE7]'
+  id: totrans-21
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: The integer value `8` is a keyword argument, with the keyword `base`.
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 整数值`8`是一个关键字参数，关键字是`base`。
 - en: Specifying a keyword argument looks like an assignment statement, but it does
     not create a new variable. And when you specify a keyword argument, you don’t
     choose the variable name. In this example, the keyword name, `base`, is part of
     the definition of `int`. If you specify another keyword name, you get an error.
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: 指定关键字参数看起来像一个赋值语句，但它不会创建一个新变量。当你指定一个关键字参数时，你不会选择变量名。在这个例子中，关键字名`base`是`int`的一部分。如果你指定另一个关键字名，你会得到一个错误。
 - en: '**Exercise:** The `print` function takes a keyword argument called `end` that
     specifies the character it prints at the end of the line. By default, `end` is
     the newline character, `\n`. So if you call `print` more than once, the results
     normally appear on separate lines, like this:'
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**`print`函数接受一个名为`end`的关键字参数，指定它在行末打印的字符。默认情况下，`end`是换行符`\n`。所以如果你调用`print`超过一次，结果通常会出现在不同的行上，就像这样：'
 - en: '[PRE8]'
+  id: totrans-25
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '[PRE9]'
+  id: totrans-26
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: Modify the previous example so it prints the elements of the list, all on one
     line, with spaces between them. Then modify it to print an open bracket at the
     beginning and a close bracket and newline at the end.
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 修改前面的例子，使其打印出列表的元素，全部在一行上，它们之间用空格隔开。然后修改它，打印出一个开放括号在开头，一个闭合括号和换行符在结尾。
 - en: Graphing Religious Affiliation
+  id: totrans-28
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 宗教信仰图表
 - en: Now we’re ready to make some graphs. In October 2019 the Pew Research Center
     published “In U.S., Decline of Christianity Continues at Rapid Pace” at [https://www.pewresearch.org/religion/2019/10/17/in-u-s-decline-of-christianity-continues-at-rapid-pace/](https://www.pewresearch.org/religion/2019/10/17/in-u-s-decline-of-christianity-continues-at-rapid-pace/).
     It includes this figure, which shows changes in religious affiliation among adults
     in the U.S. over the previous 10 years.
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们准备做一些图表。2019年10月，皮尤研究中心在[https://www.pewresearch.org/religion/2019/10/17/in-u-s-decline-of-christianity-continues-at-rapid-pace/](https://www.pewresearch.org/religion/2019/10/17/in-u-s-decline-of-christianity-continues-at-rapid-pace/)上发布了“在美国，基督教的衰落继续以快速的速度”。其中包括这张图，显示了美国成年人在过去10年中宗教信仰的变化。
 - en: '![](../Images/bc35ca82c991246898939f6880176b46.png)'
+  id: totrans-30
   prefs: []
   type: TYPE_IMG
+  zh: '![](../Images/bc35ca82c991246898939f6880176b46.png)'
 - en: As an exercise, we’ll replicate this figure. It shows results from two sources,
     Religious Landscape Studies and Pew Research Political Surveys. The political
     surveys provide data from more years, so we’ll focus on that.
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为练习，我们将复制这张图。它显示了来自两个来源的结果，宗教景观研究和皮尤研究政治调查。政治调查提供了更多年的数据，所以我们将重点关注这一点。
 - en: The data from the figure are available from Pew Research at [https://www.pewforum.org/wp-content/uploads/sites/7/2019/10/Detailed-Tables-v1-FOR-WEB.pdf](https://www.pewforum.org/wp-content/uploads/sites/7/2019/10/Detailed-Tables-v1-FOR-WEB.pdf),
     but they are in a PDF document. It is sometimes possible to extract data from
     PDF documents, but for now we’ll enter the data by hand.
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 图中的数据可从Pew Research的[https://www.pewforum.org/wp-content/uploads/sites/7/2019/10/Detailed-Tables-v1-FOR-WEB.pdf](https://www.pewforum.org/wp-content/uploads/sites/7/2019/10/Detailed-Tables-v1-FOR-WEB.pdf)获取，但它们在一个PDF文档中。有时可以从PDF文档中提取数据，但现在我们将手动输入数据。
 - en: '[PRE10]'
+  id: totrans-33
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: The library we’ll use for plotting is Matplotlib; more specifically, we’ll use
     a part of it called Pyplot, which we’ll import with the nickname `plt`.
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将用于绘图的库是Matplotlib；更具体地说，我们将使用它的一部分称为Pyplot，并将其用别名`plt`导入。
 - en: '[PRE11]'
+  id: totrans-35
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: Pyplot provides a function called `plot` that makes a line plot. It takes two
     sequences as arguments, the `x` values and the `y` values. The sequences can be
     tuples, lists, or arrays.
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: Pyplot提供了一个名为`plot`的函数，用于绘制线图。它接受两个序列作为参数，`x`值和`y`值。这些序列可以是元组、列表或数组。
 - en: '[PRE12]'
+  id: totrans-37
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '![_images/06_plotting_23_0.png](../Images/43bd7d0a690a87dcdc2356fa53f29c39.png)'
+  id: totrans-38
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/06_plotting_23_0.png](../Images/43bd7d0a690a87dcdc2356fa53f29c39.png)'
 - en: The semi-colon at the end of the line prevents the return value from `plot`,
     which is an object representing the line, from being displayed.
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 行末的分号阻止了`plot`的返回值（表示线的对象）被显示。
 - en: If you plot multiple lines in a single cell, they appear on the same axes.
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果在单个单元格中绘制多条线，它们将出现在同一坐标轴上。
 - en: '[PRE13]'
+  id: totrans-41
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: '![_images/06_plotting_25_0.png](../Images/6209418d885f60f56e5f71483404ca02.png)'
+  id: totrans-42
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/06_plotting_25_0.png](../Images/6209418d885f60f56e5f71483404ca02.png)'
 - en: Plotting them on the same axes makes it possible to compare them directly. However,
     notice that Pyplot chooses the range for the axes automatically; in this example
     the `y` axis starts around 15, not zero.
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 在同一坐标轴上绘制它们可以直接进行比较。但是，请注意，Pyplot会自动选择轴的范围；在这个例子中，`y`轴从15左右开始，而不是从零开始。
 - en: As a result, it provides a misleading picture, making the ratio of the two lines
     look bigger than it really is. We can set the limits of the `y` axis using the
     function `plt.ylim`. The argument is a list with two values, the lower bound and
     the upper bound.
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，它提供了一个误导性的图片，使得这两条线的比率看起来比实际情况要大。我们可以使用函数`plt.ylim`设置`y`轴的限制。参数是一个包含两个值的列表，下限和上限。
 - en: '[PRE14]'
+  id: totrans-45
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '![_images/06_plotting_27_0.png](../Images/c6dfee6fa24825e1f4eb5b35e92fea33.png)'
+  id: totrans-46
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/06_plotting_27_0.png](../Images/c6dfee6fa24825e1f4eb5b35e92fea33.png)'
 - en: 'That’s better, but this graph is missing some of the most important elements:
     labels for the axes and a title.'
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 这样更好，但是这张图缺少一些最重要的元素：坐标轴的标签和标题。
 - en: Decorating the Axes
+  id: totrans-48
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 装饰坐标轴
 - en: To label the axes and add a title, we’ll use Pyplot functions `xlabel`, `ylabel`,
     and `title`. All of them take strings as arguments.
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了标记轴并添加标题，我们将使用Pyplot函数`xlabel`、`ylabel`和`title`。它们都以字符串作为参数。
 - en: '[PRE15]'
+  id: totrans-50
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '![_images/06_plotting_30_0.png](../Images/1387ae9aa1e14ae68cc6b08ac4324de7.png)'
+  id: totrans-51
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/06_plotting_30_0.png](../Images/1387ae9aa1e14ae68cc6b08ac4324de7.png)'
 - en: Now let’s add another important element, a legend that indicates which line
     is which. To do that, we add a label to each line, using the keyword argument
     `label`. Then we call `plt.legend` to create the legend.
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们添加另一个重要元素，一个说明哪条线是哪条线的图例。为此，我们为每条线添加一个标签，使用关键字参数`label`。然后我们调用`plt.legend`创建图例。
 - en: '[PRE16]'
+  id: totrans-53
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '![_images/06_plotting_32_0.png](../Images/9ca161bbb9246e3e283302f57fe190ec.png)'
+  id: totrans-54
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/06_plotting_32_0.png](../Images/9ca161bbb9246e3e283302f57fe190ec.png)'
 - en: The legend shows the labels we provided when we created the lines.
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: 图例显示了我们在创建线时提供的标签。
 - en: '**Exercise:** The original figure plots lines between the data points, but
     it also plots markers showing the location of each data point. It is generally
     good practice to include markers, especially if data are not available for every
     year.'
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: 练习：原始图绘制了数据点之间的线，但也绘制了标记显示每个数据点的位置。通常最好包括标记，特别是如果每年的数据不可用。
 - en: Modify the previous example to include a keyword argument `marker` with the
     string value `'o'`, which indicates that you want to plot circles as markers.
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 修改前面的示例，包括一个关键字参数`marker`，其字符串值为`'o'`，表示要绘制圆圈作为标记。
 - en: '**Exercise:** In the original figure, the line labeled `''Christian''` is red
     and the line labeled `''Unaffiliated''` is grey.'
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 练习：在原始图中，标有“基督教”的线是红色的，标有“无宗教信仰”的线是灰色的。
 - en: Find the online documentation of `plt.plot` and figure out how to use keyword
     arguments to specify colors. Choose colors to (roughly) match the original figure.
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 找到`plt.plot`的在线文档，并弄清楚如何使用关键字参数来指定颜色。选择颜色（大致）与原始图相匹配。
 - en: The `legend` function takes a keyword argument that specifies the location of
     the legend. Read the documentation of this function and move the legend to the
     center left of the figure.
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: '`legend`函数接受一个关键字参数，指定图例的位置。阅读此函数的文档，并将图例移动到图的左中部。'
 - en: Plotting Sandwich Prices
+  id: totrans-61
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 绘制三明治价格
 - en: 'In Chapter 3 we used data from an article in *The Economist* comparing sandwich
     prices in Boston and London: “Why Americans pay more for lunch than Britons do”
     at [https://www.economist.com/finance-and-economics/2019/09/07/why-americans-pay-more-for-lunch-than-britons-do](https://www.economist.com/finance-and-economics/2019/09/07/why-americans-pay-more-for-lunch-than-britons-do).'
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: 在第3章中，我们使用了《经济学人》一篇文章中的数据，比较了波士顿和伦敦的三明治价格：“为什么美国人午餐比英国人贵”[https://www.economist.com/finance-and-economics/2019/09/07/why-americans-pay-more-for-lunch-than-britons-do](https://www.economist.com/finance-and-economics/2019/09/07/why-americans-pay-more-for-lunch-than-britons-do)。
 - en: 'The article includes this graph showing prices of several sandwiches in the
     two cities:'
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 文章中包括了这张图，显示了两个城市的几种三明治的价格：
 - en: '![](../Images/5feb03c573c0b858be44a006b68b3324.png)'
+  id: totrans-64
   prefs: []
   type: TYPE_IMG
+  zh: '![](../Images/5feb03c573c0b858be44a006b68b3324.png)'
 - en: 'As an exercise, let’s see if we can replicate this figure. Here’s the data
     from the article again: the names of the sandwiches and the price list for each
     city.'
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为练习，让我们看看是否可以复制这张图。这是文章中的数据：三明治的名称和每个城市的价格列表。
 - en: '[PRE17]'
+  id: totrans-66
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: 'In the previous section we plotted percentages on the `y` axis versus time
     on the `x` axis. Now we want to plot the sandwich names on the `y` axis and the
     prices on the `x` axis. Here’s how:'
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: 在前一节中，我们在`y`轴上绘制了百分比，时间在`x`轴上。现在我们想要在`y`轴上绘制三明治的名称，在`x`轴上绘制价格。方法如下：
 - en: '[PRE18]'
+  id: totrans-68
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: '![_images/06_plotting_41_0.png](../Images/71b9ad114443b75fbf3c497ecfb1d487.png)'
+  id: totrans-69
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/06_plotting_41_0.png](../Images/71b9ad114443b75fbf3c497ecfb1d487.png)'
 - en: '`name_list` is a list of strings; Pyplot orders them from top to bottom, equally
     spaced.'
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: '`name_list`是一个字符串列表；Pyplot会按照从上到下，等距离排列它们。'
 - en: By default Pyplot connects the points with lines, but in this example the lines
     don’t make sense because the sandwich names are discrete; there are no intermediate
     points between an egg sandwich and a tuna sandwich.
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: 默认情况下，Pyplot使用线连接点，但在这个例子中，线条没有意义，因为三明治的名称是离散的；在鸡蛋三明治和金枪鱼三明治之间没有中间点。
 - en: We can turn on markers and turn off lines with keyword arguments.
+  id: totrans-72
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用关键字参数打开标记并关闭线条。
 - en: '[PRE19]'
+  id: totrans-73
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '![_images/06_plotting_43_0.png](../Images/6181c1be0e66ab9817df5a68c117c531.png)'
+  id: totrans-74
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/06_plotting_43_0.png](../Images/6181c1be0e66ab9817df5a68c117c531.png)'
 - en: Or we can do the same thing more concisely by providing a **format string**
     as a positional argument. In this example, `'o'` indicates a circle marker and
     `'s'` indicates a square. You can read the documentation of `plt.plot` to learn
     more about format strings.
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: 或者我们可以更简洁地做同样的事情，通过提供一个**格式字符串**作为位置参数。在这个例子中，`'o'`表示圆形标记，`'s'`表示正方形。您可以阅读`plt.plot`的文档，了解更多关于格式字符串的信息。
 - en: 'And let’s add a title while we’re at it:'
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们在这个过程中添加一个标题：
 - en: '[PRE20]'
+  id: totrans-77
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '![_images/06_plotting_45_0.png](../Images/04ca819fde271fe7c27b1877ed1443cd.png)'
+  id: totrans-78
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/06_plotting_45_0.png](../Images/04ca819fde271fe7c27b1877ed1443cd.png)'
 - en: 'Now, to approximate the colors in the original figure, we can use the strings
     `''C3''` and `''C0''`, which specify colors from the default color sequence. You
     can read more about specifying colors in the Pyplot documentation: [https://matplotlib.org/3.1.1/tutorials/colors/colors.html](https://matplotlib.org/3.1.1/tutorials/colors/colors.html).'
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，为了近似原始图中的颜色，我们可以使用字符串`'C3'`和`'C0'`，它们指定默认颜色序列中的颜色。您可以在Pyplot文档中阅读更多关于指定颜色的信息：[https://matplotlib.org/3.1.1/tutorials/colors/colors.html](https://matplotlib.org/3.1.1/tutorials/colors/colors.html)。
 - en: '[PRE21]'
+  id: totrans-80
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: '![_images/06_plotting_47_0.png](../Images/e3201b85e50f3388634be418207e8a45.png)'
+  id: totrans-81
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/06_plotting_47_0.png](../Images/e3201b85e50f3388634be418207e8a45.png)'
 - en: 'To connect the dots with lines, we’ll use `plt.hlines`, which draws horizontal
     lines. It takes three arguments: a sequence of values on the `y` axis, which are
     the sandwich names in this example, and two sequences of values on the `x` axis,
     which are the London prices and Boston prices.'
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了用线连接这些点，我们将使用`plt.hlines`，它绘制水平线。它需要三个参数：`y`轴上的值序列，这个例子中是三明治的名称，以及`x`轴上的两个值序列，分别是伦敦价格和波士顿价格。
 - en: '[PRE22]'
+  id: totrans-83
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: '![_images/06_plotting_49_0.png](../Images/574ab21c062efb29e3f34ba89da471cf.png)'
+  id: totrans-84
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/06_plotting_49_0.png](../Images/574ab21c062efb29e3f34ba89da471cf.png)'
 - en: '**Exercise:** To finish off this example, add a legend that identifies the
     London and Boston prices. Remember that you have to add a `label` keyword each
     time you call `plt.plot`, and then call `plt.legend`.'
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：**完成这个例子，添加一个标识伦敦和波士顿价格的图例。记住，每次调用`plt.plot`时都必须添加一个`label`关键字，然后调用`plt.legend`。'
 - en: Notice that the sandwiches in our figure are in the opposite order of the sandwiches
     in the original figure. There is a Pyplot function that inverts the `y` axis;
     see if you can find it and use it to reverse the order of the sandwich list.
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: 请注意，我们图中的三明治的顺序与原始图中的三明治的顺序相反。Pyplot有一个函数可以反转`y`轴；看看你能否找到它并用它来反转三明治列表的顺序。
 - en: Zipf’s Law
+  id: totrans-87
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 齐夫定律
 - en: 'In almost any book, in almost any language, if you count the number of unique
     words the the number of times each word appears, you will find a remarkable pattern:
     the most common word appears twice as often as the second most common, at least
     approximately, three times as often as the third most common, and so on.'
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: 在几乎任何一本书中，无论是什么语言，如果你统计单词的唯一数量以及每个单词出现的次数，你都会发现一个显著的模式：最常见的单词出现的次数是第二常见单词的两倍，至少近似如此，第三常见单词出现的次数是第二常见单词的三倍，依此类推。
 - en: In general, if we sort the words in descending order of frequency, there is
     an inverse relationship between the rank of the words – first, second, third,
     etc. – and the number of times they appear. This observation was most famously
     made by George Kingsley Zipf, so it is called Zipf’s law.
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: 一般来说，如果我们按照词频降序排列单词，单词的排名（第一、第二、第三等）与它们出现的次数之间存在反比关系。这一观察最著名的是由乔治·金斯利·齐夫提出的，因此被称为齐夫定律。
 - en: 'To see if this law holds for the words in *War and Peace*, we’ll make a Zipf
     plot, which shows:'
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了查看这个定律是否适用于《战争与和平》中的单词，我们将制作一个齐夫图，显示：
 - en: The frequency of each word on the `y` axis, and
+  id: totrans-91
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`y`轴上每个单词的频率，以及'
 - en: The rank of each word on the `x` axis, starting from 1.
+  id: totrans-92
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`x`轴上每个单词的排名，从1开始。'
 - en: In the previous chapter, we looped through the book and made a string that contains
     all punctuation characters. Here are the results, which we will need again.
+  id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: 在上一章中，我们循环遍历了书中的内容，并创建了一个包含所有标点符号的字符串。以下是结果，我们将再次需要它们。
 - en: '[PRE23]'
+  id: totrans-94
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: The following code loops through the book and makes a dictionary that maps from
     each word to the number of times it appears.
+  id: totrans-95
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下代码循环遍历书中的内容，并创建一个字典，将每个单词映射到它出现的次数。
 - en: '[PRE24]'
+  id: totrans-96
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: 'In `unique_words`, the keys are words and the values are their frequencies.
     We can use the `values` function to get the values from the dictionary. The result
     has the type `dict_values`:'
+  id: totrans-97
   prefs: []
   type: TYPE_NORMAL
+  zh: 在`unique_words`中，键是单词，值是它们的频率。我们可以使用`values`函数从字典中获取值。结果的类型是`dict_values`：
 - en: '[PRE25]'
+  id: totrans-98
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: '[PRE26]'
+  id: totrans-99
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: Before we plot them, we have to sort them, but the `sort` function doesn’t work
     with `dict_values`.
+  id: totrans-100
   prefs: []
   type: TYPE_NORMAL
+  zh: 在绘制之前，我们必须对它们进行排序，但`sort`函数无法处理`dict_values`。
 - en: 'We can use `list` to make a list of frequencies:'
+  id: totrans-101
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用`list`来制作一个频率列表：
 - en: '[PRE27]'
+  id: totrans-102
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: '[PRE28]'
+  id: totrans-103
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: And now we can use `sort`. By default it sorts in ascending order, but we can
     pass a keyword argument to reverse the order.
+  id: totrans-104
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以使用`sort`。默认情况下，它按升序排序，但我们可以传递一个关键字参数来反转顺序。
 - en: '[PRE29]'
+  id: totrans-105
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: Now, for the ranks, we need a sequence that counts from 1 to `n`, where `n`
     is the number of elements in `freqs`. We can use the `range` function, which returns
     a value with type `range`.
+  id: totrans-106
   prefs: []
   type: TYPE_NORMAL
 - en: As a small example, here’s the range from 1 to 5.
+  id: totrans-107
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE30]'
+  id: totrans-108
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: '[PRE31]'
+  id: totrans-109
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: However, there’s a catch. If we use the range to make a list, we see that “the
     range from 1 to 5” includes 1, but it doesn’t include 5.
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE32]'
+  id: totrans-111
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: '[PRE33]'
+  id: totrans-112
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: 'That might seem strange, but it is often more convenient to use `range` when
     it is defined this way, rather than what might seem like the more natural way
     (see [https://www.cs.utexas.edu/users/EWD/transcriptions/EWD08xx/EWD831.html](https://www.cs.utexas.edu/users/EWD/transcriptions/EWD08xx/EWD831.html)).
     Anyway, we can get what we want by increasing the second argument by one:'
+  id: totrans-113
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE34]'
+  id: totrans-114
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: '[PRE35]'
+  id: totrans-115
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: 'So, finally, we can make a range that represents the ranks from `1` to `n`:'
+  id: totrans-116
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE36]'
+  id: totrans-117
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: '[PRE37]'
+  id: totrans-118
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE37]'
 - en: 'And now we can plot the frequencies versus the ranks:'
+  id: totrans-119
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE38]'
+  id: totrans-120
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: '![_images/06_plotting_78_0.png](../Images/31a70a27c80c3046cb62367fd70d7460.png)'
+  id: totrans-121
   prefs: []
   type: TYPE_IMG
 - en: 'The few most common words are very common, but the great majority of words
     are rare. So that’s consistent with Zipf’s law, but Zipf’s law is more specific.
     It claims that the frequencies should be inversely proportional to the ranks.
     If that’s true, we can write:'
+  id: totrans-122
   prefs: []
   type: TYPE_NORMAL
 - en: \(f = k / r\)
+  id: totrans-123
   prefs: []
   type: TYPE_NORMAL
 - en: where \(r\) is the rank of a word, \(f\) is its frequency, and \(k\) is an unknown
     constant of proportionality. If we take the log of both sides, we get
+  id: totrans-124
   prefs: []
   type: TYPE_NORMAL
 - en: \(\log f = \log k - \log r\)
+  id: totrans-125
   prefs: []
   type: TYPE_NORMAL
 - en: This equation implies that if we plot \(f\) versus \(r\) on a log-log scale,
     we expect to see a straight line with intercept at \(\log k\) and slope -1.
+  id: totrans-126
   prefs: []
   type: TYPE_NORMAL
 - en: Logarithmic Scales
+  id: totrans-127
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: We can use `plt.xscale` to plot the `x` axis on a log scale.
+  id: totrans-128
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE39]'
+  id: totrans-129
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: '![_images/06_plotting_81_0.png](../Images/9d58226c9d16ad1fb8a6110d8f0b6b0a.png)'
+  id: totrans-130
   prefs: []
   type: TYPE_IMG
 - en: And `plt.yscale` to plot the `y` axis on a log scale.
+  id: totrans-131
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE40]'
+  id: totrans-132
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE40]'
 - en: '![_images/06_plotting_83_0.png](../Images/e1210900dc3a7d4282ed90c81ec8fe1e.png)'
+  id: totrans-133
   prefs: []
   type: TYPE_IMG
 - en: The result is not quite a straight line, but it is close. We can get a sense
     of the slope by connecting the end points with a line. We’ll select the first
     and last elements from `xs`.
+  id: totrans-134
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE41]'
+  id: totrans-135
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE41]'
 - en: '[PRE42]'
+  id: totrans-136
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE42]'
 - en: And the first and last elements from `ys`.
+  id: totrans-137
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE43]'
+  id: totrans-138
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE43]'
 - en: '[PRE44]'
+  id: totrans-139
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE44]'
 - en: And plot a line between them.
+  id: totrans-140
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE45]'
+  id: totrans-141
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE45]'
 - en: '![_images/06_plotting_89_0.png](../Images/9225e34b69d7305d2e156443284c10e8.png)'
+  id: totrans-142
   prefs: []
   type: TYPE_IMG
 - en: The slope of this line is the “rise over run”, that is, the difference on the
     `y` axis divided by the difference on the `x` axis.
+  id: totrans-143
   prefs: []
   type: TYPE_NORMAL
 - en: 'We can compute the rise using `np.log10` to compute the log base 10 of the
     first and last values:'
+  id: totrans-144
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE46]'
+  id: totrans-145
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE46]'
 - en: '[PRE47]'
+  id: totrans-146
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE47]'
 - en: 'Then we can use `np.diff` to compute the difference between the elements:'
+  id: totrans-147
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE48]'
+  id: totrans-148
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE48]'
 - en: '[PRE49]'
+  id: totrans-149
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE49]'
 - en: In the following exercise, you’ll compute the run and the slope of the gray
     line.
+  id: totrans-150
   prefs: []
   type: TYPE_NORMAL
 - en: '**Exercise:** Use `log10` and `diff` to compute the run, that is, the difference
     on the `x` axis. Then divide the rise by the run to get the slope of the grey
     line. Is it close to -1, as Zipf’s law predicts?'
+  id: totrans-151
   prefs: []
   type: TYPE_NORMAL
 - en: Summary
+  id: totrans-152
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -582,5 +862,6 @@
     visualization, including lines and markers, values and labels on the axes, a legend
     and a title. The Zipf plot also shows the power of plotting data on logarithmic
     scales.
+  id: totrans-153
   prefs: []
   type: TYPE_NORMAL
