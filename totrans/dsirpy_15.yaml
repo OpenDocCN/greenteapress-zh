@@ -1,0 +1,338 @@
+- en: Huffman Code
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/DSIRP/huffman.html](https://allendowney.github.io/DSIRP/huffman.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/huffman.ipynb)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'A [Huffman code](https://en.wikipedia.org/wiki/Huffman_coding) is a “type of
+    optimal prefix code that is commonly used for lossless data compression”. There
+    are three parts of that definition we have to unpack: “code”, “prefix”, and “optimal”.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this context, a “code” is a mapping from symbols to bit strings. For example,
+    [ASCII](https://en.wikipedia.org/wiki/ASCII) is a character encoding that maps
+    from characters (like letters, numbers, and punctuation) to seven-bit integers.
+    Since all ASCII bit strings are the same length, it is a “fixed-length code”,
+    as contrasted with Huffman codes, which are “variable-length codes”.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In order to decode something encoded in a variable-length code, there has to
+    be some way to figure out where one bit string ends and the next begins. In general,
+    there are three ways to solve this problem:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: One option is to begin each bit string with a special sequence that indicates
+    its length. This is [how Unicode works](https://stackoverflow.com/questions/1543613/how-does-utf-8-variable-width-encoding-work).
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Another option is to end each bit string with a special sequence that marks
+    the end.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The third option is to use a “prefix code”, which is how Huffman codes work.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: A prefix code is a code where no whole bit string in the code is a prefix of
+    any bit string in the code. If a code has this property, we can decode it by reading
+    bits one at a time and checking to see whether we have completed a valid bit string.
+    If so, we know we are at the end of the bit string, because it cannot be the prefix
+    of another bit string.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'For example, the following is a prefix code with only three symbols:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: In this code, we can encode the string `xyz` with the bit string `101001`, and
+    we can decode the result without ambiguity.
+  prefs: []
+  type: TYPE_NORMAL
+- en: So that’s what it means to say that a Huffman code is a prefix code; finally,
+    Huffman codes are “optimal” in the sense that they give short codes to the most
+    common symbols and longer codes to the least common symbols. The result is that
+    they minimize the average number of bits needed to encode a sequence of symbols.
+  prefs: []
+  type: TYPE_NORMAL
+- en: However, in order to achieve this feat, we have to know the relative frequencies
+    of the symbols. One way to do that is to start with a “corpus”, which is a text
+    that contains the symbols in the proportions we expect for the text we will encode.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As an example, I’ll use the text from the [Huffman code Wikipedia page](https://en.wikipedia.org/wiki/Huffman_coding).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can use a `Counter` to count the number of times each symbol appears in this
+    text.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now let’s see how we can use these counts to build a Huffman code. The first
+    step is to build a Huffman tree, which is a binary tree where every node contains
+    a count and some nodes contain symbols.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To make a Huffman tree, we start with a sequence of nodes, one for each symbol.
+    To represent nodes, I’ll use a `namedtuple`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: For example, here’s a node that represents the symbol `a` with count `4`. Since
+    this node has no children, it is a leaf node.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here’s another leaf node that represents the symbol `n` and its count.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: One reason we’re using a namedtuple is that it behaves like a tuple, so if we
+    compare two `Node` objects, we get a tuple-like sorting order.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: If two nodes have the same `count`, they get sorted in alphabetical order by
+    `letter`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Making trees
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Given these two leaf nodes, we can make a tree like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: Because `root` has children, it is not a leaf node; it is an interior node.
+    In a Huffman tree, the interior nodes do not represent symbols, so I have set
+    `letter` to the null character `\0`. The count of an interior node is the sum
+    of the count of its children.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now, to build a Huffman tree, we’ll start with a collection of nodes, one for
+    each symbol, and build the tree “bottom up” by following these steps:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Remove the node with the lowest count.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Remove the node with the next lowest count.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Make a new node with the nodes we just removed as children.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Put the new node back into the collection.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: If there’s only one node in the collection, it’s the Huffman tree, and we’re
+    done.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: In general, we could use any kind of collection, but if we look at the operations
+    required by this algorithm, the most efficient option is a heap.
+  prefs: []
+  type: TYPE_NORMAL
+- en: But we’ll start by iterating through the `Counter` and making a list of `Node`
+    objects,
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: Next we’ll use the heap module to convert the list to a heap.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can use the heap to make a tree.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** Write a function called `make_tree` that takes a heap of `Node`
+    objects and uses the algorithm I described to make and return a Huffman tree.
+    In other words, it should join up the nodes into a tree and return the root node.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Use this code to test it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: Drawing the Tree
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: To see what it looks like, we’ll use NetworkX and a library called EoN.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following function traverses the Huffman tree and makes a NetworkX `DiGraph`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following function traverses the tree again and collects the node labels
+    in a dictionary.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we’re ready to draw.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/huffman_39_0.png](../Images/4a7702b28bb07530b390c6085ebb1eac.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The result might not be identical to the tree on [the Wikipedia page](https://en.wikipedia.org/wiki/Huffman_coding),
+    but a letter in our tree should be on the same level as the same letter in their
+    tree.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Making the Table
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The following function traverses the tree, keeping track of the path as it goes.
+    When it finds a leaf node, it makes an entry in the table.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: Encoding
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: We can use the table to encode a string by looking up each symbol in the string
+    and joining the results into a bit string.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s an example, noting that we can encode strings other than the corpus we
+    started with, provided that it contains no symbols that were not in the corpus.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: Decoding
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: To decode the bit string, we start at the top of the tree and follow the path,
+    turning left when we see a `0` and right when we see a `1`. If we get to a leaf
+    node, we have decoded a symbol, so we should record it and then jump back to the
+    top of the tree to start decoding the next symbol.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** Write a function called `decode` that takes as parameters a string
+    on 0s and 1s and a Huffman tree. It should decode the message and return it as
+    a string.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Data Structures and Information Retrieval in Python*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Copyright 2021 Allen Downey
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'License: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  prefs: []
+  type: TYPE_NORMAL

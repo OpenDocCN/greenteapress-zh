@@ -1,0 +1,300 @@
+- en: Merge Sort
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/DSIRP/mergesort.html](https://allendowney.github.io/DSIRP/mergesort.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/mergesort.ipynb)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Implementing Merge Sort
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '[Merge sort](https://en.wikipedia.org/wiki/Merge_sort) is a divide and conquer
+    strategy:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Divide the sequence into two halves,
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Sort the halves, and
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Merge the sorted sub-sequences into a single sequence.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Since step 2 involves sorting, this algorithm is recursive, so we need a base
+    case. There are two options:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: If the size falls below some threshold, we can use another sort algorithm.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: If the size of a sub-sequence is 1, it is already sorted.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[Comparison with other sort algorithms](https://en.wikipedia.org/wiki/Merge_sort#Comparison_with_other_sort_algorithms)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: To implement merge sort, I think it’s helpful to start with a non-recursive
+    version that uses the Python `sort` function to sort the sub-sequences.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise:** Write a function called `merge` that takes two sorted sequences,
+    `left` and `right`, and returns a sequence that contains all elements from `left`
+    and `right`, in ascending order (or non-decreasing order, to be more precise).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Note: this function is not conceptually difficult, but it is notoriously tricky
+    to get all of the edge cases right without making the function unreadable. Take
+    it as a challenge to write a version that is correct, concise, and readable. I
+    found that I could write it more concisely as a generator function.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: You can use the following example to test your code.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise:** Starting with `merge_sort_norec`, write a function called `merge_sort_rec`
+    that’s fully recursive; that is, instead of using Python’s `sort` function to
+    sort the halves, it should use `merge_sort_rec`. Of course, you will need a base
+    case to avoid an infinite recursion.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Test your method by running the code in the next cell, then use `test_merge_sort_rec`,
+    below, to check the performance of your function.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: Heap Merge
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Suppose we want to merge more than two sub-sequences. A convenient way to do
+    that is to use a heap. For example, here are three sorted sub-sequences.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'For each sequence, I’ll make an iterator and push onto the heap a tuple that
+    contains:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The first element from the iterator,
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: An index that’s different for each iterator, and
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The iterator itself.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: When the heap compares two of these tuples, it compares the elements first.
+    If there’s a tie, it compares the indices. Since the indices are unique, there
+    can’t be a tie, so we never have to compare iterators (which would be an error).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: When we pop a value from the heap, we get the tuple with the smallest value.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: If we know that the iterator has more values, we can use `next` to get the next
+    one and then push a tuple back into the heap.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: If we repeat this process, we’ll get all elements from all sub-sequences in
+    ascending order.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'However, we have to deal with the case where the iterator is empty. In Python,
+    the only way to check is to call `next` and take your chances! If there are no
+    more elements in the iterator, `next` raises a `StopIteration` exception, which
+    you can handle with a `try` statement, like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise:** Write a generator function called `heapmerge` that takes a list
+    of sequences and yields the elements from the sequences in increasing order.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: You can use the following examples to test your function.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: The `heapq` module provides a function called `merge` that implements this algorithm.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Comparing sort algorithms
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: NumPy provides implementations of three sorting algorithms, quicksort, mergesort,
+    and heapsort.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In theory that are all in `O(n log n)`. Let’s see what that looks like when
+    we plot runtime versus problem size.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/mergesort_40_1.png](../Images/4f0cc84b465ad18914fad171735ade35.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: quicksort is hard to distinguish from linear, up to about 10 million elements.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/mergesort_42_1.png](../Images/3030a678a5c410add211f7edc25a32c8.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Merge sort is similar, maybe with some upward curvature.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/mergesort_44_1.png](../Images/dc01af810014291c022b7d3fb58ee825.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The three methods are effectively linear over this range of problem sizes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: And their run times are about the same, with quicksort being the fastest, despite
+    being the one with the worst asympotic performance in the worst case.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now let’s see how our implementation of merge sort does.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE37]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/mergesort_46_1.png](../Images/3d35c7c30b9c019bf699a84cd9d5f8f6.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: If things go according to plan, our implementation of merge sort should be close
+    to linear, or a little steeper.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*Data Structures and Information Retrieval in Python*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Copyright 2021 Allen Downey
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'License: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  prefs: []
+  type: TYPE_NORMAL

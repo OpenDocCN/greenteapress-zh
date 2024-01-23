@@ -1,0 +1,867 @@
+- en: Estimating Counts
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/ThinkBayes2/chap05.html](https://allendowney.github.io/ThinkBayes2/chap05.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: In the previous chapter we solved problems that involve estimating proportions.
+    In the Euro problem, we estimated the probability that a coin lands heads up,
+    and in the exercises, you estimated a batting average, the fraction of people
+    who cheat on their taxes, and the chance of shooting down an invading alien.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Clearly, some of these problems are more realistic than others, and some are
+    more useful than others.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this chapter, we’ll work on problems related to counting, or estimating the
+    size of a population. Again, some of the examples will seem silly, but some of
+    them, like the German Tank problem, have real applications, sometimes in life
+    and death situations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Train Problem
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'I found the train problem in Frederick Mosteller’s, [*Fifty Challenging Problems
+    in Probability with Solutions*](https://store.doverpublications.com/0486653552.html):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: “A railroad numbers its locomotives in order 1…N. One day you see a locomotive
+    with the number 60\. Estimate how many locomotives the railroad has.”
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'Based on this observation, we know the railroad has 60 or more locomotives.
+    But how many more? To apply Bayesian reasoning, we can break this problem into
+    two steps:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: What did we know about \(N\) before we saw the data?
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: For any given value of \(N\), what is the likelihood of seeing the data (a locomotive
+    with number 60)?
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The answer to the first question is the prior. The answer to the second is the
+    likelihood.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We don’t have much basis to choose a prior, so we’ll start with something simple
+    and then consider alternatives. Let’s assume that \(N\) is equally likely to be
+    any value from 1 to 1000.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here’s the prior distribution:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now let’s figure out the likelihood of the data. In a hypothetical fleet of
+    \(N\) locomotives, what is the probability that we would see number 60? If we
+    assume that we are equally likely to see any locomotive, the chance of seeing
+    any particular one is \(1/N\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here’s the function that does the update:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: This function might look familiar; it is the same as the update function for
+    the dice problem in the previous chapter. In terms of likelihood, the train problem
+    is the same as the dice problem.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here’s the update:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Here’s what the posterior looks like:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]</details> ![_images/3fd4516774234abdc207c2e19bea0991f19f2b933e638bd40ce82c44782249c5.png](../Images/c8884d0e433a999659931b4e047c3514.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Not surprisingly, all values of \(N\) below 60 have been eliminated.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The most likely value, if you had to guess, is 60.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: That might not seem like a very good guess; after all, what are the chances
+    that you just happened to see the train with the highest number? Nevertheless,
+    if you want to maximize the chance of getting the answer exactly right, you should
+    guess 60.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'But maybe that’s not the right goal. An alternative is to compute the mean
+    of the posterior distribution. Given a set of possible quantities, \(q_i\), and
+    their probabilities, \(p_i\), the mean of the distribution is:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[\mathrm{mean} = \sum_i p_i q_i\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Which we can compute like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Or we can use the method provided by `Pmf`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: The mean of the posterior is 333, so that might be a good guess if you want
+    to minimize error. If you played this guessing game over and over, using the mean
+    of the posterior as your estimate would minimize the [mean squared error](http://en.wikipedia.org/wiki/Minimum_mean_square_error)
+    over the long run.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Sensitivity to the Prior
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The prior I used in the previous section is uniform from 1 to 1000, but I offered
+    no justification for choosing a uniform distribution or that particular upper
+    bound. We might wonder whether the posterior distribution is sensitive to the
+    prior. With so little data—only one observation—it is.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This table shows what happens as we vary the upper bound:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '|  | Posterior mean |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Upper bound |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 500 | 207.079228 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1000 | 333.419893 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2000 | 552.179017 |'
+  prefs: []
+  type: TYPE_TB
+- en: As we vary the upper bound, the posterior mean changes substantially. So that’s
+    bad.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'When the posterior is sensitive to the prior, there are two ways to proceed:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Get more data.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Get more background information and choose a better prior.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: With more data, posterior distributions based on different priors tend to converge.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For example, suppose that in addition to train 60 we also see trains 30 and
+    90.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here’s how the posterior means depend on the upper bound of the prior, when
+    we observe three trains:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '|  | Posterior mean |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Upper bound |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 500 | 151.849588 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1000 | 164.305586 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2000 | 171.338181 |'
+  prefs: []
+  type: TYPE_TB
+- en: The differences are smaller, but apparently three trains are not enough for
+    the posteriors to converge.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Power Law Prior
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: If more data are not available, another option is to improve the priors by gathering
+    more background information. It is probably not reasonable to assume that a train-operating
+    company with 1000 locomotives is just as likely as a company with only 1.
+  prefs: []
+  type: TYPE_NORMAL
+- en: With some effort, we could probably find a list of companies that operate locomotives
+    in the area of observation. Or we could interview an expert in rail shipping to
+    gather information about the typical size of companies.
+  prefs: []
+  type: TYPE_NORMAL
+- en: But even without getting into the specifics of railroad economics, we can make
+    some educated guesses. In most fields, there are many small companies, fewer medium-sized
+    companies, and only one or two very large companies.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In fact, the distribution of company sizes tends to follow a power law, as Robert
+    Axtell reports in *Science* ([http://www.sciencemag.org/content/293/5536/1818.full.pdf](http://www.sciencemag.org/content/293/5536/1818.full.pdf)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: This law suggests that if there are 1000 companies with fewer than 10 locomotives,
+    there might be 100 companies with 100 locomotives, 10 companies with 1000, and
+    possibly one company with 10,000 locomotives.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Mathematically, a power law means that the number of companies with a given
+    size, \(N\), is proportional to \((1/N)^{\alpha}\), where \(\alpha\) is a parameter
+    that is often near 1.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We can construct a power law prior like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: <details class="hide below-input"><summary aria-label="Toggle hidden content">Show
+    code cell output Hide code cell output</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE13]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: For comparison, here’s the uniform prior again.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Here’s what a power law prior looks like, compared to the uniform prior:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]</details> ![_images/1540e9adc2d63655ca44e42defbf777d454d6ae8554df5ec7344b6a0105b19ae.png](../Images/6fb82f3e2199e7281ec74969875b78ca.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s the update for both priors.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here are the posterior distributions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE18]</details> ![_images/39081a966b6588f813b7a938dd08689cf7e276519770fc9afa2e8681ab159173.png](../Images/e20c7df561b596edfd53a82f583bd230.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The power law gives less prior probability to high values, which yields lower
+    posterior means, and less sensitivity to the upper bound.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here’s how the posterior means depend on the upper bound when we use a power
+    law prior and observe three trains:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '|  | Posterior mean |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Upper bound |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 500 | 130.708470 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1000 | 133.275231 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2000 | 133.997463 |'
+  prefs: []
+  type: TYPE_TB
+- en: Now the differences are much smaller. In fact, with an arbitrarily large upper
+    bound, the mean converges on 134.
+  prefs: []
+  type: TYPE_NORMAL
+- en: So the power law prior is more realistic, because it is based on general information
+    about the size of companies, and it behaves better in practice.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Credible Intervals
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'So far we have seen two ways to summarize a posterior distribution: the value
+    with the highest posterior probability (the MAP) and the posterior mean. These
+    are both **point estimates**, that is, single values that estimate the quantity
+    we are interested in.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Another way to summarize a posterior distribution is with percentiles. If you
+    have taken a standardized test, you might be familiar with percentiles. For example,
+    if your score is the 90th percentile, that means you did as well as or better
+    than 90% of the people who took the test.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If we are given a value, `x`, we can compute its **percentile rank** by finding
+    all values less than or equal to `x` and adding up their probabilities.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`Pmf` provides a method that does this computation. So, for example, we can
+    compute the probability that the company has less than or equal to 100 trains:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: With a power law prior and a dataset of three trains, the result is about 29%.
+    So 100 trains is the 29th percentile.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Going the other way, suppose we want to compute a particular percentile; for
+    example, the median of a distribution is the 50th percentile. We can compute it
+    by adding up probabilities until the total exceeds 0.5. Here’s a function that
+    does it:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: The loop uses `items`, which iterates the quantities and probabilities in the
+    distribution. Inside the loop we add up the probabilities of the quantities in
+    order. When the total equals or exceeds `prob`, we return the corresponding quantity.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This function is called `quantile` because it computes a quantile rather than
+    a percentile. The difference is the way we specify `prob`. If `prob` is a percentage
+    between 0 and 100, we call the corresponding quantity a percentile. If `prob`
+    is a probability between 0 and 1, we call the corresponding quantity a **quantile**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here’s how we can use this function to compute the 50th percentile of the posterior
+    distribution:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result, 113 trains, is the median of the posterior distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`Pmf` provides a method called `quantile` that does the same thing. We can
+    call it like this to compute the 5th and 95th percentiles:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The result is the interval from 91 to 243 trains, which implies:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The probability is 5% that the number of trains is less than or equal to 91.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The probability is 5% that the number of trains is greater than 243.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Therefore the probability is 90% that the number of trains falls between 91
+    and 243 (excluding 91 and including 243). For this reason, this interval is called
+    a 90% **credible interval**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`Pmf` also provides `credible_interval`, which computes an interval that contains
+    the given probability.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: The German Tank Problem
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: During World War II, the Economic Warfare Division of the American Embassy in
+    London used statistical analysis to estimate German production of tanks and other
+    equipment.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Western Allies had captured log books, inventories, and repair records that
+    included chassis and engine serial numbers for individual tanks.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Analysis of these records indicated that serial numbers were allocated by manufacturer
+    and tank type in blocks of 100 numbers, that numbers in each block were used sequentially,
+    and that not all numbers in each block were used. So the problem of estimating
+    German tank production could be reduced, within each block of 100 numbers, to
+    a form of the train problem.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Based on this insight, American and British analysts produced estimates substantially
+    lower than estimates from other forms of intelligence. And after the war, records
+    indicated that they were substantially more accurate.
+  prefs: []
+  type: TYPE_NORMAL
+- en: They performed similar analyses for tires, trucks, rockets, and other equipment,
+    yielding accurate and actionable economic intelligence.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The German tank problem is historically interesting; it is also a nice example
+    of real-world application of statistical estimation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For more on this problem, see [this Wikipedia page](https://en.wikipedia.org/wiki/German_tank_problem)
+    and Ruggles and Brodie, “An Empirical Approach to Economic Intelligence in World
+    War II”, *Journal of the American Statistical Association*, March 1947, [available
+    here](https://web.archive.org/web/20170123132042/https://www.cia.gov/library/readingroom/docs/CIA-RDP79R01001A001300010013-3.pdf).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Informative Priors
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Among Bayesians, there are two approaches to choosing prior distributions. Some
+    recommend choosing the prior that best represents background information about
+    the problem; in that case the prior is said to be **informative**. The problem
+    with using an informative prior is that people might have different information
+    or interpret it differently. So informative priors might seem arbitrary.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The alternative is a so-called **uninformative prior**, which is intended to
+    be as unrestricted as possible, in order to let the data speak for itself. In
+    some cases you can identify a unique prior that has some desirable property, like
+    representing minimal prior information about the estimated quantity.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Uninformative priors are appealing because they seem more objective. But I am
+    generally in favor of using informative priors. Why? First, Bayesian analysis
+    is always based on modeling decisions. Choosing the prior is one of those decisions,
+    but it is not the only one, and it might not even be the most subjective. So even
+    if an uninformative prior is more objective, the entire analysis is still subjective.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Also, for most practical problems, you are likely to be in one of two situations:
+    either you have a lot of data or not very much. If you have a lot of data, the
+    choice of the prior doesn’t matter; informative and uninformative priors yield
+    almost the same results. If you don’t have much data, using relevant background
+    information (like the power law distribution) makes a big difference.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: And if, as in the German tank problem, you have to make life and death decisions
+    based on your results, you should probably use all of the information at your
+    disposal, rather than maintaining the illusion of objectivity by pretending to
+    know less than you do.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: This chapter introduces the train problem, which turns out to have the same
+    likelihood function as the dice problem, and which can be applied to the German
+    Tank problem. In all of these examples, the goal is to estimate a count, or the
+    size of a population.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the next chapter, I’ll introduce “odds” as an alternative to probabilities,
+    and Bayes’s Rule as an alternative form of Bayes’s Theorem. We’ll compute distributions
+    of sums and products, and use them to estimate the number of Members of Congress
+    who are corrupt, among other problems.
+  prefs: []
+  type: TYPE_NORMAL
+- en: But first, you might want to work on these exercises.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exercises
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '**Exercise:** Suppose you are giving a talk in a large lecture hall and the
+    fire marshal interrupts because they think the audience exceeds 1200 people, which
+    is the safe capacity of the room.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You think there are fewer then 1200 people, and you offer to prove it. It would
+    take too long to count, so you try an experiment:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: You ask how many people were born on May 11 and two people raise their hands.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: You ask how many were born on May 23 and 1 person raises their hand.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Finally, you ask how many were born on August 1, and no one raises their hand.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'How many people are in the audience? What is the probability that there are
+    more than 1200 people. Hint: Remember the binomial distribution.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE30]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE31]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE33]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/e88d06c8d69defdc14f80513a529c748ae82947f1d46597958f1e5294d141b84.png](../Images/9b3cd9ca937aff05ce0fa947721ceea5.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">Show code
+    cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE36]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE37]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE38]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** I often see [rabbits](https://en.wikipedia.org/wiki/Eastern_cottontail)
+    in the garden behind my house, but it’s not easy to tell them apart, so I don’t
+    really know how many there are.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Suppose I deploy a motion-sensing [camera trap](https://en.wikipedia.org/wiki/Camera_trap)
+    that takes a picture of the first rabbit it sees each day. After three days, I
+    compare the pictures and conclude that two of them are the same rabbit and the
+    other is different.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How many rabbits visit my garden?
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To answer this question, we have to think about the prior distribution and
+    the likelihood of the data:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: I have sometimes seen four rabbits at the same time, so I know there are at
+    least that many. I would be surprised if there were more than 10\. So, at least
+    as a starting place, I think a uniform prior from 4 to 10 is reasonable.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: To keep things simple, let’s assume that all rabbits who visit my garden are
+    equally likely to be caught by the camera trap in a given day. Let’s also assume
+    it is guaranteed that the camera trap gets a picture every day.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE39]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE40]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE41]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/fae1b64345d5eccfc5958883cb7a5da6c375cfdd3dc7f01e3f83f721ab0ee87c.png](../Images/bf83414453de1f8eb1a8bd38012ca56e.png)</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** Suppose that in the criminal justice system, all prison sentences
+    are either 1, 2, or 3 years, with an equal number of each. One day, you visit
+    a prison and choose a prisoner at random. What is the probability that they are
+    serving a 3-year sentence? What is the average remaining sentence of the prisoners
+    you observe?'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE42]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 0.333333 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 0.333333 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 0.333333 |</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE43]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 0.166667 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 0.333333 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 0.500000 |</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE44]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE45]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** If I chose a random adult in the U.S., what is the probability
+    that they have a sibling? To be precise, what is the probability that their mother
+    has had at least one other child.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[This article from the Pew Research Center](https://www.pewsocialtrends.org/2015/05/07/family-size-among-mothers/)
+    provides some relevant data.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'From it, I extracted the following distribution of family size for mothers
+    in the U.S. who were 40-44 years old in 2014:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE46]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/aab4093f29e589364a6225822e5476df7fa0e3902c8c5e1cf5f5455a41f5741e.png](../Images/7b585ad781658a49a136c0070208eb0b.png)</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: For simplicity, let’s assume that all families in the 4+ category have exactly
+    4 children.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE47]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 0.094828 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 0.353448 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 0.310345 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 4 | 0.241379 |</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE48]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE49]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE50]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE51]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** The [Doomsday argument](https://en.wikipedia.org/wiki/Doomsday_argument)
+    is “a probabilistic argument that claims to predict the number of future members
+    of the human species given an estimate of the total number of humans born so far.”'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Suppose there are only two kinds of intelligent civilizations that can happen
+    in the universe. The “short-lived” kind go exinct after only 200 billion individuals
+    are born. The “long-lived” kind survive until 2,000 billion individuals are born.
+    And suppose that the two kinds of civilization are equally likely. Which kind
+    of civilization do you think we live in?
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Doomsday argument says we can use the total number of humans born so far
+    as data. According to the [Population Reference Bureau](https://www.prb.org/howmanypeoplehaveeverlivedonearth/),
+    the total number of people who have ever lived is about 108 billion.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Since you were born quite recently, let’s assume that you are, in fact, human
+    being number 108 billion. If \(N\) is the total number who will ever live and
+    we consider you to be a randomly-chosen person, it is equally likely that you
+    could have been person 1, or \(N\), or any number in between. So what is the probability
+    that you would be number 108 billion?
+  prefs: []
+  type: TYPE_NORMAL
+- en: Given this data and dubious prior, what is the probability that our civilization
+    will be short-lived?
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE52]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE53]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 200 | 0.909091 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2000 | 0.090909 |</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE54]</details>'
+  prefs: []
+  type: TYPE_NORMAL

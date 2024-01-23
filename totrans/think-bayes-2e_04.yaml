@@ -1,0 +1,1138 @@
+- en: Probability
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/ThinkBayes2/chap01.html](https://allendowney.github.io/ThinkBayes2/chap01.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: The foundation of Bayesian statistics is Bayes’s Theorem, and the foundation
+    of Bayes’s Theorem is conditional probability.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this chapter, we’ll start with conditional probability, derive Bayes’s Theorem,
+    and demonstrate it using a real dataset. In the next chapter, we’ll use Bayes’s
+    Theorem to solve problems related to conditional probability. In the chapters
+    that follow, we’ll make the transition from Bayes’s Theorem to Bayesian statistics,
+    and I’ll explain the difference.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Linda the Banker
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'To introduce conditional probability, I’ll use an example from a [famous experiment
+    by Tversky and Kahneman](https://en.wikipedia.org/wiki/Conjunction_fallacy), who
+    posed the following question:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Linda is 31 years old, single, outspoken, and very bright. She majored in philosophy.
+    As a student, she was deeply concerned with issues of discrimination and social
+    justice, and also participated in anti-nuclear demonstrations. Which is more probable?
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Linda is a bank teller.
+  prefs:
+  - PREF_BQ
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Linda is a bank teller and is active in the feminist movement.
+  prefs:
+  - PREF_BQ
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Many people choose the second answer, presumably because it seems more consistent
+    with the description. It seems uncharacteristic if Linda is *just* a bank teller;
+    it seems more consistent if she is also a feminist.
+  prefs: []
+  type: TYPE_NORMAL
+- en: But the second answer cannot be “more probable”, as the question asks. Suppose
+    we find 1000 people who fit Linda’s description and 10 of them work as bank tellers.
+    How many of them are also feminists? At most, all 10 of them are; in that case,
+    the two options are *equally* probable. If fewer than 10 are, the second option
+    is *less* probable. But there is no way the second option can be *more* probable.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If you were inclined to choose the second option, you are in good company.
+    The biologist [Stephen J. Gould wrote](https://doi.org/10.1080/09332480.1989.10554932)
+    :'
+  prefs: []
+  type: TYPE_NORMAL
+- en: I am particularly fond of this example because I know that the [second] statement
+    is least probable, yet a little [homunculus](https://en.wikipedia.org/wiki/Homunculus_argument)
+    in my head continues to jump up and down, shouting at me, “but she can’t just
+    be a bank teller; read the description.”
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: If the little person in your head is still unhappy, maybe this chapter will
+    help.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Probability
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'At this point I should provide a definition of “probability”, but that [turns
+    out to be surprisingly difficult](https://en.wikipedia.org/wiki/Probability_interpretations).
+    To avoid getting stuck before we start, we will use a simple definition for now
+    and refine it later: A **probability** is a fraction of a finite set.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: For example, if we survey 1000 people, and 20 of them are bank tellers, the
+    fraction that work as bank tellers is 0.02 or 2%. If we choose a person from this
+    population at random, the probability that they are a bank teller is 2%. By “at
+    random” I mean that every person in the dataset has the same chance of being chosen.
+  prefs: []
+  type: TYPE_NORMAL
+- en: With this definition and an appropriate dataset, we can compute probabilities
+    by counting. To demonstrate, I’ll use data from the [General Social Survey](http://gss.norc.org/)
+    (GSS).
+  prefs: []
+  type: TYPE_NORMAL
+- en: I’ll use Pandas to read the data and store it in a `DataFrame`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | caseid | year | age | sex | polviews | partyid | indus10 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 1 | 1974 | 21.0 | 1 | 4.0 | 2.0 | 4970.0 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 2 | 1974 | 41.0 | 1 | 5.0 | 0.0 | 9160.0 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 5 | 1974 | 58.0 | 2 | 6.0 | 1.0 | 2670.0 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 6 | 1974 | 30.0 | 1 | 5.0 | 4.0 | 6870.0 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 4 | 7 | 1974 | 48.0 | 1 | 5.0 | 4.0 | 7860.0 |'
+  prefs: []
+  type: TYPE_TB
+- en: The `DataFrame` has one row for each person surveyed and one column for each
+    variable I selected.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The columns are
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`caseid`: Respondent identifier.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`year`: Year when the respondent was surveyed.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`age`: Respondent’s age when surveyed.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`sex`: Male or female.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`polviews`: Political views on a range from liberal to conservative.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`partyid`: Political party affiliation, Democrat, Independent, or Republican.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`indus10`: [Code](https://www.census.gov/cgi-bin/sssd/naics/naicsrch?chart=2007)
+    for the industry the respondent works in.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Let’s look at these variables in more detail, starting with `indus10`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Fraction of Bankers
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'The code for “Banking and related activities” is 6870, so we can select bankers
+    like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is a Pandas `Series` that contains the Boolean values `True` and
+    `False`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If we use the `sum` function on this `Series`, it treats `True` as 1 and `False`
+    as 0, so the total is the number of bankers.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: In this dataset, there are 728 bankers.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To compute the *fraction* of bankers, we can use the `mean` function, which
+    computes the fraction of `True` values in the `Series`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: About 1.5% of the respondents work in banking, so if we choose a random person
+    from the dataset, the probability they are a banker is about 1.5%.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Probability Function
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'I’ll put the code from the previous section in a function that takes a Boolean
+    series and returns a probability:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'So we can compute the fraction of bankers like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Now let’s look at another variable in this dataset. The values of the column
+    `sex` are encoded like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: So we can make a Boolean series that is `True` for female respondents and `False`
+    otherwise.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: And use it to compute the fraction of respondents who are women.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: The fraction of women in this dataset is higher than in the adult U.S. population
+    because [the GSS does not include people living in institutions](https://gss.norc.org/faq)
+    like prisons and military housing, and those populations are more likely to be
+    male.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Political Views and Parties
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The other variables we’ll consider are `polviews`, which describes the political
+    views of the respondents, and `partyid`, which describes their affiliation with
+    a political party.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The values of `polviews` are on a seven-point scale:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: I’ll define `liberal` to be `True` for anyone whose response is “Extremely liberal”,
+    “Liberal”, or “Slightly liberal”.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s the fraction of respondents who are liberal by this definition.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: If we choose a random person in this dataset, the probability they are liberal
+    is about 27%.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The values of `partyid` are encoded like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'I’ll define `democrat` to include respondents who chose “Strong democrat” or
+    “Not strong democrat”:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here’s the fraction of respondents who are Democrats, by this definition.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: Conjunction
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Now that we have a definition of probability and a function that computes it,
+    let’s move on to conjunction.
+  prefs: []
+  type: TYPE_NORMAL
+- en: “Conjunction” is another name for the logical `and` operation. If you have two
+    [propositions](https://en.wikipedia.org/wiki/Proposition), `A` and `B`, the conjunction
+    `A and B` is `True` if both `A` and `B` are `True`, and `False` otherwise.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If we have two Boolean series, we can use the `&` operator to compute their
+    conjunction. For example, we have already computed the probability that a respondent
+    is a banker.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'And the probability that they are a Democrat:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Now we can compute the probability that a respondent is a banker *and* a Democrat:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: As we should expect, `prob(banker & democrat)` is less than `prob(banker)`,
+    because not all bankers are Democrats.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We expect conjunction to be commutative; that is, `A & B` should be the same
+    as `B & A`. To check, we can also compute `prob(democrat & banker)`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: As expected, they are the same.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Conditional Probability
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Conditional probability is a probability that depends on a condition, but that
+    might not be the most helpful definition. Here are some examples:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: What is the probability that a respondent is a Democrat, given that they are
+    liberal?
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: What is the probability that a respondent is female, given that they are a banker?
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: What is the probability that a respondent is liberal, given that they are female?
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Let’s start with the first one, which we can interpret like this: “Of all the
+    respondents who are liberal, what fraction are Democrats?”'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We can compute this probability in two steps:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Select all respondents who are liberal.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Compute the fraction of the selected respondents who are Democrats.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'To select liberal respondents, we can use the bracket operator, `[]`, like
+    this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`selected` contains the values of `democrat` for liberal respondents, so `prob(selected)`
+    is the fraction of liberals who are Democrats:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'A little more than half of liberals are Democrats. If that result is lower
+    than you expected, keep in mind:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: We used a somewhat strict definition of “Democrat”, excluding Independents who
+    “lean” democratic.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The dataset includes respondents as far back as 1974; in the early part of this
+    interval, there was less alignment between political views and party affiliation,
+    compared to the present.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Let’s try the second example, “What is the probability that a respondent is
+    female, given that they are a banker?” We can interpret that to mean, “Of all
+    respondents who are bankers, what fraction are female?”
+  prefs: []
+  type: TYPE_NORMAL
+- en: Again, we’ll use the bracket operator to select only the bankers and `prob`
+    to compute the fraction that are female.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: About 77% of the bankers in this dataset are female.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s wrap this computation in a function. I’ll define `conditional` to take
+    two Boolean series, `proposition` and `given`, and compute the conditional probability
+    of `proposition` conditioned on `given`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can use `conditional` to compute the probability that a respondent is liberal
+    given that they are female.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE37]'
+  prefs: []
+  type: TYPE_PRE
+- en: About 28% of female respondents are liberal.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I included the keyword, `given`, along with the parameter, `female`, to make
+    this expression more readable.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Conditional Probability Is Not Commutative
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: We have seen that conjunction is commutative; that is, `prob(A & B)` is always
+    equal to `prob(B & A)`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: But conditional probability is *not* commutative; that is, `conditional(A, B)`
+    is not the same as `conditional(B, A)`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: That should be clear if we look at an example. Previously, we computed the probability
+    a respondent is female, given that they are banker.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE39]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The result shows that the majority of bankers are female. That is not the same
+    as the probability that a respondent is a banker, given that they are female:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE40]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE41]'
+  prefs: []
+  type: TYPE_PRE
+- en: Only about 2% of female respondents are bankers.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I hope this example makes it clear that conditional probability is not commutative,
+    and maybe it was already clear to you. Nevertheless, it is a common error to confuse
+    `conditional(A, B)` and `conditional(B, A)`. We’ll see some examples later.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Condition and Conjunction
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: We can combine conditional probability and conjunction. For example, here’s
+    the probability a respondent is female, given that they are a liberal Democrat.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE42]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE43]'
+  prefs: []
+  type: TYPE_PRE
+- en: About 57% of liberal Democrats are female.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'And here’s the probability they are a liberal female, given that they are a
+    banker:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE44]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE45]'
+  prefs: []
+  type: TYPE_PRE
+- en: About 17% of bankers are liberal women.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Laws of Probability
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'In the next few sections, we’ll derive three relationships between conjunction
+    and conditional probability:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Theorem 1: Using a conjunction to compute a conditional probability.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Theorem 2: Using a conditional probability to compute a conjunction.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Theorem 3: Using `conditional(A, B)` to compute `conditional(B, A)`.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Theorem 3 is also known as Bayes’s Theorem.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'I’ll write these theorems using mathematical notation for probability:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \(P(A)\) is the probability of proposition \(A\).
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: \(P(A~\mathrm{and}~B)\) is the probability of the conjunction of \(A\) and \(B\),
+    that is, the probability that both are true.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: \(P(A | B)\) is the conditional probability of \(A\) given that \(B\) is true.
+    The vertical line between \(A\) and \(B\) is pronounced “given”.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: With that, we are ready for Theorem 1.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Theorem 1
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'What fraction of bankers are female? We have already seen one way to compute
+    the answer:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Use the bracket operator to select the bankers, then
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Use `mean` to compute the fraction of bankers who are female.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'We can write these steps like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE46]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE47]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Or we can use the `conditional` function, which does the same thing:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE48]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE49]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'But there is another way to compute this conditional probability, by computing
+    the ratio of two probabilities:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The fraction of respondents who are female bankers, and
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The fraction of respondents who are bankers.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'In other words: of all the bankers, what fraction are female bankers? Here’s
+    how we compute this ratio.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE50]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE51]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The result is the same. This example demonstrates a general rule that relates
+    conditional probability and conjunction. Here’s what it looks like in math notation:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[P(A|B) = \frac{P(A~\mathrm{and}~B)}{P(B)}\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: And that’s Theorem 1.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Theorem 2
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: If we start with Theorem 1 and multiply both sides by \(P(B)\), we get Theorem
+    2.
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[P(A~\mathrm{and}~B) = P(B) ~ P(A|B)\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This formula suggests a second way to compute a conjunction: instead of using
+    the `&` operator, we can compute the product of two probabilities.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s see if it works for `liberal` and `democrat`. Here’s the result using
+    `&`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE52]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE53]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'And here’s the result using Theorem 2:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE54]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE55]'
+  prefs: []
+  type: TYPE_PRE
+- en: They are the same.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Theorem 3
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'We have established that conjunction is commutative. In math notation, that
+    means:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[P(A~\mathrm{and}~B) = P(B~\mathrm{and}~A)\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: If we apply Theorem 2 to both sides, we have
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[P(B) P(A|B) = P(A) P(B|A)\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here’s one way to interpret that: if you want to check \(A\) and \(B\), you
+    can do it in either order:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: You can check \(B\) first, then \(A\) conditioned on \(B\), or
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: You can check \(A\) first, then \(B\) conditioned on \(A\).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'If we divide through by \(P(B)\), we get Theorem 3:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[P(A|B) = \frac{P(A) P(B|A)}{P(B)}\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: And that, my friends, is Bayes’s Theorem.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To see how it works, let’s compute the fraction of bankers who are liberal,
+    first using `conditional`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE56]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE57]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Now using Bayes’s Theorem:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE58]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE59]'
+  prefs: []
+  type: TYPE_PRE
+- en: They are the same.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Law of Total Probability
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'In addition to these three theorems, there’s one more thing we’ll need to do
+    Bayesian statistics: the law of total probability. Here’s one form of the law,
+    expressed in mathematical notation:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[P(A) = P(B_1 \mathrm{and} A) + P(B_2 \mathrm{and} A)\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In words, the total probability of \(A\) is the sum of two possibilities: either
+    \(B_1\) and \(A\) are true or \(B_2\) and \(A\) are true. But this law applies
+    only if \(B_1\) and \(B_2\) are:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Mutually exclusive, which means that only one of them can be true, and
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Collectively exhaustive, which means that one of them must be true.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'As an example, let’s use this law to compute the probability that a respondent
+    is a banker. We can compute it directly like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE60]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE61]'
+  prefs: []
+  type: TYPE_PRE
+- en: So let’s confirm that we get the same thing if we compute male and female bankers
+    separately.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this dataset all respondents are designated male or female. Recently, the
+    GSS Board of Overseers announced that they will add more inclusive gender questions
+    to the survey (you can read more about this issue, and their decision, at [https://gender.stanford.edu/news-publications/gender-news/more-inclusive-gender-questions-added-general-social-survey](https://gender.stanford.edu/news-publications/gender-news/more-inclusive-gender-questions-added-general-social-survey).
+  prefs: []
+  type: TYPE_NORMAL
+- en: We already have a Boolean `Series` that is `True` for female respondents. Here’s
+    the complementary `Series` for male respondents.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE62]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can compute the total probability of `banker` like this.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE63]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE64]'
+  prefs: []
+  type: TYPE_PRE
+- en: Because `male` and `female` are mutually exclusive and collectively exhaustive
+    (MECE), we get the same result we got by computing the probability of `banker`
+    directly.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Applying Theorem 2, we can also write the law of total probability like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[P(A) = P(B_1) P(A|B_1) + P(B_2) P(A|B_2)\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'And we can test it with the same example:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE65]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE66]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'When there are more than two conditions, it is more concise to write the law
+    of total probability as a summation:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[P(A) = \sum_i P(B_i) P(A|B_i)\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: Again, this holds as long as the conditions, \(B_i\) are mutually exclusive
+    and collectively exhaustive. As an example, let’s consider `polviews`, which has
+    seven different values.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE67]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE68]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'On this scale, `4.0` represents “Moderate”. So we can compute the probability
+    of a moderate banker like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE69]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE70]'
+  prefs: []
+  type: TYPE_PRE
+- en: And we can use `sum` and a [generator expression](https://www.johndcook.com/blog/2020/01/15/generator-expression/)
+    to compute the summation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE71]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE72]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is the same.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this example, using the law of total probability is a lot more work than
+    computing the probability directly, but it will turn out to be useful, I promise.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Here’s what we have so far:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Theorem 1** gives us a way to compute a conditional probability using a conjunction:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[P(A|B) = \frac{P(A~\mathrm{and}~B)}{P(B)}\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Theorem 2** gives us a way to compute a conjunction using a conditional probability:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[P(A~\mathrm{and}~B) = P(B) P(A|B)\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Theorem 3**, also known as Bayes’s Theorem, gives us a way to get from \(P(A|B)\)
+    to \(P(B|A)\), or the other way around:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[P(A|B) = \frac{P(A) P(B|A)}{P(B)}\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**The Law of Total Probability** provides a way to compute probabilities by
+    adding up the pieces:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[P(A) = \sum_i P(B_i) P(A|B_i)\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: At this point you might ask, “So what?” If we have all of the data, we can compute
+    any probability we want, any conjunction, or any conditional probability, just
+    by counting. We don’t have to use these formulas.
+  prefs: []
+  type: TYPE_NORMAL
+- en: And you are right, *if* we have all of the data. But often we don’t, and in
+    that case, these formulas can be pretty useful – especially Bayes’s Theorem. In
+    the next chapter, we’ll see how.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exercises
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '**Exercise:** Use `conditional` to compute the following probabilities:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: What is the probability that a respondent is liberal, given that they are a
+    Democrat?
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: What is the probability that a respondent is a Democrat, given that they are
+    liberal?
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Think carefully about the order of the arguments you pass to `conditional`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE73]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE74]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE75]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE76]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** Let’s use the tools in this chapter to solve a variation of the
+    Linda problem.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Linda is 31 years old, single, outspoken, and very bright. She majored in philosophy.
+    As a student, she was deeply concerned with issues of discrimination and social
+    justice, and also participated in anti-nuclear demonstrations. Which is more probable?
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Linda is a banker.
+  prefs:
+  - PREF_BQ
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Linda is a banker and considers herself a liberal Democrat.
+  prefs:
+  - PREF_BQ
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: To answer this question, compute
+  prefs: []
+  type: TYPE_NORMAL
+- en: The probability that Linda is a banker, given that she is female,
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The probability that Linda is a banker and a liberal Democrat, given that she
+    is female.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE77]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE78]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE79]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE80]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** There’s a [famous quote](https://quoteinvestigator.com/2014/02/24/heart-head/)
+    about young people, old people, liberals, and conservatives that goes something
+    like:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: If you are not a liberal at 25, you have no heart. If you are not a conservative
+    at 35, you have no brain.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'Whether you agree with this proposition or not, it suggests some probabilities
+    we can compute as an exercise. Rather than use the specific ages 25 and 35, let’s
+    define `young` and `old` as under 30 or over 65:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE81]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE82]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE83]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE84]'
+  prefs: []
+  type: TYPE_PRE
+- en: For these thresholds, I chose round numbers near the 20th and 80th percentiles.
+    Depending on your age, you may or may not agree with these definitions of “young”
+    and “old”.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I’ll define `conservative` as someone whose political views are “Conservative”,
+    “Slightly Conservative”, or “Extremely Conservative”.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE85]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE86]'
+  prefs: []
+  type: TYPE_PRE
+- en: Use `prob` and `conditional` to compute the following probabilities.
+  prefs: []
+  type: TYPE_NORMAL
+- en: What is the probability that a randomly chosen respondent is a young liberal?
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: What is the probability that a young person is liberal?
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: What fraction of respondents are old conservatives?
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: What fraction of conservatives are old?
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: For each statement, think about whether it is expressing a conjunction, a conditional
+    probability, or both.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For the conditional probabilities, be careful about the order of the arguments.
+    If your answer to the last question is greater than 30%, you have it backwards!
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE87]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE88]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE89]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE90]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE91]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE92]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE93]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE94]</details>'
+  prefs: []
+  type: TYPE_NORMAL

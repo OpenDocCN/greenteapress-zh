@@ -1,0 +1,282 @@
+- en: FFT
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/DSIRP/fft.html](https://allendowney.github.io/DSIRP/fft.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/fft.ipynb)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: Discrete Fourier Transform
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'According to our friends at [Wikipedia](https://en.wikipedia.org/wiki/Discrete_Fourier_transform):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The discrete Fourier transform transforms a sequence of \(N\) complex numbers
+    \({\displaystyle \mathbf{x} =x_{0},x_{1},\ldots ,x_{N-1}}\) into another sequence
+    of complex numbers, \({\displaystyle \mathbf{X} =X_{0},X_{1},\ldots ,X_{N-1},}\)
+    which is defined by $\(X_k = \sum_{n=0}^N x_n \cdot e^{-i 2 \pi k n / N} \)$
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'Notice:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \(X\) and \(x\) are the same length, \(N\).
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: \(n\) is the index that specifies an element of \(x\), and
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: \(k\) is the index that specifies an element of \(X\).
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Let’s start with a small example and use Numpy’s implementation of FFT to compute
+    the DFT.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we know what the answer is, let’s compute it ourselves.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s the expression that computes one element of \(X\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Wrapping this code in a function makes the roles of `k` and `n` clearer:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`k` is the parameter that specifies which element of the DFT to compute, and'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`n` is the loop variable we use to compute the summation.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Usually we compute \(X\) all at once, so we can wrap `dft_k` in another function:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: And that’s what we got from Numpy.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Timing DFT
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Let’s see what the performance of `dft` looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/fft_20_1.png](../Images/f868c70d4018f50996e36119f6b0739d.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Implementing FFT
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The key to the FFT algorithm is the [Danielson-Lanczos lemma](https://mathworld.wolfram.com/Danielson-LanczosLemma.html),
+    which says
+  prefs: []
+  type: TYPE_NORMAL
+- en: \( X_k = E_k + e^{-i 2 \pi n / N} O_k \)
+  prefs: []
+  type: TYPE_NORMAL
+- en: Where
+  prefs: []
+  type: TYPE_NORMAL
+- en: \(E\) is the FFT of the even elements of \(x\), and
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: \(O\) is the DFT of the odd elements of \(x\).
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Before we can translate this expression into code, we have to deal with a gotcha.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Remember that, if the length of \(x\) is \(N\), the length of \(X\) is also
+    \(N\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: If we select the even elements of \(x\), the result is a sequence with length
+    \(N/2\), which means that the length of \(E\) is \(N/2\). And the same for \(O\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: But if \(k\) goes from \(0\) up to \(N-1\), what do we do when it exceeds \(N/2-1\)?
+  prefs: []
+  type: TYPE_NORMAL
+- en: Fortunately, the DFT repeats itself so, \(X_N\) is the same as \(X_0\). That
+    means we can extend \(E\) and \(O\) to be the same length as \(X\) just by repeating
+    them. And we can do that with the Numpy function `tile`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: So, here’s a version of `merge` based on the D-L lemma.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise:** As a first step toward implementing FFT, write a non-recursive
+    function called `fft_norec` that takes a sequence called `x` and'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Divides `x` into even and odd elements,
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Uses `dft` to compute `E` and `O`, and
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Uses `merge` to compute `X`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: Let’s see what the performance looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/fft_29_1.png](../Images/52dec72a572ee7db362f15722b930de6.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Exercise:** Starting with `fft_norec`, write a function called `fft_rec`
+    that’s fully recursive; that is, instead of using `dft` to compute the DFTs of
+    the halves, it should use `fft_rec`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You will need a base case to avoid an infinite recursion. You have two options:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The DFT of an array with length 1 is the array itself.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: If the parameter, `x`, is smaller than some threshold length, you could use
+    DFT.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Use `test_fft_rec`, below, to check the performance of your function.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/fft_35_1.png](../Images/0b8082606d96a7e408de735daf96b087.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: If things go according to plan, your FFT implementation should be faster than
+    `dft` and `fft_norec`, and over a range of problem sizes, it might be indistinguishable
+    from linear.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*Data Structures and Information Retrieval in Python*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Copyright 2021 Allen Downey
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'License: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  prefs: []
+  type: TYPE_NORMAL

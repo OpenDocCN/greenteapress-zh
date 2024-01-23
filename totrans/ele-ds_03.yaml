@@ -1,0 +1,494 @@
+- en: Variables and Values
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/ElementsOfDataScience/01_variables.html](https://allendowney.github.io/ElementsOfDataScience/01_variables.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '[Run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/01_variables.ipynb)
+    or'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Run this notebook on Sagemaker Studio Lab](https://studiolab.sagemaker.aws/import/github/AllenDowney/ElementsOfDataScience/blob/master/01_variables.ipynb)
+    or'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Download this notebook](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/01_variables.ipynb).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Data science is the use of data to answers questions and guide decision making.
+    For example, a topic of current debate is whether we should raise the minimum
+    wage in the United States. Some economists think that raising the minimum wage
+    would raise families out of poverty; others think it would cause more unemployment.
+    But economic theory can only take us so far. At some point, we need data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'A successful data science project requires three elements:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'A question: For example, what is the relationship between the minimum wage
+    and unemployment?'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Data: To answer this question, the best data would be results from a well designed
+    experiment. But if we can’t get ideal data, we have to work with what we can get.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Methods: With the right data, simple methods are often enough to find answers
+    and present them clearly. But sometimes we need more specialized tools.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: In an ideal world, we would pose a question, find data, and choose the appropriate
+    methods, in that order. More often, the process is iterative. We might start with
+    one question, get stuck, and pivot to a different question. Or we might explore
+    a new dataset and discover the questions it can answer. Or we might start with
+    a tool and look for problems it can solve. Most data science projects require
+    flexibility and persistence.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The goal of this book is to give you the tools you need to execute a data science
+    project from beginning to end, including these steps:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Choosing questions, data, and methods that go together.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Finding data or collecting it yourself.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Cleaning and validating data.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Exploring datasets, visualizing distributions and relationships between variables.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Modeling data and generating predictions.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Designing data visualizations that tell a compelling story.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Communicating results effectively.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: We’ll start with basic programming concepts and work our way toward data science
+    tools.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I won’t assume that you already know about programming, statistics, or data
+    science. When I use a term, I try to define it immediately, and when I use a programming
+    feature, I try to explain it clearly.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This book is in the form of Jupyter notebooks. Jupyter is a software development
+    tool you can run in a web browser, so you don’t have to install any software.
+    A Jupyter notebook is a document that contains text, Python code, and results.
+    So you can read it like a book, but you can also modify the code, run it, develop
+    new programs, and test them.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The notebooks contain exercises where you can practice what you learn. I encourage
+    you to do the exercises as you go along.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The topics in this chapter are:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using Jupyter to write and run Python code.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Basic programming features in Python: variables and values.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Translating formulas from math notation to Python.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Along the way, we’ll review a couple of math topics I assume you have seen before,
+    logarithms and algebra.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Numbers
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Python provides tools for working with many kinds of data, including numbers,
+    words, dates, times, and locations (latitude and longitude).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s start with numbers. Python can work with several types of numbers, but
+    the two most common are:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`int`, which represents integer values like `3`, and'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`float`, which represents numbers that have a fraction part, like `3.14159`.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Most often, we use `int` to represent counts and `float` to represent measurements.
+    Here’s an example of an `int` and a `float`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`float` is short for “floating-point”, which is the name for the way these
+    numbers are stored.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Arithmetic
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Python provides operators that perform arithmetic. The operators that perform
+    addition and subtraction are `+` and `-`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The operators that perform multiplication and division are `*` and `/`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'And the operator for exponentiation is `**`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: Unlike math notation, Python does not allow “implicit multiplication”. For example,
+    in math notation, if you write \(3 (2 + 1)\), that’s understood to be the same
+    as \(3 \times (2+ 1)\). Python does not allow that notation. If you want to multiply,
+    you have to use the `*` operator.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The arithmetic operators follow the rules of precedence you might have learned
+    as “PEMDAS”:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Parentheses before
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Exponentiation before
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Multiplication and division before
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Addition and subtraction.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'So in this expression:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The multiplication happens first. If that’s not what you want, you can use
+    parentheses to make the order of operations explicit:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise:** Write a Python expression that raises `1+2` to the power `3*4`.
+    The answer should be `531441`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Math Functions
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Python provides functions that compute all the usual mathematical functions,
+    like `sin` and `cos`, `exp` and `log`. However, they are not part of Python itself;
+    they are in a **library**, which is a collection of functions that supplement
+    the Python language.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Actually, there are several libraries that provide math functions; the one
+    we’ll use is called NumPy, which stands for “Numerical Python”, and is pronounced
+    “num pie”. Before you can use a library, you have to **import** it. Here’s how
+    we import NumPy:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: It is conventional to import `numpy` as `np`, which means we can refer to it
+    by the short name `np` rather than the longer name `numpy`. Names like this are
+    case-sensitive, which means that `numpy` is not the same as `NumPy`. So even though
+    the name of the library is NumPy, when we import it we have to call it `numpy`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: But assuming we import `np` correctly, we can use it to read the value `pi`,
+    which is an approximation of the mathematical constant \(\pi\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is a `float` with 16 digits. As you might know, we can’t represent
+    \(\pi\) with a finite number of digits, so this result is only approximate.
+  prefs: []
+  type: TYPE_NORMAL
+- en: NumPy provides `log`, which computes the natural logarithm
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: NumPy also provides `exp`, which raises the constant `e` to a power.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise:** Use these functions to confirm the mathematical identity \(\log(e^x)
+    = x\), which should be true for any value of \(x\).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: With floating-point values, this identity should work for values of \(x\) between
+    -700 and 700\. What happens when you try it with larger and smaller values?
+  prefs: []
+  type: TYPE_NORMAL
+- en: As this example shows, floating-point numbers are finite approximations, which
+    means they don’t always behave like math.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'As another example, let’s see what happens when you add up `0.1` three times:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is close to `0.3`, but not exact. We’ll see other examples of floating-point
+    approximation later, and learn some ways to deal with it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Variables
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'A **variable** is a name that refers to a value. The following statement assigns
+    the value `5` to a variable named `x`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: The variable we just created has the name `x` and the value `5`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If we use `x` as part of an arithmetic operation, it represents the value `5`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'We can also use `x` with `numpy` functions:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: Notice that the result from `exp` is a `float`, even though the value of `x`
+    is an `int`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** If you have not programmed before, one of the things you have
+    to get used to is that programming languages are picky about details. Natural
+    languages, like English, and semi-formal languages, like math notation, are more
+    forgiving.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: As an example, in math notation, parentheses and square brackets mean the same
+    thing, you can write
+  prefs: []
+  type: TYPE_NORMAL
+- en: \(\sin (\omega t)\)
+  prefs: []
+  type: TYPE_NORMAL
+- en: or
+  prefs: []
+  type: TYPE_NORMAL
+- en: \(\sin [\omega t]\)
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Either one is fine. And you can leave out the parentheses altogether, as long
+    as the meaning is clear:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \(\sin \omega t\)
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In Python, every character counts. For example, the following are all different:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: While you are learning, I encourage you to make mistakes on purpose to see what
+    goes wrong. Read the error messages carefully. Sometimes they are helpful and
+    tell you exactly what’s wrong. Other times they can be misleading. But if you
+    have seen the message before, you might remember some likely causes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** Search the NumPy documentation to find the function that computes
+    square roots, and use it to compute a floating-point approximation of the golden
+    ratio:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \(\phi = \frac{1 + \sqrt{5}}{2}\)
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Hint: The result should be close to `1.618`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Calculating with Variables
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Now we’ll use variables to solve a problem involving compound interest. It might
+    not be the most exciting example, but it uses everything we have done so far,
+    and it reviews exponentiation and logarithms, which we are going to need.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If we start with a principal sum, \(P\), and earn compounded interest, the
+    total accumulated value, \(V\), at the end of time \(t\) is:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \(V=P\left(1+{\frac {r}{n}}\right)^{nt}\)
+  prefs: []
+  type: TYPE_NORMAL
+- en: where \(r\) is the annual interest rate and \(n\) is the compounding frequency.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'For example, if you deposit $2,100 in a bank paying an annual interest rate
+    of 3.4% compounded quarterly, we can compute the balance after 7 years by defining
+    these variables:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: And computing the total accumulated value like this.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise:** Continuing the previous example, suppose you start with the same
+    principle and the same interest rate, but interest is compounded twice per year,
+    so `n = 2`. What would the total value be after 7 years? Hint: we expect the answer
+    to be a bit less than the previous answer.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** If interest is compounded continuously, the value after time
+    \(t\) is given by the formula:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \(V=P~e^{rt}\)
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Translate this equation into Python and use it compute the value of the investment
+    in the previous example with continuous compounding. Hint: we expect the answer
+    to be a bit more than the previous answers.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: This chapter introduces variables, which are names that refer to values, and
+    two kinds of values, integers and floating-point numbers.
+  prefs: []
+  type: TYPE_NORMAL
+- en: It presents mathematical operators, like `+` for addition and `*` for multiplication,
+    and mathematical functions like `log` for logarithms and `exp` for raising `e`
+    to a power.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the next chapter, we’ll see additional data types for representing letters
+    and words, dates and times, and latitude and longitude.
+  prefs: []
+  type: TYPE_NORMAL

@@ -1,0 +1,1043 @@
+- en: Approximate Bayesian Computation
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/ThinkBayes2/chap20.html](https://allendowney.github.io/ThinkBayes2/chap20.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: This chapter introduces a method of last resort for the most complex problems,
+    Approximate Bayesian Computation (ABC). I say it is a last resort because it usually
+    requires more computation than other methods, so if you can solve a problem any
+    other way, you should. However, for the examples in this chapter, ABC is not just
+    easy to implement; it is also efficient.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The first example is my solution to a problem posed by a patient with a kidney
+    tumor. I use data from a medical journal to model tumor growth, and use simulations
+    to estimate the age of a tumor based on its size.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The second example is a model of cell counting, which has applications in biology,
+    medicine, and zymurgy (beer-making). Given a cell count from a diluted sample,
+    we estimate the concentration of cells.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Finally, as an exercise, you’ll have a chance to work on a fun sock-counting
+    problem.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Kidney Tumor Problem
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'I am a frequent reader and occasional contributor to the online statistics
+    forum at [http://reddit.com/r/statistics](http://reddit.com/r/statistics). In
+    November 2011, I read the following message:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: “I have Stage IV Kidney Cancer and am trying to determine if the cancer formed
+    before I retired from the military. … Given the dates of retirement and detection
+    is it possible to determine when there was a 50/50 chance that I developed the
+    disease? Is it possible to determine the probability on the retirement date? My
+    tumor was 15.5 cm x 15 cm at detection. Grade II.”
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: I contacted the author of the message to get more information; I learned that
+    veterans get different benefits if it is “more likely than not” that a tumor formed
+    while they were in military service (among other considerations). So I agree to
+    help him answer his question.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Because renal tumors grow slowly, and often do not cause symptoms, they are
+    sometimes left untreated. As a result, doctors can observe the rate of growth
+    for untreated tumors by comparing scans from the same patient at different times.
+    Several papers have reported these growth rates.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'For my analysis I used data from a paper by [Zhang et al](https://pubs.rsna.org/doi/full/10.1148/radiol.2501071712).
+    They report growth rates in two forms:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Volumetric doubling time, which is the time it would take for a tumor to double
+    in size.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Reciprocal doubling time (RDT), which is the number of doublings per year.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The next section shows how we work with these growth rates.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Zhang et al, Distribution of Renal Tumor Growth Rates Determined by Using Serial
+    Volumetric CT Measurements, January 2009 *Radiology*, 250, 137-144.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[https://pubs.rsna.org/doi/full/10.1148/radiol.2501071712](https://pubs.rsna.org/doi/full/10.1148/radiol.2501071712)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: A Simple Growth Model
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'We’ll start with a simple model of tumor growth based on two assumptions:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Tumors grow with a constant doubling time, and
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: They are roughly spherical in shape.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'And I’ll define two points in time:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`t1` is when my correspondent retired.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`t2` is when the tumor was detected.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The time between `t1` and `t2` was about 9.0 years. As an example, let’s assume
+    that the diameter of the tumor was 1 cm at `t1`, and estimate its size at `t2`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I’ll use the following function to compute the volume of a sphere with a given
+    diameter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: Assuming that the tumor is spherical, we can compute its volume at `t1`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: The median volume doubling time reported by Zhang et al. is 811 days, which
+    corresponds to an RDT of 0.45 doublings per year.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'We can compute the number of doublings that would have happened in the interval
+    between `t1` and `t2`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: Given `v1` and the number of doublings, we can compute the volume at `t2`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following function computes the diameter of a sphere with the given volume.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'So we can compute the diameter of the tumor at `t2`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: If the diameter of the tumor was 1 cm at `t1`, and it grew at the median rate,
+    the diameter would be about 2.5 cm at `t2`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This example demonstrates the growth model, but it doesn’t answer the question
+    my correspondent posed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: A More General Model
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Given the size of a tumor at time of diagnosis, we would like to know the distribution
+    of its age. To find it, we’ll run simulations of tumor growth to get the distribution
+    of size conditioned on age. Then we’ll compute the distribution of age conditioned
+    on size.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The simulation starts with a small tumor and runs these steps:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Choose a value from the distribution of growth rates.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Compute the size of the tumor at the end of an interval.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Repeat until the tumor exceeds the maximum relevant size.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: So the first thing we need is the distribution of growth rates.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using the figures in the paper by Zhange et al., I created an array, `rdt_sample`,
+    that contains estimated values of RDT for the 53 patients in the study.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Again, RDT stands for “reciprocal doubling time”, which is in doublings per
+    year. So if `rdt=1`, a tumor would double in volume in one year. If `rdt=2`, it
+    would double twice; that is, the volume would quadruple. And if `rdt=-1`, it would
+    halve in volume.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE13]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can use the sample of RDTs to estimate the PDF of the distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s what it looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]</details> ![_images/914a6146b4348099a8272fb971569ca6c637ea221de92d28038e20285408c1bd.png](../Images/fb5159fd84b272719c97dc5be1704503.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the next section we will use this distribution to simulate tumor growth.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Simulation
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Now we’re ready to run the simulations. Starting with a small tumor, we’ll simulate
+    a series of intervals until the tumor reaches a maximum size.
+  prefs: []
+  type: TYPE_NORMAL
+- en: At the beginning of each simulated interval, we’ll choose a value from the distribution
+    of growth rates and compute the size of the tumor at the end.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I chose an interval of 245 days (about 8 months) because that is the median
+    time between measurements in the data source
+  prefs: []
+  type: TYPE_NORMAL
+- en: For the initial diameter I chose 0.3 cm, because carcinomas smaller than that
+    are less likely to be invasive and less likely to have the blood supply needed
+    for rapid growth (see [this page on carcinoma](http://en.wikipedia.org/wiki/Carcinoma_in_situ)).
+    For the maximum diameter I chose 20 cm.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'I’ll use `calc_volume` to compute the initial and maximum volumes:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following function runs the simulation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`simulate_growth` takes as a parameter a `Pmf` that represents the distribution
+    of RDT. It initializes the age and volume of the tumor, then runs a loop that
+    simulates one interval at a time.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Each time through the loop, it checks the volume of the tumor and exits if it
+    exceeds `vmax`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Otherwise it chooses a value from `pmf_rdt` and updates `age` and `volume`.
+    Since `rdt` is in doublings per year, we multiply by `interval` to compute the
+    number of doublings during each interval.
+  prefs: []
+  type: TYPE_NORMAL
+- en: At the end of the loop, `simulate_growth` puts the results in a `DataFrame`
+    and computes the diameter that corresponds to each volume.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here’s how we call this function:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Here are the results for the first few intervals:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | age | volume | diameter |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 0.000000 | 0.014137 | 0.300000 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 0.671233 | 0.014949 | 0.305635 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 1.342466 | 0.019763 | 0.335441 |'
+  prefs: []
+  type: TYPE_TB
+- en: And the last few intervals.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | age | volume | diameter |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 43 | 28.863014 | 1882.067427 | 15.318357 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 44 | 29.534247 | 2887.563277 | 17.667603 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 45 | 30.205479 | 4953.618273 | 21.149883 |'
+  prefs: []
+  type: TYPE_TB
+- en: 'To show the results graphically, I’ll run 101 simulations:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: And plot the results.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE24]</details> ![_images/c7a36f14efef9fb97b73fc9d6d8d623e3d53b61e750e4ca983a63eb4eb7a227c.png](../Images/b9b0da08e32d428b971901dfd3f3e9e3.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this figure, each thin, solid line shows the simulated growth of a tumor
+    over time, with diameter on a log scale. The dotted lines are at 4, 8, and 16
+    cm.
+  prefs: []
+  type: TYPE_NORMAL
+- en: By reading across the dotted lines, you can get a sense of the distribution
+    of age at each size. For example, reading across the top line, we see that the
+    age of a 16 cm tumor might be as low 10 years or as high as 40 years, but it is
+    most likely to be between 15 and 30.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To compute this distribution more precisely, we can interpolate the growth curves
+    to see when each one passes through a given size. The following function takes
+    the results of the simulations and returns the age when each tumor reached a given
+    diameter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'We can call this function like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: For a tumor 15 cm in diameter, the median age is about 22 years, the 90% credible
+    interval is between 13 and 34 years, and the probability that it formed less than
+    9 years ago is less than 1%.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'But this result is based on two modeling decisions that are potentially problematic:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the simulations, growth rate during each interval is independent of previous
+    growth rates. In reality it is plausible that tumors that have grown quickly in
+    the past are likely to grow quickly in the future. In other words, there is probably
+    a serial correlation in growth rate.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: To convert from linear measure to volume, we assume that tumors are approximately
+    spherical.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: In additional experiments, I implemented a simulation that chooses growth rates
+    with serial correlation; the effect is that the fast-growing tumors grow faster
+    and the slow-growing tumors grow slower. Nevertheless, with moderate correlation
+    (0.5), the probability that a 15 cm tumor is less than 9 years old is only about
+    1%.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The assumption that tumors are spherical is probably fine for tumors up to a
+    few centimeters, but not for a tumor with linear dimensions 15.5 x 15 cm. If,
+    as seems likely, a tumor this size is relatively flat, it might have the same
+    volume as a 6 cm sphere. But even with this smaller volume and correlation 0.5,
+    the probability that this tumor is less than 9 years old is about 5%.
+  prefs: []
+  type: TYPE_NORMAL
+- en: So even taking into account modeling errors, it is unlikely that such a large
+    tumor could have formed after my correspondent retired from military service.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following figure shows the distribution of ages for tumors with diameters
+    4, 8, and 15 cm.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/df1b7e305f0bf055e7cb9eff94aa6e9b81aac9dc8f20186a88f92e867a20b50e.png](../Images/700c3256cc27fa31185ccc2cb7552e5f.png)</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Approximate Bayesian Calculation
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: At this point you might wonder why this example is in a book about Bayesian
+    statistics. We never defined a prior distribution or did a Bayesian update. Why
+    not? Because we didn’t have to.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Instead, we used simulations to compute ages and sizes for a collection of hypothetical
+    tumors. Then, implicitly, we used the simulation results to form a joint distribution
+    of age and size. If we select a column from the joint distribution, we get a distribution
+    of size conditioned on age. If we select a row, we get a distribution of age conditioned
+    on size.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'So this example is like the ones we saw in <<_Probability>>: if you have all
+    of the data, you don’t need Bayes’s theorem; you can compute probabilities by
+    counting.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: This example is a first step toward Approximate Bayesian Computation (ABC).
+    The next example is a second step.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Counting Cells
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: This example comes from [this blog post](https://dataorigami.net/blogs/napkin-folding/bayesian-cell-counting),
+    by Cameron Davidson-Pilon. In it, he models the process biologists use to estimate
+    the concentration of cells in a sample of liquid. The example he presents is counting
+    cells in a “yeast slurry”, which is a mixture of yeast and water used in brewing
+    beer.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'There are two steps in the process:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: First, the slurry is diluted until the concentration is low enough that it is
+    practical to count cells.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Then a small sample is put on a hemocytometer, which is a specialized microscope
+    slide that holds a fixed amount of liquid on a rectangular grid.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The cells and the grid are visible in a microscope, making it possible to count
+    the cells accurately.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As an example, suppose we start with a yeast slurry with unknown concentration
+    of cells. Starting with a 1 mL sample, we dilute it by adding it to a shaker with
+    9 mL of water and mixing well. Then we dilute it again, and then a third time.
+    Each dilution reduces the concentration by a factor of 10, so three dilutions
+    reduces the concentration by a factor of 1000.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Then we add the diluted sample to the hemocytometer, which has a capacity of
+    0.0001 mL spread over a 5x5 grid. Although the grid has 25 squares, it is standard
+    practice to inspect only a few of them, say 5, and report the total number of
+    cells in the inspected squares.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This process is simple enough, but at every stage there are sources of error:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: During the dilution process, liquids are measured using pipettes that introduce
+    measurement error.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The amount of liquid in the hemocytometer might vary from the specification.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: During each step of the sampling process, we might select more or less than
+    the average number of cells, due to random variation.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Davidson-Pilon presents a PyMC model that describes these errors. I’ll start
+    by replicating his model; then we’ll adapt it for ABC.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Suppose there are 25 squares in the grid, we count 5 of them, and the total
+    number of cells is 49.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s the first part of the model, which defines the prior distribution of
+    `yeast_conc`, which is the concentration of yeast we’re trying to estimate.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`shaker1_vol` is the actual volume of water in the first shaker, which should
+    be 9 mL, but might be higher or lower, with standard deviation 0.05 mL. `shaker2_vol`
+    and `shaker3_vol` are the volumes in the second and third shakers.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now, the sample drawn from the yeast slurry is supposed to be 1 mL, but might
+    be more or less. And similarly for the sample from the first shaker and from the
+    second shaker. The following variables model these steps.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: Given the actual volumes in the samples and in the shakers, we can compute the
+    effective dilution, `final_dilution`, which should be 1000, but might be higher
+    or lower.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: The next step is to place a sample from the third shaker in the chamber of the
+    hemocytomer. The capacity of the chamber should be 0.0001 mL, but might vary;
+    to describe this variance, we’ll use a gamma distribution, which ensures that
+    we don’t generate negative values.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: On average, the number of cells in the chamber is the product of the actual
+    concentration, final dilution, and chamber volume. But the actual number might
+    vary; we’ll use a Poisson distribution to model this variance.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: Finally, each cell in the chamber will be in one of the squares we count with
+    probability `p=squares_counted/total_squares`. So the actual count follows a binomial
+    distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE37]'
+  prefs: []
+  type: TYPE_PRE
+- en: With the model specified, we can use `sample` to generate a sample from the
+    posterior distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: <details class="hide below-input"><summary aria-label="Toggle hidden content">Show
+    code cell output Hide code cell output</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE39]'
+  prefs: []
+  type: TYPE_PRE
+- en: '<progress value="4000" class="" max="4000" style="width:300px; height:20px;
+    vertical-align: middle;">100.00% [4000/4000 00:03<00:00 Sampling 2 chains, 0 divergences]</progress>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE40]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: And we can use the sample to estimate the posterior distribution of `yeast_conc`
+    and compute summary statistics.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE41]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE42]'
+  prefs: []
+  type: TYPE_PRE
+- en: The posterior mean is about 2.3 billion cells per mL, with a 90% credible interval
+    from 1.8 and 2.7.
+  prefs: []
+  type: TYPE_NORMAL
+- en: So far we’ve been following in Davidson-Pilon’s footsteps. And for this problem,
+    the solution using MCMC is sufficient. But it also provides an opportunity to
+    demonstrate ABC.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Cell Counting with ABC
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The fundamental idea of ABC is that we use the prior distribution to generate
+    a sample of the parameters, and then simulate the system for each set of parameters
+    in the sample.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this case, since we already have a PyMC model, we can use `sample_prior_predictive`
+    to do the sampling and the simulation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE43]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is a dictionary that contains samples from the prior distribution
+    of the parameters and the prior predictive distribution of `count`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE44]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE45]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now, to generate a sample from the posterior distribution, we’ll select only
+    the elements in the prior sample where the output of the simulation, `count`,
+    matches the observed data, 49.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE46]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE47]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can use `mask` to select the values of `yeast_conc` for the simulations that
+    yield the observed data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE48]'
+  prefs: []
+  type: TYPE_PRE
+- en: And we can use the posterior sample to estimate the CDF of the posterior distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE49]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE50]'
+  prefs: []
+  type: TYPE_PRE
+- en: The posterior mean and credible interval are similar to what we got with MCMC.
+    Here’s what the distributions look like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE51]</details> ![_images/8eaa208c16fc79c79edb3769816e14528e9b03eb810bc1d301ecdc95ce329632.png](../Images/1d23154bcad37ebbc595c0be66cb4554.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The distributions are similar, but the results from ABC are noisier because
+    the sample size is smaller.
+  prefs: []
+  type: TYPE_NORMAL
+- en: When Do We Get to the Approximate Part?
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'The examples so far are similar to Approximate Bayesian Computation, but neither
+    of them demonstrates all of the elements of ABC. More generally, ABC is characterized
+    by:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: A prior distribution of parameters.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A simulation of the system that generates the data.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A criterion for when we should accept that the output of the simulation matches
+    the data.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The kidney tumor example was atypical because we didn’t represent the prior
+    distribution of age explicitly. Because the simulations generate a joint distribution
+    of age and size, we we able to get the marginal posterior distribution of age
+    directly from the results.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The yeast example is more typical because we represented the distribution of
+    the parameters explicitly. But we accepted only simulations where the output matches
+    the data exactly.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The result is approximate in the sense that we have a sample from the posterior
+    distribution rather than the posterior distribution itself. But it is not approximate
+    in the sense of Approximate Bayesian Computation, which typically accepts simulations
+    where the output matches the data only approximately.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To show how that works, I will extend the yeast example with an approximate
+    matching criterion.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the previous section, we accepted a simulation if the output is precisely
+    49 and rejected it otherwise. As a result, we got only a few hundred samples out
+    of 10,000 simulations, so that’s not very efficient.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can make better use of the simulations if we give “partial credit” when the
+    output is close to 49. But how close? And how much credit?
+  prefs: []
+  type: TYPE_NORMAL
+- en: One way to answer that is to back up to the second-to-last step of the simulation,
+    where we know the number of cells in the chamber, and we use the binomial distribution
+    to generate the final count.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If there are `n` cells in the chamber, each has a probability `p` of being counted,
+    depending on whether it falls in one of the squares in the grid that get counted.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We can extract `n` from the prior sample, like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE52]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE53]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'And compute `p` like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE54]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE55]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Now here’s the idea: we’ll use the binomial distribution to compute the likelihood
+    of the data, `yeast_counted`, for each value of `n` and the fixed value of `p`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE56]'
+  prefs: []
+  type: TYPE_PRE
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE57]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE58]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: When the expected count, `n * p`, is close to the actual count, `likelihood`
+    is relatively high; when it is farther away, `likelihood` is lower.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following is a scatter plot of these likelihoods versus the expected counts.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE59]</details> ![_images/b236c7fa22cca34323d3de3073ad4b52b044a670cfb4661663bb69c0e81373d7.png](../Images/f3e3c9ba995ba9209c11aeb7bdd7e598.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can’t use these likelihoods to do a Bayesian update because they are incomplete;
+    that is, each likelihood is the probability of the data given `n`, which is the
+    result of a single simulation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: But we *can* use them to weight the results of the simulations. Instead of requiring
+    the output of the simulation to match the data exactly, we’ll use the likelihoods
+    to give partial credit when the output is close.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here’s how: I’ll construct a `Pmf` that contains yeast concentrations as quantities
+    and the likelihoods as unnormalized probabilities.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE60]'
+  prefs: []
+  type: TYPE_PRE
+- en: In this `Pmf`, values of `yeast_conc` that yield outputs close to the data map
+    to higher probabilities. If we sort the quantities and normalize the probabilities,
+    the result is an estimate of the posterior distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE61]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE62]'
+  prefs: []
+  type: TYPE_PRE
+- en: The posterior mean and credible interval are similar to the values we got from
+    MCMC. And here’s what the posterior distributions look like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE63]</details> ![_images/49f8337976b730ce868462a4375483b9c032020dffdd39b08ca9b6e4e7958f12.png](../Images/c6ee6e1a0295e2dde4fef1b17e5f9b3f.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The distributions are similar, but the results from MCMC are a little noisier.
+    In this example, ABC is more efficient than MCMC, requiring less computation to
+    generate a better estimate of the posterior distribution. But that’s unusual;
+    usually ABC requires a lot of computation. For that reason, it is generally a
+    method of last resort.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In this chapter we saw two examples of Approximate Bayesian Computation (ABC),
+    based on simulations of tumor growth and cell counting.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The definitive elements of ABC are:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: A prior distribution of parameters.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A simulation of the system that generates the data.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A criterion for when we should accept that the output of the simulation matches
+    the data.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: ABC is particularly useful when the system is too complex to model with tools
+    like PyMC. For example, it might involve a physical simulation based on differential
+    equations. In that case, each simulation might require substantial computation,
+    and many simulations might be needed to estimate the posterior distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Next, you’ll have a chance to practice with one more example.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exercises
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '**Exercise:** This exercise is based on [a blog post by Rasmus Bååth](http://www.sumsar.net/blog/2014/10/tiny-data-and-the-socks-of-karl-broman),
+    which is motivated by a tweet from Karl Broman, who wrote:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: That the first 11 socks in the laundry are distinct suggests that there are
+    a lot of socks.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Suppose you pull 11 socks out of the laundry and find that no two of them make
+    a matched pair. Estimate the number of socks in the laundry.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To solve this problem, we’ll use the model Bååth suggests, which is based on
+    these assumptions:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The laundry contains some number of pairs of socks, `n_pairs`, plus some number
+    of odd (unpaired) socks, `n_odds`.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The pairs of socks are different from each other and different from the unpaired
+    socks; in other words, the number of socks of each type is either 1 or 2, never
+    more.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'We’ll use the prior distributions Bååth suggests, which are:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The number of socks follows a negative binomial distribution with mean 30 and
+    standard deviation 15.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The proportion of socks that are paired follows a beta distribution with parameters
+    `alpha=15` and `beta=2`.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: In the notebook for this chapter, I’ll define these priors. Then you can simulate
+    the sampling process and use ABC to estimate the posterior distributions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE64]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE65]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE66]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE67]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE68]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE69]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE70]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE71]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE72]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE73]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE74]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE75]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE76]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE77]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE78]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE79]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | n_socks | n_pairs | n_odds |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 52 | 25.0 | 2.0 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 54 | 26.0 | 2.0 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 41 | 18.0 | 5.0 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 35 | 14.0 | 7.0 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 4 | 57 | 19.0 | 19.0 |</details> <details class="hide above-input"><summary
+    aria-label="Toggle hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE80]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE81]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE82]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/c50294d3bdbfeea2193671a474d85658c75f9e858b4eefdea006ede9e1f375b7.png](../Images/ee25da0b52382108ec7bab5e7f748b43.png)</details>'
+  prefs: []
+  type: TYPE_NORMAL

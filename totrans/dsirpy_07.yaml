@@ -1,0 +1,345 @@
+- en: Sets
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/DSIRP/set.html](https://allendowney.github.io/DSIRP/set.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/set.ipynb)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Set operators and methods
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'The following example is based on Luciano Ramalho’s talk, [Set Practice: Learning
+    from Python’s set type](https://www.youtube.com/watch?v=tGAngdU_8D8).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: Checking membership is constant time.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Intersection is like AND: it returns elements in f AND in p.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Union is like OR: it returns elements in f OR in p.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Symmetric difference is like XOR: elements from `f` OR `p` but not both.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here are the Fibonacci numbers that are not prime.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: And the primes that are not Fibonacci numbers.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: The comparison operators check for subset and superset relationships.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Fibonacci numbers are not a superset of the primes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: And the primes are not a superset of the Fibonacci numbers.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'In that sense, sets are not like numbers: they are only [partially ordered](https://en.wikipedia.org/wiki/Partially_ordered_set).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`f` is a superset of `{1, 2, 3}`'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: Sets provide methods as well as operators. Why?
+  prefs: []
+  type: TYPE_NORMAL
+- en: For one thing, the argument you pass to a method can be any iterable, not just
+    a set.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Methods also accept more than one argument:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: If you don’t have a set to start with, you can use an empty set.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'One small syntax nuisance: `{1, 2, 3}` is a set, but `{}` is an empty dictionary.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Spelling Bee
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '[The New York Times Spelling Bee](https://www.nytimes.com/puzzles/spelling-bee)
+    is a daily puzzle where the goal is to spell as many words as possible using only
+    the given set of seven letters. For example, in a recent Spelling Bee, the available
+    letters were `dehiklo`, so you could spell “like” and “hold”.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: You can use each of the letters more than once, so “hook” and “deed” would be
+    allowed, too.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To make it a little more interesting, one of the letters is special and must
+    be included in every word. In this example, the special letter is `o`, so “hood”
+    would be allowed, but not “like”.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Each word you find scores points depending on it’s length, which must be at
+    least four letters. A word that uses all of the letters is called a “pangram”
+    and scores extra points.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We’ll use this puzzle to explore the use of Python sets.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Suppose we’re given a word and we would like to know whether it can be spelled
+    using only a given set of letters. The following function solves this problem
+    using string operations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: If we find any letters in `word` that are not in the list of letters, we can
+    return `False` immediately. If we get through the word without finding any unavailable
+    letters, we can return `True`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s try it out with some examples. In a recent Spelling Bee, the available
+    letters were `dehiklo`. Let’s see what we can spell with them.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE37]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE39]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE40]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise:** It is possible to implement `uses_only` more concisely using
+    set operations rather than list operations. [Read the documentation of the `set`
+    class](https://docs.python.org/3/tutorial/datastructures.html#sets) and rewrite
+    `uses_only` using sets.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE41]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE42]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE43]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE44]'
+  prefs: []
+  type: TYPE_PRE
+- en: Word list
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The following function downloads a list of about 100,000 words in American English.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE45]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The file contains one word per line, so we can read the file and split it into
+    a list of words like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE46]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE47]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise:** Write a loop that iterates through this word list and prints
+    only words'
+  prefs: []
+  type: TYPE_NORMAL
+- en: With at least four letters,
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: That can be spelled using only the letters `dehiklo`, and
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: That include the letter `o`.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Exercise:** Now let’s check for pangrams. Write a function called `uses_all`
+    that takes two strings and returns `True` if the first string uses all of the
+    letters in the second string. Think about how to express this computation using
+    set operations.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Test your function with at least one case that returns `True` and one that returns
+    `False`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** Modify the previous loop to search the word list for pangrams
+    using `uses_only` and `uses_all`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Or, as a bonus, write a function called `uses_all_and_only` that checks both
+    conditions using a single `set` operation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Leftovers
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: So far we’ve been writing Boolean functions that test specific conditions, but
+    if they return `False`, they don’t explain why. As an alternative to `uses_only`,
+    we could write a function called `bad_letters` that takes a word and a set of
+    letters, and returns a new string that contains the letters in words that are
+    not available. Let’s call it `bad_letters`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE48]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now if we run this function with an illegal word, it will tell us which letters
+    in the word are not available.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE49]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE50]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise:** Write a function called `unused_letters` that takes a word and
+    a set of letters and returns the subset of the letters that are not used in `word`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** Write a function called `no_duplicates` that takes a string and
+    returns `True` if each letter appears only once.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*Data Structures and Information Retrieval in Python*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Copyright 2021 Allen Downey
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'License: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  prefs: []
+  type: TYPE_NORMAL

@@ -1,0 +1,1009 @@
+- en: Chapter 5  Modeling distributions
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://greenteapress.com/thinkstats2/html/thinkstats2006.html](https://greenteapress.com/thinkstats2/html/thinkstats2006.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: The distributions we have used so far are called empirical distributions because
+    they are based on empirical observations, which are necessarily finite samples.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The alternative is an analytic distribution, which is characterized by a CDF
+    that is a mathematical function. Analytic distributions can be used to model empirical
+    distributions. In this context, a model is a simplification that leaves out unneeded
+    details. This chapter presents common analytic distributions and uses them to
+    model data from a variety of sources.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The code for this chapter is in `analytic.py`. For information about downloading
+    and working with this code, see Section [0.2](thinkstats2001.html#code).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5.1  The exponential distribution
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '![](../Images/309868cbc0a1f2504792e668b09a6b49.png)'
+  prefs:
+  - PREF_BQ
+  type: TYPE_IMG
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '| Figure 5.1: CDFs of exponential distributions with various parameters. |'
+  prefs:
+  - PREF_BQ
+  type: TYPE_TB
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: I’ll start with the exponential distribution because it is relatively simple.
+    The CDF of the exponential distribution is
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| CDF(x) = 1 − e^(−λ x)  |'
+  prefs: []
+  type: TYPE_TB
+- en: The parameter, λ, determines the shape of the distribution. Figure [5.1](#analytic_expo_cdf)
+    shows what this CDF looks like with λ = 0.5, 1, and 2.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the real world, exponential distributions come up when we look at a series
+    of events and measure the times between events, called interarrival times. If
+    the events are equally likely to occur at any time, the distribution of interarrival
+    times tends to look like an exponential distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As an example, we will look at the interarrival time of births. On December
+    18, 1997, 44 babies were born in a hospital in Brisbane, Australia.^([1](#note1))
+    The time of birth for all 44 babies was reported in the local paper; the complete
+    dataset is in a file called `babyboom.dat`, in the `ThinkStats2` repository.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`ReadBabyBoom` reads the data file and returns a DataFrame with columns `time`,
+    `sex`, `weight_g`, and `minutes`, where `minutes` is time of birth converted to
+    minutes since midnight.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '![](../Images/fa0286875c3a1a7b8215c1ff627d9171.png)'
+  prefs:
+  - PREF_BQ
+  type: TYPE_IMG
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '| Figure 5.2: CDF of interarrival times (left) and CCDF on a log-y scale (right).
+    |'
+  prefs:
+  - PREF_BQ
+  type: TYPE_TB
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '`diffs` is the difference between consecutive birth times, and `cdf` is the
+    distribution of these interarrival times. Figure [5.2](#analytic_interarrival_cdf)
+    (left) shows the CDF. It seems to have the general shape of an exponential distribution,
+    but how can we tell?'
+  prefs: []
+  type: TYPE_NORMAL
+- en: One way is to plot the complementary CDF, which is 1 − CDF(x), on a log-y scale.
+    For data from an exponential distribution, the result is a straight line. Let’s
+    see why that works.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If you plot the complementary CDF (CCDF) of a dataset that you think is exponential,
+    you expect to see a function like:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| y ≈ e^(−λ x)  |'
+  prefs: []
+  type: TYPE_TB
+- en: 'Taking the log of both sides yields:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| logy ≈ −λ x |'
+  prefs: []
+  type: TYPE_TB
+- en: 'So on a log-y scale the CCDF is a straight line with slope −λ. Here’s how we
+    can generate a plot like that:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: With the argument `complement=True`, `thinkplot.Cdf` computes the complementary
+    CDF before plotting. And with `yscale='log'`, `thinkplot.Show` sets the `y` axis
+    to a logarithmic scale.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Figure [5.2](#analytic_interarrival_cdf) (right) shows the result. It is not
+    exactly straight, which indicates that the exponential distribution is not a perfect
+    model for this data. Most likely the underlying assumption—that a birth is equally
+    likely at any time of day—is not exactly true. Nevertheless, it might be reasonable
+    to model this dataset with an exponential distribution. With that simplification,
+    we can summarize the distribution with a single parameter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The parameter, λ, can be interpreted as a rate; that is, the number of events
+    that occur, on average, in a unit of time. In this example, 44 babies are born
+    in 24 hours, so the rate is λ = 0.0306 births per minute. The mean of an exponential
+    distribution is 1/λ, so the mean time between births is 32.7 minutes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5.2  The normal distribution
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The normal distribution, also called Gaussian, is commonly used because it describes
+    many phenomena, at least approximately. It turns out that there is a good reason
+    for its ubiquity, which we will get to in Section [14.4](thinkstats2015.html#CLT).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '![](../Images/f6d2a67a8fedb8bc39d853942c502bfc.png)'
+  prefs:
+  - PREF_BQ
+  type: TYPE_IMG
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '| Figure 5.3: CDF of normal distributions with a range of parameters. |'
+  prefs:
+  - PREF_BQ
+  type: TYPE_TB
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'The normal distribution is characterized by two parameters: the mean, µ, and
+    standard deviation σ. The normal distribution with µ=0 and σ=1 is called the standard
+    normal distribution. Its CDF is defined by an integral that does not have a closed
+    form solution, but there are algorithms that evaluate it efficiently. One of them
+    is provided by SciPy: `scipy.stats.norm` is an object that represents a normal
+    distribution; it provides a method, `cdf`, that evaluates the standard normal
+    CDF:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'This result is correct: the median of the standard normal distribution is 0
+    (the same as the mean), and half of the values fall below the median, so CDF(0)
+    is 0.5.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`norm.cdf` takes optional parameters: `loc`, which specifies the mean, and
+    `scale`, which specifies the standard deviation.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`thinkstats2` makes this function a little easier to use by providing `EvalNormalCdf`,
+    which takes parameters `mu` and `sigma` and evaluates the CDF at `x`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: Figure [5.3](#analytic_gaussian_cdf) shows CDFs for normal distributions with
+    a range of parameters. The sigmoid shape of these curves is a recognizable characteristic
+    of a normal distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the previous chapter we looked at the distribution of birth weights in the
+    NSFG. Figure [5.4](#analytic_birthwgt_model) shows the empirical CDF of weights
+    for all live births and the CDF of a normal distribution with the same mean and
+    variance.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '![](../Images/7598133038205b0f9e8e58c098a6e89e.png)'
+  prefs:
+  - PREF_BQ
+  type: TYPE_IMG
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '| Figure 5.4: CDF of birth weights with a normal model. |'
+  prefs:
+  - PREF_BQ
+  type: TYPE_TB
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: The normal distribution is a good model for this dataset, so if we summarize
+    the distribution with the parameters µ = 7.28 and σ = 1.24, the resulting error
+    (difference between the model and the data) is small.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Below the 10th percentile there is a discrepancy between the data and the model;
+    there are more light babies than we would expect in a normal distribution. If
+    we are specifically interested in preterm babies, it would be important to get
+    this part of the distribution right, so it might not be appropriate to use the
+    normal model.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5.3  Normal probability plot
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: For the exponential distribution, and a few others, there are simple transformations
+    we can use to test whether an analytic distribution is a good model for a dataset.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'For the normal distribution there is no such transformation, but there is an
+    alternative called a normal probability plot. There are two ways to generate a
+    normal probability plot: the hard way and the easy way. If you are interested
+    in the hard way, you can read about it at [https://en.wikipedia.org/wiki/Normal_probability_plot](https://en.wikipedia.org/wiki/Normal_probability_plot).
+    Here’s the easy way:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Sort the values in the sample.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: From a standard normal distribution (µ=0 and σ=1), generate a random sample
+    with the same size as the sample, and sort it.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Plot the sorted values from the sample versus the random values.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'If the distribution of the sample is approximately normal, the result is a
+    straight line with intercept `mu` and slope `sigma`. `thinkstats2` provides `NormalProbability`,
+    which takes a sample and returns two NumPy arrays:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '![](../Images/80cc141dcbf185aad2e625bd21eae50a.png)'
+  prefs:
+  - PREF_BQ
+  type: TYPE_IMG
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '| Figure 5.5: Normal probability plot for random samples from normal distributions.
+    |'
+  prefs:
+  - PREF_BQ
+  type: TYPE_TB
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '`ys` contains the sorted values from `sample`; `xs` contains the random values
+    from the standard normal distribution.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: To test `NormalProbability` I generated some fake samples that were actually
+    drawn from normal distributions with various parameters. Figure [5.5](#analytic_normal_prob_example)
+    shows the results. The lines are approximately straight, with values in the tails
+    deviating more than values near the mean.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now let’s try it with real data. Here’s code to generate a normal probability
+    plot for the birth weight data from the previous section. It plots a gray line
+    that represents the model and a blue line that represents the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`weights` is a pandas Series of birth weights; `mean` and `std` are the mean
+    and standard deviation.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`FitLine` takes a sequence of `xs`, an intercept, and a slope; it returns `fxs`
+    and `fys` that represent a line with the given parameters, evaluated at the values
+    in `xs`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`NormalProbability` returns `xs` and `ys` that contain values from the standard
+    normal distribution and values from `weights`. If the distribution of weights
+    is normal, the data should match the model.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '![](../Images/28feaf05f70cf87a3dfe8f06180ddf9d.png)'
+  prefs:
+  - PREF_BQ
+  type: TYPE_IMG
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '| Figure 5.6: Normal probability plot of birth weights. |'
+  prefs:
+  - PREF_BQ
+  type: TYPE_TB
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Figure [5.6](#analytic_birthwgt_normal) shows the results for all live births,
+    and also for full term births (pregnancy length greater than 36 weeks). Both curves
+    match the model near the mean and deviate in the tails. The heaviest babies are
+    heavier than what the model expects, and the lightest babies are lighter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: When we select only full term births, we remove some of the lightest weights,
+    which reduces the discrepancy in the lower tail of the distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This plot suggests that the normal model describes the distribution well within
+    a few standard deviations from the mean, but not in the tails. Whether it is good
+    enough for practical purposes depends on the purposes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5.4  The lognormal distribution
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: If the logarithms of a set of values have a normal distribution, the values
+    have a lognormal distribution. The CDF of the lognormal distribution is the same
+    as the CDF of the normal distribution, with logx substituted for x.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| CDF[lognormal](x) = CDF[normal](logx) |'
+  prefs: []
+  type: TYPE_TB
+- en: The parameters of the lognormal distribution are usually denoted µ and σ. But
+    remember that these parameters are *not* the mean and standard deviation; the
+    mean of a lognormal distribution is exp(µ +σ²/2) and the standard deviation is
+    ugly (see [http://wikipedia.org/wiki/Log-normal_distribution](http://wikipedia.org/wiki/Log-normal_distribution)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '![](../Images/fabbcf82db90a3bd3f8ef108aa7836ef.png)'
+  prefs:
+  - PREF_BQ
+  type: TYPE_IMG
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '| Figure 5.7: CDF of adult weights (left); CDF of logarithms adult weights
+    (right). |'
+  prefs:
+  - PREF_BQ
+  type: TYPE_TB
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: If a sample is approximately lognormal and you plot the CDF of its logarithms,
+    the result will have the characteristic shape of a normal distribution. To test
+    how well the sample fits a lognormal model, you can make a normal probability
+    plot using the log of the values in the sample.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As an example, let’s look at the distribution of adult weights, which is approximately
+    lognormal.^([2](#note2))
+  prefs: []
+  type: TYPE_NORMAL
+- en: The National Center for Chronic Disease Prevention and Health Promotion conducts
+    an annual survey as part of the Behavioral Risk Factor Surveillance System (BRFSS).^([3](#note3))
+    In 2008, they interviewed 414,509 respondents and asked about their demographics,
+    health, and health risks. Among the data they collected are the weights in kilograms
+    of 398,484 respondents.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The repository for this book contains `CDBRFS08.ASC.gz`, a fixed-width ASCII
+    file that contains data from the BRFSS, and `brfss.py`, which reads the file and
+    analyzes the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '![](../Images/50957af740795a75877b0522e4657b69.png)'
+  prefs:
+  - PREF_BQ
+  type: TYPE_IMG
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '| Figure 5.8: Normal probability plots for adult weight on a linear scale (left)
+    and log scale (right). |'
+  prefs:
+  - PREF_BQ
+  type: TYPE_TB
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Figure [5.7](#brfss_weight) (left) shows the distribution of adult weights on
+    a linear scale with a normal model. Figure[5.7](#brfss_weight) (right) shows the
+    same distribution on a log scale with a lognormal model. The lognormal model is
+    a better fit, but this representation of the data does not make the difference
+    particularly dramatic.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Figure [5.8](#brfss_weight_normal) shows normal probability plots for adult
+    weights, w, and for their logarithms, log[10] w. Now it is apparent that the data
+    deviate substantially from the normal model. On the other hand, the lognormal
+    model is a good match for the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5.5  The Pareto distribution
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The Pareto distribution is named after the economist Vilfredo Pareto, who used
+    it to describe the distribution of wealth (see [http://wikipedia.org/wiki/Pareto_distribution](http://wikipedia.org/wiki/Pareto_distribution)).
+    Since then, it has been used to describe phenomena in the natural and social sciences
+    including sizes of cities and towns, sand particles and meteorites, forest fires
+    and earthquakes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The CDF of the Pareto distribution is:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| CDF(x) = 1 −  | ⎛ ⎜'
+  prefs: []
+  type: TYPE_NORMAL
+- en: ⎜
+  prefs: []
+  type: TYPE_NORMAL
+- en: ⎝ |
+  prefs: []
+  type: TYPE_NORMAL
+- en: '&#124; x &#124;'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '&#124;  &#124;'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '&#124; x[m] &#124;'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '|   | ⎞ ⎟'
+  prefs: []
+  type: TYPE_NORMAL
+- en: ⎟
+  prefs: []
+  type: TYPE_NORMAL
+- en: ⎠ |
+  prefs: []
+  type: TYPE_NORMAL
+- en: '&#124; −α &#124;'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '&#124;    &#124;'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '&#124;   &#124;'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '|   |'
+  prefs: []
+  type: TYPE_TB
+- en: The parameters x[m] and α determine the location and shape of the distribution.
+    x[m] is the minimum possible value. Figure[5.9](#analytic_pareto_cdf) shows CDFs
+    of Pareto distributions with x[m] = 0.5 and different values of α.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '![](../Images/5c0072d316d2a3827927d1332b6b918e.png)'
+  prefs:
+  - PREF_BQ
+  type: TYPE_IMG
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '| Figure 5.9: CDFs of Pareto distributions with different parameters. |'
+  prefs:
+  - PREF_BQ
+  type: TYPE_TB
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'There is a simple visual test that indicates whether an empirical distribution
+    fits a Pareto distribution: on a log-log scale, the CCDF looks like a straight
+    line. Let’s see why that works.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If you plot the CCDF of a sample from a Pareto distribution on a linear scale,
+    you expect to see a function like:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| y ≈  | ⎛ ⎜'
+  prefs: []
+  type: TYPE_NORMAL
+- en: ⎜
+  prefs: []
+  type: TYPE_NORMAL
+- en: ⎝ |
+  prefs: []
+  type: TYPE_NORMAL
+- en: '&#124; x &#124;'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '&#124;  &#124;'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '&#124; x[m] &#124;'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '|   | ⎞ ⎟'
+  prefs: []
+  type: TYPE_NORMAL
+- en: ⎟
+  prefs: []
+  type: TYPE_NORMAL
+- en: ⎠ |
+  prefs: []
+  type: TYPE_NORMAL
+- en: '&#124; −α &#124;'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '&#124;    &#124;'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '&#124;   &#124;'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '|   |'
+  prefs: []
+  type: TYPE_TB
+- en: 'Taking the log of both sides yields:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| logy ≈ −α (logx − logx[m]) |'
+  prefs: []
+  type: TYPE_TB
+- en: So if you plot logy versus logx, it should look like a straight line with slope
+    −α and intercept α logx[m].
+  prefs: []
+  type: TYPE_NORMAL
+- en: As an example, let’s look at the sizes of cities and towns. The U.S. Census
+    Bureau publishes the population of every incorporated city and town in the United
+    States.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '![](../Images/a6c989f2234d4c920b42e41c0b8c3566.png)'
+  prefs:
+  - PREF_BQ
+  type: TYPE_IMG
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '| Figure 5.10: CCDFs of city and town populations, on a log-log scale. |'
+  prefs:
+  - PREF_BQ
+  type: TYPE_TB
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: I downloaded their data from [http://www.census.gov/popest/data/cities/totals/2012/SUB-EST2012-3.html](http://www.census.gov/popest/data/cities/totals/2012/SUB-EST2012-3.html);
+    it is in the repository for this book in a file named `PEP_2012_PEPANNRES_with_ann.csv`.
+    The repository also contains `populations.py`, which reads the file and plots
+    the distribution of populations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Figure [5.10](#populations_pareto) shows the CCDF of populations on a log-log
+    scale. The largest 1% of cities and towns, below 10^(−2), fall along a straight
+    line. So we could conclude, as some researchers have, that the tail of this distribution
+    fits a Pareto model.
+  prefs: []
+  type: TYPE_NORMAL
+- en: On the other hand, a lognormal distribution also models the data well. Figure [5.11](#populations_normal)
+    shows the CDF of populations and a lognormal model (left), and a normal probability
+    plot (right). Both plots show good agreement between the data and the model.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Neither model is perfect. The Pareto model only applies to the largest 1% of
+    cities, but it is a better fit for that part of the distribution. The lognormal
+    model is a better fit for the other 99%. Which model is appropriate depends on
+    which part of the distribution is relevant.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '![](../Images/cd2a66429b5d11f9907a9c3937ac8c70.png)'
+  prefs:
+  - PREF_BQ
+  type: TYPE_IMG
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '| Figure 5.11: CDF of city and town populations on a log-x scale (left), and
+    normal probability plot of log-transformed populations (right). |'
+  prefs:
+  - PREF_BQ
+  type: TYPE_TB
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 5.6  Generating random numbers
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Analytic CDFs can be used to generate random numbers with a given distribution
+    function, p = CDF(x). If there is an efficient way to compute the inverse CDF,
+    we can generate random values with the appropriate distribution by choosing p
+    from a uniform distribution between 0 and 1, then choosing x = ICDF(p).
+  prefs: []
+  type: TYPE_NORMAL
+- en: For example, the CDF of the exponential distribution is
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| p = 1 − e^(−λ x)  |'
+  prefs: []
+  type: TYPE_TB
+- en: 'Solving for x yields:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| x = −log(1 − p) / λ  |'
+  prefs: []
+  type: TYPE_TB
+- en: So in Python we can write
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`expovariate` takes `lam` and returns a random value chosen from the exponential
+    distribution with parameter `lam`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Two notes about this implementation: I called the parameter `lam` because `lambda`
+    is a Python keyword. Also, since log0 is undefined, we have to be a little careful.
+    The implementation of `random.random` can return 0 but not 1, so 1 − p can be
+    1 but not 0, so `log(1-p)` is always defined.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5.7  Why model?
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: At the beginning of this chapter, I said that many real world phenomena can
+    be modeled with analytic distributions. “So,” you might ask, “what?”
+  prefs: []
+  type: TYPE_NORMAL
+- en: Like all models, analytic distributions are abstractions, which means they leave
+    out details that are considered irrelevant. For example, an observed distribution
+    might have measurement errors or quirks that are specific to the sample; analytic
+    models smooth out these idiosyncrasies.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Analytic models are also a form of data compression. When a model fits a dataset
+    well, a small set of parameters can summarize a large amount of data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'It is sometimes surprising when data from a natural phenomenon fit an analytic
+    distribution, but these observations can provide insight into physical systems.
+    Sometimes we can explain why an observed distribution has a particular form. For
+    example, Pareto distributions are often the result of generative processes with
+    positive feedback (so-called preferential attachment processes: see [http://wikipedia.org/wiki/Preferential_attachment](http://wikipedia.org/wiki/Preferential_attachment).).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Also, analytic distributions lend themselves to mathematical analysis, as we
+    will see in Chapter [14](thinkstats2015.html#analysis).
+  prefs: []
+  type: TYPE_NORMAL
+- en: But it is important to remember that all models are imperfect. Data from the
+    real world never fit an analytic distribution perfectly. People sometimes talk
+    as if data are generated by models; for example, they might say that the distribution
+    of human heights is normal, or the distribution of income is lognormal. Taken
+    literally, these claims cannot be true; there are always differences between the
+    real world and mathematical models.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Models are useful if they capture the relevant aspects of the real world and
+    leave out unneeded details. But what is “relevant” or “unneeded” depends on what
+    you are planning to use the model for.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5.8  Exercises
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: For the following exercises, you can start with `chap05ex.ipynb`. My solution
+    is in `chap05soln.ipynb`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exercise 1   *In the BRFSS (see Section*[*5.4*](#lognormal)*), the distribution
+    of heights is roughly normal with parameters* µ = 178 *cm and* σ = 7.7 *cm for
+    men, and* µ = 163 *cm and* σ = 7.3 *cm for women.*
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*In order to join Blue Man Group, you have to be male between 5’10” and 6’1”
+    (see* [*http://bluemancasting.com*](http://bluemancasting.com)*). What percentage
+    of the U.S. male population is in this range? Hint: use `scipy.stats.norm.cdf`.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exercise 2   *To get a feel for the Pareto distribution, let’s see how different
+    the world would be if the distribution of human height were Pareto. With the parameters*
+    x[m] = 1 *m and* α = 1.7*, we get a distribution with a reasonable minimum, 1
+    m, and median, 1.5 m.*
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*Plot this distribution. What is the mean human height in Pareto world? What
+    fraction of the population is shorter than the mean? If there are 7 billion people
+    in Pareto world, how many do we expect to be taller than 1 km? How tall do we
+    expect the tallest person to be?*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exercise 3
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*The Weibull distribution is a generalization of the exponential distribution
+    that comes up in failure analysis (see* [*http://wikipedia.org/wiki/Weibull_distribution*](http://wikipedia.org/wiki/Weibull_distribution)*).
+    Its CDF is*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| CDF(x) = 1 − e^(−(x / λ)^k)  |'
+  prefs: []
+  type: TYPE_TB
+- en: '*Can you find a transformation that makes a Weibull distribution look like
+    a straight line? What do the slope and intercept of the line indicate?*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*Use `random.weibullvariate` to generate a sample from a Weibull distribution
+    and use it to test your transformation.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exercise 4   *For small values of* n*, we don’t expect an empirical distribution
+    to fit an analytic distribution exactly. One way to evaluate the quality of fit
+    is to generate a sample from an analytic distribution and see how well it matches
+    the data.*
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*For example, in Section *[*5.1*](#exponential) *we plotted the distribution
+    of time between births and saw that it is approximately exponential. But the distribution
+    is based on only 44 data points. To see whether the data might have come from
+    an exponential distribution, generate 44 values from an exponential distribution
+    with the same mean as the data, about 33 minutes between births.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*Plot the distribution of the random values and compare it to the actual distribution.
+    You can use `random.expovariate` to generate the values.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exercise 5   *In the repository for this book, you’ll find a set of data files
+    called `mystery0.dat`, `mystery1.dat`, and so on. Each contains a sequence of
+    random numbers generated from an analytic distribution.*
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*You will also find `test_models.py`, a script that reads data from a file
+    and plots the CDF under a variety of transforms. You can run it like this:*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Based on these plots, you should be able to infer what kind of distribution
+    generated each file. If you are stumped, you can look in `mystery.py`, which contains
+    the code that generated the files.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exercise 6
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*The distributions of wealth and income are sometimes modeled using lognormal
+    and Pareto distributions. To see which is better, let’s look at some data.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*The Current Population Survey (CPS) is a joint effort of the Bureau of Labor
+    Statistics and the Census Bureau to study income and related variables. Data collected
+    in 2013 is available from* [*http://www.census.gov/hhes/www/cpstables/032013/hhinc/toc.htm*](http://www.census.gov/hhes/www/cpstables/032013/hhinc/toc.htm)*.
+    I downloaded `hinc06.xls`, which is an Excel spreadsheet with information about
+    household income, and converted it to `hinc06.csv`, a CSV file you will find in
+    the repository for this book. You will also find `hinc.py`, which reads this file.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*Extract the distribution of incomes from this dataset. Are any of the analytic
+    distributions in this chapter a good model of the data? A solution to this exercise
+    is in `hinc_soln.py`.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5.9  Glossary
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'empirical distribution: The distribution of values in a sample.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'analytic distribution: A distribution whose CDF is an analytic function.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'model: A useful simplification. Analytic distributions are often good models
+    of more complex empirical distributions.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'interarrival time: The elapsed time between two events.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'complementary CDF: A function that maps from a value, x, to the fraction of
+    values that exceed x, which is 1 − CDF(x).'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'standard normal distribution: The normal distribution with mean 0 and standard
+    deviation 1.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'normal probability plot: A plot of the values in a sample versus random values
+    from a standard normal distribution.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[1](#text1)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: This example is based on information and data from Dunn, “A Simple Dataset for
+    Demonstrating Common Distributions,” Journal of Statistics Education v.7, n.3
+    (1999).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[2](#text2)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'I was tipped off to this possibility by a comment (without citation) at [http://mathworld.wolfram.com/LogNormalDistribution.html](http://mathworld.wolfram.com/LogNormalDistribution.html).
+    Subsequently I found a paper that proposes the log transform and suggests a cause:
+    Penman and Johnson, “The Changing Shape of the Body Mass Index Distribution Curve
+    in the Population,” Preventing Chronic Disease, 2006 July; 3(3): A74\. Online
+    at [http://www.ncbi.nlm.nih.gov/pmc/articles/PMC1636707](http://www.ncbi.nlm.nih.gov/pmc/articles/PMC1636707).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[3](#text3)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Centers for Disease Control and Prevention (CDC). Behavioral Risk Factor Surveillance
+    System Survey Data. Atlanta, Georgia: U.S. Department of Health and Human Services,
+    Centers for Disease Control and Prevention, 2008.'
+  prefs: []
+  type: TYPE_NORMAL

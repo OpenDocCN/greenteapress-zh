@@ -1,0 +1,489 @@
+- en: The Left Handed Sister Problem
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/ThinkBayes2/sister.html](https://allendowney.github.io/ThinkBayes2/sister.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Suppose you meet someone who looks like the brother of your friend Mary. You
+    ask if he has a sister named Mary, and he says “Yes I do, but I don’t think I
+    know you.”
+  prefs: []
+  type: TYPE_NORMAL
+- en: You remember that Mary has a sister who is left-handed, but you don’t remember
+    her name. So you ask your new friend if he has another sister who is left-handed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If he does, how much evidence does that provide that he is the brother of your
+    friend, rather than a random person who coincidentally has a sister named Mary
+    and another sister who is left-handed. In other words, what is the Bayes factor
+    of the left-handed sister?
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s assume:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Out of 100 families with children, 20 have one child, 30 have two children,
+    40 have three children, and 10 have four children.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: All children are either boys or girls with equal probability, one girl in 10
+    is left-handed, and one girl in 100 is named Mary.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Name, sex, and handedness are independent, so every child has the same probability
+    of being a girl, left-handed, or named Mary.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: If the person you met had more than one sister named Mary, he would have said
+    so, but he could have more than one sister who is left handed.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Constructing the prior
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: I’ll make a Pandas `Series` that enumerates possible families with 2, 3, or
+    4 children.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: To compute the proportion of each type of family, I’ll use Scipy to compute
+    the binomial distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: And put the results into a Pandas `Series`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  |  | Prior |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Boys | Girls |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 0 | 0.2500 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 1 | 0.5000 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 2 | 0.2500 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 0 | 0.1250 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 1 | 0.3750 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 2 | 0.3750 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 3 | 0.1250 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 4 | 0 | 0.0625 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 1 | 0.2500 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 2 | 0.3750 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 3 | 0.2500 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 4 | 0.0625 |'
+  prefs: []
+  type: TYPE_TB
+- en: But we also have the information frequencies of these families are proportional
+    to 30%, 40%, and 10%, so we can multiply through.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  |  | Prior |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Boys | Girls |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 0 | 7.500 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 1 | 15.000 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 2 | 7.500 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 0 | 5.000 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 1 | 15.000 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 2 | 15.000 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 3 | 5.000 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 4 | 0 | 0.625 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 1 | 2.500 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 2 | 3.750 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 3 | 2.500 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 4 | 0.625 |'
+  prefs: []
+  type: TYPE_TB
+- en: So that’s the (unnormalized) prior.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I’ll use the following function to do Bayesian updates.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: This function takes a prior and a likelihood and returns a `DataFrame`
+  prefs: []
+  type: TYPE_NORMAL
+- en: The first update
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Due to [length-biased sampling](https://towardsdatascience.com/the-inspection-paradox-is-everywhere-2ef1c2e9d709),
+    the person you met is more likely to come from family with more boys. Specifically,
+    the likelihood of meeting someone from a family with \(n\) boys is proportional
+    to \(n\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  |  | Prior | Likelihood | Product | Posterior |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Boys | Girls |  |  |  |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 0 | 7.500 | 2 | 15.0 | 0.136364 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 1 | 15.000 | 1 | 15.0 | 0.136364 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 2 | 7.500 | 0 | 0.0 | 0.000000 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 0 | 5.000 | 3 | 15.0 | 0.136364 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 1 | 15.000 | 2 | 30.0 | 0.272727 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 2 | 15.000 | 1 | 15.0 | 0.136364 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 3 | 5.000 | 0 | 0.0 | 0.000000 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 4 | 0 | 0.625 | 4 | 2.5 | 0.022727 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 1 | 2.500 | 3 | 7.5 | 0.068182 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 2 | 3.750 | 2 | 7.5 | 0.068182 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 3 | 2.500 | 1 | 2.5 | 0.022727 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 4 | 0.625 | 0 | 0.0 | 0.000000 |'
+  prefs: []
+  type: TYPE_TB
+- en: So that’s what we should believe about the family after the first update.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The second update
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The likelihood that a person has exactly one sister named Mary is given by the
+    binomial distribution where `n` is the number of girls in the family and `p` is
+    the probability that a girl is named Mary.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s the second update.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  |  | Prior | Likelihood | Product | Posterior |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Boys | Girls |  |  |  |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 0 | 0.136364 | 0.000000 | 0.000000 | 0.000000 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 1 | 0.136364 | 0.010000 | 0.001364 | 0.143677 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 2 | 0.000000 | 0.019800 | 0.000000 | 0.000000 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 0 | 0.136364 | 0.000000 | 0.000000 | 0.000000 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 1 | 0.272727 | 0.010000 | 0.002727 | 0.287354 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 2 | 0.136364 | 0.019800 | 0.002700 | 0.284481 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 3 | 0.000000 | 0.029403 | 0.000000 | 0.000000 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 4 | 0 | 0.022727 | 0.000000 | 0.000000 | 0.000000 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 1 | 0.068182 | 0.010000 | 0.000682 | 0.071839 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 2 | 0.068182 | 0.019800 | 0.001350 | 0.142240 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 3 | 0.022727 | 0.029403 | 0.000668 | 0.070409 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 4 | 0.000000 | 0.038812 | 0.000000 | 0.000000 |'
+  prefs: []
+  type: TYPE_TB
+- en: Based on the sister named Mary, we can rule out families with no girls, and
+    families with more than one girls are more likely.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Probability of a left-handed sister
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Finally, we can compute the probability that he has at least one left-handed
+    sister. The likelihood comes from the binomial distribution again, where `n` is
+    the number of *additional* sisters, and we use the survival function to compute
+    the probability that one or more are left-handed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  |  | Additional sisters |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Boys | Girls |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 0 | 0 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 1 | 0 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 2 | 1 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 0 | 0 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 1 | 0 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 2 | 1 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 3 | 2 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 4 | 0 | 0 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 1 | 0 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 2 | 1 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 3 | 2 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 4 | 3 |'
+  prefs: []
+  type: TYPE_TB
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: A convenient way to compute the total probability of an outcome is to do an
+    update as if it happened, ignore the posterior probabilities, and compute the
+    sum of the products.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  |  | Prior | Likelihood | Product | Posterior |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Boys | Girls |  |  |  |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 0 | 0.000000 | 0.000 | 0.000000 | 0.000000 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 1 | 0.143677 | 0.000 | 0.000000 | 0.000000 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 2 | 0.000000 | 0.100 | 0.000000 | 0.000000 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 0 | 0.000000 | 0.000 | 0.000000 | 0.000000 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 1 | 0.287354 | 0.000 | 0.000000 | 0.000000 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 2 | 0.284481 | 0.100 | 0.028448 | 0.507550 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 3 | 0.000000 | 0.190 | 0.000000 | 0.000000 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 4 | 0 | 0.000000 | 0.000 | 0.000000 | 0.000000 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 1 | 0.071839 | 0.000 | 0.000000 | 0.000000 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 2 | 0.142240 | 0.100 | 0.014224 | 0.253775 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 3 | 0.070409 | 0.190 | 0.013378 | 0.238675 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 4 | 0.000000 | 0.271 | 0.000000 | 0.000000 |'
+  prefs: []
+  type: TYPE_TB
+- en: At this point, there are only three family types left standing, (1,2), (2,2),
+    and (1,3).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s the total probability that your new friend has a left-handed sister.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: The Bayes factor
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: If your interlocutor is the brother of your friend, the probability is 1 that
+    he has a left-handed sister. If he is not the brother of your friend, the probability
+    is `p`. So the Bayes factor is the ratio of these probabilities.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: This might be the hardest Bayesian puzzle I’ve created. In fact, I got it wrong
+    the first time, until [Aubrey Clayton convinced me](https://twitter.com/aubreyclayton/status/1420041376377475075)
+    I needed to take into account the number of boys and girls in each family, not
+    just the size. He solved the problem by enumerating the possible families in a
+    giant spreadsheet! So the fact that we get the same answer gives me more confidence
+    it is correct.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Thanks to Aubrey and the other folks on Twitter who submitted answers, including
+    [Corey Yanofsky](https://twitter.com/Corey_Yanofsky/status/1418627294256582664)
+    and [Michal Haltuf](https://twitter.com/MichalHaltuf/status/1418685902717693952).
+  prefs: []
+  type: TYPE_NORMAL
+- en: If you like this puzzle, you might like the [new second edition of *Think Bayes*](https://thinkbayes.com).
+  prefs: []
+  type: TYPE_NORMAL

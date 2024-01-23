@@ -1,0 +1,1133 @@
+- en: Hypothesis Testing
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/ElementsOfDataScience/13_hypothesis.html](https://allendowney.github.io/ElementsOfDataScience/13_hypothesis.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/13_hypothesis.ipynb)
+    or [click here to download it](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/13_hypothesis.ipynb).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: This chapter introduces statistical hypothesis testing, which is such a contentious
+    topic in the history of statistics, it’s hard to provide a simple definition.
+    Instead, I’ll start with an example, present the problem hypothesis testing is
+    intended to solve, and then show a solution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The solution I’ll show is different from what you might find in a statistics
+    book. Instead of mathematical analysis, we will use computational simulations.
+    This approach has two advantages and one disadvantage:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Advantage: The standard statistics curriculum includes many different tests,
+    and many people find it hard to remember which one to use. In my opinion, simulation
+    makes it clearer that there is only one testing framework.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Advantage: Simulations make modeling decision explicit. All statistical methods
+    are based on models, but when we use mathematical methods, it is easy to forget
+    the assumptions they are based on. With computation, the assumptions are more
+    visible, and it is easier to try different models.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Disadvantage: Simulation uses a lot of computation. Some of the examples in
+    this notebook take several seconds to run and the results are only approximate.
+    For some problems, there are analytic methods that are faster and more accurate.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The examples in this chapter include results from a clinical trial related to
+    peanut allergies, and survey data from the National Survey of Family Growth (NSFG)
+    and the Behavioral Risk Factor Surveillance System (BRFSS).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Testing Medical Treatments
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The LEAP study was a randomized trial that tested the effect of eating peanut
+    snacks on the development of peanut allergies (see [http://www.leapstudy.co.uk/leap-0#.YEJax3VKikA](http://www.leapstudy.co.uk/leap-0#.YEJax3VKikA)).
+    The subjects were infants who were at high risk of developing peanut allergies
+    because they had been diagnosed with other food allergies. Over a period of several
+    years, half of the subjects were periodically given a snack containing peanuts;
+    the other half were given no peanuts at all.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The conclusion of the study, reported in 2015 is:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Of the children who avoided peanut, 17% developed peanut allergy by the age
+    of 5 years. Remarkably, only 3% of the children who were randomized to eating
+    the peanut snack developed allergy by age 5\. Therefore, in high-risk infants,
+    sustained consumption of peanut beginning in the first 11 months of life was highly
+    effective in preventing the development of peanut allergy.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: These results seem impressive, but as skeptical data scientists we should wonder
+    whether it is possible that we are getting fooled by randomness. Maybe the apparent
+    difference between the groups is due to chance, not the effectiveness of the treatment.
+    To see whether this is likely, we will simulate the experiment using a model where
+    the treatment has no effect, and see how often we see such a big difference between
+    the groups.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Detailed results of the study are reported in the *New England Journal of Medicine*
+    (see [https://www.nejm.org/doi/full/10.1056/NEJMoa1414850](https://www.nejm.org/doi/full/10.1056/NEJMoa1414850)).
+    In that article, Figure 1 shows the number of subjects in the treatment and control
+    groups, which happened to be equal.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: And from Figure 2 we can extract the number of subjects who developed peanut
+    allergies in each group. Specifically, we’ll use the numbers from the “intention
+    to treat analysis for both cohorts”.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: Using these numbers, we can compute the risk in each group as a percentage.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: These are consistent with the percentages reported in the paper. To quantify
+    the difference between the groups, we’ll use relative risk, which is the ratio
+    of the risks in the two groups.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The risk in the treatment group is about 18% of the risk in the control group.
+    So it seems like the treatment is highly effective. To check, let’s imagine a
+    world where the treatment is completely ineffective, so the risk is actually the
+    same in both groups, and the difference we saw is due to chance. If that’s true,
+    we can estimate the hypothetical risk by combining the two groups:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: If the risk is the same for both groups, it is close to 10%. Now we can use
+    this hypothetical risk to simulate the experiment. Here’s `simulate_group_percent`,
+    which we saw in Chapter 11. It takes as parameters the size of the group, `n`,
+    and the risk, `p`. It simulates the experiment and returns the number of cases
+    as a percentage of the group, which is the observed risk.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: If we call this function many times, the result is a list of observed risks,
+    one for each simulated experiment. Here’s the list for the treatment group.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: And the control group.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: If we divide these lists elementwise, the result is a list of relative risks,
+    one for each simulated experiment.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can use a KDE plot to visualize the distribution of these results.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/13_hypothesis_26_0.png](../Images/652fdb0bede9a612fa25c7dfa01e0feb.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Remember that these simulations are based on the assumption that the risk is
+    the same for both groups, so we expect the relative risk to be near 1 most of
+    the time. And it is.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In some simulated experiments, the relative risk is as low as 0.5 or as high
+    as 2, which means it is plausible we could see results like that by chance, even
+    if there is no difference between groups.
+  prefs: []
+  type: TYPE_NORMAL
+- en: But the relative risk in the actual experiment was 0.18, and we never see a
+    result as small as that in the simulated experiment. We can conclude that the
+    relative risk we saw is unlikely if the risk is actually the same in both groups.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Computing p-values
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Now suppose that in addition to the treatment and control groups, the experiment
+    included a placebo group that was given a snack that contained no peanuts. Suppose
+    this group was the same size as the others, and 42 of the subjects developed peanut
+    allergies.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To be clear, there was no third group, and I made up these numbers, but let’s
+    see how this hypothetical works out. Here’s the risk in the placebo group.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here’s the relative risk compared to the control group.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: The relative risk is less than 1, which means the risk in the placebo group
+    is a bit lower than in the control group. So we might wonder whether the placebo
+    was actually effective. To answer that question, at least partially, we can go
+    back to the results from the simulated experiment.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Under the assumption that there is actually no difference between the groups,
+    it would not be unusual to see a relative risk as low as 0.77 by chance. In fact,
+    we can compute the probability of seeing a relative risk as low or lower than
+    `relative_risk_placebo`, even if the two groups are the same, like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: This probability is called a **p-value** (see [https://en.wikipedia.org/wiki/P-value](https://en.wikipedia.org/wiki/P-value)).
+    In this case, the p-value is about 14%, which means that even if the two groups
+    are the same, we expect to see a relative risk as low as 0.77 about 14% of the
+    time. So, for this imagined experiment, we can’t rule out the possibility that
+    the apparent difference is due to chance.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Are first babies more likely to be late?
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In the previous example, we saw a difference in proportion between two groups.
+    As a second example, let’s consider a difference in means.
+  prefs: []
+  type: TYPE_NORMAL
+- en: When my wife and I were expecting our first child, we heard that first babies
+    are more likely to be born late. But we also heard that first babies are more
+    likely to be born early. So which is it? As a data scientist with too much time
+    on my hands, I decided to find out. I got data from the National Survey of Family
+    Growth (NSFG), the same survey we have used in previous chapters. I’ve put the
+    results from the 2015-2017 survey in an HDF file. Here are the first few rows.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | CASEID | OUTCOME | BIRTHWGT_LB1 | BIRTHWGT_OZ1 | PRGLNGTH | NBRNALIV |
+    AGECON | AGEPREG | BIRTHORD | HPAGELB | WGT2015_2017 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 70627 | 1 | 7.0 | 8.0 | 40 | 1.0 | 28 | 29.0 | 1.0 | 5.0 | 19877.457610
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 70627 | 4 | NaN | NaN | 14 | NaN | 32 | 32.0 | NaN | NaN | 19877.457610
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 70627 | 1 | 9.0 | 2.0 | 39 | 1.0 | 33 | 33.0 | 2.0 | 5.0 | 19877.457610
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 70628 | 1 | 6.0 | 9.0 | 39 | 1.0 | 17 | 18.0 | 1.0 | 1.0 | 4221.017695
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 4 | 70628 | 1 | 7.0 | 0.0 | 39 | 1.0 | 19 | 20.0 | 2.0 | 2.0 | 4221.017695
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: We’ll use the `OUTCOME` column to select pregnancies that ended with a live
+    birth.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: And use `PRGLNGTH` to select babies that were born full term, that is, during
+    or after the 37th week of pregnancy.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: This dataset includes data from 2724 first babies.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: And 3115 other (not first) babies.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can select pregnancy lengths for the first babies and others.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here are the mean pregnancy lengths for the two groups, in weeks.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: In this dataset, first babies are born a little later on average. The difference
+    is about 0.2 weeks, or 33 hours.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Relative to an average length of 39 weeks, that’s not a very big difference.
+    We might wonder if a difference as big as this would be likely, even if the two
+    groups are the same. To answer that question, let’s imagine a world where there
+    is no difference in pregnancy length between first babies and others. How should
+    we model a world like that? As always with modeling decisions, there are many
+    options. A simple one is to combine the two groups and compute the mean and standard
+    deviation of pregnancy length, like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can use `simulate_sample_mean` from Chapter 11 to draw a random sample
+    from a normal distribution with the given parameters and return the mean.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'If we run it 1000 times, it simulates the sampling and measurement process
+    and returns a list of results from 1000 simulated experiments. Here are the simulated
+    results with sample size `n_first`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE37]'
+  prefs: []
+  type: TYPE_PRE
+- en: And with sample size `n_other`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: If we subtract the simulated means elementwise, the result is a list of observed
+    differences from simulated experiments where the distribution is the same for
+    both groups.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE39]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can use a KDE plot to visualize the distribution of these values.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE40]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/13_hypothesis_64_0.png](../Images/31bd3f643026950fd3321396b7ab9c9c.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The center of this distribution is near zero, which makes sense if the distribution
+    in both group is the same. Just by chance, we sometimes see differences as big
+    as 0.1 weeks, but in 1000 simulations, we never see a difference as big as the
+    observed difference in the data, which is almost 0.2 weeks.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Based on this result, we can pretty much rule out the possibility that the difference
+    we saw is due to random sampling. But we should remember that there are other
+    possible sources of error. For one, pregnancy lengths in the NSFG are self-reported.
+    When the respondents are interviewed, their recollection of first babies might
+    be less accurate than their recollection of more recent babies. Or the estimation
+    of pregnancy length might be less accurate with less experienced mothers.
+  prefs: []
+  type: TYPE_NORMAL
+- en: A correspondent of mine, who knows more than me about giving birth, suggested
+    yet another possibility. If a first baby is born by [Caesarean section](https://en.wikipedia.org/wiki/Caesarean_section),
+    it is more likely that subsequent deliveries will be scheduled, and less likely
+    that they will go much past 39 weeks. So that could bring the average down for
+    non-first babies.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In summary, the results in this section suggest that the observed difference
+    is unlikely to be due to chance, but there are other possible explanations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Hypothesis Testing Framework
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'The examples we’ve done so far fit into the framework shown in this diagram:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../Images/1c42ca862250a8d3991037dae13796c8.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Using data from an experiment, we compute the observed **test statistic**, denoted
+    \(\delta^*\) in the diagram, which quantifies the size of the observed effect.
+    In the peanut allergy example, the test statistic is relative risk. In the pregnancy
+    length example, it is the difference in the means.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Then we build a model of a world where the effect does not exist. This model
+    is called the **null hypothesis** and denoted \(H_0\). In the peanut allergy example,
+    the model assumes that the risk is the same in both groups. In the pregnancy example,
+    it assumes that the lengths are drawn from the same normal distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Next we use the model to simulate the experiment many times. Each simulation
+    generates a dataset which we use to compute a test statistic, \(\delta\). Finally,
+    we collect the test statistics from the simulations and compute a p-value, which
+    is the probability under the null hypothesis of seeing a test statistic as big
+    as the observed effect, \(\delta*\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: If the p-value is small, we can usually rule out the possibility that the observed
+    effect is due to random variation. But often there are other explanations we can’t
+    rule out, including measurement error and unrepresentative sampling.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I emphasize the role of the model in this framework because for a given experiment
+    there might be several possible models, each including some elements of the real
+    world and ignoring others. For example, we used a normal distribution to model
+    variation in pregnancy length. If we don’t want to make this assumption, an alternative
+    is to simulate the null hypothesis by shuffling the pregnancy lengths.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following function takes two sequences representing the pregnancy lengths
+    for the two groups. It appends them into a single sequence, shuffles it, and then
+    splits it again into groups with the same size as the originals. The return value
+    is the difference in means between the groups.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE41]'
+  prefs: []
+  type: TYPE_PRE
+- en: If we call this function once, we get a random difference in means from a simulated
+    world where the distribution of pregnancy lengths is the same in both groups.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE42]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE43]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise:** Using this function to run 1000 simulations of the null hypothesis
+    and save the results as `diff2`. Make a KDE plot to compare the distribution of
+    `diff2` to the results from the normal model, `diff`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Compute the probability of seeing a difference as big as `diff_actual`. Is this
+    p-value consistent with the results we got with the normal model?
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** Are first babies more likely to be *light*? To find out, we can
+    use the birth weight data from the NSFG. The variables we need use special codes
+    to represent missing data, so let’s replace them with `NaN`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE44]'
+  prefs: []
+  type: TYPE_PRE
+- en: And combine pounds and ounces into a single variable.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE45]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can use `first` and `other` to select birth weights for first babies and
+    others, dropping the `NaN` values.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE46]'
+  prefs: []
+  type: TYPE_PRE
+- en: In this dataset, it looks like first babies are a little lighter, on average.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE47]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE48]'
+  prefs: []
+  type: TYPE_PRE
+- en: But as usual, we should wonder whether we are being fooled by randomness. To
+    find out, compute the actual difference between the means. Then use `simulate_two_groups`
+    to simulate a world where birth weights for both groups are drawn from the same
+    distribution. Under the null hypothesis, how often does the difference in means
+    exceed the actual difference in the dataset? What conclusion can you draw from
+    this result?
+  prefs: []
+  type: TYPE_NORMAL
+- en: Testing Correlation
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The method we used in the previous section is called a **permutation test**
+    because we permuted the pregnancy lengths before dividing them into groups (“permute”
+    is another word for shuffle). As another example, in this section we’ll use a
+    permutation tests to check whether an observed correlation might be due to chance.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As an example, let’s look again at the correlations we computed in Chapter 9,
+    using data from the Behavioral Risk Factor Surveillance System (BRFSS). The following
+    cell reads the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE49]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE50]'
+  prefs: []
+  type: TYPE_PRE
+- en: The correlations we computed were between height, weight and age.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE51]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | HTM4 | WTKG3 | AGE |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| HTM4 | 1.000000 | 0.477151 | -0.135980 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| WTKG3 | 0.477151 | 1.000000 | -0.064951 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| AGE | -0.135980 | -0.064951 | 1.000000 |'
+  prefs: []
+  type: TYPE_TB
+- en: The correlation between height and weight is about 0.48, which is moderately
+    strong; if you know someone’s height, you can make a better guess about their
+    weight. The other correlations are weaker; for example, knowing someone’s age
+    would not substantially improve your guesses about their height or weight.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Because these correlations are so small, we might wonder whether they are due
+    to chance. To answer this question, we can use permutation to simulate a world
+    where there is actually no correlation between two variables.
+  prefs: []
+  type: TYPE_NORMAL
+- en: But first we have to take a detour to figure out how to shuffle a Pandas `Series`.
+    As an example, I’ll extract the height data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE52]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE53]'
+  prefs: []
+  type: TYPE_PRE
+- en: The idiomatic way to shuffle a `Series` is to use `sample` with the argument
+    `frac=1`, which means that the fraction of the elements we want is `1`, that is,
+    all of them (see [https://stackoverflow.com/questions/29576430/shuffle-dataframe-rows](https://stackoverflow.com/questions/29576430/shuffle-dataframe-rows)).
+    By default, `sample` chooses elements without replacement, so the result contains
+    all of the elements in a random order.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE54]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE55]'
+  prefs: []
+  type: TYPE_PRE
+- en: If we check the first few elements, it seems like a random sample, so that’s
+    good. But let’s see what happens if we use the shuffled `Series` to compute a
+    correlation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE56]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE57]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'That result looks familiar: it is the correlation of the unshuffled columns.
+    The problem is that when we shuffle a `Series`, the index gets shuffled along
+    with it. When we compute a correlation, Pandas uses the index to line up the elements
+    from the first `Series` with the elements of the second `Series`. For many operations,
+    that’s the behavior we want, but in this case it defeats the purpose of shuffling!'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The solution is to use `reset_index`, which gives the `Series` a new index,
+    with the argument `drop=True`, which drops the old one. So we have to shuffle
+    `series` like this.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE58]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can compute a correlation with the shuffled `Series`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE59]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE60]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is small, as we expect it to be when the elements are aligned at
+    random.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Rather than repeat this awful idiom, let’s put it in a function and never speak
+    of it again.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE61]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following function takes a `DataFrame` and two column names, makes a shuffled
+    copy of one column, and computes its correlation with the other.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE62]'
+  prefs: []
+  type: TYPE_PRE
+- en: We only have to shuffle one of the columns; it doesn’t get any more random if
+    we shuffle both. Now we can use this function to generate a sample of correlations
+    with shuffled columns.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE63]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s the distribution of the correlations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE64]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/13_hypothesis_112_0.png](../Images/c7c1084d9f7d4b0a4d4f93e0ec568d8a.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The center of the distribution is near 0, and the largest values (positive or
+    negative) are around 0.005. If we compute the same distribution with different
+    columns, the results are pretty much the same. With samples this big, the correlation
+    between shuffled columns is generally small.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How do these values compare to the observed correlations?
+  prefs: []
+  type: TYPE_NORMAL
+- en: The correlation of height and weight is about 0.48, so it’s extremely unlikely
+    we would see a correlation as big as that by chance.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The correlation of height and age is smaller, around -0.14, but even that value
+    would be unlikely by chance.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: And the correlation of weight and age is even smaller, about -0.06, but that’s
+    still 10 times bigger than the biggest correlation in the simulations.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: We can conclude that these correlations are probably not due to chance. And
+    that’s useful in the sense that it rules out one possible explanation. But this
+    example also demonstrates a limitation of this kind of hypothesis testing. With
+    large sample sizes, variability due to randomness tends to be small, so it seldom
+    explains the effects we see in real data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: And hypothesis testing can be a distraction from more important questions. In
+    Chapter 9, we saw that the relationship between weight and age is nonlinear. But
+    the coefficient of correlation only measures linear relationships, so it does
+    not capture the real strength of the relationship. So testing a correlation might
+    not be the more useful thing to do in the first place. We can do better by testing
+    a regression model.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Testing Regression Models
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In the previous sections we used permutation to simulate a world where there
+    is no correlation between two variables. In this section we’ll apply the same
+    method to regression models.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As an example, we’ll use NSFG data to explore the relationship between a mother’s
+    age and her baby’s birth weight.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In previous sections we computed birth weight and a Boolean variable that identifies
+    first babies. Now we’ll store them as columns in `nsfg`, so we can use them with
+    StatsModels.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE65]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can select the subset of the rows that represent live, full-term births,
+    and make a copy so we can modify the subset without affecting the original.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE66]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE67]'
+  prefs: []
+  type: TYPE_PRE
+- en: To visualize the relationship between mother’s age and birth weight, we’ll use
+    a box plot with mother’s age grouped into 3-year bins. We can use `np.arange`
+    to make the bin boundaries, and `pd.cut` to put the values from `AGECON` into
+    bins.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE68]'
+  prefs: []
+  type: TYPE_PRE
+- en: The label for each bin is the midpoint of the range; I used a slice to remove
+    the last label because the number of bins is one less than the number of bin boundaries.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s the box plot.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE69]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/13_hypothesis_122_0.png](../Images/bb32adbc00fbb9808d3b47dac0ec3ebc.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: It looks like the average birth weight is highest if the mother is 25-31 years
+    old, and lower if she is younger or older. So the relationship might be nonlinear.
+    Nevertheless, let’s start with a linear model and work our way up. Here’s a simple
+    regression of birth weight as a function of the mother’s age at conception.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE70]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE71]'
+  prefs: []
+  type: TYPE_PRE
+- en: The slope of the regression line is 0.016 pounds per year, which means that
+    if one mother is a year older than another, we expect her baby to be about 0.016
+    pounds heavier, which is about a quarter of an ounce.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This parameter is small, so we might wonder whether the apparent effect is due
+    to chance. To answer that question, we will use permutation to simulate a world
+    where there is no relationship between mother’s age and birth weight.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As a test statistic, we’ll use the coefficient of determination, denoted \(R^2\),
+    which quantifies the predictive power of the model (see [https://en.wikipedia.org/wiki/Coefficient_of_determination](https://en.wikipedia.org/wiki/Coefficient_of_determination)).
+    The regression results include \(R^2\) in a variable called `rsquared`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE72]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE73]'
+  prefs: []
+  type: TYPE_PRE
+- en: The value of \(R^2\) for this model is very small, which means that our guesses
+    about a baby’s weight are barely improved if we know the mother’s age (and use
+    a linear model). So it seems possible that the apparent relationship between these
+    variables is due to chance. We can test this possibility by using permutation
+    to simulate a world where there is no such relationship.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following function takes a `DataFrame`, shuffles the `AGECON` column, computes
+    a linear regression model, and returns \(R^2\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE74]'
+  prefs: []
+  type: TYPE_PRE
+- en: If we call it many times, we get a sample from the distribution of \(R^2\) under
+    the null hypothesis.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE75]'
+  prefs: []
+  type: TYPE_PRE
+- en: After 200 attempts, the largest value of \(R^2\) is about 0.003, which is smaller
+    than the observed value of \(R^2\), about 0.008. We conclude that the observed
+    effect is bigger than we would expect to see by chance.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE76]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE77]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise:** The box plot suggests that the relationship between mother’s
+    age and birth weight is nonlinear, so let’s try a nonlinear model. I’ll add a
+    column to the `DataFrame` with the square of mother’s age.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE78]'
+  prefs: []
+  type: TYPE_PRE
+- en: And run the model again with both the linear and quadratic terms.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE79]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE80]'
+  prefs: []
+  type: TYPE_PRE
+- en: The parameter of `AGECON2` is quite small, so we might wonder whether it actually
+    improves the model, or might be the product of randomness. One way to answer this
+    question is to look at the improvement in \(R^2\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE81]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE82]'
+  prefs: []
+  type: TYPE_PRE
+- en: The value of \(R^2\) is about 0.012, compared to 0.008 with the linear model.
+    By this criterion, the quadratic model is a better, but when we add variables
+    to a model, we might get some improvement just by chance. To see how much, write
+    a function called `simulate_rsquared2` that takes a `DataFrame` as a parameter,
+    shuffles `AGECON2`, runs a regression model with `AGECON` and the shuffled values,
+    and returns \(R^2\). Run your function 200 times and count how often \(R^2\) from
+    the model exceeds the observed value from the dataset. What conclusion can you
+    draw?
+  prefs: []
+  type: TYPE_NORMAL
+- en: Controlling for Age
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In a previous exercise, you computed the difference in birth weight between
+    first babies and others, which is about 0.17 pounds, and you checked whether we
+    are likely to see a difference as big as that by chance. If things went according
+    to plan, you found that it is very unlikely.
+  prefs: []
+  type: TYPE_NORMAL
+- en: But that doesn’t necessarily mean that there is anything special about first
+    babies that makes them lighter than others. Rather, knowing a baby’s birth order
+    might provide information about some other factor that is related to birth weight.
+    The mother’s age could be that factor.
+  prefs: []
+  type: TYPE_NORMAL
+- en: First babies are likely to have younger mothers than other babies, and younger
+    mothers tend to have lighter babies. The difference we see in first babies might
+    be explained by their mothers’ ages. So let’s see what happens if we control for
+    age. Here’s a simple regression of birth weight as a function of the Boolean variable
+    `FIRST`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE83]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE84]'
+  prefs: []
+  type: TYPE_PRE
+- en: The parameter associated with `FIRST` is -0.17 pounds, which is the same as
+    the difference in means we computed. But now we can add `AGECON` as a control
+    variable.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE85]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE86]'
+  prefs: []
+  type: TYPE_PRE
+- en: The age effect accounts for some of the difference between first babies and
+    others. After controlling for age, the remaining difference is about 0.12 pounds.
+    Since the age effect is nonlinear, we can can control for age more effectively
+    by adding `AGECON2`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE87]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE88]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE89]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE90]'
+  prefs: []
+  type: TYPE_PRE
+- en: When we use a quadratic model to control for the age effect, the remaining difference
+    between first babies and others is smaller again, about 0.10 pounds.
+  prefs: []
+  type: TYPE_NORMAL
+- en: One of the warning signs of a spurious relationship between two variables is
+    that the effect gradually disappears as you add control variables. So we should
+    wonder whether the remaining effect might be due to chance. To find out, we’ll
+    use the following function, which simulates a world where there is no difference
+    in weight between first babies and others. It takes a `DataFrame` as a parameter,
+    shuffles the `FIRST` column, runs the regression model with `AGECON` and `AGECON2`,
+    and returns the estimated difference.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE91]'
+  prefs: []
+  type: TYPE_PRE
+- en: If we run it many times, we get a sample from the distribution of the test statistic
+    under the null hypothesis.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE92]'
+  prefs: []
+  type: TYPE_PRE
+- en: The range of values is wide enough that it occasionally exceeds the observed
+    effect size.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE93]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE94]'
+  prefs: []
+  type: TYPE_PRE
+- en: Our estimate of the p-value is only approximate, but it looks like it’s between
+    1% and 2%.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE95]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE96]'
+  prefs: []
+  type: TYPE_PRE
+- en: This result indicates that an observed difference of 0.1 pounds is possible,
+    but not likely, if the actual difference between the groups is zero.
+  prefs: []
+  type: TYPE_NORMAL
+- en: So how should we interpret a result like this? In the tradition of statistical
+    hypothesis testing, it is common to use 5% as the threshold between results that
+    are considered “statistically significant” or not (see [https://en.wikipedia.org/wiki/Statistical_hypothesis_testing](https://en.wikipedia.org/wiki/Statistical_hypothesis_testing)).
+    By that standard, the weight difference between first babies and others is statistically
+    significant.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'However, there are several problems with this practice:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: First, the choice of the threshold should depend on the context. For a life-and-death
+    decision, we might choose a more stringent threshold. For a topic of idle curiosity,
+    like this one, we could be more relaxed.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: But it might not be useful to apply a threshold at all. An alternative (which
+    is common in practice) is to report the p-value and let it speak for itself. It
+    provides no additional value to declare that the result is significant or not.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Finally, the use of the word “significant” is dangerously misleading, because
+    it implies that the result is important in practice. But a small p-value only
+    means that an observed effect would be unlikely to happen by chance. It doesn’t
+    mean it is important.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: This last point is particularly problematic with large datasets, because very
+    small effects can be statistically significant. We saw an example with the BRFSS
+    dataset, where the correlations we tested were *all* statistically significant,
+    even the ones that are too small to matter in practice.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Let’s review the examples in this chapter:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: We started with data from LEAP, which studied the effect of eating peanuts on
+    the development of peanut allergies. The test statistic was relative risk, and
+    the null hypothesis was that the treatment was ineffective.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Then we looked at the difference in pregnancy length for first babies and others.
+    We used the difference in means as the test statistic, and two models of the null
+    hypothesis: one based on a normal model and the other based on permutation of
+    the data. As an exercise, you tested the difference in weight between first babies
+    and others.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Next we used permutation to test correlations, using height, weight, and age
+    data from the BRFSS. This example shows that with large sample sizes, observed
+    effects are often “statistically significant”, even if they are too small to matter
+    in practice.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: We used regression models to explore the maternal age effect on birth weight.
+    To see whether the effect might be due to chance, we used permutation to model
+    the null hypothesis and \(R^2\) as a test statistic.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Finally, we explored the possibility that the first baby effect is actually
+    an indirect maternal age effect. After controlling for the mother’s age, we tested
+    whether the remaining difference between first babies and others might happen
+    by chance. We used permutation to model the null hypothesis and the estimated
+    slope as a test statistic.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: As a final exercise, below, you can use the same methods to explore the paternal
+    age effect.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** A paternal age effect is a relationship between the age of a
+    father and a variety of outcomes for their children (see [https://en.wikipedia.org/wiki/Paternal_age_effect](https://en.wikipedia.org/wiki/Paternal_age_effect)).
+    There is some evidence that young fathers and old fathers tend to have lighter
+    babies than fathers in the middle. Let’s see if that’s true for the babies in
+    the NSFG dataset. The `HPAGELB` column encodes the father’s age. Here are the
+    values, after replacing the codes for missing data with `NaN`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE97]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE98]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'And here’s what the codes mean:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| Code | Age |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | Under 20 years |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 20-24 years |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 25-29 years |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 4 | 30-34 years |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 5 | 35-39 years |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 6 | 40 years or older |'
+  prefs: []
+  type: TYPE_TB
+- en: Let’s create a new column that’s true for the fathers in the youngest and oldest
+    groups.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE99]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can use this column in a regression model to compute the difference in birth
+    weight for young and old fathers compared to the others.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE100]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE101]'
+  prefs: []
+  type: TYPE_PRE
+- en: The difference is negative, which is consistent with the theory, and about 0.14
+    pounds, which is comparable in size to the (apparent) first baby effect. But there
+    is a strong correlation between father’s age and mother’s age. So what seems like
+    a paternal age effect might actually be an indirect maternal age effect. To find
+    out, let’s see what happens if we control for the mother’s age. Run this model
+    again with `AGECON` and `AGECON2` as predictors. Does the observed effect of paternal
+    age get smaller?
+  prefs: []
+  type: TYPE_NORMAL
+- en: To see if the remaining effect could be due to randomness, write a function
+    that shuffles `YO_DAD`, runs the regression model, and returns the parameter associated
+    with the shuffled column. How often does this parameter exceed the observed value?
+    What conclusion can we draw from the results?
+  prefs: []
+  type: TYPE_NORMAL

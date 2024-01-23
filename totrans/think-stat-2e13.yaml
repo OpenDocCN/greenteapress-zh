@@ -1,0 +1,1033 @@
+- en: Chapter 12  Time series analysis
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://greenteapress.com/thinkstats2/html/thinkstats2013.html](https://greenteapress.com/thinkstats2/html/thinkstats2013.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: A time series is a sequence of measurements from a system that varies in time.
+    One famous example is the “hockey stick graph” that shows global average temperature
+    over time (see [https://en.wikipedia.org/wiki/Hockey_stick_graph](https://en.wikipedia.org/wiki/Hockey_stick_graph)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: The example I work with in this chapter comes from Zachary M. Jones, a researcher
+    in political science who studies the black market for cannabis in the U.S. ([http://zmjones.com/marijuana](http://zmjones.com/marijuana)).
+    He collected data from a web site called “Price of Weed” that crowdsources market
+    information by asking participants to report the price, quantity, quality, and
+    location of cannabis transactions ([http://www.priceofweed.com/](http://www.priceofweed.com/)).
+    The goal of his project is to investigate the effect of policy decisions, like
+    legalization, on markets. I find this project appealing because it is an example
+    that uses data to address important political questions, like drug policy.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I hope you will find this chapter interesting, but I’ll take this opportunity
+    to reiterate the importance of maintaining a professional attitude to data analysis.
+    Whether and which drugs should be illegal are important and difficult public policy
+    questions; our decisions should be informed by accurate data reported honestly.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The code for this chapter is in `timeseries.py`. For information about downloading
+    and working with this code, see Section [0.2](thinkstats2001.html#code).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 12.1  Importing and cleaning
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'The data I downloaded from Mr. Jones’s site is in the repository for this book.
+    The following code reads it into a pandas DataFrame:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`parse_dates` tells `read_csv` to interpret values in column 5 as dates and
+    convert them to NumPy `datetime64` objects.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The DataFrame has a row for each reported transaction and the following columns:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'city: string city name.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'state: two-letter state abbreviation.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'price: price paid in dollars.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'amount: quantity purchased in grams.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'quality: high, medium, or low quality, as reported by the purchaser.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'date: date of report, presumed to be shortly after date of purchase.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'ppg: price per gram, in dollars.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'state.name: string state name.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'lat: approximate latitude of the transaction, based on city name.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'lon: approximate longitude of the transaction.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Each transaction is an event in time, so we could treat this dataset as a time
+    series. But the events are not equally spaced in time; the number of transactions
+    reported each day varies from 0 to several hundred. Many methods used to analyze
+    time series require the measurements to be equally spaced, or at least things
+    are simpler if they are.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In order to demonstrate these methods, I divide the dataset into groups by reported
+    quality, and then transform each group into an equally spaced series by computing
+    the mean daily price per gram.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`groupby` is a DataFrame method that returns a GroupBy object, `groups`; used
+    in a for loop, it iterates the names of the groups and the DataFrames that represent
+    them. Since the values of `quality` are `low`, `medium`, and `high`, we get three
+    groups with those names.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The loop iterates through the groups and calls `GroupByDay`, which computes
+    the daily average price and returns a new DataFrame:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: The parameter, `transactions`, is a DataFrame that contains columns `date` and
+    `ppg`. We select these two columns, then group by `date`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The result, `grouped`, is a map from each date to a DataFrame that contains
+    prices reported on that date. `aggregate` is a GroupBy method that iterates through
+    the groups and applies a function to each column of the group; in this case there
+    is only one column, `ppg`. So the result of `aggregate` is a DataFrame with one
+    row for each date and one column, `ppg`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Dates in these DataFrames are stored as NumPy `datetime64` objects, which are
+    represented as 64-bit integers in nanoseconds. For some of the analyses coming
+    up, it will be convenient to work with time in more human-friendly units, like
+    years. So `GroupByDay` adds a column named `date` by copying the `index`, then
+    adds `years`, which contains the number of years since the first transaction as
+    a floating-point number.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The resulting DataFrame has columns `ppg`, `date`, and `years`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 12.2  Plotting
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'The result from `GroupByQualityAndDay` is a map from each quality to a DataFrame
+    of daily prices. Here’s the code I use to plot the three time series:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`PrePlot` with `rows=3` means that we are planning to make three subplots laid
+    out in three rows. The loop iterates through the DataFrames and creates a scatter
+    plot for each. It is common to plot time series with line segments between the
+    points, but in this case there are many data points and prices are highly variable,
+    so adding lines would not help.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Since the labels on the x-axis are dates, I use `pyplot.xticks` to rotate the
+    “ticks” 30 degrees, making them more readable.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '![](../Images/e245484870275fc7969f0dbbdfe2da66.png)'
+  prefs:
+  - PREF_BQ
+  type: TYPE_IMG
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '| Figure 12.1: Time series of daily price per gram for high, medium, and low
+    quality cannabis. |'
+  prefs:
+  - PREF_BQ
+  type: TYPE_TB
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Figure [12.1](#timeseries1) shows the result. One apparent feature in these
+    plots is a gap around November 2013\. It’s possible that data collection was not
+    active during this time, or the data might not be available. We will consider
+    ways to deal with this missing data later.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Visually, it looks like the price of high quality cannabis is declining during
+    this period, and the price of medium quality is increasing. The price of low quality
+    might also be increasing, but it is harder to tell, since it seems to be more
+    volatile. Keep in mind that quality data is reported by volunteers, so trends
+    over time might reflect changes in how participants apply these labels.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 12.3  Linear regression
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Although there are methods specific to time series analysis, for many problems
+    a simple way to get started is by applying general-purpose tools like linear regression.
+    The following function takes a DataFrame of daily prices and computes a least
+    squares fit, returning the model and results objects from StatsModels:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Then we can iterate through the qualities and fit a model to each:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Here are the results:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| quality | intercept | slope | R² |'
+  prefs: []
+  type: TYPE_TB
+- en: '| high | 13.450 | -0.708 | 0.444 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| medium | 8.879 | 0.283 | 0.050 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| low | 5.362 | 0.568 | 0.030 |'
+  prefs: []
+  type: TYPE_TB
+- en: The estimated slopes indicate that the price of high quality cannabis dropped
+    by about 71 cents per year during the observed interval; for medium quality it
+    increased by 28 cents per year, and for low quality it increased by 57 cents per
+    year. These estimates are all statistically significant with very small p-values.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The R² value for high quality cannabis is 0.44, which means that time as an
+    explanatory variable accounts for 44% of the observed variability in price. For
+    the other qualities, the change in price is smaller, and variability in prices
+    is higher, so the values of R² are smaller (but still statistically significant).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The following code plots the observed prices and the fitted values:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: As we saw in Section [11.8](thinkstats2012.html#implementation), `model` contains
+    `exog` and `endog`, NumPy arrays with the exogenous (explanatory) and endogenous
+    (dependent) variables.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '![](../Images/cda31d85c4970c02086678b0bd995185.png)'
+  prefs:
+  - PREF_BQ
+  type: TYPE_IMG
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '| Figure 12.2: Time series of daily price per gram for high quality cannabis,
+    and a linear least squares fit. |'
+  prefs:
+  - PREF_BQ
+  type: TYPE_TB
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '`PlotFittedValues` makes a scatter plot of the data points and a line plot
+    of the fitted values. Figure [12.2](#timeseries2) shows the results for high quality
+    cannabis. The model seems like a good linear fit for the data; nevertheless, linear
+    regression is not the most appropriate choice for this data:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: First, there is no reason to expect the long-term trend to be a line or any
+    other simple function. In general, prices are determined by supply and demand,
+    both of which vary over time in unpredictable ways.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Second, the linear regression model gives equal weight to all data, recent and
+    past. For purposes of prediction, we should probably give more weight to recent
+    data.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Finally, one of the assumptions of linear regression is that the residuals are
+    uncorrelated noise. With time series data, this assumption is often false because
+    successive values are correlated.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The next section presents an alternative that is more appropriate for time series
+    data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 12.4  Moving averages
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Most time series analysis is based on the modeling assumption that the observed
+    series is the sum of three components:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Trend: A smooth function that captures persistent changes.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Seasonality: Periodic variation, possibly including daily, weekly, monthly,
+    or yearly cycles.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Noise: Random variation around the long-term trend.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Regression is one way to extract the trend from a series, as we saw in the previous
+    section. But if the trend is not a simple function, a good alternative is a moving
+    average. A moving average divides the series into overlapping regions, called
+    windows, and computes the average of the values in each window.
+  prefs: []
+  type: TYPE_NORMAL
+- en: One of the simplest moving averages is the rolling mean, which computes the
+    mean of the values in each window. For example, if the window size is 3, the rolling
+    mean computes the mean of values 0 through 2, 1 through 3, 2 through 4, etc.
+  prefs: []
+  type: TYPE_NORMAL
+- en: pandas provides `rolling_mean`, which takes a Series and a window size and returns
+    a new Series.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: The first two values are `nan`; the next value is the mean of the first three
+    elements, 0, 1, and 2\. The next value is the mean of 1, 2, and 3\. And so on.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Before we can apply `rolling_mean` to the cannabis data, we have to deal with
+    missing values. There are a few days in the observed interval with no reported
+    transactions for one or more quality categories, and a period in 2013 when data
+    collection was not active.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In the DataFrames we have used so far, these dates are absent; the index skips
+    days with no data. For the analysis that follows, we need to represent this missing
+    data explicitly. We can do that by “reindexing” the DataFrame:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: The first line computes a date range that includes every day from the beginning
+    to the end of the observed interval. The second line creates a new DataFrame with
+    all of the data from `daily`, but including rows for all dates, filled with `nan`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now we can plot the rolling mean like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: The window size is 30, so each value in `roll_mean` is the mean of 30 values
+    from `reindexed.ppg`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '![](../Images/49eb17db4c1ca458a927d7542ce58fc4.png)'
+  prefs:
+  - PREF_BQ
+  type: TYPE_IMG
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '| Figure 12.3: Daily price and a rolling mean (left) and exponentially-weighted
+    moving average (right). |'
+  prefs:
+  - PREF_BQ
+  type: TYPE_TB
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Figure [12.3](#timeseries10) (left) shows the result. The rolling mean seems
+    to do a good job of smoothing out the noise and extracting the trend. The first
+    29 values are `nan`, and wherever there’s a missing value, it’s followed by another
+    29 `nan`s. There are ways to fill in these gaps, but they are a minor nuisance.
+  prefs: []
+  type: TYPE_NORMAL
+- en: An alternative is the exponentially-weighted moving average (EWMA), which has
+    two advantages. First, as the name suggests, it computes a weighted average where
+    the most recent value has the highest weight and the weights for previous values
+    drop off exponentially. Second, the pandas implementation of EWMA handles missing
+    values better.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: The span parameter corresponds roughly to the window size of a moving average;
+    it controls how fast the weights drop off, so it determines the number of points
+    that make a non-negligible contribution to each average.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Figure [12.3](#timeseries10) (right) shows the EWMA for the same data. It is
+    similar to the rolling mean, where they are both defined, but it has no missing
+    values, which makes it easier to work with. The values are noisy at the beginning
+    of the time series, because they are based on fewer data points.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 12.5  Missing values
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Now that we have characterized the trend of the time series, the next step is
+    to investigate seasonality, which is periodic behavior. Time series data based
+    on human behavior often exhibits daily, weekly, monthly, or yearly cycles. In
+    the next section I present methods to test for seasonality, but they don’t work
+    well with missing data, so we have to solve that problem first.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'A simple and common way to fill missing data is to use a moving average. The
+    Series method `fillna` does just what we want:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: Wherever `reindexed.ppg` is `nan`, `fillna` replaces it with the corresponding
+    value from `ewma`. The `inplace` flag tells `fillna` to modify the existing Series
+    rather than create a new one.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'A drawback of this method is that it understates the noise in the series. We
+    can solve that problem by adding in resampled residuals:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`resid` contains the residual values, not including days when `ppg` is `nan`.
+    `fake_data` contains the sum of the moving average and a random sample of residuals.
+    Finally, `fillna` replaces `nan` with values from `fake_data`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '![](../Images/7d75da41b3dcddd89c001753c236b50c.png)'
+  prefs:
+  - PREF_BQ
+  type: TYPE_IMG
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '| Figure 12.4: Daily price with filled data. |'
+  prefs:
+  - PREF_BQ
+  type: TYPE_TB
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Figure [12.4](#timeseries8) shows the result. The filled data is visually similar
+    to the actual values. Since the resampled residuals are random, the results are
+    different every time; later we’ll see how to characterize the error created by
+    missing values.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 12.6  Serial correlation
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: As prices vary from day to day, you might expect to see patterns. If the price
+    is high on Monday, you might expect it to be high for a few more days; and if
+    it’s low, you might expect it to stay low. A pattern like this is called serial
+    correlation, because each value is correlated with the next one in the series.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To compute serial correlation, we can shift the time series by an interval
+    called a lag, and then compute the correlation of the shifted series with the
+    original:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: After the shift, the first `lag` values are `nan`, so I use a slice to remove
+    them before computing `Corr`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If we apply `SerialCorr` to the raw price data with lag 1, we find serial correlation
+    0.48 for the high quality category, 0.16 for medium and 0.10 for low. In any time
+    series with a long-term trend, we expect to see strong serial correlations; for
+    example, if prices are falling, we expect to see values above the mean in the
+    first half of the series and values below the mean in the second half.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'It is more interesting to see if the correlation persists if you subtract away
+    the trend. For example, we can compute the residual of the EWMA and then compute
+    its serial correlation:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: With lag=1, the serial correlations for the de-trended data are -0.022 for high
+    quality, -0.015 for medium, and 0.036 for low. These values are small, indicating
+    that there is little or no one-day serial correlation in this series.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To check for weekly, monthly, and yearly seasonality, I ran the analysis again
+    with different lags. Here are the results:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| lag | high | medium | low |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | -0.029 | -0.014 | 0.034 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 7 | 0.02 | -0.042 | -0.0097 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 30 | 0.014 | -0.0064 | -0.013 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 365 | 0.045 | 0.015 | 0.033 |'
+  prefs: []
+  type: TYPE_TB
+- en: In the next section we’ll test whether these correlations are statistically
+    significant (they are not), but at this point we can tentatively conclude that
+    there are no substantial seasonal patterns in these series, at least not with
+    these lags.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 12.7  Autocorrelation
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: If you think a series might have some serial correlation, but you don’t know
+    which lags to test, you can test them all! The autocorrelation function is a function
+    that maps from lag to the serial correlation with the given lag. “Autocorrelation”
+    is another name for serial correlation, used more often when the lag is not 1.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'StatsModels, which we used for linear regression in Section [11.1](thinkstats2012.html#statsmodels),
+    also provides functions for time series analysis, including `acf`, which computes
+    the autocorrelation function:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`acf` computes serial correlations with lags from 0 through `nlags`. The `unbiased`
+    flag tells `acf` to correct the estimates for the sample size. The result is an
+    array of correlations. If we select daily prices for high quality, and extract
+    correlations for lags 1, 7, 30, and 365, we can confirm that `acf` and `SerialCorr`
+    yield approximately the same results:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: With `lag=0`, `acf` computes the correlation of the series with itself, which
+    is always 1.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '![](../Images/5973817390cd5f7934138e22767cc8dd.png)'
+  prefs:
+  - PREF_BQ
+  type: TYPE_IMG
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '| Figure 12.5: Autocorrelation function for daily prices (left), and daily
+    prices with a simulated weekly seasonality (right). |'
+  prefs:
+  - PREF_BQ
+  type: TYPE_TB
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Figure [12.5](#timeseries9) (left) shows autocorrelation functions for the three
+    quality categories, with `nlags=40`. The gray region shows the normal variability
+    we would expect if there is no actual autocorrelation; anything that falls outside
+    this range is statistically significant, with a p-value less than 5%. Since the
+    false positive rate is 5%, and we are computing 120 correlations (40 lags for
+    each of 3 times series), we expect to see about 6 points outside this region.
+    In fact, there are 7\. We conclude that there are no autocorrelations in these
+    series that could not be explained by chance.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I computed the gray regions by resampling the residuals. You can see my code
+    in `timeseries.py`; the function is called `SimulateAutocorrelation`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To see what the autocorrelation function looks like when there is a seasonal
+    component, I generated simulated data by adding a weekly cycle. Assuming that
+    demand for cannabis is higher on weekends, we might expect the price to be higher.
+    To simulate this effect, I select dates that fall on Friday or Saturday and add
+    a random amount to the price, chosen from a uniform distribution from $0 to $2.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`frisat` is a boolean Series, `True` if the day of the week is Friday or Saturday.
+    `fake` is a new DataFrame, initially a copy of `daily`, which we modify by adding
+    random values to `ppg`. `frisat.sum()` is the total number of Fridays and Saturdays,
+    which is the number of random values we have to generate.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Figure [12.5](#timeseries9) (right) shows autocorrelation functions for prices
+    with this simulated seasonality. As expected, the correlations are highest when
+    the lag is a multiple of 7\. For high and medium quality, the new correlations
+    are statistically significant. For low quality they are not, because residuals
+    in this category are large; the effect would have to be bigger to be visible through
+    the noise.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 12.8  Prediction
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Time series analysis can be used to investigate, and sometimes explain, the
+    behavior of systems that vary in time. It can also make predictions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The linear regressions we used in Section [12.3](#timeregress) can be used
+    for prediction. The RegressionResults class provides `predict`, which takes a
+    DataFrame containing the explanatory variables and returns a sequence of predictions.
+    Here’s the code:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`results` is a RegressionResults object; `years` is the sequence of time values
+    we want predictions for. The function constructs a DataFrame, passes it to `predict`,
+    and returns the result.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: If all we want is a single, best-guess prediction, we’re done. But for most
+    purposes it is important to quantify error. In other words, we want to know how
+    accurate the prediction is likely to be.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'There are three sources of error we should take into account:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Sampling error: The prediction is based on estimated parameters, which depend
+    on random variation in the sample. If we run the experiment again, we expect the
+    estimates to vary.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Random variation: Even if the estimated parameters are perfect, the observed
+    data varies randomly around the long-term trend, and we expect this variation
+    to continue in the future.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Modeling error: We have already seen evidence that the long-term trend is not
+    linear, so predictions based on a linear model will eventually fail.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Another source of error to consider is unexpected future events. Agricultural
+    prices are affected by weather, and all prices are affected by politics and law.
+    As I write this, cannabis is legal in two states and legal for medical purposes
+    in 20 more. If more states legalize it, the price is likely to go down. But if
+    the federal government cracks down, the price might go up.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Modeling errors and unexpected future events are hard to quantify. Sampling
+    error and random variation are easier to deal with, so we’ll do that first.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To quantify sampling error, I use resampling, as we did in Section [10.4](thinkstats2011.html#regest).
+    As always, the goal is to use the actual observations to simulate what would happen
+    if we ran the experiment again. The simulations are based on the assumption that
+    the estimated parameters are correct, but the random residuals could have been
+    different. Here is a function that runs the simulations:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`daily` is a DataFrame containing the observed prices; `iters` is the number
+    of simulations to run.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`SimulateResults` uses `RunLinearModel`, from Section [12.3](#timeregress),
+    to estimate the slope and intercept of the observed values.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Each time through the loop, it generates a “fake” dataset by resampling the
+    residuals and adding them to the fitted values. Then it runs a linear model on
+    the fake data and stores the RegressionResults object.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The next step is to use the simulated results to generate predictions:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`GeneratePredictions` takes the sequence of results from the previous step,
+    as well as `years`, which is a sequence of floats that specifies the interval
+    to generate predictions for, and `add_resid`, which indicates whether it should
+    add resampled residuals to the straight-line prediction. `GeneratePredictions`
+    iterates through the sequence of RegressionResults and generates a sequence of
+    predictions.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '![](../Images/e02e8f5248569ee65ddd5a624335c5e0.png)'
+  prefs:
+  - PREF_BQ
+  type: TYPE_IMG
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '| Figure 12.6: Predictions based on linear fits, showing variation due to sampling
+    error and prediction error. |'
+  prefs:
+  - PREF_BQ
+  type: TYPE_TB
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'Finally, here’s the code that plots a 90% confidence interval for the predictions:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`PlotPredictions` calls `GeneratePredictions` twice: once with `add_resid=True`
+    and again with `add_resid=False`. It uses `PercentileRows` to select the 5th and
+    95th percentiles for each year, then plots a gray region between these bounds.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Figure [12.6](#timeseries4) shows the result. The dark gray region represents
+    a 90% confidence interval for the sampling error; that is, uncertainty about the
+    estimated slope and intercept due to sampling.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The lighter region shows a 90% confidence interval for prediction error, which
+    is the sum of sampling error and random variation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: These regions quantify sampling error and random variation, but not modeling
+    error. In general modeling error is hard to quantify, but in this case we can
+    address at least one source of error, unpredictable external events.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The regression model is based on the assumption that the system is stationary;
+    that is, that the parameters of the model don’t change over time. Specifically,
+    it assumes that the slope and intercept are constant, as well as the distribution
+    of residuals.
+  prefs: []
+  type: TYPE_NORMAL
+- en: But looking at the moving averages in Figure [12.3](#timeseries10), it seems
+    like the slope changes at least once during the observed interval, and the variance
+    of the residuals seems bigger in the first half than the second.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As a result, the parameters we get depend on the interval we observe. To see
+    how much effect this has on the predictions, we can extend `SimulateResults` to
+    use intervals of observation with different start and end dates. My implementation
+    is in `timeseries.py`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '![](../Images/13a2d33d8c28e4238f501ab702d30cbe.png)'
+  prefs:
+  - PREF_BQ
+  type: TYPE_IMG
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '| Figure 12.7: Predictions based on linear fits, showing variation due to the
+    interval of observation. |'
+  prefs:
+  - PREF_BQ
+  type: TYPE_TB
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Figure [12.7](#timeseries5) shows the result for the medium quality category.
+    The lightest gray area shows a confidence interval that includes uncertainty due
+    to sampling error, random variation, and variation in the interval of observation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The model based on the entire interval has positive slope, indicating that prices
+    were increasing. But the most recent interval shows signs of decreasing prices,
+    so models based on the most recent data have negative slope. As a result, the
+    widest predictive interval includes the possibility of decreasing prices over
+    the next year.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 12.9  Further reading
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Time series analysis is a big topic; this chapter has only scratched the surface.
+    An important tool for working with time series data is autoregression, which I
+    did not cover here, mostly because it turns out not to be useful for the example
+    data I worked with.
+  prefs: []
+  type: TYPE_NORMAL
+- en: But once you have learned the material in this chapter, you are well prepared
+    to learn about autoregression. One resource I recommend is Philipp Janert’s book,
+    Data Analysis with Open Source Tools, O’Reilly Media, 2011\. His chapter on time
+    series analysis picks up where this one leaves off.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 12.10  Exercises
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: My solution to these exercises is in `chap12soln.py`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exercise 1   *The linear model I used in this chapter has the obvious drawback
+    that it is linear, and there is no reason to expect prices to change linearly
+    over time. We can add flexibility to the model by adding a quadratic term, as
+    we did in Section*[*11.3*](thinkstats2012.html#nonlinear)*.*
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*Use a quadratic model to fit the time series of daily prices, and use the
+    model to generate predictions. You will have to write a version of `RunLinearModel`
+    that runs that quadratic model, but after that you should be able to reuse code
+    in `timeseries.py` to generate predictions.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exercise 2   *Write a definition for a class named `SerialCorrelationTest` that
+    extends `HypothesisTest` from Section*[*9.2*](thinkstats2010.html#hypotest)*.
+    It should take a series and a lag as data, compute the serial correlation of the
+    series with the given lag, and then compute the p-value of the observed correlation.*
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*Use this class to test whether the serial correlation in raw price data is
+    statistically significant. Also test the residuals of the linear model and (if
+    you did the previous exercise), the quadratic model.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exercise 3   *There are several ways to extend the EWMA model to generate predictions.
+    One of the simplest is something like this:*
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*Compute the EWMA of the time series and use the last point as an intercept,
+    `inter`.*'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '*Compute the EWMA of differences between successive elements in the time series
+    and use the last point as a slope, `slope`.*'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '*To predict values at future times, compute `inter + slope * dt`, where `dt`
+    is the difference between the time of the prediction and the time of the last
+    observation.*'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '*Use this method to generate predictions for a year after the last observation.
+    A few hints:*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*Use `timeseries.FillMissing` to fill in missing values before running this
+    analysis. That way the time between consecutive elements is consistent.*'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '*Use `Series.diff` to compute differences between successive elements.*'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '*Use `reindex` to extend the DataFrame index into the future.*'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '*Use `fillna` to put your predicted values into the DataFrame.*'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 12.11  Glossary
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'time series: A dataset where each value is associated with a timestamp, often
+    a series of measurements and the times they were collected.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'window: A sequence of consecutive values in a time series, often used to compute
+    a moving average.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'moving average: One of several statistics intended to estimate the underlying
+    trend in a time series by computing averages (of some kind) for a series of overlapping
+    windows.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'rolling mean: A moving average based on the mean value in each window.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'exponentially-weighted moving average (EWMA): A moving average based on a weighted
+    mean that gives the highest weight to the most recent values, and exponentially
+    decreasing weights to earlier values.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'span: A parameter of EWMA that determines how quickly the weights decrease.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'serial correlation: Correlation between a time series and a shifted or lagged
+    version of itself.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'lag: The size of the shift in a serial correlation or autocorrelation.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'autocorrelation: A more general term for a serial correlation with any amount
+    of lag.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'autocorrelation function: A function that maps from lag to serial correlation.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'stationary: A model is stationary if the parameters and the distribution of
+    residuals do not change over time.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL

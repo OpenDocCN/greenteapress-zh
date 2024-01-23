@@ -1,0 +1,114 @@
+- en: Comparing birth rates
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/ThinkBayes2/hospital_birth_rate.html](https://allendowney.github.io/ThinkBayes2/hospital_birth_rate.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '[Run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ThinkBayes2/blob/master/examples/hospital_birth_rate.ipynb)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s an exercise that was in a draft of *Think Bayes*, but I ended up cutting
+    it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** Two doctors fresh out of medical school are arguing about whose
+    hospital delivers more babies. The first doctor says, “I’ve been at Hospital A
+    for one week, and already we’ve had a day when we delivered 19 babies.”'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The second doctor says, “I’ve been at Hospital B for two weeks, and already
+    there’s been a 20-baby day.”
+  prefs: []
+  type: TYPE_NORMAL
+- en: Which hospital do you think delivers more babies on average? You can assume
+    that the number of babies born in a day is well modeled by a [Poisson distribution](https://en.wikipedia.org/wiki/Poisson_distribution)
+    with parameter \(\lambda\), which is the Greek letter pronounced “lambda”.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The following function computes the PMF of a Poisson distribution with parameter
+    `lam` over a range of integers, `qs`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'For example, if the actual value of \(\lambda\) is 8, we can compute the distribution
+    of babies born in a single day like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here’s what it looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]</details> ![_images/455e7212e0df3a64e4f896ba479de5ffdd0a75b04650b5db54c0254de70941eb.png](../Images/a154135c5310ff6d54430faa88766d2f.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The mean of this distribution is the parameter, \(\lambda\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here’s what the distributions look like for the maximum number of babies
+    after one week or two weeks.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/13f236aa791bf6e4cbb7a3f41b08f4a23884da7cfee2b831e04ab79ef253e372.png](../Images/6572fd1f7bbcbc590f53a1ad3b42adbb.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Now you finish it off from there.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/dd6f0474e1a7d5db3a82a64f9408af43695c0e0a153f549cfdfd353ae06cce86.png](../Images/e611f3ad921d5602ff8901e3306514bc.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE

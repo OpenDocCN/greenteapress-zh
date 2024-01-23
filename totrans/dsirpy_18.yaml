@@ -1,0 +1,579 @@
+- en: Redis
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/DSIRP/redis.html](https://allendowney.github.io/DSIRP/redis.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/redis.ipynb)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/chap01.ipynb)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Persistence
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Data stored only in the memory of a running program is called “volatile”, because
+    it disappears when the program ends.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Data that still exists after the program that created it ends is called “persistent”.
+    In general, files stored in a file system are persistent, as well as data stored
+    in databases.
+  prefs: []
+  type: TYPE_NORMAL
+- en: A simple way to make data persistent is to store it in a file. For example,
+    before the program ends, it could translate its data structures into a format
+    like [JSON](https://en.wikipedia.org/wiki/JSON) and then write them into a file.
+    When it starts again, it could read the file and rebuild the data structures.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'But there are several problems with this solution:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Reading and writing large data structures (like a Web index) would be slow.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The entire data structure might not fit into the memory of a single running
+    program.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: If a program ends unexpectedly (for example, due to a power outage), any changes
+    made since the program last started would be lost.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A better alternative is a database that provides persistent storage and the
+    ability to read and write parts of the database without reading and writing the
+    whole thing.
+  prefs: []
+  type: TYPE_NORMAL
+- en: There are many kinds of [database management systems](https://en.wikipedia.org/wiki/Database)
+    (DBMS) that provide these capabilities.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The database we’ll use is Redis, which organizes data in structures that are
+    similar to Python data structures. Among others, it provides lists, hashes (similar
+    to Python dictionaries), and sets.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Redis is a “key-value database”, which means that it represents a mapping from
+    keys to values. In Redis, the keys are strings and the values can be one of several
+    types.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Redis clients and servers
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Redis is usually run as a remote service; in fact, the name stands for “REmote
+    DIctionary Server”. To use Redis, you have to run the Redis server somewhere and
+    then connect to it using a Redis client.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To get started, we’ll run the Redis server on the same machine where we run
+    the Jupyter server. This will let us get started quickly, but if we are running
+    Jupyter on Colab, the database lives in a Colab runtime environment, which disappears
+    when we shut down the notebook. So it’s not really persistent.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Later we will use [RedisToGo](http://thinkdast.com/redistogo), which runs Redis
+    in the cloud. Databases on RedisToGo are persistent.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following cell installs the Redis server and starts it with the `daemonize`
+    options, which runs it in the background so the Jupyter server can resume.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: redis-py
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: To talk to the Redis server, we’ll use [redis-py](https://redis-py.readthedocs.io/en/stable/index.html).
+    Here’s how we use it to connect to the Redis server.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: The `set` method adds a key-value pair to the database. In the following example,
+    the key and value are both strings.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: The `get` method looks up a key and returns the corresponding value.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is not actually a string; it is a [bytearray](https://stackoverflow.com/questions/6224052/what-is-the-difference-between-a-string-and-a-byte-string).
+  prefs: []
+  type: TYPE_NORMAL
+- en: For many purposes, a bytearray behaves like a string so for now we will treat
+    it like a string and deal with differences as they arise.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The values can be integers or floating-point numbers.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: And Redis provides some functions that understand numbers, like `incr`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: But if you `get` a numeric value, the result is a bytearray.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: If you want to do math with it, you have to convert it back to a number.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: If you want to set more than one value at a time, you can pass a dictionary
+    to `mset`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: If you try to store any other type in a Redis database, you get an error.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: We could use the `repr` function to create a string representation of a list,
+    but that representation is Python-specific. It would be better to make a database
+    that can work with any language. To do that, we can use JSON to create a string
+    representation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The `json` module provides a function `dumps`, that creates a language-independent
+    representation of most Python objects.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: When we read one of these strings back, we can use `loads` to convert it back
+    to a Python object.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise:** Create a dictionary with a few items, including keys and values
+    with different types. Use `json` to make a string representation of the dictionary,
+    then store it as a value in the Redis database. Retrieve it and convert it back
+    to a dictionary.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Redis Data Types
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'JSON can represent most Python objects, so we could use it to store arbitrary
+    data structures in Redis. But in that case Redis only knows that they are strings;
+    it can’t work with them as data structures. For example, if we store a data structure
+    in JSON, the only way to modify it would be to:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Get the entire structure, which might be large,
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Load it back into a Python structure,
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Modify the Python structure,
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Dump it back into a JSON string, and
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Replace the old value in the database with the new value.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: That’s not very efficient. A better alternative is to use the data types Redis
+    provides, which you can read about in the [Redis Data Types Intro](https://redis.io/topics/data-types-intro).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Lists
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The `rpush` method adds new elements to the end of a list (the `r` indicates
+    the right-hand side of the list).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: You don’t have to do anything special to create a list; if it doesn’t exist,
+    Redis creates it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`llen` returns the length of the list.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`lrange` gets elements from a list. With the indices `0` and `-1`, it gets
+    all of the elements.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is a Python list, but the elements are bytestrings.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`rpop` removes elements from the end of the list.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: You can read more about the other list methods in the [Redis documentation](https://redis.io/commands#list).
+  prefs: []
+  type: TYPE_NORMAL
+- en: And you can read about the [redis-py API here](https://redis-py.readthedocs.io/en/stable/index.html#redis.Redis.rpush).
+  prefs: []
+  type: TYPE_NORMAL
+- en: In general, the documentation of Redis is very good; the documentation of `redis-py`
+    is a little rough around the edges.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** Use `lpush` to add elements to the beginning of the list and
+    `lpop` to remove them.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Note: Redis lists behave like linked lists, so you can add and remove elements
+    from either end in constant time.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE37]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE39]'
+  prefs: []
+  type: TYPE_PRE
+- en: Hash
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: A [Redis hash](https://redis.io/commands#hash) is similar to a Python dictionary,
+    but just to make things confusing the nomenclature is a little different.
+  prefs: []
+  type: TYPE_NORMAL
+- en: What we would call a “key” in a Python dictionary is called a “field” in a Redis
+    hash.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The `hset` method sets a field-value pair in a hash:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE40]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE41]'
+  prefs: []
+  type: TYPE_PRE
+- en: The `hget` method looks up a field and returns the corresponding value.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE42]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE43]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`hset` can also take a Python dictionary as a parameter:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE44]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE45]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'To iterate the elements of a hash, we can use `hscan_iter`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE46]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE47]'
+  prefs: []
+  type: TYPE_PRE
+- en: The results are bytestrings for both the fields and values.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** To add multiple items to a hash, you can use `hset` with the
+    keyword `mapping` and a dictionary (or other mapping type).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Use the `Counter` object from the `collections` module to count the letters
+    in a string, then use `hset` to store the results in a Redis hash.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Then use `hscan_iter` to display the results.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Deleting
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Before we go on, let’s clean up the database by deleting all of the key-value
+    pairs.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE48]'
+  prefs: []
+  type: TYPE_PRE
+- en: Anagrams (again!)
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In a previous notebook, we made sets of words that are anagrams of each other
+    by building a dictionary where they keys are sorted strings of letters and the
+    values are lists of words.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We’ll start by solving this problem again using Python data structures; then
+    we’ll translate it into Redis.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following cell downloads a file that contains the list of words.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE49]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here’s a generator function that reads the words in the file and yields
+    them one at a time.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE50]'
+  prefs: []
+  type: TYPE_PRE
+- en: The “signature” of a word is a string that contains the letter of the word in
+    sorted order. So if two words are anagrams, they have the same signature.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE51]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following loop makes a dictionary of anagram lists.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE52]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following loop prints all anagram lists with 6 or more words
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE53]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE54]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Now, to do the same thing in Redis, we have two options:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can store the anagram lists using Redis lists, using the signatures as keys.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: We can store the whole data structure in a Redis hash.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: A problem with the first option is that the keys in a Redis database are like
+    global variables. If we create a large number of keys, we are likely to run into
+    name conflicts. We can mitigate this problem by giving each key a prefix that
+    identifies its purpose.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following loop implements the first option, using “Anagram” as a prefix
+    for the keys.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE55]'
+  prefs: []
+  type: TYPE_PRE
+- en: An advantage of this option is that it makes good use of Redis lists. A drawback
+    is that makes many small database transactions, so it is relatively slow.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can use `keys` to get a list of all keys with a given prefix.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE56]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE57]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise:** Write a loop that iterates through `keys`, uses `llen` to get
+    the length of each list, and prints the elements of all lists with 6 or more elements.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Before we go on, we can delete the keys from the database like this.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE58]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE59]'
+  prefs: []
+  type: TYPE_PRE
+- en: The second option is to compute the dictionary of anagram lists locally and
+    then store it as a Redis hash.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following function uses `dumps` to convert lists to strings that can be
+    stored as values in a Redis hash.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE60]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can do the same thing faster if we convert all of the lists to JSON locally
+    and store all of the field-value pairs with one `hset` command.
+  prefs: []
+  type: TYPE_NORMAL
+- en: First, I’ll delete the hash we just created.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE61]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE62]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise:** Make a Python dictionary that contains the items from `anagram_dict`
+    but with the values converted to JSON. Use `hset` with the `mapping` keyword to
+    store it as a Redis hash.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** Write a loop that iterates through the field-value pairs, converts
+    each value back to a Python list, and prints the lists with 6 or more elements.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Shut down
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: If you are running this notebook on your own computer, you can use the following
+    command to shut down the Redis server.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If you are running on Colab, it’s not really necessary: the Redis server will
+    get shut down when the Colab runtime shuts down (and everything stored in it will
+    disappear).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE63]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Data Structures and Information Retrieval in Python*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Copyright 2021 Allen Downey
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'License: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  prefs: []
+  type: TYPE_NORMAL

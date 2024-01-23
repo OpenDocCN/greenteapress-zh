@@ -1,0 +1,375 @@
+- en: Quiz 7
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/DSIRP/quiz07.html](https://allendowney.github.io/DSIRP/quiz07.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'BEFORE YOU START THIS QUIZ:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Click on “Copy to Drive” to make a copy of the quiz,
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Click on “Share”,
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Click on “Change” and select “Anyone with this link can edit”
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Click “Copy link” and
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Paste the link into [this Canvas assignment](https://canvas.olin.edu/courses/313/assignments/5183).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: This quiz is open notes, open internet.
+  prefs: []
+  type: TYPE_NORMAL
+- en: You can ask for help from the instructor, but not from anyone else.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: You can use code you find on the internet, but if you use more than a couple
+    of lines from a single source, you should attribute the source.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Question 1
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'A certain function is defined recursively like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[ f(n, m) = f(n-1, m-1) + f(n-1, m) \]
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'with two special cases: if \(m=0\) or \(m=n\), the value of the function is
+    1.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Write a (Python) function called `f` that computes this (mathematical) function.
+  prefs: []
+  type: TYPE_NORMAL
+- en: You can use the following examples to test your function.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: If you try to run the following example, you will find that it runs for a long
+    time.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: Question 2
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Write a version of `f` called `f_memo` that uses an appropriate Python data
+    structure to “memoize” `f`. In other words, you should keep a record of results
+    you have already computed and look them up rather than compute them again.
+  prefs: []
+  type: TYPE_NORMAL
+- en: There’s an example of memoization in recursion.ipynb.
+  prefs: []
+  type: TYPE_NORMAL
+- en: You can use this example to confirm that the function still works.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: And use this one to confirm that it is faster. It should take less than a second,
+    and the result should be `100891344545564193334812497256`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: LetterSet
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The next two questions are based on a set implementation I’ll call a `LetterSet`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Note: In this problem statement, “set” refers to the concept of a set, not
+    the Python object called `set`. We won’t use any Python `set` objects in these
+    problems.'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: If you know ahead of time what elements can appear in a set, you can represent
+    the set efficiently using a [bit array](https://en.wikipedia.org/wiki/Bit_array).
+    For example, to represent a set of letters, you can use a list of 26 Boolean values,
+    one for each letter in the Roman alphabet (ignoring upper and lower case).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s a class definition for this representation of a set.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: If all of the elements in the list are False, the set is empty.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: To add a letter to a set, we have to compute the index that corresponds to a
+    given letter. The following function uses `ord`, which is a built-in Python function,
+    to compute the index of a given letter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: The index of `a` is 0, and the index of `Z` is 25.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: To add a letter, we set the corresponding element of the list to `True`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'To count the elements of a set, we can use the built-in `sum` function:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: Question 3
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Write a function called `is_in` that takes a set and a letter and returns `True`
+    if the letter is in the set. In a comment, identify the order of growth of this
+    function.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Use the following examples to test your code.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: Question 4
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Write a function called `intersect` that takes two `LetterSet` objects and returns
+    a new `LetterSet` that represents the intersection of the two sets. In other words,
+    the new `LetterSet` should contain only elements that appear in both sets.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In a comment, identify the order of growth of this function.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Use the following examples to test your code.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: Just for fun bonus question
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: One way to represent large numbers is to use a linked list where each node contains
+    a digit.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here are class definitions for `DigitList`, which represents a list of digits,
+    and `Node`, which contains one digit and a reference to the next `Node` in the
+    list.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: In a `DigitList`, digits are stored in reverse order, so a list that contains
+    the digits `1`, `2`, and `3`, in that order, represents the number `321`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE37]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following function takes a `DigitList` and prints the digits in reverse
+    order.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE39]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE40]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE41]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE42]'
+  prefs: []
+  type: TYPE_PRE
+- en: Write a function called `add` that takes two `DigitList` objects and returns
+    a new `DigitList` that represents their sum.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE43]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE44]'
+  prefs: []
+  type: TYPE_PRE
+- en: You can use the following examples to test your code.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE45]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE46]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE47]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE48]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE49]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE50]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE51]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE52]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE53]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE54]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE55]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE56]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE57]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE58]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE59]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE60]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE61]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Data Structures and Information Retrieval in Python*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Copyright 2021 Allen Downey
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'License: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  prefs: []
+  type: TYPE_NORMAL

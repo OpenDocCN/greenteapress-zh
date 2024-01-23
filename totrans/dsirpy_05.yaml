@@ -1,0 +1,171 @@
+- en: Quiz 1
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/DSIRP/quiz01.html](https://allendowney.github.io/DSIRP/quiz01.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'BEFORE YOU START THIS QUIZ:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Click on “Copy to Drive” to make a copy of the quiz,
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Click on “Share”,
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Click on “Change” and select “Anyone with this link can edit”
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Click “Copy link” and
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Paste the link into [this Canvas assignment](https://canvas.olin.edu/courses/313/assignments/4866).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Copyright 2021 Allen Downey, [MIT License](http://opensource.org/licenses/MIT)
+  prefs: []
+  type: TYPE_NORMAL
+- en: Setup
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The following cells download a file that contains a list of words, reads the
+    words, and stores them in a `set`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: Question 1
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The following function takes a string and returns `True` if the letters in the
+    string appear in alphabetical order.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: Make a new list called `alpha_words` that contains only the words in `word_list`
+    that are alphabetical, and display the length of the list.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Question 2
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Find and display the longest word in `alpha_words`. If there is more than one
+    word with the maximal length, you can display any one of them (but only one).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'NOTE: You can write code for this question even if your answer to the previous
+    question doesn’t work. I’ll grade the code, not the output.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Question 3
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Write a function called `encompasses` that takes two words and returns `True`
+    if the first word contains the second word, but not at the beginning or the end
+    (and `False` otherwise). For example, `hippopotomus` encompasses the word `pot`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'HINT: You might find the string method `find` useful.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: You can use the following examples to test your function.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: Question 4
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Two words make a “reverse pair” if one of them is the reverse of the other.
+    For example, `pots` and `stop` are a reverse pair.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The words in a reverse pair must be different, so `gag` and `gag` are not a
+    reverse pair.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Make a list of all reverse pairs in `word_list`. Each pair of words should appear
+    only once, so if `('tons', 'snot')` is in the list, `('snot', 'tons')` should
+    not be.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'BONUS QUESTION JUST FOR FUN: What is the longest reverse pair in this word
+    list?'
+  prefs: []
+  type: TYPE_NORMAL

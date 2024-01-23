@@ -1,0 +1,305 @@
+- en: How Many Books?
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/ThinkBayes2/bookstore.html](https://allendowney.github.io/ThinkBayes2/bookstore.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Suppose you are the author of a book like *Probably Overthinking It*, and when
+    you visit a local bookstore, like Newtonville Books in Newton, MA, you see that
+    they have two copies of your book on display.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Is it good that they have only a few copies, because it suggests they started
+    with more and sold some? Or is it bad because it suggests they only keep a small
+    number in stock, and they have not sold. More generally, what number of books
+    would you like to see?
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To answer these questions, we have to make some modeling decisions. To keep
+    it simple, I’ll assume:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The bookstore orders books on some regular cycle of unknown duration.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: At the beginning of every cycle, they start with `k` books.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: People buy the book at a rate of `λ` books per cycle.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: When you visit the store, you arrive at a random time `t` during the cycle.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: We’ll start by defining prior distributions for these parameters, and then we’ll
+    update it with the observed data. Here are some libraries we’ll need.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: Priors
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: For some books, the store only keeps one copy in stock. For others it might
+    keep as many as ten. If we would be equally unsurprised by any value in this range,
+    the prior distribution of `k` is uniform between `1` and `10`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: If we arrive at a random point in the cycle, the prior distribution of `t` is
+    uniform between `0` and `1`, measured in cycles.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now let’s figure the book-buying rate is probably between `2` and `3` copies
+    per cycle, but it could be substantially higher – with low probability. We can
+    choose a lognormal distribution that has a mean and shape that seem reasonable.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s what it looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/70c831167bdb156a5b844210efc57857ab6d977c8b7e921824c1657f8f7fe363.png](../Images/7a6248d3b35c301e201c66833f9bbfd0.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'To form the joint prior distribution, I’ll use `meshgrid` with the `ij` indexing
+    order, which makes the order of the dimensions the same as the order of the arguments:
+    `k`, `λ`, `t`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: The update
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Now for the update, we have to handle two cases:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: If we observe at least one book, `n`, the probability of the data is the probability
+    of selling `k-n` books at rate `λ` over period `t`, which is given by the Poisson
+    PMF.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: If there are no copies left, we have to add in the probability that the number
+    of books sold in this period could have exceeded `k`, which is given by the Poisson
+    survival function.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The following function computes the probability of the data for all values of
+    the parameters, multiplies by the prior, and normalizes the result.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: As an example, we’ll do an update with the hypothetically observed `2` books.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: From the joint posterior, we can extract the marginal distributions of `k` and
+    `λ`, and compute their means.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: Seeing two books suggests that the store starts each cycle with 3-4 books and
+    sells 2-3 per cycle. Here’s the posterior distribution of `k` compared to its
+    prior.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/d8e884eb1b4ec7868ee71b385c257a1c4fd4313edd3605c78f0494ff25846d8d.png](../Images/eb3b1a84b2ba5f03e66b6ac44ae83f0a.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: And here’s the posterior distribution of `λ`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/181cd6f5e92ad73ba112dc4bea9f9c192d38cdea74b9be3320944502f1a86c26.png](../Images/0602e304c1897be769e3b96af5555917.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Seeing two books doesn’t provide much information about the book-selling rate.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Optimization
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Now let’s consider the more general question, “What number of books would you
+    most like to see?” There are two ways we might answer:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: One answer might be the observation that leads to the highest estimate of `λ`.
+    But if the book-selling rate is high, relative to `k`, the book will sometimes
+    be out of stock, leading to lost sales.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: So an alternative is to choose the observation that implies the highest number
+    of books sold per cycle.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: To compute the second one, we’ll need the following function, which makes a
+    `Pmf` that represents the distribution of books sold during one cycle with rate
+    `λ` and upper bound `k`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/0fd14ae4ba21b3ce6cc5cae1189002d1d094fa87ba3ccbb39792c5d7724e2652.png](../Images/2ed1105510b8f76a6cf78c1135bcb0b1.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Now if we are given a posterior distribution, we can compute the expected sales
+    for each pair of parameters and make a Pmf that maps from each expectation to
+    its probability.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: Finally, let’s loop over possible values of `n` and compute for each one the
+    posterior mean values of `k` and `λ`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | n | mean k | mean λ | exp sales |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 0 | 2.409571 | 4.361937 | 2.025360 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 1 | 2.322331 | 2.740616 | 1.643844 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 2 | 3.294089 | 2.720710 | 2.036440 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 3 | 4.254728 | 2.693604 | 2.269578 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 4 | 4 | 5.199590 | 2.656726 | 2.393205 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 5 | 5 | 6.122093 | 2.606749 | 2.441859 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 6 | 6 | 7.013147 | 2.539618 | 2.435680 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 7 | 7 | 7.860703 | 2.450961 | 2.384995 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 8 | 8 | 8.649959 | 2.337343 | 2.295145 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 9 | 9 | 9.365430 | 2.199540 | 2.172083 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 10 | 10 | 10.000000 | 2.056530 | 2.037294 |'
+  prefs: []
+  type: TYPE_TB
+- en: Here’s the implied sales rate as a function of the observed number of books.
+    By this metric, the best number of books to see is `0`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/ab725915066bf7051e2566f58f24370cfb3ef8c8af969f3e2d27e29d94450417.png](../Images/c2b7a6f0690dc469e9069225998e6ad2.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: And here’s the implied number of books sold per cycle.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/b5cc4a92b204bc04b9add492874efd17495325a4e5462befd3932318a8f6c9a2.png](../Images/afb628ce7561b107d5370123c1c19484.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: This result is a little more interesting. Seeing `0` books is still good, but
+    the optimal value is around `5`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now, we should not take this value too seriously, as it is based on a very small
+    amount of data and a lot of assumptions – both in the model and in the priors.
+    But it is interesting that the optimal point is neither many nor none.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Thanks to Aubrey Clayton for [this tweet](https://twitter.com/aubreyclayton/status/1735467931490734251),
+    which gave me the idea for this article.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Copyright 2023 Allen B. Downey
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'License: [Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA
+    4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  prefs: []
+  type: TYPE_NORMAL

@@ -1,0 +1,243 @@
+- en: Indexer
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/DSIRP/indexer.html](https://allendowney.github.io/DSIRP/indexer.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/indexer.ipynb)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/indexer.ipynb)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Indexing the web
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In the context of web search, an index is a data structure that makes it possible
+    to look up a search term and find the pages where that term appears. In addition,
+    we would like to know how many times the search term appears on each page, which
+    will help identify the pages most relevant to the term.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For example, if a user submits the search terms “Python” and “programming”,
+    we would look up both search terms and get two sets of pages. Pages with the word
+    “Python” would include pages about the species of snake and pages about the programming
+    language. Pages with the word “programming” would include pages about different
+    programming languages, as well as other uses of the word. By selecting pages with
+    both terms, we hope to eliminate irrelevant pages and find the ones about Python
+    programming.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In order to make an index, we’ll need to iterate through the words in a document
+    and count them. So that’s where we’ll start.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s a minimal HTML document we have seen before, borrowed from the BeautifulSoup
+    documentation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can use `BeautifulSoup` to parse the text and make a DOM.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following is a generator function that iterates the elements of the DOM,
+    finds the `NavigableString` objects, iterates through the words, and yields them
+    one at a time.
+  prefs: []
+  type: TYPE_NORMAL
+- en: From each word, it removes the characters identified by the `string` module
+    as whitespace or punctuation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'We can loop through the words like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: And count them like this.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: Parsing Wikipedia
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Now let’s do the same thing with the text of a Wikipedia page:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: As you might expect, the word “python” is one of the most common words on the
+    Wikipedia page about Python. The word “programming” didn’t make the top 10, but
+    it also appears many times.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: However, there are a number of common words, like “the” and “from” that also
+    appear many times. Later, we’ll come back and think about how to distinguish the
+    words that really indicate what the page is about from the common words that appear
+    on every page.
+  prefs: []
+  type: TYPE_NORMAL
+- en: But first, let’s think about making an index.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Indexing
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: An index is a map from a search word, like “python”, to a collection of pages
+    that contain the word. The collection should also indicate how many times the
+    word appears on each page.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We want the index to be persistent, so we’ll store it on Redis.
+  prefs: []
+  type: TYPE_NORMAL
+- en: So what Redis type should we use? There are several options, but one reasonable
+    choice is a hash for each word, where the fields are pages (represented by URL)
+    and the values are counts.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To manage the size of the index, we won’t list a page for a given search word
+    unless it appears at least three times.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s get Redis started.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: And make sure the Redis client is installed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: And let’s make a `Redis` object that creates the connection to the Redis database.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: If you have a Redis database running on a different machine, you can create
+    a `Redis` object using the URL of the database, like this
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise:** Write a function called `redis_index` that takes a URL and indexes
+    it. It should download the web page with the given URL, iterate through the words,
+    and make a `Counter` that maps from words to their frequencies.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Then it should iterate through the words and add field-value pairs to Redis
+    hashes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The keys for the hashes should have the prefix `Index:`; for example, the key
+    for the word `python` should be `Index:python`.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The fields in the hashes should be URLs.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The values in the hashes should be word counts.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Use your function to index at least these two pages:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: Use `hscan_iter` to iterate the field-values pairs in the index for the word
+    `python`. Print the URLs of the pages where this word appears and the number of
+    times it appears on each page.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Shutdown
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: If you are running this notebook on your own computer, you can use the following
+    command to shut down the Redis server.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If you are running on Colab, it’s not really necessary: the Redis server will
+    get shut down when the Colab runtime shuts down (and everything stored in it will
+    disappear).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: RedisToGo
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '[RedisToGo](https://redistogo.com) is a hosting service that provides remote
+    Redis databases. They offer a free plan that includes a small database that is
+    perfect for testing our indexer.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If you sign up and go to your list of instances, you should find a URL that
+    looks like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: If you pass this url to `Redis.from_url`, as described above, you should be
+    able to connect to your database on RedisToGo and run your exercise solution again.
+  prefs: []
+  type: TYPE_NORMAL
+- en: And if you come back later and read the index, your data should still be there!
+  prefs: []
+  type: TYPE_NORMAL

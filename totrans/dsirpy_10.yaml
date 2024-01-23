@@ -1,0 +1,298 @@
+- en: Depth First Search
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/DSIRP/dfs.html](https://allendowney.github.io/DSIRP/dfs.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/dfs.ipynb)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: This notebook presents “depth first search” as a way to iterate through the
+    nodes in a tree. This algorithm applies to any kind of tree, but since we need
+    an example, we’ll use BeautifulSoup, which is a Python module that reads HTML
+    (and related languages) and builds a tree that represents the content.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using BeautifulSoup
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: When you download a web page, the contents are written in HyperText Markup Language,
+    aka HTML. For example, here is a minimal HTML document, which I borrowed from
+    the [BeautifulSoup documentation](https://beautiful-soup-4.readthedocs.io). The
+    text is from Lewis Carroll’s [*Alice’s Adventures in Wonderland*](https://www.gutenberg.org/files/11/11-h/11-h.htm).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s how we use BeautifulSoup to read it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is a `BeautifulSoup` object that represents the root of the tree.
+    If we display the soup, it reproduces the HTML.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`prettify` uses indentation to show the structure of the document.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: The `BeautifulSoup` object has a property called `children` that returns an
+    iterator of the objects it contains.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can use a for loop to iterate through them.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: This soup contains only a single child, which is a `Tag`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`BeautifulSoup` also provides `contents`, which returns the children in the
+    form of a list, which can be more convenient.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The only child is an HTML element that contains the whole document. Let’s get
+    just this element:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The type of the element is `Tag`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: And the name of the tag is `html`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Now let’s get the children of this top-level element:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: There are three elements in this list, but it’s hard to read because when you
+    print an element, it prints all of the HTML.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I’ll use the following function to print elements in a simple form.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: And the following function to print a list of elements.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now let’s try navigating the tree. I’ll start with the first child of `element`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: And print its children.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now let’s get the first child of the first child.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: And the first child of the first grandchild.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE37]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE39]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE40]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`NavigableString` has no children, so we’ve come to the end of the road.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In order to continue, we would have to backtrack to the grandchild and select
+    the second child.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Which means we have to keep track of which elements we have seen, in order to
+    pick up where we left off.
+  prefs: []
+  type: TYPE_NORMAL
+- en: That’s what depth-first search does.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Depth-first search
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: DFS starts at the root of the tree and selects the first child. If the child
+    has children, it selects the first child again. When it gets to a node with no
+    children, it backtracks, moving up the tree to the parent node, where it selects
+    the next child if there is one; otherwise it backtracks again. When it has explored
+    the last child of the root, it’s done.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'There are two common ways to implement DFS, recursively and iteratively. The
+    recursive implementation looks like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE41]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE42]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE43]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Here is an iterative version of DFS that uses a list to represent a stack of
+    elements:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE44]'
+  prefs: []
+  type: TYPE_PRE
+- en: The parameter, `root`, is the root of the tree we want to traverse, so we start
+    by creating the stack and pushing the root onto it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The loop continues until the stack is empty. Each time through, it pops a `PageElement`
+    off the stack. If it gets a `NavigableString`, it prints the contents. Then it
+    pushes the children onto the stack. In order to process the children in the right
+    order, we have to push them onto the stack in reverse order.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE45]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE46]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise:** Write a function similar to `PageElement.find` that takes a `PageElement`
+    and a tag name and returns the first tag with the given name. You can write it
+    iteratively or recursively.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s how to check whether a `PageElement` is a `Tag`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE47]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE48]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise:** Write a generator function similar to `PageElement.find_all`
+    that takes a `PageElement` and a tag name and yields all tags with the given name.
+    You can write it iteratively or recursively.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*Data Structures and Information Retrieval in Python*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Copyright 2021 Allen Downey
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'License: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  prefs: []
+  type: TYPE_NORMAL

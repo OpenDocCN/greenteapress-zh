@@ -1,0 +1,511 @@
+- en: The Red Line Problem
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/ThinkBayes2/redline.html](https://allendowney.github.io/ThinkBayes2/redline.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: The Red Line is a subway that connects Cambridge and Boston, Massachusetts.
+    When I was working in Cambridge I took the Red Line from Kendall Square to South
+    Station and caught the commuter rail to Needham. During rush hour Red Line trains
+    run every 7–8 minutes, on average.
+  prefs: []
+  type: TYPE_NORMAL
+- en: When I arrived at the subway stop, I could estimate the time until the next
+    train based on the number of passengers on the platform. If there were only a
+    few people, I inferred that I just missed a train and expected to wait about 7
+    minutes. If there were more passengers, I expected the train to arrive sooner.
+    But if there were a large number of passengers, I suspected that trains were not
+    running on schedule, so I would leave the subway stop and get a taxi.
+  prefs: []
+  type: TYPE_NORMAL
+- en: While I was waiting for trains, I thought about how Bayesian estimation could
+    help predict my wait time and decide when I should give up and take a taxi. This
+    chapter presents the analysis I came up with.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This example is based on a project by Brendan Ritter and Kai Austin, who took
+    a class with me at Olin College.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ThinkBayes2/blob/master/notebooks/redline.ipynb)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Before we get to the analysis, we have to make some modeling decisions. First,
+    I will treat passenger arrivals as a Poisson process, which means I assume that
+    passengers are equally likely to arrive at any time, and that they arrive at a
+    rate, λ, measured in passengers per minute. Since I observe passengers during
+    a short period of time, and at the same time every day, I assume that λ is constant.
+  prefs: []
+  type: TYPE_NORMAL
+- en: On the other hand, the arrival process for trains is not Poisson. Trains to
+    Boston are supposed to leave from the end of the line (Alewife station) every
+    7–8 minutes during peak times, but by the time they get to Kendall Square, the
+    time between trains varies between 3 and 12 minutes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To gather data on the time between trains, I wrote a script that downloads real-time
+    data from the [MBTA](http://www.mbta.com/rider_tools/developers/), selects south-bound
+    trains arriving at Kendall square, and records their arrival times in a database.
+    I ran the script from 4 pm to 6 pm every weekday for 5 days, and recorded about
+    15 arrivals per day. Then I computed the time between consecutive arrivals. Here
+    are the gap times I recorded, in seconds.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: I’ll convert them to minutes and use `kde_from_sample` to estimate the distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s what it looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/f8de2d9ea7de2af767afcae042feb625b0d0d7fd7fae5a11f6e19d5b321734de.png](../Images/7e5c60a70c0bba8a0b8e1436228eb7b6.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The Update
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: At this point we have an estimate for the distribution of time between trains.
+    Now let’s suppose I arrive at the station and see 10 passengers on the platform.
+    What distribution of wait times should I expect?
+  prefs: []
+  type: TYPE_NORMAL
+- en: We’ll answer this question in two steps.
+  prefs: []
+  type: TYPE_NORMAL
+- en: First, we’ll derive the distribution of gap times as observed by a random arrival
+    (me).
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Then we’ll derive the distribution of wait times, conditioned on the number
+    of passengers.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: When I arrive at the station, I am more likely to arrive during a long gap than
+    a short one. In fact, the probability that I arrive during any interval is proportional
+    to its duration.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If we think of `pmf_z` as the prior distribution of gap time, we can do a Bayesian
+    update to compute the posterior. The likelihood of my arrival during each gap
+    is the duration of the gap:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: So here’s the first update.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s what the posterior distribution looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/c8f070e98dd2ff4564a00771e7d566b5ec33b51f101ed7bb1ff7fb5ee3ba3b56.png](../Images/f151fe5e310d26189b4c0ccf0015adea.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Because I am more likely to arrive during a longer gap, the distribution is
+    shifted to the right. The prior mean is about 7.8 minutes; the posterior mean
+    is about 8.9 minutes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: This shift is an example of the “inspection paradox”, which [I wrote an article
+    about](https://towardsdatascience.com/the-inspection-paradox-is-everywhere-2ef1c2e9d709).
+  prefs: []
+  type: TYPE_NORMAL
+- en: As an aside, the Red Line schedule reports that trains run every 9 minutes during
+    peak times. This is close to the posterior mean, but higher than the prior mean.
+    I exchanged email with a representative of the MBTA, who confirmed that the reported
+    time between trains is deliberately conservative in order to account for variability.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Elapsed time
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Elapsed time, which I call `x`, is the time between the arrival of the previous
+    train and the arrival of a passenger. Wait time, which I call `y`, is the time
+    between the arrival of a passenger and the next arrival of a train. I chose this
+    notation so that
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: Given the distribution of `z`, we can compute the distribution of `x`. I’ll
+    start with a simple case and then generalize. Suppose the gap between trains is
+    either 5 or 10 minutes with equal probability.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If we arrive at a random time, we arrive during a 5 minute gap with probability
+    1/3, or a 10 minute gap with probability 2/3.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If we arrive during a 5 minute gap, `x` is uniform from 0 to 5 minutes. If we
+    arrive during a 10 minute gap, `x` is uniform from 0 to 10. So the distribution
+    of wait times is a weighted mixture of two uniform distributions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: More generally, if we have the posterior distribution of `z`, we can compute
+    the distribution of `x` by making a mixture of uniform distributions. We’ll use
+    the following function to make the uniform distributions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`make_elapsed_dist` takes a hypothetical gap and an array of possible times.
+    It selects the elapsed times less than or equal to `gap` and puts them into a
+    `Pmf` that represents a uniform distribution.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: I’ll use this function to make a sequence of `Pmf` objects, one for each gap
+    in `posterior_z`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s an example that represents a uniform distribution from 0 to 0.6 minutes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0.0 | 0.25 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0.2 | 0.25 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0.4 | 0.25 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0.6 | 0.25 |'
+  prefs: []
+  type: TYPE_TB
+- en: The last element of the sequence is uniform from 0 to 20 minutes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/e04c1eca3ff2aea714e04a33a17b2de9c6cc50b1c57b7713bc9cae27a7752c73.png](../Images/5cd0ae13b62935fcd0aa0d8aab31d774.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Now we can use `make_mixture` to make a weighted mixture of uniform distributions,
+    where the weights are the probabilities from `posterior_z`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/6dea62010873c6070d43c669b7d6fed2488b72f85a7a92175e24eae25cedba65.png](../Images/b5912e612f0d114e052c5984a1af004b.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: The mean elapsed time is 4.4 minutes, half the posterior mean of `z`. And that
+    makes sense, since we expect to arrive in the middle of the gap, on average.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Counting passengers
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Now let’s take into account the number of passengers waiting on the platform.
+    Let’s assume that passengers are equally likely to arrive at any time, and that
+    they arrive at a rate, `λ`, that is known to be 2 passengers per minute.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Under those assumptions, the number of passengers who arrive in `x` minutes
+    follows a Poisson distribution with parameter `λ x` So we can use the SciPy function
+    `poisson` to compute the likelihood of 10 passengers for each possible value of
+    `x`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: With this likelihood, we can compute the posterior distribution of `x`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Here’s what it looks like:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/32a1f7d633afb2a26c83c036ec21abe5835f2647577f4f38059cc02c3083bbe9.png](../Images/a724e2ebba97e3d3b3149c940de6d5b5.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Based on the number of passengers, we think it has been about 5 minutes since
+    the last train.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: Wait time
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Now how long do we think it will be until the next train? Based on what we know
+    so far, the distribution of `z` is `posterior_z`, and the distribution of `x`
+    is `posterior_x`. Remember that we defined
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: If we know `x` and `z`, we can compute
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: So we can use `sub_dist` to compute the distribution of `y`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Well, almost. That distribution contains some negative values, which are impossible.
+    But we can remove them and renormalize, like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: Based on the information so far, here are the distributions for `x`, `y`, and
+    `z`, shown as CDFs.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/61d9287b6df210c1961fdd80866bb33aed5bd0f21854fe0ae10d4fbf5e6cda7d.png](../Images/75e81c84847b0f9a0cbfd30dae478be9.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Because of rounding errors, `posterior_y` contains quantities that are not in
+    `posterior_x` and `posterior_z`; that’s why I plotted it as a CDF, and why it
+    appears jaggy.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Decision analysis
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'At this point we can use the number of passengers on the platform to predict
+    the distribution of wait times. Now let’s get to the second part of the question:
+    when should I stop waiting for the train and go catch a taxi?'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Remember that in the original scenario, I am trying to get to South Station
+    to catch the commuter rail. Suppose I leave the office with enough time that I
+    can wait 15 minutes and still make my connection at South Station.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In that case I would like to know the probability that `y` exceeds 15 minutes
+    as a function of `num_passengers`. To answer that question, we can run the analysis
+    from the previous section with range of `num_passengers`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: But there’s a problem. The analysis is sensitive to the frequency of long delays,
+    and because long delays are rare, it is hard to estimate their frequency.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I only have data from one week, and the longest delay I observed was 15 minutes.
+    So I can’t estimate the frequency of longer delays accurately.
+  prefs: []
+  type: TYPE_NORMAL
+- en: However, I can use previous observations to make at least a coarse estimate.
+    When I commuted by Red Line for a year, I saw three long delays caused by a signaling
+    problem, a power outage, and “police activity” at another stop. So I estimate
+    that there are about 3 major delays per year.
+  prefs: []
+  type: TYPE_NORMAL
+- en: But remember that my observations are biased. I am more likely to observe long
+    delays because they affect a large number of passengers. So we should treat my
+    observations as a sample of `posterior_z` rather than `pmf_z`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s how we can augment the observed distribution of gap times with some assumptions
+    about long delays. From `posterior_z`, I’ll draw a sample of 260 values (roughly
+    the number of work days in a year). Then I’ll add in delays of 30, 40, and 50
+    minutes (the number of long delays I observed in a year).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: I’ll use this augmented sample to make a new estimate for the posterior distribution
+    of `z`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s what it looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/7bfbd95ae9bd4887c57bc32400c1dec1dbeb8652fa9241dc818eacb979846646.png](../Images/f95937bcdf0834cd93a8fc34d62d2008.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Now let’s take the analysis from the previous sections and wrap it in a function.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: Given the number of passengers when we arrive at the station, it computes the
+    posterior distribution of `y`. As an example, here’s the distribution of wait
+    time if we see 10 passengers.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can use it to compute the mean wait time and the probability of waiting more
+    than 15 minutes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE37]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE39]'
+  prefs: []
+  type: TYPE_PRE
+- en: If we see 10 passengers, we expect to wait a little less than 5 minutes, and
+    the chance of waiting more than 15 minutes is about 1%.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s see what happens if we sweep through a range of values for `num_passengers`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE40]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s the mean wait as a function of the number of passengers.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE41]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE42]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/de8465ec97e738535f8ac65691bea6648336280ca606ad9c716453477a6eb069.png](../Images/5e37984f60418e47375174ccc8603cdf.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: If there are no passengers on the platform when I arrive, I infer that I just
+    missed a train; in that case, the expected wait time is the mean of `augmented_posterior_z`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The more passengers I see, the longer I think it has been since the last train,
+    and the more likely a train arrives soon.
+  prefs: []
+  type: TYPE_NORMAL
+- en: But only up to a point. If there are more than 30 passengers on the platform,
+    that suggests that there is a long delay, and the expected wait time starts to
+    increase.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now here’s the probability that wait time exceeds 15 minutes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE43]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE44]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/a87493d6a5550a6e781319f383c1cbe9de96056c8d7a72a31c5b2d216b9adac1.png](../Images/92079aa07aadc5383a5fa67cef4c049b.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: When the number of passengers is less than 20, we infer that the system is operating
+    normally, so the probability of a long delay is small. If there are 30 passengers,
+    we suspect that something is wrong and expect longer delays.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If we are willing to accept a 5% chance of missing the connection at South Station,
+    we should stay and wait as long as there are fewer than 30 passengers, and take
+    a taxi if there are more.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Or, to take this analysis one step further, we could quantify the cost of missing
+    the connection and the cost of taking a taxi, then choose the threshold that minimizes
+    expected cost.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This analysis is based on the assumption that the arrival rate, `lam`, is known.
+    If it is not known precisely, but is estimated from data, we could represent our
+    uncertainty about `lam` with a distribution, compute the distribution of `y` for
+    each value of `lam`, and make a mixture to represent the distribution of `y`.
+    I did that in the version of this problem in the first edition of *Think Bayes*;
+    I left it out here because it is not the focus of the problem.
+  prefs: []
+  type: TYPE_NORMAL

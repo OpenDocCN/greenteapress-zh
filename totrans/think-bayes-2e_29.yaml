@@ -1,0 +1,205 @@
+- en: Bayesian Dice
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/ThinkBayes2/bayes_dice.html](https://allendowney.github.io/ThinkBayes2/bayes_dice.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ThinkBayes2/blob/master/examples/bayes_dice.ipynb)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: I’ve been enjoying Aubrey Clayton’s new book [*Bernoulli’s Fallacy*](https://aubreyclayton.com/bernoulli).
+    Chapter 1, which is about the historical development of competing definitions
+    of probability, is worth the price of admission alone.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'One of the examples in the first chapter is a simplified version of a problem
+    posed by Thomas Bayes. The original version, [which I wrote about here](https://allendowney.blogspot.com/2015/06/bayesian-billiards.html),
+    involves a billiards (pool) table; Clayton’s version uses dice:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Your friend rolls a six-sided die and secretly records the outcome; this number
+    becomes the target *T*. You then put on a blindfold and roll the same six-sided
+    die over and over. You’re unable to see how it lands, so each time your friend
+    […] tells you *only* whether the number you just rolled was greater than, equal
+    to, or less than *T*.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'Suppose in one round of the game we had this sequence of outcomes, with G representing
+    a greater roll, L a lesser roll, and E an equal roll:'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: G, G, L, E, L, L, L, E, G, L
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Based on this data, what is the posterior distribution of *T*?
+  prefs: []
+  type: TYPE_NORMAL
+- en: Computing likelihoods
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: There are two parts of my solution; computing the likelihood of the data under
+    each hypothesis and then using those likelihoods to compute the posterior distribution
+    of *T*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To compute the likelihoods, I’ll demonstrate one of my favorite idioms, using
+    a meshgrid to apply an operation, like `>`, to all pairs of values from two sequences.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this case, the sequences are
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`hypos`: The hypothetical values of *T*, and'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`outcomes`: possible outcomes each time we roll the dice'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: If we compute a meshgrid of `outcomes` and `hypos`, the result is two arrays.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: The first contains the possible outcomes repeated down the columns.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: The second contains the hypotheses repeated across the rows.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: If we apply an operator like `>`, the result is a Boolean array.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can use `mean` with `axis=1` to compute the fraction of `True` values
+    in each row.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The result is the probability that the outcome is greater than *T*, for each
+    hypothetical value of *T*. I’ll name this array `gt`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: The first element of the array is 5/6, which indicates that if *T* is 1, the
+    probability of exceeding it is 5/6. The second element is 2/3, which indicates
+    that if *T* is 2, the probability of exceeding it is 2/3. And do on.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now we can compute the corresponding arrays for less than and equal.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: In the next section, we’ll use these arrays to do a Bayesian update.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Update
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In this example, computing the likelihoods was the hard part. The Bayesian update
+    is easy. Since *T* was chosen by rolling a fair die, the prior distribution for
+    *T* is uniform. I’ll use a Pandas `Series` to represent it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now here’s the sequence of data, encoded using the likelihoods we computed in
+    the previous section.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following loop updates the prior distribution by multiplying by each of
+    the likelihoods.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: Finally, we normalize the posterior.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s what it looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/2cdd9367819cda73320cb08dfa72c3215cb420f6cb2d95d167d39c88a06b165b.png](../Images/a502859d6161a3b40c92c397beb77bd6.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: As an aside, you might have noticed that the values in `eq` are all the same.
+    So when the value we roll is equal to \(T\), we don’t get any new information
+    about *T*. We could leave the instances of `eq` out of the data, and we would
+    get the same answer.
+  prefs: []
+  type: TYPE_NORMAL

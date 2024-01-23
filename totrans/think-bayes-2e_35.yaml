@@ -1,0 +1,557 @@
+- en: The All-Knowing Cube of Probability
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/ThinkBayes2/beta_binomial.html](https://allendowney.github.io/ThinkBayes2/beta_binomial.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: This example uses array computations to explore the concept of conjugate distributions.
+    It is an extension of *[Think Bayes](https://greenteapress.com/wp/think-bayes/)*,
+    [Chapter 18](https://allendowney.github.io/ThinkBayes2/chap18.html), which explains
+    how to use conjugate priors to do Bayesian updates with very little computation.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: The all-knowing cube of probability is an 3-D array that contains the past,
+    the present, and the probabilistic future.
+  prefs: []
+  type: TYPE_NORMAL
+- en: At first, the cube appears to be a collection of binomial PMFs, but if we turn
+    it sideways, we see that it is also a collection of negative binomial PMFs, and
+    if we turn it sideways again, it is also a collection of grid-approximated beta
+    distributions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This tripartite nature is the source of its uncanny ability to perform Bayesian
+    updates, which I will demonstrate.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: Making the cube
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Suppose you run \(n\) trials where the probability of success is \(p\). To compute
+    the probability of \(k\) successes, we can use the binomial distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For example, here’s a range of values for \(k\) and \(n\), and a discrete grid
+    of values for \(p\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can use `meshgrid` to make a 3-D grid of \(k\), \(n\), and \(p\), and `binom`
+    to evaluate the binomial PMF at each point.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is the **all-knowing cube of probability**, so-called because it
+    can answer all of our questions about Bernoulli trials. Allow me to demonstrate.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The binomial distribution
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Suppose we are given \(n\) and \(p\), and we would like to know the distribution
+    of \(k\). We can answer that question by selecting a vector from the cube along
+    the \(k\) axis.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is a normalized PMF.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s what it looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/1dbbe565464b50915e694c1adcba74a56d1cbc3079226148517aa86de13d54f4.png](../Images/3ed8c9d7a44cc89c336bdae1c955d04d.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Because we used `binom` to compute the cube, we should not be surprised to find
+    that this slice from the cube is a binomial PMF. But just to make sure, we can
+    use `binom` again to confirm it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: And we can check that the results are consistent.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'So we can think of the cube as a collection of binomial PMFs. But we can also
+    think of it as a joint distribution of \(k\), \(n\), and \(p\), which raises the
+    question: what do we get if we select a vector along the \(n\) and \(p\) axes?'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The negative binomial distribution
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Suppose we plan to run Bernoulli trials with probability \(p\) until we see
+    \(k\) successes. How many trials will it take?
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can answer this question by selecting a vector from the cube along the \(n\)
+    axis.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is close to the answer we want, but there’s something we have to
+    fix. Remember that the values in the cube come from the binomial PMF, which looks
+    like this.
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[Pr(k; n, p) = \binom{n}{k} p^{k} (1-p)^{n-k}\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: The first term is the binomial coefficient, which indicates that there are \(n\)
+    places we could find \(k\) successes. But if we keep running trials until we see
+    \(k\) successes, we know the last trial will be a success, which means there are
+    only \(n-1\) places we could find the other \(k-1\) successes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: So we have to adjust the values from the cube by dividing the elements by \(n/k\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: And normalize the results to get a proper PMF.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s what it looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/51edcd12a1bc05b69931e2780914f6188edca778ea322bda187b49025823c225.png](../Images/4a176a0d1a4ac8dd63525dccd0402620.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: This is a negative binomial distribution, which we can confirm using `scipy.stats.nbinom`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'To see why this works we can compare the binomial PMF, which is a distribution
+    over \(k\) with \(n\) and \(p\) as parameters:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[Pr(k; n, p) = \binom{n}{k} p^{k} (1-p)^{n-k}\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'And the negative binomial PMF, which I’ve written as a distribution over \(n\)
+    with \(k\) and \(p\) as parameters:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[Pr(n; k, p) = \binom{n-1}{k-1} p^k (1-p)^{n-k}\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: This is not the most common way to parameterize the negative binomial distribution,
+    but it shows that the only difference is in the binomial coefficient, because
+    we know that the last trial is a success.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The beta distribution
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Suppose we have 101 devices that perform Bernoulli trials with different probabilities.
+    The first device has \(p=0\), the second has \(p=0.01\), and so on up to the last
+    device with \(p=1\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now suppose we choose one of the devices so that all values of \(p\) are equally
+    likely. If we run \(n\) trials and see \(k\) successes, what is the distribution
+    of \(p\)?
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can answer this question by selecting a vector from the cube along the \(p\)
+    axis.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is not normalized.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: But we can normalize it like this.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here’s what it looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/1e2f223d24ce1e9e25ec684e3a964abe687315c7cf0abbccc146146a9d09dc10.png](../Images/4fdb4cb254e7f9ffae0b960858df03b6.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: This is a beta distribution, which we can confirm by running `scipy.stats.beta`
+    with a change of variables, \(a = k+1\) and \(b = n-k+1\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: To see why this works, let’s compare the PDF of the beta distribution
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[f(p, a, b) = \frac{1}{B(a, b)} p^{a-1} (1-p)^{b-1} \]
+  prefs: []
+  type: TYPE_NORMAL
+- en: And the PMF of the binomial distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[Pr(k; n, p) = \binom{n}{k} p^{k} (1-p)^{n-k}\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: With the change of variables, they are identical except for the first term,
+    which normalizes the distributions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Conjugate priors
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'This similarity is the reason the beta and binomial are conjugate distributions,
+    which means they are joined together. This relationship has a useful property
+    for Bayesian statistics: if the prior distribution of \(p\) is beta and the likelihood
+    of the data is binomial, the posterior distribution is also beta.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: To see how that works, here is the PDF of the a beta prior distribution with
+    parameters \(a\) and \(b\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[p^{a-1} (1-p)^{b-1}\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: I have omitted the normalizing factor – we don’t need it because we are going
+    to normalize the distribution after the update.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now suppose we see \(k\) successes in \(n\) trials. The likelihood of this data
+    is given by the binomial distribution, which has this PMF.
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[p^{k} (1-p)^{n-k}\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: Again, I have omitted the normalizing factor. Now to get the unnormalized posterior,
+    we multiply the beta prior and the binomial likelihood. The result is
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[p^{a-1+k} (1-p)^{b-1+n-k}\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: which we recognize as an unnormalized beta distribution with parameters \(a+k\)
+    and \(b+n-k\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: So if we observe \(k\) successes in \(n\) trials, we can do the update by making
+    a beta posterior with parameters \(a+k\) and \(b+n-k\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: As an example, suppose the prior is a beta distribution with parameters \(a=2\)
+    and \(b=3\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: And suppose we see \(k=5\) successes in \(n=10\) attempts.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can compute the posterior by multiplying the prior and the likelihood, then
+    normalizing the results.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: Or we can compute a beta distribution with the updated parameters.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is the same either way.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: But we don’t have to compute the posterior by doing an explicit update, or by
+    computing a beta distribution, because the all-knowing cube of probability already
+    knows the answer – we just have to ask.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following function takes the parameters \(a\) and \(b\) and looks up the
+    corresponding beta distribution already computed in the cube.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can use it to get the posterior distribution of \(p\) from the cube.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: And confirm that we get the same result.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE37]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s what it looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE39]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/2b4e629151043e7f5d3a22dbba5ac9a8705b3ae0cd6a79ae6e9e462eb2e876a0.png](../Images/b5d64572157bf5ac1ff45eda06e05204.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Update with nbinom
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Now suppose that instead of running \(n\) trials, we keep running trials until
+    we see \(k\) successes – and suppose it takes \(n\) trials.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this case, we can use the negative binomial distribution to compute the likelihood
+    of the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE40]'
+  prefs: []
+  type: TYPE_PRE
+- en: And we can do the update in the usual way.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE41]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'It turns out that the result is the same in both cases:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: If we decide ahead of time to run \(n\) trials, and see \(k\) successes, or
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: If we run until we see \(k\) successes, and it takes \(n\) trials.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[PRE42]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE43]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Bayesian inference only depends on the data, not the stopping condition. Or,
+    as my friend Ted Bunn put it: [Who knows what evil lurks in the hearts of men?
+    The Bayesian doesn’t care.](https://blog.richmond.edu/physicsbunn/2012/01/05/who-knows-what-evil-lurks-in-the-hearts-of-men-the-bayesian-doesnt-care/)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Posterior predictive distributions
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The all-knowing cube of probability knows what we should believe in the light
+    of new data, but that’s not all. It also knows the future, at least probabilistically.
+  prefs: []
+  type: TYPE_NORMAL
+- en: After an update, we can get posterior predictive distribution by computing a
+    weighted mixture of binomial distributions with different values of \(p\), weighted
+    by the posterior probabilities.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can do that by selecting the \((k, p)\) plane from the cube, multiplying
+    by the posterior and summing away the \(p\) axis.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE44]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is a distribution over \(k\). Here’s what it looks like (dropping
+    values of \(k\) greater than \(n\)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE45]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/2590e39b2e536e14079fcc7ba7faff83a4bfbcce3d1babb7f3169dcdf8b6cf36.png](../Images/72dd6150a263282c745c197ab939388d.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: A beta mixture of binomials is a beta-binomial distribution, and it has a PMF
+    we can compute analytically.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE46]'
+  prefs: []
+  type: TYPE_PRE
+- en: So we can confirm that the all-knowing cube was correct.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE47]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE48]'
+  prefs: []
+  type: TYPE_PRE
+- en: The other posterior predictive
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: We can also use the cube to compute the posterior predictive distribution of
+    \(n\) given a required number of successes, \(k\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: We start by selecting the \((n, p)\) plane from the cube, which is a collection
+    of negative binomials distributions, except that we have to correct them by dividing
+    through by \(n/k\), as we did above.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Actually, we only have to divide by \(n\) because \(k\) is a constant that will
+    get normalized away.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE49]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can compute a weighted sum as in the previous example, multiplying by
+    the posterior and summing away the \(p\) axis.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE50]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s what it looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE51]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/f9799c743157bf4fad1e53e01bb39d37622a3165729b2255b2157422d1e781e8.png](../Images/cb60c74484fc8a7f55a406e46c7e8dd0.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: A beta-weighted mixture of negative binomials is a beta-negative binomial distribution,
+    and it has a PMF we can compute analytically. SciPy doesn’t have a function to
+    do it, but we can write our own using functions in `scipy.special`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE52]'
+  prefs: []
+  type: TYPE_PRE
+- en: The conventional parameterization of the beta-negative binomial uses \(k\) for
+    the number of failures and \(r\) for the number of required successes, so we have
+    to change some variables to get a distribution over \(n\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE53]'
+  prefs: []
+  type: TYPE_PRE
+- en: But we can confirm that the result from the cube is consistent with the analytic
+    PMF.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE54]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE55]'
+  prefs: []
+  type: TYPE_PRE
+- en: In conclusion, the all-knowing cube of probability contains the past (the prior
+    distributions), the present (the posterior distributions), and the future (the
+    posterior predictive distributions).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Think Bayes, Second Edition
+  prefs: []
+  type: TYPE_NORMAL
+- en: Copyright 2020 Allen B. Downey
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'License: [Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA
+    4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  prefs: []
+  type: TYPE_NORMAL

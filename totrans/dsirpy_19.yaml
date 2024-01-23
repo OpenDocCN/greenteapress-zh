@@ -1,0 +1,418 @@
+- en: Linked List
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/DSIRP/linked_list.html](https://allendowney.github.io/DSIRP/linked_list.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/linked_list.ipynb)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Linked Lists
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Implementing operations on linked lists is a staple of programming classes and
+    technical interviews.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I resist them because it is unlikely that you will ever have to implement a
+    linked list in your professional work. And if you do, someone has made a bad decision.
+  prefs: []
+  type: TYPE_NORMAL
+- en: However, they can be good études, that is, pieces that you practice in order
+    to learn, but never perform.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'For many of these problems, there are several possible solutions, depending
+    on the requirements:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Are you allowed to modify an existing list, or do you have to create a new one?
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: If you modify an existing structure, are you also supposed to return a reference
+    to it?
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Are you allowed to allocate temporary structures, or do you have to perform
+    all operations in place?
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: And for all of these problems, you could write a solution iteratively or recursively.
+    So there are many possible solutions for each.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'As we consider alternatives, some of the factors to keep in mind are:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Performance in terms of time and space.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Readability and demonstrably correctness.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: In general, performance should be asymptotically efficient; for example, if
+    there is a constant time solution, a linear solution would not be acceptable.
+    But we might be willing to pay some overhead to achieve bulletproof correctness.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s the class we’ll use to represent the nodes in a list.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'We can create nodes like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'And then link them up, like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'There are two ways to think about what `node1` is:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: It is “just” a node object, which happens to contain a link to another node.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: It is the first node in a linked list of nodes.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: When we pass a node as a parameter, sometimes we think of it as a node and sometimes
+    we think of it as the beginning of a list.
+  prefs: []
+  type: TYPE_NORMAL
+- en: LinkedList objects
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: For some operations, it will be convenient to have another object that represents
+    the whole list (as opposed to one of its nodes).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s the class definition.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: If we create a `LinkedList` with a reference to `node1`, we can think of the
+    result as a list with three elements.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: Search
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '**Exercise:** Write a function called `find` that takes a `LinkedList` and
+    a target value; if the target value appears in the `LinkedList`, it should return
+    the `Node` that contains it; otherwise it should return `None`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: You can use these examples to test your code.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: Push and Pop
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Adding and removing elements from the *left* side of a linked list is relatively
+    easy:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: Adding and removing from the end right side take longer because we have to traverse
+    the list.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** Write `rpush` and `rpop`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: You can use the following example to test your code.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: Reverse
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Reversing a linked list is a classic interview question, although at this point
+    it is so classic you will probably never encounter it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: But it is still a good exercise, in part because there are so many ways to do
+    it. My solutions here are based on [this tutorial](https://www.geeksforgeeks.org/reverse-a-linked-list/).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If you are allowed to make a new list, you can traverse the old list and `lpush`
+    the elements onto the new list:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s a recursive version that doesn’t allocate anything
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE37]'
+  prefs: []
+  type: TYPE_PRE
+- en: And finally an iterative version that doesn’t allocate anything.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE39]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE40]'
+  prefs: []
+  type: TYPE_PRE
+- en: Remove
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: One of the advantages of a linked list (compared to an array list) is that we
+    can add and remove elements from the middle of the list in constant time.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For example, the following function takes a node and removes the node that follows
+    it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE41]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Here’s an example:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE42]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE43]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise:** Write a function called `remove` that takes a LinkedList and
+    a target value. It should remove the first node that contains the value, or raise
+    a `ValueError` if it is not found.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Hint: This one is a little tricky.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: You can use this example to test your code.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE44]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE45]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE46]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE47]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE48]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE49]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE50]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE51]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE52]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE53]'
+  prefs: []
+  type: TYPE_PRE
+- en: Although `remove_after` is constant time, `remove` is not. Because we have to
+    iterate through the nodes to find the target, `remove` takes linear time.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Insert Sorted
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Similarly, you can insert an element into the middle of a linked list in constant
+    time.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following function inserts `data` after the given node in a list.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE54]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE55]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE56]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise:** Write a function called `insert_sorted` (also known as `insort`)
+    that takes a linked list and a value and inserts the value in the list in the
+    first place where it will be in increasing sorted order, that is, with the smallest
+    element at the beginning.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE57]'
+  prefs: []
+  type: TYPE_PRE
+- en: You can use the following example to test your code.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE58]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE59]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE60]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE61]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE62]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE63]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE64]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE65]'
+  prefs: []
+  type: TYPE_PRE
+- en: Although `insert_after` is constant time, `insert_sorted` is not. Because we
+    have to iterate through the nodes to find the insertion point, `insert_sorted`
+    takes linear time.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*Data Structures and Information Retrieval in Python*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Copyright 2021 Allen Downey
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'License: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  prefs: []
+  type: TYPE_NORMAL

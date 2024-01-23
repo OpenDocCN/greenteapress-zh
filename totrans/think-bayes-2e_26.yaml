@@ -1,0 +1,218 @@
+- en: Estimating vaccine efficacy
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/ThinkBayes2/vaccine2.html](https://allendowney.github.io/ThinkBayes2/vaccine2.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'In a recent vaccine trial, no one in the vaccinated group got the disease,
+    so the makers of the vaccine reported that it is 100% effective. Of course, nothing
+    in the real world is 100% effective, so this example raises a question: how do
+    we estimate efficacy when the number of cases is 0?'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this article, I present a Bayesian way to answer this question – and the
+    answer turns out to be about 94%.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*If you like this article, you might also like the second edition of [*Think
+    Bayes*](https://greenteapress.com/wp/think-bayes/).*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Click here to run this article on Colab](https://colab.research.google.com/github/AllenDowney/ThinkBayes2/blob/master/examples/vaccine2.ipynb)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Data
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: According to [this press release](https://www.pfizer.com/news/press-release/press-release-detail/pfizer-biontech-announce-positive-topline-results-pivotal)
+  prefs: []
+  type: TYPE_NORMAL
+- en: …in a Phase 3 trial in adolescents 12 to 15 years of age with or without prior
+    evidence of SARS-CoV-2 infection, the Pfizer-BioNTech COVID-19 vaccine BNT162b2
+    demonstrated 100% efficacy and robust antibody responses…
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Of course, it is good news that the vaccine seems to work in this age group
+    as well as it does in adults, and possibly better. But reporting that the vaccine
+    is 100% effective is a little strange.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The press release includes the following details about the results
+  prefs: []
+  type: TYPE_NORMAL
+- en: The trial enrolled 2,260 adolescents 12 to 15 years of age in the United States.
+    In the trial, 18 cases of COVID-19 were observed in the placebo group (n=1,129)
+    versus none in the vaccinated group (n=1,131).
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Since there were no cases in the vaccinated group, it is reasonable to think
+    that the vaccine works, but in the real world, nothing is 100% effective. In a
+    bigger trial, we should expect to see at least one case in the vaccinated group.
+    But how can we estimate the frequency of something that has not happened yet?
+  prefs: []
+  type: TYPE_NORMAL
+- en: Bayesian statistics provides a sensible way to do just that.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s the data as reported in the press release.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: To estimate the efficacy of the vaccine, I’ll start by computing the risk in
+    each group separately.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Beta Distribution
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: If we start with a uniform prior distribution, the posterior is a beta distribution
+    with parameters
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can use SciPy to make beta distributions that represents the posteriors.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s the posterior distribution for the control branch.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The posterior mean is close to the observed proportion:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s the posterior distribution for the treatment branch.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: The posterior mean is about 0.1%, which is small, but not 0.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To compute the distribution of risk ratios, I’ll make a discrete approximation
+    to the two posterior distributions, using the `Pmf` object from `empiricaldist`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Here are the `Pmf` objects:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'And here’s what they look like:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/d49a40c56490a24d2bed801957622063f28a37002fbdcdeb9e1bb630bcefc1ba.png](../Images/0774531b7db34a1d885c794d474cd7fa.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Computing Efficacy
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Now, to compute efficacy, I’ll use these distributions to compute the distribution
+    of risk ratio, `RR`, and then compute the distribution of efficacy, which is the
+    complement of risk ration, `1-RR`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can use `div_dist` to compute the risk ratio.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s the CDF of the risk ratio. I cut it off at 1 because higher values have
+    very low probabilities; that is, we are pretty sure the treatment is effective.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/52ddb97b67f0e1e0ef654e57e3821a182ca4da7ac9eb3139252a3b843439a763.png](../Images/fd0c4a9a47780bc9f7e9c1bc2549d78c.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: To compute the distribution of efficacy, we have to compute the distribution
+    of `1-RR`, where `RR` is the risk ratio. We can do that with `empiricaldist` by
+    creating a deterministic `Pmf` with the quantity `1` and using `sub_dist` to subtract
+    two `Pmf`s.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s the result.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/31e48b6b6d9ba65a9acbcc12f0d0e324e7a5f51e9d71a5219389681f5d4a6a94.png](../Images/18ab9b62e59b1dc92850cf29c46fa713.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The posterior mean is about 94%.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: And the 95% credible interval is between 79% and 99.9%.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: By these estimates, the efficacy in teenagers is about the same as in adults.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*If you like this article, you might also like the second edition of [*Think
+    Bayes*](https://greenteapress.com/wp/think-bayes/).*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Copyright 2020 Allen Downey
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Code: [MIT License](https://opensource.org/licenses/MIT)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Text: [Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA
+    4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  prefs: []
+  type: TYPE_NORMAL

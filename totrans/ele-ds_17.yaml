@@ -1,0 +1,641 @@
+- en: Resampling and Logistic Regression
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/ElementsOfDataScience/resample_logit.html](https://allendowney.github.io/ElementsOfDataScience/resample_logit.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/examples/resample_logit.ipynb)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Different ways of computing sampling distributions – and the statistics derived
+    from them, like standard errors and confidence intervals – yield different results.
+    None of them are right or wrong; rather, they are based on different modeling
+    assumptions. In practice, the differences are often small compared to other sources
+    of error, so we are free to use whichever is convenient.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This article is prompted by a recent question on [Reddit](https://www.reddit.com/r/statistics/comments/10ayfm5/q_parametric_bootstrap_for_logistic_regression/):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: I am trying to do parametric bootstrap for logistic regression but I don’t know
+    what the random error terms should be. I know how to do it with linear regression
+    since the error terms follow a normal distribution. Really appreciate any pointers
+    to resources about this topic.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'One of the responses recommends [this paper](https://www.scirp.org/journal/paperinformation.aspx?paperid=70962):
+    “An Application of Bootstrapping in Logistic Regression Model”, by Isaac Akpor
+    Adjei and Rezaul Karim.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The paper suggests two ways to compute the sampling distribution of the parameters
+    of a logistic regression by bootstrap sampling. They characterize one as parametric
+    and the other as non-parametric, and advise:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The non-parametric bootstrap [relies] on weaker assumptions (or no assumptions
+    at all) about the underlying distribution of the population. Statistical practitioners
+    should use non-parametric procedures only in so far as the assumptions about the
+    underlying distribution are seriously doubtful in their validity. … However, when
+    assumptions are not violated, non-parametric procedures will usually have greater
+    variance (in point estimation), less power (in hypothesis testing), wider intervals
+    (in confidence interval estimation), lower probability of correct selection (in
+    ranking and selection) and higher risk (in decision theory) when compared to a
+    corresponding parametric procedure (Efron and Tibshirani, 1994 [1] ).
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: The premise of this advice is that the parametric and non-parametric methods
+    are answering the same question in different ways, and that one might be preferred
+    over the other because the results are preferable in one way or another. It is
+    also based on the assumption that the sampling distribution of the parameters
+    – and the statistics derived from it – are uniquely and objectively defined.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I disagree with these premises. The parametric and non-parametric methods they
+    present are based on different modeling decisions, so they compute answers to
+    different questions. And the models they are based on are only two of many possible
+    models.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To explain what I mean, I will implement the methods they propose and explain
+    the assumptions each is based on. Then I will propose a third method that is a
+    hybrid of the two. I’ll show that all three methods yield different results, and
+    suggest criteria for when one might be preferred over the others.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Data
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: As an example, I’ll use data from the General Social Survey (GSS). I’ll download
+    an HDF file from the *Elements of Data Science* repository, which contains a subset
+    of the GSS data that has been resampled to correct for stratified sampling.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: It includes 64,814 respondents and 8 variables for each respondent.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | YEAR | ID_ | AGE | EDUC | SEX | GUNLAW | GRASS | REALINC |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 1972 | 1 | 23.0 | 16.0 | 2 | 1.0 | NaN | 18951.0 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 1972 | 2 | 70.0 | 10.0 | 1 | 1.0 | NaN | 24366.0 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 1972 | 3 | 48.0 | 12.0 | 2 | 1.0 | NaN | 24366.0 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 1972 | 4 | 27.0 | 17.0 | 2 | 1.0 | NaN | 30458.0 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 4 | 1972 | 5 | 61.0 | 12.0 | 2 | 1.0 | NaN | 50763.0 |'
+  prefs: []
+  type: TYPE_TB
+- en: To demonstrate logistic regression, I’ll use on [one of the questions](https://gssdataexplorer.norc.org/variables/285/vshow)
+    in the General Social Survey, which asks “Do you think the use of marijuana should
+    be made legal or not?” The responses are in a column called `GRASS`; here are
+    the values.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: I’ll use StatsModels, which provides a function that does logistic regression.
+    First we have to recode the dependent variable so `1` means “yes” and `0` means
+    “no”. We can do that by replacing `2` with `0`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: To model quadratic relationships, I’ll add columns that contain the values of
+    `AGE` and `EDUC` squared.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: And I’ll drop the rows that have missing values for the variables we’ll need.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: Logistic Regression
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Here are the results of logistic regression with these variables.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: Logit Regression Results
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| Dep. Variable: | GRASS | No. Observations: | 20475 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Model: | Logit | Df Residuals: | 20469 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Method: | MLE | Df Model: | 5 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Date: | Tue, 17 Jan 2023 | Pseudo R-squ.: | 0.05003 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Time: | 08:58:57 | Log-Likelihood: | -12151. |'
+  prefs: []
+  type: TYPE_TB
+- en: '| converged: | True | LL-Null: | -12791. |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Covariance Type: | nonrobust | LLR p-value: | 1.555e-274 |'
+  prefs: []
+  type: TYPE_TB
+- en: '|  | coef | std err | z | P>&#124;z&#124; | [0.025 | 0.975] |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Intercept | -1.6788 | 0.240 | -6.988 | 0.000 | -2.150 | -1.208 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| C(SEX)[T.2] | -0.3849 | 0.031 | -12.394 | 0.000 | -0.446 | -0.324 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| AGE | -0.0278 | 0.005 | -5.399 | 0.000 | -0.038 | -0.018 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| AGE2 | 0.0001 | 5.28e-05 | 2.190 | 0.029 | 1.21e-05 | 0.000 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| EDUC | 0.2000 | 0.031 | 6.412 | 0.000 | 0.139 | 0.261 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| EDUC2 | -0.0029 | 0.001 | -2.450 | 0.014 | -0.005 | -0.001 |'
+  prefs: []
+  type: TYPE_TB
+- en: To get a sense of what the results look like, we can plot the predicted probability
+    of saying “yes” as a function of age, for male and female respondents.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/resample_logit_21_0.png](../Images/aa74a3679320584224ecc98eebfea4f2.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Men are more likely to support legalization than women, and younger people more
+    likely than older people.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Boostrap sampling
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Now let’s implement the method characterized as non-parametric, which is based
+    on bootstrap resampling. The following function samples the rows of `data` with
+    replacement and runs the regression model on the resampled data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: The options sent to `fit` make it run faster, but don’t affect the results by
+    much.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Each time we run this process, the result represents a single draw from the
+    sampling distribution of the parameters.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: By running it many times, we generate a sample from the sampling distribution.
+    `pqdm` runs the sampling process in multiple threads.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | Intercept | C(SEX)[T.2] | AGE | AGE2 | EDUC | EDUC2 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | -1.747448 | -0.413202 | -0.027473 | 0.000114 | 0.213299 | -0.003302 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | -2.055303 | -0.411384 | -0.029943 | 0.000129 | 0.276153 | -0.005563 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | -2.050773 | -0.414960 | -0.023190 | 0.000094 | 0.242778 | -0.004530 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | -2.031659 | -0.392391 | -0.029538 | 0.000147 | 0.251942 | -0.004616 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 4 | -1.847295 | -0.363829 | -0.031532 | 0.000156 | 0.238870 | -0.004339 |'
+  prefs: []
+  type: TYPE_TB
+- en: Here’s what the sampling distribution looks like for one of the parameters.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/resample_logit_31_0.png](../Images/898f8a3018abbd0356c483f5c05fecdf.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The mean of the sampling distribution should be close to the parameters we estimated
+    with the original dataset, and it is.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | Sampling mean | Estimates |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Intercept | -1.681880 | -1.678838 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| C(SEX)[T.2] | -0.379621 | -0.384919 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| AGE | -0.027804 | -0.027825 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| AGE2 | 0.000115 | 0.000116 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| EDUC | 0.201137 | 0.200002 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| EDUC2 | -0.002912 | -0.002855 |'
+  prefs: []
+  type: TYPE_TB
+- en: The standard deviations of the sampling distributions should be close to the
+    standard errors computed by StatsModels, and they are. Most of them are close
+    enough that the difference probably doesn’t matter in practice.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | Sampling std | Standard error | Percent diff |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Intercept | 0.248814 | 0.240243 | 3.567779 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| C(SEX)[T.2] | 0.027137 | 0.031057 | -12.622418 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| AGE | 0.004944 | 0.005153 | -4.066840 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| AGE2 | 0.000051 | 0.000053 | -4.198399 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| EDUC | 0.031756 | 0.031193 | 1.804886 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| EDUC2 | 0.001197 | 0.001166 | 2.687507 |'
+  prefs: []
+  type: TYPE_TB
+- en: Of course, there is nothing magic about the standard errors computed by StatsModels;
+    they are approximations based on a model of the sampling process, just like the
+    results from resampling.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Resampling Framework
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The purpose of the sampling distribution is to quantify the variability in an
+    estimate due to random sampling. It is the answer to the question, “If we ran
+    this sampling process many times, how much would we expect the results to vary?”
+  prefs: []
+  type: TYPE_NORMAL
+- en: To answer that question, we need a model of the sampling process. We use the
+    model to simulate the sampling process and generate counterfactual datasets that
+    represent other samples the process could have generated.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following figure represents this framework.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../Images/3bae19c4186703c90aec13ae2c4e4eec.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: In bootstrap resampling, we treat the rows of the original dataset as if they
+    are the population and draw a random sample from it. We use this simulated data
+    to compute the sample statistic; in this example, it’s the parameters of the logistic
+    regression model. We collect the results to form a sample from the sampling distribution,
+    which we can use to compute confidence intervals and standard errors.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This way of simulating the sampling process asks, in effect, what would have
+    happened if we had surveyed different people. But that’s not the only possible
+    model of the sampling process. An alternative is to ask what would happen if we
+    surveyed the same people, but they gave different answers. That’s the model that
+    underlies the parametric method.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Parametric bootstrap
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'So, how do we simulate a sampling process where we survey the same people,
+    but they give different answers? One way is to assume, for the purposes of the
+    simulation, that the parameters we estimated from the original data are correct.
+    If so, we can use the regression model to compute the predicted probability for
+    each respondent, like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can use these probabilities to generate a biased coin toss for each respondent.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: Then we can run the regression model with these simulated values as the dependent
+    variable. The following function shows how.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: Again, the result from a single simulation is a random value from the sampling
+    distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: If we run it many times, we get a sample from the sampling distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | Intercept | C(SEX)[T.2] | AGE | AGE2 | EDUC | EDUC2 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | -1.804015 | -0.384881 | -0.014708 | -0.000017 | 0.180796 | -0.002302
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | -1.432664 | -0.422171 | -0.023207 | 0.000044 | 0.166255 | -0.001940 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | -1.415658 | -0.406837 | -0.033815 | 0.000168 | 0.180158 | -0.001914 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | -1.840253 | -0.394937 | -0.028435 | 0.000126 | 0.221295 | -0.003461 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 4 | -1.642430 | -0.375719 | -0.034946 | 0.000177 | 0.216985 | -0.003430 |'
+  prefs: []
+  type: TYPE_TB
+- en: Here’s the sampling distribution for a single parameter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/resample_logit_53_0.png](../Images/2715a335ba843f9dcc8bd0f5d460bf53.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Again, the standard deviations should be close to the standard errors, and they
+    are.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | Sampling std | Standard error | Percent diff |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Intercept | 0.199178 | 0.240243 | -17.092962 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| C(SEX)[T.2] | 0.030494 | 0.031057 | -1.812430 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| AGE | 0.005085 | 0.005153 | -1.327560 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| AGE2 | 0.000054 | 0.000053 | 2.118557 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| EDUC | 0.024899 | 0.031193 | -20.178173 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| EDUC2 | 0.000935 | 0.001166 | -19.819110 |'
+  prefs: []
+  type: TYPE_TB
+- en: So we have two models of the sampling process that yield different sampling
+    distributions. But these are not the only models.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If the first method asks, “What if we surveyed different people?” and the second
+    asks “What if we surveyed the same people and they gave different answers?”, let’s
+    consider a third method that asks “¿Por qué no los dos?”.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Hybrid Model
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The following function uses bootstrap sampling to simulate surveying different
+    people; then it uses the parametric method to simulate their responses.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE37]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | Intercept | C(SEX)[T.2] | AGE | AGE2 | EDUC | EDUC2 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | -2.019658 | -0.385612 | -0.025974 | 0.000108 | 0.249717 | -0.005012 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | -1.648528 | -0.351063 | -0.025192 | 0.000100 | 0.182666 | -0.002312 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | -1.780499 | -0.445770 | -0.032862 | 0.000173 | 0.242922 | -0.004569 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | -1.534347 | -0.464670 | -0.029799 | 0.000125 | 0.189228 | -0.002218 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 4 | -1.336757 | -0.404636 | -0.030217 | 0.000137 | 0.160754 | -0.001453 |'
+  prefs: []
+  type: TYPE_TB
+- en: Here’s the sampling distribution for one of the parameters.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/resample_logit_63_0.png](../Images/1da9d9633359e51d2198daf296dc4f70.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Again, the standard errors are comparable to the ones computed by StatsModels.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE39]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | Sampling std | Standard error | Percent diff |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Intercept | 0.236901 | 0.240243 | -1.390859 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| C(SEX)[T.2] | 0.035600 | 0.031057 | 14.629106 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| AGE | 0.005769 | 0.005153 | 11.939358 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| AGE2 | 0.000061 | 0.000053 | 15.337773 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| EDUC | 0.031469 | 0.031193 | 0.884552 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| EDUC2 | 0.001173 | 0.001166 | 0.613167 |'
+  prefs: []
+  type: TYPE_TB
+- en: Now we have four ways to compute sampling distributions, confidence intervals,
+    and standard errors – and they yield different results. So you might wonder…
+  prefs: []
+  type: TYPE_NORMAL
+- en: Which One Is Right?
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: None of them are right. They are based on different models of the sampling process,
+    so they quantify different sources of uncertainty.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In some cases we might find that different methods converge on the same results,
+    asymptotically, under certain assumptions. But that doesn’t really matter, because
+    with finite data sets, the results are not generally the same. So the important
+    question is whether the differences are big enough to matter in practice.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this example, it is easy to implement multiple models and compare the results.
+    If they were substantially different, we would need to think more carefully about
+    the modeling assumptions they are based on and choose the one we think is the
+    best description of the data-generating process.
+  prefs: []
+  type: TYPE_NORMAL
+- en: But in this example, the differences are small enough that they probably don’t
+    matter in practice. So we are free to choose whichever is easiest to implement,
+    or fastest to compute, or convenient in some other way.
+  prefs: []
+  type: TYPE_NORMAL
+- en: It is a common error to presume that the result of an analytic method is uniquely
+    correct, and that results from computational methods like resampling are approximations
+    to it. Analytic methods are often fast to compute, but they are always based on
+    modeling assumptions and usually based on approximations, so they are no more
+    correct than computational methods.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Copyright 2023 Allen Downey
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  prefs: []
+  type: TYPE_NORMAL

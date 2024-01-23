@@ -1,0 +1,321 @@
+- en: Priority Queues and Heaps
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/DSIRP/heap.html](https://allendowney.github.io/DSIRP/heap.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/heap.ipynb)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The `heapq` module
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The `heapq` module provides functions for adding and removing elements to and
+    from a heap.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: The heap itself is literally a list, so if you create an empty list, you can
+    think of it as a heap with no elements.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: Then you can use `heappush` to add one element at a time.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The result is a list that represents a tree. Here’s how the correspondence
+    works between the list representation and the tree representation:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The first element (index 0) is the root.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The next two elements are the children of the root.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The next four element are the grandchildren of the root.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: And so on.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In general, if the index of an element is `i`, its parent is `(i-1)//2` and
+    its children are `2*i + 1` and `2*i + 2`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Drawing the Tree
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: To generate the tree representation of the heap, the following function iterates
+    through the heap and makes a NetworkX graph with an edge between each node and
+    its parent.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: To draw the tree, we’ll use a module called `EoN` that provides a function called
+    [hierarchy_pos](https://epidemicsonnetworks.readthedocs.io/en/latest/functions/EoN.hierarchy_pos.html#EoN.hierarchy_pos).
+  prefs: []
+  type: TYPE_NORMAL
+- en: It takes as a parameter a NetworkX graph that represents a tree, and it returns
+    a dictionary that maps from each node to a position in the Cartesian plane. If
+    we pass this dictionary to `nx.draw`, it lays the tree out accordingly.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s what the tree representation looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/heap_17_1.png](../Images/c20dd2af8eed3f1003d17ac6ede89134.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The Heap Property
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'If the list is a heap, the tree should have the heap property:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Every parent is less than or equal to its children.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'Or more formally:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: For all pairs of nodes P and C, where P is the parent of C, the value of P must
+    be less than or equal to the value of C.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: The following function checks whether this property is true for all nodes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: As we might hope, `heap` is a heap.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s a list of integers in no particular order, and as you might expect, it
+    does not have the heap property.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: Using a Heap to Sort
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Given a heap, we can implement a sort algorithm called [heapsort](https://en.wikipedia.org/wiki/Heapsort).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s start again with a fresh heap:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: If we know that a list is a heap, we can use `heappop` to find and remove the
+    smallest element.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`heappop` rearranges the remaining elements of the list to restore the heap
+    property (we’ll see how soon).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'And that means we can use `heappop` again to get the second smallest element
+    (of the original heap):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: Which means we can use a heap to sort a list.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** Write a generator function called `heapsort` that takes an iterable
+    and yields the elements of the iterable in increasing order.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now let’s see how a heap is implemented. The two key methods are `push` and
+    `pop`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Push
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: To insert an element in a heap, you start by appending it to the list.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The result is generally not a heap, so you have to do some work to restore
+    the heap property:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: If the new element is greater than or equal to its parent, you are done.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Otherwise swap the new element with its parent.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: If the new element is greater than or equal to the parent’s parent, you are
+    done.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Otherwise swap the new element with its parent’s parent.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: And repeat, working your way up the tree, until you’re done or you reach the
+    root.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: This process is called “sift-up” or sometimes [swim](https://en.wikipedia.org/wiki/Heap_(data_structure)#Implementation).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** Write a function called `push` that does the same thing as `heappush`:
+    it should take as parameters a list (which should be a heap) and a new element;
+    it should add the new element to the list and restore the heap property.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You can use this example to test your code:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: Pop
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'To remove an element from the heap, you:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Make a copy of the root element,
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Pop the *last* element off the list and store it at the root.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Then you have to restore the heap property. If the new root is less than or
+    equal to both of its children, you are done.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Otherwise, swap the parent with the smaller of its children.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Then repeat the process with the child you just replaced, and continue until
+    you get to a leaf node.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: This process is called a “sift-down” or sometimes “sink”.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** Write a function called `pop` that does the same thing as `heappop`:
+    it should remove the smallest element, restore the heap property, and return the
+    smallest element.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Hint: This one is tricky because you have to deal with several special cases.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Data Structures and Information Retrieval in Python*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Copyright 2021 Allen Downey
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'License: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  prefs: []
+  type: TYPE_NORMAL

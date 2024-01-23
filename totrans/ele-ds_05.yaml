@@ -1,0 +1,589 @@
+- en: Lists and Arrays
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/ElementsOfDataScience/03_arrays.html](https://allendowney.github.io/ElementsOfDataScience/03_arrays.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/03_arrays.ipynb)
+    or [click here to download it](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/03_arrays.ipynb).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In the previous chapter we used tuples to represent latitude and longitude.
+    In this chapter, you’ll see how to use tuples more generally to represent a sequence
+    of values. And we’ll see two more ways to represent sequences: lists and arrays.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: You might wonder why we need three ways to represent the same thing. Most of
+    the time we don’t, but each of them has different capabilities. For work with
+    data, we will use arrays most of the time.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As an example, we will use a small dataset from an article in *The Economist*
+    about the price of sandwiches. It’s a silly example, but I’ll use it to introduce
+    the idea of relative differences and different ways to summarize them.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Tuples
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'A tuple is a sequence of elements. When we use a tuple to represent latitude
+    and longitude, the sequence only contains two elements, and they are both floating-point
+    numbers. But in general a tuple can contain any number of elements, and the elements
+    can be values of any type. The following is a tuple of three integers:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: Notice that when Python displays a tuple, it puts the elements in parentheses.
+    When you type a tuple, you can put it in parentheses if you think it is easier
+    to read that way, but you don’t have to.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The elements can be any type. Here’s a tuple of strings:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: The elements don’t have to be the same type. Here’s a tuple with a string, an
+    integer, and a floating-point number.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'If you have a string, you can convert it to a tuple using the `tuple` function:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is a tuple of single-character strings.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'When you create a tuple, the parentheses are optional, but the commas are required.
+    So how do you think you create a tuple with a single element? You might be tempted
+    to write:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'But you will find that the result is just a number, not a tuple. To make a
+    tuple with a single element, you need a comma:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: That might look funny, but it does the job.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Lists
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Python provides another way to store a sequence of elements: a **list**.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: To create a list, you put a sequence of elements in square brackets.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: Lists and tuples are very similar. They can contain any number of elements,
+    the elements can be any type, and the elements don’t have to be the same type.
+    The difference is that you can modify a list; tuples are **immutable** (cannot
+    be modified). This difference will matter later, but for now we can ignore it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'When you make a list, the brackets are required, but if there is a single element,
+    you don’t need a comma. So you can make a list like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'It is also possible to make a list with no elements, like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: The `len` function returns the length (number of elements) in a list or tuple.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise:** Create a list with 4 elements; then use `type` to confirm that
+    it’s a list, and `len` to confirm that it has 4 elements.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: There’s a lot more we could do with lists, but that’s enough to get started.
+    In the next section, we’ll use lists to store data about sandwich prices.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Sandwich Prices
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'In September 2019, *The Economist* published an article comparing sandwich
+    prices in Boston and London: “[Why Americans pay more for lunch than Britons do](https://www.economist.com/finance-and-economics/2019/09/07/why-americans-pay-more-for-lunch-than-britons-do)”.
+    It includes this graph showing prices of several sandwiches in the two cities:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../Images/5feb03c573c0b858be44a006b68b3324.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Here are the sandwich names from the graph, as a list of strings.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'I contacted *The Economist* to ask for the data they used to create that graph,
+    and they were kind enough to share it with me. Here are the sandwich prices in
+    Boston:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here are the prices in London, converted to dollars at $1.25 / £1.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Lists provide some arithmetic operators, but they might not do what you want.
+    For example, you can “add” two lists:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: But it concatenates the two lists, which is not very useful in this example.
+    To compute differences between prices, you might try subtracting lists, but you
+    would get an error.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can solve this problem with NumPy.
+  prefs: []
+  type: TYPE_NORMAL
+- en: NumPy Arrays
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: We’ve already seen that the NumPy library provides math functions. It also provides
+    a type of sequence called an **array**. You can create a new array with the `np.array`
+    function, starting with a list or tuple.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: The type of the result is `numpy.ndarray`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The “nd” stands for “n-dimensional”, which indicates that NumPy arrays can
+    have any number of dimensions. But for now we will work with one-dimensional sequences.
+    If you display an array, Python displays the elements:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'You can also display the **data type** of the array, which is the type of the
+    elements:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`float64` means that the elements are floating-point numbers that take up 64
+    bits each. You don’t need to know about the storage format of these numbers, but
+    if you are curious, you can read about it at [https://en.wikipedia.org/wiki/Floating-point_arithmetic#Internal_representation](https://en.wikipedia.org/wiki/Floating-point_arithmetic#Internal_representation).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The elements of a NumPy array can be any type, but they all have to be the same
+    type. Most often the elements are numbers, but you can also make an array of strings.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: In this example, the `dtype` is `<U17`. The `U` indicates that the elements
+    are Unicode strings; Unicode is the standard Python uses to represent strings.
+    The number `17` is the length of the longest string in the array.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now, here’s why NumPy arrays are useful: they can do arithmetic. For example,
+    to compute the differences between Boston and London prices, we can write:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: Subtraction is done **elementwise**; that is, NumPy lines up the two arrays
+    and subtracts corresponding elements. The result is a new array.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Statistical Summaries
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'NumPy provides functions that compute statistical summaries like the mean:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'So we could describe the difference in prices like this: “Sandwiches in Boston
+    are more expensive by $2.64, on average”. We could also compute the means first,
+    and then compute their difference:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE37]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'And that turns out to be the same thing: the difference in means is the same
+    as the mean of the differences. As an aside, many of the NumPy functions also
+    work with lists, so we could also do this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE39]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise:** Standard deviation is way to quantify the variability in a set
+    of numbers. The NumPy function that computes standard deviation is `np.std`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Compute the standard deviation of sandwich prices in Boston and London. By this
+    measure, which set of prices is more variable?
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** The definition of the mean, in math notation, is'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \(\mu = \frac{1}{N} \sum_i x_i\)
+  prefs: []
+  type: TYPE_NORMAL
+- en: where \(x\) is a sequence of elements, \(x_i\) is the element with index \(i\),
+    and \(N\) is the number of elements. The definition of standard deviation is
+  prefs: []
+  type: TYPE_NORMAL
+- en: \(\sigma = \sqrt{\frac{1}{N} \sum_i (x_i - \mu)^2}\)
+  prefs: []
+  type: TYPE_NORMAL
+- en: Compute the standard deviation of `boston_price_list` using NumPy functions
+    `np.mean` and `np.sqrt` and see if you get the same result as `np.std`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: You can (and should) do this exercise using only features we have discussed
+    so far.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This definition of standard deviation is sometimes called the “population standard
+    deviation”. You might have seen another definition with \(N-1\) in the denominator;
+    that’s the “sample standard deviation”. We’ll use the population standard deviation
+    for now and come back to this issue later.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Relative Difference
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In the previous section we computed differences between prices. But often when
+    we make this kind of comparison, we are interested in **relative differences**,
+    which are differences expressed as a fraction or percentage of a quantity.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Taking the lobster roll as an example, the difference in price is:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE40]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE41]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'We can express that difference as a fraction of the London price, like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE42]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE43]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Or as a *percentage* of the London price, like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE44]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE45]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'So we might say that the lobster roll is 33% more expensive in Boston. But
+    putting London in the denominator was an arbitrary choice. We could also compute
+    the difference as a percentage of the Boston price:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE46]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE47]'
+  prefs: []
+  type: TYPE_PRE
+- en: If we do that calculation, we might say the lobster roll is 25% cheaper in London.
+    When you read this kind of comparison, you should make sure you understand which
+    quantity is in the denominator, and you might want to think about why that choice
+    was made. In this example, if you want to make the difference seem bigger, you
+    might put London prices in the denominator.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If we do the same calculation with the arrays `boston_price_array` and `boston_price_array`,
+    we can compute the relative differences for all sandwiches:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE48]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE49]'
+  prefs: []
+  type: TYPE_PRE
+- en: And the percent differences.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE50]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE51]'
+  prefs: []
+  type: TYPE_PRE
+- en: Summarizing Relative Differences
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Now let’s think about how to summarize an array of percentage differences. One
+    option is to report the range, which we can compute with `np.min` and `np.max`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE52]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE53]'
+  prefs: []
+  type: TYPE_PRE
+- en: The lobster roll is only 33% more expensive in Boston; the egg sandwich is 121%
+    percent more (that is, more than twice the price).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** What are the percent differences if we put the Boston prices
+    in the denominator? What is the range of those differences? Write a sentence that
+    summarizes the results.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Another way to summarize percentage differences is to report the mean.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE54]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE55]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'So we might say, on average, sandwiches are 65% more expensive in Boston. But
+    another way to summarize the data is to compute the mean price in each city, and
+    then compute the percentage difference of the means:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE56]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE57]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'So we might say that the average sandwich price is 56% higher in Boston. As
+    this example demonstrates:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: With relative and percentage differences, the mean of the differences is not
+    the same as the difference of the means.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: When you report data like this, you should think about different ways to summarize
+    the data.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: When you read a summary of data like this, make sure you understand what summary
+    was chosen and what it means.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: In this example, I think the second option (the relative difference in the means)
+    is more meaningful, because it reflects the difference in price between “baskets
+    of goods” that include one of each sandwich.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Debugging
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: So far, most of the exercises have only required a few lines of code. If you
+    made errors along the way, you probably found them quickly.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As we go along, the exercises will be more substantial, and you may find yourself
+    spending more time debugging. Here are a couple of suggestions to help you find
+    errors quickly – and avoid them in the first place.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Most importantly, you should develop code incrementally; that is, you should
+    write a small amount of code and test it. If it works, add more code; otherwise,
+    debug what you have.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Conversely, if you have written too much code, and you are having a hard time
+    debugging it, split it into smaller chunks and debug them separately.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'For example, suppose you want to compute, for each sandwich in the sandwich
+    list, the midpoint of the Boston and London prices. As a first draft, you might
+    write something like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE58]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE59]'
+  prefs: []
+  type: TYPE_PRE
+- en: This code runs, and it produces an answer, but the answer is a single number
+    rather than the list we were expecting.
+  prefs: []
+  type: TYPE_NORMAL
+- en: You might have already spotted the error, but let’s suppose you did not. To
+    debug this code, I would start by splitting the computation into smaller steps
+    and displaying the intermediate results. For example, we might add the two lists
+    and display the result, like this.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE60]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE61]'
+  prefs: []
+  type: TYPE_PRE
+- en: Looking at the result, we see that it did not add the sandwich prices elementwise,
+    as we intended. Because the arguments are lists, the `+` operator concatenates
+    them rather than adding the elements.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can solve this problem by converting the lists to arrays.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE62]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE63]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'And then computing the midpoint of each pair of prices, like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE64]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE65]'
+  prefs: []
+  type: TYPE_PRE
+- en: As you gain experience, you will be able to write bigger chunks of code before
+    testing. But while you are getting started, keep it simple! As a general rule,
+    each line of code should perform a small number of operations, and each cell should
+    contain a small number of statements. When you are getting started, this number
+    should be one.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'This chapter presents three ways to represent a sequence of values: tuples,
+    list, and Numpy arrays. Working with data, we will primarily use arrays.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'It also introduces three ways to represent differences: absolute, relative,
+    and percentage; and several ways to summarize a set of values: minimum, maximum,
+    mean, and standard deviation.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the next chapter we’ll start working with data files, and we’ll use loops
+    to process letters and words.
+  prefs: []
+  type: TYPE_NORMAL

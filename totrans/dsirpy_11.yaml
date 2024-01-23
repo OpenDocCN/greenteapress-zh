@@ -1,0 +1,484 @@
+- en: Search
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/DSIRP/searching.html](https://allendowney.github.io/DSIRP/searching.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/searching.ipynb)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Linear Search
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Suppose you have a list.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: And you want to know whether an element appears in the list. You can use the
+    `in` operator, which returns `True` or `False`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: If you want to know where in the list it is, you can use `index`, which returns
+    the index of the element if it appears.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: Or raises a `ValueError` otherwise.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The following function does the same thing as `string.index`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: The runtime of this kind of search is in `O(n)`, where `n` is the length of
+    the list, because
+  prefs: []
+  type: TYPE_NORMAL
+- en: If the target is not in the list, you have to check every element in the list.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: If the target is in a random location, you have to check half the list on average.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: As an exception, if you know that the target is within the first `k` elements,
+    for a value of `k` that does not depend on `n`, you can consider this search `O(1)`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Bisection
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: If we know that the elements of the list are in order, we can do better.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The `bisect` module provides an implementation of a “bisection search”, which
+    works by
+  prefs: []
+  type: TYPE_NORMAL
+- en: Checking the element in the middle of the list. If it’s the target, we’re done.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: If the middle element is larger than the target, we search the left half.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: If the middle element is smaller than the target, we search the right half.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[Here is the documentation of the bisect modle](https://docs.python.org/3/library/bisect.html).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: To test it, we’ll start with a sorted list.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`bisect_left` is similar to `index`'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: But with elements that are not in the list, it returns their insertion point,
+    that is, the place where you would put the target to keep the list sorted.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'We can use `bisect_left` to implement `index`, like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise:** Write your own version of `bisect_left`. You can do it iteratively
+    or recursively.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Each time through the loop, we cut the search region in half, so if we start
+    with `n` elements, we have `n/2` during the next loop, `n/4` during the second
+    loop, and so on. When we get to 1 element, we’re done.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[See this animation](https://blog.penjee.com/binary-vs-linear-search-animated-gifs/)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: So how many steps does that take? Thinking about it in reverse, starting with
+    1, how many times do we have to double it before we get to `n`? In math notation,
+    the question is
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[2^x = n\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Where `x` is the unknown number of steps. Taking the log of both sides, base
+    2:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[x = log_2 n\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: In terms of order of growth, bisection search is in `O(log n)`. Notice that
+    we don’t bother to specify the base of the logarithm, because a log in one base
+    is a constant multiple of a log in any other base.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`bisect` also provides methods to insert elements while maintaining sorted
+    order.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: However, as the documentation explains, “Keep in mind that the O(log n) search
+    is dominated by the slow O(n) insertion step.”
+  prefs: []
+  type: TYPE_NORMAL
+- en: Binary search tree
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Using a sorted array to support log-time search is a reasonable choice if we
+    don’t have to add or remove elements very often.
+  prefs: []
+  type: TYPE_NORMAL
+- en: But if the number of add/remove operations is similar to the number of searches,
+    the overall performance would be linear.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can solve that problem with a [binary search tree](https://en.wikipedia.org/wiki/Binary_search_tree).
+  prefs: []
+  type: TYPE_NORMAL
+- en: To implement a tree, I’ll define a new class that represents a `Node`. Each
+    node contains data and a reference to two “children” called `left` and `right`.
+    (It’s called a binary tree because every node has two children).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s how we can instantiate two nodes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: Because `Node` provides `__repr__`, we can display a node like this.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we’ll make a parent node that has the first two nodes as children.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: I’ll define another class to represent the tree. The only thing it contains
+    is a reference to the top of the tree, which is confusingly called the root node.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s tree with a reference to `node8`, so it implicitly contains `node3` and
+    `node10` as well.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: A binary tree is a binary search tree if for every node (1) the value of the
+    left child is lower and (2) the value of the right child is higher. Let’s assume
+    for now that there are no duplicates.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We can check whether a tree is a BST like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: And let’s see an example where it’s not true.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE37]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE39]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE40]'
+  prefs: []
+  type: TYPE_PRE
+- en: Draw the Tree
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: One of the better functions for drawing trees is part of a package called `EoN`,
+    for “Epidemics on Networks”, which provides “tools to study the spread of SIS
+    and SIR diseases in networks”.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The function we’ll use is called [hierarchy_pos](https://epidemicsonnetworks.readthedocs.io/en/latest/functions/EoN.hierarchy_pos.html#EoN.hierarchy_pos).
+    It takes as a parameter a NetworkX graph that represents a tree, and it returns
+    a dictionary that maps from each node to a position in the Cartesian plane. If
+    we pass this dictionary to `nx.draw`, it lays the tree out accordingly.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE41]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE42]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE43]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE44]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE45]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE46]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE47]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE48]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/searching_55_0.png](../Images/9d6d47f61e3369792a9fc819d51bef10.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Search
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Given a tree and a target value, how do we determine whether the target is in
+    the tree?
+  prefs: []
+  type: TYPE_NORMAL
+- en: Start at the root. If you find the target, stop.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: If the target is less than the value at the root, go left.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: If the target is greater than the value at the root, go right.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: If you get to a non-existent node, stop.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Exercise:** Write a function called `search` that takes a `BSTree` and a
+    target value and returns `True` if the target value appears in the tree.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** Many tree operations lend themselves to recursive implementations.
+    Write a function called `search_rec` that searches the tree recursively.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Hint: Start with a copy of `is_bst`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Insert
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The point of the BST is that we can add and remove elements efficiently, compared
+    to a sorted array.
+  prefs: []
+  type: TYPE_NORMAL
+- en: So let’s see what that looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE49]'
+  prefs: []
+  type: TYPE_PRE
+- en: We’ll test it by starting with an empty tree and adding elements one at a time.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE50]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE51]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE52]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/searching_66_0.png](../Images/4d383453189a15eaac3c690933afc89e.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: If things have gone according to plan, the result should be a BST.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE53]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE54]'
+  prefs: []
+  type: TYPE_PRE
+- en: Sorting
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: If we traverse the tree recursively and print the elements as we go, we get
+    the values in sorted order.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE55]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE56]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE57]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise:** Write a generator method called `iterate_tree` that traverses
+    the tree and yields the elements in order.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: You can do this iteratively or recursively.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Badness 10000
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: If the tree is reasonably well balanced, the height is proportional to `log
+    n`, where `n` is the number of elements.
+  prefs: []
+  type: TYPE_NORMAL
+- en: But let’s see what happens if we add elements in sorted order.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE58]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE59]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/searching_77_0.png](../Images/c2f4fb64046b6a248a879b4562acac7a.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Now traversing the tree takes linear time. To avoid this problem, there are
+    variations of BST that are [self-balancing](https://en.wikipedia.org/wiki/Self-balancing_binary_search_tree).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Most are based on [tree rotation](https://en.wikipedia.org/wiki/Tree_rotation)
+    operations. For example, the following is a function that rotates a tree to the
+    left (following Wikipedia’s nomenclature for what “left” and “right” mean).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE60]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE61]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/searching_80_0.png](../Images/68bf18fefd43aff35b62729052f13887.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: '*Data Structures and Information Retrieval in Python*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Copyright 2021 Allen Downey
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'License: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  prefs: []
+  type: TYPE_NORMAL

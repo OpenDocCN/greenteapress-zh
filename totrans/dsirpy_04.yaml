@@ -1,0 +1,246 @@
+- en: Testing Order of Growth
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/DSIRP/timing.html](https://allendowney.github.io/DSIRP/timing.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/timing.ipynb)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Analysis of algorithms makes it possible to predict how run time will grow as
+    the size of a problem increases. But this kind of analysis ignores leading coefficients
+    and non-leading terms. So the behavior for small and medium problems might not
+    be what the analysis predicts.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To see how run time really behaves for a range of problem sizes, we can run
+    the algorithm and measure.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To do the measurement, we’ll use the [times](https://docs.python.org/3/library/os.html#os.times)
+    function from the `os` module.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Exercise: Use `etime` to measure the computation time used by `sleep`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: One of the things that makes timing tricky is that many operations are too fast
+    to measure accurately.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`%timeit` handles this by running enough times get a precise estimate, even
+    for things that run very fast.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: We’ll handle it by running over a wide range of problem sizes, hoping to find
+    sizes that run long enough to measure, but not more than a few seconds.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following function takes a size, `n`, creates an empty list, and calls `list.append`
+    `n` times.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`timeit` can time this function accurately.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: But our `time_func` is not that smart.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Exercise: Increase the number of iterations until the run time is measureable.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: List append
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The following function gradually increases `n` and records the total time.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/timing_21_0.png](../Images/de967991f7841998e3585c9626348eea.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: This one looks pretty linear, but it won’t always be so clear. It will help
+    to plot a straight line that goes through the last data point.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following function plots the actual results and the fitted line.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/timing_27_0.png](../Images/ffc01fafc63bbbd03fec9cd950e27f17.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: From these results, what can we conclude about the order of growth of `list.append`?
+  prefs: []
+  type: TYPE_NORMAL
+- en: Before we go on, let’s also look at the results on a log-log scale.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/timing_30_0.png](../Images/ddfc704936836d5a523d49f90545015e.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Why might we prefer this scale?
+  prefs: []
+  type: TYPE_NORMAL
+- en: List pop
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Now let’s do the same for `list.pop` (which pops from the end of the list by
+    default).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Notice that we have to make the list before we pop things from it, so we will
+    have to think about how to interpret the results.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/timing_33_1.png](../Images/52c1ade3798cd00abed858d566252789.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: What can we conclude?
+  prefs: []
+  type: TYPE_NORMAL
+- en: What about `pop(0)`, which pops from the beginning of the list?
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Note: You might have to adjust `exp` to make the fitted line fit.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/timing_35_1.png](../Images/25710c0d1158368978bc3573ecee763e.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Searching a list
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '`list.index` searches a list and returns the index of the first element that
+    matches the target.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: What do we expect if we always search for the first element?
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/timing_37_1.png](../Images/e690c7073f011818f06cf13e8b61a404.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: What if we always search for the last element?
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/timing_39_1.png](../Images/1330a6bb9f90c0d8eeeae3dce07dbda5.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Dictionary add
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/timing_41_1.png](../Images/610c775fab59c8d3df1e0ec4f43400b5.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Dictionary lookup
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/timing_43_1.png](../Images/3e6801ef3662ca0a2f4fc968124abfc8.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: This characteristic of dictionaries is the foundation of a lot of efficient
+    algorithms!
+  prefs: []
+  type: TYPE_NORMAL

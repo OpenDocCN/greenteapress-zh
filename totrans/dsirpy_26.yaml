@@ -1,0 +1,322 @@
+- en: Quiz 6
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/DSIRP/quiz06.html](https://allendowney.github.io/DSIRP/quiz06.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'BEFORE YOU START THIS QUIZ:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Click on “Copy to Drive” to make a copy of the quiz,
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Click on “Share”,
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Click on “Change” and select “Anyone with this link can edit”
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Click “Copy link” and
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Paste the link into [this Canvas assignment](https://canvas.olin.edu/courses/313/assignments/5138).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: This quiz is open notes, open internet.
+  prefs: []
+  type: TYPE_NORMAL
+- en: You can ask for help from the instructor, but not from anyone else.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: You can use code you find on the internet, but if you use more than a couple
+    of lines from a single source, you should attribute the source.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: A tree of sequences
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Suppose you have a large number of DNA sequences, represented using strings
+    containing the characters `A`, `C`, `G`, and `T`, which are the bases that make
+    up DNA.
+  prefs: []
+  type: TYPE_NORMAL
+- en: One way to store these sequences is in a tree where each node has four children,
+    one for each base. Here’s a class definition for such a node.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The instance variables are:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`children`, which is a list of four `Node` objects, where `None` indicates
+    that a child is missing.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`end`: which is a `bool` that indicates whether this `Node` represents the
+    end of a sequence.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: I’ll use the following dictionary to map from each base to its index in the
+    list of children.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following function inserts a new sequence into the tree.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: As an example, here’s a tree that contains only one sequence, `CA`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: The root of the tree has a single child, at index `1`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: The child has a single child, at index `0`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: In the grandchild, `end` is `True`, which indicates that there is a sequence
+    in the tree that ends at this node.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s an example with more sequences.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: I’ll use NetworkX and EoN to draw this tree.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/quiz06_23_0.png](../Images/aa2680ea88fb22b65563438138db7846.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Question 1
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Write a function called `find` that takes as parameters
+  prefs: []
+  type: TYPE_NORMAL
+- en: A `Node` that represents the root of a tree and
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: A string representing a sequence of bases.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: It should return `True` if the sequence appears in the tree, and `False` otherwise.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You can use the following examples to test your code:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: Question 2
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Write a function called `find_all_rec` that takes as parameters:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: A `Node` in a tree.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: A path that indicates the sequence of bases from the root to the current `Node`.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: A list of sequences.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: This function should traverse the tree and add to the list all of the complete
+    sequences it discovers.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Hint: Review `make_table` from `huffman.ipynb`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: You can use the following example to test your code.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result should be a list with the following elements, not necessarily in
+    this order
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: Question 3
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Write a function called `find_all` that takes a `Node` and a sequence of bases.
+    It should traverse the tree and return a list that contains all sequences in the
+    tree that begin with the given prefix.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Note: You can use `find_all_rec` as part of your solution even if your answer
+    to the previous question does not work.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: You can use the following examples to test your code.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: Question 4
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Suppose we write a more general version of `Node.__init__` that takes `end`
+    and `children` as optional parameters.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'And we write a version of `insert` that uses `BadNode`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'If we use the new versions to make a tree, like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE37]'
+  prefs: []
+  type: TYPE_PRE
+- en: It seems to work. But if we draw the tree, we get a `RecursionError`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE39]'
+  prefs: []
+  type: TYPE_PRE
+- en: In the cell that defines `BadNode`, write a comment that explains what the problem
+    is, and then fix it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Note: Your fixed version should still accept `end` and `children` as optional
+    parameters.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*Data Structures and Information Retrieval in Python*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Copyright 2021 Allen Downey
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'License: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  prefs: []
+  type: TYPE_NORMAL

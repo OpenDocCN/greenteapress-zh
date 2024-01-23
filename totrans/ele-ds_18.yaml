@@ -1,0 +1,234 @@
+- en: Never Test for Normality
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/ElementsOfDataScience/anderson.html](https://allendowney.github.io/ElementsOfDataScience/anderson.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Way back in 2013, I wrote [this blog post](https://allendowney.blogspot.com/2013/08/are-my-data-normal.html)
+    explaining why you should never use a statistical test to check whether a sample
+    came from a Gaussian distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I argued that data from the real world never come from a Gaussian distribution,
+    or any other simple mathematical model, so the answer to the question is always
+    no.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'And there are only two possible outcomes from the test:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: If you have enough data, the test will reject the hypothesis that the data came
+    from a Gaussian distribution, or
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: If you don’t have enough data, the test will fail to reject the hypothesis.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Either way, the result doesn’t tell you anything useful.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this article, I will explore a particular example and demonstrate this relationship
+    between the sample size and the outcome of the test. And I will conclude, again,
+    that
+  prefs: []
+  type: TYPE_NORMAL
+- en: Choosing a distribution is not a statistical question; it is a modeling decision.
+    No statistical test can tell you whether a particular distribution is a good model
+    for your data.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/examples/anderson.ipynb)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: I’ll start by generating a sample that is actually from a lognormal distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: I’ll use the sample mean and standard deviation to make a Gaussian model of
+    the sample.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s what the empirical distribution of the sample looks like compared to
+    the CDF of the Gaussian distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/anderson_8_0.png](../Images/f7811f8961e90e190359c5c895cd5d5d.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: It looks like the Gaussian distribution is a pretty good model for the data,
+    and probably good enough for most purposes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s see what the [Anderson-Darling test](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.anderson.html)
+    has to say:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: The A-D statistic is 1.7, which exceeds the critical value, 0.77, so at the
+    5% significance level, we can reject the hypothesis that this sample came from
+    a Gaussian distribution. That’s the right answer, so it might seem like we’ve
+    done something useful. But we haven’t.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Sample size
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The result from the A-D test depends on the sample size. To demonstrate, I’ll
+    wrap the test in a function that returns a boolean.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: And wrap that in a function that takes a distribution and a sample size, generates
+    a sample, runs the test, and returns the result.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now let’s see what the results look like as we vary the sample size.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I’ll run the test 1000 times, adjusting the sample size after each iteration.
+    If the test rejects the null hypothesis, I’ll decrease the sample size by abut
+    4%; if the test fails to reject, I’ll increase the sample size by 4%.
+  prefs: []
+  type: TYPE_NORMAL
+- en: That way the sample size does a random walk that tends to linger in the vicinity
+    of the critical size where the probability of rejecting the null is near 50%.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here are the first few results.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | y | x |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 0 | 10.000000 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 0 | 10.363082 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 0 | 10.752798 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 0 | 11.301154 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 4 | 0 | 11.827253 |'
+  prefs: []
+  type: TYPE_TB
+- en: Now we can use logistic regression to model the probability of rejecting the
+    null as a function of sample size.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s what the result looks like (with sample size on a log axis).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/anderson_26_0.png](../Images/b1f0cb103e72f00808828145e43b6bb0.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: When the sample size is more than 200, the probability of rejection is high.
+    When the sample size is less than 100, the probability of rejection is low. But
+    notice that it doesn’t go all the way to zero, because there is always a 5% chance
+    of a false positive.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can use the parameters of the logistic model to compute the critical value.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: At this sample size, the probability of rejecting the null is close to 50%.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: So, again, the result just depends on the sample size. If you have enough data,
+    you’ll reject the null; otherwise you probably won’t. Either way, you learn nothing
+    about the question you really care about, which is whether the Gaussian model
+    is a *good enough* model of the data for your purposes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: That’s a modeling decision, and no statistical test can help. In [the original
+    article](https://allendowney.blogspot.com/2013/08/are-my-data-normal.html), I
+    suggested some methods that might.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Copyright 2023 Allen Downey
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  prefs: []
+  type: TYPE_NORMAL

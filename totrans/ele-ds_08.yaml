@@ -1,0 +1,586 @@
+- en: Plotting
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/ElementsOfDataScience/06_plotting.html](https://allendowney.github.io/ElementsOfDataScience/06_plotting.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/06_plotting.ipynb)
+    or [click here to download it](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/06_plotting.ipynb).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This chapter presents ways to create figures and graphs, more generally called
+    **data visualizations**. As examples, we’ll generate three figures:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: We’ll replicate a figure from the Pew Research Center that shows changes in
+    religious affiliation in the U.S. over time.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: We’ll replicate the figure from *The Economist* that shows the prices of sandwiches
+    in Boston and London (we saw this data back in Chapter 3).
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: We’ll make a plot to test Zipf’s law, which describes the relationship between
+    word frequencies and their ranks.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'With the tools in this chapter, you can generate a variety of simple graphs.
+    We will see more visualization tools in later chapters. But before we get started
+    with plotting, we need a new language feature: keyword arguments.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Keyword Arguments
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'When you call most functions, you have to provide values. For example, when
+    you call `np.exp`, which raises \(e\) to a given power, the value you provide
+    is a number:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'When you call `np.power`, you have to provide two numbers:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: The values you provide are called **arguments**. Specifically, the values in
+    these examples are **positional arguments** because their position determines
+    how they are used. In the second example, `power` computes `10` to the sixth power,
+    not `6` to the 10th power because of the order of the arguments.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Many functions also take **keyword arguments**, which are identified by name.
+    For example, we have previously used `int` to convert a string to an integer.
+    Here’s how we use it with a string as a positional argument:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: By default, `int` assumes that the number is in base 10\. But you can provide
+    a keyword argument that specifies a different base. For example, the string `'21'`,
+    interpreted in base 8, represents the number `2 * 8 + 1 = 17`. Here’s how we do
+    this conversion using `int`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: The integer value `8` is a keyword argument, with the keyword `base`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Specifying a keyword argument looks like an assignment statement, but it does
+    not create a new variable. And when you specify a keyword argument, you don’t
+    choose the variable name. In this example, the keyword name, `base`, is part of
+    the definition of `int`. If you specify another keyword name, you get an error.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** The `print` function takes a keyword argument called `end` that
+    specifies the character it prints at the end of the line. By default, `end` is
+    the newline character, `\n`. So if you call `print` more than once, the results
+    normally appear on separate lines, like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: Modify the previous example so it prints the elements of the list, all on one
+    line, with spaces between them. Then modify it to print an open bracket at the
+    beginning and a close bracket and newline at the end.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Graphing Religious Affiliation
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Now we’re ready to make some graphs. In October 2019 the Pew Research Center
+    published “In U.S., Decline of Christianity Continues at Rapid Pace” at [https://www.pewresearch.org/religion/2019/10/17/in-u-s-decline-of-christianity-continues-at-rapid-pace/](https://www.pewresearch.org/religion/2019/10/17/in-u-s-decline-of-christianity-continues-at-rapid-pace/).
+    It includes this figure, which shows changes in religious affiliation among adults
+    in the U.S. over the previous 10 years.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../Images/bc35ca82c991246898939f6880176b46.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: As an exercise, we’ll replicate this figure. It shows results from two sources,
+    Religious Landscape Studies and Pew Research Political Surveys. The political
+    surveys provide data from more years, so we’ll focus on that.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The data from the figure are available from Pew Research at [https://www.pewforum.org/wp-content/uploads/sites/7/2019/10/Detailed-Tables-v1-FOR-WEB.pdf](https://www.pewforum.org/wp-content/uploads/sites/7/2019/10/Detailed-Tables-v1-FOR-WEB.pdf),
+    but they are in a PDF document. It is sometimes possible to extract data from
+    PDF documents, but for now we’ll enter the data by hand.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: The library we’ll use for plotting is Matplotlib; more specifically, we’ll use
+    a part of it called Pyplot, which we’ll import with the nickname `plt`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: Pyplot provides a function called `plot` that makes a line plot. It takes two
+    sequences as arguments, the `x` values and the `y` values. The sequences can be
+    tuples, lists, or arrays.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/06_plotting_23_0.png](../Images/43bd7d0a690a87dcdc2356fa53f29c39.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The semi-colon at the end of the line prevents the return value from `plot`,
+    which is an object representing the line, from being displayed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If you plot multiple lines in a single cell, they appear on the same axes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/06_plotting_25_0.png](../Images/6209418d885f60f56e5f71483404ca02.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Plotting them on the same axes makes it possible to compare them directly. However,
+    notice that Pyplot chooses the range for the axes automatically; in this example
+    the `y` axis starts around 15, not zero.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As a result, it provides a misleading picture, making the ratio of the two lines
+    look bigger than it really is. We can set the limits of the `y` axis using the
+    function `plt.ylim`. The argument is a list with two values, the lower bound and
+    the upper bound.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/06_plotting_27_0.png](../Images/c6dfee6fa24825e1f4eb5b35e92fea33.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'That’s better, but this graph is missing some of the most important elements:
+    labels for the axes and a title.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Decorating the Axes
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: To label the axes and add a title, we’ll use Pyplot functions `xlabel`, `ylabel`,
+    and `title`. All of them take strings as arguments.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/06_plotting_30_0.png](../Images/1387ae9aa1e14ae68cc6b08ac4324de7.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Now let’s add another important element, a legend that indicates which line
+    is which. To do that, we add a label to each line, using the keyword argument
+    `label`. Then we call `plt.legend` to create the legend.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/06_plotting_32_0.png](../Images/9ca161bbb9246e3e283302f57fe190ec.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The legend shows the labels we provided when we created the lines.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** The original figure plots lines between the data points, but
+    it also plots markers showing the location of each data point. It is generally
+    good practice to include markers, especially if data are not available for every
+    year.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Modify the previous example to include a keyword argument `marker` with the
+    string value `'o'`, which indicates that you want to plot circles as markers.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** In the original figure, the line labeled `''Christian''` is red
+    and the line labeled `''Unaffiliated''` is grey.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Find the online documentation of `plt.plot` and figure out how to use keyword
+    arguments to specify colors. Choose colors to (roughly) match the original figure.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The `legend` function takes a keyword argument that specifies the location of
+    the legend. Read the documentation of this function and move the legend to the
+    center left of the figure.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Plotting Sandwich Prices
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'In Chapter 3 we used data from an article in *The Economist* comparing sandwich
+    prices in Boston and London: “Why Americans pay more for lunch than Britons do”
+    at [https://www.economist.com/finance-and-economics/2019/09/07/why-americans-pay-more-for-lunch-than-britons-do](https://www.economist.com/finance-and-economics/2019/09/07/why-americans-pay-more-for-lunch-than-britons-do).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The article includes this graph showing prices of several sandwiches in the
+    two cities:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../Images/5feb03c573c0b858be44a006b68b3324.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'As an exercise, let’s see if we can replicate this figure. Here’s the data
+    from the article again: the names of the sandwiches and the price list for each
+    city.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'In the previous section we plotted percentages on the `y` axis versus time
+    on the `x` axis. Now we want to plot the sandwich names on the `y` axis and the
+    prices on the `x` axis. Here’s how:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/06_plotting_41_0.png](../Images/71b9ad114443b75fbf3c497ecfb1d487.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: '`name_list` is a list of strings; Pyplot orders them from top to bottom, equally
+    spaced.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: By default Pyplot connects the points with lines, but in this example the lines
+    don’t make sense because the sandwich names are discrete; there are no intermediate
+    points between an egg sandwich and a tuna sandwich.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can turn on markers and turn off lines with keyword arguments.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/06_plotting_43_0.png](../Images/6181c1be0e66ab9817df5a68c117c531.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Or we can do the same thing more concisely by providing a **format string**
+    as a positional argument. In this example, `'o'` indicates a circle marker and
+    `'s'` indicates a square. You can read the documentation of `plt.plot` to learn
+    more about format strings.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'And let’s add a title while we’re at it:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/06_plotting_45_0.png](../Images/04ca819fde271fe7c27b1877ed1443cd.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Now, to approximate the colors in the original figure, we can use the strings
+    `''C3''` and `''C0''`, which specify colors from the default color sequence. You
+    can read more about specifying colors in the Pyplot documentation: [https://matplotlib.org/3.1.1/tutorials/colors/colors.html](https://matplotlib.org/3.1.1/tutorials/colors/colors.html).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/06_plotting_47_0.png](../Images/e3201b85e50f3388634be418207e8a45.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'To connect the dots with lines, we’ll use `plt.hlines`, which draws horizontal
+    lines. It takes three arguments: a sequence of values on the `y` axis, which are
+    the sandwich names in this example, and two sequences of values on the `x` axis,
+    which are the London prices and Boston prices.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/06_plotting_49_0.png](../Images/574ab21c062efb29e3f34ba89da471cf.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Exercise:** To finish off this example, add a legend that identifies the
+    London and Boston prices. Remember that you have to add a `label` keyword each
+    time you call `plt.plot`, and then call `plt.legend`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Notice that the sandwiches in our figure are in the opposite order of the sandwiches
+    in the original figure. There is a Pyplot function that inverts the `y` axis;
+    see if you can find it and use it to reverse the order of the sandwich list.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Zipf’s Law
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'In almost any book, in almost any language, if you count the number of unique
+    words the the number of times each word appears, you will find a remarkable pattern:
+    the most common word appears twice as often as the second most common, at least
+    approximately, three times as often as the third most common, and so on.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In general, if we sort the words in descending order of frequency, there is
+    an inverse relationship between the rank of the words – first, second, third,
+    etc. – and the number of times they appear. This observation was most famously
+    made by George Kingsley Zipf, so it is called Zipf’s law.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To see if this law holds for the words in *War and Peace*, we’ll make a Zipf
+    plot, which shows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The frequency of each word on the `y` axis, and
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The rank of each word on the `x` axis, starting from 1.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: In the previous chapter, we looped through the book and made a string that contains
+    all punctuation characters. Here are the results, which we will need again.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following code loops through the book and makes a dictionary that maps from
+    each word to the number of times it appears.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'In `unique_words`, the keys are words and the values are their frequencies.
+    We can use the `values` function to get the values from the dictionary. The result
+    has the type `dict_values`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: Before we plot them, we have to sort them, but the `sort` function doesn’t work
+    with `dict_values`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We can use `list` to make a list of frequencies:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: And now we can use `sort`. By default it sorts in ascending order, but we can
+    pass a keyword argument to reverse the order.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now, for the ranks, we need a sequence that counts from 1 to `n`, where `n`
+    is the number of elements in `freqs`. We can use the `range` function, which returns
+    a value with type `range`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As a small example, here’s the range from 1 to 5.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: However, there’s a catch. If we use the range to make a list, we see that “the
+    range from 1 to 5” includes 1, but it doesn’t include 5.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'That might seem strange, but it is often more convenient to use `range` when
+    it is defined this way, rather than what might seem like the more natural way
+    (see [https://www.cs.utexas.edu/users/EWD/transcriptions/EWD08xx/EWD831.html](https://www.cs.utexas.edu/users/EWD/transcriptions/EWD08xx/EWD831.html)).
+    Anyway, we can get what we want by increasing the second argument by one:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'So, finally, we can make a range that represents the ranks from `1` to `n`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE37]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'And now we can plot the frequencies versus the ranks:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/06_plotting_78_0.png](../Images/31a70a27c80c3046cb62367fd70d7460.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The few most common words are very common, but the great majority of words
+    are rare. So that’s consistent with Zipf’s law, but Zipf’s law is more specific.
+    It claims that the frequencies should be inversely proportional to the ranks.
+    If that’s true, we can write:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \(f = k / r\)
+  prefs: []
+  type: TYPE_NORMAL
+- en: where \(r\) is the rank of a word, \(f\) is its frequency, and \(k\) is an unknown
+    constant of proportionality. If we take the log of both sides, we get
+  prefs: []
+  type: TYPE_NORMAL
+- en: \(\log f = \log k - \log r\)
+  prefs: []
+  type: TYPE_NORMAL
+- en: This equation implies that if we plot \(f\) versus \(r\) on a log-log scale,
+    we expect to see a straight line with intercept at \(\log k\) and slope -1.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Logarithmic Scales
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: We can use `plt.xscale` to plot the `x` axis on a log scale.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE39]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/06_plotting_81_0.png](../Images/9d58226c9d16ad1fb8a6110d8f0b6b0a.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: And `plt.yscale` to plot the `y` axis on a log scale.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE40]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/06_plotting_83_0.png](../Images/e1210900dc3a7d4282ed90c81ec8fe1e.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The result is not quite a straight line, but it is close. We can get a sense
+    of the slope by connecting the end points with a line. We’ll select the first
+    and last elements from `xs`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE41]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE42]'
+  prefs: []
+  type: TYPE_PRE
+- en: And the first and last elements from `ys`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE43]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE44]'
+  prefs: []
+  type: TYPE_PRE
+- en: And plot a line between them.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE45]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/06_plotting_89_0.png](../Images/9225e34b69d7305d2e156443284c10e8.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The slope of this line is the “rise over run”, that is, the difference on the
+    `y` axis divided by the difference on the `x` axis.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We can compute the rise using `np.log10` to compute the log base 10 of the
+    first and last values:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE46]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE47]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Then we can use `np.diff` to compute the difference between the elements:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE48]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE49]'
+  prefs: []
+  type: TYPE_PRE
+- en: In the following exercise, you’ll compute the run and the slope of the gray
+    line.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** Use `log10` and `diff` to compute the run, that is, the difference
+    on the `x` axis. Then divide the rise by the run to get the slope of the grey
+    line. Is it close to -1, as Zipf’s law predicts?'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: This chapter introduces the Matplotlib library, which we used to replicate two
+    figures a Zipf plot. These examples demonstrate the most common elements of data
+    visualization, including lines and markers, values and labels on the axes, a legend
+    and a title. The Zipf plot also shows the power of plotting data on logarithmic
+    scales.
+  prefs: []
+  type: TYPE_NORMAL

@@ -1,0 +1,381 @@
+- en: Crawler
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/DSIRP/crawler.html](https://allendowney.github.io/DSIRP/crawler.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/crawler.ipynb)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Crawling the web
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: At this point we have all the pieces we need to build a web crawler; it’s time
+    to bring them together.
+  prefs: []
+  type: TYPE_NORMAL
+- en: First, from `philosophy.ipynb`, we have `WikiFetcher`, which we’ll use to download
+    pages from Wikipedia while limiting requests to about one per second.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Here’s an example:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is a BeautifulSoup object that represents the document object model
+    (DOM) of the page.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Note that `WikiFetcher` won’t work if `url` is a bytearray, because `urlopen`
+    doesn’t work with bytearrays.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: To convert a bytearray to a string, you have to decode it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: Usually when you call `decode`, you should [specify which encoding to use](https://docs.python.org/3.8/library/stdtypes.html#bytes.decode).
+    But in this case we know that the original strings were URLs, so the default encoding
+    will work.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Wikipedia pages contain boilerplate content that we don’t want to index, so
+    we’ll select the `div` element that contains the “body content” of the page.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: Finding links
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: From `philosophy.ipynb`, we have the following function that traverses the DOM
+    and finds links.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: This version includes links to images and other links we probably don’t want
+    to index.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following version includes a condition that checks whether the link has
+    a `title` attribute, which seems to select mostly “good” links.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here are the first few links from the page we downloaded.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: Finding words
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: From `indexer.ipynb`, we have the following function, which traverses the DOM
+    and yields individual words, stripped of punctuation and converted to lowercase.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here are the first words from the page we downloaded. They include keywords
+    from the sidebar on the right side of the page, which are not part of the main
+    text, but might be good to index anyway, since they indicate the topic of the
+    page.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: Redis
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Let’s get Redis started.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: And make sure the Redis client is installed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: We’ll make a `Redis` object that creates the connection to the Redis database.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: If you have a Redis database running on a different machine, you can create
+    a `Redis` object using the URL of the database, like this
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: If your database contains values from previous exercises, or if you make a mistake
+    and want to start over, you can use the following function to clear the database.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: Indexing
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: From `indexer.ipynb`, here’s the function that counts the words on a page and
+    adds the results to a Redis hash.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For each word, it creates or updates a hash in the database that maps from URLs
+    to word counts. For example if the word `python` appears 428 times on a page,
+    we could find the hash with key `Index:python` and add an entry that maps from
+    the URL to the number 428.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The previous version is likely to be slow because it makes many small requests
+    to the database. We can speed it up using a pipeline object, like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: Let’s see which version is faster.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can use `hscan_iter` to iterate the field-values pairs in the index for the
+    word `python`, and print the URLs of the pages where this word appears and the
+    number of times it appears on each page.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: Notice that when we get the number back, it’s a bytearray. If we want to work
+    with it as a number, we have to convert back to int.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Crawling
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In `philosophy.ipynb` we wrote a simple crawler that always follows the first
+    link.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Now we want a crawler that runs a breadth-first search. Here’s the implementation
+    of BFS from `bfs.ipynb`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise:** Write a function called `crawl` that takes a starting URL as
+    a parameter, and an optional number of pages to crawl.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: It should create a queue of URLs and work it’s way through the queue, indexing
+    pages as it goes and adding new links to the queue.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For a first draft, I suggest using Python data structures to keep track of the
+    queue and the set of URLs that have already been seen/indexed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: For a second draft, consider storing these structures in Redis so they are persistent;
+    that way, you can call `crawl` later and it will pick up from where it left off.
+    Or you could have multiple crawlers running at the same time.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Hint: When you read a URL from Redis, you might have to decode it to make a
+    string.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE37]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE39]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE40]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE41]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE42]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE43]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE44]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE45]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE46]'
+  prefs: []
+  type: TYPE_PRE
+- en: Stop words
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The most common English words are likely to appear on every page. They don’t
+    indicate what the page is about, and we might not want to index them. Words that
+    we don’t index are sometimes called [stop words](https://en.wikipedia.org/wiki/Stop_word).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once you have indexed a few pages, use the index to identify the words that
+    have appeared the most times, totaled across all pages.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE47]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE48]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE49]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE50]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE51]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE52]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE53]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following cells use the results to make a Zipf plot, which shows counts
+    versus “rank” on a log-log scale (the most common word has rank 1, the next most
+    common has rank 2, and so on).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Zipf’s law asserts that the distribution of word frequencies follows a power
+    law, which implies that the Zipf plot is approximately a straight line.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE54]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE55]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/crawler_66_0.png](../Images/8dd14149b85e7d84c3e23e05ac0bbc2c.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Shutdown
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: If you are running this notebook on your own computer, you can use the following
+    command to shut down the Redis server.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If you are running on Colab, it’s not really necessary: the Redis server will
+    get shut down when the Colab runtime shuts down (and everything stored in it will
+    disappear).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE56]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Data Structures and Information Retrieval in Python*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Copyright 2021 Allen Downey
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'License: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  prefs: []
+  type: TYPE_NORMAL

@@ -1,0 +1,221 @@
+- en: Algorithms
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/DSIRP/algorithms.html](https://allendowney.github.io/DSIRP/algorithms.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/algorithms.ipynb)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Searching for anagrams
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'In this notebook we’ll implement algorithms for two tasks:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Testing a pair of words to see if they are anagrams of each other, that is,
+    if you can rearrange the letters in one word to spell the other.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Searching a list of words for all pairs that are anagrams of each other.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: There is a point to these examples, which I will explain at the end.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise 1:** Write a function that takes two words and returns `True` if
+    they are anagrams. Test your function with the examples below.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise 2:** Use `timeit` to see how fast your function is for these examples:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: How can we compare algorithms running on different computers?
+  prefs: []
+  type: TYPE_NORMAL
+- en: Searching for anagram pairs
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '**Exercise 3:** Write a function that takes a word list and returns a list
+    of all anagram pairs.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following cell downloads a file containing a list of English words.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following function reads a file and returns a set of words (I used a set
+    because after we convert words to lower case, there are some repeats.)
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise 4:** Loop through the word list and print all words that are anagrams
+    of `stop`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now run `all_anagram_pairs` with the full `word_list`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise 5:** While that’s running, let’s estimate how long it’s going to
+    take.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: A better algorithm
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '**Exercise 6:** Write a better algorithm! Hint: make a dictionary. How much
+    faster is your algorithm?'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: Summary
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: What is the point of the examples in this notebook?
+  prefs: []
+  type: TYPE_NORMAL
+- en: The different versions of `is_anagram` show that, when inputs are small, it
+    is hard to say which algorithm will be the fastest. It often depends on details
+    of the implementation. Anyway, the differences tend to be small, so it might not
+    matter much in practice.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The different algorithms we used to search for anagram pairs show that, when
+    inputs are large, we can often tell which algorithm will be fastest. And the difference
+    between a fast algorithm and a slow one can be huge!
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Exercises
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Before you work on these exercises, you might want to read the Python [Sorting
+    How-To](https://docs.python.org/3/howto/sorting.html). It uses `lambda` to define
+    an anonymous function, which [you can read about here](https://www.w3schools.com/python/python_lambda.asp).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise 7:** Make a dictionary like `anagram_map` that contains only keys
+    that map to a list with more than one element. You can use a `for` loop to make
+    a new dictionary, or a [dictionary comprehension](https://www.freecodecamp.org/news/dictionary-comprehension-in-python-explained-with-examples/).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise 8:** Find the longest word with at least one anagram. Suggestion:
+    use the `key` argument of `sort` or `sorted` ([see here](https://stackoverflow.com/questions/8966538/syntax-behind-sortedkey-lambda)).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise 9:** Find the largest list of words that are anagrams of each other.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise 10:** Write a function that takes an integer `word_length` and finds
+    the longest list of words with the given length that are anagrams of each other.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise 11:** At this point we have a data structure that contains lists
+    of words that are anagrams, but we have not actually enumerated all pairs. Write
+    a function that takes `anagram_map` and returns a list of all anagram pairs. How
+    many are there?'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*Data Structures and Information Retrieval in Python*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Copyright 2021 Allen Downey
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'License: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  prefs: []
+  type: TYPE_NORMAL

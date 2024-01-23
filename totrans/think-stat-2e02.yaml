@@ -1,0 +1,729 @@
+- en: Chapter 1  Exploratory data analysis
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://greenteapress.com/thinkstats2/html/thinkstats2002.html](https://greenteapress.com/thinkstats2/html/thinkstats2002.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: The thesis of this book is that data combined with practical methods can answer
+    questions and guide decisions under uncertainty.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'As an example, I present a case study motivated by a question I heard when
+    my wife and I were expecting our first child: do first babies tend to arrive late?'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If you Google this question, you will find plenty of discussion. Some people
+    claim it’s true, others say it’s a myth, and some people say it’s the other way
+    around: first babies come early.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In many of these discussions, people provide data to support their claims.
+    I found many examples like these:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: “My two friends that have given birth recently to their first babies, BOTH went
+    almost 2 weeks overdue before going into labour or being induced.”
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: “My first one came 2 weeks late and now I think the second one is going to come
+    out two weeks early!!”
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: “I don’t think that can be true because my sister was my mother’s first and
+    she was early, as with many of my cousins.”
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Reports like these are called anecdotal evidence because they are based on data
+    that is unpublished and usually personal. In casual conversation, there is nothing
+    wrong with anecdotes, so I don’t mean to pick on the people I quoted.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'But we might want evidence that is more persuasive and an answer that is more
+    reliable. By those standards, anecdotal evidence usually fails, because:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Small number of observations: If pregnancy length is longer for first babies,
+    the difference is probably small compared to natural variation. In that case,
+    we might have to compare a large number of pregnancies to be sure that a difference
+    exists.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Selection bias: People who join a discussion of this question might be interested
+    because their first babies were late. In that case the process of selecting data
+    would bias the results.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Confirmation bias: People who believe the claim might be more likely to contribute
+    examples that confirm it. People who doubt the claim are more likely to cite counterexamples.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Inaccuracy: Anecdotes are often personal stories, and often misremembered,
+    misrepresented, repeated inaccurately, etc.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: So how can we do better?
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.1  A statistical approach
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'To address the limitations of anecdotes, we will use the tools of statistics,
+    which include:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Data collection: We will use data from a large national survey that was designed
+    explicitly with the goal of generating statistically valid inferences about the
+    U.S. population.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Descriptive statistics: We will generate statistics that summarize the data
+    concisely, and evaluate different ways to visualize data.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Exploratory data analysis: We will look for patterns, differences, and other
+    features that address the questions we are interested in. At the same time we
+    will check for inconsistencies and identify limitations.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Estimation: We will use data from a sample to estimate characteristics of the
+    general population.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Hypothesis testing: Where we see apparent effects, like a difference between
+    two groups, we will evaluate whether the effect might have happened by chance.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: By performing these steps with care to avoid pitfalls, we can reach conclusions
+    that are more justifiable and more likely to be correct.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.2  The National Survey of Family Growth
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Since 1973 the U.S. Centers for Disease Control and Prevention (CDC) have conducted
+    the National Survey of Family Growth (NSFG), which is intended to gather “information
+    on family life, marriage and divorce, pregnancy, infertility, use of contraception,
+    and men’s and women’s health. The survey results are used…to plan health services
+    and health education programs, and to do statistical studies of families, fertility,
+    and health.” See [http://cdc.gov/nchs/nsfg.htm](http://cdc.gov/nchs/nsfg.htm).
+  prefs: []
+  type: TYPE_NORMAL
+- en: We will use data collected by this survey to investigate whether first babies
+    tend to come late, and other questions. In order to use this data effectively,
+    we have to understand the design of the study.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The NSFG is a cross-sectional study, which means that it captures a snapshot
+    of a group at a point in time. The most common alternative is a longitudinal study,
+    which observes a group repeatedly over a period of time.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The NSFG has been conducted seven times; each deployment is called a cycle.
+    We will use data from Cycle 6, which was conducted from January 2002 to March
+    2003\.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The goal of the survey is to draw conclusions about a population; the target
+    population of the NSFG is people in the United States aged 15-44\. Ideally surveys
+    would collect data from every member of the population, but that’s seldom possible.
+    Instead we collect data from a subset of the population called a sample. The people
+    who participate in a survey are called respondents.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In general, cross-sectional studies are meant to be representative, which means
+    that every member of the target population has an equal chance of participating.
+    That ideal is hard to achieve in practice, but people who conduct surveys come
+    as close as they can.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The NSFG is not representative; instead it is deliberately oversampled. The
+    designers of the study recruited three groups—Hispanics, African-Americans and
+    teenagers—at rates higher than their representation in the U.S. population, in
+    order to make sure that the number of respondents in each of these groups is large
+    enough to draw valid statistical inferences.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Of course, the drawback of oversampling is that it is not as easy to draw conclusions
+    about the general population based on statistics from the survey. We will come
+    back to this point later.
+  prefs: []
+  type: TYPE_NORMAL
+- en: When working with this kind of data, it is important to be familiar with the
+    codebook, which documents the design of the study, the survey questions, and the
+    encoding of the responses. The codebook and user’s guide for the NSFG data are
+    available from [http://www.cdc.gov/nchs/nsfg/nsfg_cycle6.htm](http://www.cdc.gov/nchs/nsfg/nsfg_cycle6.htm).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.3  Importing the data
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The code and data used in this book are available from [https://github.com/AllenDowney/ThinkStats2](https://github.com/AllenDowney/ThinkStats2).
+    For information about downloading and working with this code, see Section [0.2](thinkstats2001.html#code).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once you download the code, you should have a file called `ThinkStats2/code/nsfg.py`.
+    If you run it, it should read a data file, run some tests, and print a message
+    like, “All tests passed.”
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s see what it does. Pregnancy data from Cycle 6 of the NSFG is in a file
+    called `2002FemPreg.dat.gz`; it is a gzip-compressed data file in plain text (ASCII),
+    with fixed width columns. Each line in the file is a record that contains data
+    about one pregnancy.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The format of the file is documented in `2002FemPreg.dct`, which is a Stata
+    dictionary file. Stata is a statistical software system; a “dictionary” in this
+    context is a list of variable names, types, and indices that identify where in
+    each line to find each variable.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'For example, here are a few lines from `2002FemPreg.dct`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'This dictionary describes two variables: `caseid` is a 12-character string
+    that represents the respondent ID; `pregordr` is a one-byte integer that indicates
+    which pregnancy this record describes for this respondent.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The code you downloaded includes `thinkstats2.py`, which is a Python module
+    that contains many classes and functions used in this book, including functions
+    that read the Stata dictionary and the NSFG data file. Here’s how they are used
+    in `nsfg.py`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`ReadStataDct` takes the name of the dictionary file and returns `dct`, a `FixedWidthVariables`
+    object that contains the information from the dictionary file. `dct` provides
+    `ReadFixedWidth`, which reads the data file.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.4  DataFrames
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The result of `ReadFixedWidth` is a DataFrame, which is the fundamental data
+    structure provided by pandas, which is a Python data and statistics package we’ll
+    use throughout this book. A DataFrame contains a row for each record, in this
+    case one row per pregnancy, and a column for each variable.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In addition to the data, a DataFrame also contains the variable names and their
+    types, and it provides methods for accessing and modifying the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If you print `df` you get a truncated view of the rows and columns, and the
+    shape of the DataFrame, which is 13593 rows/records and 244 columns/variables.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: The DataFrame is too big to display, so the output is truncated. The last line
+    reports the number of rows and columns.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The attribute `columns` returns a sequence of column names as Unicode strings:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The result is an Index, which is another pandas data structure. We’ll learn
+    more about Index later, but for now we’ll treat it like a list:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'To access a column from a DataFrame, you can use the column name as a key:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The result is a Series, yet another pandas data structure. A Series is like
+    a Python list with some additional features. When you print a Series, you get
+    the indices and the corresponding values:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: In this example the indices are integers from 0 to 13592, but in general they
+    can be any sortable type. The elements are also integers, but they can be any
+    type.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The last line includes the variable name, Series length, and data type; `int64`
+    is one of the types provided by NumPy. If you run this example on a 32-bit machine
+    you might see `int32`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You can access the elements of a Series using integer indices and slices:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result of the index operator is an `int64`; the result of the slice is another
+    Series.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You can also access the columns of a DataFrame using dot notation:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: This notation only works if the column name is a valid Python identifier, so
+    it has to begin with a letter, can’t contain spaces, etc.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.5  Variables
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'We have already seen two variables in the NSFG dataset, `caseid` and `pregordr`,
+    and we have seen that there are 244 variables in total. For the explorations in
+    this book, I use the following variables:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`caseid` is the integer ID of the respondent.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`prglngth` is the integer duration of the pregnancy in weeks.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`outcome` is an integer code for the outcome of the pregnancy. The code 1 indicates
+    a live birth.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`pregordr` is a pregnancy serial number; for example, the code for a respondent’s
+    first pregnancy is 1, for the second pregnancy is 2, and so on.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`birthord` is a serial number for live births; the code for a respondent’s
+    first child is 1, and so on. For outcomes other than live birth, this field is
+    blank.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`birthwgt_lb` and `birthwgt_oz` contain the pounds and ounces parts of the
+    birth weight of the baby.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`agepreg` is the mother’s age at the end of the pregnancy.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`finalwgt` is the statistical weight associated with the respondent. It is
+    a floating-point value that indicates the number of people in the U.S. population
+    this respondent represents.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: If you read the codebook carefully, you will see that many of the variables
+    are recodes, which means that they are not part of the raw data collected by the
+    survey; they are calculated using the raw data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For example, `prglngth` for live births is equal to the raw variable `wksgest`
+    (weeks of gestation) if it is available; otherwise it is estimated using `mosgest
+    * 4.33` (months of gestation times the average number of weeks in a month).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Recodes are often based on logic that checks the consistency and accuracy of
+    the data. In general it is a good idea to use recodes when they are available,
+    unless there is a compelling reason to process the raw data yourself.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.6  Transformation
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: When you import data like this, you often have to check for errors, deal with
+    special values, convert data into different formats, and perform calculations.
+    These operations are called data cleaning.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`nsfg.py` includes `CleanFemPreg`, a function that cleans the variables I am
+    planning to use.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`agepreg` contains the mother’s age at the end of the pregnancy. In the data
+    file, `agepreg` is encoded as an integer number of centiyears. So the first line
+    divides each element of `agepreg` by 100, yielding a floating-point value in years.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`birthwgt_lb` and `birthwgt_oz` contain the weight of the baby, in pounds and
+    ounces, for pregnancies that end in live birth. In addition it uses several special
+    codes:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: Special values encoded as numbers are *dangerous* because if they are not handled
+    properly, they can generate bogus results, like a 99-pound baby. The `replace`
+    method replaces these values with `np.nan`, a special floating-point value that
+    represents “not a number.” The `inplace` flag tells `replace` to modify the existing
+    Series rather than create a new one.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'As part of the IEEE floating-point standard, all mathematical operations return
+    `nan` if either argument is `nan`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: So computations with `nan` tend to do the right thing, and most pandas functions
+    handle `nan` appropriately. But dealing with missing data will be a recurring
+    issue.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The last line of `CleanFemPreg` creates a new column `totalwgt_lb` that combines
+    pounds and ounces into a single quantity, in pounds.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'One important note: when you add a new column to a DataFrame, you must use
+    dictionary syntax, like this'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Not dot notation, like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: The version with dot notation adds an attribute to the DataFrame object, but
+    that attribute is not treated as a new column.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.7  Validation
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: When data is exported from one software environment and imported into another,
+    errors might be introduced. And when you are getting familiar with a new dataset,
+    you might interpret data incorrectly or introduce other misunderstandings. If
+    you take time to validate the data, you can save time later and avoid errors.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'One way to validate data is to compute basic statistics and compare them with
+    published results. For example, the NSFG codebook includes tables that summarize
+    each variable. Here is the table for `outcome`, which encodes the outcome of each
+    pregnancy:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The Series class provides a method, `value_counts`, that counts the number
+    of times each value appears. If we select the `outcome` Series from the DataFrame,
+    we can use `value_counts` to compare with the published data:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result of `value_counts` is a Series; `sort_index()` sorts the Series by
+    index, so the values appear in order.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Comparing the results with the published table, it looks like the values in
+    `outcome` are correct. Similarly, here is the published table for `birthwgt_lb`
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'And here are the value counts:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: The counts for 6, 7, and 8 pounds check out, and if you add up the counts for
+    0-5 and 9-95, they check out, too. But if you look more closely, you will notice
+    one value that has to be an error, a 51 pound baby!
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To deal with this error, I added a line to `CleanFemPreg`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: This statement replaces invalid values with `np.nan`. The attribute `loc` provides
+    several ways to select rows and columns from a DataFrame. In this example, the
+    first expression in brackets is the row indexer; the second expression selects
+    the column.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The expression `df.birthwgt_lb > 20` yields a Series of type `bool`, where True
+    indicates that the condition is true. When a boolean Series is used as an index,
+    it selects only the elements that satisfy the condition.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.8  Interpretation
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'To work with data effectively, you have to think on two levels at the same
+    time: the level of statistics and the level of context.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'As an example, let’s look at the sequence of outcomes for a few respondents.
+    Because of the way the data files are organized, we have to do some processing
+    to collect the pregnancy data for each respondent. Here’s a function that does
+    that:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`df` is the DataFrame with pregnancy data. The `iteritems` method enumerates
+    the index (row number) and `caseid` for each pregnancy.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`d` is a dictionary that maps from each case ID to a list of indices. If you
+    are not familiar with `defaultdict`, it is in the Python `collections` module.
+    Using `d`, we can look up a respondent and get the indices of that respondent’s
+    pregnancies.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This example looks up one respondent and prints a list of outcomes for her
+    pregnancies:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`indices` is the list of indices for pregnancies corresponding to respondent
+    `10229`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using this list as an index into `df.outcome` selects the indicated rows and
+    yields a Series. Instead of printing the whole Series, I selected the `values`
+    attribute, which is a NumPy array.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The outcome code `1` indicates a live birth. Code `4` indicates a miscarriage;
+    that is, a pregnancy that ended spontaneously, usually with no known medical cause.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Statistically this respondent is not unusual. Miscarriages are common and there
+    are other respondents who reported as many or more.
+  prefs: []
+  type: TYPE_NORMAL
+- en: But remembering the context, this data tells the story of a woman who was pregnant
+    six times, each time ending in miscarriage. Her seventh and most recent pregnancy
+    ended in a live birth. If we consider this data with empathy, it is natural to
+    be moved by the story it tells.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Each record in the NSFG dataset represents a person who provided honest answers
+    to many personal and difficult questions. We can use this data to answer statistical
+    questions about family life, reproduction, and health. At the same time, we have
+    an obligation to consider the people represented by the data, and to afford them
+    respect and gratitude.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.9  Exercises
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Exercise 1   *In the repository you downloaded, you should find a file named
+    `chap01ex.ipynb`, which is an IPython notebook. You can launch IPython notebook
+    from the command line like this:*
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*If IPython is installed, it should launch a server that runs in the background
+    and open a browser to view the notebook. If you are not familiar with IPython,
+    I suggest you start at* [*http://ipython.org/ipython-doc/stable/notebook/notebook.html*](http://ipython.org/ipython-doc/stable/notebook/notebook.html)*.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*To launch the IPython notebook server, run:*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*It should open a new browser window, but if not, the startup message provides
+    a URL you can load in a browser, usually* [*http://localhost:8888*](http://localhost:8888)*.
+    The new window should list the notebooks in the repository.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*Open `chap01ex.ipynb`. Some cells are already filled in, and you should execute
+    them. Other cells give you instructions for exercises you should try.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*A solution to this exercise is in `chap01soln.ipynb`*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exercise 2   *In the repository you downloaded, you should find a file named
+    `chap01ex.py`; using this file as a starting place, write a function that reads
+    the respondent file, `2002FemResp.dat.gz`.*
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*The variable `pregnum` is a recode that indicates how many times each respondent
+    has been pregnant. Print the value counts for this variable and compare them to
+    the published results in the NSFG codebook.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*You can also cross-validate the respondent and pregnancy files by comparing
+    `pregnum` for each respondent with the number of records in the pregnancy file.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*You can use `nsfg.MakePregMap` to make a dictionary that maps from each `caseid`
+    to a list of indices into the pregnancy DataFrame.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*A solution to this exercise is in `chap01soln.py`*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exercise 3   *The best way to learn about statistics is to work on a project
+    you are interested in. Is there a question like, “Do first babies arrive late,”
+    that you want to investigate?*
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*Think about questions you find personally interesting, or items of conventional
+    wisdom, or controversial topics, or questions that have political consequences,
+    and see if you can formulate a question that lends itself to statistical inquiry.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*Look for data to help you address the question. Governments are good sources
+    because data from public research is often freely available. Good places to start
+    include* [*http://www.data.gov/*](http://www.data.gov/)*, and* [*http://www.science.gov/*](http://www.science.gov/)*,
+    and in the United Kingdom,* [*http://data.gov.uk/*](http://data.gov.uk/)*.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*Two of my favorite data sets are the General Social Survey at* [*http://www3.norc.org/gss+website/*](http://www3.norc.org/gss+website/)*,
+    and the European Social Survey at* [*http://www.europeansocialsurvey.org/*](http://www.europeansocialsurvey.org/)*.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*If it seems like someone has already answered your question, look closely
+    to see whether the answer is justified. There might be flaws in the data or the
+    analysis that make the conclusion unreliable. In that case you could perform a
+    different analysis of the same data, or look for a better source of data.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*If you find a published paper that addresses your question, you should be
+    able to get the raw data. Many authors make their data available on the web, but
+    for sensitive data you might have to write to the authors, provide information
+    about how you plan to use the data, or agree to certain terms of use. Be persistent!*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.10  Glossary
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'anecdotal evidence: Evidence, often personal, that is collected casually rather
+    than by a well-designed study.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'population: A group we are interested in studying. “Population” often refers
+    to a group of people, but the term is used for other subjects, too.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'cross-sectional study: A study that collects data about a population at a particular
+    point in time.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'cycle: In a repeated cross-sectional study, each repetition of the study is
+    called a cycle.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'longitudinal study: A study that follows a population over time, collecting
+    data from the same group repeatedly.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'record: In a dataset, a collection of information about a single person or
+    other subject.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'respondent: A person who responds to a survey.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'sample: The subset of a population used to collect data.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'representative: A sample is representative if every member of the population
+    has the same chance of being in the sample.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'oversampling: The technique of increasing the representation of a sub-population
+    in order to avoid errors due to small sample sizes.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'raw data: Values collected and recorded with little or no checking, calculation
+    or interpretation.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'recode: A value that is generated by calculation and other logic applied to
+    raw data.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'data cleaning: Processes that include validating data, identifying errors,
+    translating between data types and representations, etc.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL

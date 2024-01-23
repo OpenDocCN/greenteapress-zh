@@ -1,0 +1,1306 @@
+- en: Inference
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/ThinkBayes2/chap13.html](https://allendowney.github.io/ThinkBayes2/chap13.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Whenever people compare Bayesian inference with conventional approaches, one
+    of the questions that comes up most often is something like, “What about p-values?”
+    And one of the most common examples is the comparison of two groups to see if
+    there is a difference in their means.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In classical statistical inference, the usual tool for this scenario is a [Student’s
+    *t*-test](https://en.wikipedia.org/wiki/Student%27s_t-test), and the result is
+    a [p-value](https://en.wikipedia.org/wiki/P-value). This process is an example
+    of [null hypothesis significance testing](https://en.wikipedia.org/wiki/Statistical_hypothesis_testing).
+  prefs: []
+  type: TYPE_NORMAL
+- en: A Bayesian alternative is to compute the posterior distribution of the difference
+    between the groups. Then we can use that distribution to answer whatever questions
+    we are interested in, including the most likely size of the difference, a credible
+    interval that’s likely to contain the true difference, the probability of superiority,
+    or the probability that the difference exceeds some threshold.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To demonstrate this process, I’ll solve a problem borrowed from a statistical
+    textbook: evaluating the effect of an educational “treatment” compared to a control.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Improving Reading Ability
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: We’ll use data from a [Ph.D. dissertation in educational psychology](https://docs.lib.purdue.edu/dissertations/AAI8807671/)
+    written in 1987, which was used as an example in a [statistics textbook](https://books.google.com/books/about/Introduction_to_the_practice_of_statisti.html?id=pGBNhajABlUC)
+    from 1989 and published on [DASL](https://web.archive.org/web/20000603124754/http://lib.stat.cmu.edu/DASL/Datafiles/DRPScores.html),
+    a web page that collects data stories.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here’s the description from DASL:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: An educator conducted an experiment to test whether new directed reading activities
+    in the classroom will help elementary school pupils improve some aspects of their
+    reading ability. She arranged for a third grade class of 21 students to follow
+    these activities for an 8-week period. A control classroom of 23 third graders
+    followed the same curriculum without the activities. At the end of the 8 weeks,
+    all students took a Degree of Reading Power (DRP) test, which measures the aspects
+    of reading ability that the treatment is designed to improve.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: The [dataset is available here](https://web.archive.org/web/20000603124754/http://lib.stat.cmu.edu/DASL/Datafiles/DRPScores.html).
+  prefs: []
+  type: TYPE_NORMAL
+- en: I’ll use Pandas to load the data into a `DataFrame`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | Treatment | Response |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | Treated | 24 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | Treated | 43 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | Treated | 58 |'
+  prefs: []
+  type: TYPE_TB
+- en: The `Treatment` column indicates whether each student was in the treated or
+    control group. The `Response` is their score on the test.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'I’ll use `groupby` to separate the data for the `Treated` and `Control` groups:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here are CDFs of the scores for the two groups and summary statistics.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/4b872e5331cd510f2d09a3ab3ffa581f909ebe5a20e51f12a90a42002577fae9.png](../Images/1ee292db46c8c0909e0451626f93c8dd.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: There is overlap between the distributions, but it looks like the scores are
+    higher in the treated group. The distribution of scores is not exactly normal
+    for either group, but it is close enough that the normal model is a reasonable
+    choice.
+  prefs: []
+  type: TYPE_NORMAL
+- en: So I’ll assume that in the entire population of students (not just the ones
+    in the experiment), the distribution of scores is well modeled by a normal distribution
+    with unknown mean and standard deviation. I’ll use `mu` and `sigma` to denote
+    these unknown parameters, and we’ll do a Bayesian update to estimate what they
+    are.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Estimating Parameters
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: As always, we need a prior distribution for the parameters. Since there are
+    two parameters, it will be a joint distribution. I’ll construct it by choosing
+    marginal distributions for each parameter and computing their outer product.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As a simple starting place, I’ll assume that the prior distributions for `mu`
+    and `sigma` are uniform. The following function makes a `Pmf` object that represents
+    a uniform distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`make_uniform` takes as parameters'
+  prefs: []
+  type: TYPE_NORMAL
+- en: An array of quantities, `qs`, and
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: A string, `name`, which is assigned to the index so it appears when we display
+    the `Pmf`.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Here’s the prior distribution for `mu`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: I chose the lower and upper bounds by trial and error. I’ll explain how when
+    we look at the posterior distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here’s the prior distribution for `sigma`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can use `make_joint` to make the joint prior distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: And we’ll start by working with the data from the control group.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: In the next section we’ll compute the likelihood of this data for each pair
+    of parameters in the prior distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Likelihood
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: We would like to know the probability of each score in the dataset for each
+    hypothetical pair of values, `mu` and `sigma`. I’ll do that by making a 3-dimensional
+    grid with values of `mu` on the first axis, values of `sigma` on the second axis,
+    and the scores from the dataset on the third axis.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can use `norm.pdf` to compute the probability density of each score for
+    each hypothetical pair of parameters.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The result is a 3-D array. To compute likelihoods, I’ll multiply these densities
+    along `axis=2`, which is the axis of the data:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is a 2-D array that contains the likelihood of the entire dataset
+    for each hypothetical pair of parameters.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We can use this array to update the prior, like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is a `DataFrame` that represents the joint posterior distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following function encapsulates these steps.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Here are the updates for the control and treatment groups:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'And here’s what they look like:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]</details> ![_images/07e09a7764bf63bd25d2de096380ab1b98da662b35273b5a5f32f41b7c0c928d.png](../Images/40c70f90c0bd3e979a2c0296876ae3c2.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Along the \(x\)-axis, it looks like the mean score for the treated group is
+    higher. Along the \(y\)-axis, it looks like the standard deviation for the treated
+    group is lower.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If we think the treatment causes these differences, the data suggest that the
+    treatment increases the mean of the scores and decreases their spread. We can
+    see these differences more clearly by looking at the marginal distributions for
+    `mu` and `sigma`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Posterior Marginal Distributions
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: I’ll use `marginal`, which we saw in <<_MarginalDistributions>>, to extract
+    the posterior marginal distributions for the population means.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Here’s what they look like:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/74533c73c49e8633b077b14653127429555b9df95ce634788a96f4f047d6c063.png](../Images/681405482ffc61c5b3d2bae884d8f290.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: In both cases the posterior probabilities at the ends of the range are near
+    zero, which means that the bounds we chose for the prior distribution are wide
+    enough.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Comparing the marginal distributions for the two groups, it looks like the
+    population mean in the treated group is higher. We can use `prob_gt` to compute
+    the probability of superiority:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: There is a 98% chance that the mean in the treated group is higher.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Distribution of Differences
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: To quantify the magnitude of the difference between groups, we can use `sub_dist`
+    to compute the distribution of the difference.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: There are two things to be careful about when you use methods like `sub_dist`.
+    The first is that the result usually contains more elements than the original
+    `Pmf`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this example, the original distributions have the same quantities, so the
+    size increase is moderate.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: In the worst case, the size of the result can be the product of the sizes of
+    the originals.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The other thing to be careful about is plotting the `Pmf`. In this example,
+    if we plot the distribution of differences, the result is pretty noisy.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE28]</details> ![_images/17719b39d2db8694dcd3465576ab0f6848ab5bac7aaf1e6ca9c26bd616f14290.png](../Images/d3285bcfff528c7a281a867a76d7fade.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'There are two ways to work around that limitation. One is to plot the CDF,
+    which smooths out the noise:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE30]</details> ![_images/7853b02a168362d7aaa22b1dc7b901dbf56554e8005a90aa2de857eac0221020.png](../Images/42384d504f6b67b8a8222412cdbf17ed.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The other option is to use kernel density estimation (KDE) to make a smooth
+    approximation of the PDF on an equally-spaced grid, which is what this function
+    does:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`kde_from_pmf` takes as parameters a `Pmf` and the number of places to evaluate
+    the KDE.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: It uses `gaussian_kde`, which we saw in <<_KernelDensityEstimation>>, passing
+    the probabilities from the `Pmf` as weights. This makes the estimated densities
+    higher where the probabilities in the `Pmf` are higher.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s what the kernel density estimate looks like for the `Pmf` of differences
+    between the groups.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE33]</details> ![_images/96237655b97311f4d9c0571002cba9f1f1bf1b50c9e4c69c7f47bdd4235cce83.png](../Images/750833c43967521c794d8e009b3bc6d2.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The mean of this distribution is almost 10 points on a test where the mean is
+    around 45, so the effect of the treatment seems to be substantial.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can use `credible_interval` to compute a 90% credible interval.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE37]'
+  prefs: []
+  type: TYPE_PRE
+- en: Based on this interval, we are pretty sure the treatment improves test scores
+    by 2 to 17 points.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using Summary Statistics
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In this example the dataset is not very big, so it doesn’t take too long to
+    compute the probability of every score under every hypothesis. But the result
+    is a 3-D array; for larger datasets, it might be too big to compute practically.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Also, with larger datasets the likelihoods get very small, sometimes so small
+    that we can’t compute them with floating-point arithmetic. That’s because we are
+    computing the probability of a particular dataset; the number of possible datasets
+    is astronomically big, so the probability of any of them is very small.
+  prefs: []
+  type: TYPE_NORMAL
+- en: An alternative is to compute a summary of the dataset and compute the likelihood
+    of the summary. For example, if we compute the mean and standard deviation of
+    the data, we can compute the likelihood of those summary statistics under each
+    hypothesis.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As an example, suppose we know that the actual mean of the population, \(\mu\),
+    is 42 and the actual standard deviation, \(\sigma\), is 17.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now suppose we draw a sample from this distribution with sample size `n=20`,
+    and compute the mean of the sample, which I’ll call `m`, and the standard deviation
+    of the sample, which I’ll call `s`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'And suppose it turns out that:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE39]'
+  prefs: []
+  type: TYPE_PRE
+- en: The summary statistics, `m` and `s`, are not too far from the parameters \(\mu\)
+    and \(\sigma\), so it seems like they are not too unlikely.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To compute their likelihood, we will take advantage of three results from mathematical
+    statistics:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Given \(\mu\) and \(\sigma\), the distribution of `m` is normal with parameters
+    \(\mu\) and \(\sigma/\sqrt{n}\);
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The distribution of \(s\) is more complicated, but if we compute the transform
+    \(t = n s^2 / \sigma^2\), the distribution of \(t\) is chi-squared with parameter
+    \(n-1\); and
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: According to [Basu’s theorem](https://en.wikipedia.org/wiki/Basu%27s_theorem),
+    `m` and `s` are independent.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: So let’s compute the likelihood of `m` and `s` given \(\mu\) and \(\sigma\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: First I’ll create a `norm` object that represents the distribution of `m`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE40]'
+  prefs: []
+  type: TYPE_PRE
+- en: This is the “sampling distribution of the mean”. We can use it to compute the
+    likelihood of the observed value of `m`, which is 41.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE41]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE42]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Now let’s compute the likelihood of the observed value of `s`, which is 18.
+    First, we compute the transformed value `t`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE43]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE44]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Then we create a `chi2` object to represent the distribution of `t`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE45]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Now we can compute the likelihood of `t`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE46]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE47]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Finally, because `m` and `s` are independent, their joint likelihood is the
+    product of their likelihoods:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE48]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE49]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can compute the likelihood of the data for any values of \(\mu\) and
+    \(\sigma\), which we’ll use in the next section to do the update.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Update with Summary Statistics
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Now we’re ready to do an update. I’ll compute summary statistics for the two
+    groups.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE50]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE51]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is a dictionary that maps from group name to a tuple that contains
+    the sample size, `n`, the sample mean, `m`, and the sample standard deviation
+    `s`, for each group.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I’ll demonstrate the update with the summary statistics from the control group.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE52]'
+  prefs: []
+  type: TYPE_PRE
+- en: I’ll make a mesh with hypothetical values of `mu` on the `x` axis and values
+    of `sigma` on the `y` axis.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE53]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE54]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can compute the likelihood of seeing the sample mean, `m`, for each pair
+    of parameters.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE55]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE56]'
+  prefs: []
+  type: TYPE_PRE
+- en: And we can compute the likelihood of the sample standard deviation, `s`, for
+    each pair of parameters.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE57]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE58]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Finally, we can do the update with both likelihoods:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE59]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'To compute the posterior distribution for the treatment group, I’ll put the
+    previous steps in a function:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE60]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Here’s the update for the treatment group:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE61]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here are the results.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE62]</details> ![_images/788f06239c80c1669cae10247482f0fb684c52288c1b0713b213e62821d3eb15.png](../Images/2e0ea03c4df7f105c2b86b60db36f8a2.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Visually, these posterior joint distributions are similar to the ones we computed
+    using the entire dataset, not just the summary statistics. But they are not exactly
+    the same, as we can see by comparing the marginal distributions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Comparing Marginals
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Again, let’s extract the marginal posterior distributions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE63]'
+  prefs: []
+  type: TYPE_PRE
+- en: And compare them to results we got using the entire dataset (the dashed lines).
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE64]</details> ![_images/8905b82ef04dd79130d1cebbad78367aafe809a8fda9f1cb4c4ed2011ae0311c.png](../Images/7a53a9d55b1e248b3131381791fe1a63.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The posterior distributions based on summary statistics are similar to the posteriors
+    we computed using the entire dataset, but in both cases they are shorter and a
+    little wider.
+  prefs: []
+  type: TYPE_NORMAL
+- en: That’s because the update with summary statistics is based on the implicit assumption
+    that the distribution of the data is normal. But it’s not; as a result, when we
+    replace the dataset with the summary statistics, we lose some information about
+    the true distribution of the data. With less information, we are less certain
+    about the parameters.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Proof By Simulation
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'The update with summary statistics is based on theoretical distributions, and
+    it seems to work, but I think it is useful to test theories like this, for a few
+    reasons:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: It confirms that our understanding of the theory is correct,
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: It confirms that the conditions where we apply the theory are conditions where
+    the theory holds,
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: It confirms that the implementation details are correct. For many distributions,
+    there is more than one way to specify the parameters. If you use the wrong specification,
+    this kind of testing will help you catch the error.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: In this section I’ll use simulations to show that the distribution of the sample
+    mean and standard deviation is as I claimed. But if you want to take my word for
+    it, you can skip this section and the next.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s suppose that we know the actual mean and standard deviation of the population:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE65]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: I’ll create a `norm` object to represent this distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE66]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`norm` provides `rvs`, which generates random values from the distribution.
+    We can use it to simulate 1000 samples, each with sample size `n=20`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE67]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE68]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The result is an array with 1000 rows, each containing a sample or 20 simulated
+    test scores.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If we compute the mean of each row, the result is an array that contains 1000
+    sample means; that is, each value is the mean of a sample with `n=20`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE69]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE70]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now, let’s compare the distribution of these means to `dist_m`. I’ll use `pmf_from_dist`
+    to make a discrete approximation of `dist_m`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE71]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`pmf_from_dist` takes an object representing a continuous distribution, evaluates
+    its probability density function at equally space points between `low` and `high`,
+    and returns a normalized `Pmf` that approximates the distribution.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: I’ll use it to evaluate `dist_m` over a range of six standard deviations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE72]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now let’s compare this theoretical distribution to the means of the samples.
+    I’ll use `kde_from_sample` to estimate their distribution and evaluate it in the
+    same locations as `pmf_m`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE73]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following figure shows the two distributions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE74]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/52c43bd9abdda9201e2072a09dfb286e5850cae41d61da3a6e7ad355b77b20fd.png](../Images/fdd44a246bef6bcdc55cc9a74e4b2d62.png)</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The theoretical distribution and the distribution of sample means are in accord.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Checking Standard Deviation
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Let’s also check that the standard deviations follow the distribution we expect.
+    First I’ll compute the standard deviation for each of the 1000 samples.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE75]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE76]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now we’ll compute the transformed values, \(t = n s^2 / \sigma^2\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE77]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: We expect the transformed values to follow a chi-square distribution with parameter
+    \(n-1\). SciPy provides `chi2`, which we can use to represent this distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE78]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can use `pmf_from_dist` again to make a discrete approximation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE79]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: And we’ll use `kde_from_sample` to estimate the distribution of the sample standard
+    deviations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE80]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now we can compare the theoretical distribution to the distribution of the standard
+    deviations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE81]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/8ff5ec2be08b5f2cd8763610a22cb2b6ded0e4ca76da07bb4cad7a56cb1eb824.png](../Images/23e05aba19a5fbc1b39471ad7eefc69b.png)</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The distribution of transformed standard deviations agrees with the theoretical
+    distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Finally, to confirm that the sample means and standard deviations are independent,
+    I’ll compute their coefficient of correlation:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE82]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE83]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Their correlation is near zero, which is consistent with their being independent.
+  prefs: []
+  type: TYPE_NORMAL
+- en: So the simulations confirm the theoretical results we used to do the update
+    with summary statistics.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can also use `kdeplot` from Seaborn to see what their joint distribution
+    looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE84]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/33bcff608384ba34050242a14176f0c7647ce9109c68aeb3c3041ca19defb6e6.png](../Images/1ec87303e4aed28ef3f8cf8cf945490d.png)</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: It looks like the axes of the ellipses are aligned with the axes, which indicates
+    that the variables are independent.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'In this chapter we used a joint distribution to represent prior probabilities
+    for the parameters of a normal distribution, `mu` and `sigma`. And we updated
+    that distribution two ways: first using the entire dataset and the normal PDF;
+    then using summary statistics, the normal PDF, and the chi-square PDF. Using summary
+    statistics is computationally more efficient, but it loses some information in
+    the process.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Normal distributions appear in many domains, so the methods in this chapter
+    are broadly applicable. The exercises at the end of the chapter will give you
+    a chance to apply them.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exercises
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '**Exercise:** Looking again at the posterior joint distribution of `mu` and
+    `sigma`, it seems like the standard deviation of the treated group might be lower;
+    if so, that would suggest that the treatment is more effective for students with
+    lower scores.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: But before we speculate too much, we should estimate the size of the difference
+    and see whether it might actually be 0.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Extract the marginal posterior distributions of `sigma` for the two groups.
+    What is the probability that the standard deviation is higher in the control group?
+  prefs: []
+  type: TYPE_NORMAL
+- en: Compute the distribution of the difference in `sigma` between the two groups.
+    What is the mean of this difference? What is the 90% credible interval?
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE85]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE86]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/308308b6ecac3d93df676f436d6bdcb155063578cbf2f3436b0836d41eadb098.png](../Images/28f980c6489e761e5e36d9cac4408fec.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">Show code
+    cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE87]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE88]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE89]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE90]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE91]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE92]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE93]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE94]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/4a41f5f62c4bf9c935fcc913296e6af4942eeac649bc5a0689dca131f81d3784.png](../Images/f8db324dc26895f255a7e1e081881c19.png)</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** An [effect size](http://en.wikipedia.org/wiki/Effect_size) is
+    a statistic intended to quantify the magnitude of a phenomenon. If the phenomenon
+    is a difference in means between two groups, a common way to quantify it is Cohen’s
+    effect size, denoted \(d\).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: If the parameters for Group 1 are \((\mu_1, \sigma_1)\), and the parameters
+    for Group 2 are \((\mu_2, \sigma_2)\), Cohen’s effect size is
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[ d = \frac{\mu_1 - \mu_2}{(\sigma_1 + \sigma_2)/2} \]
+  prefs: []
+  type: TYPE_NORMAL
+- en: Use the joint posterior distributions for the two groups to compute the posterior
+    distribution for Cohen’s effect size.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If we try enumerate all pairs from the two distributions, it takes too long
+    so we’ll use random sampling.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following function takes a joint posterior distribution and returns a sample
+    of pairs. It uses some features we have not seen yet, but you can ignore the details
+    for now.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE95]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s how we can use it to sample pairs from the posterior distributions for
+    the two groups.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE96]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE97]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE98]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE99]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The result is an array of tuples, where each tuple contains a possible pair
+    of values for \(\mu\) and \(\sigma\). Now you can loop through the samples, compute
+    the Cohen effect size for each, and estimate the distribution of effect sizes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE100]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE101]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE102]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE103]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE104]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/93749567d15a59d942c9592d5f736a75613b185134d0b1aa9cbc0cd0964b767c.png](../Images/9d80ca54302ffbc494cce5aa63d81ebf.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">Show code
+    cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE105]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE106]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE107]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE108]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** This exercise is inspired by [a question that appeared on Reddit](https://www.reddit.com/r/statistics/comments/hcvl2j/q_reverse_empirical_distribution_rule_question/).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: An instructor announces the results of an exam like this, “The average score
+    on this exam was 81\. Out of 25 students, 5 got more than 90, and I am happy to
+    report that no one failed (got less than 60).”
+  prefs: []
+  type: TYPE_NORMAL
+- en: Based on this information, what do you think the standard deviation of scores
+    was?
+  prefs: []
+  type: TYPE_NORMAL
+- en: You can assume that the distribution of scores is approximately normal. And
+    let’s assume that the sample mean, 81, is actually the population mean, so we
+    only have to estimate `sigma`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Hint: To compute the probability of a score greater than 90, you can use `norm.sf`,
+    which computes the survival function, also known as the complementary CDF, or
+    `1 - cdf(x)`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE109]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE110]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE111]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE112]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE113]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE114]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE115]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE116]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/0abfd6d388bcc11c2cbc5a5bdff47d10cd98504e0d8303178e9038f9087c54f0.png](../Images/b9d7be510e4f972bddbd47c8a8091418.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">Show code
+    cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE117]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE118]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE119]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/f8dada047905f5f85c2e5f21efb160f4b275e94cf4fc642523008abe432780be.png](../Images/9f0bdab9a77306788bab7542713052c9.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">Show code
+    cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE120]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE121]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE122]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/ac9958f8a232e0d024b18dd3b11c95ce2fd3980d1f0a54a3a1a50dc89a315070.png](../Images/fe30c4209d494fdc71e03f110b65e357.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">Show code
+    cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE123]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE124]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE125]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE126]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** The [Variability Hypothesis](http://en.wikipedia.org/wiki/Variability_hypothesis)
+    is the observation that many physical traits are more variable among males than
+    among females, in many species.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: It has been a subject of controversy since the early 1800s, which suggests an
+    exercise we can use to practice the methods in this chapter. Let’s look at the
+    distribution of heights for men and women in the U.S. and see who is more variable.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I used 2018 data from the CDC’s [Behavioral Risk Factor Surveillance System](https://www.cdc.gov/brfss/annual_data/annual_2018.html)
+    (BRFSS), which includes self-reported heights from 154 407 men and 254 722 women.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here’s what I found:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The average height for men is 178 cm; the average height for women is 163 cm.
+    So men are taller on average; no surprise there.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: For men the standard deviation is 8.27 cm; for women it is 7.75 cm. So in absolute
+    terms, men’s heights are more variable.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: But to compare variability between groups, it is more meaningful to use the
+    [coefficient of variation](https://en.wikipedia.org/wiki/Coefficient_of_variation)
+    (CV), which is the standard deviation divided by the mean. It is a dimensionless
+    measure of variability relative to scale.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For men CV is 0.0465; for women it is 0.0475. The coefficient of variation is
+    higher for women, so this dataset provides evidence against the Variability Hypothesis.
+    But we can use Bayesian methods to make that conclusion more precise.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Use these summary statistics to compute the posterior distribution of `mu` and
+    `sigma` for the distributions of male and female height. Use `Pmf.div_dist` to
+    compute posterior distributions of CV. Based on this dataset and the assumption
+    that the distribution of height is normal, what is the probability that the coefficient
+    of variation is higher for men? What is the most likely ratio of the CVs and what
+    is the 90% credible interval for that ratio?
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Hint: Use different prior distributions for the two groups, and chose them
+    so they cover all parameters with non-negligible probability.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Also, you might find this function helpful:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE127]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE128]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE129]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE130]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/cefe85dd76a0d6417b6ca3812f888bb019e2178da1197955d44f5e37fb10cfe6.png](../Images/88f65519ee30c9435bcb53075ac9ded0.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">Show code
+    cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE131]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE132]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE133]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/0fe23b061fdb21223027aa04f716cab5d7b29d98950d5eeba6beb10407696796.png](../Images/163c7b380a05e4d1adf09a222808f1e6.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">Show code
+    cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE134]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/b07e3ae52ba0514a3f439fcfd1eb6862e6d00434cfedf0fae3ad72fc346f47d4.png](../Images/d233c72768657a36bdab646931ca3924.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">Show code
+    cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE135]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE136]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE137]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE138]</details>'
+  prefs: []
+  type: TYPE_NORMAL

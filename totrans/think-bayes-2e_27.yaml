@@ -1,0 +1,544 @@
+- en: Flipping USB Connectors
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/ThinkBayes2/usb.html](https://allendowney.github.io/ThinkBayes2/usb.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: This notebook is one of the examples in the second edition of [*Think Bayes*](https://greenteapress.com/wp/think-bayes/).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ThinkBayes2/blob/master/examples/usb.ipynb).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: I am not the first person to observe that it sometimes takes several tries to
+    plug in a USB connector (specifically the rectangular [Type A connector](https://en.wikipedia.org/wiki/USB),
+    which is not reversible). There are [memes about it](https://knowyourmeme.com/memes/usb-insertion-issues),
+    there are [cartoons about it](https://www.smbc-comics.com/?id=2388), and on Quora
+    alone, [people](https://www.quora.com/Why-do-you-always-have-to-flip-a-USB-twice-when-trying-to-plug-it-in-Shouldn-t-it-have-gone-in-the-first-time-when-you-had-it-the-right-way)
+    [have](https://www.quora.com/There-is-a-50-chance-of-plugging-in-a-USB-cable-the-right-way-on-the-first-try-Why-does-it-only-happen-20-of-the-time-when-I-do-it)
+    [asked](https://www.quora.com/Why-doesnt-the-USB-go-in-the-first-time-but-does-after-youve-turn-it-a-few-times)
+    [about](https://www.quora.com/People-that-can-plug-the-USB-in-on-their-first-try-How)
+    [it](https://www.quora.com/Why-cant-we-plug-in-USB-devices-correctly-the-first-time)
+    more than once.
+  prefs: []
+  type: TYPE_NORMAL
+- en: But I might be the first to use Bayesian decision analysis to figure out the
+    optimal strategy for plugging in a USB connector. Specifically, I have worked
+    out how long you should try on the first side before flipping, how long you should
+    try on the second side before flipping again, how long you should try on the third
+    side, and so on.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Of course, my analysis is based on some modeling assumptions:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Initially, the probability is 0.5 that the connector is in the right orientation.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: If it is, the time it takes to succeed follows an exponential distribution with
+    a mean of 1.1 seconds.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Flipping the connector takes 0.1 seconds.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: With that, we are ready to get started.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Continuous Updates
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The first step is to figure out the probability that the connector is in the
+    right orientation as a function of how long you have been trying. For that, we
+    can use a Bayes table, which is a form of Bayes’s Theorem I use in [Chapter 2
+    of *Think Bayes*](https://allendowney.github.io/ThinkBayes2/chap02.html#bayes-tables).
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following function takes a sequence of hypotheses, prior probabilities,
+    and likelihoods, and returns a pandas `DataFrame` that represents a Bayes table.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now suppose that the prior probability is 0.5 that the orientation of the connector
+    is correct, and you have been trying for 0.9 seconds. What is the likelihood that
+    you would have to try so long?
+  prefs: []
+  type: TYPE_NORMAL
+- en: If you are on the wrong side, it is 100%.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: If you are on the right side, it’s given by the survival function (complementary
+    CDF) of the exponential distribution, which is \(\exp(-\lambda t)\), where \(\lambda\)
+    is the rate parameter and \(t\) is time.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'The following function computes this likelihood:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can use this function to compute the likelihood of trying for 0.9 seconds
+    or more, given an exponential distribution with mean 1.1.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is the likelihood of the data, given that the orientation of the
+    connector is correct.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now let’s make a Bayes table with two hypotheses – the connector is either the
+    right way or the wrong way – with equal prior probabilities.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'And here is the likelihood of the data for each hypothesis:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: Putting it together, here’s the Bayes table.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | prior | likelihood | unnorm | posterior |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Right way | 0.5 | 0.441233 | 0.220617 | 0.30615 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Wrong way | 0.5 | 1.000000 | 0.500000 | 0.69385 |'
+  prefs: []
+  type: TYPE_TB
+- en: After 0.9 seconds, the probability is about 69% that the orientation of the
+    connector is wrong, so you might want to think about trying the other side.
+  prefs: []
+  type: TYPE_NORMAL
+- en: But if it takes 0.1 seconds to flip, maybe you should keep trying a little longer.
+    To figure out when to flip, let’s do the same analysis again for general values
+    of \(\lambda\) and \(t\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Generalization
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: To minimize human error, I’ll use Sympy to do the algebra. Here are the symbols
+    I’ll use.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s the likelihood again, using the symbols.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here’s the Bayes table, using \(p\) and \(q\) for the prior probabilities
+    of the hypotheses.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | prior | likelihood | unnorm | posterior |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Right way | p | exp(-lam*t) | p*exp(-lam*t) | p*exp(-lam*t)/(p*exp(-lam*t)
+    + q) |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Wrong way | q | 1 | q | q/(p*exp(-lam*t) + q) |'
+  prefs: []
+  type: TYPE_TB
+- en: From the table I’ll select the posterior probability that the orientation is
+    correct.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: \[\displaystyle \frac{p}{p + q e^{lam t}}\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You might recognize this as a form of the [logistic function](https://en.wikipedia.org/wiki/Logistic_function);
+    we can compute it like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: Let’s see what that looks like for a range of values of `t`, assuming that the
+    prior probability is `p=0.5`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/de7c57b361e3862191718049c129160d6a2e309b37236e2a27b5b2808d885d73.png](../Images/e0b43dd27c7fbea3ab513e80e876d2c8.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: After a few seconds of fiddling, you should be reasonably convinced that the
+    orientation is wrong.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Strategy
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Now, let’s think about turning belief into action. Let me start with a conjecture:
+    I suspect that the best strategy is to try on the first side until the probability
+    of correct orientation drops below some threshold (to be determined), then try
+    on the second side until the probability drops below that threshold again, and
+    repeat until success.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: To test this strategy, we will have to figure out how long to try as a function
+    of the prior probability, `p`, and the threshold probability, `r`. Again, I’ll
+    make Sympy do the work.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s the equation that sets the posterior probability, which we computed in
+    the previous section, to `r`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: \[\displaystyle \frac{p e^{- lam t}}{p e^{- lam t} + q} = r\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: And here’s the solution for `t` in terms of `p`, `q`, `r`, and `lam`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: \[\displaystyle \frac{\log{\left(\frac{p \left(1 - r\right)}{q r} \right)}}{lam}\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: And here’s how we can express this solution in terms of the prior and posterior
+    odds.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: Let’s see what that looks like for a range of values of `r`, assuming that the
+    prior probability is `p=0.5`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/585af370b3b160af0bbacf09de7d129454c09bcd871873947b05f4c51cef9119.png](../Images/92988963e15d5f8249194a7819a6f3b5.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: When the threshold is low, we have to wait a few seconds to reach it. As the
+    threshold increases, the time to reach it decreases. We’ll use this function in
+    the next section to simulate the strategy.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Simulation
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'As a step toward optimization, let’s run a simulation. The following function
+    takes as parameters:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`correct`: A Boolean indicating if the orientation is correct.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`p`: The prior probability that the orientation is correct.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`lam`: The rate parameter for the distribution of time until success.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`r`: The threshold for the posterior probability.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`flip`: The time it takes to flip the connector, in seconds.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`trace`: A list that indicates how much time we have spent, so far, trying
+    and flipping.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: It runs the simulation and returns a sequence of waiting and flipping times.
+    The sum of this sequence is the total time it took to connect. And we can use
+    the length of the sequence to figure out how many times we had to flip.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s a test run, starting on the correct side.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here’s a run where we start on the wrong side.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following function runs the simulation many times with initial probability
+    `p=0.5`, starting in the right orientation half the time.
+  prefs: []
+  type: TYPE_NORMAL
+- en: It returns two arrays, containing the length of the trace and the total duration
+    for each simulation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s the average total duration with threshold probability `r=0.25`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: With this threshold, it takes about 2 seconds to connect, on average.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Optimization
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Now let’s see how the average duration varies as we sweep through a range of
+    values for the threshold probability, `r`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE29]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE30]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s what the results look like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/ef0f082f51ddabf66af0c0bbf2d1d4782f60fe8dbe4dcddffbcce2057af35668.png](../Images/46c9bf10513019779a2766dd437dcf8a.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The optimal value of `r` is close to `0.3`. With that threshold we can see how
+    long we should try on the first side, starting with prior probability `p=0.5`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: With the given values of `lam` and `flip`, it turns out the optimal time to
+    wait is about `0.9` seconds.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If we have to flip, the prior probability for the second side is `p=1-r`, so
+    we have to wait twice as long for the posterior probability to get down to `r`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: How many flips?
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Now let’s run the simulations with the optimal value of `r` and see what the
+    distributions look like for the total time and the number of flips.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s the distribution of total time, represented as a CDF.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE37]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/9a5ebc6d681cac7ad22288b3e56e8dcf324fd8c82edfcdff5c099b0adbca4dcf.png](../Images/019ab7cd4409dae18454950f0eb8b385.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: '[PRE39]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE40]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE41]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE42]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE43]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE44]'
+  prefs: []
+  type: TYPE_PRE
+- en: The average is about 2.4 seconds, but occasionally it takes much longer!
+  prefs: []
+  type: TYPE_NORMAL
+- en: And here’s the distribution for the total number of flips.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE45]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/329756fe4226fb8140b519ec40aeaa938e308f4be1f6881e173cfec0fecedb4c.png](../Images/e98ce3352f7d73ac847fc303eb0e09bd.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: '[PRE46]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0.0 | 0.282925 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1.0 | 0.407050 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2.0 | 0.177200 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3.0 | 0.075200 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 4.0 | 0.032575 |'
+  prefs: []
+  type: TYPE_TB
+- en: The probability of getting it right on the first try is only about 28%. That
+    might seem low, because the chance of starting in the right orientation is 50%,
+    but remember that we have a substantial chance of flipping even if we start in
+    the right orientation (and in that case, we have to flip at least twice).
+  prefs: []
+  type: TYPE_NORMAL
+- en: The most common outcome is that we have to flip once, about 40% of the time.
+    And the probability of the notorious double flip is about 18%.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Fortunately, it is rare to flip three or more times.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: With that, I think we have solved the USB connector problem.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For given parameters `lam` and `flip`, we can find the threshold probability,
+    `r`, that minimizes the average time to connect.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Given this optimal value, we can estimate the distribution of total time and
+    the number of times we have to flip.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Sadly, all of this fun is gradually being spoiled by the encroachment of the
+    [USB-C](https://en.wikipedia.org/wiki/USB-C) connector, which is reversible.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*If you like this article, you might also like the second edition of [*Think
+    Bayes*](https://greenteapress.com/wp/think-bayes/).*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Copyright 2021 Allen Downey
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Code: [MIT License](https://opensource.org/licenses/MIT)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Text: [Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA
+    4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  prefs: []
+  type: TYPE_NORMAL

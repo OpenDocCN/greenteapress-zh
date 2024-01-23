@@ -1,0 +1,618 @@
+- en: The Emitter-Detector Problem
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/ThinkBayes2/radiation.html](https://allendowney.github.io/ThinkBayes2/radiation.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ThinkBayes2/blob/master/examples/radiation.ipynb)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Modeling a radiation sensor
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Here’s an example from Jaynes, *Probability Theory*, page 168:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: We have a radioactive source … which is emitting particles of some sort … There
+    is a rate \(p\), in particles per second, at which a radioactive nucleus sends
+    particles through our counter; and each particle passing through produces counts
+    at the rate \(\theta\). From measuring the number {c1 , c2 , …} of counts in different
+    seconds, what can we say about the numbers {n1 , n2 , …} actually passing through
+    the counter in each second, and what can we say about the strength of the source?
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: I presented a [version of this problem](https://www.greenteapress.com/thinkbayes/html/thinkbayes015.html#sec130)
+    in the first edition of *Think Bayes*, but I don’t think I explained it well,
+    and my solution was a bit of a mess. In the second edition, I use more NumPy and
+    SciPy, which makes it possible to express the solution more clearly and concisely,
+    so let me give it another try.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As a model of the radioactive source, Jaynes suggests we imagine “\(N\) nuclei,
+    each of which has independently the probability \(r\) of sending a particle through
+    our counter in any one second”. If \(N\) is large and \(r\) is small, the number
+    or particles emitted in a given second is well modeled by a Poisson distribution
+    with parameter \(s = N r\), where \(s\) is the strength of the source.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As a model of the sensor, we’ll assume that “each particle passing through the
+    counter has independently the probability \(\phi\) of making a count”. So if we
+    know the actual number of particles, \(n\), and the efficiency of the sensor,
+    \(\phi\), the distribution of the count is \(\mathrm{Binomial}(n, \phi)\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'With that, we are ready to solve the problem, but first, an aside: I am not
+    sure why Jaynes states the problem in terms of \(p\) and \(\theta\), and then
+    solves it in terms of \(s\) and \(\phi\). It might have been an oversight, or
+    there might be subtle distinction he intended to draw the reader’s attention to.
+    The book is full of dire warnings about distinctions like this, but in this case
+    I don’t see an explanation.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Anyway, following Jaynes, I’ll start with a uniform prior for \(s\), over a
+    range of values wide enough to cover the region where the likelihood of the data
+    is non-negligible.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0.0 | 1 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3.5 | 1 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 7.0 | 1 |'
+  prefs: []
+  type: TYPE_TB
+- en: For each value of \(s\), the distribution of \(n\) is Poisson, so we can form
+    the joint prior of \(s\) and \(n\) using the `poisson` function from SciPy. I’ll
+    use a range of values for \(n\) that, again, covers the region where the likelihood
+    of the data is non-negligible.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is an array with one row for each value of \(n\) and one column for
+    each value of \(s\). To get the prior probability for each pair, we multiply each
+    row by the prior probabilities of \(s\). The following function encapsulates this
+    computation and puts the result in a Pandas `DataFrame` that represents the joint
+    prior.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Here’s the joint prior:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '| s | 0.0 | 3.5 | 7.0 | 10.5 | 14.0 | 17.5 | 21.0 | 24.5 | 28.0 | 31.5 | ...
+    | 318.5 | 322.0 | 325.5 | 329.0 | 332.5 | 336.0 | 339.5 | 343.0 | 346.5 | 350.0
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+    | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| n |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+    | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 1.0 | 0.030197 | 0.000912 | 0.000028 | 8.315287e-07 | 2.510999e-08 |
+    7.582560e-10 | 2.289735e-11 | 6.914400e-13 | 2.087968e-14 | ... | 4.755624e-139
+    | 1.436074e-140 | 4.336568e-142 | 1.309530e-143 | 3.954438e-145 | 1.194137e-146
+    | 3.605981e-148 | 1.088912e-149 | 3.288229e-151 | 9.929590e-153 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 0.0 | 0.105691 | 0.006383 | 0.000289 | 1.164140e-05 | 4.394249e-07 |
+    1.592338e-08 | 5.609850e-10 | 1.936032e-11 | 6.577099e-13 | ... | 1.514666e-136
+    | 4.624158e-138 | 1.411553e-139 | 4.308354e-141 | 1.314851e-142 | 4.012300e-144
+    | 1.224230e-145 | 3.734968e-147 | 1.139371e-148 | 3.475357e-150 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 0.0 | 0.184959 | 0.022341 | 0.001518 | 8.148981e-05 | 3.844967e-06 |
+    1.671955e-07 | 6.872067e-09 | 2.710445e-10 | 1.035893e-11 | ... | 2.412106e-134
+    | 7.444895e-136 | 2.297302e-137 | 7.087242e-139 | 2.185939e-140 | 6.740663e-142
+    | 2.078131e-143 | 6.405469e-145 | 1.973961e-146 | 6.081874e-148 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 0.0 | 0.215785 | 0.052129 | 0.005313 | 3.802858e-04 | 2.242898e-05 |
+    1.170368e-06 | 5.612188e-08 | 2.529749e-09 | 1.087688e-10 | ... | 2.560853e-132
+    | 7.990854e-134 | 2.492573e-135 | 7.772342e-137 | 2.422749e-138 | 7.549543e-140
+    | 2.351752e-141 | 7.323587e-143 | 2.279925e-144 | 7.095520e-146 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 4 | 0.0 | 0.188812 | 0.091226 | 0.013946 | 1.331000e-03 | 9.812677e-05 |
+    6.144433e-06 | 3.437465e-07 | 1.770824e-08 | 8.565541e-10 | ... | 2.039079e-130
+    | 6.432637e-132 | 2.028331e-133 | 6.392751e-135 | 2.013910e-136 | 6.341616e-138
+    | 1.996049e-139 | 6.279975e-141 | 1.974985e-142 | 6.208580e-144 |'
+  prefs: []
+  type: TYPE_TB
+- en: 5 rows × 101 columns
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now we’re ready to compute the likelihood of the data. In this problem, it depends
+    only on \(n\), regardless of \(s\), so we only have to compute it once for each
+    value of \(n\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is an array of likelihoods, one for each value of \(n\). To do the
+    Bayesian update, we need to multiply each column in the prior by this array of
+    likelihoods. We can do that using the `multiply` method with the `axis` argument.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '| s | 0.0 | 3.5 | 7.0 | 10.5 | 14.0 | 17.5 | 21.0 | 24.5 | 28.0 | 31.5 | ...
+    | 318.5 | 322.0 | 325.5 | 329.0 | 332.5 | 336.0 | 339.5 | 343.0 | 346.5 | 350.0
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+    | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| n |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+    | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | ... | 0.0
+    | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | ... | 0.0
+    | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | ... | 0.0
+    | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | ... | 0.0
+    | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 4 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | ... | 0.0
+    | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 |'
+  prefs: []
+  type: TYPE_TB
+- en: 5 rows × 101 columns
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following function encapsulates this computation, normalizes the result,
+    and returns the posterior distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: First update
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Let’s test the update function with the first example, on page 178 of *Probability
+    Theory*:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: During the first second, `c1 = 10` counts are registered. What can [we] say
+    about the number `n1` of particles?
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'Here’s the update:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '| s | 0.0 | 3.5 | 7.0 | 10.5 | 14.0 | 17.5 | 21.0 | 24.5 | 28.0 | 31.5 | ...
+    | 318.5 | 322.0 | 325.5 | 329.0 | 332.5 | 336.0 | 339.5 | 343.0 | 346.5 | 350.0
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+    | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| n |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+    | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | ... | 0.0
+    | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | ... | 0.0
+    | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | ... | 0.0
+    | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | ... | 0.0
+    | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 4 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | ... | 0.0
+    | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 |'
+  prefs: []
+  type: TYPE_TB
+- en: 5 rows × 101 columns
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following figure is a contour plot of the joint posterior distribution.
+    As you might expect, \(s\) and \(n\) are highly correlated; that is, if we believe
+    \(s\) is low, we should believe that \(n\) is low, and contrariwise if \(s\) is
+    high.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/b5cc8230c348ba4b83c235c20afe353243cada64c8a17e899620331c993a21bb.png](../Images/3743eb4391247cf26464d2e09bbc9340.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: From the posterior distribution, we can extract the marginal distributions of
+    \(s\) and \(n\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/f3655c7e8ac622ed2137103e8ec175d15721f4c402798c4b7794f59f58746e51.png](../Images/00afa676cb24332069d97ed385ab5a38.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/59df8b33ca4bd09abf77ddcc0aeaaaa817667e393a1ca03598e118c9371298cb.png](../Images/34f9ba44369bca6d197637fc0ed58d7e.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The posterior mean of \(n\) is close to 109, which is consistent with Equation
+    6.116.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: The MAP is 99, which is one less than the analytic result in Equation 6.113,
+    which is 100. It looks like the posterior probabilities for 99 and 100 are the
+    same, but the floating-point results differ slightly.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: Jeffreys prior
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Instead of a uniform prior for \(s\), we can use a Jeffreys prior, in which
+    the prior probability for each value of \(s\) is proportional to \(1/s\). This
+    has the advantage of “invariance under certain changes of parameters”, which is
+    “the only correct way to express complete ignorance of a scale parameter.” However,
+    Jaynes suggests that it is not clear “whether \(s\) can properly be regarded as
+    a scale parameter in this problem.”
+  prefs: []
+  type: TYPE_NORMAL
+- en: Nevertheless, he suggests we try it and see what happens. Here’s the Jeffreys
+    prior for \(s\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3.5 | 0.285714 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 7.0 | 0.142857 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 10.5 | 0.095238 |'
+  prefs: []
+  type: TYPE_TB
+- en: We can use it to compute the joint prior of \(s\) and \(n\), and update it with
+    `c1`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Here’s the marginal posterior distribution of \(n\):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/7101eedd63277d78a54f25477a6f60c9c2234af947ed9755dd213aafca0854ea.png](../Images/16df9c76bb5dcab9c1e0a0f1ce6ec221.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: The posterior mean is close to 100 and the MAP is 91; both are consistent with
+    the results in Equation 6.122.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Robot A
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Now we get to what I think is the most interesting part of this example, which
+    is to take into account a second observation under two models of the scenario:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Two robots, [A and B], have different prior information about the source of
+    the particles. The source is hidden in another room which A and B are not allowed
+    to enter. A has no knowledge at all about the source of particles; for all [it]
+    knows, … the other room might be full of little [people] who run back and forth,
+    holding first one radioactive source, then another, up to the exit window.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'B has one additional qualitative fact: [it] knows that the source is a radioactive
+    sample of long lifetime, in a fixed position.'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: In other words, B has reason to believe that the source strength \(s\) is constant
+    from one interval to the next, while A admits the possibility that \(s\) is different
+    for each interval.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following figure, from Jaynes, represents these models graphically (Jaynes
+    calls them “logical situations” because he seems to be allergic to the word “model”).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[![https://github.com/AllenDowney/ThinkBayes2/raw/master/examples/jaynes177.png](../Images/f3caa3b6e53230edf4b31011c64e9017.png)](https://github.com/AllenDowney/ThinkBayes2/raw/master/examples/jaynes177.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: For A, the “different intervals are logically independent”, so the update with
+    `c2 = 16` starts with the same prior.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s the posterior marginal distribution of `n2`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/08e991dae10108d2fbefe797ad82aaba68f40c89ab3c91309740f4f0bd085ed7.png](../Images/4d62953b9997f3f8f0be05fd93c7f5d5.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: The posterior mean is close to 169, which is consistent with the result in Equation
+    6.124. The MAP is 160, which is consistent with 6.123.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Robot B
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'For B, the “logical situation” is different. If we consider \(s\) to be constant,
+    we can – and should! – take the information from the first update into account
+    when we perform the second update. We can do that by using the posterior distribution
+    of \(s\) from the first update to form the joint prior for the second update,
+    like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/4b50d9a60cf899178330dfb1199ffb2945f405006de59bcf8dc1cc49cf943f2e.png](../Images/d351fa149f9d84d4c70083fda32a1562.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The posterior mean of \(n\) is close to 137.5, which is consistent with Equation
+    6.134. The MAP is 132, which is one less than the analytic result, 133. But again,
+    there are two values with the same probability except for floating-point errors.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: Under B’s model, the data from the first interval updates our belief about \(s\),
+    which influences what we believe about `n2`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Going the other way
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'That might not seem surprising, but there is an additional point Jaynes makes
+    with this example, which is that it also works the other way around: Having seen
+    `c2`, we have more information about \(s\), which means we can – and should! –
+    go back and reconsider what we concluded about `n1`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can do that by imagining we did the experiments in the opposite order, so
+  prefs: []
+  type: TYPE_NORMAL
+- en: We’ll start again with a joint prior based on a uniform distribution for \(s\),
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Update it based on `c2`,
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Use the posterior distribution of \(s\) to form a new joint prior,
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Update it based on `c1`, and
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Extract the marginal posterior for `n1`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE37]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE39]'
+  prefs: []
+  type: TYPE_PRE
+- en: The posterior mean is close to 131.5, which is consistent with Equation 6.133.
+    And the MAP is 126, which is one less than the result in Equation 6.132, again
+    due to floating-point error.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE40]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE41]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE42]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE43]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s what the new distribution of `n1` looks like compared to the original,
+    which was based on `c1` only.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE44]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE45]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/2293d73b99596e9fda0e513eab50d159e0e4e484ce95a38d399835f483c2c60e.png](../Images/88d23094b3b21dddeee94fb48d444b50.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'With the additional information from `c2`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: We give higher probability to large values of \(s\), so we also give higher
+    probability to large values of `n1`, and
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The width of the distribution is narrower, which shows that with more information
+    about \(s\), we have more information about `n1`.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'This is one of several examples Jaynes uses to distinguish between “logical
+    and causal dependence.” In this example, causal dependence only goes in the forward
+    direction: “\(s\) is the physical cause which partially determines \(n\); and
+    then \(n\) in turn is the physical cause which partially determines \(c\)”.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Therefore, `c1` and `c2` are causally independent: if the number of particles
+    counted in one interval is unusually high (or low), that does not cause the number
+    of particles during any other interval to be higher or lower.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: But if \(s\) is unknown, they are not *logically* independent. For example,
+    if `c1` is lower than expected, that implies that lower values of \(s\) are more
+    likely, which implies that lower values of `n2` are more likely, which implies
+    that lower values of `c2` are more likely.
+  prefs: []
+  type: TYPE_NORMAL
+- en: And, as we’ve seen, it works the other way, too. For example, if `c2` is higher
+    than expected, that implies that higher values of \(s\), `n1`, and `c1` are more
+    likely.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If you find the second result more surprising – that is, if you think it’s weird
+    that `c2` changes what we believe about `n1` – that implies that you are not (yet)
+    distinguishing between logical and causal dependence.
+  prefs: []
+  type: TYPE_NORMAL

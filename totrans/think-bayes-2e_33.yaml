@@ -1,0 +1,472 @@
+- en: How Many Typos?
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/ThinkBayes2/ok.html](https://allendowney.github.io/ThinkBayes2/ok.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: When I started work at [Brilliant](https://brilliant.org) a couple of weeks
+    ago, I learned that one of my new colleagues, Michelle McSweeney, just published
+    [a book called *OK*](https://www.goodreads.com/book/show/58380165-ok), which is
+    all about the word OK.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As we discussed the joys and miseries of publishing, Michelle mentioned that
+    she had found a typo in the book after publication. So naturally I took it as
+    a challenge to find the typo. While I was searching, I enjoyed the book very much.
+    If you are interested in etymology, linguistics, and history, I recommend it!
+  prefs: []
+  type: TYPE_NORMAL
+- en: As it turned out, I found exactly one typo. When I told Michelle, she asked
+    me nervously which page it was on. Page 17\. She looked disappointed – that was
+    not the same typo she found.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now, for people who like Bayesian statistics, this scenario raises some questions:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: After our conversation, how many additional typos should we expect there to
+    be?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: If she and I had found the same typo, instead of different ones, how many typos
+    would we expect?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: As it happens, I used a similar scenario as [an example in *Think Bayes*](https://allendowney.github.io/ThinkBayes2/chap15.html#the-lincoln-index-problem).
+    This notebook is based on the code I presented there. If there’s anything here
+    that’s not clear, you could read the chapter for more details.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[You can also click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ThinkBayes2/blob/master/examples/ok.ipynb).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: A Warm-up Problem
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Starting with a simple version of the problem, let’s assume that we know `p0`
+    and `p1`, which are the probabilities, respectively, that the first and second
+    readers find any given typo.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For example, let’s assume that Michelle has a 66% chance of finding a typo and
+    I have a 50% chance.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: With these assumptions, we can compute an array that contains (in order) the
+    probability that neither of us find a typo, the probability that only the second
+    reader does, the probability that the first reader does, and the probability that
+    we both do.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: With the assumed probabilities, there is a 33% chance that we both find a typo
+    and a 17% chance that neither of us do.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Prior
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Next we need to choose a prior for the total number of typos. I’ll use a Poisson
+    distribution, which is a reasonable default for values that are counts. And I’ll
+    set the mean to 2, which means that before either of us read the book, we would
+    have expected about two typos.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s what the prior looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]</details> ![_images/77726d32755a0911144b37af88df7d5b01545b8f0092aaa4754562c4c6801e50.png](../Images/0d27247b200123da695694c7f46e46ab.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Update (Simple Version)
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'To represent the data, I’ll create these variables:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`k10`: the number of typos found by the first reader but not the second'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`k01`: the number of typos found by the second reader but not the first'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`k11`: the number of typos found by both readers'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: I’ll put the data in an array, with 0 as a place-keeper for the unknown value
+    `k00`, which is the number of typos neither of us found.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can use the multinomial distribution to compute the likelihood of the
+    data for each hypothetical value of `N` (assuming for now that the probabilities
+    in `y` are known).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can compute the posterior in the usual way.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here’s what it looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]</details> ![_images/e9548bb3eda665fa8cc1684da08ffe2df31f833e2ec55e22d0f4c6a08b185931.png](../Images/76953af36d1e930825c19828768e1369.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The most likely value is 2, and the posterior mean is about 2.3, just a little
+    higher than the prior mean.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE14]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: But remember that this is based on the assumption that we know `p0` and `p1`.
+    In reality, they are unknown, but we can estimate them from the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Three-Parameter Model
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'What we need is a model with three parameters: `N`, `p0`, and `p1`. We’ll use
+    `prior_N` again for the prior distribution of `N`, and here are the priors for
+    `p0` and `p1`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/7e0d1a057533e834e15cc2de09bb543b9108cd175ccce907df9079147b09c1be.png](../Images/ddb1ad9429f402e82ab247a9f4b7c9c7.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: I used beta distributions to construct weakly informative priors for `p0` and
+    `p1`, with means `0.66` and `0.5` respectively.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Joint Prior
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Now we have to assemble the marginal priors into a joint distribution. I’ll
+    start by putting the first two into a `DataFrame`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now I’ll stack them and put the result in a `Pmf`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  |  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| N | p0 |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 0.00 | 0.000000 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0.02 | 0.000013 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0.04 | 0.000050 |'
+  prefs: []
+  type: TYPE_TB
+- en: We can use `make_joint` again to add in the third parameter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is a `DataFrame` with values of `N` and `p0` in a `MultiIndex` that
+    goes down the rows and values of `p1` in an index that goes across the columns.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | p1 | 0.00 | 0.02 | 0.04 | 0.06 | 0.08 | 0.10 | 0.12 | 0.14 | 0.16 | 0.18
+    | ... | 0.82 | 0.84 | 0.86 | 0.88 | 0.90 | 0.92 | 0.94 | 0.96 | 0.98 | 1.00 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+    | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| N | p0 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+    | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 0.00 | 0.0 | 0.000000e+00 | 0.000000e+00 | 0.000000e+00 | 0.000000e+00
+    | 0.000000e+00 | 0.000000e+00 | 0.000000e+00 | 0.000000e+00 | 0.000000e+00 | ...
+    | 0.000000e+00 | 0.000000e+00 | 0.000000e+00 | 0.000000e+00 | 0.000000e+00 | 0.000000e+00
+    | 0.000000e+00 | 0.000000e+00 | 0.000000e+00 | 0.0 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0.02 | 0.0 | 2.997069e-08 | 5.871809e-08 | 8.624220e-08 | 1.125430e-07 |
+    1.376205e-07 | 1.614748e-07 | 1.841057e-07 | 2.055133e-07 | 2.256977e-07 | ...
+    | 2.256977e-07 | 2.055133e-07 | 1.841057e-07 | 1.614748e-07 | 1.376205e-07 | 1.125430e-07
+    | 8.624220e-08 | 5.871809e-08 | 2.997069e-08 | 0.0 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0.04 | 0.0 | 1.174362e-07 | 2.300791e-07 | 3.379286e-07 | 4.409848e-07 |
+    5.392478e-07 | 6.327174e-07 | 7.213937e-07 | 8.052767e-07 | 8.843664e-07 | ...
+    | 8.843664e-07 | 8.052767e-07 | 7.213937e-07 | 6.327174e-07 | 5.392478e-07 | 4.409848e-07
+    | 3.379286e-07 | 2.300791e-07 | 1.174362e-07 | 0.0 |'
+  prefs: []
+  type: TYPE_TB
+- en: 3 rows × 51 columns
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now I’ll apply `stack` again:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  |  |  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| N | p0 | p1 |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 0.0 | 0.00 | 0.0 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0.02 | 0.0 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0.04 | 0.0 |'
+  prefs: []
+  type: TYPE_TB
+- en: The result is a `Pmf` with a three-column `MultiIndex` containing all possible
+    triplets of parameters.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The number of rows is the product of the number of values in all three priors:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: That’s still small enough to be practical, but it will take longer to compute
+    the likelihoods than in the previous example.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Update (Three-Parameter Version)
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Here’s the loop that computes the likelihoods. It’s similar to the one in the
+    previous section, except that `y` is no longer constant; we compute it each time
+    through the loop from hypothetical values of `p0` and `p1`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can compute the posterior in the usual way.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s the posterior marginal distribution `N`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/521e5ac757cf28dc37bb176c71850b5773b74cdf68d0ea45e694a617bac42457.png](../Images/35882921e66e1b703284f0182178ec1c.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'To compute the probability that there is at least one undiscovered typo, we
+    can convert the posterior distribution to a survival function (complementary CDF):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: The probability is about 37% that there’s another typo – so that’s good news!
+  prefs: []
+  type: TYPE_NORMAL
+- en: The posterior mean is about 2.5, which is a little higher than what we got with
+    the simple model.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: Apparently our uncertainty about `p0` and `p1` leaves open the possibility that
+    there are more typos and we are not very good at finding them. Here’s what the
+    posterior distributions look like for `p0` and `p1`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE37]</details> ![_images/b1402fb19dc1e3caa863266c73b6723a8334d075a54cad8f228d32265e115cc6.png](../Images/97f4d4ab12e650084fc56a9ab9ce658f.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: With so little data, the posterior distributions are still quite wide, but the
+    posterior means are a little smaller than the priors.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE39]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE40]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE41]'
+  prefs: []
+  type: TYPE_PRE
+- en: The fact that Michelle and I found only two typos is weak evidence that we are
+    not as good at finding them as the priors implied.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'At this point, we’ve answered the first question: given that Michelle and I
+    found different bugs, the expected value for the number of remaining typos is
+    about 0.5.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In the counterfactual case, if we had found the same typo, we would represent
+    the data like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE42]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'If we run the analysis with this data, we find:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The expected number of remaining typos is about 0.3 (compared to 0.5),
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: there would be only a 25% chance that there is at least one undiscovered typo,
+    and
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: we would conclude that Michelle and I are slightly better at finding typos.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: This notebook is based on [this chapter of *Think Bayes*, Second Edition](https://allendowney.github.io/ThinkBayes2/chap15.html#the-lincoln-index-problem).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Copyright 2023 Allen B. Downey
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'License: [Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA
+    4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  prefs: []
+  type: TYPE_NORMAL

@@ -1,0 +1,1093 @@
+- en: Distributions
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/ElementsOfDataScience/08_distributions.html](https://allendowney.github.io/ElementsOfDataScience/08_distributions.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/08_distributions.ipynb)
+    or [click here to download it](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/08_distributions.ipynb).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In this chapter we’ll see three ways to describe a set of values:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: A probability mass function (PMF), which represents a set of values and the
+    number of times each one appears in a dataset.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: A cumulative distribution function (CDF), which contains the same information
+    as a PMF in a form that makes it easier to visualize, make comparisons, and perform
+    some computations.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: A kernel density estimate (KDE), which is like a smooth, continuous version
+    of a histogram.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: For examples, we’ll use data from the General Social Survey (GSS) to look at
+    distributions of age and income, and to explore the relationship between income
+    and education.
+  prefs: []
+  type: TYPE_NORMAL
+- en: But we’ll start with one of the most important ideas in statistics, the distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Distributions
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: A distribution is a set of values and their corresponding probabilities. For
+    example, if you roll a six-sided die, there are six possible outcomes, the numbers
+    `1` through `6`, and they all have the same probability, `1/6`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We can represent this distribution of outcomes with a table, like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| Value | Probability |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 1/6 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 1/6 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 1/6 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 4 | 1/6 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 5 | 1/6 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 6 | 1/6 |'
+  prefs: []
+  type: TYPE_TB
+- en: More generally, a distributions can have any number of values, the values can
+    be any type, and the probabilities do not have to be equal.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To represent distributions in Python, we will use a library called `empiricaldist`,
+    for “empirical distribution”, where “empirical” means it is based on data rather
+    than a mathematical formula.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`empiricaldist` provides an object called `Pmf`, which stands for “probability
+    mass function”. A `Pmf` object contains a set of possible outcomes and their probabilities.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'For example, here’s a `Pmf` that represents the outcome of rolling a six-sided
+    die:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: The first argument is the probability of each outcome; the second argument is
+    the list of outcomes. We can display the result like this.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 0.166667 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 0.166667 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 0.166667 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 4 | 0.166667 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 5 | 0.166667 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 6 | 0.166667 |'
+  prefs: []
+  type: TYPE_TB
+- en: A `Pmf` object is a specialized version of a Pandas `Series`, so it provides
+    all of the attributes and methods of a `Series`, plus some additional methods
+    we’ll see soon.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The General Social Survey
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Now we’ll use `Pmf` objects to represent distributions of values from a new
+    dataset, the General Social Survey (GSS). The GSS surveys a representative sample
+    of adult residents of the U.S. and asks questions about demographics, personal
+    history, and beliefs about social and political issues. It is widely used by politicians,
+    policy makers, and researchers.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The GSS dataset contains hundreds of columns; using an online tool call [GSS
+    Explorer](https://gssdataexplorer.norc.org/) I’ve selected just a few and created
+    a subset of the data, called an **extract**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Like the NSFG data we used in the previous chapter, the GSS data is stored in
+    a fixed-width format, described by a Stata data dictionary.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: We will use the `statadict` library to read the data dictionary.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: The data file is compressed, but we can use the `gzip` library to open it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The result is an object that behaves like a file, so we can pass it as an argument
+    to `read_fwf`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is a `DataFrame` with one row for each respondent, and one column
+    for each variable. Here are the first few rows.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | YEAR | ID_ | AGE | EDUC | SEX | GUNLAW | GRASS | REALINC |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 1972 | 1 | 23 | 16 | 2 | 1 | 0 | 18951.0 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 1972 | 2 | 70 | 10 | 1 | 1 | 0 | 24366.0 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 1972 | 3 | 48 | 12 | 2 | 1 | 0 | 24366.0 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 1972 | 4 | 27 | 17 | 2 | 1 | 0 | 30458.0 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 4 | 1972 | 5 | 61 | 12 | 2 | 1 | 0 | 50763.0 |'
+  prefs: []
+  type: TYPE_TB
+- en: I’ll explain these variables as we go along, but if you want more information,
+    you can read the online documentation at [https://gssdataexplorer.norc.org/variables/vfilter](https://gssdataexplorer.norc.org/variables/vfilter).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Distribution of Education
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: To get started with this dataset, let’s look at the distribution of `EDUC`,
+    which records the number of years of education for each respondent. First we’ll
+    select a column from the `DataFrame` and use `value_counts` to see what values
+    are in it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result from `value_counts` is a set of possible values and the number of
+    times each one appears, so it is a kind of distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The values `98` and `99` are special codes for “Don’t know” and “No answer”.
+    We’ll use `replace` to replace these codes with `NaN`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: We’ve already seen one way to visualize a distribution, a histogram. Here’s
+    the histogram of education level.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/08_distributions_33_0.png](../Images/b767f3981eee2b12b77061a2791a0c4e.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Based on the histogram, we can see the general shape of the distribution and
+    the central tendency – it looks like the peak is near 12 years of education. But
+    a histogram is not the best way to visualize this distribution because it obscures
+    some important details.
+  prefs: []
+  type: TYPE_NORMAL
+- en: An alternative is to use a `Pmf`. The function `Pmf.from_seq` takes any kind
+    of sequence – like a list, tuple, or Pandas `Series` – and computes the distribution
+    of the values in the sequence.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: The keyword argument `normalize=False` indicates that we don’t want to normalize
+    this PMF. I’ll explain what that means soon.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s what the first few rows look like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0.0 | 165 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1.0 | 47 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2.0 | 152 |'
+  prefs: []
+  type: TYPE_TB
+- en: In this dataset, there are `165` respondents who report that they have had no
+    formal education, and `47` who have only one year. Here the last few rows.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 18.0 | 2384 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 19.0 | 920 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 20.0 | 1439 |'
+  prefs: []
+  type: TYPE_TB
+- en: There are `1439` respondents who report that they have 20 or more years of formal
+    education, which probably means they attended college and graduate school.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You can use the bracket operator to look up a value in a `Pmf` and get the
+    corresponding count:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: Usually when we make a PMF, we want to know the *fraction* of respondents with
+    each value, rather than the counts. We can do that by setting `normalize=True`;
+    then we get a **normalized** PMF, that is, a PMF where the values in the second
+    column add up to 1.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0.0 | 0.002553 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1.0 | 0.000727 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2.0 | 0.002352 |'
+  prefs: []
+  type: TYPE_TB
+- en: 'Now if we use the bracket operator, the result is a fraction. For example,
+    the fraction of people with 12 years of education is about 30%:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`Pmf` provides a `bar` method that plots the values and their probabilities
+    as a bar chart.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/08_distributions_47_0.png](../Images/8ccd9e744e3f7dd5765f9624805024e4.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: In this figure, we can see that the most common value is 12 years, but there
+    are also peaks at 14 and 16, which correspond to two and four years of college.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For this data, the PMF is probably a better choice than the histogram. The PMF
+    shows all unique values, so we can see where the peaks are. Because the histogram
+    puts values into bins, it obscures these details. With this dataset, and the default
+    number of bins, we couldn’t see the peaks at 14 and 16 years. But PMFs have limitations,
+    too, as we’ll see.
+  prefs: []
+  type: TYPE_NORMAL
+- en: First, here’s an exercise where you can practice with PMFs.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** Let’s look at the `YEAR` column in the `DataFrame`, which represents
+    the year each respondent was interviewed.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Make an unnormalized `Pmf` for `YEAR` and display the result. How many respondents
+    were interviewed in 2018?
+  prefs: []
+  type: TYPE_NORMAL
+- en: Cumulative Distribution Functions
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Now we’ll see another way to represent a distribution, the cumulative distribution
+    function (CDF). `empiricaldist` provides a `Cdf` object that represents a CDF.
+    We can import it like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'As an example, suppose we have a sequence of five values:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s the `Pmf` of these values.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 0.2 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 0.4 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 0.2 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 5 | 0.2 |'
+  prefs: []
+  type: TYPE_TB
+- en: If you draw a random value from `values`, the `Pmf` tells you the chance of
+    getting `x`, for any value of `x`. So the probability of the value `1` is `1/5`;
+    the probability of the value `2` is `2/5`; and the probabilities for `3` and `5`
+    are `1/5` each.
+  prefs: []
+  type: TYPE_NORMAL
+- en: A CDF is similar to a PMF in the sense that it contains values and their probabilities;
+    the difference is that the probabilities in the CDF are the cumulative sum of
+    the probabilities in the PMF.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s a `Cdf` object for the same five values.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 0.2 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 0.6 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 0.8 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 5 | 1.0 |'
+  prefs: []
+  type: TYPE_TB
+- en: If you draw a random value from `values`, `Cdf` tells you the chance of getting
+    a value *less than or equal to* `x`, for any given `x`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: So the `Cdf` of `1` is `1/5` because one of the five values in the sequence
+    is less than or equal to 1.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The `Cdf` of 2 is `3/5` because three of the five values are less than or equal
+    to 2.
+  prefs: []
+  type: TYPE_NORMAL
+- en: And the `Cdf` of 5 is `5/5` because all of the values are less than or equal
+    to 5.
+  prefs: []
+  type: TYPE_NORMAL
+- en: CDF of Age
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Now let’s look at a more substantial `Cdf`, the distribution of ages for respondents
+    in the General Social Survey.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The variable we’ll use is `'AGE'`. According to the codebook, the range of the
+    values is from `18` to `89`, where `89` means “89 or older”. The special codes
+    `98` and `99` mean “Don’t know” and “Didn’t answer”. See [https://gssdataexplorer.norc.org/variables/53/vshow](https://gssdataexplorer.norc.org/variables/53/vshow).
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can use `replace` to replace the special codes with `NaN`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'We can compute the `Cdf` of these values like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`Cdf` provides a method called `plot` that plots the CDF as a line. Here’s
+    what it looks like.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/08_distributions_66_0.png](../Images/08d79f8c37a2eb99d15d998d79c69455.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The \(x\)-axis is the ages, from 18 to 89\. The \(y\)-axis is the cumulative
+    probabilities, from 0 to 1.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`cdf_age` can be used as a function, so if you give it an age, it returns the
+    corresponding probability (in a NumPy array).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`q` stands for “quantity”, which is what we are looking up. `p` stands for
+    probability, which is the result. In this example, the quantity is age 51, and
+    the corresponding probability is about `0.63`. That means that about 63% of the
+    respondents are 51 years old or younger.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The arrow in the following figure shows how you could read this value from the
+    CDF, at least approximately.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/08_distributions_71_0.png](../Images/997af415e48fee04879a2b81dc859a2f.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The CDF is an invertible function, which means that if you have a probability,
+    `p`, you can look up the corresponding quantity, `q`. `Cdf` provides a method
+    called `inverse` that computes the inverse of the cumulative distribution function.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: In this example, we look up the probability `0.25` and the result is `31`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: That means that 25% of the respondents are age 31 or less. Another way to say
+    the same thing is “age 31 is the 25th percentile of this distribution”.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If we look up probability `0.75`, it returns `59`, so 75% of the respondents
+    are 59 or younger.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: In the following figure, the arrows show how you could read these values from
+    the CDF.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/08_distributions_77_0.png](../Images/4c002c1357bdea7e324ca209ff4ed33a.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The distance from the 25th to the 75th percentile is called the **interquartile
+    range**, or IQR. It measures the spread of the distribution, so it is similar
+    to standard deviation or variance.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Because it is based on percentiles, it doesn’t get thrown off by extreme values
+    or outliers, the way standard deviation does. So IQR is more **robust** than variance,
+    which means it works well even if there are errors in the data or extreme values.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** Using `cdf_age`, compute the fraction of the respondents in the
+    GSS dataset that are *older* than 65.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** The distribution of income in almost every country is long-tailed,
+    which means there are a small number of people with very high incomes. In the
+    GSS dataset, the column `REALINC` represents total household income, converted
+    to 1986 dollars. We can get a sense of the shape of this distribution by plotting
+    the CDF.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Select `REALINC` from the `gss` dataset, make a `Cdf` called `cdf_income`, and
+    plot it. Remember to label the axes!
+  prefs: []
+  type: TYPE_NORMAL
+- en: Comparing Distributions
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: So far we’ve seen two ways to represent distributions, PMFs and CDFs. Now we’ll
+    use PMFs and CDFs to compare distributions, and we’ll see the pros and cons of
+    each.
+  prefs: []
+  type: TYPE_NORMAL
+- en: One way to compare distributions is to plot multiple PMFs on the same axes.
+    For example, suppose we want to compare the distribution of age for male and female
+    respondents.
+  prefs: []
+  type: TYPE_NORMAL
+- en: First we’ll create a Boolean Series that’s true for male respondents.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE37]'
+  prefs: []
+  type: TYPE_PRE
+- en: And another that’s true for female respondents.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can select ages for the male and female respondents.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE39]'
+  prefs: []
+  type: TYPE_PRE
+- en: And plot a PMF for each.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE40]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/08_distributions_90_0.png](../Images/6ddc171d91edb4b8e7c137e063f6e4b6.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The plot is pretty noisy. In the range from 40 to 50, it looks like the PMF
+    is higher for men. And from 70 to 80, it is higher for women. But both of those
+    differences might be due to random variation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now let’s do the same thing with CDFs; everything is the same except we replace
+    `Pmf` with `Cdf`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE41]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/08_distributions_92_0.png](../Images/ae09f59ca0f017f9859f5db7759d95c7.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: In general, CDFs are smoother than PMFs. Because they smooth out randomness,
+    we can often get a better view of real differences between distributions. In this
+    case, the lines are close together until age 40; after that, the CDF is higher
+    for men than women. So what does that mean?
+  prefs: []
+  type: TYPE_NORMAL
+- en: One way to interpret the difference is that the fraction of men below a given
+    age is generally more than the fraction of women below the same age. For example,
+    about 79% of men are 60 or less, compared to 76% of women.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE42]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE43]'
+  prefs: []
+  type: TYPE_PRE
+- en: Going the other way, we could also compare percentiles. For example, the median
+    age woman is older than the median age man, by about one year.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE44]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE45]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise:** What fraction of men are over 80? What fraction of women?'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Comparing Incomes
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: As another example, let’s look at household income and compare the distribution
+    before and after 1995 (I chose 1995 because it’s roughly the midpoint of the survey).
+    The variable `REALINC` represents household income in 1986 dollars.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We’ll make a Boolean `Series` to select respondents interviewed before and after
+    1995.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE46]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can plot the PMFs.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE47]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/08_distributions_102_0.png](../Images/bb298e62ea0432644782c497c335279f.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: There are a lot of unique values in this distribution, and none of them appear
+    very often. As a result, the PMF is so noisy and we can’t really see the shape
+    of the distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: It’s also hard to compare the distributions. It looks like there are more people
+    with high incomes after 1995, but it’s hard to tell. We can get a clearer picture
+    with a CDF.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE48]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/08_distributions_104_0.png](../Images/5b723f08b7b04c615dad130086e966c1.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Below $30,000 the CDFs are almost identical; above that, we can see that the
+    post-1995 distribution is shifted to the right. In other words, the fraction of
+    people with high incomes is about the same, but the income of high earners has
+    increased.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In general, I recommend CDFs for exploratory analysis. They give you a clear
+    view of the distribution, without too much noise, and they are good for comparing
+    distributions, especially if you have more than two.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** In the previous figure, the dollar amounts are big enough that
+    the labels on the `x` axis are crowded. Improve the figure by expressing income
+    in 1000s of dollars (and update the `x` label accordingly).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** Let’s compare incomes for different levels of education in the
+    GSS dataset'
+  prefs: []
+  type: TYPE_NORMAL
+- en: To do that we’ll create Boolean `Series` to identify respondents with different
+    levels of education.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the U.S, 12 years of education usually means the respondent has completed
+    high school (secondary education).
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: A respondent with 14 years of education has probably completed an associate
+    degree (two years of college)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Someone with 16 years has probably completed a bachelor’s degree (four years
+    of college or university).
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Define Boolean `Series` named `high`, `assc`, and `bach` that are true for respondents
+    with
+  prefs: []
+  type: TYPE_NORMAL
+- en: 12 or fewer years of education,
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 13, 14, or 15 years, and
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 16 or more.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Compute and plot the distribution of income for each group. Remember to label
+    the CDFs, display a legend, and label the axes. Write a few sentences that describe
+    and interpret the results.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Modeling Distributions
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Some distributions have names. For example, you might be familiar with the normal
+    distribution, also called the Gaussian distribution or the bell curve. And you
+    might have heard of others like the exponential distribution, binomial distribution,
+    or maybe Poisson distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: These “distributions with names” are called **analytic** because they are described
+    by analytic mathematical functions, as contrasted with empirical distributions,
+    which are based on data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: It turns out that many things we measure in the world have distributions that
+    are well approximated by analytic distributions, so these distributions are sometimes
+    good models for the real world.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this context, what I mean by a “model” is a simplified description of the
+    world that is accurate enough for its intended purpose.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this section, we’ll compute the CDF of a normal distribution and compare
+    it to an empirical distribution of data. But before we get to real data, we’ll
+    start with fake data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following statement uses NumPy’s `random` library to generate 1000 values
+    from a normal distribution with mean `0` and standard deviation `1`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE49]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE50]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s what the empirical distribution of the sample looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE51]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/08_distributions_115_0.png](../Images/705d7b62ac2b1c533d29f10195a3e7de.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: If we did not know that this sample was drawn from a normal distribution, and
+    we wanted to check, we could compare the CDF of the data to the CDF of an ideal
+    normal distribution, which we can use the SciPy library to compute.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE52]'
+  prefs: []
+  type: TYPE_PRE
+- en: First we import `norm` from `scipy.stats`, which is a collection of functions
+    related to statistics.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Then we use `linspace()` to create an array of equally-spaced points from -3
+    to 3; those are the `x` values where we will evaluate the normal CDF.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Next, `norm(0, 1)` creates an object that represents a normal distribution with
+    mean `0` and standard deviation `1`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Finally, `cdf` computes the CDF of the normal distribution, evaluated at each
+    of the `xs`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I’ll plot the normal CDF with a gray line and then plot the CDF of the data
+    again.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE53]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/08_distributions_119_0.png](../Images/208e78c7944d03d1d832b0e495aad861.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The CDF of the random sample agrees with the normal model. And that’s not surprising
+    because the data were actually sampled from a normal distribution. When we collect
+    data in the real world, we do not expect it to fit a normal distribution as well
+    as this. In the next exercise, we’ll try it and see.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** Is the normal distribution a good model for the distribution
+    of ages in the U.S. population?'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To answer this question:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Compute the mean and standard deviation of ages in the GSS dataset.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Use `linspace` to create an array of equally spaced values between 18 and 89.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Use `norm` to create a normal distribution with the same mean and standard deviation
+    as the data, then use it to compute the normal CDF for each value in the array.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Plot the normal CDF with a gray line.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Plot the CDF of the ages in the GSS.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How well do the plotted CDFs agree?
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** In many datasets, the distribution of income is approximately
+    **lognormal**, which means that the logarithms of the incomes fit a normal distribution.
+    Let’s see whether that’s true for the GSS data.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Extract `REALINC` from `gss` and compute its logarithm using `np.log10()`.
+    Hint: Replace the value `0` with `NaN` before computing logarithms.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Compute the mean and standard deviation of the log-transformed incomes.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Use `norm` to make a normal distribution with the same mean and standard deviation
+    as the log-transformed incomes.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Plot the CDF of the normal distribution.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Compute and plot the CDF of the log-transformed incomes.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How similar are the CDFs of the log-transformed incomes and the normal distribution?
+  prefs: []
+  type: TYPE_NORMAL
+- en: Kernel Density Estimation
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'We have seen two ways to represent distributions, PMFs and CDFs. Now we’ll
+    learn another way: a probability density function, or PDF. The `norm` function,
+    which we used to compute the normal CDF, can also compute the normal PDF:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE54]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/08_distributions_127_0.png](../Images/afecee42b95c4c363297b06860ada23b.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The normal PDF is the classic “bell curve”.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'It is tempting to compare the PMF of the data to the PDF of the normal distribution,
+    but that doesn’t work. Let’s see what happens if we try:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE55]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/08_distributions_129_0.png](../Images/7f46d3931d39c210362bc67fc8c3a222.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The PMF of the sample is a flat line across the bottom. In the random sample,
+    every value is unique, so they all have the same probability, one in 1000.
+  prefs: []
+  type: TYPE_NORMAL
+- en: However, we can use the points in the sample to estimate the PDF of the distribution
+    they came from. This process is called **kernel density estimation**, or KDE.
+    It’s a way of getting from a PMF, a probability mass function, to a PDF, a probability
+    density function.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To generate a KDE plot, we’ll use the Seaborn library, imported as `sns`. Seaborn
+    provides `kdeplot`, which takes the sample, estimates the PDF, and plots it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE56]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/08_distributions_131_0.png](../Images/0d64dca24548d46d7c94ce7aff656c33.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Now we can compare the KDE plot and the normal PDF.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE57]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/08_distributions_133_0.png](../Images/b2651ac172e84de0a538a65b0d8b4af7.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The KDE plot matches the normal PDF pretty well, although the differences look
+    bigger when we compare PDFs than they did with the CDFs. That means that the PDF
+    is a more sensitive way to look for differences, but often it is too sensitive.
+  prefs: []
+  type: TYPE_NORMAL
+- en: It’s hard to tell whether apparent differences mean anything, or if they are
+    just random, as in this case.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** In a previous exercise, we asked “Is the normal distribution
+    a good model for the distribution of ages in the U.S. population?” To answer this
+    question, we plotted the CDF of the data and compared it to the CDF of a normal
+    distribution with the same mean and standard deviation.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now we’ll compare the estimated density of the data with the normal PDF.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Again, compute the mean and standard deviation of ages in the GSS dataset.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Use `linspace` to create an array of values between 18 and 89.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Use `norm` to create a normal distribution with the same mean and standard deviation
+    as the data, then use it to compute the normal PDF for each value in the array.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Plot the normal PDF with a gray line.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Use `sns.kdeplot` to estimate and plot the density of the ages in the GSS.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Note: Seaborn can’t handle NaNs, so use `dropna` to drop them before calling
+    `kdeplot`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: How well do the PDF and KDE plots agree?
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** In a previous exercise, we used CDFs to see if the distribution
+    of income fits a lognormal distribution. We can make the same comparison using
+    a PDF and KDE.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Again, extract `REALINC` from `gss` and compute its logarithm using `np.log10()`.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Compute the mean and standard deviation of the log-transformed incomes.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Use `norm` to make a normal distribution with the same mean and standard deviation
+    as the log-transformed incomes.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Plot the PDF of the normal distribution.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Use `sns.kdeplot()` to estimate and plot the density of the log-transformed
+    incomes.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Summary
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In this chapter, we’ve seen four ways to visualize distributions, PMFs, CDFs,
+    and KDE plots.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In general, I use CDFs when I am exploring data. That way, I get the best view
+    of what’s going on without getting distracted by noise.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Then, if I am presenting results to an audience unfamiliar with CDFs, I might
+    use a PMF if the dataset contains a small number of unique values, or KDE if there
+    are many unique values.
+  prefs: []
+  type: TYPE_NORMAL

@@ -1,0 +1,267 @@
+- en: Level Order Traversal
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/DSIRP/level_order.html](https://allendowney.github.io/DSIRP/level_order.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/level_order.ipynb)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: More tree traversal
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'In a previous notebook we wrote two versions of a depth-first search in a tree.
+    Now we are working toward depth-first search, but we’re going to make a stop along
+    the way: level-order traversal.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: One application of level-order traversal is searching through directories (aka
+    folders) in a file system. Since directories can contain other directories, which
+    can contains other directories, and so on, we can think of a file system as a
+    tree.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this notebook, we’ll start by making a tree of directories and fake data
+    files. Then we’ll traverse it several ways.
+  prefs: []
+  type: TYPE_NORMAL
+- en: And while we’re at it, we’ll learn about the `os` module, which provides functions
+    for interacting with the operating system, especially the file system.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The `os` module provides `mkdir`, which creates a directory. It raises an exception
+    if the directory exists, so I’m going to wrap it in a `try` statement.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now I’ll create the directory where we’ll put the fake data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Inside `level_data`, I want to make a subdirectory named `2021`. It is tempting
+    to write something like:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: This path would work on Unix operating systems (including MacOS), but not Windows,
+    which uses `\` rather than `/` between names in a path.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can avoid this problem by using `os.path.join`, which joins names in a path
+    with whatever character the operating system wants.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: To make the fake data files, I’ll use the following function, which opens a
+    file for writing and puts the word `data` into it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: So let’s start by putting a data file in `year_dir`, imagining that this file
+    contains summary data for the whole year.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following function
+  prefs: []
+  type: TYPE_NORMAL
+- en: Makes a subdirectory that represents one month of the year,
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Makes a data file we imagine contains summary data for the month, and
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Calls `make_day` (below) to make subdirectories each day of the month (in a
+    world where all months have 30 days).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`make_day` makes a sub-subdirectory for a given day of the month, and puts
+    a data file in it.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following loop makes a directory for each month.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: Walking a Directory
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The `os` module provides `walk`, which is a generator function that traverses
+    a directory and all its subdirectories, and all their subdirectories, and so on.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'For each directory, it yields:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: dirpath, which is the name of the directory.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: dirnames, which is a list of subdirectories it contains, and
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: filenames, which is a list of files it contains.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Here’s how we can use it to print the paths of all files in the directory we
+    created.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: One quirk of `os.walk` is that the directories and files don’t appear in any
+    particular order. Of course, we can store the results and sort them in whatever
+    order we want.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'But as an exercise, we can write our own version of `walk`. We’ll need two
+    functions:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`os.listdir`, which takes a directory and list the directories and files it
+    contains, and'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`os.path.isfile`, which takes a path and returns `True` if it is a file, and
+    `False` if it is a directory or something else.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: You might notice that some file-related functions are in the submodule `os.path`.
+    There is some logic to this organization, but it is not always obvious why a particular
+    function is in this submodule or not.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Anyway, here is a recursive version of `walk`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise:** Write a version of `walk` called `walk_gen` that is a generator
+    function; that is, it should yield the paths it finds rather than printing them.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: You can use the following loop to test your code.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise:** Write a version of `walk_gen` called `walk_dfs` that traverses
+    the given directory and yields the file it contains, but it should use a stack
+    and run iteratively, rather than recursively.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: You can use the following loop to test your code.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: Notice that the order the files are discovered is “depth-first”. For example,
+    it yields all files from the first month before any of the files for the second
+    month.
+  prefs: []
+  type: TYPE_NORMAL
+- en: An alternative is a level-order traversal, which yields all files at the first
+    level (the annual summary), then all the files at the second level (the monthly
+    summaries), then the files at the third level.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To implement a level-order traversal, we can make a minimal change to `walk_dfs`:
+    replace the stack with a FIFO queue. To implement the queue efficiently, we can
+    use `collections.deque`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** Write a generator function called `walk_level` that takes a directory
+    and yields its files in level order.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Use the following loop to test your code.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: If you are looking for a file in a large file system, a level-order search might
+    be useful if you think the file is more likely to be near the root, rather than
+    deep in a nested subdirectory.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*Data Structures and Information Retrieval in Python*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Copyright 2021 Allen Downey
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'License: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  prefs: []
+  type: TYPE_NORMAL

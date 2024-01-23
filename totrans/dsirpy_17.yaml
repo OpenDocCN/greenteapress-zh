@@ -1,0 +1,257 @@
+- en: Quiz 4
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/DSIRP/quiz04.html](https://allendowney.github.io/DSIRP/quiz04.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'BEFORE YOU START THIS QUIZ:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Click on “Copy to Drive” to make a copy of the quiz,
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Click on “Share”,
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Click on “Change” and select “Anyone with this link can edit”
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Click “Copy link” and
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Paste the link into [this Canvas assignment](https://canvas.olin.edu/courses/313/assignments/5032).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: This quiz is open notes, open internet. The only thing you can’t do is ask for
+    help.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Copyright 2021 Allen Downey, [MIT License](http://opensource.org/licenses/MIT)
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: Question 1
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: According to [Wikipedia](https://en.wikipedia.org/wiki/Gray_code), a Gray code
+    is “an ordering of the binary numeral system such that two successive values differ
+    in only one bit (binary digit).”
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'A “Gray code list” is a table that lists the Gray code for each decimal number
+    in order. For example, the following is the Gray code list for decimal numbers
+    up to 3:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: In this code, the representation of the number 3 is the bit sequence `10`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[This section of the Wikipedia page](https://en.wikipedia.org/wiki/Gray_code#Constructing_an_n-bit_Gray_code)
+    presents an algorithm for constructing a Gray code list with a given number of
+    binary digits.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Write a function called `gray_code` that takes the number of binary digits,
+    `n`, as a parameter and returns a list of strings that represents a Gray code
+    list.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For example, `gray_code(3)` should return
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: Your function can be iterative or recursive.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: You can use the following cells to test your solution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: Question 2
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Suppose you are given a very large sequence of numbers and you are asked to
+    find the `k` largest elements. One option would be to sort the sequence, but that
+    would take time proportional to `n log n`, where `n` is the length of the sequence.
+    And you would have to store the entire sequence.
+  prefs: []
+  type: TYPE_NORMAL
+- en: An alternative is to use a “bounded heap”, that is, a heap that never contains
+    more than `k` elements.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Write a function called `k_largest` that takes as parameters an iterable and
+    an integer `k` and returns a list that contains the `k` largest elements in the
+    iterable. Don’t worry about ties.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Your implementation should not store more than `k` elements and it should take
+    time proportional to `n log k`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: You can use the following cells to test your function.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: Question 3
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'An expression tree is a tree that represents a mathematical expression. For
+    example, the expression `(1+2) * 3` is represented by a tree with the multiplication
+    operator at the root and two children:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The left child is a node that contains the addition operator and two children,
+    the number 1 and the number 2.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The right child is a node that contains the number 3.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: To represent an expression tree, we can use a `namedtuple` called `Node` that
+    contains three attributes, `data`, `left`, and `right`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: In a leaf node, `data` contains a number. For example, here are two nodes representing
+    the numbers `1` and `2`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: For internal nodes (that is, not leaf nodes) `data` contains a function. To
+    represent addition, subtraction, and multiplication, I’ll import functions from
+    the `operator` module.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can make an expression tree with the `add` function at the root and two
+    operands as children.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: To evaluate this tree, we can extract the function and the two operands, then
+    call the function and pass the operands as arguments.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: Write a function called `evaluate` that takes an arbitrary expression tree,
+    evaluates it, and returns an integer.
+  prefs: []
+  type: TYPE_NORMAL
+- en: You will probably want to write this one recursively.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You can test your function with the following examples:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE

@@ -1,0 +1,1219 @@
+- en: Odds and Addends
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/ThinkBayes2/chap06.html](https://allendowney.github.io/ThinkBayes2/chap06.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: This chapter presents a new way to represent a degree of certainty, **odds**,
+    and a new form of Bayes’s Theorem, called **Bayes’s Rule**. Bayes’s Rule is convenient
+    if you want to do a Bayesian update on paper or in your head. It also sheds light
+    on the important idea of **evidence** and how we can quantify the strength of
+    evidence.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The second part of the chapter is about “addends”, that is, quantities being
+    added, and how we can compute their distributions. We’ll define functions that
+    compute the distribution of sums, differences, products, and other operations.
+    Then we’ll use those distributions as part of a Bayesian update.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Odds
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: One way to represent a probability is with a number between 0 and 1, but that’s
+    not the only way. If you have ever bet on a football game or a horse race, you
+    have probably encountered another representation of probability, called **odds**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: You might have heard expressions like “the odds are three to one”, but you might
+    not know what that means. The **odds in favor** of an event are the ratio of the
+    probability it will occur to the probability that it will not.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following function does this calculation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: For example, if my team has a 75% chance of winning, the odds in their favor
+    are three to one, because the chance of winning is three times the chance of losing.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: You can write odds in decimal form, but it is also common to write them as a
+    ratio of integers. So “three to one” is sometimes written \(3:1\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: When probabilities are low, it is more common to report the **odds against**
+    rather than the odds in favor. For example, if my horse has a 10% chance of winning,
+    the odds in favor are \(1:9\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: But in that case it would be more common I to say that the odds against are
+    \(9:1\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Given the odds in favor, in decimal form, you can convert to probability like
+    this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'For example, if the odds are \(3/2\), the corresponding probability is \(3/5\):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Or if you represent odds with a numerator and denominator, you can convert
+    to probability like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: Probabilities and odds are different representations of the same information;
+    given either one, you can compute the other. But some computations are easier
+    when we work with odds, as we’ll see in the next section, and some computations
+    are even easier with log odds, which we’ll see later.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Bayes’s Rule
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'So far we have worked with Bayes’s theorem in the “probability form”:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[P(H|D) = \frac{P(H)~P(D|H)}{P(D)}\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Writing \(\mathrm{odds}(A)\) for odds in favor of \(A\), we can express Bayes’s
+    Theorem in “odds form”:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[\mathrm{odds}(A|D) = \mathrm{odds}(A)~\frac{P(D|A)}{P(D|B)}\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This is Bayes’s Rule, which says that the posterior odds are the prior odds
+    times the likelihood ratio. Bayes’s Rule is convenient for computing a Bayesian
+    update on paper or in your head. For example, let’s go back to the cookie problem:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Suppose there are two bowls of cookies. Bowl 1 contains 30 vanilla cookies and
+    10 chocolate cookies. Bowl 2 contains 20 of each. Now suppose you choose one of
+    the bowls at random and, without looking, select a cookie at random. The cookie
+    is vanilla. What is the probability that it came from Bowl 1?
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: The prior probability is 50%, so the prior odds are 1\. The likelihood ratio
+    is \(\frac{3}{4} / \frac{1}{2}\), or \(3/2\). So the posterior odds are \(3/2\),
+    which corresponds to probability \(3/5\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'If we draw another cookie and it’s chocolate, we can do another update:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: And convert back to probability.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: Oliver’s Blood
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'I’ll use Bayes’s Rule to solve another problem from MacKay’s [*Information
+    Theory, Inference, and Learning Algorithms*](https://www.inference.org.uk/mackay/itila/):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Two people have left traces of their own blood at the scene of a crime. A suspect,
+    Oliver, is tested and found to have type ‘O’ blood. The blood groups of the two
+    traces are found to be of type ‘O’ (a common type in the local population, having
+    frequency 60%) and of type ‘AB’ (a rare type, with frequency 1%). Do these data
+    [the traces found at the scene] give evidence in favor of the proposition that
+    Oliver was one of the people [who left blood at the scene]?
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: To answer this question, we need to think about what it means for data to give
+    evidence in favor of (or against) a hypothesis. Intuitively, we might say that
+    data favor a hypothesis if the hypothesis is more likely in light of the data
+    than it was before.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the cookie problem, the prior odds are 1, which corresponds to probability
+    50%. The posterior odds are \(3/2\), or probability 60%. So the vanilla cookie
+    is evidence in favor of Bowl 1.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Bayes’s Rule provides a way to make this intuition more precise. Again
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[\mathrm{odds}(A|D) = \mathrm{odds}(A)~\frac{P(D|A)}{P(D|B)}\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Dividing through by \(\mathrm{odds}(A)\), we get:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[\frac{\mathrm{odds}(A|D)}{\mathrm{odds}(A)} = \frac{P(D|A)}{P(D|B)}\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: The term on the left is the ratio of the posterior and prior odds. The term
+    on the right is the likelihood ratio, also called the **Bayes factor**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If the Bayes factor is greater than 1, that means that the data were more likely
+    under \(A\) than under \(B\). And that means that the odds are greater, in light
+    of the data, than they were before.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If the Bayes factor is less than 1, that means the data were less likely under
+    \(A\) than under \(B\), so the odds in favor of \(A\) go down.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Finally, if the Bayes factor is exactly 1, the data are equally likely under
+    either hypothesis, so the odds do not change.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s apply that to the problem at hand. If Oliver is one of the people who
+    left blood at the crime scene, he accounts for the ‘O’ sample; in that case, the
+    probability of the data is the probability that a random member of the population
+    has type ‘AB’ blood, which is 1%.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If Oliver did not leave blood at the scene, we have two samples to account
+    for. If we choose two random people from the population, what is the chance of
+    finding one with type ‘O’ and one with type ‘AB’? Well, there are two ways it
+    might happen:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The first person might have ‘O’ and the second ‘AB’,
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Or the first person might have ‘AB’ and the second ‘O’.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The probability of either combination is \((0.6) (0.01)\), which is 0.6%, so
+    the total probability is twice that, or 1.2%. So the data are a little more likely
+    if Oliver is *not* one of the people who left blood at the scene.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We can use these probabilities to compute the likelihood ratio:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: Since the likelihood ratio is less than 1, the blood tests are evidence *against*
+    the hypothesis that Oliver left blood at the scence.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'But it is weak evidence. For example, if the prior odds were 1 (that is, 50%
+    probability), the posterior odds would be 0.83, which corresponds to a probability
+    of 45%:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: So this evidence doesn’t “move the needle” very much.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This example is a little contrived, but it demonstrates the counterintuitive
+    result that data *consistent* with a hypothesis are not necessarily *in favor
+    of* the hypothesis.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If this result still bothers you, this way of thinking might help: the data
+    consist of a common event, type ‘O’ blood, and a rare event, type ‘AB’ blood.
+    If Oliver accounts for the common event, that leaves the rare event unexplained.
+    If Oliver doesn’t account for the ‘O’ blood, we have two chances to find someone
+    in the population with ‘AB’ blood. And that factor of two makes the difference.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** Suppose that based on other evidence, you prior belief in Oliver’s
+    guilt is 90%. How much would the blood evidence in this section change your beliefs?
+    What if you initially thought there was only a 10% chance of his guilt?'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE26]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE28]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Addends
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The second half of this chapter is about distributions of sums and results of
+    other operations. We’ll start with a forward problem, where we are given the inputs
+    and compute the distribution of the output. Then we’ll work on inverse problems,
+    where we are given the outputs and we compute the distribution of the inputs.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'As a first example, suppose you roll two dice and add them up. What is the
+    distribution of the sum? I’ll use the following function to create a `Pmf` that
+    represents the possible outcomes of a die:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: On a six-sided die, the outcomes are 1 through 6, all equally likely.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE31]</details> ![_images/c43b36bcf66bd6b728a6fe5ac6a7fc5f7eb51478dc651542d4edae0b5b0321ac.png](../Images/c2a1877e04a8a3fa36a8f59028332ffb.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: If we roll two dice and add them up, there are 11 possible outcomes, 2 through
+    12, but they are not equally likely. To compute the distribution of the sum, we
+    have to enumerate the possible outcomes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'And that’s how this function works:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: The parameters are `Pmf` objects representing distributions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The loops iterate though the quantities and probabilities in the `Pmf` objects.
+    Each time through the loop `q` gets the sum of a pair of quantities, and `p` gets
+    the probability of the pair. Because the same sum might appear more than once,
+    we have to add up the total probability for each sum.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Notice a subtle element of this line:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: I use parentheses on the right side of the assignment, which returns 0 if `q`
+    does not appear yet in `res`. I use brackets on the left side of the assignment
+    to create or update an element in `res`; using parentheses on the left side would
+    not work.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`Pmf` provides `add_dist`, which does the same thing. You can call it as a
+    method, like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Or as a function, like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'And here’s what the result looks like:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE36]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell source Hide code cell source</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE37]</details> ![_images/5f14ae8079e6a213ad93fa1a0cefd00895bff212ba562dd9d19448f25a988969.png](../Images/6c1db637e7682329b5bfa0a26b1f7b4e.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If we have a sequence of `Pmf` objects that represent dice, we can compute
+    the distribution of the sum like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'As an example, we can make a list of three dice like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE39]'
+  prefs: []
+  type: TYPE_PRE
+- en: And we can compute the distribution of their sum like this.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE40]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The following figure shows what these three distributions look like:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The distribution of a single die is uniform from 1 to 6.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The sum of two dice has a triangle distribution between 2 and 12.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The sum of three dice has a bell-shaped distribution between 3 and 18.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE41]</details> ![_images/3f108e3febe8fa608321ae32f3fc6dcb0452841dd61e69fd0f44bd17c1c6ca14.png](../Images/5a5a0645b1a295392ef92cc14b5f632f.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: As an aside, this example demonstrates the Central Limit Theorem, which says
+    that the distribution of a sum converges on a bell-shaped normal distribution,
+    at least under some conditions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Gluten Sensitivity
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In 2015 I read a paper that tested whether people diagnosed with gluten sensitivity
+    (but not celiac disease) were able to distinguish gluten flour from non-gluten
+    flour in a blind challenge ([you can read the paper here](https://onlinelibrary.wiley.com/doi/full/10.1111/apt.13372)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Out of 35 subjects, 12 correctly identified the gluten flour based on resumption
+    of symptoms while they were eating it. Another 17 wrongly identified the gluten-free
+    flour based on their symptoms, and 6 were unable to distinguish.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The authors conclude, “Double-blind gluten challenge induces symptom recurrence
+    in just one-third of patients.”
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This conclusion seems odd to me, because if none of the patients were sensitive
+    to gluten, we would expect some of them to identify the gluten flour by chance.
+    So here’s the question: based on this data, how many of the subjects are sensitive
+    to gluten and how many are guessing?'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We can use Bayes’s Theorem to answer this question, but first we have to make
+    some modeling decisions. I’ll assume:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: People who are sensitive to gluten have a 95% chance of correctly identifying
+    gluten flour under the challenge conditions, and
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: People who are not sensitive have a 40% chance of identifying the gluten flour
+    by chance (and a 60% chance of either choosing the other flour or failing to distinguish).
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: These particular values are arbitrary, but the results are not sensitive to
+    these choices.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I will solve this problem in two steps. First, assuming that we know how many
+    subjects are sensitive, I will compute the distribution of the data. Then, using
+    the likelihood of the data, I will compute the posterior distribution of the number
+    of sensitive patients.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The first is the **forward problem**; the second is the **inverse problem**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Forward Problem
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Suppose we know that 10 of the 35 subjects are sensitive to gluten. That means
+    that 25 are not:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE42]'
+  prefs: []
+  type: TYPE_PRE
+- en: Each sensitive subject has a 95% chance of identifying the gluten flour, so
+    the number of correct identifications follows a binomial distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I’ll use `make_binomial`, which we defined in <<_TheBinomialDistribution>>,
+    to make a `Pmf` that represents the binomial distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE43]'
+  prefs: []
+  type: TYPE_PRE
+- en: The results are the distributions for the number of correct identifications
+    in each group.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now we can use `add_dist` to compute the distribution of the total number of
+    correct identifications:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE44]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Here are the results:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE45]</details> ![_images/3e47fb19260ca824056dcc90c9e53515d3d7c9be4757ccf994017254c93be06c.png](../Images/1f321000f1d6a53c287f697719fa9824.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: We expect most of the sensitive subjects to identify the gluten flour correctly.
+    Of the 25 insensitive subjects, we expect about 10 to identify the gluten flour
+    by chance. So we expect about 20 correct identifications in total.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This is the answer to the forward problem: given the number of sensitive subjects,
+    we can compute the distribution of the data.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Inverse Problem
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Now let’s solve the inverse problem: given the data, we’ll compute the posterior
+    distribution of the number of sensitive subjects.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here’s how. I’ll loop through the possible values of `num_sensitive` and compute
+    the distribution of the data for each:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE46]'
+  prefs: []
+  type: TYPE_PRE
+- en: The loop enumerates the possible values of `num_sensitive`. For each value,
+    it computes the distribution of the total number of correct identifications, and
+    stores the result as a column in a Pandas `DataFrame`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE47]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | ... | 26 | 27 | 28 | 29 | 30 |
+    31 | 32 | 33 | 34 | 35 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+    | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 1.719071e-08 | 1.432559e-09 | 1.193799e-10 | 9.948326e-12 | 8.290272e-13
+    | 6.908560e-14 | 5.757133e-15 | 4.797611e-16 | 3.998009e-17 | 3.331674e-18 | ...
+    | 1.501694e-36 | 1.251411e-37 | 1.042843e-38 | 8.690357e-40 | 7.241964e-41 | 6.034970e-42
+    | 5.029142e-43 | 4.190952e-44 | 3.492460e-45 | 2.910383e-46 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 4.011165e-07 | 5.968996e-08 | 7.162795e-09 | 7.792856e-10 | 8.013930e-11
+    | 7.944844e-12 | 7.676178e-13 | 7.276377e-14 | 6.796616e-15 | 6.274653e-16 | ...
+    | 7.508469e-34 | 6.486483e-35 | 5.596590e-36 | 4.823148e-37 | 4.152060e-38 | 3.570691e-39
+    | 3.067777e-40 | 2.633315e-41 | 2.258457e-42 | 1.935405e-43 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 4.545987e-06 | 9.741401e-07 | 1.709122e-07 | 2.506426e-08 | 3.269131e-09
+    | 3.940182e-10 | 4.490244e-11 | 4.908756e-12 | 5.197412e-13 | 5.365476e-14 | ...
+    | 1.806613e-31 | 1.620070e-32 | 1.449030e-33 | 1.292922e-34 | 1.151034e-35 | 1.022555e-36
+    | 9.066202e-38 | 8.023344e-39 | 7.088005e-40 | 6.251357e-41 |'
+  prefs: []
+  type: TYPE_TB
+- en: 3 rows × 36 columns</details>
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The following figure shows selected columns from the `DataFrame`, corresponding
+    to different hypothetical values of `num_sensitive`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE48]</details> ![_images/d3a6012daa1a36dea54616b3bab308a507c20c69b4c9b2e889c0aae0dae66295.png](../Images/62e4ea7462f4fe30667801a6293636a6.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now we can use this table to compute the likelihood of the data:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE49]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`loc` selects a row from the `DataFrame`. The row with index 12 contains the
+    probability of 12 correct identifications for each hypothetical value of `num_sensitive`.
+    And that’s exactly the likelihood we need to do a Bayesian update.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'I’ll use a uniform prior, which implies that I would be equally surprised by
+    any value of `num_sensitive`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE50]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'And here’s the update:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE51]'
+  prefs: []
+  type: TYPE_PRE
+- en: <details class="hide below-input"><summary aria-label="Toggle hidden content">Show
+    code cell output Hide code cell output</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE52]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: For comparison, I also compute the posterior for another possible outcome, 20
+    correct identifications.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE53]'
+  prefs: []
+  type: TYPE_PRE
+- en: <details class="hide below-input"><summary aria-label="Toggle hidden content">Show
+    code cell output Hide code cell output</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE54]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following figure shows posterior distributions of `num_sensitive` based
+    on the actual data, 12 correct identifications, and the other possible outcome,
+    20 correct identifications.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE55]</details> ![_images/4edbc176c039585b4e37ae3bbaa48382e58f129df43bdad9a00b9891467b7541.png](../Images/be42bd3ed0fd91410501a73a59b454c4.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: With 12 correct identifications, the most likely conclusion is that none of
+    the subjects are sensitive to gluten. If there had been 20 correct identifications,
+    the most likely conclusion would be that 11-12 of the subjects were sensitive.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE56]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE57]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE58]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE59]'
+  prefs: []
+  type: TYPE_PRE
+- en: Summary
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: This chapter presents two topics that are almost unrelated except that they
+    make the title of the chapter catchy.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The first part of the chapter is about Bayes’s Rule, evidence, and how we can
+    quantify the strength of evidence using a likelihood ratio or Bayes factor.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The second part is about `add_dist`, which computes the distribution of a sum.
+    We can use this function to solve forward and inverse problems; that is, given
+    the parameters of a system, we can compute the distribution of the data or, given
+    the data, we can compute the distribution of the parameters.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the next chapter, we’ll compute distributions for minimums and maximums,
+    and use them to solve more Bayesian problems. But first you might want to work
+    on these exercises.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exercises
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '**Exercise:** Let’s use Bayes’s Rule to solve the Elvis problem from <<_Distributions>>:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Elvis Presley had a twin brother who died at birth. What is the probability
+    that Elvis was an identical twin?
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: In 1935, about 2/3 of twins were fraternal and 1/3 were identical. The question
+    contains two pieces of information we can use to update this prior.
+  prefs: []
+  type: TYPE_NORMAL
+- en: First, Elvis’s twin was also male, which is more likely if they were identical
+    twins, with a likelihood ratio of 2.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Also, Elvis’s twin died at birth, which is more likely if they were identical
+    twins, with a likelihood ratio of 1.25.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: If you are curious about where those numbers come from, I wrote [a blog post
+    about it](https://www.allendowney.com/blog/2020/01/28/the-elvis-problem-revisited).
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE60]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE61]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE62]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE63]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** The following is an [interview question that appeared on glassdoor.com](https://www.glassdoor.com/Interview/You-re-about-to-get-on-a-plane-to-Seattle-You-want-to-know-if-you-should-bring-an-umbrella-You-call-3-random-friends-of-y-QTN_519262.htm),
+    attributed to Facebook:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: You’re about to get on a plane to Seattle. You want to know if you should bring
+    an umbrella. You call 3 random friends of yours who live there and ask each independently
+    if it’s raining. Each of your friends has a 2/3 chance of telling you the truth
+    and a 1/3 chance of messing with you by lying. All 3 friends tell you that “Yes”
+    it is raining. What is the probability that it’s actually raining in Seattle?
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Use Bayes’s Rule to solve this problem. As a prior you can assume that it rains
+    in Seattle about 10% of the time.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This question causes some confusion about the differences between Bayesian and
+    frequentist interpretations of probability; if you are curious about this point,
+    [I wrote a blog article about it](http://allendowney.blogspot.com/2016/09/bayess-theorem-is-not-optional.html).
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE64]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE65]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE66]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE67]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** [According to the CDC](https://www.cdc.gov/tobacco/data_statistics/fact_sheets/health_effects/effects_cig_smoking),
+    people who smoke are about 25 times more likely to develop lung cancer than nonsmokers.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Also according to the CDC](https://www.cdc.gov/tobacco/data_statistics/fact_sheets/adult_data/cig_smoking/index.htm),
+    about 14% of adults in the U.S. are smokers. If you learn that someone has lung
+    cancer, what is the probability they are a smoker?'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE68]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE69]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE70]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE71]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** In *Dungeons & Dragons*, the amount of damage a goblin can withstand
+    is the sum of two six-sided dice. The amount of damage you inflict with a short
+    sword is determined by rolling one six-sided die. A goblin is defeated if the
+    total damage you inflict is greater than or equal to the amount it can withstand.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Suppose you are fighting a goblin and you have already inflicted 3 points of
+    damage. What is your probability of defeating the goblin with your next successful
+    attack?
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Hint: You can use `Pmf.sub_dist` to subtract a constant amount, like 3, from
+    a `Pmf`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE72]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE73]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE74]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| -1 | 0.027778 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 0.055556 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 0.083333 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 0.111111 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 0.138889 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 4 | 0.166667 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 5 | 0.138889 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 6 | 0.111111 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 7 | 0.083333 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 8 | 0.055556 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 9 | 0.027778 |</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE75]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| -1 | 0.000000 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 0.000000 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 0.090909 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 0.121212 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 0.151515 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 4 | 0.181818 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 5 | 0.151515 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 6 | 0.121212 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 7 | 0.090909 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 8 | 0.060606 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 9 | 0.030303 |</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE76]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE77]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/c4aa15c5ffeb5acf5ca0a2614bbb8bdcf50b9c7d12890ac7caabd2715a152213.png](../Images/a619f1380207071d29980a7ce6c583c5.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">Show code
+    cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE78]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE79]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE80]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** Suppose I have a box with a 6-sided die, an 8-sided die, and
+    a 12-sided die. I choose one of the dice at random, roll it twice, multiply the
+    outcomes, and report that the product is 12. What is the probability that I chose
+    the 8-sided die?'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Hint: `Pmf` provides a function called `mul_dist` that takes two `Pmf` objects
+    and returns a `Pmf` that represents the distribution of the product.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE81]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE82]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 0.0625 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 0.1250 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 0.1250 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 4 | 0.1875 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 6 | 0.1250 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 8 | 0.1250 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 9 | 0.0625 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 12 | 0.1250 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 16 | 0.0625 |</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE83]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE84]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE85]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 6 | 0.516129 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 8 | 0.290323 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 12 | 0.193548 |</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** *Betrayal at House on the Hill* is a strategy game in which characters
+    with different attributes explore a haunted house. Depending on their attributes,
+    the characters roll different numbers of dice. For example, if attempting a task
+    that depends on knowledge, Professor Longfellow rolls 5 dice, Madame Zostra rolls
+    4, and Ox Bellows rolls 3\. Each die yields 0, 1, or 2 with equal probability.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: If a randomly chosen character attempts a task three times and rolls a total
+    of 3 on the first attempt, 4 on the second, and 5 on the third, which character
+    do you think it was?
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE86]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 0.333333 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 0.333333 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 0.333333 |</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE87]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE88]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE89]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE90]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE91]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE92]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Bellows | 0.333333 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Zostra | 0.333333 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Longfellow | 0.333333 |</details> <details class="hide above-input"><summary
+    aria-label="Toggle hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE93]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Bellows | 0.006401 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Zostra | 0.009152 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Longfellow | 0.004798 |</details> <details class="hide above-input"><summary
+    aria-label="Toggle hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE94]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Bellows | 0.314534 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Zostra | 0.449704 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Longfellow | 0.235762 |</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** There are 538 members of the United States Congress. Suppose
+    we audit their investment portfolios and find that 312 of them out-perform the
+    market. Let’s assume that an honest member of Congress has only a 50% chance of
+    out-performing the market, but a dishonest member who trades on inside information
+    has a 90% chance. How many members of Congress are honest?'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE95]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE96]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE97]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE98]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE99]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE100]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE101]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE102]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE103]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/7447fc4391e9aa1cba5f6cab483deaa41bb05fa97e087ee7f87a4204e41e03c6.png](../Images/45ad6998d89c6322118de39215430731.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">Show code
+    cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE104]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE105]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE106]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE107]</details>'
+  prefs: []
+  type: TYPE_NORMAL

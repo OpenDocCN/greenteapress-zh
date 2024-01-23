@@ -1,0 +1,364 @@
+- en: Deque
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/DSIRP/deque.html](https://allendowney.github.io/DSIRP/deque.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/deque.ipynb)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Double-ended Queue
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: With Python lists, we can add and remove elements from the *end* of the list
+    in constant time, but adding and removing from the beginning takes linear time.
+    That’s because Python lists are implemented using arrays that grow dynamically.
+  prefs: []
+  type: TYPE_NORMAL
+- en: With linked lists, we can add and remove elements from the *beginning* of the
+    list in constant time, but adding and removing from the end takes linear time.
+  prefs: []
+  type: TYPE_NORMAL
+- en: With either of these implementations, it is easy to make a stack, that is, a
+    collection where the first element we add is the last element we remove. A stack
+    is also called a “first-in, last-out” queue, abbreviated FILO.
+  prefs: []
+  type: TYPE_NORMAL
+- en: But it is not easy to implement a “first-in, first-out” queue, that is, a collection
+    where the first element we add is the *first* element we remove.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Fortunately, there are ways to implement lists that can add and remove elements
+    from both ends in constant time. A collection that has this property is called
+    a double-ended queue, abbreviated “deque” and pronounced like “deck”.
+  prefs: []
+  type: TYPE_NORMAL
+- en: One way to implement a deque is a doubly-linked list, also known as a “head-tail
+    linked list”. Each node in a doubly-linked list has a reference to the previous
+    node in the list as well as the next element, which I will call `left` and `right`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'We can create nodes like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'And then link them up, like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: To traverse the list from left to right, we can start at the beginning and follow
+    the `right` links.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: To traverse from right to left, we start and the end and follow the `left` links.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: Deque objects
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: For some operations, it will be convenient to have another object that represents
+    the whole list (as opposed to one of its nodes).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s the class definition.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Now we can create a `Deque` with references to `node1` and `node3`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: For debugging purposes, I’ll use the following function, which prints the list
+    from right to left and then left to right, which confirms that all of the links
+    are correct.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s an example.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: Push
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Now let’s see how we can add and remove elements from the beginning and end
+    in constant time. We’ll start with the push operations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If we start with an empty deque, adding the first node is a special case, so
+    I’ll pull that into a function.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s an example.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise:** Write `left_push`, which takes a `Deque` object and a new value,
+    and adds the value to the beginning of the deque.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: If the queue is empty, it should call `push_first` to handle the special case;
+    otherwise it should handle the general case.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You can use the following examples to test your function:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise:** Write `right_push`, which takes a `Deque` object and a new value,
+    and adds the value to the end of the deque.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: If the queue is empty, it should call `push_first` to handle the special case;
+    otherwise it should handle the general case.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You can use the following examples to test your function:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: Pop
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'To pop elements from the deque, we have to handle two special cases:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: If `head` and `tail` are both `None`, the deque is empty and we should raise
+    a `ValueError`.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: If `head` and `tail` refer to the same `Node`, there is only one element, so
+    we should remove it and leave the deque empty.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The following function handles these cases.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'We can test it like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise:** Write `left_pop`, which takes a `Deque` object, remove the first
+    node, and return the first data value.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: If the queue is empty or has a single element, it should call `pop_last` to
+    handle the special case; otherwise it should handle the general case.
+  prefs: []
+  type: TYPE_NORMAL
+- en: You can use the following example to test your code.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: Check to see whether the remaining list is well-formed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE37]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise:** Write `right_pop`, which takes a `Deque` object, remove the last
+    node, and return the last data value.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: If the queue is empty or has a single element, it should call `pop_last` to
+    handle the special case; otherwise it should handle the general case.
+  prefs: []
+  type: TYPE_NORMAL
+- en: You can use the following examples to test your function.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE39]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE40]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE41]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE42]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE43]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE44]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE45]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE46]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE47]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE48]'
+  prefs: []
+  type: TYPE_PRE
+- en: collections.deque
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The Python collections module provides an implementation of a deque. You can
+    read the [documentation here](https://docs.python.org/3/library/collections.html#collections.deque)
+    and the [source code here](https://github.com/python/cpython/blob/d943d19172aa93ce88bade15b9f23a0ce3bc72ff/Modules/_collectionsmodule.c).
+  prefs: []
+  type: TYPE_NORMAL
+- en: To confirm that it can add and remove elements from the beginning and end in
+    constant time, let’s run some timing tests.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE49]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE50]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE51]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE52]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE53]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE54]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE55]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/deque_62_0.png](../Images/85ba4d03f21dc178a2b369f21085a5b5.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Running these operations `n` times is linear in `n`, which means that each one
+    is constant time, at least on average.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** Modify the examples above to confirm that `append` and `pop`
+    are also constant time.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*Data Structures and Information Retrieval in Python*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Copyright 2021 Allen Downey
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'License: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  prefs: []
+  type: TYPE_NORMAL

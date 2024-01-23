@@ -1,0 +1,1059 @@
+- en: Distributions
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/ThinkBayes2/chap03.html](https://allendowney.github.io/ThinkBayes2/chap03.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: In the previous chapter we used Bayes’s Theorem to solve a cookie problem; then
+    we solved it again using a Bayes table. In this chapter, at the risk of testing
+    your patience, we will solve it one more time using a `Pmf` object, which represents
+    a “probability mass function”. I’ll explain what that means, and why it is useful
+    for Bayesian statistics.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We’ll use `Pmf` objects to solve some more challenging problems and take one
+    more step toward Bayesian statistics. But we’ll start with distributions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Distributions
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In statistics a **distribution** is a set of possible outcomes and their corresponding
+    probabilities. For example, if you toss a coin, there are two possible outcomes
+    with approximately equal probability. If you roll a six-sided die, the set of
+    possible outcomes is the numbers 1 to 6, and the probability associated with each
+    outcome is 1/6.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To represent distributions, we’ll use a library called `empiricaldist`. An “empirical”
+    distribution is based on data, as opposed to a theoretical distribution. We’ll
+    use this library throughout the book. I’ll introduce the basic features in this
+    chapter and we’ll see additional features later.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Probability Mass Functions
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: If the outcomes in a distribution are discrete, we can describe the distribution
+    with a **probability mass function**, or PMF, which is a function that maps from
+    each possible outcome to its probability.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`empiricaldist` provides a class called `Pmf` that represents a probability
+    mass function. To use `Pmf` you can import it like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following example makes a `Pmf` that represents the outcome of a coin toss.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| heads | 0.5 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| tails | 0.5 |'
+  prefs: []
+  type: TYPE_TB
+- en: '`Pmf` creates an empty `Pmf` with no outcomes. Then we can add new outcomes
+    using the bracket operator. In this example, the two outcomes are represented
+    with strings, and they have the same probability, 0.5.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: You can also make a `Pmf` from a sequence of possible outcomes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following example uses `Pmf.from_seq` to make a `Pmf` that represents a
+    six-sided die.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 0.166667 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 0.166667 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 0.166667 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 4 | 0.166667 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 5 | 0.166667 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 6 | 0.166667 |'
+  prefs: []
+  type: TYPE_TB
+- en: In this example, all outcomes in the sequence appear once, so they all have
+    the same probability, \(1/6\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'More generally, outcomes can appear more than once, as in the following example:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| M | 0.090909 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| i | 0.363636 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| p | 0.181818 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| s | 0.363636 |'
+  prefs: []
+  type: TYPE_TB
+- en: The letter `M` appears once out of 11 characters, so its probability is \(1/11\).
+    The letter `i` appears 4 times, so its probability is \(4/11\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Since the letters in a string are not outcomes of a random process, I’ll use
+    the more general term “quantities” for the letters in the `Pmf`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The `Pmf` class inherits from a Pandas `Series`, so anything you can do with
+    a `Series`, you can also do with a `Pmf`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For example, you can use the bracket operator to look up a quantity and get
+    the corresponding probability.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: In the word “Mississippi”, about 36% of the letters are “s”.
+  prefs: []
+  type: TYPE_NORMAL
+- en: However, if you ask for the probability of a quantity that’s not in the distribution,
+    you get a `KeyError`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE7]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: You can also call a `Pmf` as if it were a function, with a letter in parentheses.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: If the quantity is in the distribution the results are the same. But if it is
+    not in the distribution, the result is `0`, not an error.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: With parentheses, you can also provide a sequence of quantities and get a sequence
+    of probabilities.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: The quantities in a `Pmf` can be strings, numbers, or any other type that can
+    be stored in the index of a Pandas `Series`. If you are familiar with Pandas,
+    that will help you work with `Pmf` objects. But I will explain what you need to
+    know as we go along.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Cookie Problem Revisited
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'In this section I’ll use a `Pmf` to solve the cookie problem from <<_TheCookieProblem>>.
+    Here’s the statement of the problem again:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Suppose there are two bowls of cookies.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Bowl 1 contains 30 vanilla cookies and 10 chocolate cookies.
+  prefs:
+  - PREF_BQ
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Bowl 2 contains 20 vanilla cookies and 20 chocolate cookies.
+  prefs:
+  - PREF_BQ
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Now suppose you choose one of the bowls at random and, without looking, choose
+    a cookie at random. If the cookie is vanilla, what is the probability that it
+    came from Bowl 1?
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'Here’s a `Pmf` that represents the two hypotheses and their prior probabilities:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Bowl 1 | 0.5 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Bowl 2 | 0.5 |'
+  prefs: []
+  type: TYPE_TB
+- en: This distribution, which contains the prior probability for each hypothesis,
+    is called (wait for it) the **prior distribution**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To update the distribution based on new data (the vanilla cookie), we multiply
+    the priors by the likelihoods. The likelihood of drawing a vanilla cookie from
+    Bowl 1 is `3/4`. The likelihood for Bowl 2 is `1/2`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Bowl 1 | 0.375 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Bowl 2 | 0.250 |'
+  prefs: []
+  type: TYPE_TB
+- en: The result is the unnormalized posteriors; that is, they don’t add up to 1.
+    To make them add up to 1, we can use `normalize`, which is a method provided by
+    `Pmf`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: The return value from `normalize` is the total probability of the data, which
+    is \(5/8\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`posterior`, which contains the posterior probability for each hypothesis,
+    is called (wait now) the **posterior distribution**.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Bowl 1 | 0.6 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Bowl 2 | 0.4 |'
+  prefs: []
+  type: TYPE_TB
+- en: 'From the posterior distribution we can select the posterior probability for
+    Bowl 1:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: And the answer is 0.6.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'One benefit of using `Pmf` objects is that it is easy to do successive updates
+    with more data. For example, suppose you put the first cookie back (so the contents
+    of the bowls don’t change) and draw again from the same bowl. If the second cookie
+    is also vanilla, we can do a second update like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Bowl 1 | 0.692308 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Bowl 2 | 0.307692 |'
+  prefs: []
+  type: TYPE_TB
+- en: Now the posterior probability for Bowl 1 is almost 70%. But suppose we do the
+    same thing again and get a chocolate cookie.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here are the likelihoods for the new data:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here’s the update.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Bowl 1 | 0.529412 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Bowl 2 | 0.470588 |'
+  prefs: []
+  type: TYPE_TB
+- en: Now the posterior probability for Bowl 1 is about 53%. After two vanilla cookies
+    and one chocolate, the posterior probabilities are close to 50/50.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 101 Bowls
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Next let’s solve a cookie problem with 101 bowls:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Bowl 0 contains 0% vanilla cookies,
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Bowl 1 contains 1% vanilla cookies,
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Bowl 2 contains 2% vanilla cookies,
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: and so on, up to
+  prefs: []
+  type: TYPE_NORMAL
+- en: Bowl 99 contains 99% vanilla cookies, and
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Bowl 100 contains all vanilla cookies.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: As in the previous version, there are only two kinds of cookies, vanilla and
+    chocolate. So Bowl 0 is all chocolate cookies, Bowl 1 is 99% chocolate, and so
+    on.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Suppose we choose a bowl at random, choose a cookie at random, and it turns
+    out to be vanilla. What is the probability that the cookie came from Bowl \(x\),
+    for each value of \(x\)?
+  prefs: []
+  type: TYPE_NORMAL
+- en: To solve this problem, I’ll use `np.arange` to make an array that represents
+    101 hypotheses, numbered from 0 to 100.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'We can use this array to make the prior distribution:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: As this example shows, we can initialize a `Pmf` with two parameters. The first
+    parameter is the prior probability; the second parameter is a sequence of quantities.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this example, the probabilities are all the same, so we only have to provide
+    one of them; it gets “broadcast” across the hypotheses. Since all hypotheses have
+    the same prior probability, this distribution is **uniform**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here are the first few hypotheses and their probabilities.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 0.009901 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 0.009901 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 0.009901 |'
+  prefs: []
+  type: TYPE_TB
+- en: 'The likelihood of the data is the fraction of vanilla cookies in each bowl,
+    which we can calculate using `hypos`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Now we can compute the posterior distribution in the usual way:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 0.000000 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 0.000198 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 0.000396 |'
+  prefs: []
+  type: TYPE_TB
+- en: The following figure shows the prior distribution and the posterior distribution
+    after one vanilla cookie.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE31]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell source Hide code cell source</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE32]</details> ![_images/701c62bf2c16f3409268caa52f308c3fd97ff18bca98c2c39570565d9d994669.png](../Images/d87868edf23191fbc85c7a9989ee0b46.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The posterior probability of Bowl 0 is 0 because it contains no vanilla cookies.
+    The posterior probability of Bowl 100 is the highest because it contains the most
+    vanilla cookies. In between, the shape of the posterior distribution is a line
+    because the likelihoods are proportional to the bowl numbers.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now suppose we put the cookie back, draw again from the same bowl, and get
+    another vanilla cookie. Here’s the update after the second cookie:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: <details class="hide below-input"><summary aria-label="Toggle hidden content">Show
+    code cell output Hide code cell output</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE34]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: And here’s what the posterior distribution looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE35]</details> ![_images/8d5be774f70698721fdb924a5597d276eb33e3a6a93a40ae4bdeb93eba11c068.png](../Images/cdada6315d31a6de84999fd183ec872e.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: After two vanilla cookies, the high-numbered bowls have the highest posterior
+    probabilities because they contain the most vanilla cookies; the low-numbered
+    bowls have the lowest probabilities.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'But suppose we draw again and get a chocolate cookie. Here’s the update:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: <details class="hide below-input"><summary aria-label="Toggle hidden content">Show
+    code cell output Hide code cell output</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE37]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: And here’s the posterior distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE38]</details> ![_images/0be0644c8193f2f4b40f05ab3ff5e273fa8ef6fbe3165c1b45aa9fee1f2f8e66.png](../Images/61b1f847d27a7edc447010533be12018.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now Bowl 100 has been eliminated because it contains no chocolate cookies. But
+    the high-numbered bowls are still more likely than the low-numbered bowls, because
+    we have seen more vanilla cookies than chocolate.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In fact, the peak of the posterior distribution is at Bowl 67, which corresponds
+    to the fraction of vanilla cookies in the data we’ve observed, \(2/3\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: The quantity with the highest posterior probability is called the **MAP**, which
+    stands for “maximum a posteriori probability”, where “a posteriori” is unnecessary
+    Latin for “posterior”.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To compute the MAP, we can use the `Series` method `idxmax`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE39]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE40]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Or `Pmf` provides a more memorable name for the same thing:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE41]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE42]'
+  prefs: []
+  type: TYPE_PRE
+- en: As you might suspect, this example isn’t really about bowls; it’s about estimating
+    proportions. Imagine that you have one bowl of cookies. You don’t know what fraction
+    of cookies are vanilla, but you think it is equally likely to be any fraction
+    from 0 to 1. If you draw three cookies and two are vanilla, what proportion of
+    cookies in the bowl do you think are vanilla? The posterior distribution we just
+    computed is the answer to that question.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We’ll come back to estimating proportions in the next chapter. But first let’s
+    use a `Pmf` to solve the dice problem.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Dice Problem
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'In the previous chapter we solved the dice problem using a Bayes table. Here’s
+    the statement of the problem:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Suppose I have a box with a 6-sided die, an 8-sided die, and a 12-sided die.
+    I choose one of the dice at random, roll it, and report that the outcome is a
+    1. What is the probability that I chose the 6-sided die?
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'Let’s solve it using a `Pmf`. I’ll use integers to represent the hypotheses:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE43]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'We can make the prior distribution like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE44]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 6 | 0.333333 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 8 | 0.333333 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 12 | 0.333333 |'
+  prefs: []
+  type: TYPE_TB
+- en: 'As in the previous example, the prior probability gets broadcast across the
+    hypotheses. The `Pmf` object has two attributes:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`qs` contains the quantities in the distribution;'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`ps` contains the corresponding probabilities.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[PRE45]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE46]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE47]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE48]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we’re ready to do the update. Here’s the likelihood of the data for each
+    hypothesis.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE49]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here’s the update.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE50]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 6 | 0.444444 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 8 | 0.333333 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 12 | 0.222222 |'
+  prefs: []
+  type: TYPE_TB
+- en: The posterior probability for the 6-sided die is \(4/9\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now suppose I roll the same die again and get a 7. Here are the likelihoods:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE51]'
+  prefs: []
+  type: TYPE_PRE
+- en: The likelihood for the 6-sided die is 0 because it is not possible to get a
+    7 on a 6-sided die. The other two likelihoods are the same as in the previous
+    update.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here’s the update:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE52]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 6 | 0.000000 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 8 | 0.692308 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 12 | 0.307692 |'
+  prefs: []
+  type: TYPE_TB
+- en: After rolling a 1 and a 7, the posterior probability of the 8-sided die is about
+    69%.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Updating Dice
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'The following function is a more general version of the update in the previous
+    section:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE53]'
+  prefs: []
+  type: TYPE_PRE
+- en: The first parameter is a `Pmf` that represents the possible dice and their probabilities.
+    The second parameter is the outcome of rolling a die.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The first line selects quantities from the `Pmf` which represent the hypotheses.
+    Since the hypotheses are integers, we can use them to compute the likelihoods.
+    In general, if there are `n` sides on the die, the probability of any possible
+    outcome is `1/n`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: However, we have to check for impossible outcomes! If the outcome exceeds the
+    hypothetical number of sides on the die, the probability of that outcome is 0.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`impossible` is a Boolean `Series` that is `True` for each impossible outcome.
+    I use it as an index into `likelihood` to set the corresponding probabilities
+    to 0.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Finally, I multiply `pmf` by the likelihoods and normalize.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here’s how we can use this function to compute the updates in the previous
+    section. I start with a fresh copy of the prior distribution:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE54]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 6 | 0.333333 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 8 | 0.333333 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 12 | 0.333333 |'
+  prefs: []
+  type: TYPE_TB
+- en: And use `update_dice` to do the updates.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE55]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 6 | 0.000000 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 8 | 0.692308 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 12 | 0.307692 |'
+  prefs: []
+  type: TYPE_TB
+- en: The result is the same. We will see a version of this function in the next chapter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: This chapter introduces the `empiricaldist` module, which provides `Pmf`, which
+    we use to represent a set of hypotheses and their probabilities.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`empiricaldist` is based on Pandas; the `Pmf` class inherits from the Pandas
+    `Series` class and provides additional features specific to probability mass functions.
+    We’ll use `Pmf` and other classes from `empiricaldist` throughout the book because
+    they simplify the code and make it more readable. But we could do the same things
+    directly with Pandas.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: We use a `Pmf` to solve the cookie problem and the dice problem, which we saw
+    in the previous chapter. With a `Pmf` it is easy to perform sequential updates
+    with multiple pieces of data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We also solved a more general version of the cookie problem, with 101 bowls
+    rather than two. Then we computed the MAP, which is the quantity with the highest
+    posterior probability.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the next chapter, I’ll introduce the Euro problem, and we will use the binomial
+    distribution. And, at last, we will make the leap from using Bayes’s Theorem to
+    doing Bayesian statistics.
+  prefs: []
+  type: TYPE_NORMAL
+- en: But first you might want to work on the exercises.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exercises
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '**Exercise:** Suppose I have a box with a 6-sided die, an 8-sided die, and
+    a 12-sided die. I choose one of the dice at random, roll it four times, and get
+    1, 3, 5, and 7. What is the probability that I chose the 8-sided die?'
+  prefs: []
+  type: TYPE_NORMAL
+- en: You can use the `update_dice` function or do the update yourself.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE56]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 6 | 0.000000 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 8 | 0.835052 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 12 | 0.164948 |</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** In the previous version of the dice problem, the prior probabilities
+    are the same because the box contains one of each die. But suppose the box contains
+    1 die that is 4-sided, 2 dice that are 6-sided, 3 dice that are 8-sided, 4 dice
+    that are 12-sided, and 5 dice that are 20-sided. I choose a die, roll it, and
+    get a 7. What is the probability that I chose an 8-sided die?'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Hint: To make the prior distribution, call `Pmf` with two parameters.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE57]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 4 | 0.000000 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 6 | 0.000000 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 8 | 0.391304 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 12 | 0.347826 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 20 | 0.260870 |</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** Suppose I have two sock drawers. One contains equal numbers of
+    black and white socks. The other contains equal numbers of red, green, and blue
+    socks. Suppose I choose a drawer at random, choose two socks at random, and I
+    tell you that I got a matching pair. What is the probability that the socks are
+    white?'
+  prefs: []
+  type: TYPE_NORMAL
+- en: For simplicity, let’s assume that there are so many socks in both drawers that
+    removing one sock makes a negligible change to the proportions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE58]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| BlackWhite | 0.6 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| RedGreenBlue | 0.4 |</details> <details class="hide above-input"><summary
+    aria-label="Toggle hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE59]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE60]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** Here’s a problem from [Bayesian Data Analysis](http://www.stat.columbia.edu/~gelman/book/):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Elvis Presley had a twin brother (who died at birth). What is the probability
+    that Elvis was an identical twin?
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'Hint: In 1935, about 2/3 of twins were fraternal and 1/3 were identical.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE61]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | prior | likelihood | unnorm | posterior |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| identical | 0.333333 | 1.0 | 0.333333 | 0.5 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| fraternal | 0.666667 | 0.5 | 0.333333 | 0.5 |</details> <details class="hide
+    above-input"><summary aria-label="Toggle hidden content">Show code cell content
+    Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE62]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| identical | 0.333333 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| fraternal | 0.666667 |</details> <details class="hide above-input"><summary
+    aria-label="Toggle hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE63]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| identical | 0.5 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| fraternal | 0.5 |</details>'
+  prefs: []
+  type: TYPE_NORMAL

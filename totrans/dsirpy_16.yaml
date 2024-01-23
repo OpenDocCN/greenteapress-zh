@@ -1,0 +1,321 @@
+- en: Getting to Philosophy
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/DSIRP/philosophy.html](https://allendowney.github.io/DSIRP/philosophy.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/philosophy.ipynb)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting to Philosophy
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'The goal of this notebook is to develop a Web crawler that tests the “Getting
+    to Philosophy” conjecture. As explained on [this Wikipedia page](https://en.wikipedia.org/wiki/Wikipedia:Getting_to_Philosophy):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Clicking on the first link in the main text of an English Wikipedia article,
+    and then repeating the process for subsequent articles, usually leads to the Philosophy
+    article. In February 2016, this was true for 97% of all articles in Wikipedia…
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: More specifically, the link can’t be in parentheses or italics, and it can’t
+    be an external link, a link to the current page, or a link to a non-existent page.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We’ll use the `urllib` library to download Wikipedia pages and BeautifulSoup
+    to parse HTML text and navigate the Document Object Model (DOM).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Before we start working with Wikipedia pages, let’s warm up with a minimal HTML
+    document, which I’ve adapted from the BeautifulSoup documentation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: This document contains three links, but the first one is in parentheses and
+    the second is in italics, so the third is the link we would follow to get to philosophy.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s how we parse this document and make a `BeautifulSoup` object.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'To iterate through the elements in the DOM, we can write our own implementation
+    of depth first search, like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'For example, we can iterate through the elements and print all `NavigableString`
+    elements:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: But we can also use `descendants`, which does the same thing.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: Checking for Parentheses
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: One theory of software development suggests you should tackle the hardest problem
+    first, because it will drive the design. Then you can figure out how to handle
+    the easier problems.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For “Getting to Philosophy”, one of the harder problems is to figure out whether
+    a link is in parentheses. If you have a link, you could work your way outward
+    looking for enclosing parentheses, but in a tree, that could get complicated.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The alternative I chose is to iterate through the text in order, counting open
+    and close parentheses, and yield links only if they are not enclosed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can iterate through the links that are not in parentheses.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: Checking for Italics
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'To see whether a link is in italics, we can:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: If its parent is a `Tag` with name `a`, it’s in italics.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Otherwise we have to check the parent of the parent, and so on.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: If we get to the root without finding an italics tag, it’s not in italics.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: For example, here’s the first link from `link_generator`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: Its parent is an italics tag.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise:** Write a function called `in_italics` that takes an element and
+    returns `True` if it is in italics.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Then write a more general function called `in_bad_element` that takes an element
+    and returns `True` if:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The element or one of its ancestors has a “bad” tag name, like `i`, or
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The element or one of its ancestors is a `div` whose `class` attribute contains
+    a “bad” class name.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: We will need the general version of this function to exclude invalid links on
+    Wikipedia pages.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Working with Wikipedia Pages
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Actual Wikipedia pages are more complicated that the simple example, so it will
+    take some effort to understand their structure and make sure we select the right
+    “first link”.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following cell downloads the Wikipedia page on Python.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can parse it and make `soup`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: If you use a web browser to view this page, and use the Inspect Element tool
+    to explore the structure, you’ll see that the body of the article is in a `div`
+    element with the class name `mw-body-content`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can use `find` to get this element, and we’ll use it as the root for our
+    searches.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise:** Write a generator function called `valid_link_generator` that
+    uses `link_generator` to find links that are not in parentheses; then it should
+    filter out links that are not valid, including links that are in italics, links
+    to external pages, etc.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Test your function with a few different pages until it reliably finds the “first
+    link” that seems most consistent with the spirit of the rules.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`WikiFetcher`'
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'When you write a Web crawler, it is easy to download too many pages too fast,
+    which might violate the terms of service for the server you are downloading from.
+    To avoid that, we’ll use an object called `WikiFetcher` that does two things:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: It encapsulates the code for downloading and parsing web pages.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: It measures the time between requests and, if we don’t leave enough time between
+    requests, it sleeps until a reasonable interval has elapsed. By default, the interval
+    is one second.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Here’s the definition of `WikiFetcher`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`fetch_wikipedia` takes a URL as a `String` and returns a BeautifulSoup object
+    that represents the contents of the page.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`sleep_if_needed` checks the time since the last request and sleeps if the
+    elapsed time is less than `min_interval`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here’s an example that demonstrates how it’s used:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'If things have gone according to plan, the three timestamps should be no less
+    than 1 second apart, which is consistent with the terms in Wikipedia’s [robots.txt](https://en.wikipedia.org/robots.txt):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Friendly, low-speed bots are welcome viewing article pages, but not dynamically-generated
+    pages please.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '**Exercise:** Now let’s pull it all together. Write a function called `get_to_philosophy`
+    that takes as a parameter the URL of a Wikipedia page. It should:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Use the `WikiFetcher` object we just created to download and parse the page.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Traverse the resulting `BeautifulSoup` object to find the first valid link according
+    to the spirit of the rules.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: If the page has no links, or if the first link is a page we have already seen,
+    the program should indicate failure and exit.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: If the link matches the URL of the Wikipedia page on philosophy, the program
+    should indicate success and exit.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Otherwise it should go back to Step 1 (although you might want to put a limit
+    on the number of hops).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The program should build a list of the URLs it visits and display the results
+    at the end (whether it succeeds or fails).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Since the links you find are relative, you might find the `urljoin` function
+    helpful:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE

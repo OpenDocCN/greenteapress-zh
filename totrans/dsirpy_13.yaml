@@ -1,0 +1,205 @@
+- en: Quiz 3
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/DSIRP/quiz03.html](https://allendowney.github.io/DSIRP/quiz03.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'BEFORE YOU START THIS QUIZ:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Click on “Copy to Drive” to make a copy of the quiz,
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Click on “Share”,
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Click on “Change” and select “Anyone with this link can edit”
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Click “Copy link” and
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Paste the link into [this Canvas assignment](https://canvas.olin.edu/courses/313/assignments/4985).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: This quiz is open notes, open internet. The only thing you can’t do is ask for
+    help.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Copyright 2021 Allen Downey, [MIT License](http://opensource.org/licenses/MIT)
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: Question 1
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The following is the implementation of a binary search tree (BST) from `search.ipynb`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following cell reads words from a file and adds them to a BST. But if you
+    run it, you’ll get a `RecursionError`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: However, if we put the words into a list, shuffle the list, and then put the
+    shuffled words into the BST, it works.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Write a few clear, complete sentences to answer the following two questions:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Why did we get a `RecursionError`, and why does shuffling the words fix the
+    problem?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: What is the order of growth for the whole process; that is, reading the words
+    into a list, shuffling the list, and then putting the shuffled words into a binary
+    search tree. You can assume that `shuffle` is linear.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Question 2
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'As we discussed in class, there are three versions of the search problem:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Checking whether an element is in a collection; for example, this is what the
+    `in` operator does.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Finding the index of an element in an ordered collection; for example, this
+    is what the string method `find` does.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: In a collection of key-value pairs, finding the value that corresponds to a
+    given key; this is what the dictionary method `get` does.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: In `search.ipynb`, we used a BST to solve the first problem. In this exercise,
+    you will modify it to solve the third problem.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s the code again (although notice that the names of the objects are `MapNode`
+    and `BSTMap`).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Modify this code so that it stores keys and values, rather than just elements
+    of a collection. Then write a function called `get` that takes a `BSTMap` and
+    a key:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: If the key is in the map, it should return the corresponding value;
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Otherwise it should raise a `KeyError` with an appropriate message.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: You can use the following code to test your implementation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following should raise a `KeyError`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: Alternative solution
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Modify this code so that it stores keys and values, rather than just elements
+    of a collection. Then write a function called `get` that takes a `BSTMap` and
+    a key:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: If the key is in the map, it should return the corresponding value;
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Otherwise it should raise a `KeyError` with an appropriate message.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: You can use the following code to test your implementation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE

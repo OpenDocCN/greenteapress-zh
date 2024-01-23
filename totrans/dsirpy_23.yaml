@@ -1,0 +1,412 @@
+- en: Graphs
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/DSIRP/graph.html](https://allendowney.github.io/DSIRP/graph.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: This notebook is adapted from Chapter 2 of [Think Complexity](https://greenteapress.com/wp/think-complexity-2e/).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/graph.ipynb)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Graph
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: A graph is a collection of nodes and edges, where nodes often represent objects
+    or ideas, and edges represent relationships among them. For example, in a graph
+    that represents a social network, nodes might represent people and edges might
+    represent friendships between them.
+  prefs: []
+  type: TYPE_NORMAL
+- en: NetworkX provides data structures to represent graphs and function that implement
+    graph algorithms. To show how it works, we’ll make a small graph that represents
+    a social network.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s how we make a graph and add nodes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: Optionally, you can provide attributes that are associated with the node. In
+    this example, Bob has an `age` attribute and Carol has a cat.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s how we add edges between nodes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: Optionally, you can provide attributes that are associated with the edge. In
+    this example, the second edge has an attribute called `type` that indicates the
+    nature of the relationship.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s how to draw the graph.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/graph_8_0.png](../Images/c49ed2f55f4457ed70f5eb1affcbfacb.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Exercise:** Suppose Alice introduces Bob and Carol, and they become frenemies.
+    Update the social network by adding an edge between Bob and Carol with an appropriate
+    attribute, then draw the graph again.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Graph Representation
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: NetworkX represents graphs using a dictionary that maps from each node to a
+    dictionary that maps from nodes to edges.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If we select an element from the top-level dictionary, the result is a dictionary-like
+    object.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'So we can iterate through the neighbors of a node like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Or enumerate the neighbors and edges like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: Edges are represented by dictionaries of attributes. In this example, the first
+    edge has no attributes and the second has an attribute named `type`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We can select an edge like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'To check whether there is an edge from one node to another, we can use the
+    `in` operator:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: But there’s a method that does the same thing.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: Complete graph
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In a complete graph, all nodes are connected to each other. To make a complete
+    graph, we’ll use the following generator function, iterates through all pairs
+    of nodes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Here’s a complete graph with 10 nodes:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here’s what it looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/graph_30_0.png](../Images/99a22bf9b80d782319f6e10b903ce54d.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Random graphs
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Next we’ll make an Erdos-Renyi graph, which is a random graph where the probability
+    of an edge between each pair of nodes is \(p\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: The helper function `flip` returns `True` with probability `p` and `False` with
+    probability `1-p`
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`random_pairs` is a generator function that enumerates all possible pairs of
+    nodes and yields each one with probability `p`'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`make_random_graph` makes an ER graph where the probability of an edge between
+    each pair of nodes is `p`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s an example with `n=10` and `p=0.3`
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'And here’s what it looks like:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/graph_40_0.png](../Images/ca45c09f50cfe71ff8330b86ab8c57b3.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Connectivity
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: A graph is **connected** if you can start from any node and follow a sequence
+    of edges to reach any other node.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To check whether a graph is connected, we’ll use a version of a depth-first
+    search. First, let’s see what goes wrong with a basic DFS; then we’ll fix the
+    problem.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: For most graphs, the basic version of DFS runs forever, because it visits the
+    same nodes over and over. The solution is to keep track of the nodes we’ve seen
+    and avoid visiting them more than once.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** Write a function called `reachable_nodes` that takes a graph
+    and a starting node, uses DFS to find all nodes that can be reached from the starting
+    node, and returns a collection that contains them.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Hint: Think about what kind of collection to use.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In the complete graph, starting from node 0, we can reach all nodes:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: In a random graph, it may or may not be possible to reach all nodes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'So we can use `reachable_nodes` to check whether a graph is connected:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Again, the complete graph is connected:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE37]'
+  prefs: []
+  type: TYPE_PRE
+- en: If we generate a random graph with a low value of `p`, it’s probably not connected.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE39]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE40]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE41]'
+  prefs: []
+  type: TYPE_PRE
+- en: If we generate a random graph with a high value of `p`, it’s probably not connected.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE42]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE43]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE44]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE45]'
+  prefs: []
+  type: TYPE_PRE
+- en: Probability of connectivity
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: This behavior is the topic of a [seminal paper in network science](https://www.renyi.hu/~p_erdos/1960-10.pdf).
+    We can use NetworkX and the functions we’ve written to replicate one of their
+    results.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following function takes `n` and `p`, generates `iters` graphs, and returns
+    the fraction of them that are connected.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE46]'
+  prefs: []
+  type: TYPE_PRE
+- en: With `n=10` and `p=0.23`, the probability of being connected is about 33%.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE47]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE48]'
+  prefs: []
+  type: TYPE_PRE
+- en: According to Erdos and Renyi, the critical value of `p` for `n=10` is about
+    0.23.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE49]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE50]'
+  prefs: []
+  type: TYPE_PRE
+- en: So let’s plot the probability of connectivity for a range of values for `p`
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE51]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE52]'
+  prefs: []
+  type: TYPE_PRE
+- en: I’ll estimate the probabilities with `iters=1000`
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE53]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE54]'
+  prefs: []
+  type: TYPE_PRE
+- en: And then plot them, adding a vertical line at the computed critical value
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE55]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/graph_71_0.png](../Images/ab319e0f7ff25cefe3c9928e0cf7f7f6.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Exercise:** In my implementation of `reachable_nodes`, you might be bothered
+    by the apparent inefficiency of adding *all* neighbors to the stack without checking
+    whether they are already in `seen`. Write a version of this function that checks
+    the neighbors before adding them to the stack. Does this “optimization” change
+    the order of growth? Does it make the function faster?'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE56]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE57]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE58]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE59]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE60]'
+  prefs: []
+  type: TYPE_PRE
+- en: How does the performance of the two methods compare for larger values of `n`?
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*Data Structures and Information Retrieval in Python*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Copyright 2021 Allen Downey
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'License: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  prefs: []
+  type: TYPE_NORMAL

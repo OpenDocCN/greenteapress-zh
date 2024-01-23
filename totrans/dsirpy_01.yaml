@@ -1,0 +1,358 @@
+- en: Introduction
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/DSIRP/](https://allendowney.github.io/DSIRP/)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '*Data Structures and Information Retrieval in Python* is an introduction to
+    data structures and algorithms using a web search engine as a motivating example.
+    It is based in part on *[Think Data Structures](https://greenteapress.com/wp/think-data-structures/)*,
+    which uses Java.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The elements of the search engine are:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Crawler, which downloads web pages and follows links to other pages,
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The Indexer, which builds a map from each search term to the pages where it
+    appears, and
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The Retriever, which looks up search terms and finds relevant, high-quality
+    pages.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The index is stored in Redis, which is a data store that provides structures
+    like sets, lists, and hashmaps. The book presents each data structure first in
+    Python, then in Redis, which should help readers see which features are essential
+    and which are implementation details.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As I did with [*Think Bayes*](https://greenteapress.com/wp/think-bayes/), I
+    wrote this book entirely in Jupyter notebooks, and used JupyterBook to translate
+    them to HTML. The notebooks run on Colab, which is a service provided by Google
+    that runs notebooks in a browser. So you can read the book, run the code, and
+    work on exercises without installing anything.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This material is a work in progress, so your feedback is welcome. The best way
+    to provide that feedback is to [click here and create an issue in this GitHub
+    repository](https://github.com/AllenDowney/DSIRP/issues).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Overview slides](https://docs.google.com/presentation/d/e/2PACX-1vRFFocqlEH4YAbi8_xgZhfx9cvHFdMkhx_-yQ2aVVqc5quUQlm_mhuu7XoE9UOARsvwDe9X0kcA2DqS/pub)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The notebooks
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Click on the links below to run the notebooks on Colab.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Algorithms: Day One activity checking for anagrams and finding anagram sets.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/algorithms.ipynb)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Analysis: Introduction to the analysis of algorithms and Big O notation.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Slides](https://docs.google.com/presentation/d/e/2PACX-1vQXYlOUlPPTE9GGR3UBugxYT8n_TcIGR5ttG7Rz_aA8lAFLTCeYUC1HFnQyDQBKPOv6PC7_PQ5Q-xz6/pub)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/analysis.ipynb)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Timing: Checking asymptotic behavior by measuring run time.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/timing.ipynb)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Quiz 1
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/quiz01.ipynb)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Generator functions: Separate the iteration from the program logic'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Slides](https://docs.google.com/presentation/d/e/2PACX-1vTOxX01R5LNdEZDqSkiG5YOlJQieAO2bePigUnz6Fx5fiJqTMtpoOzn0ltpaeuWbfLl74vz6YqWUmZK/pub)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/generator.ipynb)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Set: Using Python sets to cheat at word games.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/set.ipynb)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Recursion: Practice recursive functions.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/recursion.ipynb)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Quiz 2
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/quiz02.ipynb)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Depth First Search: Tree traversal in BeautifulSoup.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Slides](https://docs.google.com/presentation/d/e/2PACX-1vTQzIt8u_vdwhqeFjPIHUNDFlO0_2-GId567gTbSCtyfQM0nRWjlxbklUhWTGl4KDzVI4_JxcfYRfEa/pub)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/dfs.ipynb)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Search: Linear search, bisection, and binary search trees.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Slides](https://docs.google.com/presentation/d/e/2PACX-1vQItNQPqCoUITZggi-ML-OYZtecevxcsPVvbP1JvW55erx2tXaO3cibTrWE5E8myJ4wqRPLt7xby7ei/pub)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/searching.ipynb)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Hashmap: How the greatest of all data structures works.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Slides](https://docs.google.com/presentation/d/e/2PACX-1vQXOQd5jpi4eHfIg9iqPCOSLVFEnaAvAiFhBAGZECl0wZ2XKJdbMSnGZsym8CvVq-IsxvvKu1tB7e2L/pub)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/hashmap.ipynb)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Quiz 3
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/quiz03.ipynb)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Heap: It’s an array, it’s a tree, it’s a PriorityQueue!'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Slides](https://docs.google.com/presentation/d/e/2PACX-1vQTHKlq7pvrOCgqgPhLodGUtrcA3sFGco4r8O041WvmKLi-JFDfUPpb4X6txEn1qe2RR_xBfvXlXtSD/pub)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/heap.ipynb)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Huffman Code: Use the structures we’ve learned to make an optimal prefix code.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Slides](https://docs.google.com/presentation/d/e/2PACX-1vQjk8Ko3u59qdandz-R_KfmQiHc2oIBk5RcJlWMXubdIMDxYuZpVHqn26jLylm0_eMf_ZJ-rOgnBjpi/pub)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/huffman.ipynb)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Getting to Philosophy: Follow Wikipedia links until you get to Philosophy.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Slides](https://docs.google.com/presentation/d/e/2PACX-1vQKVxHQKnp4LoiDipCvMh6GFRhgdiNFG_fqJ6vOfFb-ai9S1jLLbFvR1Qp4ocaAMNGL2FSaUd3-3H62/pub)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/philosophy.ipynb)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Quiz 4
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/quiz04.ipynb)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Redis: Introduction to the Redis data store.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/redis.ipynb)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Linked List: Trees before lists? Strange but true.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Slides](https://docs.google.com/presentation/d/e/2PACX-1vRSKmupEcVRXzH4jj31Zk5To6PrmIej58HviUrbN0a7wKTKBZwdoVHcGSFKvWac-L1w3Js9R6eD33fn/pub)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/linked_list.ipynb)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Indexer: Make a map of the internet for fast lookups.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/indexer.ipynb)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Quiz 5
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/quiz05.ipynb)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Deque: Like a linked list, but more so.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/deque.ipynb)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Graphs: Representing graphs with NetworkX.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/graph.ipynb)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Level Order Search: Use the `os` module to traverse a file system.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Slides](https://docs.google.com/presentation/d/e/2PACX-1vQT31xIq3pY-JF9J2RezS-i3528RM-NSpa67PN3wjfNF_6T0uUw_pV253lFKCB7pc_zXsnglXKOU2Pw/pub)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/level_order.ipynb)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Breadth-First Search: The foundation of graph algorithms.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Slides](https://docs.google.com/presentation/d/e/2PACX-1vRXakv4ZkGq648UwqRCXUkmqUFwGx4kJ4OskY6F9_busCH2aXPjZKKsQhGP4ESdJJNDq8bJowB9zLJb/pub)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/bfs.ipynb)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Quiz 6
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/quiz06.ipynb)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Crawler: Follow links and breadth-first search the internet.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/crawler.ipynb)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Mergesort: Divide, conquer, and merge in linearithmic time.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Slides](https://docs.google.com/presentation/d/e/2PACX-1vQbgVZohGR3tSm7LtnYVravKt_za_70Egy4hQwpGeLsjvhfmG16QfBjhph991EsIWsrfyABsRMmMAMk/pub)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/mergesort.ipynb)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Fast Fourier Transform: It’s like mergesort, but with complex numbers.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Slides](https://docs.google.com/presentation/d/e/2PACX-1vRuShFoETvJiCPAiM1xbxDBIM6MaXh2kMpjYB3FvRB4xzYsfi3vgZYgoQbxtGq8ODLjC8qhwn17f2_V/pub)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/fft.ipynb)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Quiz 7 [Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/quiz07.ipynb)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'PageRank: Random walks, adjacency matrices, and eigenvectors!'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Slides](https://docs.google.com/presentation/d/e/2PACX-1vTXdmLq-KdIVsm9dQVPUi5skj-hLDlYHuxMLmDimtvBF_qs1ZyRA6gy5SgsdINLf1baWppl6SsFL6OD/pub)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '[Notebook](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/pagerank.ipynb)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Copyright 2021 Allen B. Downey
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'License: [Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA
+    4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  prefs: []
+  type: TYPE_NORMAL

@@ -1,0 +1,1249 @@
+- en: Survival Analysis
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/ThinkBayes2/chap14.html](https://allendowney.github.io/ThinkBayes2/chap14.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: This chapter introduces “survival analysis”, which is a set of statistical methods
+    used to answer questions about the time until an event. In the context of medicine
+    it is literally about survival, but it can be applied to the time until any kind
+    of event, or instead of time it can be about space or other dimensions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Survival analysis is challenging because the data we have are often incomplete.
+    But as we’ll see, Bayesian methods are particularly good at working with incomplete
+    data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'As examples, we’ll consider two applications that are a little less serious
+    than life and death: the time until light bulbs fail and the time until dogs in
+    a shelter are adopted. To describe these “survival times”, we’ll use the Weibull
+    distribution.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Weibull Distribution
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The [Weibull distribution](https://en.wikipedia.org/wiki/Weibull_distribution)
+    is often used in survival analysis because it is a good model for the distribution
+    of lifetimes for manufactured products, at least over some parts of the range.
+  prefs: []
+  type: TYPE_NORMAL
+- en: SciPy provides several versions of the Weibull distribution; the one we’ll use
+    is called `weibull_min`. To make the interface consistent with our notation, I’ll
+    wrap it in a function that takes as parameters \(\lambda\), which mostly affects
+    the location or “central tendency” of the distribution, and \(k\), which affects
+    the shape.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: As an example, here’s a Weibull distribution with parameters \(\lambda=3\) and
+    \(k=0.8\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is an object that represents the distribution. Here’s what the Weibull
+    CDF looks like with those parameters.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/165e4472a2e421796fed341383b2f25a0686b6223380934e1bf7a4af385005e3.png](../Images/c1545ba3997e2de3459ff8d07fd1a504.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: '`actual_dist` provides `rvs`, which we can use to generate a random sample
+    from this distribution.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'So, given the parameters of the distribution, we can generate a sample. Now
+    let’s see if we can go the other way: given the sample, we’ll estimate the parameters.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here’s a uniform prior distribution for \(\lambda\):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'And a uniform prior for \(k\):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: I’ll use `make_joint` to make a joint prior distribution for the two parameters.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is a `DataFrame` that represents the joint prior, with possible values
+    of \(\lambda\) across the columns and values of \(k\) down the rows.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now I’ll use `meshgrid` to make a 3-D mesh with \(\lambda\) on the first axis
+    (`axis=0`), \(k\) on the second axis (`axis=1`), and the data on the third axis
+    (`axis=2`).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can use `weibull_dist` to compute the PDF of the Weibull distribution
+    for each pair of parameters and each data point.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: The likelihood of the data is the product of the probability densities along
+    `axis=2`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can compute the posterior distribution in the usual way.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: <details class="hide below-input"><summary aria-label="Toggle hidden content">Show
+    code cell output Hide code cell output</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following function encapsulates these steps. It takes a joint prior distribution
+    and the data, and returns a joint posterior distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s how we use it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here’s a contour plot of the joint posterior distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]</details> ![_images/77fcd1c56c2f0ce10efa56dbabec2d9b197d606003e4f5968c14f2f0cb4ed13f.png](../Images/c7172a47752cdfa035c49f16e0ef490f.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: It looks like the range of likely values for \(\lambda\) is about 1 to 4, which
+    contains the actual value we used to generate the data, 3. And the range for \(k\)
+    is about 0.5 to 1.5, which contains the actual value, 0.8.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Marginal Distributions
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'To be more precise about these ranges, we can extract the marginal distributions:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE18]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: And compute the posterior means and 90% credible intervals.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/4eab37f50de519d5098ae53189c5334a625a4117a40b09fa40489e916fa2bf0b.png](../Images/6821cba075bd877a9906a1bdafa5afea.png)</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The vertical gray line show the actual value of \(\lambda\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s the marginal posterior distribution for \(k\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/146ab0f8b11ab9ec51aea0fdfe7339761a6115fa77b3ac7fe71c80aa0d760090.png](../Images/77c29eef78e70659c88fd4a9a9a1f816.png)</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The posterior distributions are wide, which means that with only 10 data points
+    we can’t estimated the parameters precisely. But for both parameters, the actual
+    value falls in the credible interval.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE22]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE24]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Incomplete Data
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In the previous example we were given 10 random values from a Weibull distribution,
+    and we used them to estimate the parameters (which we pretended we didn’t know).
+  prefs: []
+  type: TYPE_NORMAL
+- en: But in many real-world scenarios, we don’t have complete data; in particular,
+    when we observe a system at a point in time, we generally have information about
+    the past, but not the future.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As an example, suppose you work at a dog shelter and you are interested in the
+    time between the arrival of a new dog and when it is adopted. Some dogs might
+    be snapped up immediately; others might have to wait longer. The people who operate
+    the shelter might want to make inferences about the distribution of these residence
+    times.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Suppose you monitor arrivals and departures over 8 weeks and 10 dogs arrive
+    during that interval. I’ll assume that their arrival times are distributed uniformly,
+    so I’ll generate random values like this.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Now let’s suppose that the residence times follow the Weibull distribution
+    we used in the previous example. We can generate a sample from that distribution
+    like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: I’ll use these values to construct a `DataFrame` that contains the arrival and
+    departure times for each dog, called `start` and `end`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: For display purposes, I’ll sort the rows of the `DataFrame` by arrival time.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | start | end |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 0.663997 | 3.921447 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 0.780269 | 1.585242 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 1.105053 | 1.213680 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 1.975504 | 2.408592 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 4 | 2.651573 | 7.824921 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 5 | 5.085286 | 6.169150 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 6 | 5.375817 | 8.431375 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 7 | 6.089998 | 8.205769 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 8 | 6.452750 | 8.926761 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 9 | 7.861935 | 7.915343 |'
+  prefs: []
+  type: TYPE_TB
+- en: Notice that several of the lifelines extend past the observation window of 8
+    weeks. So if we observed this system at the beginning of Week 8, we would have
+    incomplete information. Specifically, we would not know the future adoption times
+    for Dogs 6, 7, and 8.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'I’ll simulate this incomplete data by identifying the lifelines that extend
+    past the observation window:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`censored` is a Boolean Series that is `True` for lifelines that extend past
+    Week 8.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Data that is not available is sometimes called “censored” in the sense that
+    it is hidden from us. But in this case it is hidden because we don’t know the
+    future, not because someone is censoring it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For the lifelines that are censored, I’ll modify `end` to indicate when they
+    are last observed and `status` to indicate that the observation is incomplete.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can plot a “lifeline” for each dog, showing the arrival and departure
+    times on a time line.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE33]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell source Hide code cell source</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE34]</details> ![_images/d6dd919f6937358b5da512f2b078083de2cd5500b7118f9665579ec6044373f6.png](../Images/787750d8f0dc88a9ac6c41b9e548ca3c.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: And I’ll add one more column to the table, which contains the duration of the
+    observed parts of the lifelines.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: What we have simulated is the data that would be available at the beginning
+    of Week 8.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using Incomplete Data
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Now, let’s see how we can use both kinds of data, complete and incomplete, to
+    infer the parameters of the distribution of residence times.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'First I’ll split the data into two sets: `data1` contains residence times for
+    dogs whose arrival and departure times are known; `data2` contains incomplete
+    residence times for dogs who were not adopted during the observation interval.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE37]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE38]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE39]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE40]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: For the complete data, we can use `update_weibull`, which uses the PDF of the
+    Weibull distribution to compute the likelihood of the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE41]'
+  prefs: []
+  type: TYPE_PRE
+- en: For the incomplete data, we have to think a little harder. At the end of the
+    observation interval, we don’t know what the residence time will be, but we can
+    put a lower bound on it; that is, we can say that the residence time will be greater
+    than `T`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: And that means that we can compute the likelihood of the data using the survival
+    function, which is the probability that a value from the distribution exceeds
+    `T`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following function is identical to `update_weibull` except that it uses
+    `sf`, which computes the survival function, rather than `pdf`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE42]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s the update with the incomplete data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE43]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here’s what the joint posterior distribution looks like after both updates.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE44]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/c7ee32a715f0f7f5eede80659e6afa17a007adbe93236237580dcfeb4d59e17d.png](../Images/300e9829c4f3c0af8a75c148fd5d2b39.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Compared to the previous contour plot, it looks like the range of likely values
+    for \(\lambda\) is substantially wider. We can see that more clearly by looking
+    at the marginal distributions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE45]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s the posterior marginal distribution for \(\lambda\) compared to the distribution
+    we got using all complete data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE46]</details> ![_images/b27b0a38dde380c88b64bce34905027ef43332cd5ddff47b9eba6b2c56dc22af.png](../Images/39d2895a1cd7517c6572e797e506d326.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The distribution with some incomplete data is substantially wider.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As an aside, notice that the posterior distribution does not come all the way
+    to 0 on the right side. That suggests that the range of the prior distribution
+    is not wide enough to cover the most likely values for this parameter. If I were
+    concerned about making this distribution more accurate, I would go back and run
+    the update again with a wider prior.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here’s the posterior marginal distribution for \(k\):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE47]</details> ![_images/0d5cf63e8cd6276770a088ce33f36cb3c83eefd722368f1143e949dd9f55322b.png](../Images/26afec247feb6f72467c13c89205d16c.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this example, the marginal distribution is shifted to the left when we have
+    incomplete data, but it is not substantially wider.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In summary, we have seen how to combine complete and incomplete data to estimate
+    the parameters of a Weibull distribution, which is useful in many real-world scenarios
+    where some of the data are censored.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In general, the posterior distributions are wider when we have incomplete data,
+    because less information leads to more uncertainty.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This example is based on data I generated; in the next section we’ll do a similar
+    analysis with real data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Light Bulbs
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'In 2007 [researchers ran an experiment](https://www.researchgate.net/publication/225450325_Renewal_Rate_of_Filament_Lamps_Theory_and_Experiment)
+    to characterize the distribution of lifetimes for light bulbs. Here is their description
+    of the experiment:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: An assembly of 50 new Philips (India) lamps with the rating 40 W, 220 V (AC)
+    was taken and installed in the horizontal orientation and uniformly distributed
+    over a lab area 11 m x 7 m.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: The assembly was monitored at regular intervals of 12 h to look for failures.
+    The instants of recorded failures were [recorded] and a total of 32 data points
+    were obtained such that even the last bulb failed.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE48]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We can load the data into a `DataFrame` like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE49]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | h | f | K |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| i |  |  |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 0 | 0 | 50 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 840 | 2 | 48 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 852 | 1 | 47 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 936 | 1 | 46 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 4 | 960 | 1 | 45 |'
+  prefs: []
+  type: TYPE_TB
+- en: 'Column `h` contains the times when bulbs failed in hours; Column `f` contains
+    the number of bulbs that failed at each time. We can represent these values and
+    frequencies using a `Pmf`, like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE50]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE51]'
+  prefs: []
+  type: TYPE_PRE
+- en: Because of the design of this experiment, we can consider the data to be a representative
+    sample from the distribution of lifetimes, at least for light bulbs that are lit
+    continuously.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The average lifetime is about 1400 h.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE52]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE53]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Assuming that these data are well modeled by a Weibull distribution, let’s
+    estimate the parameters that fit the data. Again, I’ll start with uniform priors
+    for \(\lambda\) and \(k\):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE54]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE55]'
+  prefs: []
+  type: TYPE_PRE
+- en: For this example, there are 51 values in the prior distribution, rather than
+    the usual 101\. That’s because we are going to use the posterior distributions
+    to do some computationally-intensive calculations. They will run faster with fewer
+    values, but the results will be less precise.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As usual, we can use `make_joint` to make the prior joint distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE56]'
+  prefs: []
+  type: TYPE_PRE
+- en: Although we have data for 50 light bulbs, there are only 32 unique lifetimes
+    in the dataset. For the update, it is convenient to express the data in the form
+    of 50 lifetimes, with each lifetime repeated the given number of times. We can
+    use `np.repeat` to transform the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE57]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE58]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can use `update_weibull` to do the update.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE59]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Here’s what the posterior joint distribution looks like:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE60]</details> ![_images/c045d0c012c5c3280ab43869032f47b98c77b0ad79fef4e376c00d3b6dc6e990.png](../Images/2f2a91dee647f354e9561ed85b32f958.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: To summarize this joint posterior distribution, we’ll compute the posterior
+    mean lifetime.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Posterior Means
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: To compute the posterior mean of a joint distribution, we’ll make a mesh that
+    contains the values of \(\lambda\) and \(k\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE61]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now for each pair of parameters we’ll use `weibull_dist` to compute the mean.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE62]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE63]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is an array with the same dimensions as the joint distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now we need to weight each mean with the corresponding probability from the
+    joint posterior.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE64]'
+  prefs: []
+  type: TYPE_PRE
+- en: Finally we compute the sum of the weighted means.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE65]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE66]'
+  prefs: []
+  type: TYPE_PRE
+- en: Based on the posterior distribution, we think the mean lifetime is about 1413
+    hours.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The following function encapsulates these steps:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE67]'
+  prefs: []
+  type: TYPE_PRE
+- en: Incomplete Information
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The previous update was not quite right, because it assumed each light bulb
+    died at the instant we observed it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: According to the report, the researchers only checked the bulbs every 12 hours.
+    So if they see that a bulb has died, they know only that it died during the 12
+    hours since the last check.
+  prefs: []
+  type: TYPE_NORMAL
+- en: It is more strictly correct to use the following update function, which uses
+    the CDF of the Weibull distribution to compute the probability that a bulb dies
+    during a given 12 hour interval.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE68]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The probability that a value falls in an interval is the difference between
+    the CDF at the beginning and end of the interval.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s how we run the update.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE69]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: And here are the results.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE70]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/a01f57da5382dd9ebeae9b3de1f7f0bbd3e8431a6486f4c3b2d63dadc7312526.png](../Images/f292f51d98ec07dfc930576ab8a3de1b.png)</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Visually this result is almost identical to what we got using the PDF. And that’s
+    good news, because it suggests that using the PDF can be a good approximation
+    even if it’s not strictly correct.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To see whether it makes any difference at all, let’s check the posterior means.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE71]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE72]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE73]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE74]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'When we take into account the 12-hour interval between observations, the posterior
+    mean is about 6 hours less. And that makes sense: if we assume that a bulb is
+    equally likely to expire at any point in the interval, the average would be the
+    midpoint of the interval.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Posterior Predictive Distribution
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Suppose you install 100 light bulbs of the kind in the previous section, and
+    you come back to check on them after 1000 hours. Based on the posterior distribution
+    we just computed, what is the distribution of the number of bulbs you find dead?
+  prefs: []
+  type: TYPE_NORMAL
+- en: If we knew the parameters of the Weibull distribution for sure, the answer would
+    be a binomial distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'For example, if we know that \(\lambda=1550\) and \(k=4.25\), we can use `weibull_dist`
+    to compute the probability that a bulb dies before you return:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE75]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE76]'
+  prefs: []
+  type: TYPE_PRE
+- en: If there are 100 bulbs and each has this probability of dying, the number of
+    dead bulbs follows a binomial distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE77]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here’s what it looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE78]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/42e12ef3e54e221fa4ede683f0bbf06d0c501a4eb94e1bc5da2cab501e520592.png](../Images/2a5755e75a3a3a6f94354ace263259b5.png)</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: But that’s based on the assumption that we know \(\lambda\) and \(k\), and we
+    don’t. Instead, we have a posterior distribution that contains possible values
+    of these parameters and their probabilities.
+  prefs: []
+  type: TYPE_NORMAL
+- en: So the posterior predictive distribution is not a single binomial; instead it
+    is a mixture of binomials, weighted with the posterior probabilities.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can use `make_mixture` to compute the posterior predictive distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'It doesn’t work with joint distributions, but we can convert the `DataFrame`
+    that represents a joint distribution to a `Series`, like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE79]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE80]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The result is a `Series` with a `MultiIndex` that contains two “levels”: the
+    first level contains the values of `k`; the second contains the values of `lam`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: With the posterior in this form, we can iterate through the possible parameters
+    and compute a predictive distribution for each pair.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE81]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can use `make_mixture`, passing as parameters the posterior probabilities
+    in `posterior_series` and the sequence of binomial distributions in `pmf_seq`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE82]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s what the posterior predictive distribution looks like, compared to the
+    binomial distribution we computed with known parameters.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE83]</details> ![_images/43a987be520fd3d9c1db443a0138114292fb696c4ef951ab46ac6e015469a169.png](../Images/8d5760f4032ecc5652e6a804c7e27405.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The posterior predictive distribution is wider because it represents our uncertainty
+    about the parameters as well as our uncertainty about the number of dead bulbs.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: This chapter introduces survival analysis, which is used to answer questions
+    about the time until an event, and the Weibull distribution, which is a good model
+    for “lifetimes” (broadly interpreted) in a number of domains.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We used joint distributions to represent prior probabilities for the parameters
+    of the Weibull distribution, and we updated them three ways: knowing the exact
+    duration of a lifetime, knowing a lower bound, and knowing that a lifetime fell
+    in a given interval.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'These examples demonstrate a feature of Bayesian methods: they can be adapted
+    to handle incomplete, or “censored”, data with only small changes. As an exercise,
+    you’ll have a chance to work with one more type of censored data, when we are
+    given an upper bound on a lifetime.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The methods in this chapter work with any distribution with two parameters.
+    In the exercises, you’ll have a chance to estimate the parameters of a two-parameter
+    gamma distribution, which is used to describe a variety of natural phenomena.
+  prefs: []
+  type: TYPE_NORMAL
+- en: And in the next chapter we’ll move on to models with three parameters!
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exercises
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '**Exercise:** Using data about the lifetimes of light bulbs, we computed the
+    posterior distribution from the parameters of a Weibull distribution, \(\lambda\)
+    and \(k\), and the posterior predictive distribution for the number of dead bulbs,
+    out of 100, after 1000 hours.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now suppose you do the experiment: You install 100 light bulbs, come back after
+    1000 hours, and find 20 dead light bulbs. Update the posterior distribution based
+    on this data. How much does it change the posterior mean?'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Suggestions:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Use a mesh grid to compute the probability of finding a bulb dead after 1000
+    hours for each pair of parameters.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: For each of those probabilities, compute the likelihood of finding 20 dead bulbs
+    out of 100.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Use those likelihoods to update the posterior distribution.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE84]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE85]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE86]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE87]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE88]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/e5e76b96bcdb981d51b473a995694931c9ec47affcc8c1f3dfb73d7172794803.png](../Images/0b6b415805edbf392947106d859da61c.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">Show code
+    cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE89]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE90]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** In this exercise, we’ll use one month of data to estimate the
+    parameters of a distribution that describes daily rainfall in Seattle. Then we’ll
+    compute the posterior predictive distribution for daily rainfall and use it to
+    estimate the probability of a rare event, like more than 1.5 inches of rain in
+    a day.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: According to hydrologists, the distribution of total daily rainfall (for days
+    with rain) is well modeled by a two-parameter gamma distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: When we worked with the one-parameter gamma distribution in <<_TheGammaDistribution>>,
+    we used the Greek letter \(\alpha\) for the parameter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For the two-parameter gamma distribution, we will use \(k\) for the “shape parameter”,
+    which determines the shape of the distribution, and the Greek letter \(\theta\)
+    or `theta` for the “scale parameter”.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following function takes these parameters and returns a `gamma` object from
+    SciPy.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE91]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now we need some data. The following cell downloads data I collected from the
+    National Oceanic and Atmospheric Administration ([NOAA](http://www.ncdc.noaa.gov/cdo-web/search))
+    for Seattle, Washington in May 2020.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE92]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now we can load it into a `DataFrame`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE93]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | STATION | NAME | DATE | AWND | PRCP | TMAX | TMIN | WT01 | WT03 | WT08
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | USW00024233 | SEATTLE TACOMA AIRPORT, WA US | 2020-05-01 | 4.47 | 0.00
+    | 66 | 43 | NaN | NaN | NaN |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | USW00024233 | SEATTLE TACOMA AIRPORT, WA US | 2020-05-02 | 9.40 | 0.24
+    | 58 | 47 | 1.0 | NaN | NaN |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | USW00024233 | SEATTLE TACOMA AIRPORT, WA US | 2020-05-03 | 11.63 | 0.06
+    | 57 | 44 | 1.0 | NaN | NaN |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | USW00024233 | SEATTLE TACOMA AIRPORT, WA US | 2020-05-04 | 4.47 | 0.00
+    | 65 | 39 | NaN | NaN | NaN |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 4 | USW00024233 | SEATTLE TACOMA AIRPORT, WA US | 2020-05-05 | 7.83 | 0.00
+    | 71 | 49 | NaN | NaN | NaN |</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: I’ll make a Boolean Series to indicate which days it rained.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE94]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE95]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: And select the total rainfall on the days it rained.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE96]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE97]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s what the CDF of the data looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE98]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/5c588671547b5c94db2a6883cc4aad1ee78cc18cbcac03f2d597ef510b5cc19c.png](../Images/c2c9a7a935206223c754315c7c3cd064.png)</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The maximum is 1.14 inches of rain is one day. To estimate the probability of
+    more than 1.5 inches, we need to extrapolate from the data we have, so our estimate
+    will depend on whether the gamma distribution is really a good model.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'I suggest you proceed in the following steps:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Construct a prior distribution for the parameters of the gamma distribution.
+    Note that \(k\) and \(\theta\) must be greater than 0.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Use the observed rainfalls to update the distribution of parameters.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Compute the posterior predictive distribution of rainfall, and use it to estimate
+    the probability of getting more than 1.5 inches of rain in one day.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE99]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE100]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE101]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE102]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE103]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE104]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE105]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE106]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE107]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE108]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE109]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE110]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE111]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/569775f8c7a7fb0df6c9658876198997230b9dae8712f38ff26f0629929d9e47.png](../Images/c9cff7f85ebe7c29f68f398ee9db6037.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">Show code
+    cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE112]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE113]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/69409935354138ed39afaf3aaa5ada3ff5bc77d6f005ab27429bf478d8d0946b.png](../Images/31f021b58c59b854d34d7ee6e3fe26dc.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">Show code
+    cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE114]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE115]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE116]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/1dd3578256b42f046ac84921ad312dfbfaf9c27a70cd8f865948011b66d08eca.png](../Images/a1799bf48426a5ce41de2b2405b65d59.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">Show code
+    cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE117]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE118]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE119]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE120]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE121]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE122]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE123]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE124]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/91c9c0543eef83e3308033e1fb3a26f62b4651f1f1b4e9f5d72ddea583069bf2.png](../Images/a05f4682fda21bd2b00fb2dffd541cec.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">Show code
+    cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE125]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE126]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE127]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE128]</details>'
+  prefs: []
+  type: TYPE_NORMAL

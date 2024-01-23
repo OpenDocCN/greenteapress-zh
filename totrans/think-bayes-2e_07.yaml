@@ -1,0 +1,855 @@
+- en: Estimating Proportions
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/ThinkBayes2/chap04.html](https://allendowney.github.io/ThinkBayes2/chap04.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: In the previous chapter we solved the 101 Bowls Problem, and I admitted that
+    it is not really about guessing which bowl the cookies came from; it is about
+    estimating proportions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In this chapter, we take another step toward Bayesian statistics by solving
+    the Euro problem. We’ll start with the same prior distribution, and we’ll see
+    that the update is the same, mathematically. But I will argue that it is a different
+    problem, philosophically, and use it to introduce two defining elements of Bayesian
+    statistics: choosing prior distributions, and using probability to represent the
+    unknown.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Euro Problem
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'In *Information Theory, Inference, and Learning Algorithms*, David MacKay poses
+    this problem:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '“A statistical statement appeared in *The Guardian* on Friday January 4, 2002:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: When spun on edge 250 times, a Belgian one-euro coin came up heads 140 times
+    and tails 110\. `It looks very suspicious to me,’ said Barry Blight, a statistics
+    lecturer at the London School of Economics. `If the coin were unbiased, the chance
+    of getting a result as extreme as that would be less than 7%.’
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: “But [MacKay asks] do these data give evidence that the coin is biased rather
+    than fair?”
+  prefs: []
+  type: TYPE_NORMAL
+- en: To answer that question, we’ll proceed in two steps. First we’ll use the binomial
+    distribution to see where that 7% came from; then we’ll use Bayes’s Theorem to
+    estimate the probability that this coin comes up heads.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Binomial Distribution
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Suppose I tell you that a coin is “fair”, that is, the probability of heads
+    is 50%. If you spin it twice, there are four outcomes: `HH`, `HT`, `TH`, and `TT`.
+    All four outcomes have the same probability, 25%.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If we add up the total number of heads, there are three possible results: 0,
+    1, or 2\. The probabilities of 0 and 2 are 25%, and the probability of 1 is 50%.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'More generally, suppose the probability of heads is \(p\) and we spin the coin
+    \(n\) times. The probability that we get a total of \(k\) heads is given by the
+    [binomial distribution](https://en.wikipedia.org/wiki/Binomial_distribution):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[\binom{n}{k} p^k (1-p)^{n-k}\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: for any value of \(k\) from 0 to \(n\), including both. The term \(\binom{n}{k}\)
+    is the [binomial coefficient](https://en.wikipedia.org/wiki/Binomial_coefficient),
+    usually pronounced “n choose k”.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We could evaluate this expression ourselves, but we can also use the SciPy
+    function `binom.pmf`. For example, if we flip a coin `n=2` times and the probability
+    of heads is `p=0.5`, here’s the probability of getting `k=1` heads:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: Instead of providing a single value for `k`, we can also call `binom.pmf` with
+    an array of values.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is a NumPy array with the probability of 0, 1, or 2 heads. If we
+    put these probabilities in a `Pmf`, the result is the distribution of `k` for
+    the given values of `n` and `p`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here’s what it looks like:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 0.25 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 0.50 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 0.25 |'
+  prefs: []
+  type: TYPE_TB
+- en: The following function computes the binomial distribution for given values of
+    `n` and `p` and returns a `Pmf` that represents the result.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Here’s what it looks like with `n=250` and `p=0.5`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]</details> ![_images/78776da24ecbd5525d7f021195efd37ee9f890ed482a679078c11cd2f6e24baa.png](../Images/44850b0694a0ed061791879e0749472f.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The most likely quantity in this distribution is 125:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: But even though it is the most likely quantity, the probability that we get
+    exactly 125 heads is only about 5%.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'In MacKay’s example, we got 140 heads, which is even less likely than 125:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: In the article MacKay quotes, the statistician says, “If the coin were unbiased
+    the chance of getting a result as extreme as that would be less than 7%.”
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can use the binomial distribution to check his math. The following function
+    takes a PMF and computes the total probability of quantities greater than or equal
+    to `threshold`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Here’s the probability of getting 140 heads or more:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`Pmf` provides a method that does the same computation.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is about 3.3%, which is less than the quoted 7%. The reason for the
+    difference is that the statistician includes all outcomes “as extreme as” 140,
+    which includes outcomes less than or equal to 110.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To see where that comes from, recall that the expected number of heads is 125\.
+    If we get 140, we’ve exceeded that expectation by 15. And if we get 110, we have
+    come up short by 15.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 7% is the sum of both of these “tails”, as shown in the following figure.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]</details> ![_images/bbe850c4ba1754c42250404d1be42aca905c5085d068a8cd75a524120acd38b2.png](../Images/4a2b927f5fdf7388f4b220f8fb043f38.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s how we compute the total probability of the left tail.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: The probability of outcomes less than or equal to 110 is also 3.3%, so the total
+    probability of outcomes “as extreme” as 140 is 6.6%.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The point of this calculation is that these extreme outcomes are unlikely if
+    the coin is fair.
+  prefs: []
+  type: TYPE_NORMAL
+- en: That’s interesting, but it doesn’t answer MacKay’s question. Let’s see if we
+    can.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Bayesian Estimation
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Any given coin has some probability of landing heads up when spun on edge; I’ll
+    call this probability `x`. It seems reasonable to believe that `x` depends on
+    physical characteristics of the coin, like the distribution of weight. If a coin
+    is perfectly balanced, we expect `x` to be close to 50%, but for a lopsided coin,
+    `x` might be substantially different. We can use Bayes’s theorem and the observed
+    data to estimate `x`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For simplicity, I’ll start with a uniform prior, which assumes that all values
+    of `x` are equally likely. That might not be a reasonable assumption, so we’ll
+    come back and consider other priors later.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We can make a uniform prior like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`hypos` is an array of equally spaced values between 0 and 1.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We can use the hypotheses to compute the likelihoods, like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: I’ll put the likelihoods for heads and tails in a dictionary to make it easier
+    to do the update.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: To represent the data, I’ll construct a string with `H` repeated 140 times and
+    `T` repeated 110 times.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following function does the update.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: The first argument is a `Pmf` that represents the prior. The second argument
+    is a sequence of strings. Each time through the loop, we multiply `pmf` by the
+    likelihood of one outcome, `H` for heads or `T` for tails.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Notice that `normalize` is outside the loop, so the posterior distribution only
+    gets normalized once, at the end. That’s more efficient than normalizing it after
+    each spin (although we’ll see later that it can also cause problems with floating-point
+    arithmetic).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s how we use `update_euro`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here’s what the posterior looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE28]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell source Hide code cell source</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE29]</details> ![_images/dd30c6b049d5869916cbb249de23ebe991fb42772dad3eb5da6714b70d4aeb42.png](../Images/e21c1ee951a38a073f43534b28b4d6c7.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: This figure shows the posterior distribution of `x`, which is the proportion
+    of heads for the coin we observed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The posterior distribution represents our beliefs about `x` after seeing the
+    data. It indicates that values less than 0.4 and greater than 0.7 are unlikely;
+    values between 0.5 and 0.6 are the most likely.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In fact, the most likely value for `x` is 0.56 which is the proportion of heads
+    in the dataset, `140/250`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: Triangle Prior
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'So far we’ve been using a uniform prior:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: But that might not be a reasonable choice based on what we know about coins.
+    I can believe that if a coin is lopsided, `x` might deviate substantially from
+    0.5, but it seems unlikely that the Belgian Euro coin is so imbalanced that `x`
+    is 0.1 or 0.9.
+  prefs: []
+  type: TYPE_NORMAL
+- en: It might be more reasonable to choose a prior that gives higher probability
+    to values of `x` near 0.5 and lower probability to extreme values.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'As an example, let’s try a triangle-shaped prior. Here’s the code that constructs
+    it:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`arange` returns a NumPy array, so we can use `np.append` to append `ramp_down`
+    to the end of `ramp_up`. Then we use `a` and `hypos` to make a `Pmf`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following figure shows the result, along with the uniform prior.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE35]</details> ![_images/4cdca293cccae337c63f6c15db30cf19669f1955bef2dc4da5e6bd5ac35c56cd.png](../Images/bbac65b9451d9bfb85aa0550962f4bb9.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now we can update both priors with the same data:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here are the posteriors.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE37]</details> ![_images/53d63fd46dbabe83c44373b98d53b283d13d9308199d87274f185e49165ae929.png](../Images/7fe81d981e1a21fa9014aff9ec397feb.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The differences between the posterior distributions are barely visible, and
+    so small they would hardly matter in practice.
+  prefs: []
+  type: TYPE_NORMAL
+- en: And that’s good news. To see why, imagine two people who disagree angrily about
+    which prior is better, uniform or triangle. Each of them has reasons for their
+    preference, but neither of them can persuade the other to change their mind.
+  prefs: []
+  type: TYPE_NORMAL
+- en: But suppose they agree to use the data to update their beliefs. When they compare
+    their posterior distributions, they find that there is almost nothing left to
+    argue about.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This is an example of **swamping the priors**: with enough data, people who
+    start with different priors will tend to converge on the same posterior distribution.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Binomial Likelihood Function
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: So far we’ve been computing the updates one spin at a time, so for the Euro
+    problem we have to do 250 updates.
+  prefs: []
+  type: TYPE_NORMAL
+- en: A more efficient alternative is to compute the likelihood of the entire dataset
+    at once. For each hypothetical value of `x`, we have to compute the probability
+    of getting 140 heads out of 250 spins.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Well, we know how to do that; this is the question the binomial distribution
+    answers. If the probability of heads is \(p\), the probability of \(k\) heads
+    in \(n\) spins is:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[\binom{n}{k} p^k (1-p)^{n-k}\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'And we can use SciPy to compute it. The following function takes a `Pmf` that
+    represents a prior distribution and a tuple of integers that represent the data:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: The data are represented with a tuple of values for `k` and `n`, rather than
+    a long string of outcomes. Here’s the update.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE39]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can use `allclose` to confirm that the result is the same as in the previous
+    section except for a small floating-point round-off.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE40]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE41]'
+  prefs: []
+  type: TYPE_PRE
+- en: But this way of doing the computation is much more efficient.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Bayesian Statistics
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: You might have noticed similarities between the Euro problem and the 101 Bowls
+    Problem in <<_101Bowls>>. The prior distributions are the same, the likelihoods
+    are the same, and with the same data the results would be the same. But there
+    are two differences.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The first is the choice of the prior. With 101 bowls, the uniform prior is implied
+    by the statement of the problem, which says that we choose one of the bowls at
+    random with equal probability.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the Euro problem, the choice of the prior is subjective; that is, reasonable
+    people could disagree, maybe because they have different information about coins
+    or because they interpret the same information differently.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Because the priors are subjective, the posteriors are subjective, too. And some
+    people find that problematic.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The other difference is the nature of what we are estimating. In the 101 Bowls
+    problem, we choose the bowl randomly, so it is uncontroversial to compute the
+    probability of choosing each bowl. In the Euro problem, the proportion of heads
+    is a physical property of a given coin. Under some interpretations of probability,
+    that’s a problem because physical properties are not considered random.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As an example, consider the age of the universe. Currently, our best estimate
+    is 13.80 billion years, but it might be off by 0.02 billion years in either direction
+    (see [here](https://en.wikipedia.org/wiki/Age_of_the_universe)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now suppose we would like to know the probability that the age of the universe
+    is actually greater than 13.81 billion years. Under some interpretations of probability,
+    we would not be able to answer that question. We would be required to say something
+    like, “The age of the universe is not a random quantity, so it has no probability
+    of exceeding a particular value.”
+  prefs: []
+  type: TYPE_NORMAL
+- en: Under the Bayesian interpretation of probability, it is meaningful and useful
+    to treat physical quantities as if they were random and compute probabilities
+    about them.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the Euro problem, the prior distribution represents what we believe about
+    coins in general and the posterior distribution represents what we believe about
+    a particular coin after seeing the data. So we can use the posterior distribution
+    to compute probabilities about the coin and its proportion of heads.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The subjectivity of the prior and the interpretation of the posterior are key
+    differences between using Bayes’s Theorem and doing Bayesian statistics.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Bayes’s Theorem is a mathematical law of probability; no reasonable person objects
+    to it. But Bayesian statistics is surprisingly controversial. Historically, many
+    people have been bothered by its subjectivity and its use of probability for things
+    that are not random.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If you are interested in this history, I recommend Sharon Bertsch McGrayne’s
+    book, *[The Theory That Would Not Die](https://yalebooks.yale.edu/book/9780300188226/theory-would-not-die)*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In this chapter I posed David MacKay’s Euro problem and we started to solve
+    it. Given the data, we computed the posterior distribution for `x`, the probability
+    a Euro coin comes up heads.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We tried two different priors, updated them with the same data, and found that
+    the posteriors were nearly the same. This is good news, because it suggests that
+    if two people start with different beliefs and see the same data, their beliefs
+    tend to converge.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This chapter introduces the binomial distribution, which we used to compute
+    the posterior distribution more efficiently. And I discussed the differences between
+    applying Bayes’s Theorem, as in the 101 Bowls problem, and doing Bayesian statistics,
+    as in the Euro problem.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'However, we still haven’t answered MacKay’s question: “Do these data give evidence
+    that the coin is biased rather than fair?” I’m going to leave this question hanging
+    a little longer; we’ll come back to it in <<_Testing>>.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the next chapter, we’ll solve problems related to counting, including trains,
+    tanks, and rabbits.
+  prefs: []
+  type: TYPE_NORMAL
+- en: But first you might want to work on these exercises.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exercises
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '**Exercise:** In Major League Baseball, most players have a batting average
+    between .200 and .330, which means that their probability of getting a hit is
+    between 0.2 and 0.33.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Suppose a player appearing in their first game gets 3 hits out of 3 attempts.
+    What is the posterior distribution for their probability of getting a hit?
+  prefs: []
+  type: TYPE_NORMAL
+- en: For this exercise, I’ll construct the prior distribution by starting with a
+    uniform distribution and updating it with imaginary data until it has a shape
+    that reflects my background knowledge of batting averages.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here’s the uniform prior:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE42]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: And here is a dictionary of likelihoods, with `Y` for getting a hit and `N`
+    for not getting a hit.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE43]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s a dataset that yields a reasonable prior distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE44]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: And here’s the update with the imaginary data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE45]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Finally, here’s what the prior looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE46]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/113a21d5073b3244e9b3de11539ffe19d34f4bc5fb44f1501c7f35824bc000d4.png](../Images/34271f5e5462fbc71579f1c2dd2641d0.png)</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: This distribution indicates that most players have a batting average near 250,
+    with only a few players below 175 or above 350\. I’m not sure how accurately this
+    prior reflects the distribution of batting averages in Major League Baseball,
+    but it is good enough for this exercise.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now update this distribution with the data and plot the posterior. What is the
+    most likely quantity in the posterior distribution?
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE47]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE48]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE49]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/22d82381a7a62c41f12af9cfbff8febaa9b39ee34d570c2575e5622c02a24cc0.png](../Images/f3ea843204a9b62a832df31ac2e4bfd5.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">Show code
+    cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE50]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE51]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE52]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE53]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** Whenever you survey people about sensitive issues, you have to
+    deal with [social desirability bias](https://en.wikipedia.org/wiki/Social_desirability_bias),
+    which is the tendency of people to adjust their answers to show themselves in
+    the most positive light. One way to improve the accuracy of the results is [randomized
+    response](https://en.wikipedia.org/wiki/Randomized_response).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'As an example, suppose you want to know how many people cheat on their taxes.
+    If you ask them directly, it is likely that some of the cheaters will lie. You
+    can get a more accurate estimate if you ask them indirectly, like this: Ask each
+    person to flip a coin and, without revealing the outcome,'
+  prefs: []
+  type: TYPE_NORMAL
+- en: If they get heads, they report YES.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: If they get tails, they honestly answer the question “Do you cheat on your taxes?”
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: If someone says YES, we don’t know whether they actually cheat on their taxes;
+    they might have flipped heads. Knowing this, people might be more willing to answer
+    honestly.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Suppose you survey 100 people this way and get 80 YESes and 20 NOs. Based on
+    this data, what is the posterior distribution for the fraction of people who cheat
+    on their taxes? What is the most likely quantity in the posterior distribution?
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE54]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE55]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE56]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE57]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE58]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/449441453b54871fe06691651a71cb5ad95283abe7e5a15c06079f2a6f1dc9e7.png](../Images/93982c0082f09b712a1752d059bc55df.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">Show code
+    cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE59]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE60]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** Suppose you want to test whether a coin is fair, but you don’t
+    want to spin it hundreds of times. So you make a machine that spins the coin automatically
+    and uses computer vision to determine the outcome.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: However, you discover that the machine is not always accurate. Specifically,
+    suppose the probability is `y=0.2` that an actual heads is reported as tails,
+    or actual tails reported as heads.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If we spin a coin 250 times and the machine reports 140 heads, what is the posterior
+    distribution of `x`? What happens as you vary the value of `y`?
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE61]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE62]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE63]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/e9299449114d960b46cbaa39aec91bbe8cc5f1098a613525faf9b79a51a7eead.png](../Images/1aa8dbcda6ca8c617a855081f23147f0.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">Show code
+    cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE64]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE65]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** In preparation for an alien invasion, the Earth Defense League
+    (EDL) has been working on new missiles to shoot down space invaders. Of course,
+    some missile designs are better than others; let’s assume that each design has
+    some probability of hitting an alien ship, `x`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Based on previous tests, the distribution of `x` in the population of designs
+    is approximately uniform between 0.1 and 0.4.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now suppose the new ultra-secret Alien Blaster 9000 is being tested. In a press
+    conference, an EDL general reports that the new design has been tested twice,
+    taking two shots during each test. The results of the test are confidential, so
+    the general won’t say how many targets were hit, but they report: “The same number
+    of targets were hit in the two tests, so we have reason to think this new design
+    is consistent.”'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Is this data good or bad? That is, does it increase or decrease your estimate
+    of `x` for the Alien Blaster 9000?
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Hint: If the probability of hitting each target is \(x\), the probability of
+    hitting one target in both tests is \(\left[2x(1-x)\right]^2\).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE66]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE67]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE68]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE69]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/c9c1e9bf10d628665828b3673a516fa1b68f6db8450ad81025e9011aacc14f48.png](../Images/40f4649b80c1401e56fe80eea719188b.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">Show code
+    cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE70]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE71]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE72]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/4c35edb942e0b9bc2704ca667de18b2127c8b149fac68f4406b38a173a4d8331.png](../Images/fac2d3e336dd1ade8daa9482137f1b27.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">Show code
+    cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE73]</details>'
+  prefs: []
+  type: TYPE_NORMAL

@@ -1,0 +1,575 @@
+- en: Loops and Files
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/ElementsOfDataScience/04_loops.html](https://allendowney.github.io/ElementsOfDataScience/04_loops.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/04_loops.ipynb)
+    or [click here to download it](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/04_loops.ipynb).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: This chapter presents loops, which are used to represent repeated computation,
+    and files, which are used to store data. As an example, we will download the famous
+    book *War and Peace* from Project Gutenberg and write a loop that reads the book
+    and counts the words. This example presents some new computational tools; it is
+    also an introduction to working with textual data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Loops
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'One of the most important elements of computation is repetition, and the most
+    common way to represent repetition is a `for` loop. As a simple example, suppose
+    we want to display the elements of a tuple. Here’s a tuple of three integers:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here’s a `for` loop that prints the elements.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: The first line of the loop is a **header** that specifies the tuple, `t`, and
+    a variable name, `x`. The tuple already exists, but `x` does not; the loop will
+    create it. Note that the header ends with a colon, `:`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Inside the loop is a `print` statement, which displays the value of `x`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'So here’s what happens:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: When the loop starts, it gets the first element of `t`, which is `1`, and assigns
+    it to `x`. It executes the `print` statement, which displays the value `1`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Then it gets the second element of `t`, which is `2`, and displays it.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Then it gets the third element of `t`, which is `3`, and displays it.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: After printing the last element of the tuple, the loop ends.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We can also loop through the letters in a string:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: When the loop begins, `word` already exists, but `letter` does not. Again, the
+    loop creates `letter` and assigns values to it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The variable created by the loop is called the **loop variable**. You can give
+    it any name you like; in this example, I chose `letter` to remind me what kind
+    of value it contains.
+  prefs: []
+  type: TYPE_NORMAL
+- en: After the loop ends, the loop variable contains the last value.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise:** Create a list, called `sequence` with four elements of any type.
+    Write a `for` loop that prints the elements. Call the loop variable `element`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You might wonder why I didn’t call the list `list`. I avoided it because Python
+    has a function named `list` that makes new lists. For example, if you have a string,
+    you can make a list of letters, like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: If you create a variable named `list`, you can’t use the function any more.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Counting with Loops
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '*War and Peace* is a famously long book; let’s see how long it is. To count
+    the words we need two elements: looping through the words in a text, and counting.
+    We’ll start with counting.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We’ve already seen that you can create a variable and give it a value, like
+    this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: If you assign a different value to the same variable, the new value replaces
+    the old one.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: You can increase the value of a variable by reading the old value, adding `1`,
+    and assigning the result back to the original variable.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: Increasing the value of a variable is called **incrementing**; decreasing the
+    value is called **decrementing**. These operations are so common that there are
+    special operators for them.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: In this example, the `+=` operator reads the value of `count`, adds `1`, and
+    assigns the result back to `count`. Python also provides `-=` and other update
+    operators like `*=` and `/=`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** The following is a number trick from *Learn With Math Games*
+    at [https://www.learn-with-math-games.com/math-number-tricks.html](https://www.learn-with-math-games.com/math-number-tricks.html):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*Finding Someone’s Age*'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Ask the person to multiply the first number of their age by 5.
+  prefs:
+  - PREF_BQ
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Tell them to add 3.
+  prefs:
+  - PREF_BQ
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Now tell them to double this figure.
+  prefs:
+  - PREF_BQ
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Finally, have the person add the second number of their age to the figure and
+    have them tell you the answer.
+  prefs:
+  - PREF_BQ
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Deduct 6 and you will have their age.
+  prefs:
+  - PREF_BQ
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Test this algorithm using your age. Use a single variable and update it using
+    `+=` and other update operators.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Files
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Now that we know how to count, let’s see how we can read words from a file.
+    We can download *War and Peace* from Project Gutenberg, which is a repository
+    of free books at [https://www.gutenberg.org](https://www.gutenberg.org).
+  prefs: []
+  type: TYPE_NORMAL
+- en: In order to read the contents of the file, you have to **open** it, which you
+    can do with the `open` function.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is a `TextIOWrapper`, which is a type of **file pointer**. It contains
+    the name of the file, the mode (which is `r` for “reading”) and the encoding (which
+    is `UTF` for “Unicode Transformation Format”). A file pointer is like a bookmark;
+    it keeps track of which parts of the file you have read.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If you use a file pointer in a `for` loop, it loops through the lines in the
+    file. So we can count the number of lines like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: And then display the result.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: There are about 66,000 lines in this file.
+  prefs: []
+  type: TYPE_NORMAL
+- en: if Statements
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'We’ve already see comparison operators, like `>` and `<`, which compare values
+    and produce a Boolean result, `True` or `False`. For example, we can compare the
+    final value of `count` to a number:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can use a comparison operator in an `if` statement to check for a condition
+    and take action accordingly.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: The first line of the `if` statement specifies the condition we’re checking
+    for. Like the header of a `for` statement, the first line of an `if` statement
+    has to end with a colon.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If the condition is true, the indented statement runs; otherwise, it doesn’t.
+    In the previous example, the condition is true, so the `print` statement runs.
+    In the following example, the condition is false, so the `print` statement doesn’t
+    run.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can put a `print` statement inside a `for` loop. In this example, we only
+    print a line from the book when `count` is `1`. The other lines are read, but
+    not displayed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Notice the indentation in this example:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Statements inside the `for` loop are indented.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The statement inside the `if` statement is indented.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The statement `count += 1` is **outdented** from the previous line, so it ends
+    the `if` statement. But it is still inside the `for` loop.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: It is legal in Python to use spaces or tabs for indentation, but the most common
+    convention is to use four spaces, never tabs. That’s what I’ll do in my code and
+    I strongly suggest you follow the convention.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The break Statement
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'If we display the final value of `count`, we see that the loop reads the entire
+    file, but only prints one line:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'We can avoid reading the whole file by using a `break` statement, like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The `break` statement ends the loop immediately, skipping the rest of the file.
+    We can confirm that by checking the last value of `count`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise:** Write a loop that prints the first 5 lines of the file and then
+    breaks out of the loop.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Whitespace
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: If we run the loop again and display the final value of `line`, we see the special
+    sequence `\n` at the end.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: This sequence represents a single character, called a **newline**, that puts
+    vertical space between lines. If we use a `print` statement to display `line`,
+    we don’t see the special sequence, but we do see extra space after the line.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE37]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: In other strings, you might see the sequence `\t`, which represents a “tab”
+    character. When you print a tab character, it adds enough space to make the next
+    character appear in a column that is a multiple of 8.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE39]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE40]'
+  prefs: []
+  type: TYPE_PRE
+- en: Newline characters, tabs, and spaces are called **whitespace** because when
+    they are printed they leave white space on the page (assuming that the background
+    color is white).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Counting Words
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: So far we’ve managed to count the lines in a file, but each line contains several
+    words. To split a line into words, we can use a function called `split` that returns
+    a list of words. To be more precise, `split` doesn’t actually know what a word
+    is; it just splits the line wherever there’s a space or other whitespace character.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE41]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE42]'
+  prefs: []
+  type: TYPE_PRE
+- en: Notice that the syntax for `split` is different from other functions we have
+    seen. Normally when we call a function, we name the function and provide values
+    in parentheses. So you might have expected to write `split(line)`. Sadly, that
+    doesn’t work.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The problem is that the `split` function belongs to the string `line`; in a
+    sense, the function is attached to the string, so we can only refer to it using
+    the string and the **dot operator** (the period between `line` and `split`). For
+    historical reasons, functions like this are called **methods**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now that we can split a line into a list of words, we can use `len` to get the
+    number of words in each list, and increment `count` accordingly.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE43]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE44]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE45]'
+  prefs: []
+  type: TYPE_PRE
+- en: By this count, there are more than half a million words in *War and Peace*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Actually, there aren’t quite that many, because the file we got from Project
+    Gutenberg has some introductory text and a table of contents before the text.
+    And it has some license information at the end. To skip this “front matter”, we
+    can use one loop to read lines until we get to `CHAPTER I`, and then a second
+    loop to count the words in the remaining lines.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The file pointer, `fp`, keeps track of where it is in the file, so the second
+    loop picks up where the first loop leaves off. In the second loop, we check for
+    the end of the book and stop, so we ignore the “back matter” at the end of the
+    file.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE46]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE47]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE48]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE49]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Two things to notice about this program:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: When we compare two values to see if they are equal, we use the `==` operator,
+    not to be confused with `=`, which is the assignment operator.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The string we compare `line` to has a newline at the end. If we leave that out,
+    it doesn’t work.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Exercise:**'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the previous program, replace `==` with `=` and see what happens. This is
+    a common error, so it is good to see what the error message looks like.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Correct the previous error, then remove the newline character after `CHAPTER
+    I`, and see what happens.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The first error is a **syntax error**, which means that the program violates
+    the rules of Python. If your program has a syntax error, the Python interpreter
+    prints an error message, and the program never runs.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The second error is a **logic error**, which means that there is something wrong
+    with the logic of the program. The syntax is legal, and the program runs, but
+    it doesn’t do what we wanted. Logic errors can be hard to find because we don’t
+    get any error messages.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If you have a logic error, here are two strategies for debugging:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Add print statements so the program displays additional information while it
+    runs.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Simplify the program until it does what you expect, and then gradually add more
+    code, testing as you go.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Summary
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: This chapter presents loops, `if` statements, and the `break` statement. It
+    also introduces tools for working with letters and words, and a simple kind of
+    textual analysis, word counting.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the next chapter we’ll continue this example, counting the number of unique
+    words in a text and the number of times each word appears. And we’ll see one more
+    way to represent a collection of values, a Python dictionary.
+  prefs: []
+  type: TYPE_NORMAL

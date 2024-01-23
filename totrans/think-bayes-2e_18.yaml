@@ -1,0 +1,1423 @@
+- en: Mark and Recapture
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/ThinkBayes2/chap15.html](https://allendowney.github.io/ThinkBayes2/chap15.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: This chapter introduces “mark and recapture” experiments, in which we sample
+    individuals from a population, mark them somehow, and then take a second sample
+    from the same population. Seeing how many individuals in the second sample are
+    marked, we can estimate the size of the population.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Experiments like this were originally used in ecology, but turn out to be useful
+    in many other fields. Examples in this chapter include software engineering and
+    epidemiology.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Also, in this chapter we’ll work with models that have three parameters, so
+    we’ll extend the joint distributions we’ve been using to three dimensions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: But first, grizzly bears.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Grizzly Bear Problem
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In 1996 and 1997 researchers deployed bear traps in locations in British Columbia
+    and Alberta, Canada, in an effort to estimate the population of grizzly bears.
+    They describe the experiment in [this article](https://www.researchgate.net/publication/229195465_Estimating_Population_Size_of_Grizzly_Bears_Using_Hair_Capture_DNA_Profiling_and_Mark-Recapture_Analysis).
+  prefs: []
+  type: TYPE_NORMAL
+- en: The “trap” consists of a lure and several strands of barbed wire intended to
+    capture samples of hair from bears that visit the lure. Using the hair samples,
+    the researchers use DNA analysis to identify individual bears.
+  prefs: []
+  type: TYPE_NORMAL
+- en: During the first session, the researchers deployed traps at 76 sites. Returning
+    10 days later, they obtained 1043 hair samples and identified 23 different bears.
+    During a second 10-day session they obtained 1191 samples from 19 different bears,
+    where 4 of the 19 were from bears they had identified in the first batch.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To estimate the population of bears from this data, we need a model for the
+    probability that each bear will be observed during each session. As a starting
+    place, we’ll make the simplest assumption, that every bear in the population has
+    the same (unknown) probability of being sampled during each session.
+  prefs: []
+  type: TYPE_NORMAL
+- en: With these assumptions we can compute the probability of the data for a range
+    of possible populations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As an example, let’s suppose that the actual population of bears is 100.
+  prefs: []
+  type: TYPE_NORMAL
+- en: After the first session, 23 of the 100 bears have been identified. During the
+    second session, if we choose 19 bears at random, what is the probability that
+    4 of them were previously identified?
+  prefs: []
+  type: TYPE_NORMAL
+- en: I’ll define
+  prefs: []
+  type: TYPE_NORMAL
+- en: '\(N\): actual population size, 100.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '\(K\): number of bears identified in the first session, 23.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '\(n\): number of bears observed in the second session, 19 in the example.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '\(k\): number of bears in the second session that were previously identified,
+    4.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'For given values of \(N\), \(K\), and \(n\), the probability of finding \(k\)
+    previously-identified bears is given by the [hypergeometric distribution](https://en.wikipedia.org/wiki/Hypergeometric_distribution):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[\binom{K}{k} \binom{N-K}{n-k}/ \binom{N}{n}\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: where the [binomial coefficient](https://en.wikipedia.org/wiki/Binomial_coefficient),
+    \(\binom{K}{k}\), is the number of subsets of size \(k\) we can choose from a
+    population of size \(K\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To understand why, consider:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The denominator, \(\binom{N}{n}\), is the number of subsets of \(n\) we could
+    choose from a population of \(N\) bears.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The numerator is the number of subsets that contain \(k\) bears from the previously
+    identified \(K\) and \(n-k\) from the previously unseen \(N-K\).
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: SciPy provides `hypergeom`, which we can use to compute this probability for
+    a range of values of \(k\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is the distribution of \(k\) with given parameters \(N\), \(K\),
+    and \(n\). Here’s what it looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]</details> ![_images/89091d8fbc23233c4e404edd21d8ea5de9de3e5bc1e8080e25666147e0fa8aca.png](../Images/1a280182fb74f73c44052e57501013e1.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The most likely value of \(k\) is 4, which is the value actually observed in
+    the experiment.
+  prefs: []
+  type: TYPE_NORMAL
+- en: That suggests that \(N=100\) is a reasonable estimate of the population, given
+    this data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We’ve computed the distribution of \(k\) given \(N\), \(K\), and \(n\). Now
+    let’s go the other way: given \(K\), \(n\), and \(k\), how can we estimate the
+    total population, \(N\)?'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Update
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: As a starting place, let’s suppose that, prior to this study, an expert estimates
+    that the local bear population is between 50 and 500, and equally likely to be
+    any value in that range.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I’ll use `make_uniform` to make a uniform distribution of integers in this range.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: So that’s our prior.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To compute the likelihood of the data, we can use `hypergeom` with constants
+    `K` and `n`, and a range of values of `N`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can compute the posterior in the usual way.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here’s what it looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/ac32416f4a54865371b1c99a43504a005ebf21adaf7c20b9674391cb8f8f2060.png](../Images/e2874514c41951147b92187305b32014.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The most likely value is 109.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: But the distribution is skewed to the right, so the posterior mean is substantially
+    higher.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: And the credible interval is quite wide.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: This solution is relatively simple, but it turns out we can do a little better
+    if we model the unknown probability of observing a bear explicitly.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Two-Parameter Model
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Next we’ll try a model with two parameters: the number of bears, `N`, and the
+    probability of observing a bear, `p`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: We’ll assume that the probability is the same in both rounds, which is probably
+    reasonable in this case because it is the same kind of trap in the same place.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We’ll also assume that the probabilities are independent; that is, the probability
+    a bear is observed in the second round does not depend on whether it was observed
+    in the first round. This assumption might be less reasonable, but for now it is
+    a necessary simplification.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here are the counts again:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'For this model, I’ll express the data in a notation that will make it easier
+    to generalize to more than two rounds:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`k10` is the number of bears observed in the first round but not the second,'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`k01` is the number of bears observed in the second round but not the first,
+    and'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`k11` is the number of bears observed in both rounds.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Here are their values.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: Suppose we know the actual values of `N` and `p`. We can use them to compute
+    the likelihood of this data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For example, suppose we know that `N=100` and `p=0.2`. We can use `N` to compute
+    `k00`, which is the number of unobserved bears.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: For the update, it will be convenient to store the data as a list that represents
+    the number of bears in each category.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now, if we know `p=0.2`, we can compute the probability a bear falls in each
+    category. For example, the probability of being observed in both rounds is `p*p`,
+    and the probability of being unobserved in both rounds is `q*q` (where `q=1-p`).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Now the probability of the data is given by the [multinomial distribution](https://en.wikipedia.org/wiki/Multinomial_distribution):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[\frac{N!}{\prod x_i!} \prod y_i^{x_i}\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: where \(N\) is actual population, \(x\) is a sequence with the counts in each
+    category, and \(y\) is a sequence of probabilities for each category.
+  prefs: []
+  type: TYPE_NORMAL
+- en: SciPy provides `multinomial`, which provides `pmf`, which computes this probability.
+    Here is the probability of the data for these values of `N` and `p`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: That’s the likelihood if we know `N` and `p`, but of course we don’t. So we’ll
+    choose prior distributions for `N` and `p`, and use the likelihoods to update
+    it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Prior
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'We’ll use `prior_N` again for the prior distribution of `N`, and a uniform
+    prior for the probability of observing a bear, `p`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can make a joint distribution in the usual way.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is a Pandas `DataFrame` with values of `N` down the rows and values
+    of `p` across the columns. However, for this problem it will be convenient to
+    represent the prior distribution as a 1-D `Series` rather than a 2-D `DataFrame`.
+    We can convert from one format to the other using `stack`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  |  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| N | p |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 50 | 0.00 | 0.000022 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0.01 | 0.000022 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0.02 | 0.000022 |'
+  prefs: []
+  type: TYPE_TB
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE29]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE31]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE33]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The result is a `Pmf` whose index is a `MultiIndex`. A `MultiIndex` can have
+    more than one column; in this example, the first column contains values of `N`
+    and the second column contains values of `p`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The `Pmf` has one row (and one prior probability) for each possible pair of
+    parameters `N` and `p`. So the total number of rows is the product of the lengths
+    of `prior_N` and `prior_p`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now we have to compute the likelihood of the data for each pair of parameters.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Update
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'To allocate space for the likelihoods, it is convenient to make a copy of `joint_pmf`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: As we loop through the pairs of parameters, we compute the likelihood of the
+    data as in the previous section, and then store the result as an element of `likelihood`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can compute the posterior in the usual way.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: <details class="hide below-input"><summary aria-label="Toggle hidden content">Show
+    code cell output Hide code cell output</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE37]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: We’ll use `plot_contour` again to visualize the joint posterior distribution.
+    But remember that the posterior distribution we just computed is represented as
+    a `Pmf`, which is a `Series`, and `plot_contour` expects a `DataFrame`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Since we used `stack` to convert from a `DataFrame` to a `Series`, we can use
+    `unstack` to go the other way.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here’s what the result looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE39]</details> ![_images/16d64440894686542410530f1944189022be98b1f5e334935ac3564296ad1c1e.png](../Images/20fb308f064e8ec2cf1942d050fc4b3e.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The most likely values of `N` are near 100, as in the previous model. The most
+    likely values of `p` are near 0.2.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The shape of this contour indicates that these parameters are correlated. If
+    `p` is near the low end of the range, the most likely values of `N` are higher;
+    if `p` is near the high end of the range, `N` is lower.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now that we have a posterior `DataFrame`, we can extract the marginal distributions
+    in the usual way.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE40]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Here’s the posterior distribution for `p`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE41]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/88d34493745362743711701c087bb8b926c2aa476a6222f310e370eaa4fcada2.png](../Images/bce24822b71de71da5f2b16179ae1316.png)</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The most likely values are near 0.2.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s the posterior distribution for `N` based on the two-parameter model,
+    along with the posterior we got using the one-parameter (hypergeometric) model.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE42]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/ed8daea51a92e0b5585376bd83e1c1ce8cd383a3253cf96f714ace3dda79b2f2.png](../Images/1b61dd820c7d770037e4c7ac250c8c9f.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: With the two-parameter model, the mean is a little lower and the 90% credible
+    interval is a little narrower.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE43]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE44]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE45]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE46]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The two-parameter model yields a narrower posterior distribution for `N`, compared
+    to the one-parameter model, because it takes advantage of an additional source
+    of information: the consistency of the two observations.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: To see how this helps, consider a scenario where `N` is relatively low, like
+    138 (the posterior mean of the two-parameter model).
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE47]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Given that we saw 23 bears during the first trial and 19 during the second,
+    we can estimate the corresponding value of `p`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE48]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE49]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: With these parameters, how much variability do you expect in the number of bears
+    from one trial to the next? We can quantify that by computing the standard deviation
+    of the binomial distribution with these parameters.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE50]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE51]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now let’s consider a second scenario where `N` is 173, the posterior mean of
+    the one-parameter model. The corresponding value of `p` is lower.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE52]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE53]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this scenario, the variation we expect to see from one trial to the next
+    is higher.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE54]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE55]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: So if the number of bears we observe is the same in both trials, that would
+    be evidence for lower values of `N`, where we expect more consistency. If the
+    number of bears is substantially different between the two trials, that would
+    be evidence for higher values of `N`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the actual data, the difference between the two trials is low, which is why
+    the posterior mean of the two-parameter model is lower. The two-parameter model
+    takes advantage of additional information, which is why the credible interval
+    is narrower.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Joint and Marginal Distributions
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Marginal distributions are called “marginal” because in a common visualization
+    they appear in the margins of the plot.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Seaborn provides a class called `JointGrid` that creates this visualization.
+    The following function uses it to show the joint and marginal distributions in
+    a single plot.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE56]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE57]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/21b675f7d5fd2f0f58754e38aa6c27ca264560d3a3d8662db9785a22d70fac3e.png](../Images/55b8dbaf5a3b329e9bdb684a74fcae7c.png)</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: A `JointGrid` is a concise way to represent the joint and marginal distributions
+    visually.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Lincoln Index Problem
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'In [an excellent blog post](http://www.johndcook.com/blog/2010/07/13/lincoln-index/),
+    John D. Cook wrote about the Lincoln index, which is a way to estimate the number
+    of errors in a document (or program) by comparing results from two independent
+    testers. Here’s his presentation of the problem:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: “Suppose you have a tester who finds 20 bugs in your program. You want to estimate
+    how many bugs are really in the program. You know there are at least 20 bugs,
+    and if you have supreme confidence in your tester, you may suppose there are around
+    20 bugs. But maybe your tester isn’t very good. Maybe there are hundreds of bugs.
+    How can you have any idea how many bugs there are? There’s no way to know with
+    one tester. But if you have two testers, you can get a good idea, even if you
+    don’t know how skilled the testers are.”
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Suppose the first tester finds 20 bugs, the second finds 15, and they find 3
+    in common; how can we estimate the number of bugs?
+  prefs: []
+  type: TYPE_NORMAL
+- en: This problem is similar to the Grizzly Bear problem, so I’ll represent the data
+    in the same way.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE58]'
+  prefs: []
+  type: TYPE_PRE
+- en: But in this case it is probably not reasonable to assume that the testers have
+    the same probability of finding a bug. So I’ll define two parameters, `p0` for
+    the probability that the first tester finds a bug, and `p1` for the probability
+    that the second tester finds a bug.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I will continue to assume that the probabilities are independent, which is like
+    assuming that all bugs are equally easy to find. That might not be a good assumption,
+    but let’s stick with it for now.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As an example, suppose we know that the probabilities are 0.2 and 0.15.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE59]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'We can compute the array of probabilities, `y`, like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE60]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE61]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE62]'
+  prefs: []
+  type: TYPE_PRE
+- en: With these probabilities, there is a 68% chance that neither tester finds the
+    bug and a 3% chance that both do.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Pretending that these probabilities are known, we can compute the posterior
+    distribution for `N`. Here’s a prior distribution that’s uniform from 32 to 350
+    bugs.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE63]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| N |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 32 | 0.015625 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 37 | 0.015625 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 42 | 0.015625 |'
+  prefs: []
+  type: TYPE_TB
+- en: I’ll put the data in an array, with 0 as a place-keeper for the unknown value
+    `k00`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE64]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here are the likelihoods for each value of `N`, with `ps` as a constant.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE65]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can compute the posterior in the usual way.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE66]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE67]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here’s what it looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE68]</details> ![_images/d563e5ed6f947b2470b1ec9317f0963741fcd3f9f26c5815d72fb8e75cccd114.png](../Images/46976d5c53d8c858858d1ef0d983d0d6.png)<details
+    class="hide above-input"><summary aria-label="Toggle hidden content">Show code
+    cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE69]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE70]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: With the assumption that `p0` and `p1` are known to be `0.2` and `0.15`, the
+    posterior mean is 102 with 90% credible interval (77, 127). But this result is
+    based on the assumption that we know the probabilities, and we don’t.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Three-Parameter Model
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'What we need is a model with three parameters: `N`, `p0`, and `p1`. We’ll use
+    `prior_N` again for the prior distribution of `N`, and here are the priors for
+    `p0` and `p1`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE71]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we have to assemble them into a joint prior with three dimensions. I’ll
+    start by putting the first two into a `DataFrame`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE72]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE73]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now I’ll stack them, as in the previous example, and put the result in a `Pmf`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE74]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  |  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| N | p0 |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 32 | 0.00 | 0.000306 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0.02 | 0.000306 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0.04 | 0.000306 |'
+  prefs: []
+  type: TYPE_TB
+- en: We can use `make_joint` again to add in the third parameter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE75]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE76]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is a `DataFrame` with values of `N` and `p0` in a `MultiIndex` that
+    goes down the rows and values of `p1` in an index that goes across the columns.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE77]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | p1 | 0.00 | 0.02 | 0.04 | 0.06 | 0.08 | 0.10 | 0.12 | 0.14 | 0.16 | 0.18
+    | ... | 0.82 | 0.84 | 0.86 | 0.88 | 0.90 | 0.92 | 0.94 | 0.96 | 0.98 | 1.00 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+    | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| N | p0 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+    | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 32 | 0.00 | 0.000006 | 0.000006 | 0.000006 | 0.000006 | 0.000006 | 0.000006
+    | 0.000006 | 0.000006 | 0.000006 | 0.000006 | ... | 0.000006 | 0.000006 | 0.000006
+    | 0.000006 | 0.000006 | 0.000006 | 0.000006 | 0.000006 | 0.000006 | 0.000006 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0.02 | 0.000006 | 0.000006 | 0.000006 | 0.000006 | 0.000006 | 0.000006 |
+    0.000006 | 0.000006 | 0.000006 | 0.000006 | ... | 0.000006 | 0.000006 | 0.000006
+    | 0.000006 | 0.000006 | 0.000006 | 0.000006 | 0.000006 | 0.000006 | 0.000006 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0.04 | 0.000006 | 0.000006 | 0.000006 | 0.000006 | 0.000006 | 0.000006 |
+    0.000006 | 0.000006 | 0.000006 | 0.000006 | ... | 0.000006 | 0.000006 | 0.000006
+    | 0.000006 | 0.000006 | 0.000006 | 0.000006 | 0.000006 | 0.000006 | 0.000006 |'
+  prefs: []
+  type: TYPE_TB
+- en: 3 rows × 51 columns</details>
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now I’ll apply `stack` again:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE78]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  |  |  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| N | p0 | p1 |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 32 | 0.0 | 0.00 | 0.000006 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0.02 | 0.000006 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0.04 | 0.000006 |'
+  prefs: []
+  type: TYPE_TB
+- en: The result is a `Pmf` with a three-column `MultiIndex` containing all possible
+    triplets of parameters.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The number of rows is the product of the number of values in all three priors,
+    which is almost 170,000.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE79]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE80]'
+  prefs: []
+  type: TYPE_PRE
+- en: That’s still small enough to be practical, but it will take longer to compute
+    the likelihoods than in the previous examples.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here’s the loop that computes the likelihoods; it’s similar to the one in the
+    previous section:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE81]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can compute the posterior in the usual way.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE82]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE83]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now, to extract the marginal distributions, we could unstack the joint posterior
+    as we did in the previous section. But `Pmf` provides a version of `marginal`
+    that works with a `Pmf` rather than a `DataFrame`. Here’s how we use it to get
+    the posterior distribution for `N`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE84]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here’s what it looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE85]</details> ![_images/f2cd695e438e075589cab69bddc2955d4dd4d16f5b69b8fba877124b600d71f8.png](../Images/07b5b2a3692ed9fc4d3e0ffc911cf226.png)<details
+    class="hide above-input"><summary aria-label="Toggle hidden content">Show code
+    cell source Hide code cell source</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE86]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE87]'
+  prefs: []
+  type: TYPE_PRE
+- en: The posterior mean is 105 bugs, which suggests that there are still many bugs
+    the testers have not found.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here are the posteriors for `p0` and `p1`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE88]</details> ![_images/10402507c405cb67e580cb3cf7c157f06e4c496f01ca0caf2388ddcdc8fdfc15.png](../Images/1906c3da6bf6bfc666e5825211e6bcaa.png)<details
+    class="hide above-input"><summary aria-label="Toggle hidden content">Show code
+    cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE89]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE90]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE91]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE92]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Comparing the posterior distributions, the tester who found more bugs probably
+    has a higher probability of finding bugs. The posterior means are about 23% and
+    18%. But the distributions overlap, so we should not be too sure.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This is the first example we’ve seen with three parameters. As the number of
+    parameters increases, the number of combinations increases quickly. The method
+    we’ve been using so far, enumerating all possible combinations, becomes impractical
+    if the number of parameters is more than 3 or 4.
+  prefs: []
+  type: TYPE_NORMAL
+- en: However there are other methods that can handle models with many more parameters,
+    as we’ll see in <<_MCMC>>.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The problems in this chapter are examples of [mark and recapture](https://en.wikipedia.org/wiki/Mark_and_recapture)
+    experiments, which are used in ecology to estimate animal populations. They also
+    have applications in engineering, as in the Lincoln index problem. And in the
+    exercises you’ll see that they are used in epidemiology, too.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This chapter introduces two new probability distributions:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The hypergeometric distribution is a variation of the binomial distribution
+    in which samples are drawn from the population without replacement.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The multinomial distribution is a generalization of the binomial distribution
+    where there are more than two possible outcomes.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Also in this chapter, we saw the first example of a model with three parameters.
+    We’ll see more in subsequent chapters.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exercises
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '**Exercise:** [In an excellent paper](http://chao.stat.nthu.edu.tw/wordpress/paper/110.pdf),
+    Anne Chao explains how mark and recapture experiments are used in epidemiology
+    to estimate the prevalence of a disease in a human population based on multiple
+    incomplete lists of cases.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: One of the examples in that paper is a study “to estimate the number of people
+    who were infected by hepatitis in an outbreak that occurred in and around a college
+    in northern Taiwan from April to July 1995.”
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Three lists of cases were available:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 135 cases identified using a serum test.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 122 cases reported by local hospitals.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 126 cases reported on questionnaires collected by epidemiologists.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: In this exercise, we’ll use only the first two lists; in the next exercise we’ll
+    bring in the third list.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Make a joint prior and update it using this data, then compute the posterior
+    mean of `N` and a 90% credible interval.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following array contains 0 as a place-holder for the unknown value of `k00`,
+    followed by known values of `k01`, `k10`, and `k11`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE93]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: These data indicate that there are 73 cases on the second list that are not
+    on the first, 86 cases on the first list that are not on the second, and 49 cases
+    on both lists.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To keep things simple, we’ll assume that each case has the same probability
+    of appearing on each list. So we’ll use a two-parameter model where `N` is the
+    total number of cases and `p` is the probability that any case appears on any
+    list.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here are priors you can start with (but feel free to modify them).
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE94]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| N |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 200 | 0.016667 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 205 | 0.016667 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 210 | 0.016667 |</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE95]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| p |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0.00 | 0.02 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0.02 | 0.02 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0.04 | 0.02 |</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE96]'
+  prefs: []
+  type: TYPE_PRE
+- en: '| p | 0.00 | 0.02 | 0.04 | 0.06 | 0.08 | 0.10 | 0.12 | 0.14 | 0.16 | 0.18 |
+    ... | 0.80 | 0.82 | 0.84 | 0.86 | 0.88 | 0.90 | 0.92 | 0.94 | 0.96 | 0.98 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+    | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| N |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+    | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 200 | 0.000333 | 0.000333 | 0.000333 | 0.000333 | 0.000333 | 0.000333 | 0.000333
+    | 0.000333 | 0.000333 | 0.000333 | ... | 0.000333 | 0.000333 | 0.000333 | 0.000333
+    | 0.000333 | 0.000333 | 0.000333 | 0.000333 | 0.000333 | 0.000333 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 205 | 0.000333 | 0.000333 | 0.000333 | 0.000333 | 0.000333 | 0.000333 | 0.000333
+    | 0.000333 | 0.000333 | 0.000333 | ... | 0.000333 | 0.000333 | 0.000333 | 0.000333
+    | 0.000333 | 0.000333 | 0.000333 | 0.000333 | 0.000333 | 0.000333 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 210 | 0.000333 | 0.000333 | 0.000333 | 0.000333 | 0.000333 | 0.000333 | 0.000333
+    | 0.000333 | 0.000333 | 0.000333 | ... | 0.000333 | 0.000333 | 0.000333 | 0.000333
+    | 0.000333 | 0.000333 | 0.000333 | 0.000333 | 0.000333 | 0.000333 |'
+  prefs: []
+  type: TYPE_TB
+- en: 3 rows × 50 columns</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE97]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  |  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| N | p |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 200 | 0.00 | 0.000333 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0.02 | 0.000333 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0.04 | 0.000333 |</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE98]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE99]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE100]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE101]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE102]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/998e24d1fe296c7997509135f11d22996957981e69247c1875908e46389eacb9.png](../Images/a17e40d075e72408506d7363d6caf227.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">Show code
+    cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE103]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/a001724951bd27254c3c107ea7cf2ce113b466d7277d6263c3c29ff9818a6abb.png](../Images/5e997d92efb728f58c2e94d973ddec43.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">Show code
+    cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE104]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE105]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** Now let’s do the version of the problem with all three lists.
+    Here’s the data from Chou’s paper:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE106]'
+  prefs: []
+  type: TYPE_PRE
+- en: Write a loop that computes the likelihood of the data for each pair of parameters,
+    then update the prior and compute the posterior mean of `N`. How does it compare
+    to the results using only the first two lists?
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s the data in a NumPy array (in reverse order).
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE107]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Again, the first value is a place-keeper for the unknown `k000`. The second
+    value is `k001`, which means there are 63 cases that appear on the third list
+    but not the first two. And the last value is `k111`, which means there are 28
+    cases that appear on all three lists.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the two-list version of the problem we computed `ps` by enumerating the combinations
+    of `p` and `q`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE108]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: We could do the same thing for the three-list version, computing the probability
+    for each of the eight categories. But we can generalize it by recognizing that
+    we are computing the cartesian product of `p` and `q`, repeated once for each
+    list.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'And we can use the following function (based on [this StackOverflow answer](https://stackoverflow.com/questions/58242078/cartesian-product-of-arbitrary-lists-in-pandas/58242079#58242079))
+    to compute Cartesian products:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE109]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here’s an example with `p=0.2`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE110]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | level_0 | level_1 | level_2 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 0.8 | 0.8 | 0.8 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 0.8 | 0.8 | 0.2 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 0.8 | 0.2 | 0.8 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 0.8 | 0.2 | 0.2 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 4 | 0.2 | 0.8 | 0.8 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 5 | 0.2 | 0.8 | 0.2 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 6 | 0.2 | 0.2 | 0.8 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 7 | 0.2 | 0.2 | 0.2 |</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To compute the probability for each category, we take the product across the
+    columns:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE111]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE112]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now you finish it off from there.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE113]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE114]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE115]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE116]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE117]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/2a20c097ea1f8ffbd3697c9ca7a0d79ff62c241cc153d5cfc47870b5705623a8.png](../Images/6c7ad7fc6852fba14bdb8065c19e8e36.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">Show code
+    cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE118]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE119]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/d476bca686cc3860e47a1b0e98715ff66d2bb58819764da404bce88974e8024c.png](../Images/d705a7e942009d009b649c2a2c1cb87a.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">Show code
+    cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE120]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE121]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE122]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE123]</details>'
+  prefs: []
+  type: TYPE_NORMAL

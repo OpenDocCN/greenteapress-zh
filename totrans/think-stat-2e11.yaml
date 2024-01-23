@@ -1,0 +1,662 @@
+- en: Chapter 10  Linear least squares
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://greenteapress.com/thinkstats2/html/thinkstats2011.html](https://greenteapress.com/thinkstats2/html/thinkstats2011.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: The code for this chapter is in `linear.py`. For information about downloading
+    and working with this code, see Section [0.2](thinkstats2001.html#code).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 10.1  Least squares fit
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Correlation coefficients measure the strength and sign of a relationship, but
+    not the slope. There are several ways to estimate the slope; the most common is
+    a linear least squares fit. A “linear fit” is a line intended to model the relationship
+    between variables. A “least squares” fit is one that minimizes the mean squared
+    error (MSE) between the line and the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Suppose we have a sequence of points, `ys`, that we want to express as a function
+    of another sequence `xs`. If there is a linear relationship between `xs` and `ys`
+    with intercept `inter` and slope `slope`, we expect each `y[i]` to be `inter +
+    slope * x[i]`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: But unless the correlation is perfect, this prediction is only approximate.
+    The vertical deviation from the line, or residual, is
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: The residuals might be due to random factors like measurement error, or non-random
+    factors that are unknown. For example, if we are trying to predict weight as a
+    function of height, unknown factors might include diet, exercise, and body type.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If we get the parameters `inter` and `slope` wrong, the residuals get bigger,
+    so it makes intuitive sense that the parameters we want are the ones that minimize
+    the residuals.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We might try to minimize the absolute value of the residuals, or their squares,
+    or their cubes; but the most common choice is to minimize the sum of squared residuals,
+    `sum(res**2)`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Why? There are three good reasons and one less important one:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Squaring has the feature of treating positive and negative residuals the same,
+    which is usually what we want.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Squaring gives more weight to large residuals, but not so much weight that the
+    largest residual always dominates.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: If the residuals are uncorrelated and normally distributed with mean 0 and constant
+    (but unknown) variance, then the least squares fit is also the maximum likelihood
+    estimator of `inter` and `slope`. See [https://en.wikipedia.org/wiki/Linear_regression](https://en.wikipedia.org/wiki/Linear_regression).
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The values of `inter` and `slope` that minimize the squared residuals can be
+    computed efficiently.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The last reason made sense when computational efficiency was more important
+    than choosing the method most appropriate to the problem at hand. That’s no longer
+    the case, so it is worth considering whether squared residuals are the right thing
+    to minimize.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For example, if you are using `xs` to predict values of `ys`, guessing too high
+    might be better (or worse) than guessing too low. In that case you might want
+    to compute some cost function for each residual, and minimize total cost, `sum(cost(res))`.
+    However, computing a least squares fit is quick, easy and often good enough.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 10.2  Implementation
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '`thinkstats2` provides simple functions that demonstrate linear least squares:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`LeastSquares` takes sequences `xs` and `ys` and returns the estimated parameters
+    `inter` and `slope`. For details on how it works, see [http://wikipedia.org/wiki/Numerical_methods_for_linear_least_squares](http://wikipedia.org/wiki/Numerical_methods_for_linear_least_squares).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`thinkstats2` also provides `FitLine`, which takes `inter` and `slope` and
+    returns the fitted line for a sequence of `xs`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can use these functions to compute the least squares fit for birth weight
+    as a function of mother’s age.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The estimated intercept and slope are 6.8 lbs and 0.017 lbs per year. These
+    values are hard to interpret in this form: the intercept is the expected weight
+    of a baby whose mother is 0 years old, which doesn’t make sense in context, and
+    the slope is too small to grasp easily.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Instead of presenting the intercept at x=0, it is often helpful to present the
+    intercept at the mean of x. In this case the mean age is about 25 years and the
+    mean baby weight for a 25 year old mother is 7.3 pounds. The slope is 0.27 ounces
+    per year, or 0.17 pounds per decade.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '![](../Images/147e224a9be95815080a938eba600d37.png)'
+  prefs:
+  - PREF_BQ
+  type: TYPE_IMG
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '| Figure 10.1: Scatter plot of birth weight and mother’s age with a linear
+    fit. |'
+  prefs:
+  - PREF_BQ
+  type: TYPE_TB
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Figure [10.1](#linear1) shows a scatter plot of birth weight and age along with
+    the fitted line. It’s a good idea to look at a figure like this to assess whether
+    the relationship is linear and whether the fitted line seems like a good model
+    of the relationship.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 10.3  Residuals
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Another useful test is to plot the residuals. `thinkstats2` provides a function
+    that computes residuals:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`Residuals` takes sequences `xs` and `ys` and estimated parameters `inter`
+    and `slope`. It returns the differences between the actual values and the fitted
+    line.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '![](../Images/0d7a71c806a551dd27aa1d16e2868e4c.png)'
+  prefs:
+  - PREF_BQ
+  type: TYPE_IMG
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '| Figure 10.2: Residuals of the linear fit. |'
+  prefs:
+  - PREF_BQ
+  type: TYPE_TB
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: To visualize the residuals, I group respondents by age and compute percentiles
+    in each group, as we saw in Section [7.2](thinkstats2008.html#characterizing).
+    Figure [10.2](#linear2) shows the 25th, 50th and 75th percentiles of the residuals
+    for each age group. The median is near zero, as expected, and the interquartile
+    range (IQR) is about 2 pounds. So if we know the mother’s age, we can guess the
+    baby’s weight within a pound, about 50% of the time, because 50% of the weights
+    are in the IQR.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Ideally these lines should be flat, indicating that the residuals are random,
+    and parallel, indicating that the variance of the residuals is the same for all
+    age groups. In fact, the lines are close to parallel, so that’s good; but they
+    have some curvature, indicating that the relationship is nonlinear. Nevertheless,
+    the linear fit is a simple model that is probably good enough for some purposes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 10.4  Estimation
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The parameters `slope` and `inter` are estimates based on a sample; like other
+    estimates, they are vulnerable to sampling bias, measurement error, and sampling
+    error. As discussed in Chapter [8](thinkstats2009.html#estimation), sampling bias
+    is caused by non-representative sampling, measurement error is caused by errors
+    in collecting and recording data, and sampling error is the result of measuring
+    a sample rather than the entire population.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To assess sampling error, we ask, “If we run this experiment again, how much
+    variability do we expect in the estimates?” We can answer this question by running
+    simulated experiments and computing sampling distributions of the estimates.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I simulate the experiments by resampling the data; that is, I treat the observed
+    pregnancies as if they were the entire population and draw samples, with replacement,
+    from the observed sample.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`SamplingDistributions` takes a DataFrame with one row per live birth, and
+    `iters`, the number of experiments to simulate. It uses `ResampleRows` to resample
+    the observed pregnancies. We’ve already seen `SampleRows`, which chooses random
+    rows from a DataFrame. `thinkstats2` also provides `ResampleRows`, which returns
+    a sample the same size as the original:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'After resampling, we use the simulated sample to estimate parameters. The result
+    is two sequences: the estimated intercepts and estimated slopes.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'I summarize the sampling distributions by printing the standard error and confidence
+    interval:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`Summarize` takes a sequence of estimates and the actual value. It prints the
+    mean of the estimates, the standard error and a 90% confidence interval.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: For the intercept, the mean estimate is 6.83, with standard error 0.07 and 90%
+    confidence interval (6.71, 6.94). The estimated slope, in more compact form, is
+    0.0174, SE 0.0028, CI (0.0126, 0.0220). There is almost a factor of two between
+    the low and high ends of this CI, so it should be considered a rough estimate.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To visualize the sampling error of the estimate, we could plot all of the fitted
+    lines, or for a less cluttered representation, plot a 90% confidence interval
+    for each age. Here’s the code:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`xs` is the sequence of mother’s age. `inters` and `slopes` are the estimated
+    parameters generated by `SamplingDistributions`. `percent` indicates which confidence
+    interval to plot.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`PlotConfidenceIntervals` generates a fitted line for each pair of `inter`
+    and `slope` and stores the results in a sequence, `fys_seq`. Then it uses `PercentileRows`
+    to select the upper and lower percentiles of `y` for each value of `x`. For a
+    90% confidence interval, it selects the 5th and 95th percentiles. `FillBetween`
+    draws a polygon that fills the space between two lines.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '![](../Images/c17bb3542750decc4b41dc80441c1678.png)'
+  prefs:
+  - PREF_BQ
+  type: TYPE_IMG
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '| Figure 10.3: 50% and 90% confidence intervals showing variability in the
+    fitted line due to sampling error of inter and slope. |'
+  prefs:
+  - PREF_BQ
+  type: TYPE_TB
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Figure [10.3](#linear3) shows the 50% and 90% confidence intervals for curves
+    fitted to birth weight as a function of mother’s age. The vertical width of the
+    region represents the effect of sampling error; the effect is smaller for values
+    near the mean and larger for the extremes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 10.5  Goodness of fit
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: There are several ways to measure the quality of a linear model, or goodness
+    of fit. One of the simplest is the standard deviation of the residuals.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If you use a linear model to make predictions, `Std(res)` is the root mean squared
+    error (RMSE) of your predictions. For example, if you use mother’s age to guess
+    birth weight, the RMSE of your guess would be 1.40 lbs.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If you guess birth weight without knowing the mother’s age, the RMSE of your
+    guess is `Std(ys)`, which is 1.41 lbs. So in this example, knowing a mother’s
+    age does not improve the predictions substantially.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Another way to measure goodness of fit is the coefficient of determination,
+    usually denoted R² and called “R-squared”:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`Var(res)` is the MSE of your guesses using the model, `Var(ys)` is the MSE
+    without it. So their ratio is the fraction of MSE that remains if you use the
+    model, and R² is the fraction of MSE the model eliminates.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: For birth weight and mother’s age, R² is 0.0047, which means that mother’s age
+    predicts about half of 1% of variance in birth weight.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'There is a simple relationship between the coefficient of determination and
+    Pearson’s coefficient of correlation: R² = ρ². For example, if ρ is 0.8 or -0.8,
+    R² = 0.64.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Although ρ and R² are often used to quantify the strength of a relationship,
+    they are not easy to interpret in terms of predictive power. In my opinion, `Std(res)`
+    is the best representation of the quality of prediction, especially if it is presented
+    in relation to `Std(ys)`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For example, when people talk about the validity of the SAT (a standardized
+    test used for college admission in the U.S.) they often talk about correlations
+    between SAT scores and other measures of intelligence.
+  prefs: []
+  type: TYPE_NORMAL
+- en: According to one study, there is a Pearson correlation of ρ=0.72 between total
+    SAT scores and IQ scores, which sounds like a strong correlation. But R² = ρ²
+    = 0.52, so SAT scores account for only 52% of variance in IQ.
+  prefs: []
+  type: TYPE_NORMAL
+- en: IQ scores are normalized with `Std(ys) = 15`, so
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: So using SAT score to predict IQ reduces RMSE from 15 points to 10.4 points.
+    A correlation of 0.72 yields a reduction in RMSE of only 31%.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If you see a correlation that looks impressive, remember that R² is a better
+    indicator of reduction in MSE, and reduction in RMSE is a better indicator of
+    predictive power.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 10.6  Testing a linear model
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The effect of mother’s age on birth weight is small, and has little predictive
+    power. So is it possible that the apparent relationship is due to chance? There
+    are several ways we might test the results of a linear fit.
+  prefs: []
+  type: TYPE_NORMAL
+- en: One option is to test whether the apparent reduction in MSE is due to chance.
+    In that case, the test statistic is R² and the null hypothesis is that there is
+    no relationship between the variables. We can simulate the null hypothesis by
+    permutation, as in Section[9.5](thinkstats2010.html#corrtest), when we tested
+    the correlation between mother’s age and birth weight. In fact, because R² = ρ²,
+    a one-sided test of R² is equivalent to a two-sided test of ρ. We’ve already done
+    that test, and found p < 0.001, so we conclude that the apparent relationship
+    between mother’s age and birth weight is statistically significant.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Another approach is to test whether the apparent slope is due to chance. The
+    null hypothesis is that the slope is actually zero; in that case we can model
+    the birth weights as random variations around their mean. Here’s a HypothesisTest
+    for this model:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: The data are represented as sequences of ages and weights. The test statistic
+    is the slope estimated by `LeastSquares`. The model of the null hypothesis is
+    represented by the mean weight of all babies and the deviations from the mean.
+    To generate simulated data, we permute the deviations and add them to the mean.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here’s the code that runs the hypothesis test:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: The p-value is less than 0.001, so although the estimated slope is small, it
+    is unlikely to be due to chance.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Estimating the p-value by simulating the null hypothesis is strictly correct,
+    but there is a simpler alternative. Remember that we already computed the sampling
+    distribution of the slope, in Section [10.4](#regest). To do that, we assumed
+    that the observed slope was correct and simulated experiments by resampling.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Figure [10.4](#linear4) shows the sampling distribution of the slope, from Section[10.4](#regest),
+    and the distribution of slopes generated under the null hypothesis. The sampling
+    distribution is centered about the estimated slope, 0.017 lbs/year, and the slopes
+    under the null hypothesis are centered around 0; but other than that, the distributions
+    are identical. The distributions are also symmetric, for reasons we will see in
+    Section [14.4](thinkstats2015.html#CLT).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '![](../Images/6cb387fe7f1b0f5d9c3fbe86f3e55f5d.png)'
+  prefs:
+  - PREF_BQ
+  type: TYPE_IMG
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '| Figure 10.4: The sampling distribution of the estimated slope and the distribution
+    of slopes generated under the null hypothesis. The vertical lines are at 0 and
+    the observed slope, 0.017 lbs/year. |'
+  prefs:
+  - PREF_BQ
+  type: TYPE_TB
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'So we could estimate the p-value two ways:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Compute the probability that the slope under the null hypothesis exceeds the
+    observed slope.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Compute the probability that the slope in the sampling distribution falls below
+    0\. (If the estimated slope were negative, we would compute the probability that
+    the slope in the sampling distribution exceeds 0.)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The second option is easier because we normally want to compute the sampling
+    distribution of the parameters anyway. And it is a good approximation unless the
+    sample size is small *and* the distribution of residuals is skewed. Even then,
+    it is usually good enough, because p-values don’t have to be precise.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here’s the code that estimates the p-value of the slope using the sampling
+    distribution:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: Again, we find p < 0.001.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 10.7  Weighted resampling
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: So far we have treated the NSFG data as if it were a representative sample,
+    but as I mentioned in Section [1.2](thinkstats2002.html#nsfg), it is not. The
+    survey deliberately oversamples several groups in order to improve the chance
+    of getting statistically significant results; that is, in order to improve the
+    power of tests involving these groups.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This survey design is useful for many purposes, but it means that we cannot
+    use the sample to estimate values for the general population without accounting
+    for the sampling process.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For each respondent, the NSFG data includes a variable called `finalwgt`, which
+    is the number of people in the general population the respondent represents. This
+    value is called a sampling weight, or just “weight.”
+  prefs: []
+  type: TYPE_NORMAL
+- en: As an example, if you survey 100,000 people in a country of 300 million, each
+    respondent represents 3,000 people. If you oversample one group by a factor of
+    2, each person in the oversampled group would have a lower weight, about 1500.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To correct for oversampling, we can use resampling; that is, we can draw samples
+    from the survey using probabilities proportional to sampling weights. Then, for
+    any quantity we want to estimate, we can generate sampling distributions, standard
+    errors, and confidence intervals. As an example, I will estimate mean birth weight
+    with and without sampling weights.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In Section [10.4](#regest), we saw `ResampleRows`, which chooses rows from
+    a DataFrame, giving each row the same probability. Now we need to do the same
+    thing using probabilities proportional to sampling weights. `ResampleRowsWeighted`
+    takes a DataFrame, resamples rows according to the weights in `finalwgt`, and
+    returns a DataFrame containing the resampled rows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`weights` is a Series; converting it to a dictionary makes a map from the indices
+    to the weights. In `cdf` the values are indices and the probabilities are proportional
+    to the weights.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`indices` is a sequence of row indices; `sample` is a DataFrame that contains
+    the selected rows. Since we sample with replacement, the same row might appear
+    more than once.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now we can compare the effect of resampling with and without weights. Without
+    weights, we generate the sampling distribution like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'With weights, it looks like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The following table summarizes the results:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '|   | mean birth | standard | 90% CI |'
+  prefs: []
+  type: TYPE_TB
+- en: '|   | weight (lbs) | error |   |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Unweighted | 7.27 | 0.014 | (7.24, 7.29) |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Weighted | 7.35 | 0.014 | (7.32, 7.37) |'
+  prefs: []
+  type: TYPE_TB
+- en: In this example, the effect of weighting is small but non-negligible. The difference
+    in estimated means, with and without weighting, is about 0.08 pounds, or 1.3 ounces.
+    This difference is substantially larger than the standard error of the estimate,
+    0.014 pounds, which implies that the difference is not due to chance.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 10.8  Exercises
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: A solution to this exercise is in `chap10soln.ipynb`
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exercise 1
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*Using the data from the BRFSS, compute the linear least squares fit for log(weight)
+    versus height. How would you best present the estimated parameters for a model
+    like this where one of the variables is log-transformed? If you were trying to
+    guess someone’s weight, how much would it help to know their height?*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*Like the NSFG, the BRFSS oversamples some groups and provides a sampling weight
+    for each respondent. In the BRFSS data, the variable name for these weights is
+    `finalwt`. Use resampling, with and without weights, to estimate the mean height
+    of respondents in the BRFSS, the standard error of the mean, and a 90% confidence
+    interval. How much does correct weighting affect the estimates?*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 10.9  Glossary
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'linear fit: a line intended to model the relationship between variables.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'least squares fit: A model of a dataset that minimizes the sum of squares of
+    the residuals.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'residual: The deviation of an actual value from a model.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'goodness of fit: A measure of how well a model fits data.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'coefficient of determination: A statistic intended to quantify goodness of
+    fit.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'sampling weight: A value associated with an observation in a sample that indicates
+    what part of the population it represents.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL

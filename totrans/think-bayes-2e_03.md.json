@@ -1,0 +1,1 @@
+["```py\nconda env create -f environment.yml\nconda activate ThinkBayes2 \n```", "```py\nconda install python jupyter pandas scipy matplotlib\npip install empiricaldist \n```"]

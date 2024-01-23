@@ -1,0 +1,1378 @@
+- en: Decision Analysis
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/ThinkBayes2/chap09.html](https://allendowney.github.io/ThinkBayes2/chap09.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: This chapter presents a problem inspired by the game show *The Price is Right*.
+    It is a silly example, but it demonstrates a useful process called Bayesian [decision
+    analysis](https://en.wikipedia.org/wiki/Decision_analysis).
+  prefs: []
+  type: TYPE_NORMAL
+- en: As in previous examples, we’ll use data and prior distribution to compute a
+    posterior distribution; then we’ll use the posterior distribution to choose an
+    optimal strategy in a game that involves bidding.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As part of the solution, we will use kernel density estimation (KDE) to estimate
+    the prior distribution, and a normal distribution to compute the likelihood of
+    the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: And at the end of the chapter, I pose a related problem you can solve as an
+    exercise.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Price Is Right Problem
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: On November 1, 2007, contestants named Letia and Nathaniel appeared on *The
+    Price is Right*, an American television game show. They competed in a game called
+    “The Showcase”, where the objective is to guess the price of a collection of prizes.
+    The contestant who comes closest to the actual price, without going over, wins
+    the prizes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Nathaniel went first. His showcase included a dishwasher, a wine cabinet, a
+    laptop computer, and a car. He bid \$26,000.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Letia’s showcase included a pinball machine, a video arcade game, a pool table,
+    and a cruise of the Bahamas. She bid \$21,500.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The actual price of Nathaniel’s showcase was \$25,347\. His bid was too high,
+    so he lost.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The actual price of Letia’s showcase was \$21,578.
+  prefs: []
+  type: TYPE_NORMAL
+- en: She was only off by \$78, so she won her showcase and, because her bid was off
+    by less than 250, she also won Nathaniel’s showcase.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'For a Bayesian thinker, this scenario suggests several questions:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Before seeing the prizes, what prior beliefs should the contestants have about
+    the price of the showcase?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: After seeing the prizes, how should the contestants update those beliefs?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Based on the posterior distribution, what should the contestants bid?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'The third question demonstrates a common use of Bayesian methods: decision
+    analysis.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: This problem is inspired by [an example](https://nbviewer.jupyter.org/github/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers/blob/master/Chapter5_LossFunctions/Ch5_LossFunctions_PyMC3.ipynb)
+    in Cameron Davidson-Pilon’s book, [*Probablistic Programming and Bayesian Methods
+    for Hackers*](http://camdavidsonpilon.github.io/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers).
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Prior
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: To choose a prior distribution of prices, we can take advantage of data from
+    previous episodes. Fortunately, [fans of the show keep detailed records](https://web.archive.org/web/20121107204942/http://www.tpirsummaries.8m.com/).
+  prefs: []
+  type: TYPE_NORMAL
+- en: For this example, I downloaded files containing the price of each showcase from
+    the 2011 and 2012 seasons and the bids offered by the contestants.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following function reads the data and cleans it up a little.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: I’ll read both files and concatenate them.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE3]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here’s what the dataset looks like:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | Showcase 1 | Showcase 2 | Bid 1 | Bid 2 | Difference 1 | Difference 2
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 50969.0 | 45429.0 | 42000.0 | 34000.0 | 8969.0 | 11429.0 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 21901.0 | 34061.0 | 14000.0 | 59900.0 | 7901.0 | -25839.0 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 32815.0 | 53186.0 | 32000.0 | 45000.0 | 815.0 | 8186.0 |'
+  prefs: []
+  type: TYPE_TB
+- en: The first two columns, `Showcase 1` and `Showcase 2`, are the values of the
+    showcases in dollars. The next two columns are the bids the contestants made.
+    The last two columns are the differences between the actual values and the bids.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Kernel Density Estimation
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: This dataset contains the prices for 313 previous showcases, which we can think
+    of as a sample from the population of possible prices.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can use this sample to estimate the prior distribution of showcase prices.
+    One way to do that is kernel density estimation (KDE), which uses the sample to
+    estimate a smooth distribution. If you are not familiar with KDE, you can [read
+    about it here](https://mathisonian.github.io/kde).
+  prefs: []
+  type: TYPE_NORMAL
+- en: SciPy provides `gaussian_kde`, which takes a sample and returns an object that
+    represents the estimated distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following function takes `sample`, makes a KDE, evaluates it at a given
+    sequence of quantities, `qs`, and returns the result as a normalized PMF.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'We can use it to estimate the distribution of values for Showcase 1:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Here’s what it looks like:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell source Hide code cell source</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]</details> ![_images/ebaa0745d09379dd23ab450b3c00d28fbc9fb9cd3e2cf44daeb54add4c0dd6b3.png](../Images/f5710bb28e58d6b9012587f16bce6520.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** Use this function to make a `Pmf` that represents the prior distribution
+    for Showcase 2, and plot it.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/03e7a17b911a5c8515491255fd219d0d4ad520f22f431b7f9edd96263ac92665.png](../Images/f4f9e3ebe8bbc827836c00a2bbff3bdb.png)</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Distribution of Error
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'To update these priors, we have to answer these questions:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: What data should we consider and how should we quantify it?
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Can we compute a likelihood function; that is, for each hypothetical price,
+    can we compute the conditional likelihood of the data?
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: To answer these questions, I will model each contestant as a price-guessing
+    instrument with known error characteristics. In this model, when the contestant
+    sees the prizes, they guess the price of each prize and add up the prices. Let’s
+    call this total `guess`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now the question we have to answer is, “If the actual price is `price`, what
+    is the likelihood that the contestant’s guess would be `guess`?”
+  prefs: []
+  type: TYPE_NORMAL
+- en: Equivalently, if we define `error = guess - price`, we can ask, “What is the
+    likelihood that the contestant’s guess is off by `error`?”
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To answer this question, I’ll use the historical data again. For each showcase
+    in the dataset, let’s look at the difference between the contestant’s bid and
+    the actual price:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: To visualize the distribution of these differences, we can use KDE again.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Here’s what these distributions look like:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE13]</details> ![_images/38edf57e021b3d3e8ce3a2ddc1a30895a9ccc1658bd4a943befbe2c2bbd9b82e.png](../Images/1f2c4977b6b89234efbc72504e4094b9.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: It looks like the bids are too low more often than too high, which makes sense.
+    Remember that under the rules of the game, you lose if you overbid, so contestants
+    probably underbid to some degree deliberately.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For example, if they guess that the value of the showcase is \\(40,000, they
+    might bid \\\)36,000 to avoid going over.
+  prefs: []
+  type: TYPE_NORMAL
+- en: It looks like these distributions are well modeled by a normal distribution,
+    so we can summarize them with their mean and standard deviation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For example, here is the mean and standard deviation of `Diff` for Player 1.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can use these differences to model the contestant’s distribution of errors.
+    This step is a little tricky because we don’t actually know the contestant’s guesses;
+    we only know what they bid.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'So we have to make some assumptions:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: I’ll assume that contestants underbid because they are being strategic, and
+    that on average their guesses are accurate. In other words, the mean of their
+    errors is 0.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: But I’ll assume that the spread of the differences reflects the actual spread
+    of their errors. So, I’ll use the standard deviation of the differences as the
+    standard deviation of their errors.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Based on these assumptions, I’ll make a normal distribution with parameters
+    0 and `std_diff1`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: SciPy provides an object called `norm` that represents a normal distribution
+    with the given mean and standard deviation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is an object that provides `pdf`, which evaluates the probability
+    density function of the normal distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For example, here is the probability density of `error=-100`, based on the distribution
+    of errors for Player 1.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: By itself, this number doesn’t mean very much, because probability densities
+    are not probabilities. But they are proportional to probabilities, so we can use
+    them as likelihoods in a Bayesian update, as we’ll see in the next section.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Update
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Suppose you are Player 1\. You see the prizes in your showcase and your guess
+    for the total price is \$23,000.
+  prefs: []
+  type: TYPE_NORMAL
+- en: From your guess I will subtract away each hypothetical price in the prior distribution;
+    the result is your error under each hypothesis.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now suppose we know, based on past performance, that your estimation error is
+    well modeled by `error_dist1`. Under that assumption we can compute the likelihood
+    of your error under each hypothesis.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is an array of likelihoods, which we can use to update the prior.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: <details class="hide below-input"><summary aria-label="Toggle hidden content">Show
+    code cell output Hide code cell output</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE22]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here’s what the posterior distribution looks like:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE23]</details> ![_images/aa8da72d19e4cc2f8250daffba23cacc37f51d434598893c89d0b11c900ab63c.png](../Images/20af617e710a333d6f7a5753b0309a6b.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Because your initial guess is in the lower end of the range, the posterior distribution
+    has shifted to the left. We can compute the posterior mean to see by how much.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: Before you saw the prizes, you expected to see a showcase with a value close
+    to \\(30,000. After making a guess of \\\)23,000, you updated the prior distribution.
+    Based on the combination of the prior and your guess, you now expect the actual
+    price to be about \$26,000.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** Now suppose you are Player 2\. When you see your showcase, you
+    guess that the total price is \$38,000.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Use `diff2` to construct a normal distribution that represents the distribution
+    of your estimation errors.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Compute the likelihood of your guess for each actual price and use it to update
+    `prior2`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Plot the posterior distribution and compute the posterior mean. Based on the
+    prior and your guess, what do you expect the actual price of the showcase to be?
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE27]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE28]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE29]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE31]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/ddaebf298f67138cb1ad06d9864e123abfa90d2dcfc18d188d40247fa118ee0a.png](../Images/236c7d0250007875a754dd2c19e1c288.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">Show code
+    cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE34]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Probability of Winning
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Now that we have a posterior distribution for each player, let’s think about
+    strategy.
+  prefs: []
+  type: TYPE_NORMAL
+- en: First, from the point of view of Player 1, let’s compute the probability that
+    Player 2 overbids. To keep it simple, I’ll use only the performance of past players,
+    ignoring the value of the showcase.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following function takes a sequence of past bids and returns the fraction
+    that overbid.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s an estimate for the probability that Player 2 overbids.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE37]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now suppose Player 1 underbids by \$5000. What is the probability that Player
+    2 underbids by more?
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The following function uses past performance to estimate the probability that
+    a player underbids by more than a given amount, `diff`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s the probability that Player 2 underbids by more than \$5000.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE39]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE40]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here’s the probability they underbid by more than \$10,000.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE41]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE42]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'We can combine these functions to compute the probability that Player 1 wins,
+    given the difference between their bid and the actual price:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE43]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s the probability that you win, given that you underbid by \$5000.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE44]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE45]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now let’s look at the probability of winning for a range of possible differences.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE46]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Here’s what it looks like:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE47]</details> ![_images/95b1f75c55a42262fae0f50426c1ad7109acb4485c645d8df064158bda3be190.png](../Images/d89a68655a2a15bae620e54b69ce9d9f.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: If you underbid by \$30,000, the chance of winning is about 30%, which is mostly
+    the chance your opponent overbids.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As your bids gets closer to the actual price, your chance of winning approaches
+    1.
+  prefs: []
+  type: TYPE_NORMAL
+- en: And, of course, if you overbid, you lose (even if your opponent also overbids).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** Run the same analysis from the point of view of Player 2\. Using
+    the sample of differences from Player 1, compute:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The probability that Player 1 overbids.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The probability that Player 1 underbids by more than \$5000.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The probability that Player 2 wins, given that they underbid by \$5000.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Then plot the probability that Player 2 wins for a range of possible differences
+    between their bid and the actual price.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE48]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE49]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE50]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE51]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE52]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE53]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE54]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE55]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/6a0fdd6202e5213fa2c54cc2554bb11ee21096e795e3c9e8c7418d6fd3e5cbbf.png](../Images/176beb4578160880511cac1e394957ed.png)</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Decision Analysis
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In the previous section we computed the probability of winning, given that we
+    have underbid by a particular amount.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In reality the contestants don’t know how much they have underbid by, because
+    they don’t know the actual price.
+  prefs: []
+  type: TYPE_NORMAL
+- en: But they do have a posterior distribution that represents their beliefs about
+    the actual price, and they can use that to estimate their probability of winning
+    with a given bid.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following function takes a possible bid, a posterior distribution of actual
+    prices, and a sample of differences for the opponent.
+  prefs: []
+  type: TYPE_NORMAL
+- en: It loops through the hypothetical prices in the posterior distribution and,
+    for each price,
+  prefs: []
+  type: TYPE_NORMAL
+- en: Computes the difference between the bid and the hypothetical price,
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Computes the probability that the player wins, given that difference, and
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Adds up the weighted sum of the probabilities, where the weights are the probabilities
+    in the posterior distribution.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE56]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'This loop implements the law of total probability:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[P(win) = \sum_{price} P(price) ~ P(win ~|~ price)\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s the probability that Player 1 wins, based on a bid of \$25,000 and the
+    posterior distribution `posterior1`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE57]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE58]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can loop through a series of possible bids and compute the probability
+    of winning for each one.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE59]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here are the results.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE60]</details> ![_images/a118051eb20c1b1e1fa32532dac88b183989c32465dd2c54b09fee90ac644590.png](../Images/5468adc006e73cd0ec8165b8c8422cf2.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: And here’s the bid that maximizes Player 1’s chance of winning.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE61]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE62]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE63]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE64]'
+  prefs: []
+  type: TYPE_PRE
+- en: Recall that your guess was \\(23,000. Using your guess to compute the posterior
+    distribution, the posterior mean is about \\\)26,000. But the bid that maximizes
+    your chance of winning is \$21,000.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** Do the same analysis for Player 2.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE65]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE66]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/c0a1356834ee3205a1df9657db18fef0a9c80ffdd65b4072b09881b624a09e95.png](../Images/389b2238e8f72065bd674acbfd491767.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">Show code
+    cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE67]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE68]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE69]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE70]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Maximizing Expected Gain
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In the previous section we computed the bid that maximizes your chance of winning.
+    And if that’s your goal, the bid we computed is optimal.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'But winning isn’t everything. Remember that if your bid is off by \$250 or
+    less, you win both showcases. So it might be a good idea to increase your bid
+    a little: it increases the chance you overbid and lose, but it also increases
+    the chance of winning both showcases.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s see how that works out. The following function computes how much you will
+    win, on average, given your bid, the actual price, and a sample of errors for
+    your opponent.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE71]'
+  prefs: []
+  type: TYPE_PRE
+- en: For example, if the actual price is \\(35000 and you bid \\\)30000, you will
+    win about \$23,600 worth of prizes on average, taking into account your probability
+    of losing, winning one showcase, or winning both.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE72]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE73]'
+  prefs: []
+  type: TYPE_PRE
+- en: In reality we don’t know the actual price, but we have a posterior distribution
+    that represents what we know about it. By averaging over the prices and probabilities
+    in the posterior distribution, we can compute the expected gain for a particular
+    bid.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this context, “expected” means the average over the possible showcase values,
+    weighted by their probabilities.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE74]'
+  prefs: []
+  type: TYPE_PRE
+- en: For the posterior we computed earlier, based on a guess of \\(23,000, the expected
+    gain for a bid of \\\)21,000 is about \$16,900.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE75]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE76]'
+  prefs: []
+  type: TYPE_PRE
+- en: But can we do any better?
+  prefs: []
+  type: TYPE_NORMAL
+- en: To find out, we can loop through a range of bids and find the one that maximizes
+    expected gain.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE77]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here are the results.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE78]</details> ![_images/5af6f2ee1d12a94b053bbcda95332bfc6757bf389b2ebf6eb448cbc759aa423b.png](../Images/fd2870c0b0ddd8087fe670358dacba4d.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here is the optimal bid.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE79]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE80]'
+  prefs: []
+  type: TYPE_PRE
+- en: With that bid, the expected gain is about \$17,400.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE81]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE82]'
+  prefs: []
+  type: TYPE_PRE
+- en: Recall that your initial guess was \\(23,000. The bid that maximizes the chance
+    of winning is \\\)21,000. And the bid that maximizes your expected gain is \$22,000.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** Do the same analysis for Player 2.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE83]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE84]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/fa3190e06341295c604af81707aff93d8ee047523308df3bba4a68565008857a.png](../Images/038f8ef198dbb66ad9477d8d0636264d.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">Show code
+    cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE85]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE86]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE87]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE88]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'There’s a lot going on this this chapter, so let’s review the steps:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: First we used KDE and data from past shows to estimate prior distributions for
+    the values of the showcases.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Then we used bids from past shows to model the distribution of errors as a normal
+    distribution.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: We did a Bayesian update using the distribution of errors to compute the likelihood
+    of the data.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: We used the posterior distribution for the value of the showcase to compute
+    the probability of winning for each possible bid, and identified the bid that
+    maximizes the chance of winning.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Finally, we used probability of winning to compute the expected gain for each
+    possible bid, and identified the bid that maximizes expected gain.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Incidentally, this example demonstrates the hazard of using the word “optimal”
+    without specifying what you are optimizing. The bid that maximizes the chance
+    of winning is not generally the same as the bid that maximizes expected gain.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Discussion
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: When people discuss the pros and cons of Bayesian estimation, as contrasted
+    with classical methods sometimes called “frequentist”, they often claim that in
+    many cases Bayesian methods and frequentist methods produce the same results.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In my opinion, this claim is mistaken because Bayesian and frequentist method
+    produce different *kinds* of results:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The result of frequentist methods is usually a single value that is considered
+    to be the best estimate (by one of several criteria) or an interval that quantifies
+    the precision of the estimate.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The result of Bayesian methods is a posterior distribution that represents all
+    possible outcomes and their probabilities.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Granted, you can use the posterior distribution to choose a “best” estimate
+    or compute an interval. And in that case the result might be the same as the frequentist
+    estimate.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'But doing so discards useful information and, in my opinion, eliminates the
+    primary benefit of Bayesian methods: the posterior distribution is more useful
+    than a single estimate, or even an interval.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The example in this chapter demonstrates the point. Using the entire posterior
+    distribution, we can compute the bid that maximizes the probability of winning,
+    or the bid that maximizes expected gain, even if the rules for computing the gain
+    are complicated (and nonlinear).
+  prefs: []
+  type: TYPE_NORMAL
+- en: With a single estimate or an interval, we can’t do that, even if they are “optimal”
+    in some sense. In general, frequentist estimation provides little guidance for
+    decision-making.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If you hear someone say that Bayesian and frequentist methods produce the same
+    results, you can be confident that they don’t understand Bayesian methods.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exercises
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '**Exercise:** When I worked in Cambridge, Massachusetts, I usually took the
+    subway to South Station and then a commuter train home to Needham. Because the
+    subway was unpredictable, I left the office early enough that I could wait up
+    to 15 minutes and still catch the commuter train.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: When I got to the subway stop, there were usually about 10 people waiting on
+    the platform. If there were fewer than that, I figured I just missed a train,
+    so I expected to wait a little longer than usual. And if there there more than
+    that, I expected another train soon.
+  prefs: []
+  type: TYPE_NORMAL
+- en: But if there were a *lot* more than 10 passengers waiting, I inferred that something
+    was wrong, and I expected a long wait. In that case, I might leave and take a
+    taxi.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can use Bayesian decision analysis to quantify the analysis I did intuitively.
+    Given the number of passengers on the platform, how long should we expect to wait?
+    And when should we give up and take a taxi?
+  prefs: []
+  type: TYPE_NORMAL
+- en: My analysis of this problem is in `redline.ipynb`, which is in the repository
+    for this book. [Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ThinkBayes2/blob/master/notebooks/redline.ipynb).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** This exercise is inspired by a true story. In 2001 I created
+    [Green Tea Press](https://greenteapress.com) to publish my books, starting with
+    *Think Python*. I ordered 100 copies from a short run printer and made the book
+    available for sale through a distributor.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: After the first week, the distributor reported that 12 copies were sold. Based
+    that report, I thought I would run out of copies in about 8 weeks, so I got ready
+    to order more. My printer offered me a discount if I ordered more than 1000 copies,
+    so I went a little crazy and ordered 2000.
+  prefs: []
+  type: TYPE_NORMAL
+- en: A few days later, my mother called to tell me that her *copies* of the book
+    had arrived. Surprised, I asked how many. She said ten.
+  prefs: []
+  type: TYPE_NORMAL
+- en: It turned out I had sold only two books to non-relatives. And it took a lot
+    longer than I expected to sell 2000 copies.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The details of this story are unique, but the general problem is something almost
+    every retailer has to figure out. Based on past sales, how do you predict future
+    sales? And based on those predictions, how do you decide how much to order and
+    when?
+  prefs: []
+  type: TYPE_NORMAL
+- en: Often the cost of a bad decision is complicated. If you place a lot of small
+    orders rather than one big one, your costs are likely to be higher. If you run
+    out of inventory, you might lose customers. And if you order too much, you have
+    to pay the various costs of holding inventory.
+  prefs: []
+  type: TYPE_NORMAL
+- en: So, let’s solve a version of the problem I faced. It will take some work to
+    set up the problem; the details are in the notebook for this chapter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Suppose you start selling books online. During the first week you sell 10 copies
+    (and let’s assume that none of the customers are your mother). During the second
+    week you sell 9 copies.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Assuming that the arrival of orders is a Poisson process, we can think of the
+    weekly orders as samples from a Poisson distribution with an unknown rate. We
+    can use orders from past weeks to estimate the parameter of this distribution,
+    generate a predictive distribution for future weeks, and compute the order size
+    that maximized expected profit.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Suppose the cost of printing the book is \$5 per copy,
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: But if you order 100 or more, it’s \$4.50 per copy.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: For every book you sell, you get \$10.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: But if you run out of books before the end of 8 weeks, you lose \$50 in future
+    sales for every week you are out of stock.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: If you have books left over at the end of 8 weeks, you lose \$2 in inventory
+    costs per extra book.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: For example, suppose you get orders for 10 books per week, every week. If you
+    order 60 books,
+  prefs: []
+  type: TYPE_NORMAL
+- en: The total cost is \$300.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: You sell all 60 books, so you make \$600.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: But the book is out of stock for two weeks, so you lose \$100 in future sales.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: In total, your profit is \$200.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If you order 100 books,
+  prefs: []
+  type: TYPE_NORMAL
+- en: The total cost is \$450.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: You sell 80 books, so you make \$800.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: But you have 20 books left over at the end, so you lose \$40.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: In total, your profit is \$310.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Combining these costs with your predictive distribution, how many books should
+    you order to maximize your expected profit?
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To get you started, the following functions compute profits and costs according
+    to the specification of the problem:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE89]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE90]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE91]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE92]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE93]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To test these functions, suppose we get exactly 10 orders per week for eight
+    weeks:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE94]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE95]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: If you print 60 books, your net profit is \$200, as in the example.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE96]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE97]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: If you print 100 books, your net profit is \$310.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE98]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE99]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Of course, in the context of the problem you don’t know how many books will
+    be ordered in any given week. You don’t even know the average rate of orders.
+    However, given the data and some assumptions about the prior, you can compute
+    the distribution of the rate of orders.
+  prefs: []
+  type: TYPE_NORMAL
+- en: You’ll have a chance to do that, but to demonstrate the decision analysis part
+    of the problem, I’ll start with the arbitrary assumption that order rates come
+    from a gamma distribution with mean 9.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s a `Pmf` that represents this distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE100]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE101]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'And here’s what it looks like:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE102]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/f0c07feace81ea12a0bd72e74c54165fcf17f2031f3a2fcdd831a65ed6c36fea.png](../Images/895f1f7563ae339842c1238cfccd8c3a.png)</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now, we *could* generate a predictive distribution for the number of books ordered
+    in a given week, but in this example we have to deal with a complicated cost function.
+    In particular, `out_of_stock_cost` depends on the sequence of orders.
+  prefs: []
+  type: TYPE_NORMAL
+- en: So, rather than generate a predictive distribution, I suggest we run simulations.
+    I’ll demonstrate the steps.
+  prefs: []
+  type: TYPE_NORMAL
+- en: First, from our hypothetical distribution of rates, we can draw a random sample
+    of 1000 values.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE103]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE104]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: For each possible rate, we can generate a sequence of 8 orders.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE105]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE106]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Each row of this array is a hypothetical sequence of orders based on a different
+    hypothetical order rate.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now, if you tell me how many books you printed, I can compute your expected
+    profits, averaged over these 1000 possible sequences.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE107]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: For example, here are the expected profits if you order 70, 80, or 90 books.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE108]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE109]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE110]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE111]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE112]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE113]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now, let’s sweep through a range of values and compute expected profits as a
+    function of the number of books you print.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE114]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE115]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/e7bd0c699b0f0d5d3def4bba11e16b0b0f888bb38e04107ae33456cb2593b744.png](../Images/56763189d6ade009952f80fd45745b8a.png)</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here is the optimal order and the expected profit.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE116]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE117]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now it’s your turn. Choose a prior that you think is reasonable, update it with
+    the data you are given, and then use the posterior distribution to do the analysis
+    I just demonstrated.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE118]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE119]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE120]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/a6338a1a0893a7144417ca17ebf2bc03705a6c0f0dc14683682fd835e33ee33f.png](../Images/ad7464144586cf985b0b21156b164db3.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">Show code
+    cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE121]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE122]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE123]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE124]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE125]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE126]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE127]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE128]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE129]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE130]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE131]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/f6e8f3aba82c7dc42ab819db153489febe30bd949e0bc8eb661d66f90388cf3a.png](../Images/9a8222c213f96336bc0694b34e3b8deb.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">Show code
+    cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE132]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE133]</details>'
+  prefs: []
+  type: TYPE_NORMAL

@@ -1,0 +1,919 @@
+- en: Chapter 11  Regression
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://greenteapress.com/thinkstats2/html/thinkstats2012.html](https://greenteapress.com/thinkstats2/html/thinkstats2012.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: The linear least squares fit in the previous chapter is an example of regression,
+    which is the more general problem of fitting any kind of model to any kind of
+    data. This use of the term “regression” is a historical accident; it is only indirectly
+    related to the original meaning of the word.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The goal of regression analysis is to describe the relationship between one
+    set of variables, called the dependent variables, and another set of variables,
+    called independent or explanatory variables.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the previous chapter we used mother’s age as an explanatory variable to predict
+    birth weight as a dependent variable. When there is only one dependent and one
+    explanatory variable, that’s simple regression. In this chapter, we move on to
+    multiple regression, with more than one explanatory variable. If there is more
+    than one dependent variable, that’s multivariate regression.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If the relationship between the dependent and explanatory variable is linear,
+    that’s linear regression. For example, if the dependent variable is y and the
+    explanatory variables are x[1] and x[2], we would write the following linear regression
+    model:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| y = β[0] + β[1] x[1] + β[2] x[2] + ε  |'
+  prefs: []
+  type: TYPE_TB
+- en: where β[0] is the intercept, β[1] is the parameter associated with x[1], β[2]
+    is the parameter associated with x[2], and ε is the residual due to random variation
+    or other unknown factors.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Given a sequence of values for y and sequences for x[1] and x[2], we can find
+    the parameters, β[0], β[1], and β[2], that minimize the sum of ε². This process
+    is called ordinary least squares. The computation is similar to `thinkstats2.LeastSquare`,
+    but generalized to deal with more than one explanatory variable. You can find
+    the details at [https://en.wikipedia.org/wiki/Ordinary_least_squares](https://en.wikipedia.org/wiki/Ordinary_least_squares)
+  prefs: []
+  type: TYPE_NORMAL
+- en: The code for this chapter is in `regression.py`. For information about downloading
+    and working with this code, see Section [0.2](thinkstats2001.html#code).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 11.1  StatsModels
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In the previous chapter I presented `thinkstats2.LeastSquares`, an implementation
+    of simple linear regression intended to be easy to read. For multiple regression
+    we’ll switch to StatsModels, a Python package that provides several forms of regression
+    and other analyses. If you are using Anaconda, you already have StatsModels; otherwise
+    you might have to install it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'As an example, I’ll run the model from the previous chapter with StatsModels:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`statsmodels` provides two interfaces (APIs); the “formula” API uses strings
+    to identify the dependent and explanatory variables. It uses a syntax called `patsy`;
+    in this example, the `~` operator separates the dependent variable on the left
+    from the explanatory variables on the right.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`smf.ols` takes the formula string and the DataFrame, `live`, and returns an
+    OLS object that represents the model. The name `ols` stands for “ordinary least
+    squares.”'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The `fit` method fits the model to the data and returns a RegressionResults
+    object that contains the results.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The results are also available as attributes. `params` is a Series that maps
+    from variable names to their parameters, so we can get the intercept and slope
+    like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: The estimated parameters are 6.83 and 0.0175, the same as from `LeastSquares`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`pvalues` is a Series that maps from variable names to the associated p-values,
+    so we can check whether the estimated slope is statistically significant:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: The p-value associated with `agepreg` is `5.7e-11`, which is less than 0.001,
+    as expected.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`results.rsquared` contains R², which is 0.0047\. `results` also provides `f_pvalue`,
+    which is the p-value associated with the model as a whole, similar to testing
+    whether R² is statistically significant.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: And `results` provides `resid`, a sequence of residuals, and `fittedvalues`,
+    a sequence of fitted values corresponding to `agepreg`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The results object provides `summary()`, which represents the results in a readable
+    format.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'But it prints a lot of information that is not relevant (yet), so I use a simpler
+    function called `SummarizeResults`. Here are the results of this model:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`Std(ys)` is the standard deviation of the dependent variable, which is the
+    RMSE if you have to guess birth weights without the benefit of any explanatory
+    variables. `Std(res)` is the standard deviation of the residuals, which is the
+    RMSE if your guesses are informed by the mother’s age. As we have already seen,
+    knowing the mother’s age provides no substantial improvement to the predictions.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 11.2  Multiple regression
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In Section [4.5](thinkstats2005.html#birth_weights) we saw that first babies
+    tend to be lighter than others, and this effect is statistically significant.
+    But it is a strange result because there is no obvious mechanism that would cause
+    first babies to be lighter. So we might wonder whether this relationship is spurious.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In fact, there is a possible explanation for this effect. We have seen that
+    birth weight depends on mother’s age, and we might expect that mothers of first
+    babies are younger than others.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'With a few calculations we can check whether this explanation is plausible.
+    Then we’ll use multiple regression to investigate more carefully. First, let’s
+    see how big the difference in weight is:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'First babies are 0.125 lbs lighter, or 2 ounces. And the difference in ages:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The mothers of first babies are 3.59 years younger. Running the linear model
+    again, we get the change in birth weight as a function of age:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The slope is 0.0175 pounds per year. If we multiply the slope by the difference
+    in ages, we get the expected difference in birth weight for first babies and others,
+    due to mother’s age:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is 0.063, just about half of the observed difference. So we conclude,
+    tentatively, that the observed difference in birth weight can be partly explained
+    by the difference in mother’s age.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using multiple regression, we can explore these relationships more systematically.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: The first line creates a new column named `isfirst` that is True for first babies
+    and False otherwise. Then we fit a model using `isfirst` as an explanatory variable.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here are the results:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: Because `isfirst` is a boolean, `ols` treats it as a categorical variable, which
+    means that the values fall into categories, like True and False, and should not
+    be treated as numbers. The estimated parameter is the effect on birth weight when
+    `isfirst` is true, so the result, -0.125 lbs, is the difference in birth weight
+    between first babies and others.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The slope and the intercept are statistically significant, which means that
+    they were unlikely to occur by chance, but the the R² value for this model is
+    small, which means that `isfirst` doesn’t account for a substantial part of the
+    variation in birth weight.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The results are similar with `agepreg`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: Again, the parameters are statistically significant, but R² is low.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'These models confirm results we have already seen. But now we can fit a single
+    model that includes both variables. With the formula `totalwgt_lb ~ isfirst +
+    agepreg`, we get:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: In the combined model, the parameter for `isfirst` is smaller by about half,
+    which means that part of the apparent effect of `isfirst` is actually accounted
+    for by `agepreg`. And the p-value for `isfirst` is about 2.5%, which is on the
+    border of statistical significance.
+  prefs: []
+  type: TYPE_NORMAL
+- en: R² for this model is a little higher, which indicates that the two variables
+    together account for more variation in birth weight than either alone (but not
+    by much).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 11.3  Nonlinear relationships
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Remembering that the contribution of `agepreg` might be nonlinear, we might
+    consider adding a variable to capture more of this relationship. One option is
+    to create a column, `agepreg2`, that contains the squares of the ages:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Now by estimating parameters for `agepreg` and `agepreg2`, we are effectively
+    fitting a parabola:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: The parameter of `agepreg2` is negative, so the parabola curves downward, which
+    is consistent with the shape of the lines in Figure [10.2](thinkstats2011.html#linear2).
+  prefs: []
+  type: TYPE_NORMAL
+- en: The quadratic model of `agepreg` accounts for more of the variability in birth
+    weight; the parameter for `isfirst` is smaller in this model, and no longer statistically
+    significant.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using computed variables like `agepreg2` is a common way to fit polynomials
+    and other functions to data. This process is still considered linear regression,
+    because the dependent variable is a linear function of the explanatory variables,
+    regardless of whether some variables are nonlinear functions of others.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The following table summarizes the results of these regressions:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '|   | isfirst | agepreg | agepreg2 | R² |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Model 1 | -0.125 * | – | – | 0.002 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Model 2 | – | 0.0175 * | – | 0.0047 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Model 3 | -0.0698 (0.025) | 0.0154 * | – | 0.0053 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Model 4 | -0.0504 (0.11) | 0.112 * | -0.00185 * | 0.0075 |'
+  prefs: []
+  type: TYPE_TB
+- en: The columns in this table are the explanatory variables and the coefficient
+    of determination, R². Each entry is an estimated parameter and either a p-value
+    in parentheses or an asterisk to indicate a p-value less than 0.001.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We conclude that the apparent difference in birth weight is explained, at least
+    in part, by the difference in mother’s age. When we include mother’s age in the
+    model, the effect of `isfirst` gets smaller, and the remaining effect might be
+    due to chance.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this example, mother’s age acts as a control variable; including `agepreg`
+    in the model “controls for” the difference in age between first-time mothers and
+    others, making it possible to isolate the effect (if any) of `isfirst`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 11.4  Data mining
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: So far we have used regression models for explanation; for example, in the previous
+    section we discovered that an apparent difference in birth weight is actually
+    due to a difference in mother’s age. But the R² values of those models is very
+    low, which means that they have little predictive power. In this section we’ll
+    try to do better.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Suppose one of your co-workers is expecting a baby and there is an office pool
+    to guess the baby’s birth weight (if you are not familiar with betting pools,
+    see [https://en.wikipedia.org/wiki/Betting_pool](https://en.wikipedia.org/wiki/Betting_pool)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now suppose that you *really* want to win the pool. What could you do to improve
+    your chances? Well, the NSFG dataset includes 244 variables about each pregnancy
+    and another 3087 variables about each respondent. Maybe some of those variables
+    have predictive power. To find out which ones are most useful, why not try them
+    all?
+  prefs: []
+  type: TYPE_NORMAL
+- en: Testing the variables in the pregnancy table is easy, but in order to use the
+    variables in the respondent table, we have to match up each pregnancy with a respondent.
+    In theory we could iterate through the rows of the pregnancy table, use the `caseid`
+    to find the corresponding respondent, and copy the values from the correspondent
+    table into the pregnancy table. But that would be slow.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'A better option is to recognize this process as a join operation as defined
+    in SQL and other relational database languages (see [https://en.wikipedia.org/wiki/Join_(SQL)](https://en.wikipedia.org/wiki/Join_(SQL))).
+    Join is implemented as a DataFrame method, so we can perform the operation like
+    this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: The first line selects records for pregnancies longer than 30 weeks, assuming
+    that the office pool is formed several weeks before the due date.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The next line reads the respondent file. The result is a DataFrame with integer
+    indices; in order to look up respondents efficiently, I replace `resp.index` with
+    `resp.caseid`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The `join` method is invoked on `live`, which is considered the “left” table,
+    and passed `resp`, which is the “right” table. The keyword argument `on` indicates
+    the variable used to match up rows from the two tables.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this example some column names appear in both tables, so we have to provide
+    `rsuffix`, which is a string that will be appended to the names of overlapping
+    columns from the right table. For example, both tables have a column named `race`
+    that encodes the race of the respondent. The result of the join contains two columns
+    named `race` and `race_r`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The pandas implementation is fast. Joining the NSFG tables takes less than a
+    second on an ordinary desktop computer. Now we can start testing variables.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: For each variable we construct a model, compute R², and append the results to
+    a list. The models all include `agepreg`, since we already know that it has some
+    predictive power.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I check that each explanatory variable has some variability; otherwise the results
+    of the regression are unreliable. I also check the number of observations for
+    each model. Variables that contain a large number of `nan`s are not good candidates
+    for prediction.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For most of these variables, we haven’t done any cleaning. Some of them are
+    encoded in ways that don’t work very well for linear regression. As a result,
+    we might overlook some variables that would be useful if they were cleaned properly.
+    But maybe we will find some good candidates.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 11.5  Prediction
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The next step is to sort the results and select the variables that yield the
+    highest values of R².
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: The first variable on the list is `totalwgt_lb`, followed by `birthwgt_lb`.
+    Obviously, we can’t use birth weight to predict birth weight.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Similarly `prglngth` has useful predictive power, but for the office pool we
+    assume pregnancy length (and the related variables) are not known yet.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The first useful predictive variable is `babysex` which indicates whether the
+    baby is male or female. In the NSFG dataset, boys are about 0.3 lbs heavier. So,
+    assuming that the sex of the baby is known, we can use it for prediction.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Next is `race`, which indicates whether the respondent is white, black, or other.
+    As an explanatory variable, race can be problematic. In datasets like the NSFG,
+    race is correlated with many other variables, including income and other socioeconomic
+    factors. In a regression model, race acts as a proxy variable, so apparent correlations
+    with race are often caused, at least in part, by other factors.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The next variable on the list is `nbrnaliv`, which indicates whether the pregnancy
+    yielded multiple births. Twins and triplets tend to be smaller than other babies,
+    so if we know whether our hypothetical co-worker is expecting twins, that would
+    help.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Next on the list is `paydu`, which indicates whether the respondent owns her
+    home. It is one of several income-related variables that turn out to be predictive.
+    In datasets like the NSFG, income and wealth are correlated with just about everything.
+    In this example, income is related to diet, health, health care, and other factors
+    likely to affect birth weight.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Some of the other variables on the list are things that would not be known until
+    later, like `bfeedwks`, the number of weeks the baby was breast fed. We can’t
+    use these variables for prediction, but you might want to speculate on reasons
+    `bfeedwks` might be correlated with birth weight.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Sometimes you start with a theory and use data to test it. Other times you start
+    with data and go looking for possible theories. The second approach, which this
+    section demonstrates, is called data mining. An advantage of data mining is that
+    it can discover unexpected patterns. A hazard is that many of the patterns it
+    discovers are either random or spurious.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Having identified potential explanatory variables, I tested a few models and
+    settled on this one:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'This formula uses some syntax we have not seen yet: `C(race)` tells the formula
+    parser (Patsy) to treat race as a categorical variable, even though it is encoded
+    numerically.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The encoding for `babysex` is 1 for male, 2 for female; writing `babysex==1`
+    converts it to boolean, True for male and False for female.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Similarly `nbrnaliv>1` is True for multiple births and `paydu==1` is True for
+    respondents who own their houses.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`totincr` is encoded numerically from 1-14, with each increment representing
+    about $5000 in annual income. So we can treat these values as numerical, expressed
+    in units of $5000.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here are the results of the model:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: The estimated parameters for race are larger than I expected, especially since
+    we control for income. The encoding is 1 for black, 2 for white, and 3 for other.
+    Babies of black mothers are lighter than babies of other races by 0.27–0.36 lbs.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As we’ve already seen, boys are heavier by about 0.3 lbs; twins and other multiplets
+    are lighter by 1.4 lbs.
+  prefs: []
+  type: TYPE_NORMAL
+- en: People who own their homes have heavier babies by about 0.12 lbs, even when
+    we control for income. The parameter for mother’s age is smaller than what we
+    saw in Section [11.2](#multiple), which suggests that some of the other variables
+    are correlated with age, probably including `paydu` and `totincr`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: All of these variables are statistically significant, some with very low p-values,
+    but R² is only 0.06, still quite small. RMSE without using the model is 1.27 lbs;
+    with the model it drops to 1.23\. So your chance of winning the pool is not substantially
+    improved. Sorry!
+  prefs: []
+  type: TYPE_NORMAL
+- en: 11.6  Logistic regression
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In the previous examples, some of the explanatory variables were numerical and
+    some categorical (including boolean). But the dependent variable was always numerical.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Linear regression can be generalized to handle other kinds of dependent variables.
+    If the dependent variable is boolean, the generalized model is called logistic
+    regression. If the dependent variable is an integer count, it’s called Poisson
+    regression.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As an example of logistic regression, let’s consider a variation on the office
+    pool scenario. Suppose a friend of yours is pregnant and you want to predict whether
+    the baby is a boy or a girl. You could use data from the NSFG to find factors
+    that affect the “sex ratio”, which is conventionally defined to be the probability
+    of having a boy.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If you encode the dependent variable numerically, for example 0 for a girl
+    and 1 for a boy, you could apply ordinary least squares, but there would be problems.
+    The linear model might be something like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| y = β[0] + β[1] x[1] + β[2] x[2] + ε  |'
+  prefs: []
+  type: TYPE_TB
+- en: Where y is the dependent variable, and x[1] and x[2] are explanatory variables.
+    Then we could find the parameters that minimize the residuals.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The problem with this approach is that it produces predictions that are hard
+    to interpret. Given estimated parameters and values for x[1] and x[2], the model
+    might predict y=0.5, but the only meaningful values of y are 0 and 1.
+  prefs: []
+  type: TYPE_NORMAL
+- en: It is tempting to interpret a result like that as a probability; for example,
+    we might say that a respondent with particular values of x[1] and x[2] has a 50%
+    chance of having a boy. But it is also possible for this model to predict y=1.1
+    or y=−0.1, and those are not valid probabilities.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Logistic regression avoids this problem by expressing predictions in terms of
+    odds rather than probabilities. If you are not familiar with odds, “odds in favor”
+    of an event is the ratio of the probability it will occur to the probability that
+    it will not.
+  prefs: []
+  type: TYPE_NORMAL
+- en: So if I think my team has a 75% chance of winning, I would say that the odds
+    in their favor are three to one, because the chance of winning is three times
+    the chance of losing.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Odds and probabilities are different representations of the same information.
+    Given a probability, you can compute the odds like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Given odds in favor, you can convert to probability like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Logistic regression is based on the following model:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| logo = β[0] + β[1] x[1] + β[2] x[2] + ε  |'
+  prefs: []
+  type: TYPE_TB
+- en: Where o is the odds in favor of a particular outcome; in the example, o would
+    be the odds of having a boy.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Suppose we have estimated the parameters β[0], β[1], and β[2] (I’ll explain
+    how in a minute). And suppose we are given values for x[1] and x[2]. We can compute
+    the predicted value of logo, and then convert to a probability:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: So in the office pool scenario we could compute the predictive probability of
+    having a boy. But how do we estimate the parameters?
+  prefs: []
+  type: TYPE_NORMAL
+- en: 11.7  Estimating parameters
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Unlike linear regression, logistic regression does not have a closed form solution,
+    so it is solved by guessing an initial solution and improving it iteratively.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The usual goal is to find the maximum-likelihood estimate (MLE), which is the
+    set of parameters that maximizes the likelihood of the data. For example, suppose
+    we have the following data:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'And we start with the initial guesses β[0]=−1.5, β[1]=2.8, and β[2]=1.1:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Then for each row we can compute `log_o`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'And convert from log odds to probabilities:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: Notice that when `log_o` is greater than 0, `o` is greater than 1 and `p` is
+    greater than 0.5.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The likelihood of an outcome is `p` when `y==1` and `1-p` when `y==0`. For
+    example, if we think the probability of a boy is 0.8 and the outcome is a boy,
+    the likelihood is 0.8; if the outcome is a girl, the likelihood is 0.2\. We can
+    compute that like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The overall likelihood of the data is the product of `likes`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: For these values of `beta`, the likelihood of the data is 0.18. The goal of
+    logistic regression is to find parameters that maximize this likelihood. To do
+    that, most statistics packages use an iterative solver like Newton’s method (see
+    [https://en.wikipedia.org/wiki/Logistic_regression#Model_fitting](https://en.wikipedia.org/wiki/Logistic_regression#Model_fitting)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 11.8  Implementation
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: StatsModels provides an implementation of logistic regression called `logit`,
+    named for the function that converts from probability to log odds. To demonstrate
+    its use, I’ll look for variables that affect the sex ratio.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Again, I load the NSFG data and select pregnancies longer than 30 weeks:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`logit` requires the dependent variable to be binary (rather than boolean),
+    so I create a new column named `boy`, using `astype(int)` to convert to binary
+    integers:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Factors that have been found to affect sex ratio include parents’ age, birth
+    order, race, and social status. We can use logistic regression to see if these
+    effects appear in the NSFG data. I’ll start with the mother’s age:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`logit` takes the same arguments as `ols`, a formula in Patsy syntax and a
+    DataFrame. The result is a Logit object that represents the model. It contains
+    attributes called `endog` and `exog` that contain the endogenous variable, another
+    name for the dependent variable, and the exogenous variables, another name for
+    the explanatory variables. Since they are NumPy arrays, it is sometimes convenient
+    to convert them to DataFrames:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The result of `model.fit` is a BinaryResults object, which is similar to the
+    RegressionResults object we got from `ols`. Here is a summary of the results:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: The parameter of `agepreg` is positive, which suggests that older mothers are
+    more likely to have boys, but the p-value is 0.783, which means that the apparent
+    effect could easily be due to chance.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The coefficient of determination, R², does not apply to logistic regression,
+    but there are several alternatives that are used as “pseudo R² values.” These
+    values can be useful for comparing models. For example, here’s a model that includes
+    several factors believed to be associated with sex ratio:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Along with mother’s age, this model includes father’s age at birth (`hpagelb`),
+    birth order (`birthord`), and race as a categorical variable. Here are the results:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: None of the estimated parameters are statistically significant. The pseudo-R²
+    value is a little higher, but that could be due to chance.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 11.9  Accuracy
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'In the office pool scenario, we are most interested in the accuracy of the
+    model: the number of successful predictions, compared with what we would expect
+    by chance.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In the NSFG data, there are more boys than girls, so the baseline strategy
+    is to guess “boy” every time. The accuracy of this strategy is just the fraction
+    of boys:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: Since `actual` is encoded in binary integers, the mean is the fraction of boys,
+    which is 0.507.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here’s how we compute the accuracy of the model:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE37]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`results.predict` returns a NumPy array of probabilities, which we round off
+    to 0 or 1\. Multiplying by `actual` yields 1 if we predict a boy and get it right,
+    0 otherwise. So, `true_pos` indicates “true positives”.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Similarly, `true_neg` indicates the cases where we guess “girl” and get it
+    right. Accuracy is the fraction of correct guesses:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is 0.512, slightly better than the baseline, 0.507\. But, you should
+    not take this result too seriously. We used the same data to build and test the
+    model, so the model may not have predictive power on new data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Nevertheless, let’s use the model to make a prediction for the office pool.
+    Suppose your friend is 35 years old and white, her husband is 39, and they are
+    expecting their third child:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE39]'
+  prefs: []
+  type: TYPE_PRE
+- en: To invoke `results.predict` for a new case, you have to construct a DataFrame
+    with a column for each variable in the model. The result in this case is 0.52,
+    so you should guess “boy.” But if the model improves your chances of winning,
+    the difference is very small.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 11.10  Exercises
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: My solution to these exercises is in `chap11soln.ipynb`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exercise 1   *Suppose one of your co-workers is expecting a baby and you are
+    participating in an office pool to predict the date of birth. Assuming that bets
+    are placed during the 30th week of pregnancy, what variables could you use to
+    make the best prediction? You should limit yourself to variables that are known
+    before the birth, and likely to be available to the people in the pool.*Exercise 2  
+    *The Trivers-Willard hypothesis suggests that for many mammals the sex ratio depends
+    on “maternal condition”; that is, factors like the mother’s age, size, health,
+    and social status. See* [*https://en.wikipedia.org/wiki/Trivers-Willard_hypothesis*](https://en.wikipedia.org/wiki/Trivers-Willard_hypothesis)
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*Some studies have shown this effect among humans, but results are mixed. In
+    this chapter we tested some variables related to these factors, but didn’t find
+    any with a statistically significant effect on sex ratio.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*As an exercise, use a data mining approach to test the other variables in
+    the pregnancy and respondent files. Can you find any factors with a substantial
+    effect?*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exercise 3   *If the quantity you want to predict is a count, you can use Poisson
+    regression, which is implemented in StatsModels with a function called `poisson`.
+    It works the same way as `ols` and `logit`. As an exercise, let’s use it to predict
+    how many children a woman has born; in the NSFG dataset, this variable is called
+    `numbabes`.*
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*Suppose you meet a woman who is 35 years old, black, and a college graduate
+    whose annual household income exceeds $75,000\. How many children would you predict
+    she has born?*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exercise 4   *If the quantity you want to predict is categorical, you can use
+    multinomial logistic regression, which is implemented in StatsModels with a function
+    called `mnlogit`. As an exercise, let’s use it to guess whether a woman is married,
+    cohabitating, widowed, divorced, separated, or never married; in the NSFG dataset,
+    marital status is encoded in a variable called `rmarital`.*
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*Suppose you meet a woman who is 25 years old, white, and a high school graduate
+    whose annual household income is about $45,000. What is the probability that she
+    is married, cohabitating, etc?*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 11.11  Glossary
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'regression: One of several related processes for estimating parameters that
+    fit a model to data.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'dependent variables: The variables in a regression model we would like to predict.
+    Also known as endogenous variables.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'explanatory variables: The variables used to predict or explain the dependent
+    variables. Also known as independent, or exogenous, variables.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'simple regression: A regression with only one dependent and one explanatory
+    variable.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'multiple regression: A regression with multiple explanatory variables, but
+    only one dependent variable.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'linear regression: A regression based on a linear model.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'ordinary least squares: A linear regression that estimates parameters by minimizing
+    the squared error of the residuals.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'spurious relationship: A relationship between two variables that is caused
+    by a statistical artifact or a factor, not included in the model, that is related
+    to both variables.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'control variable: A variable included in a regression to eliminate or “control
+    for” a spurious relationship.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'proxy variable: A variable that contributes information to a regression model
+    indirectly because of a relationship with another factor, so it acts as a proxy
+    for that factor.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'categorical variable: A variable that can have one of a discrete set of unordered
+    values.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'join: An operation that combines data from two DataFrames using a key to match
+    up rows in the two frames.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'data mining: An approach to finding relationships between variables by testing
+    a large number of models.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'logistic regression: A form of regression used when the dependent variable
+    is boolean.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Poisson regression: A form of regression used when the dependent variable is
+    a non-negative integer, usually a count.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'odds: An alternative way of representing a probability, p, as the ratio of
+    the probability and its complement, p / (1−p).'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL

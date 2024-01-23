@@ -1,0 +1,935 @@
+- en: Comparison
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/ThinkBayes2/chap11.html](https://allendowney.github.io/ThinkBayes2/chap11.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: This chapter introduces joint distributions, which are an essential tool for
+    working with distributions of more than one variable.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We’ll use them to solve a silly problem on our way to solving a real problem.
+    The silly problem is figuring out how tall two people are, given only that one
+    is taller than the other. The real problem is rating chess players (or participants
+    in other kinds of competition) based on the outcome of a game.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To construct joint distributions and compute likelihoods for these problems,
+    we will use outer products and similar operations. And that’s where we’ll start.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Outer Operations
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Many useful operations can be expressed as the “outer product” of two sequences,
+    or another kind of “outer” operation. Suppose you have sequences like `x` and
+    `y`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: The outer product of these sequences is an array that contains the product of
+    every pair of values, one from each sequence. There are several ways to compute
+    outer products, but the one I think is the most versatile is a “mesh grid”.
+  prefs: []
+  type: TYPE_NORMAL
+- en: NumPy provides a function called `meshgrid` that computes a mesh grid. If we
+    give it two sequences, it returns two arrays.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: The first array contains copies of `x` arranged in rows, where the number of
+    rows is the length of `y`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: The second array contains copies of `y` arranged in columns, where the number
+    of columns is the length of `x`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: Because the two arrays are the same size, we can use them as operands for arithmetic
+    functions like multiplication.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'This is result is the outer product of `x` and `y`. We can see that more clearly
+    if we put it in a `DataFrame`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | 1 | 3 | 5 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 2 | 6 | 10 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 4 | 4 | 12 | 20 |'
+  prefs: []
+  type: TYPE_TB
+- en: The values from `x` appear as column names; the values from `y` appear as row
+    labels. Each element is the product of a value from `x` and a value from `y`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can use mesh grids to compute other operations, like the outer sum, which
+    is an array that contains the *sum* of elements from `x` and elements from `y`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can also use comparison operators to compare elements from `x` with elements
+    from `y`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is an array of Boolean values.
+  prefs: []
+  type: TYPE_NORMAL
+- en: It might not be obvious yet why these operations are useful, but we’ll see examples
+    soon. With that, we are ready to take on a new Bayesian problem.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How Tall Is A?
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Suppose I choose two people from the population of adult males in the U.S.;
+    I’ll call them A and B. If we see that A taller than B, how tall is A?
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To answer this question:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: I’ll use background information about the height of men in the U.S. to form
+    a prior distribution of height,
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: I’ll construct a joint prior distribution of height for A and B (and I’ll explain
+    what that is),
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Then I’ll update the prior with the information that A is taller, and
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: From the joint posterior distribution I’ll extract the posterior distribution
+    of height for A.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: In the U.S. the average height of male adults is 178 cm and the standard deviation
+    is 7.7 cm. The distribution is not exactly normal, because nothing in the real
+    world is, but the normal distribution is a pretty good model of the actual distribution,
+    so we can use it as a prior distribution for A and B.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s an array of equally-spaced values from 3 standard deviations below the
+    mean to 3 standard deviations above (rounded up a little).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'SciPy provides a function called `norm` that represents a normal distribution
+    with a given mean and standard deviation, and provides `pdf`, which evaluates
+    the probability density function (PDF) of the normal distribution:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: Probability densities are not probabilities, but if we put them in a `Pmf` and
+    normalize it, the result is a discrete approximation of the normal distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: <details class="hide below-input"><summary aria-label="Toggle hidden content">Show
+    code cell output Hide code cell output</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s what it looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]</details> ![_images/ca73e5bb11900fb220f2fcf00c59faa78a261d27061d28a6802ff728177ec277.png](../Images/842397321283c90d3ac254aad8cf71a3.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: This distribution represents what we believe about the heights of `A` and `B`
+    before we take into account the data that `A` is taller.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Joint Distribution
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The next step is to construct a distribution that represents the probability
+    of every pair of heights, which is called a joint distribution. The elements of
+    the joint distribution are
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[P(A_x~\mathrm{and}~B_y)\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: which is the probability that `A` is \(x\) cm tall and `B` is \(y\) cm tall,
+    for all values of \(x\) and \(y\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: At this point all we know about `A` and `B` is that they are male residents
+    of the U.S., so their heights are independent; that is, knowing the height of
+    `A` provides no additional information about the height of `B`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In that case, we can compute the joint probabilities like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[P(A_x~\mathrm{and}~B_y) = P(A_x)~P(B_y)\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: Each joint probability is the product of one element from the distribution of
+    `x` and one element from the distribution of `y`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: So if we have `Pmf` objects that represent the distribution of height for `A`
+    and `B`, we can compute the joint distribution by computing the outer product
+    of the probabilities in each `Pmf`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following function takes two `Pmf` objects and returns a `DataFrame` that
+    represents the joint distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: The column names in the result are the quantities from `pmf1`; the row labels
+    are the quantities from `pmf2`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In this example, the prior distributions for `A` and `B` are the same, so we
+    can compute the joint prior distribution like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is a `DataFrame` with possible heights of `A` along the columns,
+    heights of `B` along the rows, and the joint probabilities as elements.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If the prior is normalized, the joint prior is also be normalized.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: To add up all of the elements, we convert the `DataFrame` to a NumPy array before
+    calling `sum`. Otherwise, `DataFrame.sum` would compute the sums of the columns
+    and return a `Series`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE24]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Visualizing the Joint Distribution
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The following function uses `pcolormesh` to plot the joint distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s what the joint prior distribution looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE26]</details> ![_images/f4c3236924afef3c39503dafbc9d23c4e950f98938d2b64e7e5461f4fc52d85a.png](../Images/50137dcd91919d400df5e3a4c6cf4909.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: As you might expect, the probability is highest (darkest) near the mean and
+    drops off farther from the mean.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Another way to visualize the joint distribution is a contour plot.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE28]</details> ![_images/b4d3a7f39be8b93f5a7bacd586ef2059900eafc9a11921af83552d1fc42549f2.png](../Images/de6e192d2a8a5c8f91d2cfeda116fb8a.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Each line represents a level of equal probability.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Likelihood
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Now that we have a joint prior distribution, we can update it with the data,
+    which is that `A` is taller than `B`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Each element in the joint distribution represents a hypothesis about the heights
+    of `A` and `B`. To compute the likelihood of every pair of quantities, we can
+    extract the column names and row labels from the prior, like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: And use them to compute a mesh grid.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`X` contains copies of the quantities in `x`, which are possible heights for
+    `A`. `Y` contains copies of the quantities in `y`, which are possible heights
+    for `B`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If we compare `X` and `Y`, the result is a Boolean array:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: To compute likelihoods, I’ll use `np.where` to make an array with `1` where
+    `A_taller` is `True` and 0 elsewhere.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: To visualize this array of likelihoods, I’ll put in a `DataFrame` with the values
+    of `x` as column names and the values of `y` as row labels.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Here’s what it looks like:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE35]</details> ![_images/a7ddc31653415039de483cb2cc71bb15c2a5158cfc374e50d7907a3be3aa16eb.png](../Images/f1a899cd5882c5643e9cee128afa8c48.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The likelihood of the data is 1 where `X > Y` and 0 elsewhere.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Update
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: We have a prior, we have a likelihood, and we are ready for the update. As usual,
+    the unnormalized posterior is the product of the prior and the likelihood.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'I’ll use the following function to normalize the posterior:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE37]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: <details class="hide below-input"><summary aria-label="Toggle hidden content">Show
+    code cell output Hide code cell output</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE39]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: And here’s what it looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE40]</details> ![_images/723b56c47afd3491992a957f204dd91d2d37db9e9eb60809483a62112d9d82d8.png](../Images/e58153ae31d610b7a67c24ce582a2d76.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: All pairs where `B` is taller than `A` have been eliminated. The rest of the
+    posterior looks the same as the prior, except that it has been renormalized.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Marginal Distributions
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The joint posterior distribution represents what we believe about the heights
+    of `A` and `B` given the prior distributions and the information that `A` is taller.
+  prefs: []
+  type: TYPE_NORMAL
+- en: From this joint distribution, we can compute the posterior distributions for
+    `A` and `B`. To see how, let’s start with a simpler problem.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Suppose we want to know the probability that `A` is 180 cm tall. We can select
+    the column from the joint distribution where `x=180`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE41]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE42]'
+  prefs: []
+  type: TYPE_PRE
+- en: This column contains posterior probabilities for all cases where `x=180`; if
+    we add them up, we get the total probability that `A` is 180 cm tall.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE43]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE44]'
+  prefs: []
+  type: TYPE_PRE
+- en: It’s about 3%.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now, to get the posterior distribution of height for `A`, we can add up all
+    of the columns, like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE45]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE46]'
+  prefs: []
+  type: TYPE_PRE
+- en: The argument `axis=0` means we want to add up the columns.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The result is a `Series` that contains every possible height for `A` and its
+    probability. In other words, it is the distribution of heights for `A`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We can put it in a `Pmf` like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE47]'
+  prefs: []
+  type: TYPE_PRE
+- en: When we extract the distribution of a single variable from a joint distribution,
+    the result is called a **marginal distribution**. The name comes from a common
+    visualization that shows the joint distribution in the middle and the marginal
+    distributions in the margins.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here’s what the marginal distribution for `A` looks like:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE48]</details> ![_images/11645c6bdd4ed1339103397c3d1fadddf4c4a6d0a5a19bf0d76a844f7a4072da.png](../Images/08933f4fb6676b92895827e2c0334987.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Similarly, we can get the posterior distribution of height for `B` by adding
+    up the rows and putting the result in a `Pmf`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE49]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s what it looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE50]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/ef59d833b4aa535c0d626935665b387c157495060b480d5c9c3ff175d66a065e.png](../Images/6ecdeb135d436cc037b65a5e88d8379b.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Let’s put the code from this section in a function:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE51]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`marginal` takes as parameters a joint distribution and an axis number:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: If `axis=0`, it returns the marginal of the first variable (the one on the x-axis);
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: If `axis=1`, it returns the marginal of the second variable (the one on the
+    y-axis).
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'So we can compute both marginals like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE52]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s what they look like, along with the prior.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE53]</details> ![_images/c7bcc6133ef1b03fe8ddbbbeb64d1c0f2a18cd4e302df47b5c51a535dff784a4.png](../Images/9ce2b6bed61876bfb802d372502d39fc.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: As you might expect, the posterior distribution for `A` is shifted to the right
+    and the posterior distribution for `B` is shifted to the left.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We can summarize the results by computing the posterior means:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE54]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE55]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE56]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE57]'
+  prefs: []
+  type: TYPE_PRE
+- en: Based on the observation that `A` is taller than `B`, we are inclined to believe
+    that `A` is a little taller than average, and `B` is a little shorter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Notice that the posterior distributions are a little narrower than the prior.
+    We can quantify that by computing their standard deviations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE58]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE59]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE60]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE61]'
+  prefs: []
+  type: TYPE_PRE
+- en: The standard deviations of the posterior distributions are a little smaller,
+    which means we are more certain about the heights of `A` and `B` after we compare
+    them.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Conditional Posteriors
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Now suppose we measure `A` and find that he is 170 cm tall. What does that tell
+    us about `B`?
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In the joint distribution, each column corresponds a possible height for `A`.
+    We can select the column that corresponds to height 170 cm like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE62]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The result is a `Series` that represents possible heights for `B` and their
+    relative likelihoods. These likelihoods are not normalized, but we can normalize
+    them like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE63]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE64]'
+  prefs: []
+  type: TYPE_PRE
+- en: Making a `Pmf` copies the data by default, so we can normalize `cond_B` without
+    affecting `column_170` or `posterior`. The result is the conditional distribution
+    of height for `B` given that `A` is 170 cm tall.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here’s what it looks like:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell source Hide code cell source</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE65]</details> ![_images/86c7afe0d535a76684f4ffc0dcabfae8d82c40210bbbd0297a63e924ba9891b9.png](../Images/6be7fd8c5145c981f4bfc9e1b14d77c3.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The conditional posterior distribution is cut off at 170 cm, because we have
+    established that `B` is shorter than `A`, and `A` is 170 cm.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Dependence and Independence
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: When we constructed the joint prior distribution, I said that the heights of
+    `A` and `B` were independent, which means that knowing one of them provides no
+    information about the other. In other words, the conditional probability \(P(A_x
+    | B_y)\) is the same as the unconditional probability \(P(A_x)\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: But in the posterior distribution, \(A\) and \(B\) are not independent. If we
+    know that `A` is taller than `B`, and we know how tall `A` is, that gives us information
+    about `B`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The conditional distribution we just computed demonstrates this dependence.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In this chapter we started with the “outer” operations, like outer product,
+    which we used to construct a joint distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In general, you cannot construct a joint distribution from two marginal distributions,
+    but in the special case where the distributions are independent, you can.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We extended the Bayesian update process and applied it to a joint distribution.
+    Then from the posterior joint distribution we extracted marginal posterior distributions
+    and conditional posterior distributions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As an exercise, you’ll have a chance to apply the same process to a problem
+    that’s a little more difficult and a lot more useful, updating a chess player’s
+    rating based on the outcome of a game.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exercises
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '**Exercise:** Based on the results of the previous example, compute the posterior
+    conditional distribution for `A` given that `B` is 180 cm.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Hint: Use `loc` to select a row from a `DataFrame`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE66]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE67]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE68]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/a055ca5045f355b7243323c26f627d5789ef38a780aeb10f2257adf1fbc67ffa.png](../Images/4523d653e69d7a8875570cb68998c64e.png)</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** Suppose we have established that `A` is taller than `B`, but
+    we don’t know how tall `B` is. Now we choose a random woman, `C`, and find that
+    she is shorter than `A` by at least 15 cm. Compute posterior distributions for
+    the heights of `A` and `C`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The average height for women in the U.S. is 163 cm; the standard deviation is
+    7.3 cm.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE69]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE70]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE71]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE72]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE73]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE74]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/b4ce9f2bd62a61e3311858008a797a4a2efc2cc8ea61be3110d7325ab9da910a.png](../Images/d46bdea7dd841a7a636527b54e8fd124.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">Show code
+    cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE75]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE76]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE77]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/290c2532c346858d5fc6608b0600e846e626a337ce17a947207b2272b1fc8c31.png](../Images/d1f82ed4fd480d24a85262be0004309e.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">Show code
+    cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE78]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE79]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/430a2c38b379b815ec316af7c3f25e645b7614fce48de46ed7e4932f3f0e470d.png](../Images/42e2c27461adc54b23f5693da2875560.png)</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exercise:** [The Elo rating system](https://en.wikipedia.org/wiki/Elo_rating_system)
+    is a way to quantify the skill level of players for games like chess.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'It is based on a model of the relationship between the ratings of players and
+    the outcome of a game. Specifically, if \(R_A\) is the rating of player `A` and
+    \(R_B\) is the rating of player `B`, the probability that `A` beats `B` is given
+    by the [logistic function](https://en.wikipedia.org/wiki/Logistic_function):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[P(\mathrm{A~beats~B}) = \frac{1}{1 + 10^{(R_B-R_A)/400}}\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: The parameters 10 and 400 are arbitrary choices that determine the range of
+    the ratings. In chess, the range is from 100 to 2800.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Notice that the probability of winning depends only on the difference in rankings.
+    As an example, if \(R_A\) exceeds \(R_B\) by 100 points, the probability that
+    `A` wins is
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE80]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE81]'
+  prefs: []
+  type: TYPE_PRE
+- en: Suppose `A` has a current rating of 1600, but we are not sure it is accurate.
+    We could describe their true rating with a normal distribution with mean 1600
+    and standard deviation 100, to indicate our uncertainty.
+  prefs: []
+  type: TYPE_NORMAL
+- en: And suppose `B` has a current rating of 1800, with the same level of uncertainty.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Then `A` and `B` play and `A` wins. How should we update their ratings?
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To answer this question:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Construct prior distributions for `A` and `B`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Use them to construct a joint distribution, assuming that the prior distributions
+    are independent.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Use the logistic function above to compute the likelihood of the outcome under
+    each joint hypothesis.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Use the joint prior and likelihood to compute the joint posterior.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Extract and plot the marginal posteriors for `A` and `B`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Compute the posterior means for `A` and `B`. How much should their ratings change
+    based on this outcome?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
+    code cell content Hide code cell content</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE82]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE83]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE84]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/2b25e6e47c47b1066411fcbdc6fef1aa0ff264a2e1beedadbe5815e4455136f4.png](../Images/280d8fb1883c98dafa0ec36738513e7f.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">Show code
+    cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE85]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE86]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE87]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/4de07e3466ba51067efc441c398a4adb3fbfb8765ba4be39d1efc16ef9d5b978.png](../Images/13dff45773fc776667e3b89755d738e6.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">Show code
+    cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE88]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE89]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/e573c4ecda87b84b46b2defc2095974c362e25698723e9b1c4da8b119b4c5d0e.png](../Images/39ffb67774814afd090e41f44a028016.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">Show code
+    cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE90]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE91]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE92]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/1addaf3d554c55605c5d2e75c3a5320a4b3a651b523f638cbd3350cca102486a.png](../Images/9b617d0fd9e53ed922c41f2de3006160.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">Show code
+    cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE93]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE94]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/755763efb7d6c6063c18dd110c8b7d419592cfa700efaff6daa916d4c6d1cdc6.png](../Images/5c5653b529bbfc856a97da20c6edc1e2.png)</details><details
+    class="hide above-input"><summary aria-label="Toggle hidden content">Show code
+    cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE95]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE96]</details> <details class="hide above-input"><summary aria-label="Toggle
+    hidden content">Show code cell content Hide code cell content</summary>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE97]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE98]</details>'
+  prefs: []
+  type: TYPE_NORMAL

@@ -1,0 +1,695 @@
+- en: Grid algorithms for hierarchical models
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/ThinkBayes2/hospital.html](https://allendowney.github.io/ThinkBayes2/hospital.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Copyright 2021 Allen B. Downey
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'License: [Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA
+    4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: It is widely believed that grid algorithms are only practical for models with
+    1-3 parameters, or maybe 4-5 if you are careful. [I’ve said so myself](https://allendowney.github.io/ThinkBayes2/chap19.html).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'But recently I used a grid algorithm to solve the [emitter-detector problem](https://www.allendowney.com/blog/2021/09/05/emitter-detector-redux/),
+    and along the way I noticed something about the structure of the problem: although
+    the model has two parameters, the data only depend on one of them. That makes
+    it possible to evaluate the likelihood function and update the model very efficiently.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Many hierarchical models have a similar structure: the data depend on a small
+    number of parameters, which depend on a small number of hyperparameters. I wondered
+    whether the same method would generalize to more complex models, and it does.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: As an example, in this notebook I’ll use a logitnormal-binomial hierarchical
+    model to solve a problem with two hyperparameters and 13 parameters. The grid
+    algorithm is not just practical; it’s substantially faster than MCMC.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following are some utility functions I’ll use.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: Heart Attack Data
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The problem I’ll solve is based on [Chapter 10 of *Probability and Bayesian
+    Modeling*](https://bayesball.github.io/BOOK/bayesian-hierarchical-modeling.html#example-deaths-after-heart-attack);
+    it uses data on death rates due to heart attack for patients treated at various
+    hospitals in New York City.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can use Pandas to read the data into a `DataFrame`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | Hospital | Cases | Deaths | Death % |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | Bellevue Hospital Center | 129 | 4 | 3.101 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | Harlem Hospital Center | 35 | 1 | 2.857 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | Lenox Hill Hospital | 228 | 18 | 7.894 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | Metropolitan Hospital Center | 84 | 7 | 8.333 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 4 | Mount Sinai Beth Israel | 291 | 24 | 8.247 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 5 | Mount Sinai Hospital | 270 | 16 | 5.926 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 6 | Mount Sinai Roosevelt | 46 | 6 | 13.043 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 7 | Mount Sinai St. Luke’s | 293 | 19 | 6.485 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 8 | NYU Hospitals Center | 241 | 15 | 6.224 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 9 | NYP Hospital - Allen Hospital | 105 | 13 | 12.381 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 10 | NYP Hospital - Columbia Presbyterian Center | 353 | 25 | 7.082 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 11 | NYP Hospital - New York Weill Cornell Center | 250 | 11 | 4.400 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 12 | NYP/Lower Manhattan Hospital | 41 | 4 | 9.756 |'
+  prefs: []
+  type: TYPE_TB
+- en: The columns we need are `Cases`, which is the number of patients treated at
+    each hospital, and `Deaths`, which is the number of those patients who died.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: Solution with PyMC
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Here’s a hierarchical model that estimates the death rate for each hospital
+    and simultaneously estimates the distribution of rates across hospitals.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/4aa477637d76c73e22c5ba5569dcd0f6ab56abcc71deb97593454b7f77dbc822.svg](../Images/cee02df9a8687ea1e007d9785e5ee05e.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: '<progress value="6000" class="" max="6000" style="width:300px; height:20px;
+    vertical-align: middle;">100.00% [6000/6000 00:07<00:00 Sampling 4 chains, 10
+    divergences]</progress>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: To be fair, PyMC doesn’t like this parameterization much (although I’m not sure
+    why). One most runs, there are a moderate number of divergences. Even so, the
+    results are good enough.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here are the posterior distributions of the hyperparameters.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/802eebbd477f71df4cbd9a340d2b5613eb821486aecd59aa0aa52a13b50925b4.png](../Images/12fd7003a8a0f8644da27de2aabe7a95.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: And we can extract the posterior distributions of the xs.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: As an example, here’s the posterior distribution of x for the first hospital.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/548f75d0a6ec0b23bac76b1316b5db52bedb7da62330a04f61a98e13bdf8ef4a.png](../Images/ae8b4180c3aa20fb7981df69ff63edce.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The grid priors
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Now let’s solve the same problem using a grid algorithm. I’ll use the same priors
+    for the hyperparameters, approximated by a grid with about 100 elements in each
+    dimension.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/4d36a111de94173800e762bcb4e11959161323a032fb787907ef801163972d21.png](../Images/b1f2ea3c74c546eb75cd9df07609763d.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/c5a4ef41048db2671496eab57fce6d329cb8f96b1be3d92a1916c1150e1a9737.png](../Images/f2dd9988c740ab93a9771e1c21d328d9.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The following cells confirm that these priors are consistent with the prior
+    samples from PyMC.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/87280efa676b32352a19b7704ee06b02e34ee045e7ef7f4831fdb67fa9c344d0.png](../Images/bf43b5d007ea8420fe02af58fa6c5eb7.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/ce51b8b82a93033e1b1d67375bedb99b23fa5283788710bd0205144e236ed498.png](../Images/d38b70b734ab5e74690ed941974b4d5e.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The joint distribution of hyperparameters
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: I’ll use `make_joint` to make an array that represents the joint prior distribution
+    of the hyperparameters.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s what it looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/958b2a9ea3b4c8c4b4f3da5eb4ab7ec508f51a23ee621cafca7af2836e950632.png](../Images/00ac59083dbac51dc0a419beb53d318e.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Joint prior of hyperparameters and x
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Now we’re ready to lay out the grid for x, which is the proportion we’ll estimate
+    for each hospital.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: For each pair of hyperparameters, we’ll compute the distribution of `x`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can speed this up by computing skipping the terms that don’t depend on x
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is a 3-D array with axes for mu, sigma, and x.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now we need to normalize each distribution of `x`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE37]'
+  prefs: []
+  type: TYPE_PRE
+- en: To normalize, we have to use a safe version of `divide` where `0/0` is `0`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE39]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE40]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is an array that contains the distribution of `x` for each pair of
+    hyperparameters.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now, to get the prior distribution, we multiply through by the joint distribution
+    of the hyperparameters.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE41]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE42]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE43]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE44]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is a 3-D array that represents the joint prior distribution of `mu`,
+    `sigma`, and `x`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To check that it is correct, I’ll extract the marginal distributions and compare
+    them to the priors.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE45]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE46]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/34c43829d056d3ea02a3b60bb7ae8a85900c7622aad347608b98ca80caa33779.png](../Images/e5b39fcfba081fb44539bcc089de8761.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: '[PRE47]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/d0686bec19a94e62e2430a4f3992ecb72ff02e44030ef23a4d6856232389b10f.png](../Images/7735daeec9faf0628ff06fd7a96bac42.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: We didn’t compute the prior distribution of `x` explicitly; it follows from
+    the distribution of the hyperparameters. But we can extract the prior marginal
+    of `x` from the joint prior.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE48]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/bdf43d9b32661a9cbb2dba60731aee477114f535ff9dde513a8f60a814568cd9.png](../Images/8b344dcdb4ee3fc57ed2b4d87590458a.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: And compare it to the prior sample from PyMC.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE49]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE50]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE51]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE52]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/4a08494ee22a1cd5637087377ca5d42275a09b72ebe2a0bcab09d4743c7880bf.png](../Images/3cca26cd857d171029edd0e7c4a4e10b.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The prior distribution of `x` I get from the grid is a bit different from what
+    I get from PyMC. I’m not sure why, but it doesn’t seem to affect the results much.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In addition to the marginals, we’ll also find it useful to extract the joint
+    marginal distribution of the hyperparameters.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE53]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE54]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE55]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/ac19e03323b4eb0f5f7faff979e4b93a985cd85a2344b9596e03357d0b38d5fd.png](../Images/e4a58fb5c6bad02db959c56ff3784715.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The Update
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The likelihood of the data only depends on `x`, so we can compute it like this.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE56]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE57]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE58]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/1d1840c79bc6a6af27158c4e2a15b8e4f57e29e8cef2496426af8782521d9b97.png](../Images/60671e80e622b1a3551d6e67df9ceb00.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: And here’s the update.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE59]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE60]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE61]'
+  prefs: []
+  type: TYPE_PRE
+- en: Serial updates
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: At this point we can do an update based on a single hospital, but how do we
+    update based on all of the hospitals?
+  prefs: []
+  type: TYPE_NORMAL
+- en: As a step toward the right answer, I’ll start with a wrong answer, which is
+    to do the updates one at a time.
+  prefs: []
+  type: TYPE_NORMAL
+- en: After each update, we extract the posterior distribution of the hyperparameters
+    and use it to create the prior for the next update.
+  prefs: []
+  type: TYPE_NORMAL
+- en: At the end, the posterior distribution of hyperparameters is correct, and the
+    marginal posterior of `x` for the *last* hospital is correct, but the other marginals
+    are wrong because they do not take into account data from subsequent hospitals.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE62]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE63]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE64]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here are the posterior distributions of the hyperparameters, compared to the
+    results from PyMC.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE65]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE66]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/34b5f3aae609642555c9a66934a9f59842750d058cd635e3775a6350d7035c40.png](../Images/b79b5761da1d1849da0c955187b9f5b9.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: '[PRE67]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE68]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/3761044539e7fc0be684821dbb5b0ea13c2ebcb0327a8a976943b7d8ef5cd7fe.png](../Images/37314e08f0517a5a6d7c9a9e027ee566.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: '[PRE69]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE70]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/a542fa2d10fed87e7ed4b8eaf3608ebe1f6b56281ed16d700cd0f002bf301bd9.png](../Images/a4c8b46af5695de7ebe28e6536959548.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Parallel updates
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Doing updates one at time is not quite right, but it gives us an insight.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Suppose we start with a uniform distribution for the hyperparameters and do
+    an update with data from one hospital. If we extract the posterior joint distribution
+    of the hyperparameters, what we get is the likelihood function associated with
+    one dataset.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following function computes these likelihood functions and saves them in
+    an array called `hyper_likelihood`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE71]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE72]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE73]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can multiply this out to get the product of the likelihoods.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE74]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE75]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE76]'
+  prefs: []
+  type: TYPE_PRE
+- en: This is useful because it provides an efficient way to compute the marginal
+    posterior distribution of `x` for any hospital. Here’s an example.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE77]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE78]'
+  prefs: []
+  type: TYPE_PRE
+- en: Suppose we did the updates serially and saved this hospital for last. The prior
+    distribution for the final update would reflect the updates from all previous
+    hospitals, which we can compute by dividing out `hyper_likelihood[i]`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE79]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE80]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE81]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can use `hyper_i` to make the prior for the last update.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE82]'
+  prefs: []
+  type: TYPE_PRE
+- en: And then do the update.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE83]'
+  prefs: []
+  type: TYPE_PRE
+- en: And we can confirm that the results are similar to the results from PyMC.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE84]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE85]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE86]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/34b5f3aae609642555c9a66934a9f59842750d058cd635e3775a6350d7035c40.png](../Images/b79b5761da1d1849da0c955187b9f5b9.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: '[PRE87]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE88]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/3761044539e7fc0be684821dbb5b0ea13c2ebcb0327a8a976943b7d8ef5cd7fe.png](../Images/37314e08f0517a5a6d7c9a9e027ee566.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: '[PRE89]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE90]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/a9d4fdfb10f48b1637dd49502a40eaa7edd8fbde43581c654b938fa0020c4977.png](../Images/a8eeefee425f21107c32bce6286b1094.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Compute all marginals
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The following function computes the marginals for all hospitals and stores the
+    results in an array.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE91]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE92]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE93]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s what the results look like, compared to the results from PyMC.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE94]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE95]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/d0edcb50f337ffa8fb1aa3438f6d6b3e834fec9120c52d0b0e7e6a084ee2e721.png](../Images/daf5c629fbde95f4d9f95cab77cacad4.png)
+    ![_images/9f9b3321de2136f0646b22cb95a31ee10e7d6fb91f1aeb5879646fa92de663fa.png](../Images/7f1657ec693bfe615b3224818c87d9ea.png)
+    ![_images/dd45e7a3b4c455b669c74c577c44986221d25ce2af5489c2735d21ec7ac1fbac.png](../Images/6c55a70f2feb1ea5d6148e5cbb5171b7.png)
+    ![_images/1c2aeadaebdcc8c134743788e207023c8cd7d72f976460fbcd4c75d5e12ea2e5.png](../Images/bc572287debc3b9654705c55a87d3176.png)
+    ![_images/8f723b526054d2ea3763233fe110e90964d903b48cfb6f4bc9dddb1c761ae0de.png](../Images/0ec18c9a451fcc08bc77fb5d0c5c808b.png)
+    ![_images/4d8b18ec6de53ad0b15bb01a9db2eaa08692b0304a89adcdd98cb2454a56cd7f.png](../Images/9438b827d107bf0c2da0a578dbe9c6d0.png)
+    ![_images/4d0b50ac9cd3057c970c57df8010f7500d3689cf99266d83a94913c1451bf50c.png](../Images/d50a9d9a3998a1c867f27d7e6a95d4e1.png)
+    ![_images/c65d3bde651709a62e0b7a1f12e8cfabef2d99890b4b722dfadb090b572c9112.png](../Images/16d48694973aa93f1d5a39ab67eab690.png)
+    ![_images/5e010692b56d2e899d5e37cfc93ef9d517b6d2d0434f5daac9f6dd4c969c4b0c.png](../Images/2e7aa725bbc93091d2c4daacd9b28299.png)
+    ![_images/97f4239fe527906abe1e81365268c5abdb7ceee3fe173e0fafde560df3aa03c9.png](../Images/47643ee2ff73e24930532b10835a5c96.png)
+    ![_images/4b1e0fea1bea326560809ea4054d54b76b1b6071a85fcd46203200293a708086.png](../Images/7bba56a4e32abae7a8fda5b85fb16658.png)
+    ![_images/1aea59ec4b6b828f78566aa465c4c4c9c5f80b3391f07dccc183314b7ab43781.png](../Images/b22db57b14186121c858ff10f2036fb0.png)
+    ![_images/c4b8c68ee0b70f97fdf8ae4c88b880c00ac5b27a77ddd157d95953c8307b1bc0.png](../Images/3b60d3e1a1173a8473c26ff0871015c1.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: And here are the percentage differences between the results from the grid algorithm
+    and PyMC. Most of them are less than 1%.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE96]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE97]'
+  prefs: []
+  type: TYPE_PRE
+- en: The total time to do all of these computations is about 300 ms, compared to
+    more than 10 seconds to make and run the PyMC model. And PyMC used 4 cores; I
+    only used one.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The grid algorithm is easy to parallelize, and it’s incremental. If you get
+    data from a new hospital, or new data for an existing one, you can:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Compute the posterior distribution of `x` for the updated hospital, using existing
+    `hyper_likelihoods` for the other hospitals.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Update `hyper_likelihoods` for the other hospitals, and run their updates again.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The total time would be about half of what it takes to start from scratch, and
+    it’s easy to parallelize.
+  prefs: []
+  type: TYPE_NORMAL
+- en: One drawback of the grid algorithm is that it generates marginal distributions
+    for each hospital rather than a sample from the joint distribution of all of them.
+    So it’s less easy to see the correlations among them.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The other drawback, in general, is that it takes more work to set up the grid
+    algorithm. If we switch to another parameterization, it’s easier to change the
+    PyMC model.
+  prefs: []
+  type: TYPE_NORMAL

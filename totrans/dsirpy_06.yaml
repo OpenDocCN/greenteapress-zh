@@ -1,0 +1,460 @@
+- en: Generators and Iterators
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/DSIRP/generator.html](https://allendowney.github.io/DSIRP/generator.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '[Click here to run this chapter on Colab](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/generator.ipynb)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: This chapter introduces generator functions, which are functions that yield
+    a stream of values, rather than returning a single value.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To demonstrate their use, we’ll explore Cartesian products, permutations, and
+    combinations, using playing cards as an example.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Generators
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: As a first example, we’ll write a generator function that generates the playing
+    cards in a standard 52-card deck. This example is inspired by an example in Peter
+    Norvig’s [“A Concrete Introduction to Probability (using Python)”](https://nbviewer.ipython.org/url/norvig.com/ipython/Probability.ipynb).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here are Unicode strings that represent the set of suits and the set of ranks.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here’s a nested for loop that enumerates all pairings of a rank with a suit.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: This set of pairs is the [Cartesian product](https://en.wikipedia.org/wiki/Cartesian_product)
+    of the set of ranks and the set of suits.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following function encapsulates the loops and uses the `yield` statement
+    to generate a stream of cards.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: Because this function includes a `yield` statement, it is a generator function.
+    When we call it, the return value is a generator object.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: The generator object is iterable, so we can use `next` to get the first element
+    of the stream.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: The first time we call `next`, the function runs until it hits the `yield` statement.
+    If we call `next` again, the function resumes from where it left off and runs
+    until it hits the `yield` statement again.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: Because `it` is iterable, we can use it in a for loop to enumerate the remaining
+    pairs.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: When the flow of control reaches the end of the function, the generator object
+    raises and exception, which causes the for loop to end.
+  prefs: []
+  type: TYPE_NORMAL
+- en: itertools
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The `itertools` library provides function for working with iterators, including
+    `product`, which is a generator function that takes iterators as arguments at
+    yields their Cartesian product. We’ll use `itertools.product` in the next few
+    sections; then we’ll see how to implement it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s a loop that uses `itertools.product` to generate the playing cards again.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise:** Encapsulate the previous loop in a generator function called
+    `card_generator2` that yields the playing cards. Then call your function and use
+    it to print the cards.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Enumerating all pairs
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Now that we have playing cards, let’s deal a few hands. In fact, let’s deal
+    all the hands.
+  prefs: []
+  type: TYPE_NORMAL
+- en: First, I’ll create two card generators.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can use `product` to generate all pairs of cards.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: To check whether it’s working correctly, it will be useful to count the number
+    of elements in an iterator, which is what `ilen` does. This idiom is discussed
+    [on Stack Overflow](https://stackoverflow.com/questions/390852/is-there-any-built-in-way-to-get-the-length-of-an-iterable-in-python).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can use it to count the pairs of cards.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: If things have gone according to plan, the number of pairs should be \(52^2\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: Notice that we have to create new card iterators every time, because once they
+    are used up, they behave like an empty list. Here’s what happens if we try to
+    use them again.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: That’s also why we had to create two card iterators. If you create one and try
+    to use it twice, it doesn’t work.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: However, you can get around this limitation by calling `product` with the `repeat`
+    argument, which makes it possible to use a single iterator to generate a Cartesian
+    product.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: Permutations
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In the previous section, you might have noticed that some of the hands we generated
+    are impossible because they contain the same card more than once.
+  prefs: []
+  type: TYPE_NORMAL
+- en: One way to solve this problem is to generate all pairs and then eliminate the
+    ones that contain duplicates.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise:** Write a generator function called `permutations` that takes an
+    iterator and and integer, `r`, as arguments. It should generate tuples that represent
+    all subsets of the elements in the iterator with size `r` and no duplicates.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Test your function by generating and printing all hands with two distinct cards.
+    Then use `ilen` to count how many there are, and confirm that it’s `52 * 51`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The `itertools` library provides a function called `permutations` that does
+    the same thing.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: Combinations
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: At this point we are generating legitimate hands in the sense that the same
+    card never appears twice. But we end up generating the same hand more than once,
+    in the sense that the order of the cards does not matter. So we consider `(card1,
+    card2)` to be the same hand as `(card2, card1)`. To avoid that, we can generate
+    all permutations and then filter out the ones that are not in sorted order.
+  prefs: []
+  type: TYPE_NORMAL
+- en: It doesn’t really matter which order is considered “sorted”; it’s just a way
+    to choose one ordering we consider “canonical”.
+  prefs: []
+  type: TYPE_NORMAL
+- en: That’s what the following loop does.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise:** Write a generator function called `combinations` that takes an
+    iterator and and integer, `r`, as arguments. It should generate tuples that represent
+    all *sorted* subsets of the elements in the iterator with size `r` and no duplicates.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Test your function by generating and printing all hands with two distinct cards.
+    Then use `ilen` to count how many there are, and confirm that it’s `52 * 51 /
+    2`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The `itertools` library provides a function called `combinations` that does
+    the same thing.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE37]'
+  prefs: []
+  type: TYPE_PRE
+- en: Generating hands
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: We can use `combinations` to write a generator that yields all valid hands with
+    `n` playing cards, where “valid” means that the cards are in sorted order with
+    no duplicates.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE39]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE40]'
+  prefs: []
+  type: TYPE_PRE
+- en: If you ever find yourself looping through an iterator and yielding all of the
+    elements, you can simplify the code using `yield from`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE41]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE42]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE43]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now let’s see how many hands there are with 3, 4, and (maybe) 5 cards.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE44]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE45]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE46]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE47]'
+  prefs: []
+  type: TYPE_PRE
+- en: I’m not patient enough to let this one finish.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE48]'
+  prefs: []
+  type: TYPE_PRE
+- en: But if we only care about the number of combinations, we can use [`math.comb`](https://docs.python.org/3/library/math.html).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE49]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE50]'
+  prefs: []
+  type: TYPE_PRE
+- en: How many flushes?
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In poker, a “flush” is a hand where all cards have the same suit. To check whether
+    a hand is a flush, it is convenient to extract the suit part of the cards and
+    make a set.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE51]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE52]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE53]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE54]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise:** Write a function called `is_flush` that takes a hand as an argument
+    and returns `True` if all cards are the same suit.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Then write a generator function called `flush_generator` that takes an integer
+    `n` and return all hands with `n` cards that are flushes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: What fraction of hands with 3, 4, and 5 cards are flushes?
+  prefs: []
+  type: TYPE_NORMAL
+- en: Write your own product
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: So far we’ve been using `itertools.product`, but in the same way we wrote `permutations`
+    and `combinations`, we can write our own `product`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If there are only two iterators, we can do it with nested `for` loops.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE55]'
+  prefs: []
+  type: TYPE_PRE
+- en: So we can generate the cards like this.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE56]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE57]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now, we might be tempted to write two-card hands like this.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE58]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE59]'
+  prefs: []
+  type: TYPE_PRE
+- en: But that doesn’t work; it only generates the first 52 pairs. Before you go on,
+    see if you can figure out why.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can solve this problem by making each iterator into a tuple; then we can
+    loop through them more than once. The price we pay is that we have to store all
+    of the elements of the iterators.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE60]'
+  prefs: []
+  type: TYPE_PRE
+- en: This version of `product2` works if the arguments are iterators.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE61]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE62]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE63]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE64]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now let’s take it up a notch. What if you want the product of more than two
+    iterators. The version of `product` we got from `itertools` can handle this case.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE65]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE66]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Exercise:** Write a generator function that takes an arbitrary number of
+    iterables and yields their Cartesian product. Compare the results to `itertools.product`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Hint: I found it easiest to write this recursively.'
+  prefs: []
+  type: TYPE_NORMAL
