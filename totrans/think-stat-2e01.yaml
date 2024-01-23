@@ -1,36 +1,43 @@
 - en: Chapter 0  Preface
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
 - en: 原文：[https://greenteapress.com/thinkstats2/html/thinkstats2001.html](https://greenteapress.com/thinkstats2/html/thinkstats2001.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: 'Think Stats is an introduction to the practical tools of exploratory data analysis.
     The organization of the book follows the process I use when I start working with
     a dataset:'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
 - en: 'Importing and cleaning: Whatever format the data is in, it usually takes some
     time and effort to read the data, clean and transform it, and check that everything
     made it through the translation process intact.'
+  id: totrans-3
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'Single variable explorations: I usually start by examining one variable at
     a time, finding out what the variables mean, looking at distributions of the values,
     and choosing appropriate summary statistics.'
+  id: totrans-4
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'Pair-wise explorations: To identify possible relationships between variables,
     I look at tables and scatter plots, and compute correlations and linear fits.'
+  id: totrans-5
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'Multivariate analysis: If there are apparent relationships between variables,
     I use multiple regression to add control variables and investigate more complex
     relationships.'
+  id: totrans-6
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -38,28 +45,33 @@
     important to answer three questions: How big is the effect? How much variability
     should we expect if we run the same measurement again? Is it possible that the
     apparent effect is due to chance?'
+  id: totrans-7
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'Visualization: During exploration, visualization is an important tool for finding
     possible relationships and effects. Then if an apparent effect holds up to scrutiny,
     visualization is an effective way to communicate results.'
+  id: totrans-8
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'This book takes a computational approach, which has several advantages over
     mathematical approaches:'
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
 - en: I present most ideas using Python code, rather than mathematical notation. In
     general, Python code is more readable; also, because it is executable, readers
     can download it, run it, and modify it.
+  id: totrans-10
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Each chapter includes exercises readers can do to develop and solidify their
     learning. When you write programs, you express your understanding in code; while
     you are debugging the program, you are also correcting your understanding.
+  id: totrans-11
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -67,95 +79,123 @@
     you can explore the Central Limit Theorem (CLT) by generating random samples and
     computing their sums. The resulting visualizations demonstrate why the CLT works
     and when it doesn’t.
+  id: totrans-12
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Some ideas that are hard to grasp mathematically are easy to understand by simulation.
     For example, we approximate p-values by running random simulations, which reinforces
     the meaning of the p-value.
+  id: totrans-13
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Because the book is based on a general-purpose programming language (Python),
     readers can import data from almost any source. They are not limited to datasets
     that have been cleaned and formatted for a particular statistics tool.
+  id: totrans-14
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: I wrote this book assuming that the reader is familiar with core Python, including
     object-oriented features, but not pandas, NumPy, and SciPy.
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
 - en: I assume that the reader knows basic mathematics, including logarithms, for
     example, and summations. I refer to calculus concepts in a few places, but you
     don’t have to do any calculus.
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
 - en: If you have never studied statistics, I think this book is a good place to start.
     And if you have taken a traditional statistics class, I hope this book will help
     repair the damage.
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
 - en: 'To demonstrate my approach to statistical analysis, the book presents a case
     study that runs through all of the chapters. It uses data from two sources:'
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
 - en: The National Survey of Family Growth (NSFG), conducted by the U.S. Centers for
     Disease Control and Prevention (CDC) to gather “information on family life, marriage
     and divorce, pregnancy, infertility, use of contraception, and men’s and women’s
     health.” (See [http://cdc.gov/nchs/nsfg.htm](http://cdc.gov/nchs/nsfg.htm).)
+  id: totrans-19
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: The Behavioral Risk Factor Surveillance System (BRFSS), conducted by the National
     Center for Chronic Disease Prevention and Health Promotion to “track health conditions
     and risk behaviors in the United States.” (See [http://cdc.gov/BRFSS/](http://cdc.gov/BRFSS/).)
+  id: totrans-20
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 由美国疾病控制和预防中心进行的行为风险因素监测系统（BRFSS）旨在“跟踪美国的健康状况和风险行为”。（见[http://cdc.gov/BRFSS/](http://cdc.gov/BRFSS/)。）
 - en: Other examples use data from the IRS, the U.S. Census, and the Boston Marathon.
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 其他例子使用了来自美国国税局、美国人口普查局和波士顿马拉松的数据。
 - en: This second edition of Think Stats includes the chapters from the first edition,
     many of them substantially revised, and new chapters on regression, time series
     analysis, survival analysis, and analytic methods. The previous edition did not
     use pandas, SciPy, or StatsModels, so all of that material is new.
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 这本《统计思维》的第二版包括了第一版的章节，其中许多章节经过了大幅修订，并新增了关于回归、时间序列分析、生存分析和分析方法的新章节。上一版没有使用pandas、SciPy或StatsModels，所以所有这些内容都是新的。
 - en: 0.1  How I wrote this book
+  id: totrans-23
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 0.1  我是如何写这本书的
 - en: When people write a new textbook, they usually start by reading a stack of old
     textbooks. As a result, most books contain the same material in pretty much the
     same order.
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 当人们写新教科书时，他们通常会从一堆旧教科书中开始阅读。因此，大多数书籍包含的材料几乎是按照相同的顺序排列的。
 - en: 'I did not do that. In fact, I used almost no printed material while I was writing
     this book, for several reasons:'
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 我没有这样做。事实上，在我写这本书的时候，我几乎没有使用任何印刷材料，原因有几个：
 - en: My goal was to explore a new approach to this material, so I didn’t want much
     exposure to existing approaches.
+  id: totrans-26
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 我的目标是探索这个材料的新方法，所以我不想接触太多现有的方法。
 - en: Since I am making this book available under a free license, I wanted to make
     sure that no part of it was encumbered by copyright restrictions.
+  id: totrans-27
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 由于我将这本书以自由许可证的形式提供，我希望确保它的任何部分都不受版权限制。
 - en: Many readers of my books don’t have access to libraries of printed material,
     so I tried to make references to resources that are freely available on the Internet.
+  id: totrans-28
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 我的读者中有许多人无法接触到印刷材料的图书馆，所以我试图引用一些在互联网上免费提供的资源。
 - en: Some proponents of old media think that the exclusive use of electronic resources
     is lazy and unreliable. They might be right about the first part, but I think
     they are wrong about the second, so I wanted to test my theory.
+  id: totrans-29
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 一些老媒体的支持者认为，专门使用电子资源是懒惰和不可靠的。他们可能在第一部分是对的，但我认为他们在第二部分是错误的，所以我想测试一下我的理论。
 - en: The resource I used more than any other is Wikipedia. In general, the articles
     I read on statistical topics were very good (although I made a few small changes
     along the way). I include references to Wikipedia pages throughout the book and
@@ -164,196 +204,287 @@
     generally consistent with Wikipedia, unless I had a good reason to deviate. Other
     resources I found useful were Wolfram MathWorld and the Reddit statistics forum,
     [http://www.reddit.com/r/statistics](http://www.reddit.com/r/statistics).
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: 我使用的资源比其他任何资源都要多的是维基百科。总的来说，我阅读的统计主题的文章都非常好（尽管我在途中做了一些小的修改）。我在整本书中都包含了对维基百科页面的引用，并鼓励你去跟踪这些链接；在许多情况下，维基百科页面会继续我描述的内容。本书中的词汇和符号通常与维基百科保持一致，除非我有充分的理由偏离。我发现有用的其他资源是Wolfram
+    MathWorld和Reddit统计论坛，[http://www.reddit.com/r/statistics](http://www.reddit.com/r/statistics)。
 - en: 0.2  Using the code
+  id: totrans-31
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 0.2  使用代码
 - en: The code and data used in this book are available from [http://allendowney.github.io/ThinkStats2/](http://allendowney.github.io/ThinkStats2/).
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 这本书中使用的代码和数据可以从[http://allendowney.github.io/ThinkStats2/](http://allendowney.github.io/ThinkStats2/)获取。
 - en: 'The easiest way to work with this code it to run it on Colab, which is a free
     service that runs Jupyter notebooks in a web browser. For every chapter, I provide
     two notebooks: one contains the code from the chapter and the exercises; the other
     also contains the solutions.'
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用这些代码的最简单方法是在Colab上运行它，这是一个免费的服务，在Web浏览器中运行Jupyter笔记本。对于每一章，我都提供了两个笔记本：一个包含了章节和练习中的代码；另一个还包含了解决方案。
 - en: If you want to run these notebooks on your own computer, you can downloads them
     individually from GitHub or download the entire repository from [https://github.com/AllenDowney/ThinkStats2/archive/refs/heads/master.zip](https://github.com/AllenDowney/ThinkStats2/archive/refs/heads/master.zip).
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你想在自己的电脑上运行这些笔记本，你可以从GitHub上单独下载它们，或者从[https://github.com/AllenDowney/ThinkStats2/archive/refs/heads/master.zip](https://github.com/AllenDowney/ThinkStats2/archive/refs/heads/master.zip)下载整个存储库。
 - en: I developed this book using Anaconda from Continuum Analytics, which is a free
     Python distribution that includes all the packages you’ll need to run the code
     (and lots more). I found Anaconda easy to install. By default it does a user-level
     installation, so you don’t need administrative privileges. You can download Anaconda
     from [http://continuum.io/downloads](http://continuum.io/downloads).
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 我使用了Continuum Analytics的Anaconda来编写这本书，这是一个免费的Python发行版，包括了你运行代码所需的所有软件包（以及更多）。我发现Anaconda很容易安装。默认情况下，它进行用户级安装，所以你不需要管理权限。你可以从[http://continuum.io/downloads](http://continuum.io/downloads)下载Anaconda。
 - en: 'If you don’t want to use Anaconda, you will need the following packages:'
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你不想使用Anaconda，你将需要以下软件包：
 - en: pandas for representing and analyzing data, [http://pandas.pydata.org/](http://pandas.pydata.org/);
+  id: totrans-37
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 用于表示和分析数据的pandas，[http://pandas.pydata.org/](http://pandas.pydata.org/)；
 - en: NumPy for basic numerical computation, [http://www.numpy.org/](http://www.numpy.org/);
+  id: totrans-38
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 用于基本数值计算的NumPy，[http://www.numpy.org/](http://www.numpy.org/)；
 - en: SciPy for scientific computation including statistics, [http://www.scipy.org/](http://www.scipy.org/);
+  id: totrans-39
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 科学计算包SciPy，包括统计学，[http://www.scipy.org/](http://www.scipy.org/)；
 - en: StatsModels for regression and other statistical analysis, [http://statsmodels.sourceforge.net/](http://statsmodels.sourceforge.net/);
     and
+  id: totrans-40
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 回归和其他统计分析的StatsModels，[http://statsmodels.sourceforge.net/](http://statsmodels.sourceforge.net/)；
 - en: matplotlib for visualization, [http://matplotlib.org/](http://matplotlib.org/).
+  id: totrans-41
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 可视化工具matplotlib，[http://matplotlib.org/](http://matplotlib.org/)。
 - en: Although these are commonly used packages, they are not included with all Python
     installations, and they can be hard to install in some environments. If you have
     trouble installing them, I strongly recommend using Anaconda or one of the other
     Python distributions that include these packages.
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: 尽管这些是常用的软件包，但并非所有Python安装都包含它们，并且在某些环境中安装它们可能很困难。如果您在安装时遇到问题，我强烈建议使用Anaconda或其他包含这些软件包的Python发行版。
 - en: —
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: —
 - en: Allen B. Downey is a Professor of Computer Science at the Franklin W. Olin College
     of Engineering in Needham, MA.
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: Allen B. Downey是马萨诸塞州尼达姆富兰克林W.奥林工程学院的计算机科学教授。
 - en: Contributor List
+  id: totrans-45
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 贡献者名单
 - en: If you have a suggestion or correction, please send email to `downey@allendowney.com`.
     If I make a change based on your feedback, I will add you to the contributor list
     (unless you ask to be omitted).
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果您有建议或更正，请发送电子邮件至`downey@allendowney.com`。如果我根据您的反馈进行更改，我将把您加入贡献者名单（除非您要求省略）。
 - en: If you include at least part of the sentence the error appears in, that makes
     it easy for me to search. Page and section numbers are fine, too, but not quite
     as easy to work with. Thanks!
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果您至少包含错误所在句子的一部分，这样对我来说很容易搜索。页码和章节号也可以，但不太容易处理。谢谢！
 - en: Lisa Downey and June Downey read an early draft and made many corrections and
     suggestions.
+  id: totrans-48
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: Lisa Downey和June Downey阅读了初稿，并提出了许多更正和建议。
 - en: Steven Zhang found several errors.
+  id: totrans-49
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: Steven Zhang发现了几个错误。
 - en: Andy Pethan and Molly Farison helped debug some of the solutions, and Molly
     spotted several typos.
+  id: totrans-50
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: Andy Pethan和Molly Farison帮助调试了一些解决方案，Molly发现了几个错别字。
 - en: Dr. Nikolas Akerblom knows how big a Hyracotherium is.
+  id: totrans-51
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: Dr. Nikolas Akerblom知道Hyracotherium有多大。
 - en: Alex Morrow clarified one of the code examples.
+  id: totrans-52
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: Alex Morrow澄清了一个代码示例。
 - en: Jonathan Street caught an error in the nick of time.
+  id: totrans-53
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: Jonathan Street在最后一刻发现了一个错误。
 - en: Many thanks to Kevin Smith and Tim Arnold for their work on plasTeX, which I
     used to convert this book to DocBook.
+  id: totrans-54
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 非常感谢Kevin Smith和Tim Arnold在plasTeX上的工作，我用它将这本书转换为DocBook。
 - en: George Caplan sent several suggestions for improving clarity.
+  id: totrans-55
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: George Caplan发送了几个改进清晰度的建议。
 - en: Julian Ceipek found an error and a number of typos.
+  id: totrans-56
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: Julian Ceipek发现了一个错误和一些错别字。
 - en: Stijn Debrouwere, Leo Marihart III, Jonathan Hammler, and Kent Johnson found
     errors in the first print edition.
+  id: totrans-57
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: Stijn Debrouwere，Leo Marihart III，Jonathan Hammler和Kent Johnson在第一版印刷中发现了错误。
 - en: Jörg Beyer found typos in the book and made many corrections in the docstrings
     of the accompanying code.
+  id: totrans-58
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: Jörg Beyer在书中发现了错别字，并在附带代码的docstrings中进行了许多更正。
 - en: Tommie Gannert sent a patch file with a number of corrections.
+  id: totrans-59
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: Tommie Gannert发送了一个包含许多更正的补丁文件。
 - en: Christoph Lendenmann submitted several errata.
+  id: totrans-60
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: Christoph Lendenmann提交了几个勘误。
 - en: Michael Kearney sent me many excellent suggestions.
+  id: totrans-61
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: Michael Kearney给我寄来了许多出色的建议。
 - en: Alex Birch made a number of helpful suggestions.
+  id: totrans-62
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: Alex Birch提出了许多有用的建议。
 - en: Lindsey Vanderlyn, Griffin Tschurwald, and Ben Small read an early version of
     this book and found many errors.
+  id: totrans-63
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: Lindsey Vanderlyn，Griffin Tschurwald和Ben Small阅读了这本书的早期版本，并发现了许多错误。
 - en: John Roth, Carol Willing, and Carol Novitsky performed technical reviews of
     the book. They found many errors and made many helpful suggestions.
+  id: totrans-64
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: John Roth，Carol Willing和Carol Novitsky对这本书进行了技术审查。他们发现了许多错误，并提出了许多有用的建议。
 - en: David Palmer sent many helpful suggestions and corrections.
+  id: totrans-65
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: David Palmer发送了许多有用的建议和更正。
 - en: Erik Kulyk found many typos.
+  id: totrans-66
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: Erik Kulyk发现了许多错别字。
 - en: Nir Soffer sent several excellent pull requests for both the book and the supporting
     code.
+  id: totrans-67
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: Nir Soffer为这本书和支持代码发送了几个出色的拉取请求。
 - en: GitHub user flothesof sent a number of corrections.
+  id: totrans-68
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: GitHub用户flothesof发送了许多更正。
 - en: Toshiaki Kurokawa, who is working on the Japanese translation of this book,
     has sent many corrections and helpful suggestions.
+  id: totrans-69
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 正在进行这本书的日语翻译的Toshiaki Kurokawa发送了许多更正和有用的建议。
 - en: Benjamin White suggested more idiomatic Pandas code.
+  id: totrans-70
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: Benjamin White建议使用更通俗的Pandas代码。
 - en: Takashi Sato spotted a code error.
+  id: totrans-71
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: Takashi Sato发现了一个代码错误。
 - en: Fardin Afdideh send several pages of corrections and suggestions fork this book
     and others in the Think X series.
+  id: totrans-72
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: Fardin Afdideh为这本书和Think X系列中的其他书籍发送了几页更正和建议。
 - en: Other people who found typos and similar errors are Andrew Heine, Gábor Lipták,
     Dan Kearney, Alexander Gryzlov, Martin Veillette, Haitao Ma, Jeff Pickhardt, Rohit
     Deshpande, Joanne Pratt, Lucian Ursu, Paul Glezen, Ting-kuang Lin, Scott Miller,
     Luigi Patruno.
+  id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: 其他发现错别字和类似错误的人包括Andrew Heine，Gábor Lipták，Dan Kearney，Alexander Gryzlov，Martin
+    Veillette，Haitao Ma，Jeff Pickhardt，Rohit Deshpande，Joanne Pratt，Lucian Ursu，Paul
+    Glezen，Ting-kuang Lin，Scott Miller，Luigi Patruno。
