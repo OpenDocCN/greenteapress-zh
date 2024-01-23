@@ -1908,6 +1908,8 @@
   id: totrans-335
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE101]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE102]'
   id: totrans-336
   prefs: []
@@ -1919,6 +1921,8 @@
   id: totrans-337
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/998e24d1fe296c7997509135f11d22996957981e69247c1875908e46389eacb9.png](../Images/a17e40d075e72408506d7363d6caf227.png)</details><details
+    class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE103]'
   id: totrans-338
   prefs: []
@@ -1930,6 +1934,8 @@
   id: totrans-339
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/a001724951bd27254c3c107ea7cf2ce113b466d7277d6263c3c29ff9818a6abb.png](../Images/5e997d92efb728f58c2e94d973ddec43.png)</details><details
+    class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE104]'
   id: totrans-340
   prefs: []
@@ -1939,11 +1945,13 @@
   id: totrans-341
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE105]</details>'
 - en: '**Exercise:** Now let’s do the version of the problem with all three lists.
     Here’s the data from Chou’s paper:'
   id: totrans-342
   prefs: []
   type: TYPE_NORMAL
+  zh: '**练习：** 现在让我们使用所有三个列表的问题版本。这是Chou论文中的数据：'
 - en: '[PRE106]'
   id: totrans-343
   prefs: []
@@ -1955,19 +1963,23 @@
   id: totrans-344
   prefs: []
   type: TYPE_NORMAL
+  zh: 编写一个循环，计算每对参数的数据可能性，然后更新先验并计算`N`的后验均值。与仅使用前两个列表的结果相比如何？
 - en: Here’s the data in a NumPy array (in reverse order).
   id: totrans-345
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个NumPy数组中的数据（顺序相反）。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-346
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
 - en: '[PRE107]</details>'
   id: totrans-347
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE107]</details>'
 - en: Again, the first value is a place-keeper for the unknown `k000`. The second
     value is `k001`, which means there are 63 cases that appear on the third list
     but not the first two. And the last value is `k111`, which means there are 28
@@ -1975,20 +1987,24 @@
   id: totrans-348
   prefs: []
   type: TYPE_NORMAL
+  zh: 再次，第一个值是未知的`k000`的占位符。第二个值是`k001`，这意味着有63个案例出现在第三个列表上，但前两个列表上没有。最后一个值是`k111`，这意味着有28个案例同时出现在三个列表上。
 - en: In the two-list version of the problem we computed `ps` by enumerating the combinations
     of `p` and `q`.
   id: totrans-349
   prefs: []
   type: TYPE_NORMAL
+  zh: 在问题的两个列表版本中，我们通过枚举`p`和`q`的组合来计算`ps`。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-350
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
 - en: '[PRE108]</details>'
   id: totrans-351
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE108]</details>'
 - en: We could do the same thing for the three-list version, computing the probability
     for each of the eight categories. But we can generalize it by recognizing that
     we are computing the cartesian product of `p` and `q`, repeated once for each
@@ -1996,29 +2012,35 @@
   id: totrans-352
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以对三个列表版本做同样的事情，计算每个八个类别的概率。但是我们可以通过认识到我们正在计算`p`和`q`的笛卡尔积来进行泛化，每个列表重复一次。
 - en: 'And we can use the following function (based on [this StackOverflow answer](https://stackoverflow.com/questions/58242078/cartesian-product-of-arbitrary-lists-in-pandas/58242079#58242079))
     to compute Cartesian products:'
   id: totrans-353
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用以下函数（基于[此StackOverflow答案](https://stackoverflow.com/questions/58242078/cartesian-product-of-arbitrary-lists-in-pandas/58242079#58242079)）来计算笛卡尔积：
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-354
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
 - en: '[PRE109]</details>'
   id: totrans-355
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE109]</details>'
 - en: 'Here’s an example with `p=0.2`:'
   id: totrans-356
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个`p=0.2`的例子：
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-357
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
 - en: '[PRE110]'
   id: totrans-358
   prefs: []
@@ -2028,52 +2050,64 @@
   id: totrans-359
   prefs: []
   type: TYPE_TB
+  zh: '|  | level_0 | level_1 | level_2 |'
 - en: '| --- | --- | --- | --- |'
   id: totrans-360
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- |'
 - en: '| 0 | 0.8 | 0.8 | 0.8 |'
   id: totrans-361
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 0.8 | 0.8 | 0.8 |'
 - en: '| 1 | 0.8 | 0.8 | 0.2 |'
   id: totrans-362
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 0.8 | 0.8 | 0.2 |'
 - en: '| 2 | 0.8 | 0.2 | 0.8 |'
   id: totrans-363
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 0.8 | 0.2 | 0.8 |'
 - en: '| 3 | 0.8 | 0.2 | 0.2 |'
   id: totrans-364
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 0.8 | 0.2 | 0.2 |'
 - en: '| 4 | 0.2 | 0.8 | 0.8 |'
   id: totrans-365
   prefs: []
   type: TYPE_TB
+  zh: '| 4 | 0.2 | 0.8 | 0.8 |'
 - en: '| 5 | 0.2 | 0.8 | 0.2 |'
   id: totrans-366
   prefs: []
   type: TYPE_TB
+  zh: '| 5 | 0.2 | 0.8 | 0.2 |'
 - en: '| 6 | 0.2 | 0.2 | 0.8 |'
   id: totrans-367
   prefs: []
   type: TYPE_TB
+  zh: '| 6 | 0.2 | 0.2 | 0.8 |'
 - en: '| 7 | 0.2 | 0.2 | 0.2 |</details>'
   id: totrans-368
   prefs: []
   type: TYPE_NORMAL
+  zh: '| 7 | 0.2 | 0.2 | 0.2 |</details>'
 - en: 'To compute the probability for each category, we take the product across the
     columns:'
   id: totrans-369
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了计算每个类别的概率，我们沿着列进行乘积：
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-370
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
 - en: '[PRE111]'
   id: totrans-371
   prefs: []
@@ -2083,20 +2117,25 @@
   id: totrans-372
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE112]</details>'
 - en: Now you finish it off from there.
   id: totrans-373
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后你完成它。
 - en: <details class="hide above-input"><summary aria-label="Toggle hidden content">Show
     code cell content Hide code cell content</summary>
   id: totrans-374
   prefs: []
   type: TYPE_NORMAL
+  zh: <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
 - en: '[PRE113]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-375
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE113]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE114]'
   id: totrans-376
   prefs: []
@@ -2107,11 +2146,15 @@
   id: totrans-377
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE115]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE116]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-378
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE116]</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容
+    隐藏代码单元格内容</summary>'
 - en: '[PRE117]'
   id: totrans-379
   prefs: []
@@ -2123,6 +2166,8 @@
   id: totrans-380
   prefs: []
   type: TYPE_NORMAL
+  zh: '![_images/2a20c097ea1f8ffbd3697c9ca7a0d79ff62c241cc153d5cfc47870b5705623a8.png](../Images/6c7ad7fc6852fba14bdb8065c19e8e36.png)</details><details
+    class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>'
 - en: '[PRE118]</details> <details class="hide above-input"><summary aria-label="Toggle
     hidden content">Show code cell content Hide code cell content</summary>'
   id: totrans-381
