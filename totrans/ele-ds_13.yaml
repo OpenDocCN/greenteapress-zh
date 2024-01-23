@@ -510,11 +510,13 @@
   id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: 在科学论文中，我们可以报告这些结果为0.67，90%置信区间[0.61, 0.72]”。
 - en: 'The standard error and confidence interval represent nearly the same information.
     In general, I prefer to report a confidence interval because it is easier to interpret:'
   id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: 标准误差和置信区间代表了几乎相同的信息。一般来说，我更倾向于报告置信区间，因为它更容易解释：
 - en: Formally, the confidence interval means that if we run the same experiment again,
     we expect 90% of the results to fall between 61% and 72% (assuming that the estimated
     risks are correct).
@@ -522,6 +524,7 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 正式地，置信区间意味着如果我们再次进行相同的实验，我们期望90%的结果落在61%和72%之间（假设估计的风险是正确的）。
 - en: More casually, it means that it is plausible that the actually efficacy is as
     low as 61%, or as high as 72% (assuming there are no sources of error other than
     random variation).
@@ -529,16 +532,19 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 更随意地说，这意味着实际的功效可能低至61%，或高至72%（假设除了随机变化之外没有其他误差来源）。
 - en: Estimating Means
   id: totrans-90
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 估计均值
 - en: In the previous examples, we’ve estimated risk, which is a proportion, and efficacy,
     which is a ratio of two proportions. As a third example, let’s estimate a mean.
   id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: 在之前的例子中，我们估计了风险，这是一个比例，以及功效，这是两个比例的比率。作为第三个例子，让我们估计一个均值。
 - en: Suppose we want to estimate the average height of men in the United States.
     It would be impractical to measure everyone in the country, but if we choose a
     random sample of the population and measure the people in the sample, we can use
@@ -546,6 +552,7 @@
   id: totrans-92
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设我们想要估计美国男性的平均身高。测量全国所有人是不切实际的，但如果我们从人口中随机抽取一个样本并测量样本中的人，我们可以使用测量的平均值来估计人口的平均值。
 - en: Ideally, the sample should be **representative**, which means that everyone
     in the population has an equal chance of appearing in the sample. In general,
     that’s not easy to do. Depending on how you recruit people, your sample might
@@ -553,12 +560,14 @@
   id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: 理想情况下，样本应该是**代表性**的，这意味着人口中的每个人都有相同的机会出现在样本中。一般来说，这并不容易做到。根据你如何招募人员，你的样本可能有太多高个子或太多矮个子。
 - en: But let’s suppose we have a representative sample of 103 adult male residents
     of the United States, the average height in the sample is 177 cm, and the standard
     deviation is 8.4 cm.
   id: totrans-94
   prefs: []
   type: TYPE_NORMAL
+  zh: 但假设我们有一个美国成年男性居民的代表性样本，样本的平均身高为177厘米，标准差为8.4厘米。
 - en: If someone asks for your best guess about the height of mean in the U.S., you
     would report 177 cm. But how accurate do you think this estimate is? If you only
     measure 103 people from a population of about 100 million adult males, it seems
@@ -566,18 +575,21 @@
   id: totrans-95
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果有人问你对美国男性的平均身高的最佳猜测，你会报告177厘米。但你认为这个估计有多准确？如果你只从大约1亿成年男性中抽取了103人进行测量，似乎实际的人口平均值可能会高得多或低得多。
 - en: Again, we can use random simulation to quantify the uncertainty of this estimate.
     As we did in the previous examples, we will assume for purposes of simulation
     that the estimates are correct, and simulate the sampling process 1000 times.
   id: totrans-96
   prefs: []
   type: TYPE_NORMAL
+  zh: 同样，我们可以使用随机模拟来量化这一估计的不确定性。就像在之前的例子中一样，我们将假定估计值是正确的，并模拟1000次抽样过程。
 - en: The following function takes as parameters the size of the sample, `n`, the
     presumed average height in the population, `mu`, and the presumed standard deviation,
     `std`.
   id: totrans-97
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数以样本大小`n`、假定的人口平均身高`mu`和假定的标准差`std`作为参数。
 - en: '[PRE36]'
   id: totrans-98
   prefs: []
@@ -588,11 +600,13 @@
   id: totrans-99
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个函数从具有给定均值和标准差的正态分布中生成`n`个随机值，并返回它们的平均值。
 - en: We can run it like this, using the observed mean and standard deviation from
     the sample as the presumed mean and standard deviation of the population.
   id: totrans-100
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以这样运行它，使用样本的观察平均值和标准差作为人口的假定平均值和标准差。
 - en: '[PRE37]'
   id: totrans-101
   prefs: []
@@ -608,6 +622,7 @@
   id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们运行1000次，它模拟了抽样和测量过程，并返回了1000次模拟实验的结果列表。
 - en: '[PRE39]'
   id: totrans-104
   prefs: []
@@ -617,6 +632,7 @@
   id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用KDE图来可视化这些值的分布。
 - en: '[PRE40]'
   id: totrans-106
   prefs: []
@@ -626,6 +642,7 @@
   id: totrans-107
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/11_resampling_58_0.png](../Images/d1f25af31549ffb2b7cb993207316ffc.png)'
 - en: This distribution is called a **sampling distribution** because it represents
     the variation in the results due to the random sampling process. If we recruit
     100 people and compute the mean of their heights, the result might be as low as
@@ -633,11 +650,13 @@
   id: totrans-108
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个分布被称为**抽样分布**，因为它代表了由于随机抽样过程而产生的结果的变化。如果我们招募了100个人并计算他们身高的平均值，由于偶然性，结果可能低至175厘米，或高至179厘米。
 - en: The average of the sampling distribution is close to the presumed mean of the
     population.
   id: totrans-109
   prefs: []
   type: TYPE_NORMAL
+  zh: 抽样分布的平均值接近于人口的假定平均值。
 - en: '[PRE41]'
   id: totrans-110
   prefs: []
@@ -653,6 +672,7 @@
   id: totrans-112
   prefs: []
   type: TYPE_NORMAL
+  zh: 抽样分布的标准差是估计的标准误差。
 - en: '[PRE43]'
   id: totrans-113
   prefs: []
@@ -667,6 +687,7 @@
   id: totrans-115
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用`percentile`来计算90%的置信区间。
 - en: '[PRE45]'
   id: totrans-116
   prefs: []
@@ -682,22 +703,26 @@
   id: totrans-118
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我在论文中报告这个结果，我会说美国成年男性的估计身高为177厘米，90%置信区间[176, 178]厘米。
 - en: Informally, that means that the estimate could plausibly be off by about a centimeter
     either way, just due to random sampling. But we should remember that there are
     other possible sources of error, so we might be off by more than that.
   id: totrans-119
   prefs: []
   type: TYPE_NORMAL
+  zh: 非正式地，这意味着估计值可能由于随机抽样而偏差约一厘米。但我们应该记住还有其他可能的误差来源，所以我们可能偏离得更多。
 - en: The confidence interval puts a best-case bound on the precision of the estimate;
     in this example, the precision of the estimate is 1 cm at best, and might be worse.
   id: totrans-120
   prefs: []
   type: TYPE_NORMAL
+  zh: 置信区间对估计的精度设定了最佳情况的界限；在这个例子中，估计的精度最多为1厘米，可能更差。
 - en: The Resampling Framework
   id: totrans-121
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 重新采样框架
 - en: 'The examples we’ve done so far fit into the framework shown in this diagram:'
   id: totrans-122
   prefs: []
