@@ -239,7 +239,9 @@ plt.text(57, 12, 'Treated', color='C1')
 decorate(xlabel='Mean (mu)', 
          ylabel='Standard deviation (sigma)',
          title='Joint posterior distributions of mu and sigma') 
-``` ![_images/07e09a7764bf63bd25d2de096380ab1b98da662b35273b5a5f32f41b7c0c928d.png](img/40c70f90c0bd3e979a2c0296876ae3c2.png)
+```
+
+![_images/07e09a7764bf63bd25d2de096380ab1b98da662b35273b5a5f32f41b7c0c928d.png](img/40c70f90c0bd3e979a2c0296876ae3c2.png)
 
 沿着$x$-轴，看起来处理组的平均分数更高。沿着$y$-轴，看起来处理组的标准差更低。
 
@@ -315,7 +317,9 @@ pmf_diff.plot()
 decorate(xlabel='Difference in population means', 
          ylabel='PDF', 
          title='Posterior distribution of difference in mu') 
-``` ![_images/17719b39d2db8694dcd3465576ab0f6848ab5bac7aaf1e6ca9c26bd616f14290.png](img/d3285bcfff528c7a281a867a76d7fade.png)
+```
+
+![_images/17719b39d2db8694dcd3465576ab0f6848ab5bac7aaf1e6ca9c26bd616f14290.png](img/d3285bcfff528c7a281a867a76d7fade.png)
 
 有两种方法可以解决这个限制。一种是绘制 CDF，这样可以平滑噪音：
 
@@ -331,7 +335,9 @@ cdf_diff.plot()
 decorate(xlabel='Difference in population means', 
          ylabel='CDF', 
          title='Posterior distribution of difference in mu') 
-``` ![_images/7853b02a168362d7aaa22b1dc7b901dbf56554e8005a90aa2de857eac0221020.png](img/42384d504f6b67b8a8222412cdbf17ed.png)
+```
+
+![_images/7853b02a168362d7aaa22b1dc7b901dbf56554e8005a90aa2de857eac0221020.png](img/42384d504f6b67b8a8222412cdbf17ed.png)
 
 另一个选择是使用核密度估计（KDE）在等间距网格上对 PDF 进行平滑近似，这就是这个函数的作用：
 
@@ -366,7 +372,9 @@ kde_diff.plot()
 decorate(xlabel='Difference in means', 
          ylabel='PDF', 
          title='Posterior distribution of difference in mu') 
-``` ![_images/96237655b97311f4d9c0571002cba9f1f1bf1b50c9e4c69c7f47bdd4235cce83.png](img/750833c43967521c794d8e009b3bc6d2.png)
+```
+
+![_images/96237655b97311f4d9c0571002cba9f1f1bf1b50c9e4c69c7f47bdd4235cce83.png](img/750833c43967521c794d8e009b3bc6d2.png)
 
 这个分布的均值几乎是测试中的 45 分的 10 分，因此治疗的效果似乎是显著的。
 
@@ -580,7 +588,7 @@ posterior_treated2 = update_norm_summary(prior, data)
 
 这就是结果。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 plot_contour(posterior_control2, cmap='Blues')
@@ -592,7 +600,9 @@ plt.text(57, 12, 'Treated', color='C1')
 decorate(xlabel='Mean (mu)', 
          ylabel='Standard deviation (sigma)',
          title='Joint posterior distributions of mu and sigma') 
-``` ![_images/788f06239c80c1669cae10247482f0fb684c52288c1b0713b213e62821d3eb15.png](img/2e0ea03c4df7f105c2b86b60db36f8a2.png)
+```
+
+![_images/788f06239c80c1669cae10247482f0fb684c52288c1b0713b213e62821d3eb15.png](img/2e0ea03c4df7f105c2b86b60db36f8a2.png)
 
 从视觉上看，这些后验联合分布与我们使用整个数据集计算的分布相似，而不仅仅是摘要统计数据。但它们并不完全相同，我们可以通过比较边际分布来看到这一点。
 
@@ -609,7 +619,7 @@ pmf_mean_treated2 = marginal(posterior_treated2, 0)
 
 并将它们与使用整个数据集得到的结果进行比较（虚线）。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 pmf_mean_control.plot(color='C5', ls='--')
@@ -620,7 +630,9 @@ pmf_mean_treated2.plot(label='Treated')
 decorate(xlabel='Population mean', 
          ylabel='PDF', 
          title='Posterior distributions of mu') 
-``` ![_images/8905b82ef04dd79130d1cebbad78367aafe809a8fda9f1cb4c4ed2011ae0311c.png](img/7a53a9d55b1e248b3131381791fe1a63.png)
+```
+
+![_images/8905b82ef04dd79130d1cebbad78367aafe809a8fda9f1cb4c4ed2011ae0311c.png](img/7a53a9d55b1e248b3131381791fe1a63.png)
 
 基于摘要统计数据的后验分布与我们使用整个数据集计算的后验分布相似，但在两种情况下都更短且略宽。
 

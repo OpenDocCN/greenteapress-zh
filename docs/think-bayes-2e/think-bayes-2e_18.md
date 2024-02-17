@@ -69,7 +69,7 @@ ps = hypergeom(N, K, n).pmf(ks)
 
 结果是具有给定参数$N$、$K$和$n$的$k$的分布。看起来是这样的。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 import matplotlib.pyplot as plt
@@ -80,7 +80,9 @@ plt.bar(ks, ps)
 decorate(xlabel='Number of bears observed twice',
          ylabel='PMF',
          title='Hypergeometric distribution of k (known population 100)') 
-``` ![_images/89091d8fbc23233c4e404edd21d8ea5de9de3e5bc1e8080e25666147e0fa8aca.png](img/1a280182fb74f73c44052e57501013e1.png)
+```
+
+![_images/89091d8fbc23233c4e404edd21d8ea5de9de3e5bc1e8080e25666147e0fa8aca.png](img/1a280182fb74f73c44052e57501013e1.png)
 
 $k$的最可能值是 4，这是实验中实际观察到的值。
 
@@ -386,7 +388,7 @@ joint_posterior = posterior_pmf.unstack()
 
 以下是结果的样子。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 from utils import plot_contour
@@ -394,7 +396,9 @@ from utils import plot_contour
 plot_contour(joint_posterior)
 
 decorate(title='Joint posterior distribution of N and p') 
-``` ![_images/16d64440894686542410530f1944189022be98b1f5e334935ac3564296ad1c1e.png](img/20fb308f064e8ec2cf1942d050fc4b3e.png)
+```
+
+![_images/16d64440894686542410530f1944189022be98b1f5e334935ac3564296ad1c1e.png](img/20fb308f064e8ec2cf1942d050fc4b3e.png)
 
 `N`的最可能值接近 100，与之前的模型一样。`p`的最可能值接近 0.2。
 
@@ -681,7 +685,9 @@ posterior_N.plot(color='C4')
 decorate(xlabel='Number of bugs (N)',
          ylabel='PMF',
          title='Posterior marginal distribution of n with known p1, p2') 
-``` ![_images/d563e5ed6f947b2470b1ec9317f0963741fcd3f9f26c5815d72fb8e75cccd114.png](img/46976d5c53d8c858858d1ef0d983d0d6.png)
+```
+
+![_images/d563e5ed6f947b2470b1ec9317f0963741fcd3f9f26c5815d72fb8e75cccd114.png](img/46976d5c53d8c858858d1ef0d983d0d6.png)
 
 ```py
 print(posterior_N.mean(), 
@@ -820,7 +826,7 @@ posterior_N = posterior_pmf.marginal(0)
 
 这是它的样子。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 posterior_N.plot(color='C4')
@@ -828,7 +834,9 @@ posterior_N.plot(color='C4')
 decorate(xlabel='Number of bugs (N)',
          ylabel='PDF',
          title='Posterior marginal distributions of N') 
-``` ![_images/f2cd695e438e075589cab69bddc2955d4dd4d16f5b69b8fba877124b600d71f8.png](img/07b5b2a3692ed9fc4d3e0ffc911cf226.png)显示代码单元格源代码 隐藏代码单元格源代码
+```
+
+![_images/f2cd695e438e075589cab69bddc2955d4dd4d16f5b69b8fba877124b600d71f8.png](img/07b5b2a3692ed9fc4d3e0ffc911cf226.png)
 
 ```py
 posterior_N.mean() 
@@ -842,7 +850,7 @@ posterior_N.mean()
 
 这是`p0`和`p1`的后验分布。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 posterior_p1 = posterior_pmf.marginal(1)
@@ -854,7 +862,9 @@ posterior_p2.plot(label='p2')
 decorate(xlabel='Probability of finding a bug',
          ylabel='PDF',
          title='Posterior marginal distributions of p1 and p2') 
-``` ![_images/10402507c405cb67e580cb3cf7c157f06e4c496f01ca0caf2388ddcdc8fdfc15.png](img/1906c3da6bf6bfc666e5825211e6bcaa.png)
+```
+
+![_images/10402507c405cb67e580cb3cf7c157f06e4c496f01ca0caf2388ddcdc8fdfc15.png](img/1906c3da6bf6bfc666e5825211e6bcaa.png)
 
 ```py
 posterior_p1.mean(), posterior_p1.credible_interval(0.9) 

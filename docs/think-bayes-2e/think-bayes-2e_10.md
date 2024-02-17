@@ -82,13 +82,15 @@ def decorate_euro(title):
     decorate(xlabel='Proportion of heads (x)',
              ylabel='Probability',
              title=title) 
-``` 显示代码单元格源隐藏代码单元格源
+```
 
 ```py
 cumulative.plot(label='CDF')
 pmf.plot(label='PMF')
 decorate_euro(title='Posterior distribution for the Euro problem') 
-``` ![_images/5c45a9af712ec2288ce03ce1aa193619f0c49f4ea04ea44c86a7be39fa4344bf.png](img/8858c7133f1f61a9e62a4454609a6f7c.png)
+```
+
+![_images/5c45a9af712ec2288ce03ce1aa193619f0c49f4ea04ea44c86a7be39fa4344bf.png](img/8858c7133f1f61a9e62a4454609a6f7c.png)
 
 CDF 的范围总是从 0 到 1，与 PMF 相反，PMF 的最大值可以是任何概率。
 
@@ -231,12 +233,14 @@ def decorate_dice(title=''):
     decorate(xlabel='Outcome',
              ylabel='PMF',
              title=title) 
-``` 显示代码单元源代码 隐藏代码单元源代码
+``` 
 
 ```py
 pmf_3d6.plot()
 decorate_dice('Distribution of attributes') 
-``` ![_images/b1f86dac2103398c34f875294d89187fb8c4a3b6a4264c52388783f7e9a22047.png](img/7e37d8a631470c69005f16fbdaa90579.png)
+```
+
+![_images/b1f86dac2103398c34f875294d89187fb8c4a3b6a4264c52388783f7e9a22047.png](img/7e37d8a631470c69005f16fbdaa90579.png)
 
 如果我们掷四个骰子并加上最好的三个，计算总和的分布会更加复杂。我将通过模拟 10000 次掷骰子来估计分布。
 
@@ -274,7 +278,9 @@ pmf_3d6.plot(label='sum of 3 dice')
 pmf_best3.plot(label='best 3 of 4', ls='--')
 
 decorate_dice('Distribution of attributes') 
-``` ![_images/c81d2ebe685be4da1dee4a97864b19e76444c6511d3b1bd703324cdefcd580de.png](img/757d927cf7aecda1b1605aaa103c598c.png)
+```
+
+![_images/c81d2ebe685be4da1dee4a97864b19e76444c6511d3b1bd703324cdefcd580de.png](img/757d927cf7aecda1b1605aaa103c598c.png)
 
 正如你所期望的那样，从四个中选择最好的三个往往会产生更高的值。
 
@@ -365,7 +371,9 @@ cdf_max6.plot(label='max of 6 attributes', ls=':')
 
 decorate_dice('Distribution of attributes')
 plt.ylabel('CDF'); 
-``` ![_images/13e587f63e6680fb43f73d51162d1c4f7e58eac8c77031130d8f60990cd4cf3d.png](img/6c93507d6b4921fe9d32c905372dd581.png)
+```
+
+![_images/13e587f63e6680fb43f73d51162d1c4f7e58eac8c77031130d8f60990cd4cf3d.png](img/6c93507d6b4921fe9d32c905372dd581.png)
 
 `Cdf`提供了`max_dist`，它执行相同的计算，所以我们也可以这样计算最大值的`Cdf`：
 
@@ -412,7 +420,9 @@ cdf_min6.plot(color='C4', label='minimum of 6')
 cdf_max6.plot(color='C2', label='maximum of 6', ls=':')
 decorate_dice('Minimum and maximum of six attributes')
 plt.ylabel('CDF'); 
-``` ![_images/14d14772b16b978755119cdf3244a50fcd4ecc0f3b27d903f70eed78bc9724ed.png](img/acdca4e46dc16ef0ddd137186b392dd3.png)
+```
+
+![_images/14d14772b16b978755119cdf3244a50fcd4ecc0f3b27d903f70eed78bc9724ed.png](img/acdca4e46dc16ef0ddd137186b392dd3.png)
 
 `Cdf`提供了`min_dist`，它执行相同的计算，所以我们也可以这样计算最小值的`Cdf`：
 
@@ -496,7 +506,9 @@ mix1 = (d4 + d6) / 2
 ```py
 mix1.bar(alpha=0.7)
 decorate_dice('Mixture of one 4-sided and one 6-sided die') 
-``` ![_images/8b9a1606de2696f9eb941323b7a4be46212549d4fdb795c058aaec06b86cbd3f.png](img/40dffb285e73a6b0eff9077d69b38935.png)
+```
+
+![_images/8b9a1606de2696f9eb941323b7a4be46212549d4fdb795c058aaec06b86cbd3f.png](img/40dffb285e73a6b0eff9077d69b38935.png)
 
 现在假设您正在与三只怪物战斗：
 
@@ -519,7 +531,9 @@ mix2 = (d4 + 2*d6) / 3
 ```py
 mix2.bar(alpha=0.7)
 decorate_dice('Mixture of one 4-sided and two 6-sided die') 
-``` ![_images/f60dbbf72b2cde8995df0cfb2c309eecf89fcb9825a5732787fa643e88135f47.png](img/fb9aedc2a225a006fe335ec5227f1d09.png)
+```
+
+![_images/f60dbbf72b2cde8995df0cfb2c309eecf89fcb9825a5732787fa643e88135f47.png](img/fb9aedc2a225a006fe335ec5227f1d09.png)
 
 在本节中，我们使用了`+`运算符，它将分布中的概率相加，不要与`Pmf.add_dist`混淆，后者计算分布的总和的分布。
 
@@ -683,7 +697,9 @@ mix = make_mixture(pmf_dice, dice)
 ```py
 mix.bar(label='mixture', alpha=0.6)
 decorate_dice('Distribution of damage with three different weapons') 
-``` ![_images/d1fd9f0edbd24a8c55e791574bac33f0b435f9d025cd1150a1bd483616ed0728.png](img/0bba9ae4868d2cfd8f0f1244e4c0a7d0.png)
+```
+
+![_images/d1fd9f0edbd24a8c55e791574bac33f0b435f9d025cd1150a1bd483616ed0728.png](img/0bba9ae4868d2cfd8f0f1244e4c0a7d0.png)
 
 在本节中，我使用了 Pandas，使得`make_mixture`简洁、高效，并且希望不太难理解。在本章末尾的练习中，你将有机会练习混合，我们将在下一章中再次使用`make_mixture`。
 

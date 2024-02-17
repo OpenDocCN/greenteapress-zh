@@ -102,13 +102,15 @@ def decorate_goals(title=''):
     decorate(xlabel='Number of goals',
         ylabel='PMF',
         title=title) 
-``` 显示代码单元格源代码 隐藏代码单元格源代码
+``` 
 
 ```py
 pmf_goals.bar(label=r'Poisson distribution with $\lambda=1.4/details>)
 
 decorate_goals('Distribution of goals scored') 
-``` ![_images/58c54aa34d3731e8b80f04a10b301b1ece4e10316ef4a35fd1a70b4332219d71.png](img/5302f3f1e12bf32d1b9c9773338d78bd.png)
+```
+
+![_images/58c54aa34d3731e8b80f04a10b301b1ece4e10316ef4a35fd1a70b4332219d71.png](img/5302f3f1e12bf32d1b9c9773338d78bd.png)
 
 最可能的结果是 0、1 和 2；更高的值是可能的，但越来越不太可能。超过 7 的值是可以忽略的。这个分布表明，如果我们知道进球率，我们就可以预测进球数。
 
@@ -166,12 +168,14 @@ def decorate_rate(title=''):
     decorate(xlabel='Goal scoring rate (lam)',
         ylabel='PMF',
         title=title) 
-``` Show code cell source Hide code cell source
+```
 
 ```py
 prior.plot(ls='--', label='prior', color='C5')
 decorate_rate(r'Prior distribution of $\lambda/details>) 
-``` ![_images/7ba78434be5f44d022795ae6c9f5d4277050e2da9534b44be608bda840475700.png](img/02390b3b82770114a9b2194393796dc3.png)
+```
+
+![_images/7ba78434be5f44d022795ae6c9f5d4277050e2da9534b44be608bda840475700.png](img/02390b3b82770114a9b2194393796dc3.png)
 
 这个分布代表了我们对进球的先验知识：`lam` 通常小于 2，偶尔高达 6，很少会更高。
 
@@ -245,7 +249,9 @@ prior.plot(ls='--', label='prior', color='C5')
 france.plot(label='France posterior', color='C3')
 
 decorate_rate('Posterior distribution for France') 
-``` ![_images/8a3342b969ad573b94b1b8e696c887e4f7ee6b38a3b746430e6b92396d756742.png](img/882f5262ce4230869ad254016188d3d1.png)
+```
+
+![_images/8a3342b969ad573b94b1b8e696c887e4f7ee6b38a3b746430e6b92396d756742.png](img/882f5262ce4230869ad254016188d3d1.png)
 
 数据`k=4`使我们认为更高的`lam`值更可能，更低的值更不可能。因此后验分布向右移动。
 
@@ -258,14 +264,16 @@ update_poisson(croatia, 2)
 
 这就是结果。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 prior.plot(ls='--', label='prior', color='C5')
 croatia.plot(label='Croatia posterior', color='C0')
 
 decorate_rate('Posterior distribution for Croatia') 
-``` ![_images/d5a935a0a5ac15c7cef65b49f17499e8f84f352a4439e1461a9dd40ae0c830de.png](img/656cc186025415b771822c80241a93e4.png)
+```
+
+![_images/d5a935a0a5ac15c7cef65b49f17499e8f84f352a4439e1461a9dd40ae0c830de.png](img/656cc186025415b771822c80241a93e4.png)
 
 这是这些分布的后验均值。
 
@@ -343,7 +351,7 @@ pmf_seq = [make_poisson_pmf(lam, goals)
 
 以下图显示了这些分布在几个`lam`值下的情况。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 import matplotlib.pyplot as plt
@@ -354,7 +362,9 @@ for i, index in enumerate([10, 20, 30, 40]):
     pmf = pmf_seq[index]
     pmf.bar(label=f'$\lambda$ = {lam}', color='C3')
     decorate_goals() 
-``` ![_images/62062c40c6a4a2831a237ab2924b29f91d3f6e61a7de23f3dc1237010380f9dd.png](img/fa119384238cf3adbcebd721047f6094.png)
+```
+
+![_images/62062c40c6a4a2831a237ab2924b29f91d3f6e61a7de23f3dc1237010380f9dd.png](img/fa119384238cf3adbcebd721047f6094.png)
 
 预测分布是这些`Pmf`对象的混合，根据后验概率加权。我们可以使用<<_GeneralMixtures>>中的`make_mixture`来计算这个混合。
 
@@ -366,12 +376,14 @@ pred_france = make_mixture(france, pmf_seq)
 
 这是法国在复赛中进球数的预测分布。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 pred_france.bar(color='C3', label='France')
 decorate_goals('Posterior predictive distribution') 
-``` ![_images/59075d25fad64df15f9e94a861a4486a16b91f6bad681d050dc3290afca3698d.png](img/a0ea95a1903ab36205deca76851c6d7a.png)
+```
+
+![_images/59075d25fad64df15f9e94a861a4486a16b91f6bad681d050dc3290afca3698d.png](img/a0ea95a1903ab36205deca76851c6d7a.png)
 
 这个分布代表了两种不确定性：我们不知道`lam`的实际值，即使知道了，我们也不知道下一场比赛的进球数。
 
@@ -478,13 +490,15 @@ def decorate_time(title=''):
     decorate(xlabel='Time between goals (games)',
              ylabel='PMF',
              title=title) 
-``` 显示代码单元格源代码 隐藏代码单元格源代码
+``` 
 
 ```py
 pmf_time.plot(label='exponential with $\lambda$ = 1.4')
 
 decorate_time('Distribution of time between goals') 
-``` ![_images/96ec4c44d1ecd930473d03903142cfd3b9249ca8650f4d696d5463fa14032e4b.png](img/bbb9f0b99d523d99aad1d28134d9c9a9.png)
+```
+
+![_images/96ec4c44d1ecd930473d03903142cfd3b9249ca8650f4d696d5463fa14032e4b.png](img/bbb9f0b99d523d99aad1d28134d9c9a9.png)
 
 这是反直觉的，但事实上，最有可能进球的时间是立即。之后，每个连续时间间隔的概率都会略微降低。
 

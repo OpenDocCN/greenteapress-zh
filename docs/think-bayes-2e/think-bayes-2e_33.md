@@ -74,7 +74,7 @@ prior_N.mean()
 
 这是先验的样子。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 prior_N.plot(color='C7')
@@ -82,7 +82,9 @@ prior_N.plot(color='C7')
 decorate(xlabel='Number of typos (N)',
          ylabel='PMF',
          title='Prior distribution') 
-``` ![_images/77726d32755a0911144b37af88df7d5b01545b8f0092aaa4754562c4c6801e50.png](img/0d27247b200123da695694c7f46e46ab.png)
+```
+
+![_images/77726d32755a0911144b37af88df7d5b01545b8f0092aaa4754562c4c6801e50.png](img/0d27247b200123da695694c7f46e46ab.png)
 
 ## 更新（简单版本）
 
@@ -133,7 +135,7 @@ posterior_N.normalize()
 
 这是它的样子。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 prior_N.plot(color='C7', alpha=0.4, label='prior')
@@ -142,7 +144,9 @@ posterior_N.plot(color='C4', label='posterior')
 decorate(xlabel='Number of typos (N)',
          ylabel='PMF',
          title='Prior distribution') 
-``` ![_images/e9548bb3eda665fa8cc1684da08ffe2df31f833e2ec55e22d0f4c6a08b185931.png](img/76953af36d1e930825c19828768e1369.png)
+```
+
+![_images/e9548bb3eda665fa8cc1684da08ffe2df31f833e2ec55e22d0f4c6a08b185931.png](img/76953af36d1e930825c19828768e1369.png)
 
 最可能的值是 2，后验均值约为 2.3，比先验均值略高一点。
 
@@ -352,7 +356,7 @@ posterior_N.mean()
 
 显然，我们对`p0`和`p1`的不确定性使得存在更多的错别字的可能性，而我们并不擅长发现它们。下面是`p0`和`p1`的后验分布。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 posterior_p1 = posterior_pmf.marginal(1)
@@ -364,7 +368,9 @@ posterior_p2.plot(label='p2')
 decorate(xlabel='Probability of finding a bug',
          ylabel='PDF',
          title='Posterior marginal distributions of p1 and p2') 
-``` ![_images/b1402fb19dc1e3caa863266c73b6723a8334d075a54cad8f228d32265e115cc6.png](img/97f4d4ab12e650084fc56a9ab9ce658f.png)
+```
+
+![_images/b1402fb19dc1e3caa863266c73b6723a8334d075a54cad8f228d32265e115cc6.png](img/97f4d4ab12e650084fc56a9ab9ce658f.png)
 
 由于数据很少，后验分布仍然相当宽，但后验均值略小于先验。
 

@@ -58,7 +58,7 @@ Show code cell content Hide code cell content
 ```py
 def prob(o):
     return o / (o+1) 
-``` Show code cell source Hide code cell source
+``` 
 
 ```py
 import pandas as pd
@@ -85,7 +85,7 @@ table.fillna('--')
 
 将对数几率添加到表中：
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 import numpy as np
@@ -256,11 +256,13 @@ def plot_data(data):
     decorate(ylabel="Probability of damage",
          xlabel="Outside temperature (deg F)",
          title="Damage to O-Rings vs Temperature") 
-``` 显示代码单元格源代码隐藏代码单元格源代码
+``` 
 
 ```py
 plot_data(data) 
-``` ![_images/9c176560b9752003e2f6e6e100518c13a4375e65aa388ab988866eb61c444569.png](img/d4d696fb17142eb2541d5857df0c70b9.png)
+```
+
+![_images/9c176560b9752003e2f6e6e100518c13a4375e65aa388ab988866eb61c444569.png](img/d4d696fb17142eb2541d5857df0c70b9.png)
 
 当室外温度低于 65 度时，O 形圈总是会受损。当温度高于 65 度时，通常不会受损。
 
@@ -355,13 +357,15 @@ ps.mean()
 
 这是具有这些估计参数的逻辑模型的样子。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 plt.plot(xs+offset, ps, label='model', color='C1')
 
 plot_data(data) 
-``` ![_images/184359ae741869c825727d898cd709c7876cb15a30627a4ac069ec7a766dda27.png](img/02337f43c9bd6ff6ed033cb5db254145.png)
+```
+
+![_images/184359ae741869c825727d898cd709c7876cb15a30627a4ac069ec7a766dda27.png](img/02337f43c9bd6ff6ed033cb5db254145.png)
 
 在低温下，损坏的概率很高；在高温下，它接近于 0。
 
@@ -566,7 +570,7 @@ marginal_slope = marginal(joint_posterior, 1)
 
 这是`inter`的后验分布。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 marginal_inter.plot(label='intercept', color='C4')
@@ -574,11 +578,13 @@ marginal_inter.plot(label='intercept', color='C4')
 decorate(xlabel='Intercept',
          ylabel='PDF',
          title='Posterior marginal distribution of intercept') 
-``` ![_images/b06adb0eb4e2bec88511c82b4d847ba57ba32ad397ab1b2c6a8c77dad4aba9f0.png](img/f3b94b3f1bc46134208bdb54c255ad3c.png)
+```
+
+![_images/b06adb0eb4e2bec88511c82b4d847ba57ba32ad397ab1b2c6a8c77dad4aba9f0.png](img/f3b94b3f1bc46134208bdb54c255ad3c.png)
 
 这是`slope`的后验分布。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 marginal_slope.plot(label='slope', color='C2')
@@ -586,7 +592,9 @@ marginal_slope.plot(label='slope', color='C2')
 decorate(xlabel='Slope',
          ylabel='PDF',
          title='Posterior marginal distribution of slope') 
-``` ![_images/282201b1bee504c51b0c181166c0dedfe417f37e44ca3fad23e76f8a5865a3ef.png](img/8efbc3f30e4e6f76a7e2dbe86d5e7d88.png)
+```
+
+![_images/282201b1bee504c51b0c181166c0dedfe417f37e44ca3fad23e76f8a5865a3ef.png](img/8efbc3f30e4e6f76a7e2dbe86d5e7d88.png)
 
 这是后验均值。
 
@@ -645,7 +653,7 @@ marginal_probs = marginal_inter.transform(expit)
 
 这是温度为 70 华氏度时损坏概率的后验分布。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 marginal_probs.plot(color='C1')
@@ -653,7 +661,9 @@ marginal_probs.plot(color='C1')
 decorate(xlabel='Probability of damage at 70 deg F',
          ylabel='PDF',
          title='Posterior marginal distribution of probabilities') 
-``` ![_images/d4a0ba125f94c8d8a1007b700d5bdd5bab05c13b7e0b00f8e94c59eb068ef384.png](img/c7e489fb2ab8b75a9ae3383449fff948.png)
+```
+
+![_images/d4a0ba125f94c8d8a1007b700d5bdd5bab05c13b7e0b00f8e94c59eb068ef384.png](img/c7e489fb2ab8b75a9ae3383449fff948.png)
 
 这个分布的均值约为 22%，这是根据模型在 70 华氏度时的损坏概率。
 
@@ -680,7 +690,7 @@ marginal_lr = marginal_slope.transform(np.exp)
 
 结果是似然比的后验分布；这是它的样子。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 marginal_lr.plot(color='C3')
@@ -688,7 +698,9 @@ marginal_lr.plot(color='C3')
 decorate(xlabel='Likelihood ratio of 1 deg F',
          ylabel='PDF',
          title='Posterior marginal distribution of likelihood ratios') 
-``` ![_images/027bce9b65abb343c2f6a22dba21f4090f49d688afdcf61bf519088cf5b30dc8.png](img/384df6dd201224fcbc4e303e60ee143f.png)
+```
+
+![_images/027bce9b65abb343c2f6a22dba21f4090f49d688afdcf61bf519088cf5b30dc8.png](img/384df6dd201224fcbc4e303e60ee143f.png)
 
 ```py
 mean_lr = marginal_lr.mean()
@@ -818,14 +830,16 @@ low, median, high = np.percentile(pred, [5, 50, 95], axis=0)
 
 这就是它们的样子：
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 plt.fill_between(temps, low, high, color='C1', alpha=0.2)
 plt.plot(temps, median, color='C1', label='logistic model')
 
 plot_data(data) 
-``` ![_images/d6ed2327e5042d3ea7f9418465186f43a7bc1122f9fce65442c9b565564a6cfc.png](img/9941ea28a2708ac4f8d37322e5d6aa7e.png)
+```
+
+![_images/d6ed2327e5042d3ea7f9418465186f43a7bc1122f9fce65442c9b565564a6cfc.png](img/9941ea28a2708ac4f8d37322e5d6aa7e.png)
 
 根据这些结果，80 华氏度时 O 形圈损坏的概率接近 2%，但对于该预测存在一些不确定性；CI 的上限约为 10%。
 

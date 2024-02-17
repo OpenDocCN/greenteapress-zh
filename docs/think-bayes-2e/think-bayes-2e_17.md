@@ -162,14 +162,16 @@ posterior = update_weibull(prior, data)
 
 以下是联合后验分布的等高线图。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 from utils import plot_contour
 
 plot_contour(posterior)
 decorate(title='Posterior joint distribution of Weibull parameters') 
-``` ![_images/77fcd1c56c2f0ce10efa56dbabec2d9b197d606003e4f5968c14f2f0cb4ed13f.png](img/c7172a47752cdfa035c49f16e0ef490f.png)
+```
+
+![_images/77fcd1c56c2f0ce10efa56dbabec2d9b197d606003e4f5968c14f2f0cb4ed13f.png](img/c7172a47752cdfa035c49f16e0ef490f.png)
 
 $\lambda$的可能值的范围大约是 1 到 4，其中包含了我们用来生成数据的实际值 3。而$k$的范围大约是 0.5 到 1.5，其中包含了实际值 0.8。
 
@@ -228,7 +230,7 @@ print(lam, posterior_lam.credible_interval(0.9))
 
 ```py
 3 [1.2 4.4] 
-``` Show code cell content Hide code cell content
+```
 
 ```py
 print(k, posterior_k.credible_interval(0.9)) 
@@ -346,11 +348,13 @@ def plot_lifelines(obs):
              title='Lifelines showing censored and uncensored observations')
 
     plt.gca().invert_yaxis() 
-``` 显示代码单元格源代码 隐藏代码单元格源代码
+``` 
 
 ```py
 plot_lifelines(obs) 
-``` ![_images/d6dd919f6937358b5da512f2b078083de2cd5500b7118f9665579ec6044373f6.png](img/787750d8f0dc88a9ac6c41b9e548ca3c.png)
+```
+
+![_images/d6dd919f6937358b5da512f2b078083de2cd5500b7118f9665579ec6044373f6.png](img/787750d8f0dc88a9ac6c41b9e548ca3c.png)
 
 我将在表中再添加一列，其中包含寿命线的观察部分的持续时间。
 
@@ -451,7 +455,7 @@ posterior_k2 = marginal(posterior2, 1)
 
 这是$\lambda$的后验边际分布，与我们使用所有完整数据得到的分布进行比较。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 posterior_lam.plot(color='C5', label='All complete',
@@ -461,7 +465,9 @@ posterior_lam2.plot(color='C2', label='Some censored')
 decorate(xlabel='lambda',
          ylabel='PDF', 
          title='Marginal posterior distribution of lambda') 
-``` ![_images/b27b0a38dde380c88b64bce34905027ef43332cd5ddff47b9eba6b2c56dc22af.png](img/39d2895a1cd7517c6572e797e506d326.png)
+```
+
+![_images/b27b0a38dde380c88b64bce34905027ef43332cd5ddff47b9eba6b2c56dc22af.png](img/39d2895a1cd7517c6572e797e506d326.png)
 
 一些不完整数据的分布显著更宽。
 
@@ -469,7 +475,7 @@ decorate(xlabel='lambda',
 
 这是$k$的后验边际分布：
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 posterior_k.plot(color='C5', label='All complete',
@@ -479,7 +485,9 @@ posterior_k2.plot(color='C12', label='Some censored')
 decorate(xlabel='k',
          ylabel='PDF', 
          title='Posterior marginal distribution of k') 
-``` ![_images/0d5cf63e8cd6276770a088ce33f36cb3c83eefd722368f1143e949dd9f55322b.png](img/26afec247feb6f72467c13c89205d16c.png)
+```
+
+![_images/0d5cf63e8cd6276770a088ce33f36cb3c83eefd722368f1143e949dd9f55322b.png](img/26afec247feb6f72467c13c89205d16c.png)
 
 在这个例子中，当我们有不完整的数据时，边际分布向左移动，但宽度并没有显著增加。
 
@@ -586,12 +594,14 @@ posterior_bulb = update_weibull(prior_bulb, data_bulb)
 
 这是后验联合分布的样子：
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 plot_contour(posterior_bulb)
 decorate(title='Joint posterior distribution, light bulbs') 
-``` ![_images/c045d0c012c5c3280ab43869032f47b98c77b0ad79fef4e376c00d3b6dc6e990.png](img/2f2a91dee647f354e9561ed85b32f958.png)
+```
+
+![_images/c045d0c012c5c3280ab43869032f47b98c77b0ad79fef4e376c00d3b6dc6e990.png](img/2f2a91dee647f354e9561ed85b32f958.png)
 
 为了总结这个联合后验分布，我们将计算后验均值寿命。
 
@@ -808,7 +818,7 @@ post_pred = make_mixture(posterior_series, pmf_seq)
 
 这是后验预测分布的样子，与我们使用已知参数计算的二项分布相比。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 dist_num_dead.plot(label='known parameters')
@@ -816,7 +826,9 @@ post_pred.plot(label='unknown parameters')
 decorate(xlabel='Number of dead bulbs',
          ylabel='PMF',
          title='Posterior predictive distribution') 
-``` ![_images/43a987be520fd3d9c1db443a0138114292fb696c4ef951ab46ac6e015469a169.png](img/8d5760f4032ecc5652e6a804c7e27405.png)
+```
+
+![_images/43a987be520fd3d9c1db443a0138114292fb696c4ef951ab46ac6e015469a169.png](img/8d5760f4032ecc5652e6a804c7e27405.png)
 
 后验预测分布更宽，因为它代表了我们对参数以及死灯泡数量的不确定性。
 

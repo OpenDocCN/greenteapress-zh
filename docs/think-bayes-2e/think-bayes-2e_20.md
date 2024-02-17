@@ -85,7 +85,7 @@ len(snow)
 
 下图显示了我一生中每个完整年份的总降雪量。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 from utils import decorate
@@ -95,7 +95,9 @@ snow.plot(ls='', marker='o', alpha=0.5)
 decorate(xlabel='Year',
          ylabel='Total annual snowfall (inches)',
          title='Total annual snowfall in Norfolk County, MA') 
-``` ![_images/a18b7ac97e8129afa56f1cc415d2c5d0e3cf9c07dd90c3fcc04552fe5632ef46.png](img/76639d0aa2b4e61f7774c9cff6eaac42.png)
+```
+
+![_images/a18b7ac97e8129afa56f1cc415d2c5d0e3cf9c07dd90c3fcc04552fe5632ef46.png](img/76639d0aa2b4e61f7774c9cff6eaac42.png)
 
 从这个图表来看，很难说降雪量是在增加、减少还是不变。在过去的十年中，我们有几年的降雪量比 1978 年多，包括 2015 年，这是波士顿地区现代历史上降雪最多的冬天，总降雪量达到 141 英寸。
 
@@ -166,7 +168,7 @@ ps = dist.cdf(qs)
 
 以下是数据分布与正态模型的比较。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 import matplotlib.pyplot as plt
@@ -177,7 +179,9 @@ pmf_snowfall.make_cdf().plot(label='data')
 decorate(xlabel='Total snowfall (inches)',
          ylabel='CDF',
          title='Normal model of variation in snowfall') 
-``` ![_images/d7b23964f610a03df17062f571da04796b630b921052f6c1b3cf18f64557c2f6.png](img/2290d5efd2871e877a0afa00b0c79968.png)
+```
+
+![_images/d7b23964f610a03df17062f571da04796b630b921052f6c1b3cf18f64557c2f6.png](img/2290d5efd2871e877a0afa00b0c79968.png)
 
 我们有比预期更多的冬天低于平均值，但总体上这看起来是一个合理的模型。
 
@@ -413,7 +417,7 @@ posterior_sigma = posterior.marginal(2)
 
 这是`sigma`的后验分布：
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 posterior_sigma.plot()
@@ -421,7 +425,9 @@ posterior_sigma.plot()
 decorate(xlabel='$\sigma$, standard deviation of $\epsilon/details>,
          ylabel='PDF',
          title='Posterior marginal distribution of $\sigma/details>) 
-``` ![_images/18d3bdf36ae9903d0c61bcf4256b0dc0929fbf4aa4caa9f8d899abefaa3ab113.png](img/b7d97ab697f1a05fa6e6eee325fd0b10.png)
+```
+
+![_images/18d3bdf36ae9903d0c61bcf4256b0dc0929fbf4aa4caa9f8d899abefaa3ab113.png](img/b7d97ab697f1a05fa6e6eee325fd0b10.png)
 
 `sigma`的最可能值接近 26 英寸，这与我们基于数据标准差的估计一致。
 
@@ -437,14 +443,16 @@ decorate(xlabel='$\sigma$, standard deviation of $\epsilon/details>,
 
 这是`inter`的后验分布：
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 posterior_inter.plot(color='C1')
 decorate(xlabel='intercept (inches)',
          ylabel='PDF',
          title='Posterior marginal distribution of intercept') 
-``` ![_images/aa89f6dfaa595a9b8213690daa48a4b91af587d81ee8fb38e34bda398382d7db.png](img/d36f90212593df07fd9cedae5ef00b29.png)
+```
+
+![_images/aa89f6dfaa595a9b8213690daa48a4b91af587d81ee8fb38e34bda398382d7db.png](img/d36f90212593df07fd9cedae5ef00b29.png)
 
 ```py
 from utils import summarize
@@ -460,14 +468,16 @@ summarize(posterior_inter)
 
 最后，这是`slope`的后验分布：
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 posterior_slope.plot(color='C4')
 decorate(xlabel='Slope (inches per year)',
          ylabel='PDF',
          title='Posterior marginal distribution of slope') 
-``` ![_images/f3b98cd68b7ad121771619d3ad4c437ac7247f6618221ce47119409853c25c97.png](img/49c8db0b17f56932da348d787fc72807.png)
+```
+
+![_images/f3b98cd68b7ad121771619d3ad4c437ac7247f6618221ce47119409853c25c97.png](img/49c8db0b17f56932da348d787fc72807.png)
 
 ```py
 summarize(posterior_slope) 
@@ -814,11 +824,13 @@ data.head()
 
 这是结果的样子，从 1970 年开始：
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 plot_speeds(data) 
-``` ![_images/e0e47c76527482395e93a96135d115eca888e0ad44e1dea1a7ba82dfd6d4b5d2.png](img/4097d8cf3e5b87f7fbf86c4f0676bcfd.png)
+```
+
+![_images/e0e47c76527482395e93a96135d115eca888e0ad44e1dea1a7ba82dfd6d4b5d2.png](img/4097d8cf3e5b87f7fbf86c4f0676bcfd.png)
 
 数据点大致落在一条直线上，尽管斜率可能在增加。
 
@@ -962,14 +974,16 @@ posterior_sigma.plot();
 
 这是`inter`的后验分布：
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 posterior_inter.plot(color='C1')
 decorate(xlabel='intercept',
          ylabel='PDF',
          title='Posterior marginal distribution of intercept') 
-``` ![_images/0672371f2c001a21e11016942fe04bcb4761581494d3b6bec0bb5d585b516904.png](img/7465fd7a9d1ae74eaf19d34594d109d1.png)
+```
+
+![_images/0672371f2c001a21e11016942fe04bcb4761581494d3b6bec0bb5d585b516904.png](img/7465fd7a9d1ae74eaf19d34594d109d1.png)
 
 ```py
 summarize(posterior_inter) 
@@ -983,14 +997,16 @@ summarize(posterior_inter)
 
 这是`斜率`的后验分布。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 posterior_slope.plot(color='C4')
 decorate(xlabel='Slope',
          ylabel='PDF',
          title='Posterior marginal distribution of slope') 
-``` ![_images/7109d0d15b11012912c742b75e4e4c39cd5dfb2818b8a301ce029d65ac800228.png](img/93f87be8f78847458d7bf30cf4edbf5a.png)
+```
+
+![_images/7109d0d15b11012912c742b75e4e4c39cd5dfb2818b8a301ce029d65ac800228.png](img/93f87be8f78847458d7bf30cf4edbf5a.png)
 
 ```py
 summarize(posterior_slope) 
@@ -1035,7 +1051,7 @@ low, median, high = np.percentile(pred, [5, 50, 95], axis=0)
 
 为了展示结果，我将以线的形式绘制预测的中位数，并以阴影区域表示 90%的可信区间。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 times = pd.to_timedelta(xs*365.24, unit='days') + offset
@@ -1045,7 +1061,9 @@ plt.fill_between(times, low, high,
 plt.plot(times, median, color='C2')
 
 plot_speeds(data) 
-``` ![_images/da26aaa0faaca034b92e93a2aa91612ff8cef66bda7d869e32bd0f48698d039a.png](img/0a5ed315e6da6677b8e4dbdb57e42ba9.png)
+```
+
+![_images/da26aaa0faaca034b92e93a2aa91612ff8cef66bda7d869e32bd0f48698d039a.png](img/0a5ed315e6da6677b8e4dbdb57e42ba9.png)
 
 虚线显示了两小时马拉松配速，即每小时 13.1 英里。从视觉上，我们可以估计预测线在 2030 年到 2040 年之间达到目标配速。
 

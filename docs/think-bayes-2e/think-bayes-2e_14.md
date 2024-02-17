@@ -156,7 +156,7 @@ prior.normalize()
 
 就是这个样子。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 from utils import decorate
@@ -166,7 +166,9 @@ prior.plot(style='--', color='C5')
 decorate(xlabel='Height in cm',
          ylabel='PDF',
          title='Approximate distribution of height for men in U.S.') 
-``` ![_images/ca73e5bb11900fb220f2fcf00c59faa78a261d27061d28a6802ff728177ec277.png](img/842397321283c90d3ac254aad8cf71a3.png)
+```
+
+![_images/ca73e5bb11900fb220f2fcf00c59faa78a261d27061d28a6802ff728177ec277.png](img/842397321283c90d3ac254aad8cf71a3.png)
 
 这个分布代表了我们在考虑`A`比`B`高的数据之前对`A`和`B`的身高的信念。
 
@@ -257,12 +259,14 @@ def plot_joint(joint, cmap='Blues'):
 
 这就是联合先验分布的样子。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 plot_joint(joint)
 decorate(title='Joint prior distribution of height for A and B') 
-``` ![_images/f4c3236924afef3c39503dafbc9d23c4e950f98938d2b64e7e5461f4fc52d85a.png](img/50137dcd91919d400df5e3a4c6cf4909.png)
+```
+
+![_images/f4c3236924afef3c39503dafbc9d23c4e950f98938d2b64e7e5461f4fc52d85a.png](img/50137dcd91919d400df5e3a4c6cf4909.png)
 
 正如你所期望的，概率在均值附近最高（最暗），离均值越远就会下降。
 
@@ -277,12 +281,14 @@ def plot_contour(joint):
              ylabel='B height in cm') 
 ```
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 plot_contour(joint)
 decorate(title='Joint prior distribution of height for A and B') 
-``` ![_images/b4d3a7f39be8b93f5a7bacd586ef2059900eafc9a11921af83552d1fc42549f2.png](img/de6e192d2a8a5c8f91d2cfeda116fb8a.png)
+```
+
+![_images/b4d3a7f39be8b93f5a7bacd586ef2059900eafc9a11921af83552d1fc42549f2.png](img/de6e192d2a8a5c8f91d2cfeda116fb8a.png)
 
 每条线代表相等概率的水平。
 
@@ -330,12 +336,14 @@ likelihood = pd.DataFrame(a, index=x, columns=y)
 
 它看起来是这样的：
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 plot_joint(likelihood, cmap='Oranges')
 decorate(title='Likelihood of A>B') 
-``` ![_images/a7ddc31653415039de483cb2cc71bb15c2a5158cfc374e50d7907a3be3aa16eb.png](img/f1a899cd5882c5643e9cee128afa8c48f.png)
+```
+
+![_images/a7ddc31653415039de483cb2cc71bb15c2a5158cfc374e50d7907a3be3aa16eb.png](img/f1a899cd5882c5643e9cee128afa8c48f.png)
 
 数据的似然是`X > Y`的地方为 1，其他地方为 0。
 
@@ -369,12 +377,14 @@ normalize(posterior)
 
 这是它的样子。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 plot_joint(posterior)
 decorate(title='Joint posterior distribution of height for A and B') 
-``` ![_images/723b56c47afd3491992a957f204dd91d2d37db9e9eb60809483a62112d9d82d8.png](img/e58153ae31d610b7a67c24ce582a2d76.png)
+```
+
+![_images/723b56c47afd3491992a957f204dd91d2d37db9e9eb60809483a62112d9d82d8.png](img/e58153ae31d610b7a67c24ce582a2d76.png)
 
 所有`B`比`A`高的对都被消除了。后验的其余部分看起来与先验相同，只是已经被重新归一化。
 
@@ -442,7 +452,7 @@ marginal_A = Pmf(column_sums)
 
 这是`A`的边缘分布的样子：
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 marginal_A.plot(label='Posterior for A')
@@ -450,7 +460,9 @@ marginal_A.plot(label='Posterior for A')
 decorate(xlabel='Height in cm',
          ylabel='PDF',
          title='Posterior distribution for A') 
-``` ![_images/11645c6bdd4ed1339103397c3d1fadddf4c4a6d0a5a19bf0d76a844f7a4072da.png](img/08933f4fb6676b92895827e2c0334987.png)
+```
+
+![_images/11645c6bdd4ed1339103397c3d1fadddf4c4a6d0a5a19bf0d76a844f7a4072da.png](img/08933f4fb6676b92895827e2c0334987.png)
 
 类似地，我们可以通过将行相加并将结果放入`Pmf`中来获得`B`的身高的后验分布。
 
@@ -494,7 +506,7 @@ marginal_B = marginal(posterior, axis=1)
 
 这是它们的样子，以及先验。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 prior.plot(style='--', label='Prior', color='C5')
@@ -504,7 +516,9 @@ marginal_B.plot(label='Posterior for B')
 decorate(xlabel='Height in cm',
          ylabel='PDF',
          title='Prior and posterior distributions for A and B') 
-``` ![_images/c7bcc6133ef1b03fe8ddbbbeb64d1c0f2a18cd4e302df47b5c51a535dff784a4.png](img/9ce2b6bed61876bfb802d372502d39fc.png)
+```
+
+![_images/c7bcc6133ef1b03fe8ddbbbeb64d1c0f2a18cd4e302df47b5c51a535dff784a4.png](img/9ce2b6bed61876bfb802d372502d39fc.png)
 
 正如你所预期的，`A`的后验分布向右移动，`B`的后验分布向左移动。
 
@@ -573,7 +587,7 @@ cond_B.normalize()
 
 这就是它的样子：
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 prior.plot(style='--', label='Prior', color='C5')
@@ -584,7 +598,9 @@ cond_B.plot(label='Conditional posterior for B',
 decorate(xlabel='Height in cm',
          ylabel='PDF',
          title='Prior, posterior and conditional distribution for B') 
-``` ![_images/86c7afe0d535a76684f4ffc0dcabfae8d82c40210bbbd0297a63e924ba9891b9.png](img/6be7fd8c5145c981f4bfc9e1b14d77c3.png)
+```
+
+![_images/86c7afe0d535a76684f4ffc0dcabfae8d82c40210bbbd0297a63e924ba9891b9.png](img/6be7fd8c5145c981f4bfc9e1b14d77c3.png)
 
 条件后验分布被截断在 170 厘米，因为我们已经确定`B`比`A`矮，而`A`是 170 厘米。
 

@@ -66,7 +66,7 @@ update_train(posterior, data)
 
 这是后验的样子：
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 from utils import decorate
@@ -75,7 +75,9 @@ posterior.plot(label='Posterior after train 60', color='C4')
 decorate(xlabel='Number of trains',
          ylabel='PMF',
          title='Posterior distribution') 
-``` ![_images/3fd4516774234abdc207c2e19bea0991f19f2b933e638bd40ce82c44782249c5.png](img/c8884d0e433a999659931b4e047c3514.png)
+```
+
+![_images/3fd4516774234abdc207c2e19bea0991f19f2b933e638bd40ce82c44782249c5.png](img/c8884d0e433a999659931b4e047c3514.png)
 
 毫不奇怪，所有小于 60 的$N$值都被排除了。
 
@@ -123,7 +125,7 @@ posterior.mean()
 
 这张表显示了当我们改变上限时会发生什么：
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 import pandas as pd
@@ -162,7 +164,7 @@ df
 
 当我们观察到三列火车时，后验均值如何取决于先验的上限：
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 df = pd.DataFrame(columns=['Posterior mean'])
@@ -233,7 +235,7 @@ uniform.normalize()
 
 这是幂律先验的样子，与均匀先验相比：
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 uniform.plot(color='C4')
@@ -242,7 +244,9 @@ power.plot(color='C1')
 decorate(xlabel='Number of trains',
          ylabel='PMF',
          title='Prior distributions') 
-``` ![_images/1540e9adc2d63655ca44e42defbf777d454d6ae8554df5ec7344b6a0105b19ae.png](img/6fb82f3e2199e7281ec74969875b78ca.png)
+```
+
+![_images/1540e9adc2d63655ca44e42defbf777d454d6ae8554df5ec7344b6a0105b19ae.png](img/6fb82f3e2199e7281ec74969875b78ca.png)
 
 这是两种先验的更新。
 
@@ -254,7 +258,7 @@ update_train(power, dataset)
 
 这里是后验分布。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 uniform.plot(color='C4')
@@ -263,13 +267,15 @@ power.plot(color='C1')
 decorate(xlabel='Number of trains',
          ylabel='PMF',
          title='Posterior distributions') 
-``` ![_images/39081a966b6588f813b7a938dd08689cf7e276519770fc9afa2e8681ab159173.png](img/e20c7df561b596edfd53a82f583bd230.png)
+```
+
+![_images/39081a966b6588f813b7a938dd08689cf7e276519770fc9afa2e8681ab159173.png](img/e20c7df561b596edfd53a82f583bd230.png)
 
 幂律给较高值较少的先验概率，这会产生较低的后验均值，并且对上限的敏感性较小。
 
 当我们使用幂律先验并观察到三列火车时，后验均值如何取决于上限：
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 df = pd.DataFrame(columns=['Posterior mean'])

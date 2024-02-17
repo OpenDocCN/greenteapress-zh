@@ -266,7 +266,7 @@ def make_die(sides):
 die = make_die(6) 
 ```
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 from utils import decorate
@@ -274,7 +274,9 @@ from utils import decorate
 die.bar(alpha=0.4)
 decorate(xlabel='Outcome',
          ylabel='PMF') 
-``` ![_images/c43b36bcf66bd6b728a6fe5ac6a7fc5f7eb51478dc651542d4edae0b5b0321ac.png](img/c2a1877e04a8a3fa36a8f59028332ffb.png)
+```
+
+![_images/c43b36bcf66bd6b728a6fe5ac6a7fc5f7eb51478dc651542d4edae0b5b0321ac.png](img/c2a1877e04a8a3fa36a8f59028332ffb.png)
 
 如果我们掷两个骰子并把它们加在一起，就有 11 种可能的结果，从 2 到 12，但它们并不是等可能的。要计算和的分布，我们必须列举可能的结果。
 
@@ -327,13 +329,15 @@ def decorate_dice(title=''):
     decorate(xlabel='Outcome',
              ylabel='PMF',
              title=title) 
-``` 显示代码单元格源代码 隐藏代码单元格源代码
+``` 
 
 ```py
 twice = add_dist(die, die)
 twice.bar(color='C1', alpha=0.5)
 decorate_dice() 
-``` ![_images/5f14ae8079e6a213ad93fa1a0cefd00895bff212ba562dd9d19448f25a988969.png](img/6c1db637e7682329b5bfa0a26b1f7b4e.png)
+```
+
+![_images/5f14ae8079e6a213ad93fa1a0cefd00895bff212ba562dd9d19448f25a988969.png](img/6c1db637e7682329b5bfa0a26b1f7b4e.png)
 
 如果我们有一系列代表骰子的`Pmf`对象，我们可以这样计算和的分布：
 
@@ -366,7 +370,7 @@ thrice = add_dist_seq(dice)
 
 +   三个骰子的和在 3 到 18 之间有一个钟形分布。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 import matplotlib.pyplot as plt
@@ -377,7 +381,9 @@ thrice.plot(label='thrice', ls=':')
 
 plt.xticks([0,3,6,9,12,15,18])
 decorate_dice(title='Distributions of sums') 
-``` ![_images/3f108e3febe8fa608321ae32f3fc6dcb0452841dd61e69fd0f44bd17c1c6ca14.png](img/5a5a0645b1a295392ef92cc14b5f632f.png)
+```
+
+![_images/3f108e3febe8fa608321ae32f3fc6dcb0452841dd61e69fd0f44bd17c1c6ca14.png](img/5a5a0645b1a295392ef92cc14b5f632f.png)
 
 顺便说一句，这个例子证明了中心极限定理，它说的是总和的分布会收敛到一个钟形的正态分布，至少在某些条件下是这样。
 
@@ -444,7 +450,9 @@ dist_total.plot(label='total')
 decorate(xlabel='Number of correct identifications',
          ylabel='PMF',
          title='Gluten sensitivity') 
-``` ![_images/3e47fb19260ca824056dcc90c9e53515d3d7c9be4757ccf994017254c93be06c.png](img/1f321000f1d6a53c287f697719fa9824.png)
+```
+
+![_images/3e47fb19260ca824056dcc90c9e53515d3d7c9be4757ccf994017254c93be06c.png](img/1f321000f1d6a53c287f697719fa9824.png)
 
 我们期望大多数敏感的受试者能够正确识别麸质面粉。在 25 名不敏感的受试者中，我们预计大约有 10 人会碰巧识别出麸质面粉。因此，我们预计总共有大约 20 个正确的识别。
 
@@ -486,7 +494,7 @@ table.head(3)
 
 以下图显示了来自`DataFrame`的选定列，对应于`num_sensitive`的不同假设值：
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 table[0].plot(label='num_sensitive = 0')
@@ -497,7 +505,9 @@ table[30].plot(label='num_sensitive = 30', ls=':')
 decorate(xlabel='Number of correct identifications',
          ylabel='PMF',
          title='Gluten sensitivity') 
-``` ![_images/d3a6012daa1a36dea54616b3bab308a507c20c69b4c9b2e889c0aae0dae66295.png](img/62e4ea7462f4fe30667801a6293636a6.png)
+```
+
+![_images/d3a6012daa1a36dea54616b3bab308a507c20c69b4c9b2e889c0aae0dae66295.png](img/62e4ea7462f4fe30667801a6293636a6.png)
 
 现在我们可以使用这个表格来计算数据的似然性：
 
@@ -543,7 +553,7 @@ posterior2.normalize()
 
 以下图显示了基于实际数据（12 个正确识别）和另一个可能结果（20 个正确识别）的`num_sensitive`的后验分布。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 posterior1.plot(label='posterior with 12 correct', color='C4')
@@ -552,7 +562,9 @@ posterior2.plot(label='posterior with 20 correct', color='C1')
 decorate(xlabel='Number of sensitive subjects',
          ylabel='PMF',
          title='Posterior distributions') 
-``` ![_images/4edbc176c039585b4e37ae3bbaa48382e58f129df43bdad9a00b9891467b7541.png](img/be42bd3ed0fd91410501a73a59b454c4.png)
+```
+
+![_images/4edbc176c039585b4e37ae3bbaa48382e58f129df43bdad9a00b9891467b7541.png](img/be42bd3ed0fd91410501a73a59b454c4.png)
 
 有 12 个正确的识别时，最可能的结论是没有一个受麸质过敏的受试者。如果有 20 个正确的识别，最可能的结论是 11-12 个受试者对麸质过敏。
 

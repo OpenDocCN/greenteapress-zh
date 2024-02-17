@@ -184,7 +184,7 @@ pmf_rdt = kde_from_sample(rdt_sample, qs)
 
 这是它的样子。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 from utils import decorate
@@ -194,7 +194,9 @@ pmf_rdt.plot(label='rdts')
 decorate(xlabel='Reciprocal doubling time (RDT)',
          ylabel='PDF',
          title='Distribution of growth rates') 
-``` ![_images/914a6146b4348099a8272fb971569ca6c637ea221de92d28038e20285408c1bd.png](img/fb5159fd84b272719c97dc5be1704503.png)
+```
+
+![_images/914a6146b4348099a8272fb971569ca6c637ea221de92d28038e20285408c1bd.png](img/fb5159fd84b272719c97dc5be1704503.png)
 
 在下一节中，我们将使用这个分布来模拟肿瘤的生长。
 
@@ -299,7 +301,7 @@ sims = [simulate_growth(pmf_rdt) for _ in range(101)]
 
 并绘制结果。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 import matplotlib.pyplot as plt
@@ -320,7 +322,9 @@ decorate(xlabel='Tumor age (years)',
 
 yticks = [0.2, 0.5, 1, 2, 5, 10, 20]
 plt.yticks(yticks, yticks); 
-``` ![_images/c7a36f14efef9fb97b73fc9d6d8d623e3d53b61e750e4ca983a63eb4eb7a227c.png](img/b9b0da08e32d428b971901dfd3f3e9e3.png)
+```
+
+![_images/c7a36f14efef9fb97b73fc9d6d8d623e3d53b61e750e4ca983a63eb4eb7a227c.png](img/b9b0da08e32d428b971901dfd3f3e9e3.png)
 
 在这个图中，每条细线显示了肿瘤随时间的模拟生长，直径采用对数刻度。虚线分别是 4、8 和 16 厘米。
 
@@ -604,7 +608,7 @@ print(cdf_abc.mean(), cdf_abc.credible_interval(0.9))
 
 后验均值和可信区间与 MCMC 得到的类似。以下是分布的样子。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 cdf_pymc.plot(label='MCMC', ls=':')
@@ -614,7 +618,9 @@ decorate(xlabel='Yeast concentration (cells/mL)',
          ylabel='CDF',
          title='Posterior distribution',
          xlim=(1.4, 3.4)) 
-``` ![_images/8eaa208c16fc79c79edb3769816e14528e9b03eb810bc1d301ecdc95ce329632.png](img/1d23154bcad37ebbc595c0be66cb4554.png)
+```
+
+![_images/8eaa208c16fc79c79edb3769816e14528e9b03eb810bc1d301ecdc95ce329632.png](img/1d23154bcad37ebbc595c0be66cb4554.png)
 
 这些分布是相似的，但 ABC 的结果更嘈杂，因为样本量较小。
 
@@ -688,14 +694,16 @@ likelihood.shape
 
 以下是这些 likelihoods 与期望计数的散点图。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 plt.plot(n*p, likelihood, '.', alpha=0.03, color='C2')
 
 decorate(xlabel='Expected count (number of cells)',
          ylabel='Likelihood') 
-``` ![_images/b236c7fa22cca34323d3de3073ad4b52b044a670cfb4661663bb69c0e81373d7.png](img/f3e3c9ba995ba9209c11aeb7bdd7e598.png)
+```
+
+![_images/b236c7fa22cca34323d3de3073ad4b52b044a670cfb4661663bb69c0e81373d7.png](img/f3e3c9ba995ba9209c11aeb7bdd7e598.png)
 
 我们不能使用这些可能性进行贝叶斯更新，因为它们是不完整的；也就是说，每个可能性是给定`n`的数据的概率，这是单次模拟的结果。
 
@@ -735,7 +743,9 @@ decorate(xlabel='Yeast concentration (cells/mL)',
          ylabel='CDF',
          title='Posterior distribution',
          xlim=(1.4, 3.4)) 
-``` ![_images/49f8337976b730ce868462a4375483b9c032020dffdd39b08ca9b6e4e7958f12.png](img/c6ee6e1a0295e2dde4fef1b17e5f9b3f.png)
+```
+
+![_images/49f8337976b730ce868462a4375483b9c032020dffdd39b08ca9b6e4e7958f12.png](img/c6ee6e1a0295e2dde4fef1b17e5f9b3f.png)
 
 这些分布是相似的，但来自 MCMC 的结果有点嘈杂。在这个例子中，ABC 比 MCMC 更有效，需要更少的计算来生成对后验分布的更好估计。但这是不寻常的；通常 ABC 需要大量计算。因此，它通常是最后的方法。
 

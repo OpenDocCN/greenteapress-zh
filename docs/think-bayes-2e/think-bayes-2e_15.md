@@ -104,7 +104,9 @@ Show code cell source Hide code cell source
 ```py
 colname = 'Culmen Length (mm)'
 plot_cdfs(df, colname) 
-``` ![_images/5ab5a7f798da6866fe44a8dafc0c49397cfd4f7e232ed60472f2dde56db06b37.png](img/b8c137a38b5c6f3c2e546ece3011011d.png)
+```
+
+![_images/5ab5a7f798da6866fe44a8dafc0c49397cfd4f7e232ed60472f2dde56db06b37.png](img/b8c137a38b5c6f3c2e546ece3011011d.png)
 
 看起来我们可以使用 Culmen 长度来识别 Adélie 企鹅，但其他两个物种的分布几乎完全重叠。
 
@@ -115,7 +117,9 @@ plot_cdfs(df, colname)
 ```py
 colname = 'Flipper Length (mm)'
 plot_cdfs(df, colname) 
-``` ![_images/a80e125cfdfe3dce6670cd38ddc6e2979b6337b9e02e863814498185ffb511d8.png](img/4a99d73ebdecfc30ee33286333f883ab.png)
+```
+
+![_images/a80e125cfdfe3dce6670cd38ddc6e2979b6337b9e02e863814498185ffb511d8.png](img/4a99d73ebdecfc30ee33286333f883ab.png)
 
 使用翻转长度，我们可以将 Gentoo 企鹅与其他两个物种区分开来。因此，只有这两个特征，似乎我们应该能够以一定的准确度对企鹅进行分类。
 
@@ -684,7 +688,7 @@ def make_joint(norm1, norm2, multinorm):
 
 以下图显示了数据的散点图以及每个物种多元正态分布的轮廓。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 scatterplot(df, var1, var2)
@@ -695,7 +699,9 @@ for species in hypos:
     multinorm = multinorm_map[species]
     joint = make_joint(norm1, norm2, multinorm)
     plot_contour(joint, alpha=0.5) 
-``` ![_images/08de60fde36512b3133ebdbb5b01ec9ca075bca22b44eae1e7dab0dc614b04e7.png](img/57660d1dd8078042b67f801db25b8a03.png)
+```
+
+![_images/08de60fde36512b3133ebdbb5b01ec9ca075bca22b44eae1e7dab0dc614b04e7.png](img/57660d1dd8078042b67f801db25b8a03.png)
 
 因为多元正态分布考虑了特征之间的相关性，它是数据的更好模型。而且三个分布的轮廓重叠较少，这表明它们应该产生更好的分类。
 

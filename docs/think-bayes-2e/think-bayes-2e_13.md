@@ -67,7 +67,9 @@ posterior.plot(label='140 heads out of 250')
 decorate(xlabel='Proportion of heads (x)',
          ylabel='Probability',
          title='Posterior distribution of x') 
-``` ![_images/d2164f5205e6d919479cdbbc6ada601ed81c32de4774fca532169fb4e140d36b.png](img/cff6b0a6ffb873c1f1ca6afedfa221b3.png)
+```
+
+![_images/d2164f5205e6d919479cdbbc6ada601ed81c32de4774fca532169fb4e140d36b.png](img/cff6b0a6ffb873c1f1ca6afedfa221b3.png)
 
 此外，后验均值约为 0.56，90%的可信区间为 0.51 到 0.61。
 
@@ -395,14 +397,16 @@ for outcome in 'WLLLLLLLLL':
 
 后验分布如下。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 bandit.plot()
 decorate(xlabel='Probability of winning',
          ylabel='PDF',
          title='Posterior distribution, nine losses, one win') 
-``` ![_images/cf5bcaaeed0a5e04ea726bd4023cf9330e5eebd0aef3ccd5681283ffc4d340ad.png](img/ba74321490b0e13ca4e86ff4d790ef8b.png)
+```
+
+![_images/cf5bcaaeed0a5e04ea726bd4023cf9330e5eebd0aef3ccd5681283ffc4d340ad.png](img/ba74321490b0e13ca4e86ff4d790ef8b.png)
 
 ## 多个老虎机
 
@@ -483,7 +487,7 @@ def summarize_beliefs(beliefs):
         ci = np.round(ci, 3)
         df.loc[i] = actual_probs[i], mean, ci
     return df 
-``` 显示代码单元格源代码 隐藏代码单元格源代码
+``` 
 
 ```py
 summarize_beliefs(beliefs) 
@@ -631,7 +635,7 @@ plot(beliefs)
 
 以下表格总结了结果。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 summarize_beliefs(beliefs) 
@@ -664,7 +668,7 @@ def summarize_counter(counter):
     for i, count in counter.items():
         df.loc[i] = actual_probs[i], count
     return df 
-``` 显示代码单元格源隐藏代码单元格源
+``` 
 
 ```py
 summarize_counter(counter) 

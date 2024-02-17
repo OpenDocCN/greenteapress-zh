@@ -98,7 +98,7 @@ def make_binomial(n, p):
 pmf_k = make_binomial(n=250, p=0.5) 
 ```
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 from utils import decorate
@@ -108,7 +108,9 @@ pmf_k.plot(label='n=250, p=0.5')
 decorate(xlabel='Number of heads (k)',
          ylabel='PMF',
          title='Binomial distribution') 
-``` ![_images/78776da24ecbd5525d7f021195efd37ee9f890ed482a679078c11cd2f6e24baa.png](img/44850b0694a0ed061791879e0749472f.png)
+```
+
+![_images/78776da24ecbd5525d7f021195efd37ee9f890ed482a679078c11cd2f6e24baa.png](img/44850b0694a0ed061791879e0749472f.png)
 
 这个分布中最可能的数量是 125：
 
@@ -178,7 +180,7 @@ pmf_k.prob_ge(140)
 
 7%是这两个“尾巴”的总和，如下图所示。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 import matplotlib.pyplot as plt
@@ -196,7 +198,9 @@ pmf_k.plot(label='n=250, p=0.5')
 decorate(xlabel='Number of heads (k)',
          ylabel='PMF',
          title='Binomial distribution') 
-``` ![_images/bbe850c4ba1754c42250404d1be42aca905c5085d068a8cd75a524120acd38b2.png](img/4a2b927f5fdf7388f4b220f8fb043f38.png)
+```
+
+![_images/bbe850c4ba1754c42250404d1be42aca905c5085d068a8cd75a524120acd38b2.png](img/4a2b927f5fdf7388f4b220f8fb043f38.png)
 
 这是我们如何计算左尾的总概率。
 
@@ -282,12 +286,14 @@ def decorate_euro(title):
     decorate(xlabel='Proportion of heads (x)',
              ylabel='Probability',
              title=title) 
-``` 显示代码单元格源代码 隐藏代码单元格源代码
+``` 
 
 ```py
 posterior.plot(label='140 heads out of 250', color='C4')
 decorate_euro(title='Posterior distribution of x') 
-``` ![_images/dd30c6b049d5869916cbb249de23ebe991fb42772dad3eb5da6714b70d4aeb42.png](img/e21c1ee951a38a073f43534b28b4d6c7.png)
+```
+
+![_images/dd30c6b049d5869916cbb249de23ebe991fb42772dad3eb5da6714b70d4aeb42.png](img/e21c1ee951a38a073f43534b28b4d6c7.png)
 
 这个图显示了`x`的后验分布，即我们观察到的硬币正面朝上的比例。
 
@@ -336,13 +342,15 @@ triangle.normalize()
 
 下图显示了结果，以及均匀的先验。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 uniform.plot()
 triangle.plot()
 decorate_euro(title='Uniform and triangle prior distributions') 
-``` ![_images/4cdca293cccae337c63f6c15db30cf19669f1955bef2dc4da5e6bd5ac35c56cd.png](img/bbac65b9451d9bfb85aa0550962f4bb9.png)
+```
+
+![_images/4cdca293cccae337c63f6c15db30cf19669f1955bef2dc4da5e6bd5ac35c56cd.png](img/bbac65b9451d9bfb85aa0550962f4bb9.png)
 
 现在我们可以使用相同的数据更新两个先验：
 
@@ -353,13 +361,15 @@ update_euro(triangle, dataset)
 
 这是后验分布。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 uniform.plot()
 triangle.plot()
 decorate_euro(title='Posterior distributions') 
-``` ![_images/53d63fd46dbabe83c44373b98d53b283d13d9308199d87274f185e49165ae929.png](img/7fe81d981e1a21fa9014aff9ec397feb.png)
+```
+
+![_images/53d63fd46dbabe83c44373b98d53b283d13d9308199d87274f185e49165ae929.png](img/7fe81d981e1a21fa9014aff9ec397feb.png)
 
 后验分布之间的差异几乎看不见，而且非常小，实际上几乎没有什么影响。
 

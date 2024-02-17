@@ -134,12 +134,14 @@ def decorate_value(title=''):
     decorate(xlabel='Showcase value ($)',
         ylabel='PMF',
         title=title) 
-``` 显示代码单元格源代码 隐藏代码单元格源代码
+``` 
 
 ```py
 prior1.plot(label='Prior 1')
 decorate_value('Prior distribution of showcase value') 
-``` ![_images/ebaa0745d09379dd23ab450b3c00d28fbc9fb9cd3e2cf44daeb54add4c0dd6b3.png](img/f5710bb28e58d6b9012587f16bce6520.png)
+```
+
+![_images/ebaa0745d09379dd23ab450b3c00d28fbc9fb9cd3e2cf44daeb54add4c0dd6b3.png](img/f5710bb28e58d6b9012587f16bce6520.png)
 
 **练习：** 使用这个函数制作一个代表 Showcase 2 先验分布的`Pmf`，并绘制它。
 
@@ -194,7 +196,7 @@ kde_diff2 = kde_from_sample(sample_diff2, qs)
 
 这些分布看起来是这样的：
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 kde_diff1.plot(label='Diff 1', color='C8')
@@ -203,7 +205,9 @@ kde_diff2.plot(label='Diff 2', color='C4')
 decorate(xlabel='Difference in value ($)',
         ylabel='PMF',
         title='Difference between bid and actual value') 
-``` ![_images/38edf57e021b3d3e8ce3a2ddc1a30895a9ccc1658bd4a943befbe2c2bbd9b82e.png](img/1f2c4977b6b89234efbc72504e4094b9.png)
+```
+
+![_images/38edf57e021b3d3e8ce3a2ddc1a30895a9ccc1658bd4a943befbe2c2bbd9b82e.png](img/1f2c4977b6b89234efbc72504e4094b9.png)
 
 看起来出价太低的情况比出价太高的情况更常见，这是有道理的。请记住，在游戏规则下，如果你出价过高，你就会输掉比赛，所以参赛者可能会故意低估一定程度。
 
@@ -289,14 +293,16 @@ posterior1.normalize()
 
 后验分布如下：
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 prior1.plot(color='C5', label='Prior 1')
 posterior1.plot(color='C4', label='Posterior 1')
 
 decorate_value('Prior and posterior distribution of showcase value') 
-``` ![_images/aa8da72d19e4cc2f8250daffba23cacc37f51d434598893c89d0b11c900ab63c.png](img/20af617e710a333d6f7a5753b0309a6b.png)
+```
+
+![_images/aa8da72d19e4cc2f8250daffba23cacc37f51d434598893c89d0b11c900ab63c.png](img/20af617e710a333d6f7a5753b0309a6b.png)
 
 因为你的初始猜测在范围的较低端，后验分布已经向左移动。我们可以计算后验均值，看看移动了多少。
 
@@ -473,7 +479,7 @@ ys = [compute_prob_win(x, sample_diff2)
 
 它看起来是这样的：
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 import matplotlib.pyplot as plt
@@ -483,7 +489,9 @@ plt.plot(xs, ys)
 decorate(xlabel='Difference between bid and actual price ($)',
          ylabel='Probability of winning',
          title='Player 1') 
-``` ![_images/95b1f75c55a42262fae0f50426c1ad7109acb4485c645d8df064158bda3be190.png](img/d89a68655a2a15bae620e54b69ce9d9f.png)
+```
+
+![_images/95b1f75c55a42262fae0f50426c1ad7109acb4485c645d8df064158bda3be190.png](img/d89a68655a2a15bae620e54b69ce9d9f.png)
 
 如果你低于 30000 美元，赢得比赛的机会约为 30%，这主要是你的对手出价过高的机会。
 
@@ -614,7 +622,7 @@ prob_win_series = pd.Series(probs, index=bids)
 
 这些是结果。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 prob_win_series.plot(label='Player 1', color='C1')
@@ -622,7 +630,9 @@ prob_win_series.plot(label='Player 1', color='C1')
 decorate(xlabel='Bid ($)',
          ylabel='Probability of winning',
          title='Optimal bid: probability of winning') 
-``` ![_images/a118051eb20c1b1e1fa32532dac88b183989c32465dd2c54b09fee90ac644590.png](img/5468adc006e73cd0ec8165b8c8422cf2.png)
+```
+
+![_images/a118051eb20c1b1e1fa32532dac88b183989c32465dd2c54b09fee90ac644590.png](img/5468adc006e73cd0ec8165b8c8422cf2.png)
 
 这是最大化玩家 1 获胜机会的出价。
 
@@ -759,7 +769,7 @@ expected_gain_series = pd.Series(gains, index=bids)
 
 这些是结果。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 expected_gain_series.plot(label='Player 1', color='C2')
@@ -767,7 +777,9 @@ expected_gain_series.plot(label='Player 1', color='C2')
 decorate(xlabel='Bid ($)',
          ylabel='Expected gain ($)',
          title='Optimal bid: expected gain') 
-``` ![_images/5af6f2ee1d12a94b053bbcda95332bfc6757bf389b2ebf6eb448cbc759aa423b.png](img/fd2870c0b0ddd8087fe670358dacba4d.png)
+```
+
+![_images/5af6f2ee1d12a94b053bbcda95332bfc6757bf389b2ebf6eb448cbc759aa423b.png](img/fd2870c0b0ddd8087fe670358dacba4d.png)
 
 这是最佳出价。
 
@@ -949,7 +961,7 @@ def print_cost(printed):
         return printed * 5
     else:
         return printed * 4.5 
-``` </ details>  
+```
 
 ```py
 def total_income(printed, orders):
@@ -960,7 +972,7 @@ def total_income(printed, orders):
  """
     sold = min(printed, np.sum(orders))
     return sold * 10 
-``` </ details>  
+```
 
 ```py
 def inventory_cost(printed, orders):
@@ -974,7 +986,7 @@ def inventory_cost(printed, orders):
         return excess * 2
     else:
         return 0 
-``` </ details>  
+``` 
 
 ```py
 def out_of_stock_cost(printed, orders):

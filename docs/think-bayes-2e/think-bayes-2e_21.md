@@ -140,7 +140,7 @@ def decorate_rate(title=''):
     decorate(xlabel='Goal scoring rate (lam)',
              ylabel='PMF',
              title=title) 
-``` 显示代码单元格源代码隐藏代码单元格源代码
+``` 
 
 ```py
 posterior.plot(label='grid posterior', color='C1')
@@ -148,7 +148,9 @@ posterior_conjugate.plot(label='conjugate posterior',
                          color='C4', ls=':')
 
 decorate_rate('Posterior distribution') 
-``` ![_images/39ff697e7662f79c15a8ae461ced3925ebe82de05318674e35232f7e65030af6.png](img/6eed57e32a4a8ae310cfa4205aaaacf9.png)
+```
+
+![_images/39ff697e7662f79c15a8ae461ced3925ebe82de05318674e35232f7e65030af6.png](img/6eed57e32a4a8ae310cfa4205aaaacf9.png)
 
 它们除了由于浮点近似而产生的小差异外，都是相同的。
 
@@ -297,7 +299,7 @@ def decorate_euro(title):
     decorate(xlabel='Proportion of heads (x)',
              ylabel='Probability',
              title=title) 
-``` 显示代码单元格源代码 隐藏代码单元格源代码
+``` 
 
 ```py
 posterior.plot(label='grid posterior', color='C1')
@@ -305,7 +307,9 @@ posterior_conjugate.plot(label='conjugate posterior',
                         color='C4', ls=':')
 
 decorate_euro(title='Posterior distribution of x') 
-``` ![_images/6690cfacd465eb40d9ec441a2922b3fdf2f2f9656494ba5973edb6e05280cb97.png](img/abc447a9fedcb77f484b279731c683b2.png)
+```
+
+![_images/6690cfacd465eb40d9ec441a2922b3fdf2f2f9656494ba5973edb6e05280cb97.png](img/abc447a9fedcb77f484b279731c683b2.png)
 
 它们除了由于浮点近似而产生的小差异外是相同的。
 
@@ -421,7 +425,9 @@ for i, cdf in enumerate(cdfs):
     cdf.plot(label=label)
 
 decorate() 
-``` ![_images/38e3455314147946835c8800653dfd01a9f1c97c9b568a01c8e33c8802a29287.png](img/9936b94966fbbbda87abcfe0339c0257.png)
+```
+
+![_images/38e3455314147946835c8800653dfd01a9f1c97c9b568a01c8e33c8802a29287.png](img/9936b94966fbbbda87abcfe0339c0257.png)
 
 第 0 列对应最低参数，包含最低概率。第 2 列对应最高参数，包含最高概率。
 
@@ -458,7 +464,9 @@ for i in range(len(alpha)):
     cdf.plot(label=label, ls=':')
 
 decorate() 
-``` ![_images/d2b045b7f54a65ceb60914590d7732e667f5f95b187400fa17363aed09dfab01.png](img/f50fbf1c81705f94c9ff9b1e33a4d90c)
+```
+
+![_images/d2b045b7f54a65ceb60914590d7732e667f5f95b187400fa17363aed09dfab01.png](img/f50fbf1c81705f94c9ff9b1e33a4d90c)
 
 这证实了狄利克雷分布的边缘分布是贝塔分布。这很有用，因为狄利克雷分布是多项式似然函数的共轭先验。
 

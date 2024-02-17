@@ -108,7 +108,9 @@ pmf_prior_pred.bar()
 decorate(xlabel='Number of goals',
          ylabel='PMF',
          title='Prior Predictive Distribution') 
-``` ![_images/eca8cc1de30bb001a105eb6a2bf94133ee6740cbf48d21dadeb130afe219aac7.png](img/3dd262bbe6abdce4ea23ae2cb00d096b.png)
+```
+
+![_images/eca8cc1de30bb001a105eb6a2bf94133ee6740cbf48d21dadeb130afe219aac7.png](img/3dd262bbe6abdce4ea23ae2cb00d096b.png)
 
 计算先验预测分布的一个原因是检查我们对系统的模型是否合理。在这种情况下，进球的分布似乎与我们对世界杯足球的了解一致。
 
@@ -189,7 +191,7 @@ def plot_cdf(sample, **options):
  sample: sequence of quantities
  """
     Cdf.from_seq(sample).plot(**options) 
-``` 显示代码单元格源代码 隐藏代码单元格源代码
+``` 
 
 ```py
 plot_cdf(sample_prior, 
@@ -201,7 +203,9 @@ plot_cdf(sample_prior_pymc,
 decorate(xlabel=r'Goals per game ($\lambda$)',
          ylabel='CDF',
          title='Prior distribution') 
-``` ![_images/193b0b47427fd7f39ff507b2ce0793f76d0f69476bfc766c47bc5e428f929d77.png](img/4a581ee15ec55f6c43db331b3e69b294.png)
+```
+
+![_images/193b0b47427fd7f39ff507b2ce0793f76d0f69476bfc766c47bc5e428f929d77.png](img/4a581ee15ec55f6c43db331b3e69b294.png)
 
 结果是相似的，这证实了模型的规范是正确的，采样器的工作是如广告所述的。
 
@@ -225,7 +229,7 @@ sample_prior_pred_pymc.shape
 ```py
 def plot_pred(sample, **options):
     Cdf.from_seq(sample).step(**options) 
-``` 显示代码单元格源代码 隐藏代码单元格源代码
+``` 
 
 ```py
 plot_pred(sample_prior_pred, 
@@ -237,7 +241,9 @@ plot_pred(sample_prior_pred_pymc,
 decorate(xlabel='Number of goals',
          ylabel='PMF',
          title='Prior Predictive Distribution') 
-``` ![_images/dc0f98c00bcdf866da67931d6c2c2c5b2478e90be73e2a3f295493d47e4a36b4.png](img/3e04bb6f8d13f6f6a8c646159fc0add6.png)
+```
+
+![_images/dc0f98c00bcdf866da67931d6c2c2c5b2478e90be73e2a3f295493d47e4a36b4.png](img/3e04bb6f8d13f6f6a8c646159fc0add6.png)
 
 同样，结果是相似的，因此我们有一些信心我们正在正确使用 PyMC3。
 
@@ -311,7 +317,7 @@ sample_post_pymc.shape
 
 我们可以将这个样本的 CDF 与我们通过网格近似计算的后验进行比较：
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 posterior.make_cdf().plot(label='posterior grid', 
@@ -323,7 +329,9 @@ plot_cdf(sample_post_pymc,
 decorate(xlabel=r'Goals per game ($\lambda$)',
          ylabel='CDF',
          title='Posterior distribution') 
-``` ![_images/df033dddfe2e28c72653c7a90266da82aa4902fbd977ec312df43d87c2bb4607.png](img/8732cbe552885e122226632c2238e45e.png)
+```
+
+![_images/df033dddfe2e28c72653c7a90266da82aa4902fbd977ec312df43d87c2bb4607.png](img/8732cbe552885e122226632c2238e45e.png)
 
 PyMC3 的结果与网格近似的结果一致。
 
@@ -363,7 +371,7 @@ sample_post_pred = poisson(sample_post).rvs()
 
 我们可以比较这两个样本。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 plot_pred(sample_post_pred, 
@@ -376,7 +384,9 @@ plot_pred(sample_post_pred_pymc,
 decorate(xlabel='Number of goals',
          ylabel='PMF',
          title='Posterior Predictive Distribution') 
-``` ![_images/e72732e7236a3458b5cc5d33844fdc3fed5b8289d8a9181a56868e1235c80003.png](img/8561fce647062c70fa4fe583e77acf8d.png)
+```
+
+![_images/e72732e7236a3458b5cc5d33844fdc3fed5b8289d8a9181a56868e1235c80003.png](img/8561fce647062c70fa4fe583e77acf8d.png)
 
 同样，结果是一致的。因此，我们已经确定我们可以使用网格近似或 PyMC3 计算相同的结果。
 
@@ -460,7 +470,7 @@ log_gdp = df['Logged GDP per capita']
 
 以下图是`score`与`log_gdp`的散点图，每个国家一个标记。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 import matplotlib.pyplot as plt
@@ -469,7 +479,9 @@ plt.plot(log_gdp, score, '.')
 
 decorate(xlabel='Log GDP per capita at PPP',
          ylabel='Happiness ladder score') 
-``` ![_images/e8d32d702c0b82a48796b8eac7bce082b9e28192f892eddb25f8fc18bdc32a50.png](img/d353ec4ff47106dcc2019c7369b7f92f.png)
+```
+
+![_images/e8d32d702c0b82a48796b8eac7bce082b9e28192f892eddb25f8fc18bdc32a50.png](img/d353ec4ff47106dcc2019c7369b7f92f.png)
 
 很明显这些变量之间存在关系：在 GDP 较高的国家，人们通常报告更高的幸福水平。
 
@@ -483,7 +495,7 @@ result = linregress(log_gdp, score)
 
 这里是结果。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 pd.DataFrame([result.slope, result.intercept],

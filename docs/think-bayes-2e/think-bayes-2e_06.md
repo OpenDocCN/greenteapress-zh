@@ -343,13 +343,15 @@ def decorate_bowls(title):
     decorate(xlabel='Bowl #',
              ylabel='PMF',
              title=title) 
-``` 显示代码单元格源代码 隐藏代码单元格源代码
+``` 
 
 ```py
 prior.plot(label='prior', color='C5')
 posterior1.plot(label='posterior', color='C4')
 decorate_bowls('Posterior after one vanilla cookie') 
-``` ![_images/701c62bf2c16f3409268caa52f308c3fd97ff18bca98c2c39570565d9d994669.png](img/d87868edf23191fbc85c7a9989ee0b46.png)
+```
+
+![_images/701c62bf2c16f3409268caa52f308c3fd97ff18bca98c2c39570565d9d994669.png](img/d87868edf23191fbc85c7a9989ee0b46.png)
 
 Bowl 0 的后验概率是 0，因为它不含香草饼干。Bowl 100 的后验概率最高，因为它含有最多的香草饼干。在中间，后验分布的形状是一条线，因为似然性与碗的编号成比例。
 
@@ -368,12 +370,14 @@ posterior2.normalize()
 
 这是后验分布的样子。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 posterior2.plot(label='posterior', color='C4')
 decorate_bowls('Posterior after two vanilla cookies') 
-``` ![_images/8d5be774f70698721fdb924a5597d276eb33e3a6a93a40ae4bdeb93eba11c068.png](img/cdada6315d31a6de84999fd183ec872e.png)
+```
+
+![_images/8d5be774f70698721fdb924a5597d276eb33e3a6a93a40ae4bdeb93eba11c068.png](img/cdada6315d31a6de84999fd183ec872e.png)
 
 两块香草饼干后，高编号的碗具有最高的后验概率，因为它们含有最多的香草饼干；低编号的碗具有最低的概率。
 
@@ -394,12 +398,14 @@ posterior3.normalize()
 
 这是后验分布的样子。
 
-显示代码单元格源代码 隐藏代码单元格源代码
+
 
 ```py
 posterior3.plot(label='posterior', color='C4')
 decorate_bowls('Posterior after 2 vanilla, 1 chocolate') 
-``` ![_images/0be0644c8193f2f4b40f05ab3ff5e273fa8ef6fbe3165c1b45aa9fee1f2f8e66.png](img/61b1f847d27a7edc447010533be12018.png)
+```
+
+![_images/0be0644c8193f2f4b40f05ab3ff5e273fa8ef6fbe3165c1b45aa9fee1f2f8e66.png](img/61b1f847d27a7edc447010533be12018.png)
 
 现在 Bowl 100 已经被排除了，因为它不含巧克力饼干。但是高编号的碗仍然比低编号的碗更有可能，因为我们看到的香草饼干比巧克力饼干多。
 
