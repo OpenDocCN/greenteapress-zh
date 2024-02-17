@@ -1,6 +1,11 @@
-# 第八章 估计
+# 第八章：估计
 
 > 原文：[`greenteapress.com/thinkstats2/html/thinkstats2009.html`](https://greenteapress.com/thinkstats2/html/thinkstats2009.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 本章的代码在`estimation.py`中。有关下载和使用此代码的信息，请参见第[0.2]节（thinkstats2001.html#code）。
 
@@ -28,8 +33,9 @@
 
 如果没有异常值，样本均值将最小化均方误差（MSE）。也就是说，如果我们玩游戏很多次，并且每次计算误差 x − µ，样本均值将最小化
 
-| MSE =  |
-| --- |
+```py
+MSE = 
+```
 
 &#124; 1 &#124;
 
@@ -37,8 +43,9 @@
 
 &#124; m &#124;
 
-|  ∑(x − µ)²  |
-| --- |
+```py
+ ∑(x − µ)² 
+```
 
 其中 m 是你玩估计游戏的次数，不要与 n 混淆，n 是用于计算 x 的样本的大小。
 
@@ -89,8 +96,9 @@ def RMSE(estimates, actual):
 
 你认为我的分布的方差σ²是多少？再次，显而易见的选择是使用样本方差 S²作为估计量。
 
-| S² =  |
-| --- |
+```py
+S² = 
+```
 
 &#124; 1 &#124;
 
@@ -98,15 +106,17 @@ def RMSE(estimates, actual):
 
 &#124; n &#124;
 
-|  ∑(x[i] − x)²  |
-| --- |
+```py
+ ∑(x[i] − x)² 
+```
 
 对于大样本，S²是一个合适的估计量，但对于小样本来说，它往往偏低。由于这个不幸的特性，它被称为有偏估计量。如果在估计游戏的多次迭代之后，期望的总误差（或平均误差）为 0，则估计量是无偏的。
 
 幸运的是，还有另一个简单的统计量是σ²的无偏估计量：
 
-| S[n−1]² =  |
-| --- |
+```py
+S[n−1]² = 
+```
 
 &#124; 1 &#124;
 
@@ -114,8 +124,9 @@ def RMSE(estimates, actual):
 
 &#124; n−1 &#124;
 
-|  ∑(x[i] − x)²  |
-| --- |
+```py
+ ∑(x[i] − x)² 
+```
 
 关于为什么 S²是有偏的，以及 S[n−1]²是无偏的证明，请参见[`wikipedia.org/wiki/Bias_of_an_estimator`](http://wikipedia.org/wiki/Bias_of_an_estimator)。
 
@@ -245,8 +256,9 @@ def SimulateSample(mu=90, sigma=7.5, n=9, m=1000):
 
 一般来说，指数分布的均值是 1/λ，所以往回推，我们可以选择
 
-| L = 1 / x |
-| --- |
+```py
+L = 1 / x
+```
 
 L 是λ的估计量。不仅是任何估计量；它还是最大似然估计量（见[`wikipedia.org/wiki/Exponential_distribution#Maximum_likelihood`](http://wikipedia.org/wiki/Exponential_distribution#Maximum_likelihood)）。所以如果你想最大化猜测λ的机会，L 是一个好选择。
 
@@ -254,8 +266,9 @@ L 是λ的估计量。不仅是任何估计量；它还是最大似然估计量�
 
 我们可以选择一个基于样本中位数的替代方案。指数分布的中位数是 ln(2) / λ，所以再次往回推，我们可以定义一个估计量
 
-| L[m] = ln(2) / m |
-| --- |
+```py
+L[m] = ln(2) / m
+```
 
 其中 m 是样本中位数。
 

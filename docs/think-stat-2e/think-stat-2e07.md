@@ -1,6 +1,11 @@
-# 第六章概率密度函数
+# 第六章：概率密度函数
 
 > 原文：[`greenteapress.com/thinkstats2/html/thinkstats2007.html`](https://greenteapress.com/thinkstats2/html/thinkstats2007.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 本章的代码在`density.py`中。有关下载和使用此代码的信息，请参见第 0.2 节。
 
@@ -8,13 +13,15 @@
 
 CDF 的导数称为概率密度函数，或 PDF。例如，指数分布的 PDF 是
 
-| PDFexpo = λ e^(−λ x)    |
-| --- |
+```py
+PDFexpo = λ e^(−λ x)   
+```
 
 正态分布的概率密度函数是
 
-| PDFnormal =  |
-| --- |
+```py
+PDFnormal = 
+```
 
 &#124; 1 &#124;
 
@@ -338,8 +345,9 @@ Cdf 提供了`Shift`和`Scale`，它们修改了 Cdf 中的值，但概率应该
 
 原始矩是一种统计量。如果你有一组值 x[i]的样本，第 k 个原始矩是：
 
-| m′[k] =  |
-| --- |
+```py
+m′[k] = 
+```
 
 &#124; 1 &#124;
 
@@ -347,8 +355,9 @@ Cdf 提供了`Shift`和`Scale`，它们修改了 Cdf 中的值，但概率应该
 
 &#124; n &#124;
 
-|   |
-| --- |
+```py
+ 
+```
 
 &#124;   &#124;
 
@@ -356,8 +365,9 @@ Cdf 提供了`Shift`和`Scale`，它们修改了 Cdf 中的值，但概率应该
 
 &#124; i &#124;
 
-|  x[i]^k  |
-| --- |
+```py
+ x[i]^k 
+```
 
 或者如果你更喜欢 Python 的表示法：
 
@@ -370,8 +380,9 @@ def RawMoment(xs, k):
 
 中心矩更有用。第 k 个中心矩是：
 
-| m[k] =  |
-| --- |
+```py
+m[k] = 
+```
 
 &#124; 1 &#124;
 
@@ -379,8 +390,9 @@ def RawMoment(xs, k):
 
 &#124; n &#124;
 
-|   |
-| --- |
+```py
+ 
+```
 
 &#124;   &#124;
 
@@ -388,8 +400,9 @@ def RawMoment(xs, k):
 
 &#124; i &#124;
 
-|  (x[i] − x)^k  |
-| --- |
+```py
+ (x[i] − x)^k 
+```
 
 或者在 Python 中：
 
@@ -433,8 +446,9 @@ g[1]是第三个标准化矩，这意味着它已经被归一化，因此没有�
 
 皮尔逊中位数偏度系数是基于样本均值和中位数之间的差异而衡量偏度的指标：
 
-| g[p] = 3 (x − m) / S  |
-| --- |
+```py
+g[p] = 3 (x − m) / S 
+```
 
 其中 x 是样本均值，m 是中位数，S 是标准差。或者在 Python 中：
 

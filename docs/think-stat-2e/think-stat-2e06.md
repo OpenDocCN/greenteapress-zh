@@ -1,6 +1,11 @@
-# 第五章  建模分布
+# 第五章：建模分布
 
 > 原文：[`greenteapress.com/thinkstats2/html/thinkstats2006.html`](https://greenteapress.com/thinkstats2/html/thinkstats2006.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 到目前为止我们使用的分布称为经验分布，因为它们基于经验观察，这些观察必然是有限的样本。
 
@@ -21,8 +26,9 @@
 
 我将从指数分布开始，因为它相对简单。指数分布的 CDF 是
 
-| CDF(x) = 1 − e^(−λ x)  |
-| --- |
+```py
+CDF(x) = 1 − e^(−λ x) 
+```
 
 参数λ确定了分布的形状。图 5.1 显示了当λ = 0.5, 1 和 2 时的 CDF 的样子。
 
@@ -56,13 +62,15 @@
 
 如果你绘制了一个你认为是指数分布的数据集的互补 CDF（CCDF），你期望看到一个像这样的函数：
 
-| y ≈ e^(−λ x)  |
-| --- |
+```py
+y ≈ e^(−λ x) 
+```
 
 对两边取对数得到：
 
-| logy ≈ −λ x |
-| --- |
+```py
+logy ≈ −λ x
+```
 
 因此，在对数 y 轴上，CCDF 是一条斜率为−λ的直线。以下是我们如何生成这样的图：
 
@@ -199,8 +207,9 @@ def MakeNormalPlot(weights):
 
 如果一组值的对数具有正态分布，那么这些值就具有对数正态分布。对数正态分布的 CDF 与正态分布的 CDF 相同，只是用 logx 代替 x。
 
-| CDFlognormal = CDFnormal |
-| --- |
+```py
+CDFlognormal = CDFnormal
+```
 
 对数正态分布的参数通常用µ和σ表示。但要记住，这些参数*不是*均值和标准差；对数正态分布的均值是 exp(µ +σ²/2)，标准差很复杂（参见[`wikipedia.org/wiki/Log-normal_distribution`](http://wikipedia.org/wiki/Log-normal_distribution)）。
 
@@ -264,8 +273,9 @@ def MakeNormalPlot(weights):
 
 |   |
 
-|   |
-| --- |
+```py
+ 
+```
 
 参数 x[m]和α确定了分布的位置和形状。x[m]是可能的最小值。图 5.9 显示了带有 x[m] = 0.5 和不同α值的帕累托分布的 CDF。
 
@@ -306,13 +316,15 @@ def MakeNormalPlot(weights):
 
 |   |
 
-|   |
-| --- |
+```py
+ 
+```
 
 对两边取对数得到：
 
-| logy ≈ −α (logx − logx[m]) |
-| --- |
+```py
+logy ≈ −α (logx − logx[m])
+```
 
 因此，如果你绘制 logy 与 logx，它应该看起来像一条斜率为−α，截距为α logx[m]的直线。
 
@@ -350,13 +362,15 @@ def MakeNormalPlot(weights):
 
 例如，指数分布的 CDF 是
 
-| p = 1 − e^(−λ x) |
-| --- |
+```py
+p = 1 − e^(−λ x)
+```
 
 求解 x 得到：
 
-| x = −log(1 − p) / λ |
-| --- |
+```py
+x = −log(1 − p) / λ
+```
 
 因此，在 Python 中我们可以写成
 
@@ -403,8 +417,9 @@ def expovariate(lam):
 
 *威布尔分布是指数分布在失效分析中的一种推广（参见* [*http://wikipedia.org/wiki/Weibull_distribution*](http://wikipedia.org/wiki/Weibull_distribution)*）。它的 CDF 是*
 
-| CDF(x) = 1 − e^(- (x / λ)^k) |
-| --- |
+```py
+CDF(x) = 1 − e^(- (x / λ)^k)
+```
 
 *你能找到一个转换，使威布尔分布看起来像一条直线吗？这条直线的斜率和截距表示什么？*
 

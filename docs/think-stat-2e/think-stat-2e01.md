@@ -1,6 +1,11 @@
-# 第零章 序言
+# 第零章：序言
 
 > 原文：[`greenteapress.com/thinkstats2/html/thinkstats2001.html`](https://greenteapress.com/thinkstats2/html/thinkstats2001.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 《统计思维》是对探索性数据分析实用工具的介绍。本书的组织遵循我在开始处理数据集时使用的流程：
 

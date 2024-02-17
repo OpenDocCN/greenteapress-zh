@@ -1,6 +1,11 @@
-# 第十三章  生存分析
+# 第十三章：生存分析
 
 > 原文：[`greenteapress.com/thinkstats2/html/thinkstats2014.html`](https://greenteapress.com/thinkstats2/html/thinkstats2014.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 生存分析是描述事物持续多久的一种方法。它经常用于研究人类寿命，但也适用于机械和电子部件的“生存”，或者更一般地说，适用于事件发生前的时间间隔。
 
@@ -12,8 +17,9 @@
 
 生存分析中的基本概念是生存曲线 S(t)，它是一个将持续时间 t 映射到生存时间长于 t 的概率的函数。如果你知道持续时间或“寿命”的分布，找到生存曲线就很容易；它只是 CDF 的补集：
 
-| S(t) = 1 − CDF (t)  |
-| --- |
+```py
+S(t) = 1 − CDF (t) 
+```
 
 其中 CDF(t)是寿命小于或等于 t 的概率。
 
@@ -98,8 +104,9 @@ class SurvivalFunction(object):
 
 从生存曲线中，我们可以推导出危险函数；对于怀孕期长度，危险函数从时间 t 映射到继续进行直到 t 然后在 t 结束的怀孕的比例。更准确地说：
 
-| λ(t) =  |
-| --- |
+```py
+λ(t) = 
+```
 
 &#124; S(t) − S(t+1) &#124;
 
@@ -107,8 +114,9 @@ class SurvivalFunction(object):
 
 &#124; S(t) &#124;
 
-|   |
-| --- |
+```py
+ 
+```
 
 分子是在 t 结束的寿命的比例，也是 PMF(t)。
 
@@ -262,8 +270,9 @@ def EstimateHazardFunction(complete, ongoing, label=''):
 
 一旦我们有了危险函数，我们就可以估计生存曲线。在时间`t`之后生存的机会是在`t`之前所有时间生存的机会，这是补集危险函数的累积乘积：
 
-| [1−λ(0)] [1−λ(1)] … [1−λ(t)] |
-| --- |
+```py
+[1−λ(0)] [1−λ(1)] … [1−λ(t)]
+```
 
 `HazardFunction`类提供了`MakeSurvival`，计算这个乘积：
 

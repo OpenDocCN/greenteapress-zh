@@ -1,6 +1,11 @@
-# 第七章  变量之间的关系
+# 第七章：变量之间的关系
 
 > 原文：[`greenteapress.com/thinkstats2/html/thinkstats2008.html`](https://greenteapress.com/thinkstats2/html/thinkstats2008.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 到目前为止，我们只看了一个变量。在本章中，我们将研究变量之间的关系。如果知道一个变量，就能得到关于另一个变量的信息，那么这两个变量就是相关的。例如，身高和体重是相关的；较高的人往往体重更重。当然，这不是一个完美的关系：有矮胖的人和高瘦的人。但是，如果你想猜测某人的体重，如果你知道他们的身高，你会更准确。
 
@@ -184,8 +189,9 @@ for i, group in groups:
 
 协方差是这些乘积的平均值：
 
-| Cov(X,Y) =  |
-| --- |
+```py
+Cov(X,Y) = 
+```
 
 | 1 |
 
@@ -193,8 +199,9 @@ for i, group in groups:
 
 | n |
 
-|  ∑dx[i] dy[i]  |
-| --- |
+```py
+ ∑dx[i] dy[i] 
+```
 
 其中 n 是两个序列的长度（它们必须是相同的长度）。
 
@@ -224,8 +231,9 @@ def Cov(xs, ys, meanx=None, meany=None):
 
 解决这个问题的一个方法是将偏差除以标准差，得到标准分数，并计算标准分数的乘积：
 
-| p[i] =  |
-| --- |
+```py
+p[i] = 
+```
 
 | (x[i] − x) |
 
@@ -247,8 +255,9 @@ def Cov(xs, ys, meanx=None, meany=None):
 
 其中 S[X]和 S[Y]分别是 X 和 Y 的标准差。这些乘积的均值是
 
-| ρ =  |
-| --- |
+```py
+ρ = 
+```
 
 | 1 |
 
@@ -256,13 +265,15 @@ def Cov(xs, ys, meanx=None, meany=None):
 
 | n |
 
-|  ∑p[i]  |
-| --- |
+```py
+ ∑p[i] 
+```
 
 或者我们可以通过分解 S[X]和 S[Y]来重写ρ：
 
-| ρ =  |
-| --- |
+```py
+ρ = 
+```
 
 | Cov(X,Y) |
 

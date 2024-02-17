@@ -1,6 +1,11 @@
-# 第九章 假设检验
+# 第九章：假设检验
 
 > 原文：[`greenteapress.com/thinkstats2/html/thinkstats2010.html`](https://greenteapress.com/thinkstats2/html/thinkstats2010.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 本章的代码在`hypothesis.py`中。有关下载和使用此代码的信息，请参阅第 0.2 节。
 
@@ -279,8 +284,9 @@ class DiceTest(thinkstats2.HypothesisTest):
 
 在前一节中，我们使用总偏差作为检验统计量。但是对于测试比例，更常见的是使用卡方统计量：
 
-| χ² =  |
-| --- |
+```py
+χ² = 
+```
 
 &#124;   &#124;
 
@@ -288,8 +294,9 @@ class DiceTest(thinkstats2.HypothesisTest):
 
 &#124; i &#124;
 
-|   |
-| --- |
+```py
+ 
+```
 
 &#124; (O[i] − E[i])² &#124;
 
@@ -297,8 +304,9 @@ class DiceTest(thinkstats2.HypothesisTest):
 
 &#124; E[i] &#124;
 
-|   |
-| --- |
+```py
+ 
+```
 
 其中 O[i]是观察频率，E[i]是期望频率。以下是 Python 代码：
 

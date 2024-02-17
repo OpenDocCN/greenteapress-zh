@@ -1,6 +1,11 @@
-# 第一章 探索性数据分析
+# 第一章：探索性数据分析
 
 > 原文：[`greenteapress.com/thinkstats2/html/thinkstats2002.html`](https://greenteapress.com/thinkstats2/html/thinkstats2002.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 本书的论点是，数据结合实用方法可以在不确定性下回答问题并指导决策。
 

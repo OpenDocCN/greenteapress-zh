@@ -1,6 +1,11 @@
-# 第四章 累积分布函数
+# 第四章：累积分布函数
 
 > 原文：[`greenteapress.com/thinkstats2/html/thinkstats2005.html`](https://greenteapress.com/thinkstats2/html/thinkstats2005.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 本章的代码在`cumulative.py`中。有关下载和使用此代码的信息，请参阅第 0.2 节。
 

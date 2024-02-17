@@ -1,6 +1,11 @@
-# 第十二章 时间序列分析
+# 第十二章：时间序列分析
 
 > 原文：[`greenteapress.com/thinkstats2/html/thinkstats2013.html`](https://greenteapress.com/thinkstats2/html/thinkstats2013.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 时间序列是系统随时间变化的一系列测量。一个著名的例子是显示全球平均温度随时间变化的“曲棍球杆图”（参见[`en.wikipedia.org/wiki/Hockey_stick_graph`](https://en.wikipedia.org/wiki/Hockey_stick_graph)）。
 
