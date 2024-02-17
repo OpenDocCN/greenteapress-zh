@@ -66,7 +66,7 @@ update_train(posterior, data)
 
 这是后验的样子：
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 from utils import decorate
@@ -75,7 +75,7 @@ posterior.plot(label='Posterior after train 60', color='C4')
 decorate(xlabel='Number of trains',
          ylabel='PMF',
          title='Posterior distribution') 
-```</details> ![_images/3fd4516774234abdc207c2e19bea0991f19f2b933e638bd40ce82c44782249c5.png](img/c8884d0e433a999659931b4e047c3514.png)
+``` ![_images/3fd4516774234abdc207c2e19bea0991f19f2b933e638bd40ce82c44782249c5.png](img/c8884d0e433a999659931b4e047c3514.png)
 
 毫不奇怪，所有小于 60 的$N$值都被排除了。
 
@@ -123,7 +123,7 @@ posterior.mean()
 
 这张表显示了当我们改变上限时会发生什么：
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 import pandas as pd
@@ -138,7 +138,7 @@ for high in [500, 1000, 2000]:
     df.loc[high] = pmf.mean()
 
 df 
-```</details>
+```
 
 |  | 后验均值 |
 | --- | --- |
@@ -162,7 +162,7 @@ df
 
 当我们观察到三列火车时，后验均值如何取决于先验的上限：
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 df = pd.DataFrame(columns=['Posterior mean'])
@@ -178,7 +178,7 @@ for high in [500, 1000, 2000]:
     df.loc[high] = pmf.mean()
 
 df 
-```</details>
+```
 
 |  | 后验均值 |
 | --- | --- |
@@ -213,11 +213,11 @@ power = Pmf(ps, hypos, name='power law')
 power.normalize() 
 ```
 
-<details class="hide below-input"><summary aria-label="Toggle hidden content">显示代码单元格输出 隐藏代码单元格输出</summary>
+显示代码单元格输出 隐藏代码单元格输出
 
 ```py
 8.178368103610282 
-```</details>
+```
 
 为了比较，这里再次是均匀先验。
 
@@ -233,7 +233,7 @@ uniform.normalize()
 
 这是幂律先验的样子，与均匀先验相比：
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 uniform.plot(color='C4')
@@ -242,7 +242,7 @@ power.plot(color='C1')
 decorate(xlabel='Number of trains',
          ylabel='PMF',
          title='Prior distributions') 
-```</details> ![_images/1540e9adc2d63655ca44e42defbf777d454d6ae8554df5ec7344b6a0105b19ae.png](img/6fb82f3e2199e7281ec74969875b78ca.png)
+``` ![_images/1540e9adc2d63655ca44e42defbf777d454d6ae8554df5ec7344b6a0105b19ae.png](img/6fb82f3e2199e7281ec74969875b78ca.png)
 
 这是两种先验的更新。
 
@@ -254,7 +254,7 @@ update_train(power, dataset)
 
 这里是后验分布。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 uniform.plot(color='C4')
@@ -263,13 +263,13 @@ power.plot(color='C1')
 decorate(xlabel='Number of trains',
          ylabel='PMF',
          title='Posterior distributions') 
-```</details> ![_images/39081a966b6588f813b7a938dd08689cf7e276519770fc9afa2e8681ab159173.png](img/e20c7df561b596edfd53a82f583bd230.png)
+``` ![_images/39081a966b6588f813b7a938dd08689cf7e276519770fc9afa2e8681ab159173.png](img/e20c7df561b596edfd53a82f583bd230.png)
 
 幂律给较高值较少的先验概率，这会产生较低的后验均值，并且对上限的敏感性较小。
 
 当我们使用幂律先验并观察到三列火车时，后验均值如何取决于上限：
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 df = pd.DataFrame(columns=['Posterior mean'])
@@ -287,7 +287,7 @@ for high in [500, 1000, 2000]:
     df.loc[high] = power.mean()
 
 df 
-```</details>
+```
 
 |  | 后验均值 |
 | --- | --- |
@@ -428,7 +428,7 @@ array([ 91., 243.])
 
 观众有多少人？有超过 1200 人的概率是多少。提示：记住二项分布。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 # Solution
@@ -444,7 +444,7 @@ prior.normalize()
 
 ```py
 200 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -457,7 +457,7 @@ from scipy.stats import binom
 likelihood1 = binom.pmf(2, hypos, 1/365)
 likelihood2 = binom.pmf(1, hypos, 1/365)
 likelihood3 = binom.pmf(0, hypos, 1/365) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -470,7 +470,7 @@ posterior.normalize()
 
 ```py
 0.006758799800451805 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -482,7 +482,7 @@ decorate(xlabel='Number of people in the audience',
          ylabel='PMF') 
 ```
 
-![_images/e88d06c8d69defdc14f80513a529c748ae82947f1d46597958f1e5294d141b84.png](img/9b3cd9ca937aff05ce0fa947721ceea5.png)</details><details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+![_images/e88d06c8d69defdc14f80513a529c748ae82947f1d46597958f1e5294d141b84.png](img/9b3cd9ca937aff05ce0fa947721ceea5.png)
 
 ```py
 # Solution
@@ -495,7 +495,7 @@ posterior.mean()
 
 ```py
 486.2255161687084 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -510,7 +510,7 @@ posterior.prob_gt(1200)
 
 ```py
 0.011543092507699223 
-```</details>
+```
 
 **练习：**我经常在我家后面的花园里看到[兔子](https://en.wikipedia.org/wiki/Eastern_cottontail)，但很难分辨它们，所以我不知道有多少只兔子。
 
@@ -524,14 +524,14 @@ posterior.prob_gt(1200)
 
 +   为了简化问题，让我们假设访问我的花园的所有兔子在某一天被照相陷阱捕捉到的概率相等。我们还假设照相陷阱每天都能拍到一张照片。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 # Solution
 
 hypos = np.arange(4, 11)
 prior = Pmf(1, hypos) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -541,7 +541,7 @@ prior = Pmf(1, hypos)
 
 N = hypos
 likelihood = (N-1) / N**2 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -555,11 +555,11 @@ decorate(xlabel='Number of rabbits',
          title='The Rabbit Problem') 
 ```
 
-![_images/fae1b64345d5eccfc5958883cb7a5da6c375cfdd3dc7f01e3f83f721ab0ee87c.png](img/bf83414453de1f8eb1a8bd38012ca56e.png)</details>
+![_images/fae1b64345d5eccfc5958883cb7a5da6c375cfdd3dc7f01e3f83f721ab0ee87c.png](img/bf83414453de1f8eb1a8bd38012ca56e.png)
 
 **练习：**假设在刑事司法系统中，所有监禁刑期为 1、2 或 3 年，每种刑期的数量相等。有一天，你去了一所监狱，随机选择了一个囚犯。他们服刑 3 年的概率是多少？你观察到的囚犯的平均剩余刑期是多少？
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 # Solution
@@ -576,7 +576,7 @@ prior
 | 1 | 0.333333 |
 | 2 | 0.333333 |
 
-| 3 | 0.333333 |</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+| 3 | 0.333333 | 
 
 ```py
 # Solution
@@ -596,7 +596,7 @@ posterior
 | 1 | 0.166667 |
 | 2 | 0.333333 |
 
-| 3 | 0.500000 |</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+| 3 | 0.500000 | 
 
 ```py
 # Solution
@@ -609,7 +609,7 @@ posterior.mean() / 2
 
 ```py
 1.1666666666666665 
-```</details>
+```
 
 **练习：**如果我在美国随机选择一个成年人，他们有兄弟姐妹的概率是多少？准确地说，他们的母亲至少有一个其他孩子的概率是多少。
 
@@ -617,7 +617,7 @@ posterior.mean() / 2
 
 从中，我提取了 2014 年 40-44 岁的美国母亲家庭规模的以下分布：
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 import matplotlib.pyplot as plt
@@ -632,11 +632,11 @@ decorate(ylabel='PMF',
          title='Distribution of family size') 
 ```
 
-![_images/aab4093f29e589364a6225822e5476df7fa0e3902c8c5e1cf5f5455a41f5741e.png](img/7b585ad781658a49a136c0070208eb0b.png)</details>
+![_images/aab4093f29e589364a6225822e5476df7fa0e3902c8c5e1cf5f5455a41f5741e.png](img/7b585ad781658a49a136c0070208eb0b.png)
 
 为简单起见，让我们假设 4+类别中的所有家庭都恰好有 4 个孩子。
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 # Solution
@@ -657,7 +657,7 @@ posterior
 | 2 | 0.353448 |
 | 3 | 0.310345 |
 
-| 4 | 0.241379 |</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+| 4 | 0.241379 | 
 
 ```py
 # Solution
@@ -670,7 +670,7 @@ posterior
 
 ```py
 0.9051724137931034 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -682,7 +682,7 @@ posterior.prob_gt(1)
 
 ```py
 0.9051724137931034 
-```</details>
+```
 
 **练习：**[末日论证](https://en.wikipedia.org/wiki/Doomsday_argument)是“一种概率论证，它声称可以根据迄今为止出生的人类总数的估计来预测未来人类的数量。”
 
@@ -694,14 +694,14 @@ posterior.prob_gt(1)
 
 根据这些数据和可疑的先验，我们的文明将是短寿的概率是多少？
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 # Solution
 
 hypos = [200, 2000]
 prior = Pmf(1, hypos) 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -716,7 +716,7 @@ posterior
 | --- | --- |
 | 200 | 0.909091 |
 
-| 2000 | 0.090909 |</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+| 2000 | 0.090909 | 
 
 ```py
 # Solution
@@ -730,4 +730,4 @@ posterior
 # and see what the results look like.
 
 # What do you think of the Doomsday argument? 
-```</details>
+```

@@ -131,11 +131,11 @@ posterior = prior * likelihood
 normalize(posterior) 
 ```
 
-<details class="hide below-input"><summary aria-label="Toggle hidden content">显示代码单元格输出 隐藏代码单元格输出</summary>
+显示代码单元格输出 隐藏代码单元格输出
 
 ```py
 2.052573567183434e-09 
-```</details>
+```
 
 以下函数封装了这些步骤。它接受一个联合先验分布和数据，并返回一个联合后验分布。
 
@@ -162,14 +162,14 @@ posterior = update_weibull(prior, data)
 
 以下是联合后验分布的等高线图。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 from utils import plot_contour
 
 plot_contour(posterior)
 decorate(title='Posterior joint distribution of Weibull parameters') 
-```</details> ![_images/77fcd1c56c2f0ce10efa56dbabec2d9b197d606003e4f5968c14f2f0cb4ed13f.png](img/c7172a47752cdfa035c49f16e0ef490f.png)
+``` ![_images/77fcd1c56c2f0ce10efa56dbabec2d9b197d606003e4f5968c14f2f0cb4ed13f.png](img/c7172a47752cdfa035c49f16e0ef490f.png)
 
 $\lambda$的可能值的范围大约是 1 到 4，其中包含了我们用来生成数据的实际值 3。而$k$的范围大约是 0.5 到 1.5，其中包含了实际值 0.8。
 
@@ -177,18 +177,18 @@ $\lambda$的可能值的范围大约是 1 到 4，其中包含了我们用来生
 
 为了更准确地描述这些范围，我们可以提取边缘分布：
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 from utils import marginal
 
 posterior_lam = marginal(posterior, 0)
 posterior_k = marginal(posterior, 1) 
-```</details>
+```
 
 并计算后验均值和 90%的可信区间。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">Show code cell content Hide code cell content</summary>
+Show code cell content Hide code cell content
 
 ```py
 import matplotlib.pyplot as plt
@@ -200,13 +200,13 @@ decorate(xlabel='lam',
          title='Posterior marginal distribution of lam') 
 ```
 
-![_images/4eab37f50de519d5098ae53189c5334a625a4117a40b09fa40489e916fa2bf0b.png](img/6821cba075bd877a9906a1bdafa5afea.png)</details>
+![_images/4eab37f50de519d5098ae53189c5334a625a4117a40b09fa40489e916fa2bf0b.png](img/6821cba075bd877a9906a1bdafa5afea.png)
 
 垂直灰线显示了$\lambda$的实际值。
 
 这是$k$的边际后验分布。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">Show code cell content Hide code cell content</summary>
+Show code cell content Hide code cell content
 
 ```py
 plt.axvline(0.8, color='C5')
@@ -216,11 +216,11 @@ decorate(xlabel='k',
          title='Posterior marginal distribution of k') 
 ```
 
-![_images/146ab0f8b11ab9ec51aea0fdfe7339761a6115fa77b3ac7fe71c80aa0d760090.png](img/77c29eef78e70659c88fd4a9a9a1f816.png)</details>
+![_images/146ab0f8b11ab9ec51aea0fdfe7339761a6115fa77b3ac7fe71c80aa0d760090.png](img/77c29eef78e70659c88fd4a9a9a1f816.png)
 
 后验分布很宽，这意味着只有 10 个数据点，我们无法精确估计参数。但对于两个参数，实际值都在可信区间内。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">Show code cell content Hide code cell content</summary>
+Show code cell content Hide code cell content
 
 ```py
 print(lam, posterior_lam.credible_interval(0.9)) 
@@ -228,7 +228,7 @@ print(lam, posterior_lam.credible_interval(0.9))
 
 ```py
 3 [1.2 4.4] 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">Show code cell content Hide code cell content</summary>
+``` Show code cell content Hide code cell content
 
 ```py
 print(k, posterior_k.credible_interval(0.9)) 
@@ -236,7 +236,7 @@ print(k, posterior_k.credible_interval(0.9))
 
 ```py
 0.8 [0.6 1.4] 
-```</details>
+```
 
 ## 不完整的数据
 
@@ -320,7 +320,7 @@ obs.loc[censored, 'status'] = 0
 
 现在我们可以为每只狗绘制一个“寿命线”，显示时间线上的到达和离开时间。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">Show code cell content Hide code cell content</summary>
+Show code cell content Hide code cell content
 
 ```py
 def plot_lifelines(obs):
@@ -346,11 +346,11 @@ def plot_lifelines(obs):
              title='Lifelines showing censored and uncensored observations')
 
     plt.gca().invert_yaxis() 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+``` 显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 plot_lifelines(obs) 
-```</details> ![_images/d6dd919f6937358b5da512f2b078083de2cd5500b7118f9665579ec6044373f6.png](img/787750d8f0dc88a9ac6c41b9e548ca3c.png)
+``` ![_images/d6dd919f6937358b5da512f2b078083de2cd5500b7118f9665579ec6044373f6.png](img/787750d8f0dc88a9ac6c41b9e548ca3c.png)
 
 我将在表中再添加一列，其中包含寿命线的观察部分的持续时间。
 
@@ -371,7 +371,7 @@ data1 = obs.loc[~censored, 'T']
 data2 = obs.loc[censored, 'T'] 
 ```
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 data1 
@@ -386,7 +386,7 @@ data1
 5    1.083864
 9    0.053408
 Name: T, dtype: float64 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 data2 
@@ -397,7 +397,7 @@ data2
 7    1.910002
 8    1.547250
 Name: T, dtype: float64 
-```</details>
+```
 
 对于完整数据，我们可以使用`update_weibull`，它使用 Weibull 分布的概率密度函数来计算数据的似然。
 
@@ -451,7 +451,7 @@ posterior_k2 = marginal(posterior2, 1)
 
 这是$\lambda$的后验边际分布，与我们使用所有完整数据得到的分布进行比较。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 posterior_lam.plot(color='C5', label='All complete',
@@ -461,7 +461,7 @@ posterior_lam2.plot(color='C2', label='Some censored')
 decorate(xlabel='lambda',
          ylabel='PDF', 
          title='Marginal posterior distribution of lambda') 
-```</details> ![_images/b27b0a38dde380c88b64bce34905027ef43332cd5ddff47b9eba6b2c56dc22af.png](img/39d2895a1cd7517c6572e797e506d326.png)
+``` ![_images/b27b0a38dde380c88b64bce34905027ef43332cd5ddff47b9eba6b2c56dc22af.png](img/39d2895a1cd7517c6572e797e506d326.png)
 
 一些不完整数据的分布显著更宽。
 
@@ -469,7 +469,7 @@ decorate(xlabel='lambda',
 
 这是$k$的后验边际分布：
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 posterior_k.plot(color='C5', label='All complete',
@@ -479,7 +479,7 @@ posterior_k2.plot(color='C12', label='Some censored')
 decorate(xlabel='k',
          ylabel='PDF', 
          title='Posterior marginal distribution of k') 
-```</details> ![_images/0d5cf63e8cd6276770a088ce33f36cb3c83eefd722368f1143e949dd9f55322b.png](img/26afec247feb6f72467c13c89205d16c.png)
+``` ![_images/0d5cf63e8cd6276770a088ce33f36cb3c83eefd722368f1143e949dd9f55322b.png](img/26afec247feb6f72467c13c89205d16c.png)
 
 在这个例子中，当我们有不完整的数据时，边际分布向左移动，但宽度并没有显著增加。
 
@@ -497,11 +497,11 @@ decorate(xlabel='k',
 > 
 > 组件每隔 12 小时监视一次以寻找故障。记录的故障时刻是[记录的]，共获得了 32 个数据点，以至于最后一个灯泡也失败了。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 download('https://gist.github.com/epogrebnyak/7933e16c0ad215742c4c104be4fbdeb1/raw/c932bc5b6aa6317770c4cbf43eb591511fec08f9/lamps.csv') 
-```</details>
+```
 
 我们可以像这样将数据加载到`DataFrame`中：
 
@@ -537,7 +537,7 @@ pmf_bulb.normalize()
 
 平均寿命约为 1400 小时。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 pmf_bulb.mean() 
@@ -545,7 +545,7 @@ pmf_bulb.mean()
 
 ```py
 1413.84 
-```</details>
+```
 
 假设这些数据很好地符合 Weibull 分布，让我们估计适合数据的参数。同样，我将从$\lambda$和$k$的均匀先验开始：
 
@@ -586,12 +586,12 @@ posterior_bulb = update_weibull(prior_bulb, data_bulb)
 
 这是后验联合分布的样子：
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 plot_contour(posterior_bulb)
 decorate(title='Joint posterior distribution, light bulbs') 
-```</details> ![_images/c045d0c012c5c3280ab43869032f47b98c77b0ad79fef4e376c00d3b6dc6e990.png](img/2f2a91dee647f354e9561ed85b32f958.png)
+``` ![_images/c045d0c012c5c3280ab43869032f47b98c77b0ad79fef4e376c00d3b6dc6e990.png](img/2f2a91dee647f354e9561ed85b32f958.png)
 
 为了总结这个联合后验分布，我们将计算后验均值寿命。
 
@@ -655,7 +655,7 @@ def joint_weibull_mean(joint):
 
 使用以下更新函数更加严格正确，它使用韦伯分布的 CDF 来计算在给定的 12 小时间隔内灯泡死亡的概率。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 def update_weibull_between(prior, data, dt=12):
@@ -671,34 +671,34 @@ def update_weibull_between(prior, data, dt=12):
     normalize(posterior)
 
     return posterior 
-```</details>
+```
 
 值落入区间的概率是区间开始和结束时的 CDF 之差。
 
 这是我们运行更新的方式。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 posterior_bulb2 = update_weibull_between(prior_bulb, data_bulb) 
-```</details>
+```
 
 这就是结果。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 plot_contour(posterior_bulb2)
 decorate(title='Joint posterior distribution, light bulbs') 
 ```
 
-![_images/a01f57da5382dd9ebeae9b3de1f7f0bbd3e8431a6486f4c3b2d63dadc7312526.png](img/f292f51d98ec07dfc930576ab8a3de1b.png)</details>
+![_images/a01f57da5382dd9ebeae9b3de1f7f0bbd3e8431a6486f4c3b2d63dadc7312526.png](img/f292f51d98ec07dfc930576ab8a3de1b.png)
 
 这个结果在视觉上几乎与我们使用 PDF 得到的结果完全相同。这是个好消息，因为它表明即使不是严格正确，使用 PDF 也可以是一个很好的近似。
 
 看看它是否有任何不同，让我们检查一下后验均值。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 joint_weibull_mean(posterior_bulb) 
@@ -706,7 +706,7 @@ joint_weibull_mean(posterior_bulb)
 
 ```py
 1412.7242774305005 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 joint_weibull_mean(posterior_bulb2) 
@@ -714,7 +714,7 @@ joint_weibull_mean(posterior_bulb2)
 
 ```py
 1406.8171982320873 
-```</details>
+```
 
 当我们考虑到观察之间的 12 小时间隔时，后验均值要少大约 6 小时。这是有道理的：如果我们假设灯泡在间隔的任何时间点都有同样的死亡概率，那么平均值将是间隔的中点。
 
@@ -751,7 +751,7 @@ dist_num_dead = make_binomial(n, p)
 
 这就是它的样子。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 dist_num_dead.plot(label='known parameters')
@@ -761,7 +761,7 @@ decorate(xlabel='Number of dead bulbs',
          title='Predictive distribution with known parameters') 
 ```
 
-![_images/42e12ef3e54e221fa4ede683f0bbf06d0c501a4eb94e1bc5da2cab501e520592.png](img/2a5755e75a3a3a6f94354ace263259b5.png)</details>
+![_images/42e12ef3e54e221fa4ede683f0bbf06d0c501a4eb94e1bc5da2cab501e520592.png](img/2a5755e75a3a3a6f94354ace263259b5.png)
 
 但这是基于我们知道$\lambda$和$k$的假设，而我们并不知道。相反，我们有一个包含这些参数可能值和它们概率的后验分布。
 
@@ -808,7 +808,7 @@ post_pred = make_mixture(posterior_series, pmf_seq)
 
 这是后验预测分布的样子，与我们使用已知参数计算的二项分布相比。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 dist_num_dead.plot(label='known parameters')
@@ -816,7 +816,7 @@ post_pred.plot(label='unknown parameters')
 decorate(xlabel='Number of dead bulbs',
          ylabel='PMF',
          title='Posterior predictive distribution') 
-```</details> ![_images/43a987be520fd3d9c1db443a0138114292fb696c4ef951ab46ac6e015469a169.png](img/8d5760f4032ecc5652e6a804c7e27405.png)
+``` ![_images/43a987be520fd3d9c1db443a0138114292fb696c4ef951ab46ac6e015469a169.png](img/8d5760f4032ecc5652e6a804c7e27405.png)
 
 后验预测分布更宽，因为它代表了我们对参数以及死灯泡数量的不确定性。
 
@@ -846,7 +846,7 @@ decorate(xlabel='Number of dead bulbs',
 
 1.  使用这些可能性来更新后验分布。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 # Solution
@@ -861,7 +861,7 @@ prob_dead.shape
 
 ```py
 (51, 51) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -876,7 +876,7 @@ likelihood.shape
 
 ```py
 (51, 51) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -887,7 +887,7 @@ plot_contour(posterior_bulb3)
 decorate(title='Joint posterior distribution with k=20') 
 ```
 
-![_images/e5e76b96bcdb981d51b473a995694931c9ec47affcc8c1f3dfb73d7172794803.png](img/0b6b415805edbf392947106d859da61c.png)</details><details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+![_images/e5e76b96bcdb981d51b473a995694931c9ec47affcc8c1f3dfb73d7172794803.png](img/0b6b415805edbf392947106d859da61c.png)
 
 ```py
 # Solution
@@ -900,7 +900,7 @@ joint_weibull_mean(posterior_bulb3)
 
 ```py
 1378.3949572816412 
-```</details>
+```
 
 **练习：**在这个练习中，我们将使用一个月的数据来估计描述西雅图日降雨量的分布的参数。然后我们将计算每日降雨的后验预测分布，并用它来估计罕见事件的概率，比如一天内降雨超过 1.5 英寸。
 
@@ -912,7 +912,7 @@ joint_weibull_mean(posterior_bulb3)
 
 以下函数接受这些参数，并从 SciPy 返回一个`gamma`对象。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 import scipy.stats
@@ -926,21 +926,21 @@ def gamma_dist(k, theta):
  returns: gamma object
  """
     return scipy.stats.gamma(k, scale=theta) 
-```</details>
+```
 
 现在我们需要一些数据。以下单元格下载了我在 2020 年 5 月从美国国家海洋和大气管理局（[NOAA](http://www.ncdc.noaa.gov/cdo-web/search)）收集的有关华盛顿西雅图的数据。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 # Load the data file
 
 download('https://github.com/AllenDowney/ThinkBayes2/raw/master/data/2203951.csv') 
-```</details>
+```
 
 现在我们可以将其加载到`DataFrame`中：
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 weather = pd.read_csv('2203951.csv')
@@ -954,11 +954,11 @@ weather.head()
 | 2 | USW00024233 | 美国西雅图塔科马机场，华盛顿州 | 2020-05-03 | 11.63 | 0.06 | 57 | 44 | 1.0 | NaN | NaN |
 | 3 | USW00024233 | 美国西雅图塔科马机场，华盛顿州 | 2020-05-04 | 4.47 | 0.00 | 65 | 39 | NaN | NaN | NaN |
 
-| 4 | USW00024233 | 美国西雅图塔科马机场，华盛顿州 | 2020-05-05 | 7.83 | 0.00 | 71 | 49 | NaN | NaN | NaN |</details>
+| 4 | USW00024233 | 美国西雅图塔科马机场，华盛顿州 | 2020-05-05 | 7.83 | 0.00 | 71 | 49 | NaN | NaN | NaN |
 
 我将创建一个布尔系列来指示下雨的天数。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 rained = weather['PRCP'] > 0
@@ -967,11 +967,11 @@ rained.sum()
 
 ```py
 14 
-```</details>
+```
 
 并选择下雨的日子的总降雨量。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 prcp = weather.loc[rained, 'PRCP']
@@ -988,11 +988,11 @@ min       0.010000
 75%       0.225000
 max       1.140000
 Name: PRCP, dtype: float64 
-```</details>
+```
 
 这是数据的累积分布函数的样子。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 cdf_data = Cdf.from_seq(prcp)
@@ -1002,7 +1002,7 @@ decorate(xlabel='Total rainfall (in)',
          title='Distribution of rainfall on days it rained') 
 ```
 
-![_images/5c588671547b5c94db2a6883cc4aad1ee78cc18cbcac03f2d597ef510b5cc19c.png](img/c2c9a7a935206223c754315c7c3cd064.png)</details>
+![_images/5c588671547b5c94db2a6883cc4aad1ee78cc18cbcac03f2d597ef510b5cc19c.png](img/c2c9a7a935206223c754315c7c3cd064.png)
 
 最大降雨量为 1.14 英寸是一天。要估计超过 1.5 英寸的概率，我们需要从我们拥有的数据进行外推，因此我们的估计将取决于伽玛分布是否真的是一个好模型。
 
@@ -1014,7 +1014,7 @@ decorate(xlabel='Total rainfall (in)',
 
 1.  计算降雨的后验预测分布，并用它来估计一天降雨超过 1.5 英寸的概率。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 # Solution
@@ -1028,7 +1028,7 @@ k_est, theta_est
 
 ```py
 (0.8898876017525283, 0.25043291132301665) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1038,14 +1038,14 @@ k_est, theta_est
 
 ks = np.linspace(0.01, 2, num=51)
 prior_k = make_uniform(ks, name='k') 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
 
 thetas = np.linspace(0.01, 1.5, num=51)
 prior_theta = make_uniform(thetas, name='theta') 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1053,7 +1053,7 @@ prior_theta = make_uniform(thetas, name='theta')
 # Here's the joint prior
 
 prior = make_joint(prior_k, prior_theta) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1062,7 +1062,7 @@ prior = make_joint(prior_k, prior_theta)
 
 k_mesh, theta_mesh, data_mesh = np.meshgrid(
     prior.columns, prior.index, prcp) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1075,7 +1075,7 @@ densities.shape
 
 ```py
 (51, 51, 14) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1088,7 +1088,7 @@ likelihood.sum()
 
 ```py
 150287.91980136462 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1101,7 +1101,7 @@ normalize(posterior)
 
 ```py
 57.780822684107896 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1113,7 +1113,7 @@ plot_contour(posterior)
 decorate(title='Posterior distribution, parameters of a gamma distribution') 
 ```
 
-![_images/569775f8c7a7fb0df6c9658876198997230b9dae8712f38ff26f0629929d9e47.png](img/c9cff7f85ebe7c29f68f398ee9db6037.png)</details><details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+![_images/569775f8c7a7fb0df6c9658876198997230b9dae8712f38ff26f0629929d9e47.png](img/c9cff7f85ebe7c29f68f398ee9db6037.png)
 
 ```py
 # Solution
@@ -1125,7 +1125,7 @@ from utils import marginal
 
 posterior_k = marginal(posterior, 0)
 posterior_theta = marginal(posterior, 1) 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1138,7 +1138,7 @@ decorate(xlabel='k',
          title='Posterior marginal distribution of k') 
 ```
 
-![_images/69409935354138ed39afaf3aaa5ada3ff5bc77d6f005ab27429bf478d8d0946b.png](img/31f021b58c59b854d34d7ee6e3fe26dc.png)</details><details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+![_images/69409935354138ed39afaf3aaa5ada3ff5bc77d6f005ab27429bf478d8d0946b.png](img/31f021b58c59b854d34d7ee6e3fe26dc.png)
 
 ```py
 # Solution
@@ -1148,7 +1148,7 @@ posterior_k.mean(), posterior_k.credible_interval(0.9)
 
 ```py
 (0.8437218523899558, array([0.4478, 1.3632])) 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1161,7 +1161,7 @@ decorate(xlabel='theta',
          title='Posterior marginal distribution of theta') 
 ```
 
-![_images/1dd3578256b42f046ac84921ad312dfbfaf9c27a70cd8f865948011b66d08eca.png](img/a1799bf48426a5ce41de2b2405b65d59.png)</details><details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+![_images/1dd3578256b42f046ac84921ad312dfbfaf9c27a70cd8f865948011b66d08eca.png](img/a1799bf48426a5ce41de2b2405b65d59.png)
 
 ```py
 # Solution
@@ -1171,7 +1171,7 @@ posterior_theta.mean(), posterior_theta.credible_interval(0.9)
 
 ```py
 (0.367761307460383, array([0.159 , 0.7848])) 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1192,7 +1192,7 @@ theta  k
        0.1294    2.077828e-138
        0.1692    4.227218e-136
 dtype: float64 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1200,7 +1200,7 @@ dtype: float64
 # I'll extend the predictive distribution up to 2 inches
 
 low, high = 0.01, 2 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1217,7 +1217,7 @@ for (theta, k) in posterior_series.index:
     dist = gamma_dist(k, theta)
     pmf = pmf_from_dist(dist, qs)
     pmf_seq.append(pmf) 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1226,7 +1226,7 @@ for (theta, k) in posterior_series.index:
 # distribution
 
 post_pred = make_mixture(posterior_series, pmf_seq) 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1239,7 +1239,7 @@ decorate(xlabel='Total rainfall (in)',
          title='Posterior predictive distribution of rainfall') 
 ```
 
-![_images/91c9c0543eef83e3308033e1fb3a26f62b4651f1f1b4e9f5d72ddea583069bf2.png](img/a05f4682fda21bd2b00fb2dffd541cec.png)</details><details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+![_images/91c9c0543eef83e3308033e1fb3a26f62b4651f1f1b4e9f5d72ddea583069bf2.png](img/a05f4682fda21bd2b00fb2dffd541cec.png)
 
 ```py
 # Solution 
@@ -1253,7 +1253,7 @@ p_gt
 
 ```py
 0.00900003598887611 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution 
@@ -1266,4 +1266,4 @@ p_gt
 
 ```py
 111.11066680577532 
-```</details>
+```

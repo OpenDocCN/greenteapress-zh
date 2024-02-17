@@ -699,7 +699,7 @@ $$P(A) = \sum_i P(B_i) P(A|B_i)$$
 
 仔细考虑你传递给`conditional`的参数的顺序。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -709,7 +709,7 @@ conditional(liberal, given=democrat)
 
 ```py
 0.3891320002215698 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -719,7 +719,7 @@ conditional(democrat, given=liberal)
 
 ```py
 0.5206403320240125 
-```</details>
+```
 
 **练习：**让我们使用本章的工具来解决琳达问题的一个变种。
 
@@ -735,7 +735,7 @@ conditional(democrat, given=liberal)
 
 +   Linda 是一名银行家和自由主义民主党人的概率，假设她是女性。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -745,7 +745,7 @@ conditional(banker, given=female)
 
 ```py
 0.02116102749801969 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -755,7 +755,7 @@ conditional(banker & liberal & democrat, given=female)
 
 ```py
 0.0023009316887329786 
-```</details>
+```
 
 **练习：**有一句[著名的引语](https://quoteinvestigator.com/2014/02/24/heart-head/)关于年轻人、老年人、自由主义者和保守派，大致是这样的：
 
@@ -808,7 +808,7 @@ prob(conservative)
 
 对于条件概率，要注意参数的顺序。如果你对最后一个问题的答案大于 30%，那么你搞错了！
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 # Solution
@@ -818,7 +818,7 @@ prob(young & liberal)
 
 ```py
 0.06579427875836884 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -828,7 +828,7 @@ conditional(liberal, given=young)
 
 ```py
 0.338517745302714 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -838,7 +838,7 @@ prob(old & conservative)
 
 ```py
 0.06701156421180766 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -848,4 +848,4 @@ conditional(old, given=conservative)
 
 ```py
 0.19597721609113564 
-```</details>
+```

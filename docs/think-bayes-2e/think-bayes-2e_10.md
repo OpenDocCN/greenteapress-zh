@@ -224,19 +224,19 @@ pmf_3d6 = add_dist_seq(dice)
 
 这是它的样子：
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元内容 隐藏代码单元内容</summary>
+显示代码单元内容 隐藏代码单元内容
 
 ```py
 def decorate_dice(title=''):
     decorate(xlabel='Outcome',
              ylabel='PMF',
              title=title) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元源代码 隐藏代码单元源代码</summary>
+``` 显示代码单元源代码 隐藏代码单元源代码
 
 ```py
 pmf_3d6.plot()
 decorate_dice('Distribution of attributes') 
-```</details> ![_images/b1f86dac2103398c34f875294d89187fb8c4a3b6a4264c52388783f7e9a22047.png](img/7e37d8a631470c69005f16fbdaa90579.png)
+``` ![_images/b1f86dac2103398c34f875294d89187fb8c4a3b6a4264c52388783f7e9a22047.png](img/7e37d8a631470c69005f16fbdaa90579.png)
 
 如果我们掷四个骰子并加上最好的三个，计算总和的分布会更加复杂。我将通过模拟 10000 次掷骰子来估计分布。
 
@@ -267,14 +267,14 @@ pmf_best3 = Pmf.from_seq(t)
 
 下图显示了三个骰子的总和的分布`pmf_3d6`和四个中最好的三个的分布`pmf_best3`。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元源代码 隐藏代码单元源代码</summary>
+显示代码单元源代码 隐藏代码单元源代码
 
 ```py
 pmf_3d6.plot(label='sum of 3 dice')
 pmf_best3.plot(label='best 3 of 4', ls='--')
 
 decorate_dice('Distribution of attributes') 
-```</details> ![_images/c81d2ebe685be4da1dee4a97864b19e76444c6511d3b1bd703324cdefcd580de.png](img/757d927cf7aecda1b1605aaa103c598c.png)
+``` ![_images/c81d2ebe685be4da1dee4a97864b19e76444c6511d3b1bd703324cdefcd580de.png](img/757d927cf7aecda1b1605aaa103c598c.png)
 
 正如你所期望的那样，从四个中选择最好的三个往往会产生更高的值。
 
@@ -296,7 +296,7 @@ cdf_best3 = pmf_best3.make_cdf()
 cdf_best3**6 
 ```
 
-<details class="hide below-input"><summary aria-label="Toggle hidden content">显示代码单元输出 隐藏代码单元输出</summary>
+显示代码单元输出 隐藏代码单元输出
 
 ```py
 3     4.665600e-20
@@ -316,7 +316,7 @@ cdf_best3**6
 17    9.049950e-01
 18    1.000000e+00
 dtype: float64 
-```</details>
+```
 
 如果所有 6 个值都小于或等于`x`，那意味着它们的最大值小于或等于`x`。因此结果是它们的最大值的 CDF。我们可以这样将其转换为`Cdf`对象：
 
@@ -328,15 +328,15 @@ cdf_max6 = Cdf(cdf_best3**6)
 
 并且可以这样计算等效的`Pmf`：
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元内容 隐藏代码单元内容</summary>
+显示代码单元内容 隐藏代码单元内容
 
 ```py
 pmf_max6 = cdf_max6.make_pmf() 
-```</details>
+```
 
 下图显示了结果。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元内容 隐藏代码单元内容</summary>
+显示代码单元内容 隐藏代码单元内容
 
 ```py
 pmf_max6.plot(label='max of 6 attributes')
@@ -344,13 +344,13 @@ pmf_max6.plot(label='max of 6 attributes')
 decorate_dice('Distribution of attributes') 
 ```
 
-![_images/b6f154ac59d6ddc728ef1c9bc3fe3dfb59a7fbdf969b5313f9b9b2b18bec2104.png](img/0e666254a129209f2f44a89e57af99d2.png)</details>
+![_images/b6f154ac59d6ddc728ef1c9bc3fe3dfb59a7fbdf969b5313f9b9b2b18bec2104.png](img/0e666254a129209f2f44a89e57af99d2.png)
 
 大多数角色至少有一个属性大于 12；将近 10%的角色属性为 18。
 
 下图显示了我们计算的三个分布的 CDF。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码隐藏代码单元格源代码</summary>
+显示代码单元格源代码隐藏代码单元格源代码
 
 ```py
 import matplotlib.pyplot as plt
@@ -365,7 +365,7 @@ cdf_max6.plot(label='max of 6 attributes', ls=':')
 
 decorate_dice('Distribution of attributes')
 plt.ylabel('CDF'); 
-```</details> ![_images/13e587f63e6680fb43f73d51162d1c4f7e58eac8c77031130d8f60990cd4cf3d.png](img/6c93507d6b4921fe9d32c905372dd581.png)
+``` ![_images/13e587f63e6680fb43f73d51162d1c4f7e58eac8c77031130d8f60990cd4cf3d.png](img/6c93507d6b4921fe9d32c905372dd581.png)
 
 `Cdf`提供了`max_dist`，它执行相同的计算，所以我们也可以这样计算最大值的`Cdf`：
 
@@ -405,14 +405,14 @@ cdf_min6 = Cdf(prob_le6)
 
 这是它的样子，以及最大值的分布。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码隐藏代码单元格源代码</summary>
+显示代码单元格源代码隐藏代码单元格源代码
 
 ```py
 cdf_min6.plot(color='C4', label='minimum of 6')
 cdf_max6.plot(color='C2', label='maximum of 6', ls=':')
 decorate_dice('Minimum and maximum of six attributes')
 plt.ylabel('CDF'); 
-```</details> ![_images/14d14772b16b978755119cdf3244a50fcd4ecc0f3b27d903f70eed78bc9724ed.png](img/acdca4e46dc16ef0ddd137186b392dd3.png)
+``` ![_images/14d14772b16b978755119cdf3244a50fcd4ecc0f3b27d903f70eed78bc9724ed.png](img/acdca4e46dc16ef0ddd137186b392dd3.png)
 
 `Cdf`提供了`min_dist`，它执行相同的计算，所以我们也可以这样计算最小值的`Cdf`：
 
@@ -491,12 +491,12 @@ mix1 = (d4 + d6) / 2
 
 这是这些分布的混合的样子。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码隐藏代码单元格源代码</summary>
+显示代码单元格源代码隐藏代码单元格源代码
 
 ```py
 mix1.bar(alpha=0.7)
 decorate_dice('Mixture of one 4-sided and one 6-sided die') 
-```</details> ![_images/8b9a1606de2696f9eb941323b7a4be46212549d4fdb795c058aaec06b86cbd3f.png](img/40dffb285e73a6b0eff9077d69b38935.png)
+``` ![_images/8b9a1606de2696f9eb941323b7a4be46212549d4fdb795c058aaec06b86cbd3f.png](img/40dffb285e73a6b0eff9077d69b38935.png)
 
 现在假设您正在与三只怪物战斗：
 
@@ -514,12 +514,12 @@ mix2 = (d4 + 2*d6) / 3
 
 这个分布是一个 4 面的骰子和两个 6 面的骰子的混合物。这就是它的样子。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码隐藏代码单元格源代码</summary>
+显示代码单元格源代码隐藏代码单元格源代码
 
 ```py
 mix2.bar(alpha=0.7)
 decorate_dice('Mixture of one 4-sided and two 6-sided die') 
-```</details> ![_images/f60dbbf72b2cde8995df0cfb2c309eecf89fcb9825a5732787fa643e88135f47.png](img/fb9aedc2a225a006fe335ec5227f1d09.png)
+``` ![_images/f60dbbf72b2cde8995df0cfb2c309eecf89fcb9825a5732787fa643e88135f47.png](img/fb9aedc2a225a006fe335ec5227f1d09.png)
 
 在本节中，我们使用了`+`运算符，它将分布中的概率相加，不要与`Pmf.add_dist`混淆，后者计算分布的总和的分布。
 
@@ -598,7 +598,7 @@ pd.DataFrame(dice)
 df = pd.DataFrame(dice).fillna(0).transpose() 
 ```
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+显示代码单元格内容隐藏代码单元格内容
 
 ```py
 df 
@@ -614,7 +614,7 @@ df
 | 6 | 0.00 | 0.166667 | 0.125 |
 | 7 | 0.00 | 0.000000 | 0.125 |
 
-| 8 | 0.00 | 0.000000 | 0.125 |</details>
+| 8 | 0.00 | 0.000000 | 0.125 |
 
 现在我们可以乘以`pmf_dice`中的概率：
 
@@ -643,7 +643,7 @@ df
 df.sum(axis=1) 
 ```
 
-<details class="hide below-input"><summary aria-label="Toggle hidden content">显示代码单元格输出隐藏代码单元格输出</summary>
+显示代码单元格输出隐藏代码单元格输出
 
 ```py
 1    0.159722
@@ -655,7 +655,7 @@ df.sum(axis=1)
 7    0.062500
 8    0.062500
 dtype: float64 
-```</details>
+```
 
 参数`axis=1`表示我们要沿着行求和。结果是一个 Pandas`Series`。
 
@@ -678,12 +678,12 @@ mix = make_mixture(pmf_dice, dice)
 
 这就是它的样子。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源隐藏代码单元格源</summary>
+显示代码单元格源隐藏代码单元格源
 
 ```py
 mix.bar(label='mixture', alpha=0.6)
 decorate_dice('Distribution of damage with three different weapons') 
-```</details> ![_images/d1fd9f0edbd24a8c55e791574bac33f0b435f9d025cd1150a1bd483616ed0728.png](img/0bba9ae4868d2cfd8f0f1244e4c0a7d0.png)
+``` ![_images/d1fd9f0edbd24a8c55e791574bac33f0b435f9d025cd1150a1bd483616ed0728.png](img/0bba9ae4868d2cfd8f0f1244e4c0a7d0.png)
 
 在本节中，我使用了 Pandas，使得`make_mixture`简洁、高效，并且希望不太难理解。在本章末尾的练习中，你将有机会练习混合，我们将在下一章中再次使用`make_mixture`。
 
@@ -715,16 +715,16 @@ decorate_dice('Distribution of damage with three different weapons')
 
 为了让你开始，这里有一个代表标准数组中属性分布的`Cdf`：
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+显示代码单元格内容隐藏代码单元格内容
 
 ```py
 standard = [15,14,13,12,10,8]
 cdf_standard = Cdf.from_seq(standard) 
-```</details>
+```
 
 我们可以将其与通过掷四个骰子并将最好的三个相加得到的属性分布进行比较。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+显示代码单元格内容隐藏代码单元格内容
 
 ```py
 cdf_best3.plot(label='best 3 of 4', color='C1', ls='--')
@@ -734,11 +734,11 @@ decorate_dice('Distribution of attributes')
 plt.ylabel('CDF'); 
 ```
 
-![_images/3b22f1492c17d517017af56424e1abf8d3eaa73a10290cac1682da19a5d0ef68.png](img/0413adb1051fcca69801202f0f55674d.png)</details>
+![_images/3b22f1492c17d517017af56424e1abf8d3eaa73a10290cac1682da19a5d0ef68.png](img/0413adb1051fcca69801202f0f55674d.png)
 
 我将`cdf_standard`绘制为阶梯函数，以更清楚地显示它只包含了少量的数量。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -749,7 +749,7 @@ cdf_best3.mean(), cdf_standard.mean()
 
 ```py
 (12.296699999999998, 12.0) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -760,7 +760,7 @@ cdf_best3.std(), cdf_standard.std()
 
 ```py
 (2.8381101299984817, 2.3804761428476167) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -771,7 +771,7 @@ cdf_best3.lt_dist(8)
 
 ```py
 0.055999999999999994 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -782,7 +782,7 @@ cdf_best3.gt_dist(15)
 
 ```py
 0.13419999999999999 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -794,7 +794,7 @@ cdf_min6.lt_dist(8), 1 - (1-cdf_best3.lt_dist(8))**6
 
 ```py
 (0.2923280761096768, 0.2923280761096768) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -806,7 +806,7 @@ cdf_max6.gt_dist(15), 1 - (1-cdf_best3.gt_dist(15))**6
 
 ```py
 (0.5787833897023915, 0.5787833897023917) 
-```</details>
+```
 
 **练习：**假设你正在与三个怪物战斗：
 
@@ -824,7 +824,7 @@ cdf_max6.gt_dist(15), 1 - (1-cdf_best3.gt_dist(15))**6
 
 提示：计算后验分布，就像我们以前做过的那样，并将其作为`make_mixture`的一个参数传递。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -844,7 +844,7 @@ posterior
 | 6 0.425532 |
 | 8 0.319149 |
 
-| 10 | 0.255319 |</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+| 10 | 0.255319 | 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -856,7 +856,7 @@ d8 = make_die(8)
 d10 = make_die(10)
 
 dice = d6, d8, d10 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -868,7 +868,7 @@ mix3 = make_mixture(posterior, dice)
 mix3.bar() 
 ```
 
-![_images/3231b49676e5e552b7acffd5e5afd5d9c65961bec5ee73f35ab02ea8cbc004e6.png](img/bc26d662574ca89e65b2ecd142584a7a.png)</details><details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+![_images/3231b49676e5e552b7acffd5e5afd5d9c65961bec5ee73f35ab02ea8cbc004e6.png](img/bc26d662574ca89e65b2ecd142584a7a.png)显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -881,7 +881,7 @@ mix3[6]
 
 ```py
 0.13634751773049647 
-```</details>
+```
 
 **练习：**亨利·庞加莱是一位法国数学家，他在 1900 年左右在索邦大学任教。关于他的以下轶事可能是虚构的，但它构成了一个有趣的概率问题。
 
@@ -895,7 +895,7 @@ mix3[6]
 
 为了让你开始，我将从具有给定参数的正态分布生成一年的数据。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+显示代码单元格内容隐藏代码单元格内容
 
 ```py
 mean = 950
@@ -903,7 +903,7 @@ std = 50
 
 np.random.seed(17)
 sample = np.random.normal(mean, std, size=365) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -923,7 +923,7 @@ for n in range(2, 6):
 3 992.7589004318227
 4 1002.0372868686195
 5 1008.8226939493089 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -941,4 +941,4 @@ decorate(xlabel='Weight in grams',
          ylabel='CDF') 
 ```
 
-![_images/57c85f62be8c20d60381e7e6da0fa30582fd9c72ffe89769e158ad5a12426644.png](img/aee57c7ae72c68509f6035814eced875.png)</details>
+![_images/57c85f62be8c20d60381e7e6da0fa30582fd9c72ffe89769e158ad5a12426644.png](img/aee57c7ae72c68509f6035814eced875.png)

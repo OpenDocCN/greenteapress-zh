@@ -93,7 +93,7 @@ pmf_goals = make_poisson_pmf(lam, goals)
 
 这就是它的样子。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 from utils import decorate
@@ -102,13 +102,13 @@ def decorate_goals(title=''):
     decorate(xlabel='Number of goals',
         ylabel='PMF',
         title=title) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+``` 显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 pmf_goals.bar(label=r'Poisson distribution with $\lambda=1.4/details>)
 
 decorate_goals('Distribution of goals scored') 
-```</details> ![_images/58c54aa34d3731e8b80f04a10b301b1ece4e10316ef4a35fd1a70b4332219d71.png](img/5302f3f1e12bf32d1b9c9773338d78bd.png)
+``` ![_images/58c54aa34d3731e8b80f04a10b301b1ece4e10316ef4a35fd1a70b4332219d71.png](img/5302f3f1e12bf32d1b9c9773338d78bd.png)
 
 最可能的结果是 0、1 和 2；更高的值是可能的，但越来越不太可能。超过 7 的值是可以忽略的。这个分布表明，如果我们知道进球率，我们就可以预测进球数。
 
@@ -159,25 +159,25 @@ prior.normalize()
 
 结果是伽玛分布的离散近似。看起来是这样的。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">Show code cell content Hide code cell content</summary>
+Show code cell content Hide code cell content
 
 ```py
 def decorate_rate(title=''):
     decorate(xlabel='Goal scoring rate (lam)',
         ylabel='PMF',
         title=title) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">Show code cell source Hide code cell source</summary>
+``` Show code cell source Hide code cell source
 
 ```py
 prior.plot(ls='--', label='prior', color='C5')
 decorate_rate(r'Prior distribution of $\lambda/details>) 
-```</details> ![_images/7ba78434be5f44d022795ae6c9f5d4277050e2da9534b44be608bda840475700.png](img/02390b3b82770114a9b2194393796dc3.png)
+``` ![_images/7ba78434be5f44d022795ae6c9f5d4277050e2da9534b44be608bda840475700.png](img/02390b3b82770114a9b2194393796dc3.png)
 
 这个分布代表了我们对进球的先验知识：`lam` 通常小于 2，偶尔高达 6，很少会更高。
 
 我们可以确认平均值约为 1.4。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">Show code cell content Hide code cell content</summary>
+Show code cell content Hide code cell content
 
 ```py
 prior.mean() 
@@ -185,7 +185,7 @@ prior.mean()
 
 ```py
 1.4140818156118378 
-```</details>
+```
 
 像往常一样，对于先验的细节，有理智的人可能会有不同的看法，但这已经足够开始了。让我们进行一次更新。
 
@@ -238,14 +238,14 @@ update_poisson(france, 4)
 
 这是后验分布的样子，以及先验。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">Show code cell source Hide code cell source</summary>
+Show code cell source Hide code cell source
 
 ```py
 prior.plot(ls='--', label='prior', color='C5')
 france.plot(label='France posterior', color='C3')
 
 decorate_rate('Posterior distribution for France') 
-```</details> ![_images/8a3342b969ad573b94b1b8e696c887e4f7ee6b38a3b746430e6b92396d756742.png](img/882f5262ce4230869ad254016188d3d1.png)
+``` ![_images/8a3342b969ad573b94b1b8e696c887e4f7ee6b38a3b746430e6b92396d756742.png](img/882f5262ce4230869ad254016188d3d1.png)
 
 数据`k=4`使我们认为更高的`lam`值更可能，更低的值更不可能。因此后验分布向右移动。
 
@@ -258,14 +258,14 @@ update_poisson(croatia, 2)
 
 这就是结果。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 prior.plot(ls='--', label='prior', color='C5')
 croatia.plot(label='Croatia posterior', color='C0')
 
 decorate_rate('Posterior distribution for Croatia') 
-```</details> ![_images/d5a935a0a5ac15c7cef65b49f17499e8f84f352a4439e1461a9dd40ae0c830de.png](img/656cc186025415b771822c80241a93e4.png)
+``` ![_images/d5a935a0a5ac15c7cef65b49f17499e8f84f352a4439e1461a9dd40ae0c830de.png](img/656cc186025415b771822c80241a93e4.png)
 
 这是这些分布的后验均值。
 
@@ -343,7 +343,7 @@ pmf_seq = [make_poisson_pmf(lam, goals)
 
 以下图显示了这些分布在几个`lam`值下的情况。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 import matplotlib.pyplot as plt
@@ -354,7 +354,7 @@ for i, index in enumerate([10, 20, 30, 40]):
     pmf = pmf_seq[index]
     pmf.bar(label=f'$\lambda$ = {lam}', color='C3')
     decorate_goals() 
-```</details> ![_images/62062c40c6a4a2831a237ab2924b29f91d3f6e61a7de23f3dc1237010380f9dd.png](img/fa119384238cf3adbcebd721047f6094.png)
+``` ![_images/62062c40c6a4a2831a237ab2924b29f91d3f6e61a7de23f3dc1237010380f9dd.png](img/fa119384238cf3adbcebd721047f6094.png)
 
 预测分布是这些`Pmf`对象的混合，根据后验概率加权。我们可以使用<<_GeneralMixtures>>中的`make_mixture`来计算这个混合。
 
@@ -366,12 +366,12 @@ pred_france = make_mixture(france, pmf_seq)
 
 这是法国在复赛中进球数的预测分布。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 pred_france.bar(color='C3', label='France')
 decorate_goals('Posterior predictive distribution') 
-```</details> ![_images/59075d25fad64df15f9e94a861a4486a16b91f6bad681d050dc3290afca3698d.png](img/a0ea95a1903ab36205deca76851c6d7a.png)
+``` ![_images/59075d25fad64df15f9e94a861a4486a16b91f6bad681d050dc3290afca3698d.png](img/a0ea95a1903ab36205deca76851c6d7a.png)
 
 这个分布代表了两种不确定性：我们不知道`lam`的实际值，即使知道了，我们也不知道下一场比赛的进球数。
 
@@ -381,14 +381,14 @@ decorate_goals('Posterior predictive distribution')
 pred_croatia = make_mixture(croatia, pmf_seq) 
 ```
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 pred_croatia.bar(color='C0', label='Croatia')
 decorate_goals('Posterior predictive distribution') 
 ```
 
-![_images/3c5c1e25e759daa7d773f22210dbfb08b6f53081a393466e75c90808850d29c0.png](img/99e85c8bf46cc101de4790585f805568.png)</details>
+![_images/3c5c1e25e759daa7d773f22210dbfb08b6f53081a393466e75c90808850d29c0.png](img/99e85c8bf46cc101de4790585f805568.png)
 
 我们可以使用这些分布来计算法国赢得、输掉或打平复赛的概率。
 
@@ -471,20 +471,20 @@ pmf_time.normalize()
 
 这就是它的样子：
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 def decorate_time(title=''):
     decorate(xlabel='Time between goals (games)',
              ylabel='PMF',
              title=title) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+``` 显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 pmf_time.plot(label='exponential with $\lambda$ = 1.4')
 
 decorate_time('Distribution of time between goals') 
-```</details> ![_images/96ec4c44d1ecd930473d03903142cfd3b9249ca8650f4d696d5463fa14032e4b.png](img/bbb9f0b99d523d99aad1d28134d9c9a9.png)
+``` ![_images/96ec4c44d1ecd930473d03903142cfd3b9249ca8650f4d696d5463fa14032e4b.png](img/bbb9f0b99d523d99aad1d28134d9c9a9.png)
 
 这是反直觉的，但事实上，最有可能进球的时间是立即。之后，每个连续时间间隔的概率都会略微降低。
 
@@ -524,7 +524,7 @@ decorate_time('Distribution of time between goals')
 
 1.  计算在剩下的时间内进球 5 个或更多的概率。
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 # Solution
@@ -543,7 +543,7 @@ def update_expo(pmf, data):
     likelihood = expo_pdf(t, lams)
     pmf *= likelihood
     pmf.normalize() 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -555,7 +555,7 @@ update_expo(germany, 11)
 
 germany2 = germany.copy()
 update_expo(germany2, 12) 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -567,7 +567,7 @@ germany.mean(), germany2.mean()
 
 ```py
 (2.1358882653086892, 2.703059034926364) 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -581,7 +581,7 @@ germany2.plot(color='C16', label='Posterior after 2 goals')
 decorate_rate('Prior and posterior distributions') 
 ```
 
-![ _images/0740f0e6f3f0aac3874b6c1f90f5771a7972aa50727a230b24702f1dc46f999f.png](img/d1fcdb7ef8f59f9372467e3f7169a89f.png)</details><details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+![ _images/0740f0e6f3f0aac3874b6c1f90f5771a7972aa50727a230b24702f1dc46f999f.png](img/d1fcdb7ef8f59f9372467e3f7169a89f.png)
 
 ```py
 # Solution
@@ -592,7 +592,7 @@ t = (90-23) / 90
 
 pmf_seq = [make_poisson_pmf(lam*t, goals) 
            for lam in germany2.qs] 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -601,7 +601,7 @@ pmf_seq = [make_poisson_pmf(lam*t, goals)
 # weighted by the probabilities in the posterior distribution.
 
 pred_germany2 = make_mixture(germany2, pmf_seq) 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -612,7 +612,7 @@ pred_germany2.bar(color='C1', label='germany')
 decorate_goals('Posterior predictive distribution') 
 ```
 
-![ _images/0cecd0c7ba065fb6b2658efe96e68f30cb0ac638e3b23059c2fd7a58b1978682.png](img/cf03ebe34f639a6f56d7acd81816206b.png)</details><details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+![ _images/0cecd0c7ba065fb6b2658efe96e68f30cb0ac638e3b23059c2fd7a58b1978682.png](img/cf03ebe34f639a6f56d7acd81816206b.png)
 
 ```py
 # Solution
@@ -624,7 +624,7 @@ pred_germany2[5]
 
 ```py
 0.047109658706113416 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -636,13 +636,13 @@ pred_germany2.prob_ge(5)
 
 ```py
 0.09286200122834538 
-```</details>
+```
 
 **练习：**回到世界杯问题的第一个版本。假设法国和克罗地亚进行了一场复赛。法国率先得分的概率是多少？
 
 提示：通过制作指数分布的混合来计算首个进球的后验预测分布。您可以使用以下函数制作近似指数分布的 PMF。
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 def make_expo_pmf(lam, high):
@@ -658,7 +658,7 @@ def make_expo_pmf(lam, high):
     pmf = Pmf(ps, qs)
     pmf.normalize()
     return pmf 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -667,7 +667,7 @@ def make_expo_pmf(lam, high):
 # time until the first goal
 
 pmf_seq = [make_expo_pmf(lam, high=4) for lam in prior.qs] 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -676,7 +676,7 @@ pmf_seq = [make_expo_pmf(lam, high=4) for lam in prior.qs]
 
 pred_france = make_mixture(france, pmf_seq)
 pred_croatia = make_mixture(croatia, pmf_seq) 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -689,7 +689,7 @@ pred_croatia.plot(label='Croatia', color='C0')
 decorate_time('Posterior predictive distribution') 
 ```
 
-![_images/c6056f1c8681d9a55bbb7434ffbf28fd8676cf8e71f1e833edec65ca92f43b2f.png](img/bc7bd8003dc80e838f43d3190f7ed3f4.png)</details><details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+![_images/c6056f1c8681d9a55bbb7434ffbf28fd8676cf8e71f1e833edec65ca92f43b2f.png](img/bc7bd8003dc80e838f43d3190f7ed3f4.png)
 
 ```py
 # Solution
@@ -701,7 +701,7 @@ Pmf.prob_lt(pred_france, pred_croatia)
 
 ```py
 0.5904596116867543 
-```</details>
+```
 
 **练习：**在 2010-11 赛季的国家冰球联盟（NHL）总决赛中，我心爱的波士顿布鲁因队与令人厌恶的温哥华加人队进行了一场七场比赛的冠军系列赛。波士顿在前两场比赛中以 0-1 和 2-3 输掉了比赛，然后赢得了接下来的两场比赛，分别是 8-1 和 4-0。在系列赛的这一阶段，波士顿赢得下一场比赛的概率是多少，他们赢得冠军的概率又是多少？
 
@@ -709,7 +709,7 @@ Pmf.prob_lt(pred_france, pred_croatia)
 
 你认为这些比赛的结果可能违反泊松模型的假设？这些违反会如何影响你的预测？
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 # Solution
@@ -727,7 +727,7 @@ Pmf.prob_lt(pred_france, pred_croatia)
 # that Boston wins.
 
 # As it turned out, they did not. 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -743,7 +743,7 @@ prior_hockey.normalize()
 
 ```py
 6.666325137469514 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -757,7 +757,7 @@ prior_hockey.mean()
 2.7997400090376567 
 ```
 
-![_images/8961cb45c2d1db771b78e9c4b438312f7dce1565f33644f678a6f2463f8a0a2f.png](img/3575c4c5dd177b425f14969172ffe9c4.png)</details><details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+![_images/8961cb45c2d1db771b78e9c4b438312f7dce1565f33644f678a6f2463f8a0a2f.png](img/3575c4c5dd177b425f14969172ffe9c4.png)
 
 ```py
 # Solution
@@ -771,7 +771,7 @@ bruins.mean()
 
 ```py
 3.3599999999999985 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -785,7 +785,7 @@ canucks.mean()
 
 ```py
 1.5599999606443666 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -796,14 +796,14 @@ bruins.plot(label='Bruins')
 decorate_rate('Posterior distributions') 
 ```
 
-![_images/c60ceceee189a52422bbfd1fa049ebb442236f4beb2ea4762ef515d24343ffbe.png](img/05d43fbce560d31a5916b25fb4940199.png)</details><details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+![_images/c60ceceee189a52422bbfd1fa049ebb442236f4beb2ea4762ef515d24343ffbe.png](img/05d43fbce560d31a5916b25fb4940199.png)
 
 ```py
 # Solution
 
 goals = np.arange(15)
 pmf_seq = [make_poisson_pmf(lam, goals) for lam in bruins.qs] 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -814,7 +814,7 @@ pred_bruins.bar(label='Bruins', color='C1')
 decorate_goals('Posterior predictive distribution') 
 ```
 
-![_images/aacd06863c73f0847d6ec939ef6c81a6bafb123c3163fd62b93fa43e0cf9d227.png](img/5bb78125c1a8e5bf4e5d784b719b0c13.png)</details><details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+![_images/aacd06863c73f0847d6ec939ef6c81a6bafb123c3163fd62b93fa43e0cf9d227.png](img/5bb78125c1a8e5bf4e5d784b719b0c13.png)
 
 ```py
 # Solution
@@ -825,7 +825,7 @@ pred_canucks.bar(label='Canucks')
 decorate_goals('Posterior predictive distribution') 
 ```
 
-![_images/325cc125fc2ae0889f9548b61f17be3f2cfd34d5a5f974a9951b5b3ffba5321f.png](img/5070d0fd39af5e813613121681f488d2.png)</details><details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+![_images/325cc125fc2ae0889f9548b61f17be3f2cfd34d5a5f974a9951b5b3ffba5321f.png](img/5070d0fd39af5e813613121681f488d2.png)
 
 ```py
 # Solution
@@ -839,7 +839,7 @@ win, lose, tie
 
 ```py
 (0.7038631514645926, 0.16111690750716465, 0.1350199410282429) 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -853,7 +853,7 @@ p
 
 ```py
 0.771373121978714 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -871,4 +871,4 @@ a.sum()
 
 ```py
 0.8670900197850085 
-```</details>
+```

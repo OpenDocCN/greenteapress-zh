@@ -69,7 +69,7 @@ ps = hypergeom(N, K, n).pmf(ks)
 
 结果是具有给定参数$N$、$K$和$n$的$k$的分布。看起来是这样的。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 import matplotlib.pyplot as plt
@@ -80,7 +80,7 @@ plt.bar(ks, ps)
 decorate(xlabel='Number of bears observed twice',
          ylabel='PMF',
          title='Hypergeometric distribution of k (known population 100)') 
-```</details> ![_images/89091d8fbc23233c4e404edd21d8ea5de9de3e5bc1e8080e25666147e0fa8aca.png](img/1a280182fb74f73c44052e57501013e1.png)
+``` ![_images/89091d8fbc23233c4e404edd21d8ea5de9de3e5bc1e8080e25666147e0fa8aca.png](img/1a280182fb74f73c44052e57501013e1.png)
 
 $k$的最可能值是 4，这是实验中实际观察到的值。
 
@@ -310,7 +310,7 @@ joint_pmf.head(3)
 | 0.01 | 0.000022 |
 | 0.02 | 0.000022 |
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 type(joint_pmf) 
@@ -318,7 +318,7 @@ type(joint_pmf)
 
 ```py
 empiricaldist.empiricaldist.Pmf 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 type(joint_pmf.index) 
@@ -326,7 +326,7 @@ type(joint_pmf.index)
 
 ```py
 pandas.core.indexes.multi.MultiIndex 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 joint_pmf.shape 
@@ -334,7 +334,7 @@ joint_pmf.shape
 
 ```py
 (45100,) 
-```</details>
+```
 
 结果是一个`Pmf`，其索引是`MultiIndex`。`MultiIndex`可以有多个列；在这个例子中，第一列包含`N`的值，第二列包含`p`的值。
 
@@ -370,11 +370,11 @@ posterior_pmf = joint_pmf * likelihood
 posterior_pmf.normalize() 
 ```
 
-<details class="hide below-input"><summary aria-label="Toggle hidden content">显示代码单元格输出 隐藏代码单元格输出</summary>
+显示代码单元格输出 隐藏代码单元格输出
 
 ```py
 2.9678796190279657e-05 
-```</details>
+```
 
 我们将再次使用`plot_contour`来可视化联合后验分布。但请记住，我们刚刚计算的后验分布表示为`Pmf`，它是一个`Series`，而`plot_contour`期望一个`DataFrame`。
 
@@ -386,7 +386,7 @@ joint_posterior = posterior_pmf.unstack()
 
 以下是结果的样子。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 from utils import plot_contour
@@ -394,7 +394,7 @@ from utils import plot_contour
 plot_contour(joint_posterior)
 
 decorate(title='Joint posterior distribution of N and p') 
-```</details> ![_images/16d64440894686542410530f1944189022be98b1f5e334935ac3564296ad1c1e.png](img/20fb308f064e8ec2cf1942d050fc4b3e.png)
+``` ![_images/16d64440894686542410530f1944189022be98b1f5e334935ac3564296ad1c1e.png](img/20fb308f064e8ec2cf1942d050fc4b3e.png)
 
 `N`的最可能值接近 100，与之前的模型一样。`p`的最可能值接近 0.2。
 
@@ -411,7 +411,7 @@ posterior2_N = marginal(joint_posterior, 1)
 
 这是`p`的后验分布：
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 posterior2_p.plot(color='C1')
@@ -421,7 +421,7 @@ decorate(xlabel='Probability of observing a bear',
          title='Posterior marginal distribution of p') 
 ```
 
-![_images/88d34493745362743711701c087bb8b926c2aa476a6222f310e370eaa4fcada2.png](img/bce24822b71de71da5f2b16179ae1316.png)</details>
+![_images/88d34493745362743711701c087bb8b926c2aa476a6222f310e370eaa4fcada2.png](img/bce24822b71de71da5f2b16179ae1316.png)
 
 最可能的值接近 0.2。
 
@@ -440,7 +440,7 @@ decorate(xlabel='Population of bears (N)',
 
 使用两参数模型，均值略低，90%的可信区间略窄。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 print(posterior_N.mean(), 
@@ -449,7 +449,7 @@ print(posterior_N.mean(),
 
 ```py
 173.79880627085637 [ 77\. 363.] 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 print(posterior2_N.mean(), 
@@ -458,21 +458,21 @@ print(posterior2_N.mean(),
 
 ```py
 138.750521364726 [ 68\. 277.] 
-```</details>
+```
 
 与单参数模型相比，两参数模型对`N`的后验分布更窄，因为它利用了额外的信息来源：两个观察的一致性。
 
 要了解这有何帮助，考虑一个`N`相对较低的情况，比如 138（两参数模型的后验均值）。
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 N1 = 138 
-```</details>
+```
 
 考虑到我们在第一次试验中看到了 23 只熊，在第二次试验中看到了 19 只熊，我们可以估计相应的`p`值。
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 mean = (23 + 19) / 2
@@ -482,11 +482,11 @@ p
 
 ```py
 0.15217391304347827 
-```</details>
+```
 
 有了这些参数，你期望从一次试验到下一次试验中看到的熊的数量有多大变化？我们可以通过计算具有这些参数的二项分布的标准差来量化这一点。
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 from scipy.stats import binom
@@ -496,11 +496,11 @@ binom(N1, p).std()
 
 ```py
 4.219519857292647 
-```</details>
+```
 
 现在让我们考虑第二种情况，其中`N`为 173，即一参数模型的后验均值。相应的`p`值较低。
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 N2 = 173
@@ -510,11 +510,11 @@ p
 
 ```py
 0.12138728323699421 
-```</details>
+```
 
 在这种情况下，我们期望从一次试验到下一次试验中看到的变化更大。
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 binom(N2, p).std() 
@@ -522,7 +522,7 @@ binom(N2, p).std()
 
 ```py
 4.2954472470306415 
-```</details>
+```
 
 因此，如果我们观察到的熊的数量在两次试验中是相同的，这将是对较低值的`N`的证据，我们预期会有更多的一致性。如果两次试验中观察到的熊的数量有显著差异，这将是对较高值的`N`的证据。
 
@@ -534,7 +534,7 @@ binom(N2, p).std()
 
 Seaborn 提供了一个名为`JointGrid`的类，用于创建这种可视化。以下函数使用它来在单个图中显示联合和边际分布。
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 import pandas as pd
@@ -569,13 +569,13 @@ def joint_plot(joint, **options):
 
     marginal_y = marginal(joint, 1)
     g.ax_marg_y.plot(marginal_y.ps, marginal_y.qs) 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 joint_plot(joint_posterior) 
 ```
 
-![_images/21b675f7d5fd2f0f58754e38aa6c27ca264560d3a3d8662db9785a22d70fac3e.png](img/55b8dbaf5a3b329e9bdb684a74fcae7c.png)</details>
+![_images/21b675f7d5fd2f0f58754e38aa6c27ca264560d3a3d8662db9785a22d70fac3e.png](img/55b8dbaf5a3b329e9bdb684a74fcae7c.png)
 
 `JointGrid`是一种简洁的方式来直观地表示联合和边际分布。
 
@@ -673,7 +673,7 @@ posterior_N.normalize()
 
 这就是它的样子。
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格源代码隐藏代码单元格源代码</summary>
+显示代码单元格源代码隐藏代码单元格源代码
 
 ```py
 posterior_N.plot(color='C4')
@@ -681,7 +681,7 @@ posterior_N.plot(color='C4')
 decorate(xlabel='Number of bugs (N)',
          ylabel='PMF',
          title='Posterior marginal distribution of n with known p1, p2') 
-```</details> ![_images/d563e5ed6f947b2470b1ec9317f0963741fcd3f9f26c5815d72fb8e75cccd114.png](img/46976d5c53d8c858858d1ef0d983d0d6.png)<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容隐藏代码单元格内容</summary>
+``` ![_images/d563e5ed6f947b2470b1ec9317f0963741fcd3f9f26c5815d72fb8e75cccd114.png](img/46976d5c53d8c858858d1ef0d983d0d6.png)显示代码单元格内容隐藏代码单元格内容
 
 ```py
 print(posterior_N.mean(), 
@@ -690,7 +690,7 @@ print(posterior_N.mean(),
 
 ```py
 102.1249999999998 [ 77\. 127.] 
-```</details>
+```
 
 假设`p0`和`p1`已知为`0.2`和`0.15`，后验均值为 102，90%的可信区间为(77, 127)。但这个结果是基于我们知道概率的假设，而我们并不知道。
 
@@ -743,7 +743,7 @@ joint3.shape
 
 结果是一个`DataFrame`，`N`和`p0`的值在沿行向下的`MultiIndex`中，`p1`的值在沿列的索引中。
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容隐藏代码单元格内容</summary>
+显示代码单元格内容隐藏代码单元格内容
 
 ```py
 joint3.head(3) 
@@ -757,7 +757,7 @@ joint3.head(3)
 | 0.02 | 0.000006 | 0.000006 | 0.000006 | 0.000006 | 0.000006 | 0.000006 | 0.000006 | 0.000006 | 0.000006 | 0.000006 | ... | 0.000006 | 0.000006 | 0.000006 | 0.000006 | 0.000006 | 0.000006 | 0.000006 | 0.000006 | 0.000006 | 0.000006 |
 | 0.04 | 0.000006 | 0.000006 | 0.000006 | 0.000006 | 0.000006 | 0.000006 | 0.000006 | 0.000006 | 0.000006 | 0.000006 | ... | 0.000006 | 0.000006 | 0.000006 | 0.000006 | 0.000006 | 0.000006 | 0.000006 | 0.000006 | 0.000006 | 0.000006 |
 
-3 行×51 列</details>
+3 行×51 列
 
 现在我再次应用`stack`：
 
@@ -820,7 +820,7 @@ posterior_N = posterior_pmf.marginal(0)
 
 这是它的样子。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 posterior_N.plot(color='C4')
@@ -828,11 +828,11 @@ posterior_N.plot(color='C4')
 decorate(xlabel='Number of bugs (N)',
          ylabel='PDF',
          title='Posterior marginal distributions of N') 
-```</details> ![_images/f2cd695e438e075589cab69bddc2955d4dd4d16f5b69b8fba877124b600d71f8.png](img/07b5b2a3692ed9fc4d3e0ffc911cf226.png)<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+``` ![_images/f2cd695e438e075589cab69bddc2955d4dd4d16f5b69b8fba877124b600d71f8.png](img/07b5b2a3692ed9fc4d3e0ffc911cf226.png)显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 posterior_N.mean() 
-```</details>
+```
 
 ```py
 105.7656173219623 
@@ -842,7 +842,7 @@ posterior_N.mean()
 
 这是`p0`和`p1`的后验分布。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 posterior_p1 = posterior_pmf.marginal(1)
@@ -854,7 +854,7 @@ posterior_p2.plot(label='p2')
 decorate(xlabel='Probability of finding a bug',
          ylabel='PDF',
          title='Posterior marginal distributions of p1 and p2') 
-```</details> ![_images/10402507c405cb67e580cb3cf7c157f06e4c496f01ca0caf2388ddcdc8fdfc15.png](img/1906c3da6bf6bfc666e5825211e6bcaa.png)<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` ![_images/10402507c405cb67e580cb3cf7c157f06e4c496f01ca0caf2388ddcdc8fdfc15.png](img/1906c3da6bf6bfc666e5825211e6bcaa.png)
 
 ```py
 posterior_p1.mean(), posterior_p1.credible_interval(0.9) 
@@ -862,7 +862,7 @@ posterior_p1.mean(), posterior_p1.credible_interval(0.9)
 
 ```py
 (0.2297065971677732, array([0.1, 0.4])) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 posterior_p2.mean(), posterior_p2.credible_interval(0.9) 
@@ -870,7 +870,7 @@ posterior_p2.mean(), posterior_p2.credible_interval(0.9)
 
 ```py
 (0.17501172155925757, array([0.06, 0.32])) 
-```</details>
+```
 
 比较后验分布，发现更多虫子的测试人员可能有更高的发现虫子的概率。后验均值约为 23%和 18%。但分布有重叠，所以我们不应太肯定。
 
@@ -910,11 +910,11 @@ posterior_p2.mean(), posterior_p2.credible_interval(0.9)
 
 以下数组包含 0 作为`k00`的未知值的占位符，然后是`k01`、`k10`和`k11`的已知值。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 data2 = np.array([0, 73, 86, 49]) 
-```</details>
+```
 
 这些数据表明，第二个列表中有 73 例病例不在第一个列表中，第一个列表中有 86 例病例不在第二个列表中，两个列表中都有 49 例病例。
 
@@ -922,7 +922,7 @@ data2 = np.array([0, 73, 86, 49])
 
 这是您可以开始使用的先验（但请随意修改）。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 qs = np.arange(200, 500, step=5)
@@ -937,7 +937,7 @@ prior_N.head(3)
 | 200 | 0.016667 |
 | 205 | 0.016667 |
 
-| 210 | 0.016667 |</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+| 210 | 0.016667 | 
 
 ```py
 qs = np.linspace(0, 0.98, num=50)
@@ -952,7 +952,7 @@ prior_p.head(3)
 | 0.00 | 0.02 |
 | 0.02 | 0.02 |
 
-| 0.04 | 0.02 |</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+| 0.04 | 0.02 | 
 
 ```py
 # Solution
@@ -969,7 +969,7 @@ joint_prior.head(3)
 | 205 | 0.000333 | 0.000333 | 0.000333 | 0.000333 | 0.000333 | 0.000333 | 0.000333 | 0.000333 | 0.000333 | 0.000333 | ... | 0.000333 | 0.000333 | 0.000333 | 0.000333 | 0.000333 | 0.000333 | 0.000333 | 0.000333 | 0.000333 | 0.000333 |
 | 210 | 0.000333 | 0.000333 | 0.000333 | 0.000333 | 0.000333 | 0.000333 | 0.000333 | 0.000333 | 0.000333 | 0.000333 | ... | 0.000333 | 0.000333 | 0.000333 | 0.000333 | 0.000333 | 0.000333 | 0.000333 | 0.000333 | 0.000333 | 0.000333 |
 
-3 行×50 列</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+3 行×50 列 
 
 ```py
 # Solution
@@ -985,7 +985,7 @@ prior_pmf.head(3)
 | 200 | 0.00 | 0.000333 |
 | 0.02 | 0.000333 |
 
-| 0.04 | 0.000333 |</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+| 0.04 | 0.000333 | 
 
 ```py
 # Solution
@@ -999,7 +999,7 @@ for N, p in prior_pmf.index:
     q = 1-p
     y = [q*q, q*p, p*q, p*p]
     likelihood.loc[N, p] = multinomial.pmf(x, N, y) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1010,13 +1010,13 @@ posterior_pmf.normalize()
 
 ```py
 1.266226682238907e-06 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
 
 joint_posterior = posterior_pmf.unstack() 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1026,7 +1026,7 @@ plot_contour(joint_posterior)
 decorate(title='Joint posterior distribution of N and p') 
 ```
 
-![_images/998e24d1fe296c7997509135f11d22996957981e69247c1875908e46389eacb9.png](img/a17e40d075e72408506d7363d6caf227.png)</details><details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+![_images/998e24d1fe296c7997509135f11d22996957981e69247c1875908e46389eacb9.png](img/a17e40d075e72408506d7363d6caf227.png)
 
 ```py
 # Solution
@@ -1039,7 +1039,7 @@ decorate(xlabel='Number of cases (N)',
          title='Posterior marginal distribution of N') 
 ```
 
-![_images/a001724951bd27254c3c107ea7cf2ce113b466d7277d6263c3c29ff9818a6abb.png](img/5e997d92efb728f58c2e94d973ddec43.png)</details><details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+![_images/a001724951bd27254c3c107ea7cf2ce113b466d7277d6263c3c29ff9818a6abb.png](img/5e997d92efb728f58c2e94d973ddec43.png)
 
 ```py
 # Solution
@@ -1049,7 +1049,7 @@ marginal_N.mean(), marginal_N.credible_interval(0.9)
 
 ```py
 (342.1317040018937, array([295., 400.])) 
-```</details>
+```
 
 **练习：** 现在让我们使用所有三个列表的问题版本。这是 Chou 论文中的数据：
 
@@ -1070,28 +1070,28 @@ P    Q    E    Data
 
 这是一个 NumPy 数组中的数据（顺序相反）。
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 data3 = np.array([0, 63, 55, 18, 69, 17, 21, 28]) 
-```</details>
+```
 
 再次，第一个值是未知的`k000`的占位符。第二个值是`k001`，这意味着有 63 个案例出现在第三个列表上，但前两个列表上没有。最后一个值是`k111`，这意味着有 28 个案例同时出现在三个列表上。
 
 在问题的两个列表版本中，我们通过枚举`p`和`q`的组合来计算`ps`。
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 q = 1-p
 ps = [q*q, q*p, p*q, p*p] 
-```</details>
+```
 
 我们可以对三个列表版本做同样的事情，计算每个八个类别的概率。但是我们可以通过认识到我们正在计算`p`和`q`的笛卡尔积来进行泛化，每个列表重复一次。
 
 我们可以使用以下函数（基于[此 StackOverflow 答案](https://stackoverflow.com/questions/58242078/cartesian-product-of-arbitrary-lists-in-pandas/58242079#58242079)）来计算笛卡尔积：
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 def cartesian_product(*args, **options):
@@ -1104,11 +1104,11 @@ def cartesian_product(*args, **options):
  """
     index = pd.MultiIndex.from_product(args, **options)
     return pd.DataFrame(index=index).reset_index() 
-```</details>
+```
 
 这是一个`p=0.2`的例子：
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 p = 0.2
@@ -1127,11 +1127,11 @@ df
 | 5 | 0.2 | 0.8 | 0.2 |
 | 6 | 0.2 | 0.2 | 0.8 |
 
-| 7 | 0.2 | 0.2 | 0.2 |</details>
+| 7 | 0.2 | 0.2 | 0.2 |
 
 为了计算每个类别的概率，我们沿着列进行乘积：
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 y = df.prod(axis=1)
@@ -1148,11 +1148,11 @@ y
 6    0.032
 7    0.008
 dtype: float64 
-```</details>
+```
 
 然后你完成它。
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 # Solution
@@ -1167,7 +1167,7 @@ for N, p in prior_pmf.index:
     df = cartesian_product(t, t, t)
     y = df.prod(axis=1)
     likelihood.loc[N, p] = multinomial.pmf(x, N, y) 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1178,13 +1178,13 @@ posterior_pmf.normalize()
 
 ```py
 2.6359517829553705e-16 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
 
 joint_posterior = posterior_pmf.unstack() 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1194,13 +1194,13 @@ plot_contour(joint_posterior)
 decorate(title='Joint posterior distribution of N and p') 
 ```
 
-![_images/2a20c097ea1f8ffbd3697c9ca7a0d79ff62c241cc153d5cfc47870b5705623a8.png](img/6c7ad7fc6852fba14bdb8065c19e8e36.png)</details><details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+![_images/2a20c097ea1f8ffbd3697c9ca7a0d79ff62c241cc153d5cfc47870b5705623a8.png](img/6c7ad7fc6852fba14bdb8065c19e8e36.png)
 
 ```py
 # Solution
 
 marginal3_N = marginal(joint_posterior, 1) 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1213,7 +1213,7 @@ decorate(xlabel='Number of cases (N)',
          title='Posterior marginal distribution of N') 
 ```
 
-![_images/d476bca686cc3860e47a1b0e98715ff66d2bb58819764da404bce88974e8024c.png](img/d705a7e942009d009b649c2a2c1cb87a.png)</details><details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+![_images/d476bca686cc3860e47a1b0e98715ff66d2bb58819764da404bce88974e8024c.png](img/d705a7e942009d009b649c2a2c1cb87a.png)
 
 ```py
 # Solution
@@ -1223,7 +1223,7 @@ marginal_N.mean(), marginal_N.credible_interval(0.9)
 
 ```py
 (342.1317040018937, array([295., 400.])) 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1233,4 +1233,4 @@ marginal3_N.mean(), marginal3_N.credible_interval(0.9)
 
 ```py
 (391.0050140750373, array([360., 430.])) 
-```</details>
+```

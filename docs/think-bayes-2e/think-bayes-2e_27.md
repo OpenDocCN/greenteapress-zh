@@ -328,7 +328,7 @@ for r in rs:
     res.append((r, totals.mean())) 
 ```
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 from statsmodels.nonparametric.smoothers_lowess import lowess
@@ -347,7 +347,7 @@ def make_lowess(series):
     index, data = np.transpose(smooth)
 
     return pd.Series(data, index=index) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 def plot_series_lowess(series, color):
@@ -359,7 +359,7 @@ def plot_series_lowess(series, color):
     series.plot(lw=0, marker='o', color=color, alpha=0.5)
     smooth = make_lowess(series)
     smooth.plot(label='_', color=color) 
-```</details>
+```
 
 这就是结果的样子。
 
@@ -409,14 +409,14 @@ lengths2, totals2 = run_simulations(lam=1/mu, r=r_opt, flip=0.1, flag=False)
 
 这是总时间的分布，表示为 CDF。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 try:
     import empiricaldist
 except ImportError:
     !pip  install  empiricaldist 
-```</details>
+```
 
 ```py
 from empiricaldist import Cdf

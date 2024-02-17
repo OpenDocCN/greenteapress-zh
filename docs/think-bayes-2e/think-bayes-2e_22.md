@@ -99,7 +99,7 @@ pmf_prior_pred = Pmf.from_seq(sample_prior_pred)
 
 这是它的样子：
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码隐藏代码单元格源代码</summary>
+显示代码单元格源代码隐藏代码单元格源代码
 
 ```py
 from utils import decorate
@@ -108,7 +108,7 @@ pmf_prior_pred.bar()
 decorate(xlabel='Number of goals',
          ylabel='PMF',
          title='Prior Predictive Distribution') 
-```</details> ![_images/eca8cc1de30bb001a105eb6a2bf94133ee6740cbf48d21dadeb130afe219aac7.png](img/3dd262bbe6abdce4ea23ae2cb00d096b.png)
+``` ![_images/eca8cc1de30bb001a105eb6a2bf94133ee6740cbf48d21dadeb130afe219aac7.png](img/3dd262bbe6abdce4ea23ae2cb00d096b.png)
 
 计算先验预测分布的一个原因是检查我们对系统的模型是否合理。在这种情况下，进球的分布似乎与我们对世界杯足球的了解一致。
 
@@ -146,13 +146,13 @@ with pm.Model() as model:
 
 PyMC3 提供了一个生成模型的可视化表示的函数。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 pm.model_to_graphviz(model) 
 ```
 
-![_images/609b52cdd995310fa9f12f9f2aa7d3f49ae50dbdca73040d1e57a879aeaa36fc.svg](img/20d889a293bd0942c8e78861a5bfe4d9.png)</details>
+![_images/609b52cdd995310fa9f12f9f2aa7d3f49ae50dbdca73040d1e57a879aeaa36fc.svg](img/20d889a293bd0942c8e78861a5bfe4d9.png)
 
 在这个可视化中，椭圆形显示`lam`是从 gamma 分布中抽取的，`goals`是从泊松分布中抽取的。箭头显示`lam`的值被用作`goals`分布的参数。
 
@@ -178,7 +178,7 @@ sample_prior_pymc.shape
 
 以下图比较了此样本的 CDF 与使用 SciPy 中的`gamma`对象生成的样本的 CDF。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 from empiricaldist import Cdf
@@ -189,7 +189,7 @@ def plot_cdf(sample, **options):
  sample: sequence of quantities
  """
     Cdf.from_seq(sample).plot(**options) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+``` 显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 plot_cdf(sample_prior, 
@@ -201,7 +201,7 @@ plot_cdf(sample_prior_pymc,
 decorate(xlabel=r'Goals per game ($\lambda$)',
          ylabel='CDF',
          title='Prior distribution') 
-```</details> ![_images/193b0b47427fd7f39ff507b2ce0793f76d0f69476bfc766c47bc5e428f929d77.png](img/4a581ee15ec55f6c43db331b3e69b294.png)
+``` ![_images/193b0b47427fd7f39ff507b2ce0793f76d0f69476bfc766c47bc5e428f929d77.png](img/4a581ee15ec55f6c43db331b3e69b294.png)
 
 结果是相似的，这证实了模型的规范是正确的，采样器的工作是如广告所述的。
 
@@ -220,12 +220,12 @@ sample_prior_pred_pymc.shape
 
 因为后验预测分布中的数量是离散的（进球数），我将绘制 CDF 作为阶梯函数。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 def plot_pred(sample, **options):
     Cdf.from_seq(sample).step(**options) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+``` 显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 plot_pred(sample_prior_pred, 
@@ -237,7 +237,7 @@ plot_pred(sample_prior_pred_pymc,
 decorate(xlabel='Number of goals',
          ylabel='PMF',
          title='Prior Predictive Distribution') 
-```</details> ![_images/dc0f98c00bcdf866da67931d6c2c2c5b2478e90be73e2a3f295493d47e4a36b4.png](img/3e04bb6f8d13f6f6a8c646159fc0add6.png)
+``` ![_images/dc0f98c00bcdf866da67931d6c2c2c5b2478e90be73e2a3f295493d47e4a36b4.png](img/3e04bb6f8d13f6f6a8c646159fc0add6.png)
 
 同样，结果是相似的，因此我们有一些信心我们正在正确使用 PyMC3。
 
@@ -270,7 +270,7 @@ with model2:
     trace2 = pm.sample(500, **options) 
 ```
 
-<details class="hide below-input"><summary aria-label="Toggle hidden content">显示代码单元格输出 隐藏代码单元格输出</summary>
+显示代码单元格输出 隐藏代码单元格输出
 
 ```py
 Auto-assigning NUTS sampler...
@@ -283,7 +283,7 @@ NUTS: [lam]
 
 ```py
 Sampling 2 chains for 1_000 tune and 500 draw iterations (2_000 + 1_000 draws total) took 1 seconds. 
-```</details>
+```
 
 尽管这些模型的规范是相似的，但采样过程是非常不同的。我不会详细介绍 PyMC3 的工作原理，但有几件事情你应该知道：
 
@@ -299,7 +299,7 @@ Sampling 2 chains for 1_000 tune and 500 draw iterations (2_000 + 1_000 draws to
 sample_post_pymc = trace2['lam'] 
 ```
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 sample_post_pymc.shape 
@@ -307,11 +307,11 @@ sample_post_pymc.shape
 
 ```py
 (1000,) 
-```</details>
+```
 
 我们可以将这个样本的 CDF 与我们通过网格近似计算的后验进行比较：
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 posterior.make_cdf().plot(label='posterior grid', 
@@ -323,7 +323,7 @@ plot_cdf(sample_post_pymc,
 decorate(xlabel=r'Goals per game ($\lambda$)',
          ylabel='CDF',
          title='Posterior distribution') 
-```</details> ![_images/df033dddfe2e28c72653c7a90266da82aa4902fbd977ec312df43d87c2bb4607.png](img/8732cbe552885e122226632c2238e45e.png)
+``` ![_images/df033dddfe2e28c72653c7a90266da82aa4902fbd977ec312df43d87c2bb4607.png](img/8732cbe552885e122226632c2238e45e.png)
 
 PyMC3 的结果与网格近似的结果一致。
 
@@ -336,7 +336,7 @@ with model2:
     post_pred = pm.sample_posterior_predictive(trace2) 
 ```
 
-<details class="hide below-input"><summary aria-label="Toggle hidden content">显示代码单元格输出 隐藏代码单元格输出</summary> <progress value="1000" class="" max="1000" style="width:300px; height:20px; vertical-align: middle;">100.00% [1000/1000 00:00<00:00]</progress></details>
+显示代码单元格输出 隐藏代码单元格输出 <progress value="1000" class="" max="1000" style="width:300px; height:20px; vertical-align: middle;">100.00% [1000/1000 00:00<00:00]</progress>
 
 结果是一个包含`goals`样本的字典。
 
@@ -344,7 +344,7 @@ with model2:
 sample_post_pred_pymc = post_pred['goals'] 
 ```
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 sample_post_pred_pymc.shape 
@@ -352,7 +352,7 @@ sample_post_pred_pymc.shape
 
 ```py
 (1000,) 
-```</details>
+```
 
 我还将从我们通过网格近似计算的后验分布中生成一个样本。
 
@@ -363,7 +363,7 @@ sample_post_pred = poisson(sample_post).rvs()
 
 我们可以比较这两个样本。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 plot_pred(sample_post_pred, 
@@ -376,7 +376,7 @@ plot_pred(sample_post_pred_pymc,
 decorate(xlabel='Number of goals',
          ylabel='PMF',
          title='Posterior Predictive Distribution') 
-```</details> ![_images/e72732e7236a3458b5cc5d33844fdc3fed5b8289d8a9181a56868e1235c80003.png](img/8561fce647062c70fa4fe583e77acf8d.png)
+``` ![_images/e72732e7236a3458b5cc5d33844fdc3fed5b8289d8a9181a56868e1235c80003.png](img/8561fce647062c70fa4fe583e77acf8d.png)
 
 同样，结果是一致的。因此，我们已经确定我们可以使用网格近似或 PyMC3 计算相同的结果。
 
@@ -419,7 +419,7 @@ filename = 'WHR20_DataForFigure2.1.xls'
 df = pd.read_excel(filename) 
 ```
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 df.head(3) 
@@ -430,7 +430,7 @@ df.head(3)
 | 0 | 芬兰 | 西欧 | 7.8087 | 0.031156 | 7.869766 | 7.747634 | 10.639267 | 0.954330 | 71.900826 | 0.949172 | -0.059482 | 0.195445 | 1.972317 | 1.285190 | 1.499526 | 0.961271 | 0.662317 | 0.159670 | 0.477857 | 2.762835 |
 | 1 | 丹麦 | 西欧 | 7.6456 | 0.033492 | 7.711245 | 7.579955 | 10.774001 | 0.955991 | 72.402504 | 0.951444 | 0.066202 | 0.168489 | 1.972317 | 1.326949 | 1.503449 | 0.979333 | 0.665040 | 0.242793 | 0.495260 | 2.432741 |
 
-| 2 | 瑞士 | 西欧 | 7.5599 | 0.035014 | 7.628528 | 7.491272 | 10.979933 | 0.942847 | 74.102448 | 0.921337 | 0.105911 | 0.303728 | 1.972317 | 1.390774 | 1.472403 | 1.040533 | 0.628954 | 0.269056 | 0.407946 | 2.350267 |</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+| 2 | 瑞士 | 西欧 | 7.5599 | 0.035014 | 7.628528 | 7.491272 | 10.979933 | 0.942847 | 74.102448 | 0.921337 | 0.105911 | 0.303728 | 1.972317 | 1.390774 | 1.472403 | 1.040533 | 0.628954 | 0.269056 | 0.407946 | 2.350267 | 
 
 ```py
 df.shape 
@@ -438,7 +438,7 @@ df.shape
 
 ```py
 (153, 20) 
-```</details>
+```
 
 `DataFrame`每个 153 个国家有一行，每个 20 个变量有一列。
 
@@ -460,7 +460,7 @@ log_gdp = df['Logged GDP per capita']
 
 以下图是`score`与`log_gdp`的散点图，每个国家一个标记。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 import matplotlib.pyplot as plt
@@ -469,7 +469,7 @@ plt.plot(log_gdp, score, '.')
 
 decorate(xlabel='Log GDP per capita at PPP',
          ylabel='Happiness ladder score') 
-```</details> ![_images/e8d32d702c0b82a48796b8eac7bce082b9e28192f892eddb25f8fc18bdc32a50.png](img/d353ec4ff47106dcc2019c7369b7f92f.png)
+``` ![_images/e8d32d702c0b82a48796b8eac7bce082b9e28192f892eddb25f8fc18bdc32a50.png](img/d353ec4ff47106dcc2019c7369b7f92f.png)
 
 很明显这些变量之间存在关系：在 GDP 较高的国家，人们通常报告更高的幸福水平。
 
@@ -489,7 +489,7 @@ result = linregress(log_gdp, score)
 pd.DataFrame([result.slope, result.intercept],
              index=['Slope', 'Intercept'],
              columns=['']) 
-```</details>
+```
 
 | | |
 | --- | --- |
@@ -554,13 +554,13 @@ NUTS: [sigma, b, a]
 ```py
 Sampling 2 chains for 1_000 tune and 500 draw iterations (2_000 + 1_000 draws total) took 5 seconds.
 The number of effective samples is smaller than 25% for some parameters. 
-```</details>
+```
 
 当运行采样器时，您可能会收到关于“发散”和“接受概率”的警告消息。现在可以忽略它们。
 
 结果是一个包含来自`a`，`b`和`sigma`联合后验分布的样本的对象。
 
-显示代码单元格内容 隐藏代码单元格内容
+
 
 ```py
 trace3 
@@ -568,7 +568,7 @@ trace3
 
 ```py
 <MultiTrace: 2 chains, 500 iterations, 6 variables> 
-```</details>
+```
 
 ArviZ 提供了`plot_posterior`，我们可以使用它来绘制参数的后验分布。这是斜率`a`和截距`b`的后验分布。
 
@@ -585,7 +585,7 @@ with model3:
 
 这些样本的均值与我们用`linregress`估计的参数一致。
 
-显示代码单元格内容 隐藏代码单元格内容
+
 
 ```py
 print('Sample mean:', trace3['a'].mean())
@@ -595,7 +595,7 @@ print('Regression slope:', result.slope)
 ```py
 Sample mean: 0.715698157714354
 Regression slope: 0.717738495630452 
-```</details> 显示代码单元格内容 隐藏代码单元格内容
+``` 
 
 ```py
 print('Sample mean:', trace3['b'].mean())
@@ -605,17 +605,17 @@ print('Regression intercept:', result.intercept)
 ```py
 Sample mean: -1.174412246262264
 Regression intercept: -1.1986460618088843 
-```</details>
+```
 
 最后，我们可以检查`sigma`的边际后验分布
 
-显示代码单元格内容 隐藏代码单元格内容
+
 
 ```py
 az.plot_posterior(trace3['sigma']); 
 ```
 
-![_images/76feb6bc1ab4570c10da92150b8c385ac493214901021ea2a2d7431582540ee3.png](img/d075f68956ee5fc62f1d2774da56482e.png)</details>
+![_images/76feb6bc1ab4570c10da92150b8c385ac493214901021ea2a2d7431582540ee3.png](img/d075f68956ee5fc62f1d2774da56482e.png)
 
 `sigma`的后验分布中的值似乎是合理的。
 
@@ -625,7 +625,7 @@ az.plot_posterior(trace3['sigma']);
 
 但是 PyMC3 可以轻松处理具有八个参数的模型，我们将在下一节中看到。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 20 ** 8 / 1e9 
@@ -633,7 +633,7 @@ az.plot_posterior(trace3['sigma']);
 
 ```py
 25.6 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 153 * 20 ** 8 / 1e12 
@@ -641,7 +641,7 @@ az.plot_posterior(trace3['sigma']);
 
 ```py
 3.9168 
-```</details>
+```
 
 ## 多元回归
 
@@ -659,7 +659,7 @@ columns = ['Ladder score',
 subset = df[columns] 
 ```
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 subset.head(3) 
@@ -670,7 +670,7 @@ subset.head(3)
 | 0 | 7.8087 | 10.639267 | 0.954330 | 71.900826 | 0.949172 | -0.059482 | 0.195445 |
 | 1 | 7.6456 | 10.774001 | 0.955991 | 72.402504 | 0.951444 | 0.066202 | 0.168489 |
 
-| 2 | 7.5599 | 10.979933 | 0.942847 | 74.102448 | 0.921337 | 0.105911 | 0.303728 |</details>
+| 2 | 7.5599 | 10.979933 | 0.942847 | 74.102448 | 0.921337 | 0.105911 | 0.303728 |
 
 预测变量具有不同的单位：对数 GDP 以对数美元表示，预期寿命以年为单位，其他变量以任意比例表示。为了使这些因素可比较，我将标准化数据，使每个变量的均值为 0，标准差为 1。
 
@@ -723,7 +723,7 @@ with model4:
     trace4 = pm.sample(500, **options) 
 ```
 
-<details class="hide below-input"><summary aria-label="Toggle hidden content">显示代码单元格输出 隐藏代码单元格输出</summary>
+显示代码单元格输出 隐藏代码单元格输出
 
 ```py
 Auto-assigning NUTS sampler...
@@ -736,11 +736,11 @@ NUTS: [sigma, b6, b5, b4, b3, b2, b1, b0]
 
 ```py
 Sampling 2 chains for 1_000 tune and 500 draw iterations (2_000 + 1_000 draws total) took 4 seconds. 
-```</details>
+```
 
 因为我们对数据进行了标准化，我们期望截距为 0，事实上`b0`的后验均值接近于 0。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 trace4['b0'].mean() 
@@ -748,11 +748,11 @@ trace4['b0'].mean()
 
 ```py
 -0.0009400028402880869 
-```</details>
+```
 
 我们还可以检查`sigma`的后验均值：
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 trace4['sigma'].mean() 
@@ -760,7 +760,7 @@ trace4['sigma'].mean()
 
 ```py
 0.5157546237813752 
-```</details>
+```
 
 从`trace4`中，我们可以提取参数的后验分布样本并计算它们的均值。
 
@@ -785,7 +785,7 @@ cis = [credible_interval(trace4[name])
 
 以下表格总结了结果。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格来源 隐藏代码单元格来源</summary>
+显示代码单元格来源 隐藏代码单元格来源
 
 ```py
 index = columns[1:]
@@ -793,7 +793,7 @@ table = pd.DataFrame(index=index)
 table['Posterior mean'] = np.round(means, 3)
 table['94% CI'] = cis
 table 
-```</details>
+```
 
 |  | 后验均值 | 94% CI |
 | --- | --- | --- |
@@ -836,7 +836,7 @@ MCMC 比网格方法更强大，但这种力量也伴随着一些缺点：
 
 参见[PyMC3 文档](https://docs.pymc.io/api/distributions/continuous.html)以获取连续分布列表。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 # Solution
@@ -864,7 +864,7 @@ NUTS: [x]
 Sampling 2 chains for 1_000 tune and 500 draw iterations (2_000 + 1_000 draws total) took 1 seconds. 
 ```
 
-![_images/9aceeffa47605e83ecf31ae37b480a41d897024e249e5e6400cf268e5aeecd95.png](img/76c133082854e9fd2a774b69a9a190a4.png)</details>
+![_images/9aceeffa47605e83ecf31ae37b480a41d897024e249e5e6400cf268e5aeecd95.png](img/76c133082854e9fd2a774b69a9a190a4.png)
 
 **练习：** 现在让我们使用 PyMC3 复制<<_TheGrizzlyBearProblem>>中的灰熊问题的解决方案，该问题基于超几何分布。
 
@@ -880,7 +880,7 @@ Sampling 2 chains for 1_000 tune and 500 draw iterations (2_000 + 1_000 draws to
 
 注意：`HyperGeometric`在版本 3.8 之后添加到 PyMC3 中，因此您可能需要更新您的安装来完成这个练习。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -908,7 +908,7 @@ Sampling 2 chains for 1_000 tune and 1_000 draw iterations (2_000 + 2_000 draws 
 The number of effective samples is smaller than 25% for some parameters. 
 ```
 
-![_images/6508eeee449a1c8e82ce7ce0664789351b1fd247cb5460e9429a6934db033734.png](img/dee9f9d8c3a7ab7b7a7cad18a04ff162.png)</details>
+![_images/6508eeee449a1c8e82ce7ce0664789351b1fd247cb5460e9429a6934db033734.png](img/dee9f9d8c3a7ab7b7a7cad18a04ff162.png)
 
 **练习：** 在<<_WeibullDistribution>>中，我们从 Weibull 分布中生成了一个样本，其中$\lambda=3$，$k=0.8$。然后我们使用数据来计算这些参数的后验分布的网格近似。
 
@@ -925,7 +925,7 @@ data = [0.80497283, 2.11577082, 0.43308797, 0.10862644, 5.17334866,
        3.25745053, 3.05555883, 2.47401062, 0.05340806, 1.08386395] 
 ```
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -952,7 +952,7 @@ Sampling 2 chains for 1_000 tune and 1_000 draw iterations (2_000 + 2_000 draws 
 The acceptance probability does not match the target. It is 0.8819724175144361, but should be close to 0.8\. Try to increase the number of tuning steps. 
 ```
 
-![_images/20ca2eef771e17ce366680fbf0cd5b3fa489b23d328038c5def182f25c399a5e.png](img/90b78b9ea67cbd74076b70a4cef6125f.png)</details>
+![_images/20ca2eef771e17ce366680fbf0cd5b3fa489b23d328038c5def182f25c399a5e.png](img/90b78b9ea67cbd74076b70a4cef6125f.png)
 
 **练习：** 在<<_ImprovingReadingAbility>>中，我们使用了阅读测试的数据来估计正态分布的参数。
 
@@ -960,11 +960,11 @@ The acceptance probability does not match the target. It is 0.8819724175144361, 
 
 现在估计受试组的参数。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+显示代码单元格内容隐藏代码单元格内容
 
 ```py
 data = responses['Treated'] 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -987,7 +987,7 @@ NUTS: [sigma, mu]
 
 ```py
 Sampling 2 chains for 1_000 tune and 500 draw iterations (2_000 + 1_000 draws total) took 2 seconds. 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -996,7 +996,7 @@ with model8:
     az.plot_posterior(trace8) 
 ```
 
-![_images/d8e1802f0f4db48c5429de4dc2411d4445c82281b3e3719facb259a356c7daac.png](img/0ea3f1ef40964a9f6ae59de890108f8d.png)</details>
+![_images/d8e1802f0f4db48c5429de4dc2411d4445c82281b3e3719facb259a356c7daac.png](img/0ea3f1ef40964a9f6ae59de890108f8d.png)
 
 **练习：** 在<<_TheLincolnIndexProblem>>中，我们使用了一个网格算法来解决由 John D. Cook 提出的 Lincoln 指数问题：
 
@@ -1030,7 +1030,7 @@ data = pm.math.stack((k00, k01, k10, k11))
 
 这里是除了`k00`之外的所有值:
 
-<细节 类="隐藏在输入上方"><摘要 aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</摘要>
+<细节 类="隐藏在输入上方"><摘要 aria-label="切换隐藏内容"></摘要>
 
 ```py
 k10 = 20 - 3
@@ -1040,7 +1040,7 @@ k11 = 3
 
 总共发现了 32 个错误:
 
-<细节 类="隐藏在输入上方"><摘要 aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</摘要>
+<细节 类="隐藏在输入上方"><摘要 aria-label="切换隐藏内容"></摘要>
 
 ```py
 num_seen = k01 + k10 + k11
@@ -1049,7 +1049,7 @@ num_seen
 
 ```py
 32 
-```</细节> <细节 类="隐藏在输入上方"><摘要 aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</摘要>
+```</细节> <细节 类="隐藏在输入上方"><摘要 aria-label="切换隐藏内容"></摘要>
 
 ```py
 # Solution
@@ -1066,7 +1066,7 @@ with pm.Model() as model9:
     k00 = N - num_seen
     data = pm.math.stack((k00, k01, k10, k11))
     y = pm.Multinomial('y', n=N, p=ps, observed=data) 
-```</细节> <细节 类="隐藏在输入上方"><摘要 aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</摘要>
+```</细节> <细节 类="隐藏在输入上方"><摘要 aria-label="切换隐藏内容"></摘要>
 
 ```py
 # Solution
@@ -1089,7 +1089,7 @@ Sampling 2 chains for 1_000 tune and 1_000 draw iterations (2_000 + 2_000 draws 
 The acceptance probability does not match the target. It is 0.5430480274605854, but should be close to 0.8\. Try to increase the number of tuning steps.
 The rhat statistic is larger than 1.05 for some parameters. This indicates slight problems during sampling.
 The estimated number of effective samples is smaller than 200 for some parameters. 
-```</细节> <细节 类="隐藏在输入上方"><摘要 aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</摘要>
+```</细节> <细节 类="隐藏在输入上方"><摘要 aria-label="切换隐藏内容"></摘要>
 
 ```py
 # Solution

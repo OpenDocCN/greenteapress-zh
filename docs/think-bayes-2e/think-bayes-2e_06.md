@@ -97,7 +97,7 @@ letters['s']
 
 但是，如果您要求一个不在分布中的数量的概率，您会得到一个`KeyError`。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 try:
@@ -108,7 +108,7 @@ except KeyError as e:
 
 ```py
 <class 'KeyError'> 
-```</details>
+```
 
 您还可以将`Pmf`作为函数调用，括号中是一个字母。
 
@@ -334,7 +334,7 @@ posterior1.head()
 
 以下图显示了先验分布和一块香草饼干后的后验分布。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 from utils import decorate
@@ -343,13 +343,13 @@ def decorate_bowls(title):
     decorate(xlabel='Bowl #',
              ylabel='PMF',
              title=title) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+``` 显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 prior.plot(label='prior', color='C5')
 posterior1.plot(label='posterior', color='C4')
 decorate_bowls('Posterior after one vanilla cookie') 
-```</details> ![_images/701c62bf2c16f3409268caa52f308c3fd97ff18bca98c2c39570565d9d994669.png](img/d87868edf23191fbc85c7a9989ee0b46.png)
+``` ![_images/701c62bf2c16f3409268caa52f308c3fd97ff18bca98c2c39570565d9d994669.png](img/d87868edf23191fbc85c7a9989ee0b46.png)
 
 Bowl 0 的后验概率是 0，因为它不含香草饼干。Bowl 100 的后验概率最高，因为它含有最多的香草饼干。在中间，后验分布的形状是一条线，因为似然性与碗的编号成比例。
 
@@ -360,20 +360,20 @@ posterior2 = posterior1 * likelihood_vanilla
 posterior2.normalize() 
 ```
 
-<details class="hide below-input"><summary aria-label="Toggle hidden content">显示代码单元格输出 隐藏代码单元格输出</summary>
+显示代码单元格输出 隐藏代码单元格输出
 
 ```py
 0.6699999999999999 
-```</details>
+```
 
 这是后验分布的样子。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 posterior2.plot(label='posterior', color='C4')
 decorate_bowls('Posterior after two vanilla cookies') 
-```</details> ![_images/8d5be774f70698721fdb924a5597d276eb33e3a6a93a40ae4bdeb93eba11c068.png](img/cdada6315d31a6de84999fd183ec872e.png)
+``` ![_images/8d5be774f70698721fdb924a5597d276eb33e3a6a93a40ae4bdeb93eba11c068.png](img/cdada6315d31a6de84999fd183ec872e.png)
 
 两块香草饼干后，高编号的碗具有最高的后验概率，因为它们含有最多的香草饼干；低编号的碗具有最低的概率。
 
@@ -386,20 +386,20 @@ posterior3 = posterior2 * likelihood_chocolate
 posterior3.normalize() 
 ```
 
-<details class="hide below-input"><summary aria-label="Toggle hidden content">显示代码单元格输出 隐藏代码单元格输出</summary>
+显示代码单元格输出 隐藏代码单元格输出
 
 ```py
 0.2462686567164179 
-```</details>
+```
 
 这是后验分布的样子。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 posterior3.plot(label='posterior', color='C4')
 decorate_bowls('Posterior after 2 vanilla, 1 chocolate') 
-```</details> ![_images/0be0644c8193f2f4b40f05ab3ff5e273fa8ef6fbe3165c1b45aa9fee1f2f8e66.png](img/61b1f847d27a7edc447010533be12018.png)
+``` ![_images/0be0644c8193f2f4b40f05ab3ff5e273fa8ef6fbe3165c1b45aa9fee1f2f8e66.png](img/61b1f847d27a7edc447010533be12018.png)
 
 现在 Bowl 100 已经被排除了，因为它不含巧克力饼干。但是高编号的碗仍然比低编号的碗更有可能，因为我们看到的香草饼干比巧克力饼干多。
 
@@ -598,7 +598,7 @@ pmf
 
 您可以使用`update_dice`函数或自行进行更新。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 # Solution
@@ -615,13 +615,13 @@ pmf
 | 6 | 0.000000 |
 | 8 | 0.835052 |
 
-| 12 | 0.164948 |</details>
+| 12 | 0.164948 |
 
 **练习：**在前一个版本的骰子问题中，先验概率是相同的，因为盒子里包含每种骰子。但是假设盒子里有 1 个 4 面骰子，2 个 6 面骰子，3 个 8 面骰子，4 个 12 面骰子和 5 个 20 面骰子。我选择一个骰子，掷出一个 7。我选择了一个 8 面骰子的概率是多少？
 
 提示：要制作先验分布，请使用两个参数调用`Pmf`。
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 # Solution
@@ -644,13 +644,13 @@ pmf
 | 8 | 0.391304 |
 | 12 | 0.347826 |
 
-| 20 | 0.260870 |</details>
+| 20 | 0.260870 |
 
 **练习：**假设我有两个袜子抽屉。一个抽屉里有黑色和白色袜子的数量相同。另一个抽屉里有红色、绿色和蓝色袜子的数量相同。假设我随机选择一个抽屉，随机选择两只袜子，然后告诉你我拿到了一双相配的袜子。袜子是白色的概率是多少？
 
 为简单起见，让我们假设两个抽屉里都有很多袜子，取出一只袜子对比例的变化可以忽略不计。
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 # Solution
@@ -670,7 +670,7 @@ posterior
 | --- | --- |
 | 黑白 | 0.6 |
 
-| 红绿蓝 | 0.4 |</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+| 红绿蓝 | 0.4 | 
 
 ```py
 # Solution
@@ -683,7 +683,7 @@ posterior['BlackWhite'] / 2
 
 ```py
 0.30000000000000004 
-```</details>
+```
 
 **练习：**这是来自[贝叶斯数据分析](http://www.stat.columbia.edu/~gelman/book/)的一个问题：
 
@@ -691,7 +691,7 @@ posterior['BlackWhite'] / 2
 
 提示：1935 年，大约 2/3 的双胞胎是异卵的，1/3 是同卵的。
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 # Solution
@@ -719,7 +719,7 @@ table
 | --- | --- | --- | --- | --- |
 | 相同 | 0.333333 | 1.0 | 0.333333 | 0.5 |
 
-| 异卵 | 0.666667 | 0.5 | 0.333333 | 0.5 |</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+| 异卵 | 0.666667 | 0.5 | 0.333333 | 0.5 | 
 
 ```py
 # Solution
@@ -735,7 +735,7 @@ prior
 | --- | --- |
 | 相同 | 0.333333 |
 
-| 异卵 | 0.666667 |</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+| 异卵 | 0.666667 | 
 
 ```py
 # Solution
@@ -750,4 +750,4 @@ posterior
 | --- | --- |
 | 相同 | 0.5 |
 
-| 异卵 | 0.5 |</details>
+| 异卵 | 0.5 |

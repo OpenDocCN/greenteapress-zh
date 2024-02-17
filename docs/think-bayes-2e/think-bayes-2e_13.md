@@ -57,7 +57,7 @@ posterior.normalize()
 
 这就是它的样子。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码隐藏代码单元格源代码</summary>
+显示代码单元格源代码隐藏代码单元格源代码
 
 ```py
 from utils import decorate
@@ -67,7 +67,7 @@ posterior.plot(label='140 heads out of 250')
 decorate(xlabel='Proportion of heads (x)',
          ylabel='Probability',
          title='Posterior distribution of x') 
-```</details> ![_images/d2164f5205e6d919479cdbbc6ada601ed81c32de4774fca532169fb4e140d36b.png](img/cff6b0a6ffb873c1f1ca6afedfa221b3.png)
+``` ![_images/d2164f5205e6d919479cdbbc6ada601ed81c32de4774fca532169fb4e140d36b.png](img/cff6b0a6ffb873c1f1ca6afedfa221b3.png)
 
 此外，后验均值约为 0.56，90%的可信区间为 0.51 到 0.61。
 
@@ -245,7 +245,7 @@ decorate(xlabel='Proportion of heads (x)',
 
 **练习：**现在计算在这种“偏置”的定义下数据的总概率，并计算贝叶斯因子，与公平假设相比。数据证据表明硬币是有偏的吗？
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -256,7 +256,7 @@ like_triangle
 
 ```py
 0.00698132546485788 
-``` <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -267,14 +267,14 @@ K
 
 ```py
 1.1970766535647157 
-``` <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
 
 # For this definition of "biased", the data are 
 # very slightly in favor of the fair hypothesis. 
-```</details>
+```
 
 ## 贝叶斯假设检验
 
@@ -330,7 +330,7 @@ beliefs = [prior.copy() for i in range(4)]
 
 这个函数在一个网格中显示四个分布。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 import matplotlib.pyplot as plt
@@ -350,7 +350,7 @@ def plot(beliefs, **options):
             decorate(xlabel='Probability of winning')
 
     plt.tight_layout() 
-```</details>
+```
 
 这里是四台机器的先验分布。
 
@@ -395,14 +395,14 @@ for outcome in 'WLLLLLLLLL':
 
 后验分布如下。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 bandit.plot()
 decorate(xlabel='Probability of winning',
          ylabel='PDF',
          title='Posterior distribution, nine losses, one win') 
-```</details> ![_images/cf5bcaaeed0a5e04ea726bd4023cf9330e5eebd0aef3ccd5681283ffc4d340ad.png](img/ba74321490b0e13ca4e86ff4d790ef8b.png)
+``` ![_images/cf5bcaaeed0a5e04ea726bd4023cf9330e5eebd0aef3ccd5681283ffc4d340ad.png](img/ba74321490b0e13ca4e86ff4d790ef8b.png)
 
 ## 多个老虎机
 
@@ -460,7 +460,7 @@ plot(beliefs)
 
 这里是实际概率、后验均值和 90%的可信区间。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 import pandas as pd
@@ -483,11 +483,11 @@ def summarize_beliefs(beliefs):
         ci = np.round(ci, 3)
         df.loc[i] = actual_probs[i], mean, ci
     return df 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+``` 显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 summarize_beliefs(beliefs) 
-```</details>
+```
 
 |  | 实际赢的概率 | 后验均值 | 可信区间 |
 | --- | --- | --- | --- |
@@ -631,11 +631,11 @@ plot(beliefs)
 
 以下表格总结了结果。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 summarize_beliefs(beliefs) 
-```</details>
+```
 
 |  | 实际 P(获胜) | 后验均值 | 置信区间 |
 | --- | --- | --- | --- |
@@ -648,7 +648,7 @@ summarize_beliefs(beliefs)
 
 更重要的是，让我们看看每台机器被玩了多少次。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+显示代码单元格内容隐藏代码单元格内容
 
 ```py
 def summarize_counter(counter):
@@ -664,11 +664,11 @@ def summarize_counter(counter):
     for i, count in counter.items():
         df.loc[i] = actual_probs[i], count
     return df 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源隐藏代码单元格源</summary>
+``` 显示代码单元格源隐藏代码单元格源
 
 ```py
 summarize_counter(counter) 
-```</details>
+```
 
 |  | 实际获胜概率 | 游戏次数 |
 | --- | --- | --- |
@@ -707,7 +707,7 @@ summarize_counter(counter)
 
 此练习的详细信息在笔记本中。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+显示代码单元格内容隐藏代码单元格内容
 
 ```py
 def prob_correct(ability, difficulty):
@@ -717,19 +717,19 @@ def prob_correct(ability, difficulty):
     x = (ability - difficulty) / a
     p = c + (1-c) / (1 + np.exp(-x))
     return p 
-```</details>
+```
 
 我选择了`a`，使得分数范围可以与 SAT 可比，SAT 报告的分数范围是 200 到 800。
 
 这是一个难度为 500，能力范围的逻辑曲线是什么样子。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+显示代码单元格内容隐藏代码单元格内容
 
 ```py
 abilities = np.linspace(100, 900)
 diff = 500
 ps = prob_correct(abilities, diff) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 plt.plot(abilities, ps)
@@ -739,7 +739,7 @@ decorate(xlabel='Ability',
          ylim=[0, 1.05]) 
 ```
 
-![_images/4056a18b35ba87b9cbfdf040678438925cbb5840b7dedc0ce76f95a6eb6b150b.png](img/3d44a6c66ae13372de3e4cdb9efda095.png)</details>
+![_images/4056a18b35ba87b9cbfdf040678438925cbb5840b7dedc0ce76f95a6eb6b150b.png](img/3d44a6c66ae13372de3e4cdb9efda095.png)
 
 `ability=900`的人几乎可以肯定会得到正确答案。`ability=100`的人猜对的概率约为 25%。
 
@@ -755,20 +755,20 @@ decorate(xlabel='Ability',
 
 这是`play`，它以`ability`和`difficulty`作为参数。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 def play(ability, difficulty):
   """Simulate a test-taker answering a question."""
     p = prob_correct(ability, difficulty)
     return np.random.random() < p 
-```</details>
+```
 
 `play`使用`prob_correct`来计算正确答案的概率，使用`np.random.random`生成 0 到 1 之间的随机值。返回值为`True`表示回答正确，否则为`False`。
 
 作为测试，让我们模拟一个`ability=600`的考试者回答一个`difficulty=500`的问题。正确回答的概率约为 80%。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 prob_correct(600, 500) 
@@ -776,13 +776,13 @@ prob_correct(600, 500)
 
 ```py
 0.7982939339725037 
-```</details>
+```
 
 假设这个人参加了一个有 51 个问题的测试，所有问题的难度都相同，为`500`。我们期望他们能对大约 80%的问题做出正确回答。
 
 这是一次模拟的结果。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 num_questions = 51
@@ -792,7 +792,7 @@ np.mean(outcomes)
 
 ```py
 0.803921568627451 
-```</details>
+```
 
 我们期望他们能对大约 80%的问题做出正确回答。
 
@@ -806,7 +806,7 @@ SAT 的设计是使得分数的分布大致呈正态分布，均值为 500，标
 
 这是代表先验分布的`Pmf`。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 from scipy.stats import norm
@@ -819,11 +819,11 @@ ps = norm(mean, std).pdf(qs)
 
 prior = Pmf(ps, qs)
 prior.normalize() 
-```</details>
+```
 
 这是它的样子。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 prior.plot(label='std=300', color='C5')
@@ -834,13 +834,13 @@ decorate(xlabel='Ability',
          ylim=[0, 0.032]) 
 ```
 
-![_images/f6ff46cbaef200d7e887b81758d28ab084b928962a3b5f9a698c824c1e36dd72.png](img/6b094033244393276b1d1a97d6adb274.png)</details>
+![_images/f6ff46cbaef200d7e887b81758d28ab084b928962a3b5f9a698c824c1e36dd72.png](img/6b094033244393276b1d1a97d6adb274.png)
 
 ## 更新
 
 以下函数接受一个先验`Pmf`和单个问题的结果，并就地更新`Pmf`。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 def update_ability(pmf, data):
@@ -856,13 +856,13 @@ def update_ability(pmf, data):
         pmf *= 1 - ps
 
     pmf.normalize() 
-```</details>
+```
 
 `data`是一个包含问题难度和结果的元组：如果回答正确则为`True`，否则为`False`。
 
 作为测试，让我们根据先前模拟的结果进行更新，基于一个`ability=600`的人回答了 51 个`difficulty=500`的问题。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 actual_600 = prior.copy()
@@ -870,11 +870,11 @@ actual_600 = prior.copy()
 for outcome in outcomes:
     data = (500, outcome)
     update_ability(actual_600, data) 
-```</details>
+```
 
 这是后验分布的样子。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 actual_600.plot(color='C4')
@@ -884,11 +884,11 @@ decorate(xlabel='Ability',
          title='Posterior distribution of ability') 
 ```
 
-![_images/553368a9dc3a4c555472e4f17489bf9253f43d3f3ee2101c3b304bcba13e6c6f.png](img/63249dd4cc939a3f7d16ff724b2f40f2.png)</details>
+![_images/553368a9dc3a4c555472e4f17489bf9253f43d3f3ee2101c3b304bcba13e6c6f.png](img/63249dd4cc939a3f7d16ff724b2f40f2.png)
 
 后验均值非常接近考试者的实际能力，即 600。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 actual_600.mean() 
@@ -896,7 +896,7 @@ actual_600.mean()
 
 ```py
 604.3325737356816 
-```</details>
+```
 
 如果我们再次运行这个模拟，我们将得到不同的结果。
 
@@ -904,13 +904,13 @@ actual_600.mean()
 
 现在让我们模拟一个自适应测试。我将使用以下函数来选择问题，从最简单的策略开始：所有问题的难度都相同。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 def choose(i, belief):
   """Choose the difficulty of the next question."""
     return 500 
-```</details>
+```
 
 作为参数，`choose`接受`i`，即问题的索引，以及`belief`，即基于先前问题的回答的`ability`后验分布的`Pmf`。
 
@@ -918,7 +918,7 @@ def choose(i, belief):
 
 以下函数模拟了一个已知其实际能力的人参加考试。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 def simulate_test(actual_ability):
@@ -934,21 +934,21 @@ def simulate_test(actual_ability):
         trace.loc[i] = difficulty, outcome
 
     return belief, trace 
-```</details>
+```
 
 返回值是代表能力后验分布的`Pmf`和包含问题难度和结果的`DataFrame`。
 
 这是一个例子，再次是针对`ability=600`的考试者。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 belief, trace = simulate_test(600) 
-```</details>
+```
 
 我们可以使用轨迹来查看有多少回答是正确的。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 trace['outcome'].sum() 
@@ -956,11 +956,11 @@ trace['outcome'].sum()
 
 ```py
 42 
-```</details>
+```
 
 这就是后验分布的样子。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 belief.plot(color='C4', label='ability=600')
@@ -970,7 +970,7 @@ decorate(xlabel='Ability',
          title='Posterior distribution of ability') 
 ```
 
-![_images/6fecd64a2fbf0f61eb5419cb676798c9831a102903ea96ca668ee184f4da95f6.png](img/06dc60e1e59865d48a2f8ee79cd5816c.png)</details>
+![_images/6fecd64a2fbf0f61eb5419cb676798c9831a102903ea96ca668ee184f4da95f6.png](img/06dc60e1e59865d48a2f8ee79cd5816c.png)
 
 同样，后验分布代表了对考试者实际能力的相当好的估计。
 
@@ -980,7 +980,7 @@ decorate(xlabel='Ability',
 
 在前面的例子中，后验分布的标准差约为 40。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 belief.mean(), belief.std() 
@@ -988,11 +988,11 @@ belief.mean(), belief.std()
 
 ```py
 (618.6942050450824, 40.08554296596485) 
-```</details>
+```
 
 对于所有问题难度相同的考试，估计的精度强烈依赖于考试者的能力。为了证明这一点，我将循环遍历一系列能力，并使用总是返回`difficulty=500`的`choice`版本来模拟一次测试。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 actual_abilities = np.linspace(200, 800)
@@ -1002,13 +1002,13 @@ series = pd.Series(index=actual_abilities, dtype=float, name='std')
 for actual_ability in actual_abilities:
     belief, trace = simulate_test(actual_ability)
     series[actual_ability] = belief.std() 
-```</details>
+```
 
 以下图显示了在每个能力水平上进行一次模拟时后验分布的标准差。
 
 结果很嘈杂，所以我还绘制了一条通过[局部回归](https://en.wikipedia.org/wiki/Local_regression)拟合数据的曲线。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 from utils import plot_series_lowess
@@ -1019,7 +1019,7 @@ decorate(xlabel='Actual ability',
          ylabel='Standard deviation of posterior') 
 ```
 
-![_images/49fcae9333f76f35c854dcd4b654625f8dd41b8415ea903a5c3434780d2ea9fb.png](img/d29aa0df7d3b18ac9daca492b6efe4b9.png)</details>
+![_images/49fcae9333f76f35c854dcd4b654625f8dd41b8415ea903a5c3434780d2ea9fb.png](img/d29aa0df7d3b18ac9daca492b6efe4b9.png)
 
 测试对于能力在`500`和`600`之间的人来说最精确，对于能力在范围高端的人来说不那么精确，对于能力在范围低端的人来说更糟糕。
 
@@ -1035,7 +1035,7 @@ decorate(xlabel='Actual ability',
 
 为了衡量区分能力，我将模拟一个人进行 100 次测试；每次模拟后，我将使用后验分布的均值作为他们的“分数”。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 def sample_posterior(actual_ability, iters):
@@ -1054,31 +1054,31 @@ def sample_posterior(actual_ability, iters):
         scores.append(score)
 
     return np.array(scores) 
-```</details>
+```
 
 以下是几个不同能力水平的人的分数样本。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 sample_500 = sample_posterior(500, iters=100) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 sample_600 = sample_posterior(600, iters=100) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 sample_700 = sample_posterior(700, iters=100) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 sample_800 = sample_posterior(800, iters=100) 
-```</details>
+```
 
 以下是分数分布的样子。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 from empiricaldist import Cdf
@@ -1087,7 +1087,7 @@ cdf_500 = Cdf.from_seq(sample_500)
 cdf_600 = Cdf.from_seq(sample_600)
 cdf_700 = Cdf.from_seq(sample_700)
 cdf_800 = Cdf.from_seq(sample_800) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 cdf_500.plot(label='ability=500', color='C1',
@@ -1102,7 +1102,7 @@ decorate(xlabel='Test score',
          title='Sampling distribution of test scores') 
 ```
 
-![_images/e2f80922b8b9560c88074262e5b71df8c9b98feb9d33b222084ab78f75b14f93.png](img/0a2712bec0950fe312afd311635edd84.png)</details>
+![_images/e2f80922b8b9560c88074262e5b71df8c9b98feb9d33b222084ab78f75b14f93.png](img/0a2712bec0950fe312afd311635edd84.png)
 
 平均而言，能力更高的人得分更高，但任何人都可能有好天或坏天，所以分布之间存在一些重叠。
 
@@ -1110,7 +1110,7 @@ decorate(xlabel='Test score',
 
 如果能力在`500`和`600`之间的人参加测试，几乎可以肯定能力更高的人会得到更高的分数。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 np.mean(sample_600 > sample_500) 
@@ -1118,11 +1118,11 @@ np.mean(sample_600 > sample_500)
 
 ```py
 0.98 
-```</details>
+```
 
 对于能力在`600`和`700`之间的人，就不那么确定了。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 np.mean(sample_700 > sample_600) 
@@ -1130,11 +1130,11 @@ np.mean(sample_700 > sample_600)
 
 ```py
 0.95 
-```</details>
+```
 
 而对于能力在`700`和`800`之间的人，根本就不确定。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 np.mean(sample_800 > sample_700) 
@@ -1142,7 +1142,7 @@ np.mean(sample_800 > sample_700)
 
 ```py
 0.85 
-```</details>
+```
 
 但请记住，这些结果是基于一个测试，其中所有问题的难度都是相等的。如果你在章节末做练习，你会发现，如果测试包括一系列难度不同的问题，测试的表现会更好，甚至如果测试是自适应的话，表现会更好。
 
@@ -1158,7 +1158,7 @@ np.mean(sample_800 > sample_700)
 
 对于第二个版本，什么是最大化测试在能力范围内精度的自适应策略？
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -1185,7 +1185,7 @@ def choose(i, belief):
  returns: difficulty
  """
     return difficulties[i] 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -1209,4 +1209,4 @@ def choose(i, belief):
  returns: difficulty
  """
     return belief.mean() 
-```</details>
+```

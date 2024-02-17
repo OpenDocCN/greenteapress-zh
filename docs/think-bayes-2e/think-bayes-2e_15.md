@@ -28,7 +28,7 @@ df.shape
 
 数据集中每只企鹅一行，每个变量一列。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">Show code cell content Hide code cell content</summary>
+Show code cell content Hide code cell content
 
 ```py
 df.head() 
@@ -41,7 +41,7 @@ df.head()
 | 2 | PAL0708 | 3 | Adelie Penguin (Pygoscelis adeliae) | Anvers | Torgersen | Adult, 1 Egg Stage | N2A1 | Yes | 2007-11-16 | 40.3 | 18.0 | 195.0 | 3250.0 | FEMALE | 8.36821 | -25.33302 | NaN |
 | 4 | PAL0708 | 5 | Adelie Penguin (Pygoscelis adeliae) | Anvers | Torgersen | Adult, 1 Egg Stage | N3A1 | Yes | 2007-11-16 | 36.7 | 19.3 | 193.0 | 3450.0 | FEMALE | 8.76651 | -25.32426 | NaN |
 
-| 5 | PAL0708 | 6 | Adelie Penguin (Pygoscelis adeliae) | Anvers | Torgersen | Adult, 1 Egg Stage | N3A2 | Yes | 2007-11-16 | 39.3 | 20.6 | 190.0 | 3650.0 | MALE | 8.66496 | -25.29805 | NaN |</details>
+| 5 | PAL0708 | 6 | Adelie Penguin (Pygoscelis adeliae) | Anvers | Torgersen | Adult, 1 Egg Stage | N3A2 | Yes | 2007-11-16 | 39.3 | 20.6 | 190.0 | 3650.0 | MALE | 8.66496 | -25.29805 | NaN |
 
 数据集中包含三种企鹅：阿德利企鹅、燕鸥企鹅和根趾企鹅。
 
@@ -73,7 +73,7 @@ def make_cdf_map(df, colname, by='Species2'):
 
 以下函数绘制了给定列中每个物种的`Cdf`：
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">Show code cell content Hide code cell content</summary>
+Show code cell content Hide code cell content
 
 ```py
 from empiricaldist import Cdf
@@ -95,27 +95,27 @@ def plot_cdfs(df, colname, by='Species2'):
 
     decorate(xlabel=colname,
              ylabel='CDF') 
-```</details>
+```
 
 以下是 culmen 长度的分布。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">Show code cell source Hide code cell source</summary>
+Show code cell source Hide code cell source
 
 ```py
 colname = 'Culmen Length (mm)'
 plot_cdfs(df, colname) 
-```</details> ![_images/5ab5a7f798da6866fe44a8dafc0c49397cfd4f7e232ed60472f2dde56db06b37.png](img/b8c137a38b5c6f3c2e546ece3011011d.png)
+``` ![_images/5ab5a7f798da6866fe44a8dafc0c49397cfd4f7e232ed60472f2dde56db06b37.png](img/b8c137a38b5c6f3c2e546ece3011011d.png)
 
 看起来我们可以使用 Culmen 长度来识别 Adélie 企鹅，但其他两个物种的分布几乎完全重叠。
 
 这是翻转长度的分布。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码隐藏代码单元格源代码</summary>
+显示代码单元格源代码隐藏代码单元格源代码
 
 ```py
 colname = 'Flipper Length (mm)'
 plot_cdfs(df, colname) 
-```</details> ![_images/a80e125cfdfe3dce6670cd38ddc6e2979b6337b9e02e863814498185ffb511d8.png](img/4a99d73ebdecfc30ee33286333f883ab.png)
+``` ![_images/a80e125cfdfe3dce6670cd38ddc6e2979b6337b9e02e863814498185ffb511d8.png](img/4a99d73ebdecfc30ee33286333f883ab.png)
 
 使用翻转长度，我们可以将 Gentoo 企鹅与其他两个物种区分开来。因此，只有这两个特征，似乎我们应该能够以一定的准确度对企鹅进行分类。
 
@@ -123,25 +123,25 @@ plot_cdfs(df, colname)
 
 这是 Culmen 深度的分布。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+显示代码单元格内容隐藏代码单元格内容
 
 ```py
 colname = 'Culmen Depth (mm)'
 plot_cdfs(df, colname) 
 ```
 
-![_images/f46f0996d70e07608878a6c5ba386bbe9d8e8f82ad722907e1b56bc241b32a5d.png](img/b323583fb9232123a6225fc7bf2534da.png)</details>
+![_images/f46f0996d70e07608878a6c5ba386bbe9d8e8f82ad722907e1b56bc241b32a5d.png](img/b323583fb9232123a6225fc7bf2534da.png)
 
 这是体重的分布。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+显示代码单元格内容隐藏代码单元格内容
 
 ```py
 colname = 'Body Mass (g)'
 plot_cdfs(df, colname) 
 ```
 
-![_images/bf89e4f54544ba5a119c06047fc01d36885bdcb9e1049ed5bb58d827a108a394.png](img/f2b66ccc02c0cfdaf0c50274c3a0ca2f.png)</details>
+![_images/bf89e4f54544ba5a119c06047fc01d36885bdcb9e1049ed5bb58d827a108a394.png](img/f2b66ccc02c0cfdaf0c50274c3a0ca2f.png)
 
 Culmen 深度和体重可以将 Gentoo 企鹅与其他两个物种区分开来，但这些特征可能并没有提供太多额外的信息，超出我们从翻转长度和 Culmen 长度中获得的信息。
 
@@ -370,7 +370,7 @@ for i, row in df.iterrows():
 
 所以让我们看看我们有多少是正确的。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 len(df) 
@@ -378,7 +378,7 @@ len(df)
 
 ```py
 342 
-```</details>
+```
 
 ```py
 valid = df['Classification'].notna()
@@ -574,26 +574,26 @@ multinorm_map = make_multinorm_map(df, [var1, var2])
 
 这里是我们将使用的两个特征的单变量分布和我们刚刚计算的多元分布。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 norm1 = flipper_map['Adelie']
 norm2 = culmen_map['Adelie']
 multinorm = multinorm_map['Adelie'] 
-```</details>
+```
 
 我将为每个单变量分布制作一个离散的`Pmf`近似。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 pmf1 = make_pmf_norm(norm1)
 pmf2 = make_pmf_norm(norm2) 
-```</details>
+```
 
 并使用它们制作一个包含所有值对的网格。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 X, Y = np.meshgrid(pmf1.qs, pmf2.qs)
@@ -602,13 +602,13 @@ X.shape
 
 ```py
 (101, 101) 
-```</details>
+```
 
 网格由两个数组表示：第一个包含沿`x`轴的`pmf1`的数量；第二个包含沿`y`轴的`pmf2`的数量。
 
 为了评估每对值的多元分布，我们必须“堆叠”数组。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 pos = np.dstack((X, Y))
@@ -617,11 +617,11 @@ pos.shape
 
 ```py
 (101, 101, 2) 
-```</details>
+```
 
 结果是一个 3-D 数组，你可以把它看作是一对二维数组。当我们将这个数组传递给`multinorm.pdf`时，它会评估每对值的分布的概率密度函数。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 densities = multinorm.pdf(pos)
@@ -630,11 +630,11 @@ densities.shape
 
 ```py
 (101, 101) 
-```</details>
+```
 
 结果是一个概率密度数组。如果我们把它们放在一个`DataFrame`中并对它们进行归一化，结果就是两个特征的联合分布的离散近似。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 from utils import normalize
@@ -645,11 +645,11 @@ normalize(joint)
 
 ```py
 15.87134363991382 
-```</details>
+```
 
 这是结果的样子。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 plot_contour(joint)
@@ -657,13 +657,13 @@ decorate(xlabel=var1,
          ylabel=var2) 
 ```
 
-![_images/f3a72939d6d0caab91885ed82624e972b4ec70bbf8414ced4530d78dc006626f.png](img/b9c688d93ec6509847a39b2b77b5523f.png)</details>
+![_images/f3a72939d6d0caab91885ed82624e972b4ec70bbf8414ced4530d78dc006626f.png](img/b9c688d93ec6509847a39b2b77b5523f.png)
 
 多元正态分布的轮廓仍然是椭圆形，但现在我们已经考虑了特征之间的相关性，这些椭圆不再与坐标轴对齐。
 
 以下函数封装了我们刚刚做的步骤。
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 def make_joint(norm1, norm2, multinorm):
@@ -680,11 +680,11 @@ def make_joint(norm1, norm2, multinorm):
     densities = multinorm.pdf(pos)
     joint = pd.DataFrame(densities, columns=pmf1.qs, index=pmf2.qs)
     return joint 
-```</details>
+```
 
 以下图显示了数据的散点图以及每个物种多元正态分布的轮廓。
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 scatterplot(df, var1, var2)
@@ -695,7 +695,7 @@ for species in hypos:
     multinorm = multinorm_map[species]
     joint = make_joint(norm1, norm2, multinorm)
     plot_contour(joint, alpha=0.5) 
-```</details> ![_images/08de60fde36512b3133ebdbb5b01ec9ca075bca22b44eae1e7dab0dc614b04e7.png](img/57660d1dd8078042b67f801db25b8a03.png)
+``` ![_images/08de60fde36512b3133ebdbb5b01ec9ca075bca22b44eae1e7dab0dc614b04e7.png](img/57660d1dd8078042b67f801db25b8a03.png)
 
 因为多元正态分布考虑了特征之间的相关性，它是数据的更好模型。而且三个分布的轮廓重叠较少，这表明它们应该产生更好的分类。
 
@@ -777,7 +777,7 @@ accuracy(df)
 
 制作一个使用数据集中所有四个测量值的朴素贝叶斯分类器：喙长和深度、鳍长和体重。它比使用两个特征的模型更准确吗？
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -786,7 +786,7 @@ accuracy(df)
 
 depth_map = make_norm_map(df, 'Culmen Depth (mm)')
 mass_map = make_norm_map(df, 'Body Mass (g)') 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -797,7 +797,7 @@ colnames4 = ['Culmen Length (mm)', 'Flipper Length (mm)',
              'Culmen Depth (mm)', 'Body Mass (g)']
 norm_maps4 = [culmen_map, flipper_map, 
               depth_map, mass_map] 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -819,7 +819,7 @@ accuracy(df)
 
 ```py
 0.9678362573099415 
-```</details>
+```
 
 **练习：** 收集企鹅数据集的一个原因是为了量化不同企鹅物种之间的性二态性，即雄性和雌性企鹅之间的物理差异。量化二态性的一种方法是使用测量值来按性别对企鹅进行分类。如果一种物种的二态性更强，我们希望能够更准确地对它们进行分类。
 
@@ -827,12 +827,12 @@ accuracy(df)
 
 注意：一只 Gentoo 企鹅的`性别`值无效。我使用以下代码选择了一种物种并过滤掉无效数据。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+显示代码单元格内容隐藏代码单元格内容
 
 ```py
 gentoo = (df['Species2'] == 'Gentoo')
 subset = df[gentoo].copy() 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 subset['Sex'].value_counts() 
@@ -843,7 +843,7 @@ Sex
 MALE      61
 FEMALE    58
 Name: count, dtype: int64 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 valid = df['Sex'] != '.'
@@ -852,15 +852,15 @@ valid.sum()
 
 ```py
 342 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 subset = df[valid & gentoo].copy() 
-```</details>
+```
 
 好的，你可以从这里完成。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -870,7 +870,7 @@ subset = df[valid & gentoo].copy()
 plot_cdfs(subset, 'Culmen Length (mm)', by='Sex') 
 ```
 
-![_images/593695247d65a10544511b5927c317a34961b74aa28b0b8262f09e23dc689ed0.png](img/6f185a1764714033ce3fadae7faa3dd2.png)</details><details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+![_images/593695247d65a10544511b5927c317a34961b74aa28b0b8262f09e23dc689ed0.png](img/6f185a1764714033ce3fadae7faa3dd2.png)显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -878,7 +878,7 @@ plot_cdfs(subset, 'Culmen Length (mm)', by='Sex')
 plot_cdfs(subset, 'Culmen Depth (mm)', by='Sex') 
 ```
 
-![_images/849af936f99c3a4d8967490da0ee99cf202b4ae1d50a9228de5bd1cf929ff2c6.png](img/478c601e168af9c1103e0a86f2b8ee43.png)</details><details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+![_images/849af936f99c3a4d8967490da0ee99cf202b4ae1d50a9228de5bd1cf929ff2c6.png](img/478c601e168af9c1103e0a86f2b8ee43.png)显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -886,7 +886,7 @@ plot_cdfs(subset, 'Culmen Depth (mm)', by='Sex')
 plot_cdfs(subset, 'Flipper Length (mm)', by='Sex') 
 ```
 
-![_images/00a72695a4dabd6313d863e44bab5a4aa428ed6f1190b4fb1ad50bc1dd4e7785.png](img/a8ee412d8b0bfcc92548ac420df21575.png)</details><details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+![_images/00a72695a4dabd6313d863e44bab5a4aa428ed6f1190b4fb1ad50bc1dd4e7785.png](img/a8ee412d8b0bfcc92548ac420df21575.png)显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -894,7 +894,7 @@ plot_cdfs(subset, 'Flipper Length (mm)', by='Sex')
 plot_cdfs(subset, 'Body Mass (g)', by='Sex') 
 ```
 
-![_images/ff52a4c0adc07d4e1fa5c37434ef6ce625f9b8f831b1ea9da492b30eb5ee5a05.png](img/de3f103c40a5b9d88fda92d0ad0b3c28.png)</details><details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+![_images/ff52a4c0adc07d4e1fa5c37434ef6ce625f9b8f831b1ea9da492b30eb5ee5a05.png](img/de3f103c40a5b9d88fda92d0ad0b3c28.png)显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -905,7 +905,7 @@ culmen_map = make_norm_map(subset, 'Culmen Length (mm)', by='Sex')
 flipper_map = make_norm_map(subset, 'Flipper Length (mm)', by='Sex')
 depth_map = make_norm_map(subset, 'Culmen Depth (mm)', by='Sex')
 mass_map = make_norm_map(subset, 'Body Mass (g)', by='Sex') 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -915,7 +915,7 @@ mass_map = make_norm_map(subset, 'Body Mass (g)', by='Sex')
 norm_maps4 = [culmen_map, flipper_map, depth_map, mass_map]
 colnames4 = ['Culmen Length (mm)', 'Flipper Length (mm)', 
              'Culmen Depth (mm)', 'Body Mass (g)'] 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -931,7 +931,7 @@ prior
 | --- | --- |
 | 女性 | 0.5 |
 
-| MALE | 0.5 |</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+| MALE | 0.5 | 
 
 ```py
 # Solution
@@ -944,7 +944,7 @@ for i, row in subset.iterrows():
     data_seq = row[colnames4]
     posterior = update_naive(prior, data_seq, norm_maps4)
     subset.loc[i, 'Classification'] = posterior.max_prob() 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -961,7 +961,7 @@ def accuracy_sex(df):
     valid = df['Classification'].notna()
     same = df['Sex'] == df['Classification']
     return same.sum() / valid.sum() 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -974,7 +974,7 @@ accuracy_sex(subset)
 
 ```py
 0.9186991869918699 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1005,7 +1005,7 @@ def classify_by_sex(subset):
         subset.loc[i, 'Classification'] = posterior.max_prob()
 
     return accuracy_sex(subset) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1021,7 +1021,7 @@ classify_by_sex(subset)
 
 ```py
 0.8807947019867549 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1035,7 +1035,7 @@ classify_by_sex(subset)
 
 ```py
 0.9264705882352942 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1044,4 +1044,4 @@ classify_by_sex(subset)
 # dimorphic, Adelie penguins a little less so.
 
 # All of these results are consistent with what's in the paper. 
-```</details>
+```

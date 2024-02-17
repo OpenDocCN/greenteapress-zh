@@ -152,7 +152,7 @@ d2
 
 再次，RDT 代表“倒数加倍时间”，即每年的加倍次数。因此，如果`rdt=1`，肿瘤在一年内体积加倍。如果`rdt=2`，它会加倍两次；也就是说，体积会增加四倍。如果`rdt=-1`，它会减半。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 # Data from the scatter plot in Figure 4
@@ -171,7 +171,7 @@ len(rdt_sample)
 
 ```py
 53 
-```</details>
+```
 
 我们可以使用 RDT 的样本来估计分布的概率密度函数。
 
@@ -184,7 +184,7 @@ pmf_rdt = kde_from_sample(rdt_sample, qs)
 
 这是它的样子。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 from utils import decorate
@@ -194,7 +194,7 @@ pmf_rdt.plot(label='rdts')
 decorate(xlabel='Reciprocal doubling time (RDT)',
          ylabel='PDF',
          title='Distribution of growth rates') 
-```</details> ![_images/914a6146b4348099a8272fb971569ca6c637ea221de92d28038e20285408c1bd.png](img/fb5159fd84b272719c97dc5be1704503.png)
+``` ![_images/914a6146b4348099a8272fb971569ca6c637ea221de92d28038e20285408c1bd.png](img/fb5159fd84b272719c97dc5be1704503.png)
 
 在下一节中，我们将使用这个分布来模拟肿瘤的生长。
 
@@ -299,7 +299,7 @@ sims = [simulate_growth(pmf_rdt) for _ in range(101)]
 
 并绘制结果。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 import matplotlib.pyplot as plt
@@ -320,7 +320,7 @@ decorate(xlabel='Tumor age (years)',
 
 yticks = [0.2, 0.5, 1, 2, 5, 10, 20]
 plt.yticks(yticks, yticks); 
-```</details> ![_images/c7a36f14efef9fb97b73fc9d6d8d623e3d53b61e750e4ca983a63eb4eb7a227c.png](img/b9b0da08e32d428b971901dfd3f3e9e3.png)
+``` ![_images/c7a36f14efef9fb97b73fc9d6d8d623e3d53b61e750e4ca983a63eb4eb7a227c.png](img/b9b0da08e32d428b971901dfd3f3e9e3.png)
 
 在这个图中，每条细线显示了肿瘤随时间的模拟生长，直径采用对数刻度。虚线分别是 4、8 和 16 厘米。
 
@@ -379,7 +379,7 @@ print(cdf.median(), cdf.credible_interval(0.9))
 
 下图显示了直径为 4、8 和 15 厘米的肿瘤年龄分布。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 for diameter in diameters:
@@ -391,7 +391,7 @@ decorate(xlabel='Tumor age (years)',
          ylabel='CDF') 
 ```
 
-![_images/df1b7e305f0bf055e7cb9eff94aa6e9b81aac9dc8f20186a88f92e867a20b50e.png](img/700c3256cc27fa31185ccc2cb7552e5f.png)</details>
+![_images/df1b7e305f0bf055e7cb9eff94aa6e9b81aac9dc8f20186a88f92e867a20b50e.png](img/700c3256cc27fa31185ccc2cb7552e5f.png)
 
 ## 近似贝叶斯计算
 
@@ -520,7 +520,7 @@ with model:
     trace = pm.sample(1000, **options) 
 ```
 
-<details class="hide below-input"><summary aria-label="Toggle hidden content">Show code cell output Hide code cell output</summary>
+Show code cell output Hide code cell output
 
 ```py
 Multiprocess sampling (2 chains in 2 jobs)
@@ -534,7 +534,7 @@ CompoundStep
 ```py
 Sampling 2 chains for 1_000 tune and 1_000 draw iterations (2_000 + 2_000 draws total) took 4 seconds.
 The estimated number of effective samples is smaller than 200 for some parameters. 
-```</details>
+```
 
 我们可以使用样本来估计`yeast_conc`的后验分布并计算摘要统计信息。
 
@@ -604,7 +604,7 @@ print(cdf_abc.mean(), cdf_abc.credible_interval(0.9))
 
 后验均值和可信区间与 MCMC 得到的类似。以下是分布的样子。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 cdf_pymc.plot(label='MCMC', ls=':')
@@ -614,7 +614,7 @@ decorate(xlabel='Yeast concentration (cells/mL)',
          ylabel='CDF',
          title='Posterior distribution',
          xlim=(1.4, 3.4)) 
-```</details> ![_images/8eaa208c16fc79c79edb3769816e14528e9b03eb810bc1d301ecdc95ce329632.png](img/1d23154bcad37ebbc595c0be66cb4554.png)
+``` ![_images/8eaa208c16fc79c79edb3769816e14528e9b03eb810bc1d301ecdc95ce329632.png](img/1d23154bcad37ebbc595c0be66cb4554.png)
 
 这些分布是相似的，但 ABC 的结果更嘈杂，因为样本量较小。
 
@@ -674,7 +674,7 @@ from scipy.stats import binom
 likelihood = binom(n, p).pmf(yeast_counted).flatten() 
 ```
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 likelihood.shape 
@@ -682,20 +682,20 @@ likelihood.shape
 
 ```py
 (10000,) 
-```</details>
+```
 
 当期望计数`n * p`接近实际计数时，`likelihood`相对较高；当它距离较远时，`likelihood`较低。
 
 以下是这些 likelihoods 与期望计数的散点图。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 plt.plot(n*p, likelihood, '.', alpha=0.03, color='C2')
 
 decorate(xlabel='Expected count (number of cells)',
          ylabel='Likelihood') 
-```</details> ![_images/b236c7fa22cca34323d3de3073ad4b52b044a670cfb4661663bb69c0e81373d7.png](img/f3e3c9ba995ba9209c11aeb7bdd7e598.png)
+``` ![_images/b236c7fa22cca34323d3de3073ad4b52b044a670cfb4661663bb69c0e81373d7.png](img/f3e3c9ba995ba9209c11aeb7bdd7e598.png)
 
 我们不能使用这些可能性进行贝叶斯更新，因为它们是不完整的；也就是说，每个可能性是给定`n`的数据的概率，这是单次模拟的结果。
 
@@ -724,7 +724,7 @@ print(posterior_pmf.mean(), posterior_pmf.credible_interval(0.9))
 
 后验均值和可信区间与我们从 MCMC 得到的值相似。这是后验分布的样子。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码隐藏代码单元格源代码</summary>
+显示代码单元格源代码隐藏代码单元格源代码
 
 ```py
 cdf_pymc.plot(label='MCMC', ls=':')
@@ -735,7 +735,7 @@ decorate(xlabel='Yeast concentration (cells/mL)',
          ylabel='CDF',
          title='Posterior distribution',
          xlim=(1.4, 3.4)) 
-```</details> ![_images/49f8337976b730ce868462a4375483b9c032020dffdd39b08ca9b6e4e7958f12.png](img/c6ee6e1a0295e2dde4fef1b17e5f9b3f.png)
+``` ![_images/49f8337976b730ce868462a4375483b9c032020dffdd39b08ca9b6e4e7958f12.png](img/c6ee6e1a0295e2dde4fef1b17e5f9b3f.png)
 
 这些分布是相似的，但来自 MCMC 的结果有点嘈杂。在这个例子中，ABC 比 MCMC 更有效，需要更少的计算来生成对后验分布的更好估计。但这是不寻常的；通常 ABC 需要大量计算。因此，它通常是最后的方法。
 
@@ -777,7 +777,7 @@ ABC 的明确元素是：
 
 在本章的笔记本中，我将定义这些先验。然后您可以模拟抽样过程并使用 ABC 来估计后验分布。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -793,7 +793,7 @@ print(socks)
 
 ```py
 [ 0  1  2  3  4  5  6  7  8  0  1  2  3  4  5  6  7  8  9 10 11 12 13] 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -804,7 +804,7 @@ picked_socks
 
 ```py
 array([ 6,  5,  8,  7,  1,  0,  8,  5, 10, 12,  6]) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -815,7 +815,7 @@ values
 
 ```py
 array([ 0,  1,  5,  6,  7,  8, 10, 12]) 
-``` </details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+```  
 
 ```py
 # Solution
@@ -825,7 +825,7 @@ counts
 
 ```py
 array([1, 1, 2, 2, 1, 2, 1, 1]) 
-``` </details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+```  
 
 ```py
 # Solution
@@ -838,7 +838,7 @@ solo, pairs
 
 ```py
 (5, 3) 
-``` </details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+```  
 
 ```py
 # Solution
@@ -856,7 +856,7 @@ def pick_socks(n_pairs, n_odds, n_pick):
     pairs = np.sum(counts==2)
     odds = np.sum(counts==1)
     return pairs, odds 
-``` </details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+```  
 
 ```py
 # Solution
@@ -866,7 +866,7 @@ pick_socks(n_pairs, n_odds, 11)
 
 ```py
 (2, 7) 
-``` </details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+```  
 
 ```py
 # Solution
@@ -889,7 +889,7 @@ len(res)
 
 ```py
 1156 
-``` </details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+```  
 
 ```py
 # Solution
@@ -906,7 +906,7 @@ results.head()
 | 2 | 41 | 18.0 | 5.0 |
 | 3 | 35 | 14.0 | 7.0 |
 
-| 4 | 57 | 19.0 | 19.0 |</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+| 4 | 57 | 19.0 | 19.0 | 
 
 ```py
 # Solution
@@ -919,7 +919,7 @@ print(posterior_n_socks.median(),
 
 ```py
 44.0 [27\. 74.] 
-``` </details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+```  
 
 ```py
 # Solution
@@ -930,4 +930,4 @@ decorate(xlabel='Number of socks',
          ylabel='PMF') 
 ```
 
-![_images/c50294d3bdbfeea2193671a474d85658c75f9e858b4eefdea006ede9e1f375b7.png](img/ee25da0b52382108ec7bab5e7f748b43.png)</details>
+![_images/c50294d3bdbfeea2193671a474d85658c75f9e858b4eefdea006ede9e1f375b7.png](img/ee25da0b52382108ec7bab5e7f748b43.png)

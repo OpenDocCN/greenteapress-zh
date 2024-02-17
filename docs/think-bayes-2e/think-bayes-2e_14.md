@@ -148,15 +148,15 @@ prior = Pmf(ps, qs)
 prior.normalize() 
 ```
 
-<details class="hide below-input"><summary aria-label="Toggle hidden content">显示代码单元格输出 隐藏代码单元格输出</summary>
+显示代码单元格输出 隐藏代码单元格输出
 
 ```py
 1.9963309462450582 
-```</details>
+```
 
 就是这个样子。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 from utils import decorate
@@ -166,7 +166,7 @@ prior.plot(style='--', color='C5')
 decorate(xlabel='Height in cm',
          ylabel='PDF',
          title='Approximate distribution of height for men in U.S.') 
-```</details> ![_images/ca73e5bb11900fb220f2fcf00c59faa78a261d27061d28a6802ff728177ec277.png](img/842397321283c90d3ac254aad8cf71a3.png)
+``` ![_images/ca73e5bb11900fb220f2fcf00c59faa78a261d27061d28a6802ff728177ec277.png](img/842397321283c90d3ac254aad8cf71a3.png)
 
 这个分布代表了我们在考虑`A`比`B`高的数据之前对`A`和`B`的身高的信念。
 
@@ -224,7 +224,7 @@ joint.to_numpy().sum()
 
 为了计算所有元素的和，我们在调用`sum`之前将`DataFrame`转换为 NumPy 数组。否则，`DataFrame.sum`会计算列的和并返回一个`Series`。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 series = joint.sum()
@@ -233,7 +233,7 @@ series.shape
 
 ```py
 (96,) 
-```</details>
+```
 
 ## 可视化联合分布
 
@@ -257,12 +257,12 @@ def plot_joint(joint, cmap='Blues'):
 
 这就是联合先验分布的样子。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 plot_joint(joint)
 decorate(title='Joint prior distribution of height for A and B') 
-```</details> ![_images/f4c3236924afef3c39503dafbc9d23c4e950f98938d2b64e7e5461f4fc52d85a.png](img/50137dcd91919d400df5e3a4c6cf4909.png)
+``` ![_images/f4c3236924afef3c39503dafbc9d23c4e950f98938d2b64e7e5461f4fc52d85a.png](img/50137dcd91919d400df5e3a4c6cf4909.png)
 
 正如你所期望的，概率在均值附近最高（最暗），离均值越远就会下降。
 
@@ -277,12 +277,12 @@ def plot_contour(joint):
              ylabel='B height in cm') 
 ```
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 plot_contour(joint)
 decorate(title='Joint prior distribution of height for A and B') 
-```</details> ![_images/b4d3a7f39be8b93f5a7bacd586ef2059900eafc9a11921af83552d1fc42549f2.png](img/de6e192d2a8a5c8f91d2cfeda116fb8a.png)
+``` ![_images/b4d3a7f39be8b93f5a7bacd586ef2059900eafc9a11921af83552d1fc42549f2.png](img/de6e192d2a8a5c8f91d2cfeda116fb8a.png)
 
 每条线代表相等概率的水平。
 
@@ -330,12 +330,12 @@ likelihood = pd.DataFrame(a, index=x, columns=y)
 
 它看起来是这样的：
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 plot_joint(likelihood, cmap='Oranges')
 decorate(title='Likelihood of A>B') 
-```</details> ![_images/a7ddc31653415039de483cb2cc71bb15c2a5158cfc374e50d7907a3be3aa16eb.png](img/f1a899cd5882c5643e9cee128afa8c48f.png)
+``` ![_images/a7ddc31653415039de483cb2cc71bb15c2a5158cfc374e50d7907a3be3aa16eb.png](img/f1a899cd5882c5643e9cee128afa8c48f.png)
 
 数据的似然是`X > Y`的地方为 1，其他地方为 0。
 
@@ -361,20 +361,20 @@ def normalize(joint):
 normalize(posterior) 
 ```
 
-<details class="hide below-input"><summary aria-label="Toggle hidden content">显示代码单元格输出 隐藏代码单元格输出</summary>
+显示代码单元格输出 隐藏代码单元格输出
 
 ```py
 0.49080747821526977 
-```</details>
+```
 
 这是它的样子。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 plot_joint(posterior)
 decorate(title='Joint posterior distribution of height for A and B') 
-```</details> ![_images/723b56c47afd3491992a957f204dd91d2d37db9e9eb60809483a62112d9d82d8.png](img/e58153ae31d610b7a67c24ce582a2d76.png)
+``` ![_images/723b56c47afd3491992a957f204dd91d2d37db9e9eb60809483a62112d9d82d8.png](img/e58153ae31d610b7a67c24ce582a2d76.png)
 
 所有`B`比`A`高的对都被消除了。后验的其余部分看起来与先验相同，只是已经被重新归一化。
 
@@ -442,7 +442,7 @@ marginal_A = Pmf(column_sums)
 
 这是`A`的边缘分布的样子：
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 marginal_A.plot(label='Posterior for A')
@@ -450,7 +450,7 @@ marginal_A.plot(label='Posterior for A')
 decorate(xlabel='Height in cm',
          ylabel='PDF',
          title='Posterior distribution for A') 
-```</details> ![_images/11645c6bdd4ed1339103397c3d1fadddf4c4a6d0a5a19bf0d76a844f7a4072da.png](img/08933f4fb6676b92895827e2c0334987.png)
+``` ![_images/11645c6bdd4ed1339103397c3d1fadddf4c4a6d0a5a19bf0d76a844f7a4072da.png](img/08933f4fb6676b92895827e2c0334987.png)
 
 类似地，我们可以通过将行相加并将结果放入`Pmf`中来获得`B`的身高的后验分布。
 
@@ -494,7 +494,7 @@ marginal_B = marginal(posterior, axis=1)
 
 这是它们的样子，以及先验。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 prior.plot(style='--', label='Prior', color='C5')
@@ -504,7 +504,7 @@ marginal_B.plot(label='Posterior for B')
 decorate(xlabel='Height in cm',
          ylabel='PDF',
          title='Prior and posterior distributions for A and B') 
-```</details> ![_images/c7bcc6133ef1b03fe8ddbbbeb64d1c0f2a18cd4e302df47b5c51a535dff784a4.png](img/9ce2b6bed61876bfb802d372502d39fc.png)
+``` ![_images/c7bcc6133ef1b03fe8ddbbbeb64d1c0f2a18cd4e302df47b5c51a535dff784a4.png](img/9ce2b6bed61876bfb802d372502d39fc.png)
 
 正如你所预期的，`A`的后验分布向右移动，`B`的后验分布向左移动。
 
@@ -573,7 +573,7 @@ cond_B.normalize()
 
 这就是它的样子：
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 prior.plot(style='--', label='Prior', color='C5')
@@ -584,7 +584,7 @@ cond_B.plot(label='Conditional posterior for B',
 decorate(xlabel='Height in cm',
          ylabel='PDF',
          title='Prior, posterior and conditional distribution for B') 
-```</details> ![_images/86c7afe0d535a76684f4ffc0dcabfae8d82c40210bbbd0297a63e924ba9891b9.png](img/6be7fd8c5145c981f4bfc9e1b14d77c3.png)
+``` ![_images/86c7afe0d535a76684f4ffc0dcabfae8d82c40210bbbd0297a63e924ba9891b9.png](img/6be7fd8c5145c981f4bfc9e1b14d77c3.png)
 
 条件后验分布被截断在 170 厘米，因为我们已经确定`B`比`A`矮，而`A`是 170 厘米。
 
@@ -612,7 +612,7 @@ decorate(xlabel='Height in cm',
 
 提示：使用`loc`从`DataFrame`中选择一行。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 # Solution
@@ -626,7 +626,7 @@ cond_A.normalize()
 
 ```py
 0.019669089649708035 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -639,13 +639,13 @@ decorate(xlabel='Height in cm',
          title='Conditional distribution for A') 
 ```
 
-![_images/a055ca5045f355b7243323c26f627d5789ef38a780aeb10f2257adf1fbc67ffa.png](img/4523d653e69d7a8875570cb68998c64e.png)</details>
+![_images/a055ca5045f355b7243323c26f627d5789ef38a780aeb10f2257adf1fbc67ffa.png](img/4523d653e69d7a8875570cb68998c64e.png)
 
 **练习：**假设我们已经确定`A`比`B`高，但我们不知道`B`有多高。现在我们选择一个随机女性`C`，发现她比`A`矮至少 15 厘米。计算`A`和`C`的身高的后验分布。
 
 美国女性的平均身高为 163 厘米；标准差为 7.3 厘米。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -665,7 +665,7 @@ prior_C.normalize()
 
 ```py
 1.997970387889823 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -678,7 +678,7 @@ joint_AC.shape
 
 ```py
 (96, 96) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -691,7 +691,7 @@ y = joint_AC.index
 X, Y = np.meshgrid(x, y)
 a = np.where(X-Y>=15, 1, 0)
 likelihood_AC = pd.DataFrame(a, index=y, columns=x) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -703,7 +703,7 @@ decorate(ylabel='C height in cm',
          title='Likelihood of A-C>=15') 
 ```
 
-![_images/b4ce9f2bd62a61e3311858008a797a4a2efc2cc8ea61be3110d7325ab9da910a.png](img/d46bdea7dd841a7a636527b54e8fd124.png)</details><details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+![_images/b4ce9f2bd62a61e3311858008a797a4a2efc2cc8ea61be3110d7325ab9da910a.png](img/d46bdea7dd841a7a636527b54e8fd124.png)显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -716,7 +716,7 @@ normalize(posterior_AC)
 
 ```py
 0.6839061829242195 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -728,7 +728,7 @@ decorate(ylabel='C height in cm',
          title='Joint posterior distribution of height for A and C') 
 ```
 
-![_images/290c2532c346858d5fc6608b0600e846e626a337ce17a947207b2272b1fc8c31.png](img/d1f82ed4fd480d24a85262be0004309e.png)</details><details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+![_images/290c2532c346858d5fc6608b0600e846e626a337ce17a947207b2272b1fc8c31.png](img/d1f82ed4fd480d24a85262be0004309e.png)显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -737,7 +737,7 @@ decorate(ylabel='C height in cm',
 
 marginal_AC = marginal(posterior_AC, axis=0)
 marginal_C = marginal(posterior_AC, axis=1) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -753,7 +753,7 @@ decorate(xlabel='Height in cm',
          title='Prior and posterior distributions for A and C') 
 ```
 
-![_images/430a2c38b379b815ec316af7c3f25e645b7614fce48de46ed7e4932f3f0e470d.png](img/42e2c27461adc54b23f5693da2875560.png)</details>
+![_images/430a2c38b379b815ec316af7c3f25e645b7614fce48de46ed7e4932f3f0e470d.png](img/42e2c27461adc54b23f5693da2875560.png)
 
 练习：[Elo 评级系统](https://en.wikipedia.org/wiki/Elo_rating_system)是一种量化国际象棋等游戏玩家技能水平的方法。
 
@@ -793,7 +793,7 @@ $$P(\mathrm{A~beats~B}) = \frac{1}{1 + 10^{(R_B-R_A)/400}}$$
 
 1.  计算`A`和`B`的后验均值。根据这个结果，他们的评级应该改变多少？
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -813,7 +813,7 @@ prior_B_elo.normalize()
 
 ```py
 0.09972780668486173 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -828,7 +828,7 @@ decorate(xlabel='Elo rating',
          title='Prior distributions for A and B') 
 ```
 
-![_images/2b25e6e47c47b1066411fcbdc6fef1aa0ff264a2e1beedadbe5815e4455136f4.png](img/280d8fb1883c98dafa0ec36738513e7f.png)</details><details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+![_images/2b25e6e47c47b1066411fcbdc6fef1aa0ff264a2e1beedadbe5815e4455136f4.png](img/280d8fb1883c98dafa0ec36738513e7f.png)显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -841,7 +841,7 @@ joint_elo.shape
 
 ```py
 (60, 60) 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -853,7 +853,7 @@ decorate(xlabel='A rating',
          ylabel='B rating') 
 ```
 
-![_images/4de07e3466ba51067efc441c398a4adb3fbfb8765ba4be39d1efc16ef9d5b978.png](img/13dff45773fc776667e3b89755d738e6.png)</details><details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+![_images/4de07e3466ba51067efc441c398a4adb3fbfb8765ba4be39d1efc16ef9d5b978.png](img/13dff45773fc776667e3b89755d738e6.png)
 
 ```py
 # Solution
@@ -864,7 +864,7 @@ x = joint_elo.columns
 y = joint_elo.index
 X, Y = np.meshgrid(x, y)
 diff = X - Y 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -879,7 +879,7 @@ decorate(xlabel='A rating',
          ylabel='B rating') 
 ```
 
-![_images/e573c4ecda87b84b46b2defc2095974c362e25698723e9b1c4da8b119b4c5d0e.png](img/39ffb67774814afd090e41f44a028016.png)</details><details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+![_images/e573c4ecda87b84b46b2defc2095974c362e25698723e9b1c4da8b119b4c5d0e.png](img/39ffb67774814afd090e41f44a028016.png)
 
 ```py
 # Solution
@@ -892,7 +892,7 @@ normalize(posterior_elo)
 
 ```py
 0.2660426288107942 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -904,7 +904,7 @@ decorate(xlabel='A rating',
          ylabel='B rating') 
 ```
 
-![_images/1addaf3d554c55605c5d2e75c3a5320a4b3a651b523f638cbd3350cca102486a.png](img/9b617d0fd9e53ed922c41f2de3006160.png)</details><details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+![_images/1addaf3d554c55605c5d2e75c3a5320a4b3a651b523f638cbd3350cca102486a.png](img/9b617d0fd9e53ed922c41f2de3006160.png)
 
 ```py
 # Solution
@@ -913,7 +913,7 @@ decorate(xlabel='A rating',
 
 marginal_A_elo = marginal(posterior_elo, axis=0)
 marginal_B_elo = marginal(posterior_elo, axis=1) 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -928,7 +928,7 @@ decorate(xlabel='Elo rating',
          title='Posterior distributions for A and B') 
 ```
 
-![_images/755763efb7d6c6063c18dd110c8b7d419592cfa700efaff6daa916d4c6d1cdc6.png](img/5c5653b529bbfc856a97da20c6edc1e2.png)</details><details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+![_images/755763efb7d6c6063c18dd110c8b7d419592cfa700efaff6daa916d4c6d1cdc6.png](img/5c5653b529bbfc856a97da20c6edc1e2.png)
 
 ```py
 # Solution
@@ -940,7 +940,7 @@ marginal_A_elo.mean(), marginal_B_elo.mean()
 
 ```py
 (1636.648345528236, 1763.0203078793095) 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -952,4 +952,4 @@ marginal_A_elo.std(), marginal_B_elo.std()
 
 ```py
 (95.34063582447712, 95.61569535990881) 
-```</details>
+```

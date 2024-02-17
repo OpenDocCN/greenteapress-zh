@@ -53,12 +53,12 @@ $$O(H|FFF) = 10 / 27$$
 
 以下表格显示了每次更新后的赔率、相应的概率以及每个步骤后的概率变化，以百分点表示。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">Show code cell content Hide code cell content</summary>
+Show code cell content Hide code cell content
 
 ```py
 def prob(o):
     return o / (o+1) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">Show code cell source Hide code cell source</summary>
+``` Show code cell source Hide code cell source
 
 ```py
 import pandas as pd
@@ -70,7 +70,7 @@ table['odds'] = [10, 10/3, 10/9, 10/27]
 table['prob'] = prob(table['odds'])
 table['prob diff'] = table['prob'].diff() * 100
 table.fillna('--') 
-```</details>
+```
 
 |  | 奇数 | 概率 | 概率差 |
 | --- | --- | --- | --- |
@@ -85,7 +85,7 @@ table.fillna('--')
 
 将对数几率添加到表中：
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 import numpy as np
@@ -93,7 +93,7 @@ import numpy as np
 table['log odds'] = np.log(table['odds'])
 table['log odds diff'] = table['log odds'].diff()
 table.fillna('--') 
-```</details>
+```
 
 |  | 几率 | 概率 | 概率差 | 对数几率 | 对数几率差 |
 | --- | --- | --- | --- | --- | --- |
@@ -148,15 +148,15 @@ $$\log O(H | x) = \beta_0 + \beta_1 x$$
 
 该数据集最初来自[这篇论文](https://amstat.tandfonline.com/doi/abs/10.1080/01621459.1989.10478858)，也可以从[Davidson-Pilon](https://raw.githubusercontent.com/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers/master/Chapter2_MorePyMC/data/challenger_data.csv)获取。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 download('https://raw.githubusercontent.com/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers/master/Chapter2_MorePyMC/data/challenger_data.csv') 
-```</details>
+```
 
 我将读取数据并进行一些清理。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+显示代码单元格内容隐藏代码单元格内容
 
 ```py
 data = pd.read_csv('challenger_data.csv', parse_dates=[0])
@@ -199,15 +199,15 @@ data
 | 21 | 1985-10-30 | 75 | 1 |
 | 22 | 1985-11-26 | 76 | 0 |
 
-| 23 | 1986-01-12 | 58 | 1 |</details>
+| 23 | 1986-01-12 | 58 | 1 |
 
 以下是前几行：
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码隐藏代码单元格源代码</summary>
+显示代码单元格源代码隐藏代码单元格源代码
 
 ```py
 data.head() 
-```</details>
+```
 
 |  | 日期 | 温度 | 损坏 |
 | --- | --- | --- | --- |
@@ -227,7 +227,7 @@ data.head()
 
 数据集中有 23 次发射，其中 7 次发生了损坏事件。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+显示代码单元格内容隐藏代码单元格内容
 
 ```py
 len(data), data['Damage'].sum() 
@@ -235,11 +235,11 @@ len(data), data['Damage'].sum()
 
 ```py
 (23, 7) 
-```</details>
+```
 
 以下图显示了损坏和温度之间的关系。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码隐藏代码单元格源代码</summary>
+显示代码单元格源代码隐藏代码单元格源代码
 
 ```py
 import matplotlib.pyplot as plt
@@ -256,11 +256,11 @@ def plot_data(data):
     decorate(ylabel="Probability of damage",
          xlabel="Outside temperature (deg F)",
          title="Damage to O-Rings vs Temperature") 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码隐藏代码单元格源代码</summary>
+``` 显示代码单元格源代码隐藏代码单元格源代码
 
 ```py
 plot_data(data) 
-```</details> ![_images/9c176560b9752003e2f6e6e100518c13a4375e65aa388ab988866eb61c444569.png](img/d4d696fb17142eb2541d5857df0c70b9.png)
+``` ![_images/9c176560b9752003e2f6e6e100518c13a4375e65aa388ab988866eb61c444569.png](img/d4d696fb17142eb2541d5857df0c70b9.png)
 
 当室外温度低于 65 度时，O 形圈总是会受损。当温度高于 65 度时，通常不会受损。
 
@@ -325,7 +325,7 @@ odds = np.exp(log_odds)
 ps = odds / (odds + 1) 
 ```
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+显示代码单元格内容隐藏代码单元格内容
 
 ```py
 ps.mean() 
@@ -333,7 +333,7 @@ ps.mean()
 
 ```py
 0.4155141126966854 
-```</details>
+```
 
 将对数几率转换为概率是一个很常见的操作，它有一个名字，`expit`，SciPy 提供了一个计算它的函数。
 
@@ -343,7 +343,7 @@ from scipy.special import expit
 ps = expit(inter + slope * xs) 
 ```
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+显示代码单元格内容隐藏代码单元格内容
 
 ```py
 ps.mean() 
@@ -351,17 +351,17 @@ ps.mean()
 
 ```py
 0.4155141126966854 
-```</details>
+```
 
 这是具有这些估计参数的逻辑模型的样子。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 plt.plot(xs+offset, ps, label='model', color='C1')
 
 plot_data(data) 
-```</details> ![_images/184359ae741869c825727d898cd709c7876cb15a30627a4ac069ec7a766dda27.png](img/02337f43c9bd6ff6ed033cb5db254145.png)
+``` ![_images/184359ae741869c825727d898cd709c7876cb15a30627a4ac069ec7a766dda27.png](img/02337f43c9bd6ff6ed033cb5db254145.png)
 
 在低温下，损坏的概率很高；在高温下，它接近于 0。
 
@@ -504,7 +504,7 @@ posterior_pmf.normalize()
 
 因为我们使用了均匀先验，具有最高可能性的参数对也是具有最大后验概率的参数对：
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 pd.Series(posterior_pmf.max_prob(),
@@ -515,11 +515,11 @@ pd.Series(posterior_pmf.max_prob(),
 slope   -0.233
 inter   -1.220
 dtype: float64 
-```</details>
+```
 
 因此，我们可以确认贝叶斯更新的结果与 StatsModels 计算的最大似然估计一致：
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 results.params 
@@ -529,7 +529,7 @@ results.params
 Intercept   -1.208490
 x           -0.232163
 dtype: float64 
-```</details>
+```
 
 它们大致相同，在我们使用的网格的精度范围内。
 
@@ -566,7 +566,7 @@ marginal_slope = marginal(joint_posterior, 1)
 
 这是`inter`的后验分布。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 marginal_inter.plot(label='intercept', color='C4')
@@ -574,11 +574,11 @@ marginal_inter.plot(label='intercept', color='C4')
 decorate(xlabel='Intercept',
          ylabel='PDF',
          title='Posterior marginal distribution of intercept') 
-```</details> ![_images/b06adb0eb4e2bec88511c82b4d847ba57ba32ad397ab1b2c6a8c77dad4aba9f0.png](img/f3b94b3f1bc46134208bdb54c255ad3c.png)
+``` ![_images/b06adb0eb4e2bec88511c82b4d847ba57ba32ad397ab1b2c6a8c77dad4aba9f0.png](img/f3b94b3f1bc46134208bdb54c255ad3c.png)
 
 这是`slope`的后验分布。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 marginal_slope.plot(label='slope', color='C2')
@@ -586,11 +586,11 @@ marginal_slope.plot(label='slope', color='C2')
 decorate(xlabel='Slope',
          ylabel='PDF',
          title='Posterior marginal distribution of slope') 
-```</details> ![_images/282201b1bee504c51b0c181166c0dedfe417f37e44ca3fad23e76f8a5865a3ef.png](img/8efbc3f30e4e6f76a7e2dbe86d5e7d88.png)
+``` ![_images/282201b1bee504c51b0c181166c0dedfe417f37e44ca3fad23e76f8a5865a3ef.png](img/8efbc3f30e4e6f76a7e2dbe86d5e7d88.png)
 
 这是后验均值。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 pd.Series([marginal_inter.mean(), marginal_slope.mean()],
@@ -601,11 +601,11 @@ pd.Series([marginal_inter.mean(), marginal_slope.mean()],
 inter   -1.376107
 slope   -0.289795
 dtype: float64 
-```</details>
+```
 
 两个边际分布都有适度的偏斜，因此后验均值与点估计略有不同。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 results.params 
@@ -615,7 +615,7 @@ results.params
 Intercept   -1.208490
 x           -0.232163
 dtype: float64 
-```</details>
+```
 
 ## 转换分布
 
@@ -645,7 +645,7 @@ marginal_probs = marginal_inter.transform(expit)
 
 这是温度为 70 华氏度时损坏概率的后验分布。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 marginal_probs.plot(color='C1')
@@ -653,11 +653,11 @@ marginal_probs.plot(color='C1')
 decorate(xlabel='Probability of damage at 70 deg F',
          ylabel='PDF',
          title='Posterior marginal distribution of probabilities') 
-```</details> ![_images/d4a0ba125f94c8d8a1007b700d5bdd5bab05c13b7e0b00f8e94c59eb068ef384.png](img/c7e489fb2ab8b75a9ae3383449fff948.png)
+``` ![_images/d4a0ba125f94c8d8a1007b700d5bdd5bab05c13b7e0b00f8e94c59eb068ef384.png](img/c7e489fb2ab8b75a9ae3383449fff948.png)
 
 这个分布的均值约为 22%，这是根据模型在 70 华氏度时的损坏概率。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 mean_prob = marginal_probs.mean()
@@ -666,7 +666,7 @@ mean_prob
 
 ```py
 0.2201937884647988 
-```</details>
+```
 
 这个结果显示了我将`x`定义为温度为 70 华氏度时为零的第二个原因；这样，截距对应于相关温度下的损坏概率，而不是 0 华氏度。
 
@@ -680,7 +680,7 @@ marginal_lr = marginal_slope.transform(np.exp)
 
 结果是似然比的后验分布；这是它的样子。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 marginal_lr.plot(color='C3')
@@ -688,7 +688,7 @@ marginal_lr.plot(color='C3')
 decorate(xlabel='Likelihood ratio of 1 deg F',
          ylabel='PDF',
          title='Posterior marginal distribution of likelihood ratios') 
-```</details> ![_images/027bce9b65abb343c2f6a22dba21f4090f49d688afdcf61bf519088cf5b30dc8.png](img/384df6dd201224fcbc4e303e60ee143f.png)<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` ![_images/027bce9b65abb343c2f6a22dba21f4090f49d688afdcf61bf519088cf5b30dc8.png](img/384df6dd201224fcbc4e303e60ee143f.png)
 
 ```py
 mean_lr = marginal_lr.mean()
@@ -697,7 +697,7 @@ mean_lr
 
 ```py
 0.7542914170110268 
-```</details>
+```
 
 这个分布的均值约为 0.75，这意味着每增加一华氏度都会提供反对损坏可能性的证据，似然比（贝叶斯因子）为 0.75。
 
@@ -711,7 +711,7 @@ mean_lr
 
 为了看到区别，让我们以另一种方式计算这两个值。这是`marginal_inter`的后验均值，转换为概率，与`marginal_probs`的均值进行比较。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 expit(marginal_inter.mean()), marginal_probs.mean() 
@@ -719,11 +719,11 @@ expit(marginal_inter.mean()), marginal_probs.mean()
 
 ```py
 (0.2016349762400815, 0.2201937884647988) 
-```</details>
+```
 
 这是`marginal_slope`的后验均值，转换为似然比，与`marginal_lr`的均值进行比较。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 np.exp(marginal_slope.mean()), marginal_lr.mean() 
@@ -731,7 +731,7 @@ np.exp(marginal_slope.mean()), marginal_lr.mean()
 
 ```py
 (0.7484167954660071, 0.7542914170110268) 
-```</details>
+```
 
 在这个例子中，差异并不是很大，但有时可能会很大。作为一般规则，首先进行转换，然后计算摘要统计。
 
@@ -747,7 +747,7 @@ sample = posterior_pmf.choice(101)
 
 结果是一个包含 101 个元组的数组，每个元组代表一对可能的参数。我选择这个样本大小是为了加快计算速度。增加样本大小不会改变结果太多，但会更加精确一些。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 sample.shape 
@@ -755,7 +755,7 @@ sample.shape
 
 ```py
 (101,) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 sample.dtype 
@@ -763,7 +763,7 @@ sample.dtype
 
 ```py
 dtype('O') 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 type(sample[0]) 
@@ -771,7 +771,7 @@ type(sample[0])
 
 ```py
 tuple 
-```</details>
+```
 
 为了生成预测，我将使用从 31 华氏度（挑战者号发射时的温度）到 82 华氏度（观测到的最高温度）的一系列温度。
 
@@ -793,7 +793,7 @@ for i, (slope, inter) in enumerate(sample):
 
 为了快速了解预测的样子，我们可以循环遍历行并绘制它们。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 for ps in pred:
@@ -802,7 +802,7 @@ for ps in pred:
 plot_data(data) 
 ```
 
-![_images/21874fcd51b6d4d7c1877c9f9dd8744832e07b62154132a31ee4e2c8f92428f7.png](img/a85a52adc5748136290ed7fd06400b61.png)</details>
+![_images/21874fcd51b6d4d7c1877c9f9dd8744832e07b62154132a31ee4e2c8f92428f7.png](img/a85a52adc5748136290ed7fd06400b61.png)
 
 这个图中重叠的线条给出了每个温度下最可能的值和不确定性程度。
 
@@ -818,14 +818,14 @@ low, median, high = np.percentile(pred, [5, 50, 95], axis=0)
 
 这就是它们的样子：
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 plt.fill_between(temps, low, high, color='C1', alpha=0.2)
 plt.plot(temps, median, color='C1', label='logistic model')
 
 plot_data(data) 
-```</details> ![_images/d6ed2327e5042d3ea7f9418465186f43a7bc1122f9fce65442c9b565564a6cfc.png](img/9941ea28a2708ac4f8d37322e5d6aa7e.png)
+``` ![_images/d6ed2327e5042d3ea7f9418465186f43a7bc1122f9fce65442c9b565564a6cfc.png](img/9941ea28a2708ac4f8d37322e5d6aa7e.png)
 
 根据这些结果，80 华氏度时 O 形圈损坏的概率接近 2%，但对于该预测存在一些不确定性；CI 的上限约为 10%。
 
@@ -833,13 +833,13 @@ plot_data(data)
 
 但模型的主要目标是预测 31 华氏度时损坏的概率，答案至少为 97%，更可能超过 99.9%。
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 low = pd.Series(low, temps)
 median = pd.Series(median, temps)
 high = pd.Series(high, temps) 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 t = 80
@@ -848,7 +848,7 @@ print(median[t], (low[t], high[t]))
 
 ```py
 0.016956535510200765 (0.000563939208692237, 0.1335417225332125) 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 t = 60
@@ -857,7 +857,7 @@ print(median[t], (low[t], high[t]))
 
 ```py
 0.7738185742694538 (0.45512110762641983, 0.9654437697137236) 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 t = 31
@@ -866,7 +866,7 @@ print(median[t], (low[t], high[t]))
 
 ```py
 0.9998129598124814 (0.97280101769455, 0.999999987740933) 
-```</details>
+```
 
 我们可能得出的一个结论是：如果负责挑战者号发射的人考虑了所有的数据，而不仅仅是七次损坏事件，他们本来可以预测到 31 华氏度时损坏的概率几乎是确定的。如果他们这样做了，很可能会推迟发射。
 
@@ -920,7 +920,7 @@ print(median[t], (low[t], high[t]))
 
 如果你对这个话题感兴趣，你可以[在这篇博客文章中阅读更多内容](http://allendowney.blogspot.com/2016/11/why-are-we-so-surprised.html)。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -931,7 +931,7 @@ prior_log_odds
 
 ```py
 1.3862943611198906 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -945,7 +945,7 @@ lr1, lr2, lr3
 
 ```py
 (0.3364722366212129, -0.5108256237659907, 0.5877866649021191) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -960,7 +960,7 @@ posterior_log_odds
 
 ```py
 1.7997276388772319 
-```</details>
+```
 
 **练习：**《新英格兰医学杂志》上的一篇文章报告了一项研究的结果，该研究调查了多动症（ADHD）的诊断率与出生月份的关系：[“多动症和入学月份”](https://www.nejm.org/doi/10.1056/NEJMoa1806828)。
 
@@ -982,7 +982,7 @@ posterior_log_odds
 
 所以这是更正后的数据，其中`n`是每个月出生的孩子人数，从一月开始，`k`是被诊断为多动症的孩子人数。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 n = np.array([32690, 31238, 34405, 34565, 34977, 34415, 
@@ -990,21 +990,21 @@ n = np.array([32690, 31238, 34405, 34565, 34977, 34415,
 
 k = np.array([265, 280, 307, 312, 317, 287, 
                       320, 309, 225, 240, 232, 243]) 
-```</details>
+```
 
 首先，我将“滚动”数据，使其从九月开始，而不是一月。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 x = np.arange(12)
 n = np.roll(n, -8)
 k = np.roll(k, -8) 
-```</details>
+```
 
 然后我将把它放在一个`DataFrame`中，每个月一行，每万人中的诊断率。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 adhd = pd.DataFrame(dict(x=x, k=k, n=n))
@@ -1026,11 +1026,11 @@ adhd
 | 9 | 9 | 287 | 34415 | 83.393869 |
 | 10 | 10 | 320 | 36577 | 87.486672 |
 
-| 11 | 11 | 309 | 36319 | 85.079435 |</details>
+| 11 | 11 | 309 | 36319 | 85.079435 |
 
 这就是诊断率的样子。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 def plot_adhd(adhd):
@@ -1043,13 +1043,13 @@ def plot_adhd(adhd):
 
     decorate(xlabel='Birth date, months after cutoff',
              ylabel='Diagnosis rate per 10,000') 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 plot_adhd(adhd) 
 ```
 
-![_images/f7fcadfc675c91a1017eeedc3aceabe80e38f562484fb583b6ae2dc2712a8110.png](img/fc55cb668a66d64a73295c05ec30c03e.png)</details>
+![_images/f7fcadfc675c91a1017eeedc3aceabe80e38f562484fb583b6ae2dc2712a8110.png](img/fc55cb668a66d64a73295c05ec30c03e.png)
 
 对于前 9 个月，从 9 月到 5 月，我们看到了如果一些过多的诊断是由于“基于年龄的行为变异”而导致的情况。对于年龄差异的每个月，我们都看到诊断数量的增加。
 
@@ -1059,17 +1059,17 @@ plot_adhd(adhd)
 
 使用本章的方法来估计诊断的概率作为出生月份的函数。从以下先验分布开始。
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 qs = np.linspace(-5.2, -4.6, num=51)
 prior_inter = make_uniform(qs, 'Intercept') 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 qs = np.linspace(0.0, 0.08, num=51)
 prior_slope = make_uniform(qs, 'Slope') 
-```</details>
+```
 
 1.  制作一个联合先验分布，并使用前九个月的数据对其进行更新。
 
@@ -1077,7 +1077,7 @@ prior_slope = make_uniform(qs, 'Slope')
 
 1.  作为一个额外的练习，使用过去三个月的数据进行第二次更新，但将观察到的诊断数量视为如果没有孩子被留下来会有的诊断数量的下限。
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 # Solution
@@ -1096,7 +1096,7 @@ joint.head()
 | 0.0048 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | ... | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 |
 | 0.0064 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | ... | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 | 0.000384 |
 
-5 行×51 列</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+5 行×51 列 
 
 ```py
 # Solution
@@ -1112,7 +1112,7 @@ joint_pmf.head()
 | 0.0 | -5.200 | 0.000384 |
 | -5.188 | 0.000384 |
 
-| -5.176 | 0.000384 |</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+| -5.176 | 0.000384 | 
 
 ```py
 # Solution
@@ -1134,7 +1134,7 @@ adhd1
 | 6 | 6 | 307 | 34405 | 89.231216 |
 | 7 | 7 | 312 | 34565 | 90.264719 |
 
-| 8 | 8 | 317 | 34977 | 90.630986 |</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+| 8 | 8 | 317 | 34977 | 90.630986 | 
 
 ```py
 # Solution
@@ -1147,7 +1147,7 @@ adhd2
 | 9 | 9 | 287 | 34415 | 83.393869 |
 | 10 | 10 | 320 | 36577 | 87.486672 |
 
-| 11 | 11 | 309 | 36319 | 85.079435 |</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+| 11 | 11 | 309 | 36319 | 85.079435 | 
 
 ```py
 # Solution
@@ -1170,7 +1170,7 @@ likelihood1.sum()
 
 ```py
 3.5436858189129196e-14 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1194,7 +1194,7 @@ likelihood2.sum()
 
 ```py
 1905.3511925068485 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1205,7 +1205,7 @@ posterior_pmf.normalize()
 
 ```py
 1.3624320718619453e-17 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1215,7 +1215,7 @@ posterior_pmf.max_prob()
 
 ```py
 (0.0448, -4.996) 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1226,7 +1226,7 @@ posterior_pmf.normalize()
 
 ```py
 1.3403142133315614e-17 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1236,7 +1236,7 @@ posterior_pmf.max_prob()
 
 ```py
 (0.0448, -4.996) 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1247,7 +1247,7 @@ plot_contour(joint_posterior)
 decorate(title='Joint posterior distribution') 
 ```
 
-![_images/8d4f98743b92db5422c7fe2b019ad6b7803f2191347c176038fa4c9c488d08f3.png](img/877768dbfe81bcaf9a2987e3c6c619c1.png)</details><details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+![_images/8d4f98743b92db5422c7fe2b019ad6b7803f2191347c176038fa4c9c488d08f3.png](img/877768dbfe81bcaf9a2987e3c6c619c1.png)
 
 ```py
 # Solution
@@ -1260,7 +1260,7 @@ marginal_inter.mean(), marginal_slope.mean()
 
 ```py
 (-4.999322906782624, 0.044607616771986124) 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1271,7 +1271,7 @@ decorate(xlabel='Intercept',
          title='Posterior marginal distribution of intercept') 
 ```
 
-![_images/b337e10727df99215bb86fa06d97261ab7c199eae928d7a36397babd31f2df3d.png](img/1e3b0ee906d6865b47751784829dc3ac.png)</details><details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+![_images/b337e10727df99215bb86fa06d97261ab7c199eae928d7a36397babd31f2df3d.png](img/1e3b0ee906d6865b47751784829dc3ac.png)
 
 ```py
 # Solution
@@ -1283,7 +1283,7 @@ decorate(xlabel='Slope',
          title='Posterior marginal distribution of slope') 
 ```
 
-![_images/516901f5e13958d8a6c10717e88d32e21a505a54720c437b42eb3f97fdebb5b8.png](img/6bf5df4ebf404b58a2db1ed8ee8d60db.png)</details><details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+![_images/516901f5e13958d8a6c10717e88d32e21a505a54720c437b42eb3f97fdebb5b8.png](img/6bf5df4ebf404b58a2db1ed8ee8d60db.png)
 
 ```py
 # Solution
@@ -1300,7 +1300,7 @@ ps.shape
 
 ```py
 (101, 12) 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1313,7 +1313,7 @@ median
 array([0.00663988, 0.00695303, 0.00728085, 0.00762401, 0.00798321,
        0.00835919, 0.00875272, 0.00915734, 0.00955774, 0.00997548,
        0.01043603, 0.01094356]) 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1327,4 +1327,4 @@ plt.plot(xs, median*10000, label='model',
 plot_adhd(adhd) 
 ```
 
-![_images/168f84e18b3338f4328e277a388b22e3d4da7f79745b6dcaa9369aeaadfde554.png](img/b128cc3045bc131b17f67874087d5b22.png)</details>
+![_images/168f84e18b3338f4328e277a388b22e3d4da7f79745b6dcaa9369aeaadfde554.png](img/b128cc3045bc131b17f67874087d5b22.png)

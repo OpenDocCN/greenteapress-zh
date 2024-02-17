@@ -49,7 +49,7 @@ pmf = make_poisson_pmf(lam, qs)
 
 以下是它的样子。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 from utils import decorate
@@ -58,7 +58,7 @@ pmf.bar(alpha=0.7)
 decorate(xlabel='Number of babies', 
          ylabel='PMF',
          title='Distribution of babies in a single day') 
-```</details> ![_images/455e7212e0df3a64e4f896ba479de5ffdd0a75b04650b5db54c0254de70941eb.png](img/a154135c5310ff6d54430faa88766d2f.png)
+``` ![_images/455e7212e0df3a64e4f896ba479de5ffdd0a75b04650b5db54c0254de70941eb.png](img/a154135c5310ff6d54430faa88766d2f.png)
 
 这个分布的均值是参数$\lambda$。
 

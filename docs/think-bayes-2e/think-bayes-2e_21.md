@@ -131,7 +131,7 @@ posterior_conjugate = pmf_from_dist(posterior_gamma, lams)
 
 下图显示了使用网格算法计算的结果以及我们计算的后验分布。
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容隐藏代码单元格内容</summary>
+显示代码单元格内容隐藏代码单元格内容
 
 ```py
 from utils import decorate
@@ -140,7 +140,7 @@ def decorate_rate(title=''):
     decorate(xlabel='Goal scoring rate (lam)',
              ylabel='PMF',
              title=title) 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格源代码隐藏代码单元格源代码</summary>
+``` 显示代码单元格源代码隐藏代码单元格源代码
 
 ```py
 posterior.plot(label='grid posterior', color='C1')
@@ -148,11 +148,11 @@ posterior_conjugate.plot(label='conjugate posterior',
                          color='C4', ls=':')
 
 decorate_rate('Posterior distribution') 
-```</details> ![_images/39ff697e7662f79c15a8ae461ced3925ebe82de05318674e35232f7e65030af6.png](img/6eed57e32a4a8ae310cfa4205aaaacf9.png)
+``` ![_images/39ff697e7662f79c15a8ae461ced3925ebe82de05318674e35232f7e65030af6.png](img/6eed57e32a4a8ae310cfa4205aaaacf9.png)
 
 它们除了由于浮点近似而产生的小差异外，都是相同的。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 np.allclose(posterior, posterior_conjugate) 
@@ -160,7 +160,7 @@ np.allclose(posterior, posterior_conjugate)
 
 ```py
 True 
-```</details>
+```
 
 ## 实际是什么？
 
@@ -212,11 +212,11 @@ posterior = uniform * likelihood
 posterior.normalize() 
 ```
 
-<details class="hide below-input"><summary aria-label="Toggle hidden content">显示代码单元格输出 隐藏代码单元格输出</summary>
+显示代码单元格输出 隐藏代码单元格输出
 
 ```py
 0.003944617569326651 
-```</details>
+```
 
 我们可以使用二项分布的共轭先验——贝塔分布更有效地解决这个问题。
 
@@ -290,14 +290,14 @@ posterior_conjugate = pmf_from_dist(posterior_beta, xs)
 
 我们可以将我们刚刚计算的后验分布与网格算法的结果进行比较。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 def decorate_euro(title):
     decorate(xlabel='Proportion of heads (x)',
              ylabel='Probability',
              title=title) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+``` 显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 posterior.plot(label='grid posterior', color='C1')
@@ -305,13 +305,13 @@ posterior_conjugate.plot(label='conjugate posterior',
                         color='C4', ls=':')
 
 decorate_euro(title='Posterior distribution of x') 
-```</details> ![_images/6690cfacd465eb40d9ec441a2922b3fdf2f2f9656494ba5973edb6e05280cb97.png](img/abc447a9fedcb77f484b279731c683b2.png)
+``` ![_images/6690cfacd465eb40d9ec441a2922b3fdf2f2f9656494ba5973edb6e05280cb97.png](img/abc447a9fedcb77f484b279731c683b2.png)
 
 它们除了由于浮点近似而产生的小差异外是相同的。
 
 到目前为止的例子都是我们已经解决的问题，所以让我们尝试一些新的东西。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 np.allclose(posterior, posterior_conjugate) 
@@ -319,7 +319,7 @@ np.allclose(posterior, posterior_conjugate)
 
 ```py
 True 
-```</details>
+```
 
 ## 狮子和老虎和熊
 
@@ -374,7 +374,7 @@ dist.rvs()
 array([[0.53566485, 0.35129   , 0.11304515]]) 
 ```
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 dist.rvs().sum() 
@@ -382,7 +382,7 @@ dist.rvs().sum()
 
 ```py
 1.0 
-```</details>
+```
 
 结果是一个包含三个值的数组。它们介于 0 和 1 之间，并且它们总是加起来等于 1，因此它们可以被解释为一组相互排斥且完全耗尽的结果的概率。
 
@@ -392,7 +392,7 @@ dist.rvs().sum()
 sample = dist.rvs(1000) 
 ```
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 sample.shape 
@@ -400,7 +400,7 @@ sample.shape
 
 ```py
 (1000, 3) 
-```</details>
+```
 
 结果是一个包含 1000 行和三列的数组。我将计算每列中值的`Cdf`。
 
@@ -413,7 +413,7 @@ cdfs = [Cdf.from_seq(col)
 
 结果是一个代表三个变量的边缘分布的`Cdf`对象列表。它们看起来是这样的。
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格源代码隐藏代码单元格源代码</summary>
+显示代码单元格源代码隐藏代码单元格源代码
 
 ```py
 for i, cdf in enumerate(cdfs):
@@ -421,7 +421,7 @@ for i, cdf in enumerate(cdfs):
     cdf.plot(label=label)
 
 decorate() 
-```</details> ![_images/38e3455314147946835c8800653dfd01a9f1c97c9b568a01c8e33c8802a29287.png](img/9936b94966fbbbda87abcfe0339c0257.png)
+``` ![_images/38e3455314147946835c8800653dfd01a9f1c97c9b568a01c8e33c8802a29287.png](img/9936b94966fbbbda87abcfe0339c0257.png)
 
 第 0 列对应最低参数，包含最低概率。第 2 列对应最高参数，包含最高概率。
 
@@ -443,7 +443,7 @@ marginals = [marginal_beta(alpha, i)
 
 下图显示了这些分布的 CDF 作为灰色线，并将它们与样本的 CDF 进行了比较。
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格源代码隐藏代码单元格源代码</summary>
+显示代码单元格源代码隐藏代码单元格源代码
 
 ```py
 xs = np.linspace(0, 1, 101)
@@ -458,7 +458,7 @@ for i in range(len(alpha)):
     cdf.plot(label=label, ls=':')
 
 decorate() 
-```</details> ![_images/d2b045b7f54a65ceb60914590d7732e667f5f95b187400fa17363aed09dfab01.png](img/f50fbf1c81705f94c9ff9b1e33a4d90c)
+``` ![_images/d2b045b7f54a65ceb60914590d7732e667f5f95b187400fa17363aed09dfab01.png](img/f50fbf1c81705f94c9ff9b1e33a4d90c)
 
 这证实了狄利克雷分布的边缘分布是贝塔分布。这很有用，因为狄利克雷分布是多项式似然函数的共轭先验。
 
@@ -488,7 +488,7 @@ $$\lambda e^{-\lambda t}$$
 
 记得用大约 90 分钟的游戏单位来表示这些数量。
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容隐藏代码单元格内容</summary>
+显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -507,7 +507,7 @@ So we can use the same update function and call it like this:
 
 data = 1, 11/90
 posterior1 = update_gamma(prior_gamma, data) 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -516,7 +516,7 @@ posterior1 = update_gamma(prior_gamma, data)
 
 data = 1, 12/90
 posterior2 = update_gamma(posterior1, data) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -526,7 +526,7 @@ prior_gamma.mean(), posterior1.mean(), posterior2.mean()
 
 ```py
 (1.4, 2.1386138613861387, 2.7079646017699113) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -540,7 +540,7 @@ pmf_from_dist(posterior2, lams).plot(label='after 2 goals')
 decorate_rate(title='World Cup Problem, Germany v Brazil') 
 ```
 
-![_images/4b02d1d83de1cd604d399109a433c3edb273cfc7a8407045a8aade575d235c6e.png](img/4d92153053608fe4987f356fc8345b6d.png)</details>
+![_images/4b02d1d83de1cd604d399109a433c3edb273cfc7a8407045a8aade575d235c6e.png](img/4d92153053608fe4987f356fc8345b6d.png)
 
 **练习：** 对于像欧元问题这样的似然函数是二项式的问题，我们可以通过一些算术运算进行贝叶斯更新，但前提是先验是一个贝塔分布。
 
@@ -552,7 +552,7 @@ decorate_rate(title='World Cup Problem, Germany v Brazil')
 
 这是三角形先验。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+显示代码单元格内容隐藏代码单元格内容
 
 ```py
 from empiricaldist import Pmf
@@ -569,11 +569,11 @@ triangle.normalize()
 
 ```py
 2500 
-```</details>
+```
 
 这是更新。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+显示代码单元格内容隐藏代码单元格内容
 
 ```py
 k, n = 140, 250
@@ -585,11 +585,11 @@ posterior.normalize()
 
 ```py
 0.007008842590059086 
-```</details>
+```
 
 为了帮助你入门，这是我们用作均匀先验的贝塔分布。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+显示代码单元格内容隐藏代码单元格内容
 
 ```py
 alpha = 1
@@ -601,11 +601,11 @@ prior_beta.mean()
 
 ```py
 0.5 
-```</details>
+```
 
 这是它与三角形先验的比较。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+显示代码单元格内容隐藏代码单元格内容
 
 ```py
 prior_pmf = pmf_from_dist(prior_beta, xs)
@@ -616,11 +616,11 @@ prior_pmf.plot(label='beta')
 decorate_euro('Prior distributions') 
 ```
 
-![_images/8a092622087a81b63220299ed339ad33e748615fdf8b8c669f8a3a99a5c416f1.png](img/73af9d0e16a3a3a26f30c218b855c169.png)</details>
+![_images/8a092622087a81b63220299ed339ad33e748615fdf8b8c669f8a3a99a5c416f1.png](img/73af9d0e16a3a3a26f30c218b855c169.png)
 
 现在由你来继续。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -632,13 +632,13 @@ posterior_beta.mean()
 
 ```py
 0.5595238095238095 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
 
 posterior_conjugate = pmf_from_dist(posterior_beta, xs) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -651,7 +651,7 @@ decorate(xlabel='Proportion of heads (x)',
          title='Posterior distribution of x') 
 ```
 
-![_images/c876c409c11dd54ba4da7d89608ab9129059f96d92b73aa846a81dcf77d3d82c.png](img/70a181595d707f471e4b328a30987f04.png)</details><details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+![_images/c876c409c11dd54ba4da7d89608ab9129059f96d92b73aa846a81dcf77d3d82c.png](img/70a181595d707f471e4b328a30987f04.png)显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -663,7 +663,7 @@ np.allclose(posterior, posterior_conjugate)
 
 ```py
 False 
-```</details>
+```
 
 **练习：** [3Blue1Brown](https://en.wikipedia.org/wiki/3Blue1Brown) 是一个关于数学的 YouTube 频道；如果你还不知道它，我强烈推荐。在[这个视频](https://www.youtube.com/watch?v=8idr1WZ1A7Q)中，叙述者提出了这个问题：
 
@@ -689,7 +689,7 @@ False
 
 注意：当你评估贝塔分布时，你应该限制 `xs` 的范围，使其不包括 0 和 1。当贝塔分布的参数小于 1 时，概率密度在 0 和 1 处趋于无穷大。从数学的角度来看，这并不是问题；它仍然是一个适当的概率分布。但从计算的角度来看，这意味着我们必须避免在 0 和 1 处评估概率密度函数。
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 # Solution
@@ -707,7 +707,7 @@ decorate(xlabel='Probability of positive rating',
          ylabel='PDF') 
 ```
 
-![_images/10f1e732645ad625d44851743d4fe343a94841acc5b05777fdb17545b3e088be.png](img/3467044fe4b8f6bbd9e4caaca9246e97.png)</details><details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+![_images/10f1e732645ad625d44851743d4fe343a94841acc5b05777fdb17545b3e088be.png](img/3467044fe4b8f6bbd9e4caaca9246e97.png)
 
 ```py
 # Solution
@@ -715,7 +715,7 @@ decorate(xlabel='Probability of positive rating',
 data1 = 10, 10
 data2 = 48, 50
 data3 = 186, 200 
-``` </details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+```  
 
 ```py
 # Solution
@@ -723,7 +723,7 @@ data3 = 186, 200
 seller1 = update_beta(prior, data1)
 seller2 = update_beta(prior, data2)
 seller3 = update_beta(prior, data3) 
-``` </details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+```  
 
 ```py
 # Solution
@@ -731,7 +731,7 @@ seller3 = update_beta(prior, data3)
 seller1_pmf = pmf_from_dist(seller1, xs)
 seller2_pmf = pmf_from_dist(seller2, xs)
 seller3_pmf = pmf_from_dist(seller3, xs) 
-``` </details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+```  
 
 ```py
 # Solution
@@ -745,7 +745,7 @@ decorate(xlabel='Probability of positive rating',
          xlim=(0.65, 1.0)) 
 ```
 
-![_images/287d7bc9e8018421486a23dfd8721014d0c702fff0d03d83edec1951ee90458a.png](img/b9e1eb89662d72d4365e5ef48b669c68.png)</details><details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+![_images/287d7bc9e8018421486a23dfd8721014d0c702fff0d03d83edec1951ee90458a.png](img/b9e1eb89662d72d4365e5ef48b669c68.png)
 
 ```py
 # Solution
@@ -755,7 +755,7 @@ seller1.mean(), seller2.mean(), seller3.mean()
 
 ```py
 (0.9, 0.9333333333333333, 0.9238095238095239) 
-``` </details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+```  
 
 ```py
 # Solution
@@ -766,7 +766,7 @@ a = np.empty((3, iters))
 a[0] = seller1.rvs(iters)
 a[1] = seller2.rvs(iters)
 a[2] = seller3.rvs(iters) 
-``` </details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+```  
 
 ```py
 # Solution
@@ -782,7 +782,7 @@ Pmf.from_seq(best)
 | 0 | 0.2948 |
 | 1 | 0.4750 |
 
-| 2 | 0.2302 |</details>
+| 2 | 0.2302 |
 
 **练习：** 使用参数向量 `alpha = [1, 1, 1]` 的狄利克雷先验来解决狮子、老虎和熊的问题：
 
@@ -792,20 +792,20 @@ Pmf.from_seq(best)
 > 
 > 下一个我们看到的动物是熊的概率是多少？
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 # Solution
 
 prior_alpha = np.array([1, 1, 1])
 data = 3, 2, 1 
-``` </details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+```  
 
 ```py
 # Solution
 
 posterior_alpha = prior_alpha + data 
-``` </details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+```  
 
 ```py
 # Solution
@@ -816,13 +816,13 @@ marginal_bear.mean()
 
 ```py
 0.2222222222222222 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
 
 dist = dirichlet(posterior_alpha) 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -838,4 +838,4 @@ pd.DataFrame(dist.mean(), index, columns=['prob'])
 | 狮子 | 0.444444 |
 | 老虎 | 0.333333 |
 
-| 熊 | 0.222222 |</details>
+| 熊 | 0.222222 |

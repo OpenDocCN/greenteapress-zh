@@ -67,7 +67,7 @@ df2012 = read_data('showcases.2012.csv')
 df = pd.concat([df2011, df2012], ignore_index=True) 
 ```
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 print(df2011.shape, df2012.shape, df.shape) 
@@ -75,7 +75,7 @@ print(df2011.shape, df2012.shape, df.shape)
 
 ```py
 (191, 6) (122, 6) (313, 6) 
-```</details>
+```
 
 数据集如下所示：
 
@@ -125,7 +125,7 @@ prior1 = kde_from_sample(df['Showcase 1'], qs)
 
 它看起来是这样的：
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 from utils import decorate
@@ -134,23 +134,23 @@ def decorate_value(title=''):
     decorate(xlabel='Showcase value ($)',
         ylabel='PMF',
         title=title) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+``` 显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 prior1.plot(label='Prior 1')
 decorate_value('Prior distribution of showcase value') 
-```</details> ![_images/ebaa0745d09379dd23ab450b3c00d28fbc9fb9cd3e2cf44daeb54add4c0dd6b3.png](img/f5710bb28e58d6b9012587f16bce6520.png)
+``` ![_images/ebaa0745d09379dd23ab450b3c00d28fbc9fb9cd3e2cf44daeb54add4c0dd6b3.png](img/f5710bb28e58d6b9012587f16bce6520.png)
 
 **练习：** 使用这个函数制作一个代表 Showcase 2 先验分布的`Pmf`，并绘制它。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 # Solution
 
 qs = np.linspace(0, 80000, 81)
 prior2 = kde_from_sample(df['Showcase 2'], qs) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -161,7 +161,7 @@ prior2.plot(label='Prior 2')
 decorate_value('Prior distributions of showcase value') 
 ```
 
-![_images/03e7a17b911a5c8515491255fd219d0d4ad520f22f431b7f9edd96263ac92665.png](img/f4f9e3ebe8bbc827836c00a2bbff3bdb.png)</details>
+![_images/03e7a17b911a5c8515491255fd219d0d4ad520f22f431b7f9edd96263ac92665.png](img/f4f9e3ebe8bbc827836c00a2bbff3bdb.png)
 
 ## 误差的分布
 
@@ -194,7 +194,7 @@ kde_diff2 = kde_from_sample(sample_diff2, qs)
 
 这些分布看起来是这样的：
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 kde_diff1.plot(label='Diff 1', color='C8')
@@ -203,7 +203,7 @@ kde_diff2.plot(label='Diff 2', color='C4')
 decorate(xlabel='Difference in value ($)',
         ylabel='PMF',
         title='Difference between bid and actual value') 
-```</details> ![_images/38edf57e021b3d3e8ce3a2ddc1a30895a9ccc1658bd4a943befbe2c2bbd9b82e.png](img/1f2c4977b6b89234efbc72504e4094b9.png)
+``` ![_images/38edf57e021b3d3e8ce3a2ddc1a30895a9ccc1658bd4a943befbe2c2bbd9b82e.png](img/1f2c4977b6b89234efbc72504e4094b9.png)
 
 看起来出价太低的情况比出价太高的情况更常见，这是有道理的。请记住，在游戏规则下，如果你出价过高，你就会输掉比赛，所以参赛者可能会故意低估一定程度。
 
@@ -281,22 +281,22 @@ posterior1 = prior1 * likelihood1
 posterior1.normalize() 
 ```
 
-<details class="hide below-input"><summary aria-label="切换隐藏内容">显示代码单元格输出 隐藏代码单元格输出</summary>
+显示代码单元格输出 隐藏代码单元格输出
 
 ```py
 3.3889812097254624e-05 
-```</details>
+```
 
 后验分布如下：
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 prior1.plot(color='C5', label='Prior 1')
 posterior1.plot(color='C4', label='Posterior 1')
 
 decorate_value('Prior and posterior distribution of showcase value') 
-```</details> ![_images/aa8da72d19e4cc2f8250daffba23cacc37f51d434598893c89d0b11c900ab63c.png](img/20af617e710a333d6f7a5753b0309a6b.png)
+``` ![_images/aa8da72d19e4cc2f8250daffba23cacc37f51d434598893c89d0b11c900ab63c.png](img/20af617e710a333d6f7a5753b0309a6b.png)
 
 因为你的初始猜测在范围的较低端，后验分布已经向左移动。我们可以计算后验均值，看看移动了多少。
 
@@ -318,7 +318,7 @@ prior1.mean(), posterior1.mean()
 
 绘制后验分布并计算后验均值。根据先验和你的猜测，你期望展示的实际价格是多少？
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 # Solution
@@ -331,13 +331,13 @@ print(mean_diff2, std_diff2)
 
 ```py
 -3675.891373801917 6886.260711323408 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
 
 error_dist2 = norm(0, std_diff2) 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -346,7 +346,7 @@ guess2 = 38000
 error2 = guess2 - prior2.qs
 
 likelihood2 = error_dist2.pdf(error2) 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -357,7 +357,7 @@ posterior2.normalize()
 
 ```py
 2.697812321910703e-05 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -368,7 +368,7 @@ posterior2.plot(color='C15', label='Posterior 2')
 decorate_value('Prior and posterior distribution of showcase value') 
 ```
 
-![_images/ddaebf298f67138cb1ad06d9864e123abfa90d2dcfc18d188d40247fa118ee0a.png](img/236c7d0250007875a754dd2c19e1c288.png)</details><details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+![_images/ddaebf298f67138cb1ad06d9864e123abfa90d2dcfc18d188d40247fa118ee0a.png](img/236c7d0250007875a754dd2c19e1c288.png)
 
 ```py
 # Solution
@@ -378,7 +378,7 @@ print(prior2.mean(), posterior2.mean())
 
 ```py
 31047.62371912252 34305.20161642468 
-```</details>
+```
 
 ## 获胜的概率
 
@@ -473,7 +473,7 @@ ys = [compute_prob_win(x, sample_diff2)
 
 它看起来是这样的：
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 import matplotlib.pyplot as plt
@@ -483,7 +483,7 @@ plt.plot(xs, ys)
 decorate(xlabel='Difference between bid and actual price ($)',
          ylabel='Probability of winning',
          title='Player 1') 
-```</details> ![_images/95b1f75c55a42262fae0f50426c1ad7109acb4485c645d8df064158bda3be190.png](img/d89a68655a2a15bae620e54b69ce9d9f.png)
+``` ![_images/95b1f75c55a42262fae0f50426c1ad7109acb4485c645d8df064158bda3be190.png](img/d89a68655a2a15bae620e54b69ce9d9f.png)
 
 如果你低于 30000 美元，赢得比赛的机会约为 30%，这主要是你的对手出价过高的机会。
 
@@ -501,7 +501,7 @@ decorate(xlabel='Difference between bid and actual price ($)',
 
 然后绘制玩家 2 赢得比赛的概率，以及他们的出价与实际价格之间可能的差异范围。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 # Solution
@@ -511,7 +511,7 @@ prob_overbid(sample_diff1)
 
 ```py
 0.24600638977635783 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -521,7 +521,7 @@ prob_worse_than(-5000, sample_diff1)
 
 ```py
 0.3993610223642173 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -531,14 +531,14 @@ compute_prob_win(-5000, sample_diff1)
 
 ```py
 0.6453674121405751 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
 
 xs = np.linspace(-30000, 5000, 121)
 ys = [compute_prob_win(x, sample_diff1) for x in xs] 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -550,7 +550,7 @@ decorate(xlabel='Difference between bid and actual price ($)',
          title='Player 2') 
 ```
 
-![_images/6a0fdd6202e5213fa2c54cc2554bb11ee21096e795e3c9e8c7418d6fd3e5cbbf.png](img/176beb4578160880511cac1e394957ed.png)</details>
+![_images/6a0fdd6202e5213fa2c54cc2554bb11ee21096e795e3c9e8c7418d6fd3e5cbbf.png](img/176beb4578160880511cac1e394957ed.png)
 
 ## 决策分析
 
@@ -614,7 +614,7 @@ prob_win_series = pd.Series(probs, index=bids)
 
 这些是结果。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 prob_win_series.plot(label='Player 1', color='C1')
@@ -622,7 +622,7 @@ prob_win_series.plot(label='Player 1', color='C1')
 decorate(xlabel='Bid ($)',
          ylabel='Probability of winning',
          title='Optimal bid: probability of winning') 
-```</details> ![_images/a118051eb20c1b1e1fa32532dac88b183989c32465dd2c54b09fee90ac644590.png](img/5468adc006e73cd0ec8165b8c8422cf2.png)
+``` ![_images/a118051eb20c1b1e1fa32532dac88b183989c32465dd2c54b09fee90ac644590.png](img/5468adc006e73cd0ec8165b8c8422cf2.png)
 
 这是最大化玩家 1 获胜机会的出价。
 
@@ -646,7 +646,7 @@ prob_win_series.max()
 
 **练习：**对玩家 2 进行相同的分析。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 # Solution
@@ -657,7 +657,7 @@ probs = [total_prob_win(bid, posterior2, sample_diff1)
          for bid in bids]
 
 prob_win_series = pd.Series(probs, index=bids) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -669,7 +669,7 @@ decorate(xlabel='Bid ($)',
          title='Optimal bid: probability of winning') 
 ```
 
-![_images/c0a1356834ee3205a1df9657db18fef0a9c80ffdd65b4072b09881b624a09e95.png](img/389b2238e8f72065bd674acbfd491767.png)</details><details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+![_images/c0a1356834ee3205a1df9657db18fef0a9c80ffdd65b4072b09881b624a09e95.png](img/389b2238e8f72065bd674acbfd491767.png)
 
 ```py
 # Solution
@@ -679,7 +679,7 @@ prob_win_series.idxmax()
 
 ```py
 29000.0 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -689,7 +689,7 @@ prob_win_series.max()
 
 ```py
 0.5171370053364229 
-```</details>
+```
 
 ## 最大化预期收益
 
@@ -759,7 +759,7 @@ expected_gain_series = pd.Series(gains, index=bids)
 
 这些是结果。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 expected_gain_series.plot(label='Player 1', color='C2')
@@ -767,7 +767,7 @@ expected_gain_series.plot(label='Player 1', color='C2')
 decorate(xlabel='Bid ($)',
          ylabel='Expected gain ($)',
          title='Optimal bid: expected gain') 
-```</details> ![_images/5af6f2ee1d12a94b053bbcda95332bfc6757bf389b2ebf6eb448cbc759aa423b.png](img/fd2870c0b0ddd8087fe670358dacba4d.png)
+``` ![_images/5af6f2ee1d12a94b053bbcda95332bfc6757bf389b2ebf6eb448cbc759aa423b.png](img/fd2870c0b0ddd8087fe670358dacba4d.png)
 
 这是最佳出价。
 
@@ -793,7 +793,7 @@ expected_gain_series.max()
 
 **练习：**对玩家 2 进行相同的分析。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 # Solution
@@ -803,7 +803,7 @@ bids = posterior2.qs
 gains = [expected_gain(bid, posterior2, sample_diff1) for bid in bids]
 
 expected_gain_series = pd.Series(gains, index=bids) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -815,7 +815,7 @@ decorate(xlabel='Bid ($)',
     title='Optimal bid: expected gain') 
 ```
 
-![_images/fa3190e06341295c604af81707aff93d8ee047523308df3bba4a68565008857a.png](img/038f8ef198dbb66ad9477d8d0636264d.png)</details><details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+![_images/fa3190e06341295c604af81707aff93d8ee047523308df3bba4a68565008857a.png](img/038f8ef198dbb66ad9477d8d0636264d.png)显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -825,7 +825,7 @@ expected_gain_series.idxmax()
 
 ```py
 30000.0 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -835,7 +835,7 @@ expected_gain_series.max()
 
 ```py
 19404.164188501607 
-```</details>
+```
 
 ## 摘要
 
@@ -937,7 +937,7 @@ expected_gain_series.max()
 
 为了让你开始，以下函数根据问题的规范计算利润和成本：
 
-<details class="hide above-input"> <summary aria-label="切换隐藏内容">显示代码单元格内容隐藏代码单元格内容</summary>
+ 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 def print_cost(printed):
@@ -949,7 +949,7 @@ def print_cost(printed):
         return printed * 5
     else:
         return printed * 4.5 
-``` </ details> <details class="hide above-input"> <summary aria-label="切换隐藏内容">显示代码单元格内容隐藏代码单元格内容</summary>
+``` </ details>  显示代码单元格内容隐藏代码单元格内容
 
 ```py
 def total_income(printed, orders):
@@ -960,7 +960,7 @@ def total_income(printed, orders):
  """
     sold = min(printed, np.sum(orders))
     return sold * 10 
-``` </ details> <details class="hide above-input"> <summary aria-label="切换隐藏内容">显示代码单元格内容隐藏代码单元格内容</summary>
+``` </ details>  显示代码单元格内容隐藏代码单元格内容
 
 ```py
 def inventory_cost(printed, orders):
@@ -974,7 +974,7 @@ def inventory_cost(printed, orders):
         return excess * 2
     else:
         return 0 
-``` </ details> <details class="hide above-input"> <summary aria-label="切换隐藏内容">显示代码单元格内容隐藏代码单元格内容</summary>
+``` </ details>  显示代码单元格内容隐藏代码单元格内容
 
 ```py
 def out_of_stock_cost(printed, orders):
@@ -989,7 +989,7 @@ def out_of_stock_cost(printed, orders):
         if total > printed:
             return (weeks-i) * 50
     return 0 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 def compute_profit(printed, orders):
@@ -1002,11 +1002,11 @@ def compute_profit(printed, orders):
             print_cost(printed)-
             out_of_stock_cost(printed, orders) -
             inventory_cost(printed, orders)) 
-```</details>
+```
 
 为了测试这些函数，假设我们每周确切地获得 10 个订单，持续 8 周：
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 always_10 = [10] * 8
@@ -1015,11 +1015,11 @@ always_10
 
 ```py
 [10, 10, 10, 10, 10, 10, 10, 10] 
-```</details>
+```
 
 如果你打印 60 本书，你的净利润是 200 美元，就像例子中一样。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 compute_profit(60, always_10) 
@@ -1027,11 +1027,11 @@ compute_profit(60, always_10)
 
 ```py
 200 
-```</details>
+```
 
 如果你打印 100 本书，你的净利润是 310 美元。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 compute_profit(100, always_10) 
@@ -1039,7 +1039,7 @@ compute_profit(100, always_10)
 
 ```py
 310.0 
-```</details>
+```
 
 当然，在问题的背景下，你不知道每周会订购多少书。你甚至不知道订单的平均速率。但是，根据数据和对先验的一些假设，你可以计算订单速率的分布。
 
@@ -1047,7 +1047,7 @@ compute_profit(100, always_10)
 
 这是一个代表这个分布的`Pmf`。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 from scipy.stats import gamma
@@ -1062,11 +1062,11 @@ pmf.mean()
 
 ```py
 8.998788382371902 
-```</details>
+```
 
 这是它的样子：
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 pmf.plot(color='C1')
@@ -1074,7 +1074,7 @@ decorate(xlabel=r'Book ordering rate ($\lambda$)',
         ylabel='PMF') 
 ```
 
-![_images/f0c07feace81ea12a0bd72e74c54165fcf17f2031f3a2fcdd831a65ed6c36fea.png](img/895f1f7563ae339842c1238cfccd8c3a.png)</details>
+![_images/f0c07feace81ea12a0bd72e74c54165fcf17f2031f3a2fcdd831a65ed6c36fea.png](img/895f1f7563ae339842c1238cfccd8c3a.png)
 
 现在，我们*可以*生成给定周内订购书籍数量的预测分布，但在这个例子中，我们必须处理一个复杂的成本函数。特别是，`out_of_stock_cost`取决于订单的顺序。
 
@@ -1082,7 +1082,7 @@ decorate(xlabel=r'Book ordering rate ($\lambda$)',
 
 首先，从我们的假设速率分布中，我们可以随机抽取 1000 个值。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 rates = pmf.choice(1000)
@@ -1091,11 +1091,11 @@ np.mean(rates)
 
 ```py
 8.906 
-```</details>
+```
 
 对于每个可能的速率，我们可以生成一个 8 个订单的序列。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 np.random.seed(17)
@@ -1109,13 +1109,13 @@ array([[ 8,  2,  7,  8,  9,  9, 11, 12],
        [11, 11,  8,  3,  8,  7,  8,  5],
        [ 6,  5,  9,  6,  9,  9, 12,  6],
        [ 4,  4, 10,  5,  1,  6, 12,  6]]) 
-```</details>
+```
 
 这个数组的每一行都是基于不同的假设订单速率的假设序列。
 
 现在，如果你告诉我你打印了多少书，我可以计算你的预期利润，平均分布在这 1000 个可能的序列上。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 def compute_expected_profits(printed, order_array):
@@ -1127,11 +1127,11 @@ def compute_expected_profits(printed, order_array):
     profits = [compute_profit(printed, orders)
                for orders in order_array]
     return np.mean(profits) 
-```</details>
+```
 
 例如，如果你订购 70、80 或 90 本书，这是预期利润。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 compute_expected_profits(70, order_array) 
@@ -1139,7 +1139,7 @@ compute_expected_profits(70, order_array)
 
 ```py
 182.96 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 compute_expected_profits(80, order_array) 
@@ -1147,7 +1147,7 @@ compute_expected_profits(80, order_array)
 
 ```py
 181.994 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 compute_expected_profits(90, order_array) 
@@ -1155,18 +1155,18 @@ compute_expected_profits(90, order_array)
 
 ```py
 157.608 
-```</details>
+```
 
 现在，让我们扫描一系列值，并计算预期利润作为你打印的书籍数量的函数。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 printed_array = np.arange(70, 110)
 t = [compute_expected_profits(printed, order_array)
                     for printed in printed_array]
 expected_profits = pd.Series(t, printed_array) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 expected_profits.plot(label='')
@@ -1175,11 +1175,11 @@ decorate(xlabel='Number of books printed',
          ylabel='Expected profit ($)') 
 ```
 
-![_images/e7bd0c699b0f0d5d3def4bba11e16b0b0f888bb38e04107ae33456cb2593b744.png](img/56763189d6ade009952f80fd45745b8a.png)</details>
+![_images/e7bd0c699b0f0d5d3def4bba11e16b0b0f888bb38e04107ae33456cb2593b744.png](img/56763189d6ade009952f80fd45745b8a.png)
 
 这是最佳顺序和预期利润。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 expected_profits.idxmax(), expected_profits.max() 
@@ -1187,11 +1187,11 @@ expected_profits.idxmax(), expected_profits.max()
 
 ```py
 (74, 186.328) 
-```</details>
+```
 
 现在轮到你了。选择一个你认为合理的先验，用你得到的数据更新它，然后使用后验分布来进行我刚刚演示的分析。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 # Solution
@@ -1207,7 +1207,7 @@ prior.normalize()
 
 ```py
 101 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1219,7 +1219,7 @@ decorate(xlabel=r'Book ordering rate ($\lambda$)',
          ylabel='CDF') 
 ```
 
-![_images/a6338a1a0893a7144417ca17ebf2bc03705a6c0f0dc14683682fd835e33ee33f.png](img/ad7464144586cf985b0b21156b164db3.png)</details><details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+![_images/a6338a1a0893a7144417ca17ebf2bc03705a6c0f0dc14683682fd835e33ee33f.png](img/ad7464144586cf985b0b21156b164db3.png)
 
 ```py
 # Solution
@@ -1240,7 +1240,7 @@ def update_book(pmf, data):
     likelihood = poisson.pmf(k, lams)
     pmf *= likelihood
     pmf.normalize() 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1249,7 +1249,7 @@ def update_book(pmf, data):
 
 posterior1 = prior.copy()
 update_book(posterior1, 10) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1258,7 +1258,7 @@ update_book(posterior1, 10)
 
 posterior2 = posterior1.copy()
 update_book(posterior2, 9) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1268,7 +1268,7 @@ prior.mean(), posterior1.mean(), posterior2.mean()
 
 ```py
 (21.78849107458653, 10.000000817984526, 9.500000000003652) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1281,7 +1281,7 @@ np.mean(rates)
 
 ```py
 9.408095235418383 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1298,7 +1298,7 @@ array([[ 9, 13,  7,  8, 11,  9, 11,  9],
        [12,  5, 10,  8, 12, 15, 13, 10],
        [ 5, 10,  7,  4,  9, 11,  8, 15],
        [ 5,  2,  3,  5,  3,  3,  4,  3]]) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1309,7 +1309,7 @@ printed_array = np.arange(70, 110)
 t = [compute_expected_profits(printed, order_array)
                     for printed in printed_array]
 expected_profits = pd.Series(t, printed_array) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1322,7 +1322,7 @@ decorate(xlabel='Number of books printed',
          ylabel='Expected profit ($)') 
 ```
 
-![_images/f6e8f3aba82c7dc42ab819db153489febe30bd949e0bc8eb661d66f90388cf3a.png](img/9a8222c213f96336bc0694b34e3b8deb.png)</details><details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+![_images/f6e8f3aba82c7dc42ab819db153489febe30bd949e0bc8eb661d66f90388cf3a.png](img/9a8222c213f96336bc0694b34e3b8deb.png)
 
 ```py
 # Solution
@@ -1334,4 +1334,4 @@ expected_profits.idxmax()
 
 ```py
 79 
-```</details>
+```

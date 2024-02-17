@@ -224,7 +224,7 @@ posterior_treated = update_norm(prior, data)
 
 这是它们的样子：
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码隐藏代码单元格源代码</summary>
+显示代码单元格源代码隐藏代码单元格源代码
 
 ```py
 import matplotlib.pyplot as plt
@@ -239,7 +239,7 @@ plt.text(57, 12, 'Treated', color='C1')
 decorate(xlabel='Mean (mu)', 
          ylabel='Standard deviation (sigma)',
          title='Joint posterior distributions of mu and sigma') 
-```</details> ![_images/07e09a7764bf63bd25d2de096380ab1b98da662b35273b5a5f32f41b7c0c928d.png](img/40c70f90c0bd3e979a2c0296876ae3c2.png)
+``` ![_images/07e09a7764bf63bd25d2de096380ab1b98da662b35273b5a5f32f41b7c0c928d.png](img/40c70f90c0bd3e979a2c0296876ae3c2.png)
 
 沿着$x$-轴，看起来处理组的平均分数更高。沿着$y$-轴，看起来处理组的标准差更低。
 
@@ -307,7 +307,7 @@ len(pmf_mean_treated), len(pmf_mean_control), len(pmf_diff)
 
 另一件需要注意的事情是绘制`Pmf`。在这个例子中，如果我们绘制差异的分布，结果会非常嘈杂。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码隐藏代码单元格源代码</summary>
+显示代码单元格源代码隐藏代码单元格源代码
 
 ```py
 pmf_diff.plot()
@@ -315,7 +315,7 @@ pmf_diff.plot()
 decorate(xlabel='Difference in population means', 
          ylabel='PDF', 
          title='Posterior distribution of difference in mu') 
-```</details> ![_images/17719b39d2db8694dcd3465576ab0f6848ab5bac7aaf1e6ca9c26bd616f14290.png](img/d3285bcfff528c7a281a867a76d7fade.png)
+``` ![_images/17719b39d2db8694dcd3465576ab0f6848ab5bac7aaf1e6ca9c26bd616f14290.png](img/d3285bcfff528c7a281a867a76d7fade.png)
 
 有两种方法可以解决这个限制。一种是绘制 CDF，这样可以平滑噪音：
 
@@ -323,7 +323,7 @@ decorate(xlabel='Difference in population means',
 cdf_diff = pmf_diff.make_cdf() 
 ```
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码隐藏代码单元格源代码</summary>
+显示代码单元格源代码隐藏代码单元格源代码
 
 ```py
 cdf_diff.plot()
@@ -331,7 +331,7 @@ cdf_diff.plot()
 decorate(xlabel='Difference in population means', 
          ylabel='CDF', 
          title='Posterior distribution of difference in mu') 
-```</details> ![_images/7853b02a168362d7aaa22b1dc7b901dbf56554e8005a90aa2de857eac0221020.png](img/42384d504f6b67b8a8222412cdbf17ed.png)
+``` ![_images/7853b02a168362d7aaa22b1dc7b901dbf56554e8005a90aa2de857eac0221020.png](img/42384d504f6b67b8a8222412cdbf17ed.png)
 
 另一个选择是使用核密度估计（KDE）在等间距网格上对 PDF 进行平滑近似，这就是这个函数的作用：
 
@@ -358,7 +358,7 @@ def kde_from_pmf(pmf, n=101):
 kde_diff = kde_from_pmf(pmf_diff) 
 ```
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码隐藏代码单元格源代码</summary>
+显示代码单元格源代码隐藏代码单元格源代码
 
 ```py
 kde_diff.plot()
@@ -366,7 +366,7 @@ kde_diff.plot()
 decorate(xlabel='Difference in means', 
          ylabel='PDF', 
          title='Posterior distribution of difference in mu') 
-```</details> ![_images/96237655b97311f4d9c0571002cba9f1f1bf1b50c9e4c69c7f47bdd4235cce83.png](img/750833c43967521c794d8e009b3bc6d2.png)
+``` ![_images/96237655b97311f4d9c0571002cba9f1f1bf1b50c9e4c69c7f47bdd4235cce83.png](img/750833c43967521c794d8e009b3bc6d2.png)
 
 这个分布的均值几乎是测试中的 45 分的 10 分，因此治疗的效果似乎是显著的。
 
@@ -580,7 +580,7 @@ posterior_treated2 = update_norm_summary(prior, data)
 
 这就是结果。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 plot_contour(posterior_control2, cmap='Blues')
@@ -592,7 +592,7 @@ plt.text(57, 12, 'Treated', color='C1')
 decorate(xlabel='Mean (mu)', 
          ylabel='Standard deviation (sigma)',
          title='Joint posterior distributions of mu and sigma') 
-```</details> ![_images/788f06239c80c1669cae10247482f0fb684c52288c1b0713b213e62821d3eb15.png](img/2e0ea03c4df7f105c2b86b60db36f8a2.png)
+``` ![_images/788f06239c80c1669cae10247482f0fb684c52288c1b0713b213e62821d3eb15.png](img/2e0ea03c4df7f105c2b86b60db36f8a2.png)
 
 从视觉上看，这些后验联合分布与我们使用整个数据集计算的分布相似，而不仅仅是摘要统计数据。但它们并不完全相同，我们可以通过比较边际分布来看到这一点。
 
@@ -609,7 +609,7 @@ pmf_mean_treated2 = marginal(posterior_treated2, 0)
 
 并将它们与使用整个数据集得到的结果进行比较（虚线）。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 pmf_mean_control.plot(color='C5', ls='--')
@@ -620,7 +620,7 @@ pmf_mean_treated2.plot(label='Treated')
 decorate(xlabel='Population mean', 
          ylabel='PDF', 
          title='Posterior distributions of mu') 
-```</details> ![_images/8905b82ef04dd79130d1cebbad78367aafe809a8fda9f1cb4c4ed2011ae0311c.png](img/7a53a9d55b1e248b3131381791fe1a63.png)
+``` ![_images/8905b82ef04dd79130d1cebbad78367aafe809a8fda9f1cb4c4ed2011ae0311c.png](img/7a53a9d55b1e248b3131381791fe1a63.png)
 
 基于摘要统计数据的后验分布与我们使用整个数据集计算的后验分布相似，但在两种情况下都更短且略宽。
 
@@ -640,24 +640,24 @@ decorate(xlabel='Population mean',
 
 假设我们知道总体的实际均值和标准差：
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 mu = 42
 sigma = 17 
-```</details>
+```
 
 我将创建一个`norm`对象来表示这个分布。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 dist = norm(mu, sigma) 
-```</details>
+```
 
 `norm`提供了`rvs`，它可以从分布中生成随机值。我们可以用它来模拟 1000 个样本，每个样本的样本量为`n=20`。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 n = 20
@@ -667,13 +667,13 @@ samples.shape
 
 ```py
 (1000, 20) 
-```</details>
+```
 
 结果是一个包含 1000 行的数组，每行包含一个样本或 20 个模拟测试分数。
 
 如果我们计算每行的平均值，结果将是一个包含 1000 个样本均值的数组；也就是说，每个值都是一个样本的均值，样本量为`n=20`。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 sample_means = samples.mean(axis=1)
@@ -682,11 +682,11 @@ sample_means.shape
 
 ```py
 (1000,) 
-```</details>
+```
 
 现在，让我们将这些均值的分布与`dist_m`进行比较。我将使用`pmf_from_dist`来对`dist_m`进行离散近似：
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 def pmf_from_dist(dist, low, high):
@@ -703,35 +703,35 @@ def pmf_from_dist(dist, low, high):
     pmf = Pmf(ps, qs)
     pmf.normalize()
     return pmf 
-```</details>
+```
 
 `pmf_from_dist`接受一个表示连续分布的对象，在`low`和`high`之间的等间距点上评估其概率密度函数，并返回一个近似分布的归一化`Pmf`。
 
 我将用它来评估`dist_m`在六个标准差范围内的情况。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 low = dist_m.mean() - dist_m.std() * 3
 high = dist_m.mean() + dist_m.std() * 3
 
 pmf_m = pmf_from_dist(dist_m, low, high) 
-```</details>
+```
 
 现在让我们将这个理论分布与样本的均值进行比较。我将使用`kde_from_sample`来估计它们的分布，并在与`pmf_m`相同的位置进行评估。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 from utils import kde_from_sample
 
 qs = pmf_m.qs
 pmf_sample_means = kde_from_sample(sample_means, qs) 
-```</details>
+```
 
 以下图显示了这两个分布。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 pmf_m.plot(label='Theoretical distribution',
@@ -743,7 +743,7 @@ decorate(xlabel='Mean score',
          title='Distribution of the mean') 
 ```
 
-![_images/52c43bd9abdda9201e2072a09dfb286e5850cae41d61da3a6e7ad355b77b20fd.png](img/fdd44a246bef6bcdc55cc9a74e4b2d62.png)</details>
+![_images/52c43bd9abdda9201e2072a09dfb286e5850cae41d61da3a6e7ad355b77b20fd.png](img/fdd44a246bef6bcdc55cc9a74e4b2d62.png)
 
 理论分布和样本均值的分布是一致的。
 
@@ -751,7 +751,7 @@ decorate(xlabel='Mean score',
 
 我们还要检查一下标准差是否符合我们的预期分布。首先，我将计算 1000 个样本的标准差。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 sample_stds = samples.std(axis=1)
@@ -760,49 +760,49 @@ sample_stds.shape
 
 ```py
 (1000,) 
-```</details>
+```
 
 现在我们将计算转换后的值，$t = n s² / \sigma²$。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 transformed = n * sample_stds**2 / sigma**2 
-```</details>
+```
 
 我们期望转换后的值遵循参数为$n-1$的卡方分布。SciPy 提供了`chi2`，我们可以用它来表示这个分布。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 from scipy.stats import chi2
 
 dist_s = chi2(n-1) 
-```</details>
+```
 
 我们可以再次使用`pmf_from_dist`进行离散近似。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 low = 0
 high = dist_s.mean() + dist_s.std() * 4
 
 pmf_s = pmf_from_dist(dist_s, low, high) 
-```</details>
+```
 
 我们将使用`kde_from_sample`来估计样本标准差的分布。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 qs = pmf_s.qs
 pmf_sample_stds = kde_from_sample(transformed, qs) 
-```</details>
+```
 
 现在我们可以将理论分布与标准差的分布进行比较。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 pmf_s.plot(label='Theoretical distribution',
@@ -815,13 +815,13 @@ decorate(xlabel='Standard deviation of scores',
          title='Distribution of standard deviation') 
 ```
 
-![_images/8ff5ec2be08b5f2cd8763610a22cb2b6ded0e4ca76da07bb4cad7a56cb1eb824.png](img/23e05aba19a5fbc1b39471ad7eefc69b.png)</details>
+![_images/8ff5ec2be08b5f2cd8763610a22cb2b6ded0e4ca76da07bb4cad7a56cb1eb824.png](img/23e05aba19a5fbc1b39471ad7eefc69b.png)
 
 转换后的标准差的分布与理论分布一致。
 
 最后，为了确认样本均值和标准差是独立的，我将计算它们的相关系数：
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 np.corrcoef(sample_means, sample_stds)[0][1] 
@@ -829,7 +829,7 @@ np.corrcoef(sample_means, sample_stds)[0][1]
 
 ```py
 -0.027451907688034228 
-```</details>
+```
 
 它们的相关性接近零，这与它们是独立的一致。
 
@@ -837,7 +837,7 @@ np.corrcoef(sample_means, sample_stds)[0][1]
 
 我们还可以使用 Seaborn 中的`kdeplot`来查看它们的联合分布是什么样子的。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 import seaborn as sns
@@ -849,7 +849,7 @@ decorate(xlabel='Mean (mu)',
          title='Joint distribution of mu and sigma') 
 ```
 
-![_images/33bcff608384ba34050242a14176f0c7647ce9109c68aeb3c3041ca19defb6e6.png](img/1ec87303e4aed28ef3f8cf8cf945490d.png)</details>
+![_images/33bcff608384ba34050242a14176f0c7647ce9109c68aeb3c3041ca19defb6e6.png](img/1ec87303e4aed28ef3f8cf8cf945490d.png)
 
 看起来椭圆的轴与坐标轴对齐，这表明变量是独立的。
 
@@ -869,14 +869,14 @@ decorate(xlabel='Mean (mu)',
 
 计算两组之间`sigma`的差异的分布。这种差异的均值是多少？90%的可信区间是多少？
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 # Solution
 
 pmf_std_control = marginal(posterior_control, 1)
 pmf_std_treated = marginal(posterior_treated, 1) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -889,7 +889,7 @@ decorate(xlabel='Population standard deviation',
          title='Posterior distributions of sigma') 
 ```
 
-![_images/308308b6ecac3d93df676f436d6bdcb155063578cbf2f3436b0836d41eadb098.png](img/28f980c6489e761e5e36d9cac4408fec.png)</details><details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+![_images/308308b6ecac3d93df676f436d6bdcb155063578cbf2f3436b0836d41eadb098.png](img/28f980c6489e761e5e36d9cac4408fec.png)
 
 ```py
 # Solution
@@ -899,13 +899,13 @@ Pmf.prob_gt(pmf_std_control, pmf_std_treated)
 
 ```py
 0.9685103375300469 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
 
 pmf_diff2 = Pmf.sub_dist(pmf_std_control, pmf_std_treated) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -915,7 +915,7 @@ pmf_diff2.mean()
 
 ```py
 6.41717132817218 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -925,7 +925,7 @@ pmf_diff2.credible_interval(0.9)
 
 ```py
 array([ 1\. , 12.5]) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -937,7 +937,7 @@ decorate(xlabel='Difference in population standard deviation',
          title='Posterior distributions of difference in sigma') 
 ```
 
-![_images/4a41f5f62c4bf9c935fcc913296e6af4942eeac649bc5a0689dca131f81d3784.png](img/f8db324dc26895f255a7e1e081881c19.png)</details>
+![_images/4a41f5f62c4bf9c935fcc913296e6af4942eeac649bc5a0689dca131f81d3784.png](img/f8db324dc26895f255a7e1e081881c19.png)
 
 **练习：** [效应大小](http://en.wikipedia.org/wiki/Effect_size)是一种旨在量化现象大小的统计量。如果现象是两组之间均值的差异，一种常见的量化方法是科恩效应大小，表示为$d$。
 
@@ -951,7 +951,7 @@ $$ d = \frac{\mu_1 - \mu_2}{(\sigma_1 + \sigma_2)/2} $$
 
 以下函数接受联合后验分布并返回一对样本。它使用了一些我们还没有看到的特性，但您现在可以忽略细节。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+显示代码单元格内容隐藏代码单元格内容
 
 ```py
 def sample_joint(joint, size):
@@ -962,11 +962,11 @@ def sample_joint(joint, size):
  """
     pmf = Pmf(joint.transpose().stack())
     return pmf.choice(size) 
-```</details>
+```
 
 以下是我们如何使用它从两个组的后验分布中抽样对。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+显示代码单元格内容隐藏代码单元格内容
 
 ```py
 sample_treated = sample_joint(posterior_treated, 1000)
@@ -975,7 +975,7 @@ sample_treated.shape
 
 ```py
 (1000,) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 sample_control = sample_joint(posterior_control, 1000)
@@ -984,11 +984,11 @@ sample_control.shape
 
 ```py
 (1000,) 
-```</details>
+```
 
 结果是一个元组数组，每个元组包含$\mu$和$\sigma$的一对可能值。现在您可以循环遍历样本，计算每个样本的 Cohen effect size，并估计 effect sizes 的分布。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -1005,7 +1005,7 @@ def cohen_effect(pair1, pair2):
     mu2, sigma2 = pair2
     sigma = (sigma1 + sigma2) / 2
     return (mu1 - mu2) / sigma 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -1015,7 +1015,7 @@ cohen_effect(sample_treated[0], sample_control[0])
 
 ```py
 0.7603960396039605 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -1024,7 +1024,7 @@ ds = []
 for pair1, pair2 in zip(sample_treated, sample_control):
     d = cohen_effect(pair1, pair2)
     ds.append(d) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -1037,7 +1037,7 @@ decorate(xlabel='Cohen effect size',
          title='Posterior distributions of effect size') 
 ```
 
-![_images/93749567d15a59d942c9592d5f736a75613b185134d0b1aa9cbc0cd0964b767c.png](img/9d80ca54302ffbc494cce5aa63d81ebf.png)</details><details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+![_images/93749567d15a59d942c9592d5f736a75613b185134d0b1aa9cbc0cd0964b767c.png](img/9d80ca54302ffbc494cce5aa63d81ebf.png)显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -1047,7 +1047,7 @@ cdf.mean()
 
 ```py
 0.6623391688256146 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -1057,7 +1057,7 @@ cdf.credible_interval(0.9)
 
 ```py
 array([0.08648649, 1.17647059]) 
-```</details>
+```
 
 **练习：** 这个练习受到了[Reddit 上出现的一个问题](https://www.reddit.com/r/statistics/comments/hcvl2j/q_reverse_empirical_distribution_rule_question/)的启发。
 
@@ -1069,7 +1069,7 @@ array([0.08648649, 1.17647059])
 
 提示：要计算得分大于 90 的概率，您可以使用`norm.sf`，它计算生存函数，也称为互补 CDF，或`1 - cdf(x)`。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -1078,7 +1078,7 @@ array([0.08648649, 1.17647059])
 # values for the prior
 
 hypos = np.linspace(1, 51, 101) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -1094,7 +1094,7 @@ pgt90.shape
 
 ```py
 (101,) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -1110,7 +1110,7 @@ likelihood1.shape
 
 ```py
 (101,) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -1124,7 +1124,7 @@ posterior.normalize()
 
 ```py
 5.299480018256258 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+``` 显示代码单元格内容隐藏代码单元格内容
 
 ```py
 # Solution
@@ -1137,7 +1137,7 @@ decorate(xlabel='Standard deviation (sigma)',
          title='Posterior distribution of sigma') 
 ```
 
-![_images/0abfd6d388bcc11c2cbc5a5bdff47d10cd98504e0d8303178e9038f9087c54f0.png](img/b9d7be510e4f972bddbd47c8a8091418.png)</details><details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+![_images/0abfd6d388bcc11c2cbc5a5bdff47d10cd98504e0d8303178e9038f9087c54f0.png](img/b9d7be510e4f972bddbd47c8a8091418.png)
 
 ```py
 # Solution
@@ -1145,7 +1145,7 @@ decorate(xlabel='Standard deviation (sigma)',
 # Here's the probability of a score greater than 60
 
 pgt60s = norm(81, hypos).sf(60) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1153,7 +1153,7 @@ pgt60s = norm(81, hypos).sf(60)
 # And here's the probability that all 25 students exceed 60
 
 likelihood2 = pgt60s ** 25 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1164,7 +1164,7 @@ decorate(xlabel='Standard deviation (sigma)',
          title='Likelihood function') 
 ```
 
-![_images/f8dada047905f5f85c2e5f21efb160f4b275e94cf4fc642523008abe432780be.png](img/9f0bdab9a77306788bab7542713052c9.png)</details><details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+![_images/f8dada047905f5f85c2e5f21efb160f4b275e94cf4fc642523008abe432780be.png](img/9f0bdab9a77306788bab7542713052c9.png)
 
 ```py
 # Solution
@@ -1179,7 +1179,7 @@ posterior2.normalize()
 
 ```py
 0.01425455531129565 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1192,7 +1192,7 @@ decorate(xlabel='Standard deviation (sigma)',
          title='Posterior distribution of sigma') 
 ```
 
-![_images/ac9958f8a232e0d024b18dd3b11c95ce2fd3980d1f0a54a3a1a50dc89a315070.png](img/fe30c4209d494fdc71e03f110b65e357.png)</details><details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+![_images/ac9958f8a232e0d024b18dd3b11c95ce2fd3980d1f0a54a3a1a50dc89a315070.png](img/fe30c4209d494fdc71e03f110b65e357.png)
 
 ```py
 # Solution
@@ -1202,7 +1202,7 @@ posterior.mean(), posterior2.mean()
 
 ```py
 (18.150261186811548, 10.189707962198526) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1212,7 +1212,7 @@ posterior2.credible_interval(0.9)
 
 ```py
 array([ 7., 15.]) 
-```</details>
+```
 
 **练习：** [变异性假设](http://en.wikipedia.org/wiki/Variability_hypothesis) 是这样一个观察：在许多物种中，许多生理特征在雄性中的变异性比在雌性中更大。
 
@@ -1236,7 +1236,7 @@ array([ 7., 15.])
 
 另外，你可能会发现这个函数有用：
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 def get_posterior_cv(joint):
@@ -1250,7 +1250,7 @@ def get_posterior_cv(joint):
     pmf_sigma = marginal(joint, 1)
     pmf_cv = Pmf.div_dist(pmf_sigma, pmf_mu)
     return kde_from_pmf(pmf_cv) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1258,7 +1258,7 @@ def get_posterior_cv(joint):
 n = 154407
 mean = 178
 std = 8.27 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1270,7 +1270,7 @@ qs = np.linspace(std-0.1, std+0.1, num=101)
 prior_sigma = make_uniform(qs, name='std')
 
 prior = make_joint(prior_mu, prior_sigma) 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1284,7 +1284,7 @@ decorate(xlabel='Mean (mu)',
          title='Joint distribution of mu and sigma') 
 ```
 
-![_images/cefe85dd76a0d6417b6ca3812f888bb019e2178da1197955d44f5e37fb10cfe6.png](img/88f65519ee30c9435bcb53075ac9ded0.png)</details><details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+![_images/cefe85dd76a0d6417b6ca3812f888bb019e2178da1197955d44f5e37fb10cfe6.png](img/88f65519ee30c9435bcb53075ac9ded0.png)
 
 ```py
 # Solution
@@ -1292,7 +1292,7 @@ decorate(xlabel='Mean (mu)',
 n = 254722
 mean = 163
 std = 7.75 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1304,7 +1304,7 @@ qs = np.linspace(std-0.1, std+0.1, num=101)
 prior_sigma = make_uniform(qs, name='std')
 
 prior = make_joint(prior_mu, prior_sigma) 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1314,7 +1314,7 @@ posterior_female = update_norm_summary(prior, data)
 plot_contour(posterior_female, cmap='Oranges'); 
 ```
 
-![_images/0fe23b061fdb21223027aa04f716cab5d7b29d98950d5eeba6beb10407696796.png](img/163c7b380a05e4d1adf09a222808f1e6.png)</details><details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+![_images/0fe23b061fdb21223027aa04f716cab5d7b29d98950d5eeba6beb10407696796.png](img/163c7b380a05e4d1adf09a222808f1e6.png)
 
 ```py
 # Solution
@@ -1330,7 +1330,7 @@ decorate(xlabel='Coefficient of variation',
          title='Posterior distributions of CV') 
 ```
 
-![_images/b07e3ae52ba0514a3f439fcfd1eb6862e6d00434cfedf0fae3ad72fc346f47d4.png](img/d233c72768657a36bdab646931ca3924.png)</details><details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+![_images/b07e3ae52ba0514a3f439fcfd1eb6862e6d00434cfedf0fae3ad72fc346f47d4.png](img/d233c72768657a36bdab646931ca3924.png)
 
 ```py
 # Solution
@@ -1341,7 +1341,7 @@ ratio_cv.max_prob()
 
 ```py
 1.0233615721208176 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1351,4 +1351,4 @@ ratio_cv.credible_interval(0.9)
 
 ```py
 array([1.0193799 , 1.02734473]) 
-```</details>
+```

@@ -98,7 +98,7 @@ def make_binomial(n, p):
 pmf_k = make_binomial(n=250, p=0.5) 
 ```
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 from utils import decorate
@@ -108,7 +108,7 @@ pmf_k.plot(label='n=250, p=0.5')
 decorate(xlabel='Number of heads (k)',
          ylabel='PMF',
          title='Binomial distribution') 
-```</details> ![_images/78776da24ecbd5525d7f021195efd37ee9f890ed482a679078c11cd2f6e24baa.png](img/44850b0694a0ed061791879e0749472f.png)
+``` ![_images/78776da24ecbd5525d7f021195efd37ee9f890ed482a679078c11cd2f6e24baa.png](img/44850b0694a0ed061791879e0749472f.png)
 
 这个分布中最可能的数量是 125：
 
@@ -178,7 +178,7 @@ pmf_k.prob_ge(140)
 
 7%是这两个“尾巴”的总和，如下图所示。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 import matplotlib.pyplot as plt
@@ -196,7 +196,7 @@ pmf_k.plot(label='n=250, p=0.5')
 decorate(xlabel='Number of heads (k)',
          ylabel='PMF',
          title='Binomial distribution') 
-```</details> ![_images/bbe850c4ba1754c42250404d1be42aca905c5085d068a8cd75a524120acd38b2.png](img/4a2b927f5fdf7388f4b220f8fb043f38.png)
+``` ![_images/bbe850c4ba1754c42250404d1be42aca905c5085d068a8cd75a524120acd38b2.png](img/4a2b927f5fdf7388f4b220f8fb043f38.png)
 
 这是我们如何计算左尾的总概率。
 
@@ -275,19 +275,19 @@ update_euro(posterior, dataset)
 
 这就是后验的样子。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 def decorate_euro(title):
     decorate(xlabel='Proportion of heads (x)',
              ylabel='Probability',
              title=title) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+``` 显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 posterior.plot(label='140 heads out of 250', color='C4')
 decorate_euro(title='Posterior distribution of x') 
-```</details> ![_images/dd30c6b049d5869916cbb249de23ebe991fb42772dad3eb5da6714b70d4aeb42.png](img/e21c1ee951a38a073f43534b28b4d6c7.png)
+``` ![_images/dd30c6b049d5869916cbb249de23ebe991fb42772dad3eb5da6714b70d4aeb42.png](img/e21c1ee951a38a073f43534b28b4d6c7.png)
 
 这个图显示了`x`的后验分布，即我们观察到的硬币正面朝上的比例。
 
@@ -336,13 +336,13 @@ triangle.normalize()
 
 下图显示了结果，以及均匀的先验。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 uniform.plot()
 triangle.plot()
 decorate_euro(title='Uniform and triangle prior distributions') 
-```</details> ![_images/4cdca293cccae337c63f6c15db30cf19669f1955bef2dc4da5e6bd5ac35c56cd.png](img/bbac65b9451d9bfb85aa0550962f4bb9.png)
+``` ![_images/4cdca293cccae337c63f6c15db30cf19669f1955bef2dc4da5e6bd5ac35c56cd.png](img/bbac65b9451d9bfb85aa0550962f4bb9.png)
 
 现在我们可以使用相同的数据更新两个先验：
 
@@ -353,13 +353,13 @@ update_euro(triangle, dataset)
 
 这是后验分布。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 uniform.plot()
 triangle.plot()
 decorate_euro(title='Posterior distributions') 
-```</details> ![_images/53d63fd46dbabe83c44373b98d53b283d13d9308199d87274f185e49165ae929.png](img/7fe81d981e1a21fa9014aff9ec397feb.png)
+``` ![_images/53d63fd46dbabe83c44373b98d53b283d13d9308199d87274f185e49165ae929.png](img/7fe81d981e1a21fa9014aff9ec397feb.png)
 
 后验分布之间的差异几乎看不见，而且非常小，实际上几乎没有什么影响。
 
@@ -463,46 +463,46 @@ True
 
 这是均匀的先验：
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 hypos = np.linspace(0.1, 0.4, 101)
 prior = Pmf(1, hypos) 
-```</details>
+```
 
 这是一个可能性的字典，`Y`表示得到一个命中，`N`表示没有得到一个命中。
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 likelihood = {
     'Y': hypos,
     'N': 1-hypos
 } 
-```</details>
+```
 
 这是一个产生合理先验分布的数据集。
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 dataset = 'Y' * 25 + 'N' * 75 
-```</details>
+```
 
 这是用虚构数据更新的。
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 for data in dataset:
     prior *= likelihood[data]
 
 prior.normalize() 
-```</details>
+```
 
 最后，这就是先验的样子。
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 prior.plot(label='prior')
@@ -510,13 +510,13 @@ decorate(xlabel='Probability of getting a hit',
          ylabel='PMF') 
 ```
 
-![_images/113a21d5073b3244e9b3de11539ffe19d34f4bc5fb44f1501c7f35824bc000d4.png](img/34271f5e5462fbc71579f1c2dd2641d0.png)</details>
+![_images/113a21d5073b3244e9b3de11539ffe19d34f4bc5fb44f1501c7f35824bc000d4.png](img/34271f5e5462fbc71579f1c2dd2641d0.png)
 
 这个分布表明大多数球员的击球率接近 250，只有少数球员的击球率低于 175 或高于 350。我不确定这个先验分布如何准确地反映了大联盟棒球击球率的分布，但对于这个练习来说已经足够了。
 
 现在使用数据更新这个分布并绘制后验分布。后验分布中最可能的数量是什么？
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 # Solution
@@ -531,7 +531,7 @@ posterior.normalize()
 
 ```py
 0.017944179687707326 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -542,7 +542,7 @@ decorate(xlabel='Probability of getting a hit',
          ylabel='PMF') 
 ```
 
-![_images/22d82381a7a62c41f12af9cfbff8febaa9b39ee34d570c2575e5622c02a24cc0.png](img/f3ea843204a9b62a832df31ac2e4bfd5.png)</details><details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+![_images/22d82381a7a62c41f12af9cfbff8febaa9b39ee34d570c2575e5622c02a24cc0.png](img/f3ea843204a9b62a832df31ac2e4bfd5.png)
 
 ```py
 # Solution
@@ -552,7 +552,7 @@ prior.max_prob()
 
 ```py
 0.25 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -562,7 +562,7 @@ posterior.max_prob()
 
 ```py
 0.271 
-```</details>
+```
 
 **练习：**每当你调查人们对敏感问题的看法时，你都必须处理[社会期望偏差](https://en.wikipedia.org/wiki/Social_desirability_bias)，即人们倾向于调整他们的答案以展现自己最积极的一面。改善结果准确性的一种方法是[随机响应](https://en.wikipedia.org/wiki/Randomized_response)。
 
@@ -576,7 +576,7 @@ posterior.max_prob()
 
 假设你以这种方式调查了 100 个人，得到了 80 个 YES 和 20 个 NO。根据这些数据，作弊纳税人的比例的后验分布是什么？后验分布中最可能的数量是什么？
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 # Solution
@@ -587,7 +587,7 @@ posterior.max_prob()
 
 hypos = np.linspace(0, 1, 101)
 prior = Pmf(1, hypos) 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -599,7 +599,7 @@ likelihood = {
     'Y': 0.5 + hypos/2,
     'N': (1-hypos)/2
 } 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -616,7 +616,7 @@ posterior.normalize()
 
 ```py
 3.6945139133967024e-21 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -626,7 +626,7 @@ decorate(xlabel='Proportion of cheaters',
          ylabel='PMF') 
 ```
 
-![_images/449441453b54871fe06691651a71cb5ad95283abe7e5a15c06079f2a6f1dc9e7.png](img/93982c0082f09b712a1752d059bc55df.png)</details><details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+![_images/449441453b54871fe06691651a71cb5ad95283abe7e5a15c06079f2a6f1dc9e7.png](img/93982c0082f09b712a1752d059bc55df.png)
 
 ```py
 # Solution
@@ -636,7 +636,7 @@ posterior.idxmax()
 
 ```py
 0.6 
-```</details>
+```
 
 **练习：** 假设你想测试一枚硬币是否公平，但又不想把它抛几百次。所以你制造了一台自动旋转硬币并使用计算机视觉来确定结果的机器。
 
@@ -644,7 +644,7 @@ posterior.idxmax()
 
 如果我们把一枚硬币抛 250 次，机器报告说有 140 个正面，那么`x`的后验分布是什么？当你改变`y`的值时会发生什么？
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 # Solution
@@ -659,7 +659,7 @@ def update_unreliable(pmf, dataset, y):
         pmf *= likelihood[data]
 
     pmf.normalize() 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -676,7 +676,7 @@ update_unreliable(posterior02, dataset, 0.2)
 
 posterior04 = prior.copy()
 update_unreliable(posterior04, dataset, 0.4) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -688,7 +688,7 @@ decorate(xlabel='Proportion of heads',
          ylabel='PMF') 
 ```
 
-![_images/e9299449114d960b46cbaa39aec91bbe8cc5f1098a613525faf9b79a51a7eead.png](img/1aa8dbcda6ca8c617a855081f23147f0.png)</details><details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+![_images/e9299449114d960b46cbaa39aec91bbe8cc5f1098a613525faf9b79a51a7eead.png](img/1aa8dbcda6ca8c617a855081f23147f0.png)
 
 ```py
 # Solution
@@ -698,7 +698,7 @@ posterior00.idxmax(), posterior02.idxmax(), posterior04.idxmax()
 
 ```py
 (0.56, 0.6, 0.8) 
-```</details>
+```
 
 **练习：** 为了应对外星人入侵，地球防御联盟（EDL）一直在研发新型导弹来击落太空入侵者。当然，一些导弹设计比其他的更好；让我们假设每种设计都有一定的概率击中外星飞船，`x`。
 
@@ -710,14 +710,14 @@ posterior00.idxmax(), posterior02.idxmax(), posterior04.idxmax()
 
 提示：如果击中每个目标的概率是$x$，那么在两次测试中击中一个目标的概率是$\left[2x(1-x)\right]²$。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 # Solution
 
 hypos = np.linspace(0.1, 0.4, 101)
 prior = Pmf(1, hypos) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -727,7 +727,7 @@ prior = Pmf(1, hypos)
 x = hypos
 likes = [(1-x)**4, (2*x*(1-x))**2, x**4]
 likelihood = np.sum(likes, axis=0) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -739,7 +739,7 @@ from scipy.stats import binom
 n = 2
 likes2 = [binom.pmf(k, n, x)**2 for k in range(n+1)]
 likelihood2 = np.sum(likes2, axis=0) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -755,7 +755,7 @@ decorate(xlabel='Probability of hitting the target',
          title='Likelihood of getting the same result') 
 ```
 
-![_images/c9c1e9bf10d628665828b3673a516fa1b68f6db8450ad81025e9011aacc14f48.png](img/40f4649b80c1401e56fe80eea719188b.png)</details><details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+![_images/c9c1e9bf10d628665828b3673a516fa1b68f6db8450ad81025e9011aacc14f48.png](img/40f4649b80c1401e56fe80eea719188b.png)
 
 ```py
 # Solution
@@ -766,7 +766,7 @@ posterior.normalize()
 
 ```py
 49.129627998379995 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -779,7 +779,7 @@ decorate(xlabel='Probability of hitting the target',
          ylim=[0, 0.015]) 
 ```
 
-![_images/4c35edb942e0b9bc2704ca667de18b2127c8b149fac68f4406b38a173a4d8331.png](img/fac2d3e336dd1ade8daa9482137f1b27.png)</details><details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+![_images/4c35edb942e0b9bc2704ca667de18b2127c8b149fac68f4406b38a173a4d8331.png](img/fac2d3e336dd1ade8daa9482137f1b27.png)
 
 ```py
 # Solution
@@ -791,4 +791,4 @@ decorate(xlabel='Probability of hitting the target',
 # and the update gives more weight to extreme values.
 
 # So the dataset makes lower values of `x` more likely. 
-```</details>
+```

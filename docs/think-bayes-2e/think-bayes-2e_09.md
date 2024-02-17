@@ -220,7 +220,7 @@ prob(post_odds)
 
 **练习：**假设基于其他证据，你对奥利弗的有罪信念是 90%。这一部分的血液证据会如何改变你的信念？如果你最初认为他有罪的可能性只有 10%呢？
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 # Solution
@@ -231,7 +231,7 @@ prob(post_odds)
 
 ```py
 0.8823529411764706 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -242,7 +242,7 @@ prob(post_odds)
 
 ```py
 0.0847457627118644 
-```</details>
+```
 
 ## 加数
 
@@ -266,7 +266,7 @@ def make_die(sides):
 die = make_die(6) 
 ```
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 from utils import decorate
@@ -274,7 +274,7 @@ from utils import decorate
 die.bar(alpha=0.4)
 decorate(xlabel='Outcome',
          ylabel='PMF') 
-```</details> ![_images/c43b36bcf66bd6b728a6fe5ac6a7fc5f7eb51478dc651542d4edae0b5b0321ac.png](img/c2a1877e04a8a3fa36a8f59028332ffb.png)
+``` ![_images/c43b36bcf66bd6b728a6fe5ac6a7fc5f7eb51478dc651542d4edae0b5b0321ac.png](img/c2a1877e04a8a3fa36a8f59028332ffb.png)
 
 如果我们掷两个骰子并把它们加在一起，就有 11 种可能的结果，从 2 到 12，但它们并不是等可能的。要计算和的分布，我们必须列举可能的结果。
 
@@ -318,7 +318,7 @@ twice = Pmf.add_dist(die, die)
 
 这就是结果的样子：
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 from utils import decorate
@@ -327,13 +327,13 @@ def decorate_dice(title=''):
     decorate(xlabel='Outcome',
              ylabel='PMF',
              title=title) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+``` 显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 twice = add_dist(die, die)
 twice.bar(color='C1', alpha=0.5)
 decorate_dice() 
-```</details> ![_images/5f14ae8079e6a213ad93fa1a0cefd00895bff212ba562dd9d19448f25a988969.png](img/6c1db637e7682329b5bfa0a26b1f7b4e.png)
+``` ![_images/5f14ae8079e6a213ad93fa1a0cefd00895bff212ba562dd9d19448f25a988969.png](img/6c1db637e7682329b5bfa0a26b1f7b4e.png)
 
 如果我们有一系列代表骰子的`Pmf`对象，我们可以这样计算和的分布：
 
@@ -366,7 +366,7 @@ thrice = add_dist_seq(dice)
 
 +   三个骰子的和在 3 到 18 之间有一个钟形分布。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 import matplotlib.pyplot as plt
@@ -377,7 +377,7 @@ thrice.plot(label='thrice', ls=':')
 
 plt.xticks([0,3,6,9,12,15,18])
 decorate_dice(title='Distributions of sums') 
-```</details> ![_images/3f108e3febe8fa608321ae32f3fc6dcb0452841dd61e69fd0f44bd17c1c6ca14.png](img/5a5a0645b1a295392ef92cc14b5f632f.png)
+``` ![_images/3f108e3febe8fa608321ae32f3fc6dcb0452841dd61e69fd0f44bd17c1c6ca14.png](img/5a5a0645b1a295392ef92cc14b5f632f.png)
 
 顺便说一句，这个例子证明了中心极限定理，它说的是总和的分布会收敛到一个钟形的正态分布，至少在某些条件下是这样。
 
@@ -434,7 +434,7 @@ dist_total = Pmf.add_dist(dist_sensitive, dist_insensitive)
 
 以下是结果：
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码隐藏代码单元格源代码</summary>
+显示代码单元格源代码隐藏代码单元格源代码
 
 ```py
 dist_sensitive.plot(label='sensitive', ls=':')
@@ -444,7 +444,7 @@ dist_total.plot(label='total')
 decorate(xlabel='Number of correct identifications',
          ylabel='PMF',
          title='Gluten sensitivity') 
-```</details> ![_images/3e47fb19260ca824056dcc90c9e53515d3d7c9be4757ccf994017254c93be06c.png](img/1f321000f1d6a53c287f697719fa9824.png)
+``` ![_images/3e47fb19260ca824056dcc90c9e53515d3d7c9be4757ccf994017254c93be06c.png](img/1f321000f1d6a53c287f697719fa9824.png)
 
 我们期望大多数敏感的受试者能够正确识别麸质面粉。在 25 名不敏感的受试者中，我们预计大约有 10 人会碰巧识别出麸质面粉。因此，我们预计总共有大约 20 个正确的识别。
 
@@ -470,7 +470,7 @@ for num_sensitive in range(0, n+1):
 
 循环枚举`num_sensitive`的可能值。对于每个值，它计算总正确识别数量的分布，并将结果存储为 Pandas`DataFrame`中的一列。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
+显示代码单元格内容隐藏代码单元格内容
 
 ```py
 table.head(3) 
@@ -482,11 +482,11 @@ table.head(3)
 | 1 | 4.011165e-07 | 5.968996e-08 | 7.162795e-09 | 7.792856e-10 | 8.013930e-11 | 7.944844e-12 | 7.676178e-13 | 7.276377e-14 | 6.796616e-15 | 6.274653e-16 | ... | 7.508469e-34 | 6.486483e-35 | 5.596590e-36 | 4.823148e-37 | 4.152060e-38 | 3.570691e-39 | 3.067777e-40 | 2.633315e-41 | 2.258457e-42 | 1.935405e-43 |
 | 2 | 4.545987e-06 | 9.741401e-07 | 1.709122e-07 | 2.506426e-08 | 3.269131e-09 | 3.940182e-10 | 4.490244e-11 | 4.908756e-12 | 5.197412e-13 | 5.365476e-14 | ... | 1.806613e-31 | 1.620070e-32 | 1.449030e-33 | 1.292922e-34 | 1.151034e-35 | 1.022555e-36 | 9.066202e-38 | 8.023344e-39 | 7.088005e-40 | 6.251357e-41 |
 
-3 行×36 列</details>
+3 行×36 列
 
 以下图显示了来自`DataFrame`的选定列，对应于`num_sensitive`的不同假设值：
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 table[0].plot(label='num_sensitive = 0')
@@ -497,7 +497,7 @@ table[30].plot(label='num_sensitive = 30', ls=':')
 decorate(xlabel='Number of correct identifications',
          ylabel='PMF',
          title='Gluten sensitivity') 
-```</details> ![_images/d3a6012daa1a36dea54616b3bab308a507c20c69b4c9b2e889c0aae0dae66295.png](img/62e4ea7462f4fe30667801a6293636a6.png)
+``` ![_images/d3a6012daa1a36dea54616b3bab308a507c20c69b4c9b2e889c0aae0dae66295.png](img/62e4ea7462f4fe30667801a6293636a6.png)
 
 现在我们可以使用这个表格来计算数据的似然性：
 
@@ -521,11 +521,11 @@ posterior1 = prior * likelihood1
 posterior1.normalize() 
 ```
 
-<details class="hide below-input"><summary aria-label="Toggle hidden content">显示代码单元格输出 隐藏代码单元格输出</summary>
+显示代码单元格输出 隐藏代码单元格输出
 
 ```py
 0.4754741648615131 
-```</details>
+```
 
 为了比较，我还计算了另一个可能结果的后验，即 20 个正确的识别。
 
@@ -535,15 +535,15 @@ posterior2 = prior * likelihood2
 posterior2.normalize() 
 ```
 
-<details class="hide below-input"><summary aria-label="Toggle hidden content">显示代码单元格输出 隐藏代码单元格输出</summary>
+显示代码单元格输出 隐藏代码单元格输出
 
 ```py
 1.7818649765887378 
-```</details>
+```
 
 以下图显示了基于实际数据（12 个正确识别）和另一个可能结果（20 个正确识别）的`num_sensitive`的后验分布。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
+显示代码单元格源代码 隐藏代码单元格源代码
 
 ```py
 posterior1.plot(label='posterior with 12 correct', color='C4')
@@ -552,7 +552,7 @@ posterior2.plot(label='posterior with 20 correct', color='C1')
 decorate(xlabel='Number of sensitive subjects',
          ylabel='PMF',
          title='Posterior distributions') 
-```</details> ![_images/4edbc176c039585b4e37ae3bbaa48382e58f129df43bdad9a00b9891467b7541.png](img/be42bd3ed0fd91410501a73a59b454c4.png)
+``` ![_images/4edbc176c039585b4e37ae3bbaa48382e58f129df43bdad9a00b9891467b7541.png](img/be42bd3ed0fd91410501a73a59b454c4.png)
 
 有 12 个正确的识别时，最可能的结论是没有一个受麸质过敏的受试者。如果有 20 个正确的识别，最可能的结论是 11-12 个受试者对麸质过敏。
 
@@ -596,19 +596,19 @@ posterior2.max_prob()
 
 如果您对这些数字的来源感到好奇，我写了一篇[博客文章](https://www.allendowney.com/blog/2020/01/28/the-elvis-problem-revisited)。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 # Solution
 
 prior_odds = odds(1/3) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
 
 post_odds = prior_odds * 2 * 1.25 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -618,7 +618,7 @@ prob(post_odds)
 
 ```py
 0.5555555555555555 
-```</details>
+```
 
 **练习：**以下是一个出现在 glassdoor.com 上的[面试问题](https://www.glassdoor.com/Interview/You-re-about-to-get-on-a-plane-to-Seattle-You-want-to-know-if-you-should-bring-an-umbrella-You-call-3-random-friends-of-y-QTN_519262.htm)，据说是 Facebook 提出的：
 
@@ -628,19 +628,19 @@ prob(post_odds)
 
 这个问题引起了一些关于贝叶斯和频率主义概率解释之间的差异的混淆；如果您对这一点感到好奇，我写了一篇[博客文章](http://allendowney.blogspot.com/2016/09/bayess-theorem-is-not-optional.html)。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 # Solution
 
 prior_odds = odds(0.1) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
 
 post_odds = prior_odds * 2 * 2 * 2 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -650,25 +650,25 @@ prob(post_odds)
 
 ```py
 0.4705882352941177 
-```</details>
+```
 
 **练习：**[根据疾病控制和预防中心的数据](https://www.cdc.gov/tobacco/data_statistics/fact_sheets/health_effects/effects_cig_smoking)，吸烟者患肺癌的风险大约是不吸烟者的 25 倍。
 
 [根据疾病控制和预防中心的数据](https://www.cdc.gov/tobacco/data_statistics/fact_sheets/adult_data/cig_smoking/index.htm)，美国大约有 14%的成年人是吸烟者。如果您得知某人患有肺癌，那么他们是吸烟者的概率是多少？
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 # Solution
 
 prior_odds = odds(0.14) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
 
 post_odds = prior_odds * 25 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -678,7 +678,7 @@ prob(post_odds)
 
 ```py
 0.8027522935779816 
-```</details>
+```
 
 **练习：**在《龙与地下城》中，地精可以承受的伤害量是两个六面骰子的总和。你用短剑造成的伤害量是通过掷一个六面骰子来确定的。如果你造成的总伤害大于或等于地精所能承受的伤害量，那么地精就被打败了。
 
@@ -686,19 +686,19 @@ prob(post_odds)
 
 提示：您可以使用`Pmf.sub_dist`从`Pmf`中减去一个常数，比如 3。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 # Solution
 
 d6 = make_die(6) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
 # The amount the goblin started with is the sum of two d6
 hp_before = Pmf.add_dist(d6, d6) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -720,7 +720,7 @@ hp_after
 | 7 | 0.083333 |
 | 8 | 0.055556 |
 
-| 9 | 0.027778 |</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+| 9 | 0.027778 | 
 
 ```py
 # Solution
@@ -744,13 +744,13 @@ hp_after
 | 7 | 0.090909 |
 | 8 | 0.060606 |
 
-| 9 | 0.030303 |</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+| 9 | 0.030303 | 
 
 ```py
 # Solution
 # The damage from the second attack is one d6
 damage = d6 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -760,14 +760,14 @@ damage.plot(label='Damage', color='C1')
 decorate_dice('The Goblin Problem') 
 ```
 
-![_images/c4aa15c5ffeb5acf5ca0a2614bbb8bdcf50b9c7d12890ac7caabd2715a152213.png](img/a619f1380207071d29980a7ce6c583c5.png)</details><details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+![_images/c4aa15c5ffeb5acf5ca0a2614bbb8bdcf50b9c7d12890ac7caabd2715a152213.png](img/a619f1380207071d29980a7ce6c583c5.png)
 
 ```py
 # Solution
 
 # Here's the distribution of points the goblin has left
 points_left = Pmf.sub_dist(hp_after, damage) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -778,20 +778,20 @@ points_left.prob_le(0)
 
 ```py
 0.4545454545454545 
-```</details>
+```
 
 **练习：**假设我有一个装有一个 6 面骰子、一个 8 面骰子和一个 12 面骰子的盒子。我随机选择一个骰子，掷两次，将结果相乘，并报告乘积为 12。我选择了 8 面骰子的概率是多少？
 
 提示：`Pmf`提供了一个名为`mul_dist`的函数，该函数接受两个`Pmf`对象并返回一个代表乘积分布的`Pmf`。
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 # Solution
 
 hypos = [6, 8, 12]
 prior = Pmf(1, hypos) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -813,7 +813,7 @@ Pmf.mul_dist(d4, d4)
 | 9 | 0.0625 |
 | 12 | 0.1250 |
 
-| 16 | 0.0625 |</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+| 16 | 0.0625 | 
 
 ```py
 # Solution
@@ -831,7 +831,7 @@ likelihood
 
 ```py
 [0.1111111111111111, 0.0625, 0.041666666666666664] 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -847,13 +847,13 @@ posterior
 | 6 | 0.516129 |
 | 8 | 0.290323 |
 
-| 12 | 0.193548 |</details>
+| 12 | 0.193548 |
 
 **练习：**《背叛之屋》是一款策略游戏，其中具有不同属性的角色探索一个闹鬼的房子。根据他们的属性，角色掷出不同数量的骰子。例如，如果尝试依赖知识的任务，Longfellow 教授掷 5 个骰子，Madame Zostra 掷 4 个，Ox Bellows 掷 3 个。每个骰子以相等的概率产生 0、1 或 2。
 
 如果随机选择的字符尝试了三次任务，并且第一次尝试得到了 3，第二次得到了 4，第三次得到了 5，你认为是哪个字符？
 
-<details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 # Solution
@@ -867,7 +867,7 @@ die
 | 0 | 0.333333 |
 | 1 | 0.333333 |
 
-| 2 | 0.333333 |</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+| 2 | 0.333333 | 
 
 ```py
 # Solution
@@ -876,7 +876,7 @@ pmfs = {}
 pmfs['Bellows'] = add_dist_seq([die]*3)
 pmfs['Zostra'] = add_dist_seq([die]*4)
 pmfs['Longfellow'] = add_dist_seq([die]*5) 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -886,7 +886,7 @@ pmfs'Zostra'
 
 ```py
 0.2345679012345679 
-```</details> <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -896,7 +896,7 @@ pmfs'Zostra'.prod()
 
 ```py
 0.00915247412224499 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -911,7 +911,7 @@ prior
 | 贝洛斯 | 0.333333 |
 | 佐斯特拉 | 0.333333 |
 
-| 朗费罗 | 0.333333 |</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+| 朗费罗 | 0.333333 | 
 
 ```py
 # Solution
@@ -929,7 +929,7 @@ likelihood
 | 贝洛斯 | 0.006401 |
 | 佐斯特拉 | 0.009152 |
 
-| 朗费罗 | 0.004798 |</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+| 朗费罗 | 0.004798 | 
 
 ```py
 # Solution
@@ -944,11 +944,11 @@ posterior
 | 贝洛斯 | 0.314534 |
 | 佐斯特拉 | 0.449704 |
 
-| 朗费罗 | 0.235762 |</details>
+| 朗费罗 | 0.235762 |
 
 **练习：** 美国国会有 538 名成员。假设我们审计他们的投资组合，并发现其中有 312 人的表现超过了市场。让我们假设一个诚实的国会成员只有 50%的机会超过市场，但一个利用内部信息交易的不诚实成员有 90%的机会。国会有多少名成员是诚实的？
 
-<details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+
 
 ```py
 # Solution
@@ -971,7 +971,7 @@ table.shape
 
 ```py
 (539, 539) 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -983,7 +983,7 @@ len(likelihood)
 
 ```py
 539 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -995,7 +995,7 @@ len(prior)
 
 ```py
 539 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1007,7 +1007,7 @@ posterior.mean()
 
 ```py
 431.4882114501996 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1017,7 +1017,7 @@ decorate(xlabel='Number of honest members of Congress',
          ylabel='PMF') 
 ```
 
-![_images/7447fc4391e9aa1cba5f6cab483deaa41bb05fa97e087ee7f87a4204e41e03c6.png](img/45ad6998d89c6322118de39215430731.png)</details><details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+![_images/7447fc4391e9aa1cba5f6cab483deaa41bb05fa97e087ee7f87a4204e41e03c6.png](img/45ad6998d89c6322118de39215430731.png)
 
 ```py
 # Solution
@@ -1027,7 +1027,7 @@ posterior.max_prob()
 
 ```py
 430 
-```</details> <details class="hide above-input"><summary aria-label="切换隐藏内容">显示代码单元格内容 隐藏代码单元格内容</summary>
+``` 
 
 ```py
 # Solution
@@ -1037,4 +1037,4 @@ posterior.credible_interval(0.9)
 
 ```py
 array([388., 477.]) 
-```</details>
+```
