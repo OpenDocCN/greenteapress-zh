@@ -951,7 +951,7 @@ $$ d = \frac{\mu_1 - \mu_2}{(\sigma_1 + \sigma_2)/2} $$
 
 以下函数接受联合后验分布并返回一对样本。它使用了一些我们还没有看到的特性，但您现在可以忽略细节。
 
-显示代码单元格内容隐藏代码单元格内容
+
 
 ```py
 def sample_joint(joint, size):
@@ -966,7 +966,7 @@ def sample_joint(joint, size):
 
 以下是我们如何使用它从两个组的后验分布中抽样对。
 
-显示代码单元格内容隐藏代码单元格内容
+
 
 ```py
 sample_treated = sample_joint(posterior_treated, 1000)
@@ -975,7 +975,7 @@ sample_treated.shape
 
 ```py
 (1000,) 
-``` 显示代码单元格内容隐藏代码单元格内容
+``` 
 
 ```py
 sample_control = sample_joint(posterior_control, 1000)
@@ -988,7 +988,7 @@ sample_control.shape
 
 结果是一个元组数组，每个元组包含$\mu$和$\sigma$的一对可能值。现在您可以循环遍历样本，计算每个样本的 Cohen effect size，并估计 effect sizes 的分布。
 
-显示代码单元格内容隐藏代码单元格内容
+
 
 ```py
 # Solution
@@ -1005,7 +1005,7 @@ def cohen_effect(pair1, pair2):
     mu2, sigma2 = pair2
     sigma = (sigma1 + sigma2) / 2
     return (mu1 - mu2) / sigma 
-``` 显示代码单元格内容隐藏代码单元格内容
+``` 
 
 ```py
 # Solution
@@ -1015,7 +1015,7 @@ cohen_effect(sample_treated[0], sample_control[0])
 
 ```py
 0.7603960396039605 
-``` 显示代码单元格内容隐藏代码单元格内容
+``` 
 
 ```py
 # Solution
@@ -1024,7 +1024,7 @@ ds = []
 for pair1, pair2 in zip(sample_treated, sample_control):
     d = cohen_effect(pair1, pair2)
     ds.append(d) 
-``` 显示代码单元格内容隐藏代码单元格内容
+``` 
 
 ```py
 # Solution
@@ -1037,7 +1037,7 @@ decorate(xlabel='Cohen effect size',
          title='Posterior distributions of effect size') 
 ```
 
-![_images/93749567d15a59d942c9592d5f736a75613b185134d0b1aa9cbc0cd0964b767c.png](img/9d80ca54302ffbc494cce5aa63d81ebf.png)显示代码单元格内容隐藏代码单元格内容
+![_images/93749567d15a59d942c9592d5f736a75613b185134d0b1aa9cbc0cd0964b767c.png](img/9d80ca54302ffbc494cce5aa63d81ebf.png)
 
 ```py
 # Solution
@@ -1047,7 +1047,7 @@ cdf.mean()
 
 ```py
 0.6623391688256146 
-``` 显示代码单元格内容隐藏代码单元格内容
+``` 
 
 ```py
 # Solution
@@ -1069,7 +1069,7 @@ array([0.08648649, 1.17647059])
 
 提示：要计算得分大于 90 的概率，您可以使用`norm.sf`，它计算生存函数，也称为互补 CDF，或`1 - cdf(x)`。
 
-显示代码单元格内容隐藏代码单元格内容
+
 
 ```py
 # Solution
@@ -1078,7 +1078,7 @@ array([0.08648649, 1.17647059])
 # values for the prior
 
 hypos = np.linspace(1, 51, 101) 
-``` 显示代码单元格内容隐藏代码单元格内容
+``` 
 
 ```py
 # Solution
@@ -1094,7 +1094,7 @@ pgt90.shape
 
 ```py
 (101,) 
-``` 显示代码单元格内容隐藏代码单元格内容
+``` 
 
 ```py
 # Solution
@@ -1110,7 +1110,7 @@ likelihood1.shape
 
 ```py
 (101,) 
-``` 显示代码单元格内容隐藏代码单元格内容
+``` 
 
 ```py
 # Solution
@@ -1124,7 +1124,7 @@ posterior.normalize()
 
 ```py
 5.299480018256258 
-``` 显示代码单元格内容隐藏代码单元格内容
+``` 
 
 ```py
 # Solution

@@ -681,7 +681,7 @@ posterior_N.plot(color='C4')
 decorate(xlabel='Number of bugs (N)',
          ylabel='PMF',
          title='Posterior marginal distribution of n with known p1, p2') 
-``` ![_images/d563e5ed6f947b2470b1ec9317f0963741fcd3f9f26c5815d72fb8e75cccd114.png](img/46976d5c53d8c858858d1ef0d983d0d6.png)显示代码单元格内容隐藏代码单元格内容
+``` ![_images/d563e5ed6f947b2470b1ec9317f0963741fcd3f9f26c5815d72fb8e75cccd114.png](img/46976d5c53d8c858858d1ef0d983d0d6.png)
 
 ```py
 print(posterior_N.mean(), 
@@ -743,7 +743,7 @@ joint3.shape
 
 结果是一个`DataFrame`，`N`和`p0`的值在沿行向下的`MultiIndex`中，`p1`的值在沿列的索引中。
 
-显示代码单元格内容隐藏代码单元格内容
+
 
 ```py
 joint3.head(3) 

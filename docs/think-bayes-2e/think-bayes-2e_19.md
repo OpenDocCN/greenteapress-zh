@@ -156,7 +156,7 @@ download('https://raw.githubusercontent.com/CamDavidsonPilon/Probabilistic-Progr
 
 我将读取数据并进行一些清理。
 
-显示代码单元格内容隐藏代码单元格内容
+
 
 ```py
 data = pd.read_csv('challenger_data.csv', parse_dates=[0])
@@ -227,7 +227,7 @@ data.head()
 
 数据集中有 23 次发射，其中 7 次发生了损坏事件。
 
-显示代码单元格内容隐藏代码单元格内容
+
 
 ```py
 len(data), data['Damage'].sum() 
@@ -325,7 +325,7 @@ odds = np.exp(log_odds)
 ps = odds / (odds + 1) 
 ```
 
-显示代码单元格内容隐藏代码单元格内容
+
 
 ```py
 ps.mean() 
@@ -343,7 +343,7 @@ from scipy.special import expit
 ps = expit(inter + slope * xs) 
 ```
 
-显示代码单元格内容隐藏代码单元格内容
+
 
 ```py
 ps.mean() 
@@ -920,7 +920,7 @@ print(median[t], (low[t], high[t]))
 
 如果你对这个话题感兴趣，你可以[在这篇博客文章中阅读更多内容](http://allendowney.blogspot.com/2016/11/why-are-we-so-surprised.html)。
 
-显示代码单元格内容隐藏代码单元格内容
+
 
 ```py
 # Solution

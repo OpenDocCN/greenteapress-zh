@@ -815,7 +815,7 @@ decorate(xlabel='Bid ($)',
     title='Optimal bid: expected gain') 
 ```
 
-![_images/fa3190e06341295c604af81707aff93d8ee047523308df3bba4a68565008857a.png](img/038f8ef198dbb66ad9477d8d0636264d.png)显示代码单元格内容隐藏代码单元格内容
+![_images/fa3190e06341295c604af81707aff93d8ee047523308df3bba4a68565008857a.png](img/038f8ef198dbb66ad9477d8d0636264d.png)
 
 ```py
 # Solution
@@ -825,7 +825,7 @@ expected_gain_series.idxmax()
 
 ```py
 30000.0 
-``` 显示代码单元格内容隐藏代码单元格内容
+``` 
 
 ```py
 # Solution
@@ -937,7 +937,7 @@ expected_gain_series.max()
 
 为了让你开始，以下函数根据问题的规范计算利润和成本：
 
- 显示代码单元格内容隐藏代码单元格内容
+ 
 
 ```py
 def print_cost(printed):
@@ -949,7 +949,7 @@ def print_cost(printed):
         return printed * 5
     else:
         return printed * 4.5 
-``` </ details>  显示代码单元格内容隐藏代码单元格内容
+``` </ details>  
 
 ```py
 def total_income(printed, orders):
@@ -960,7 +960,7 @@ def total_income(printed, orders):
  """
     sold = min(printed, np.sum(orders))
     return sold * 10 
-``` </ details>  显示代码单元格内容隐藏代码单元格内容
+``` </ details>  
 
 ```py
 def inventory_cost(printed, orders):
@@ -974,7 +974,7 @@ def inventory_cost(printed, orders):
         return excess * 2
     else:
         return 0 
-``` </ details>  显示代码单元格内容隐藏代码单元格内容
+``` </ details>  
 
 ```py
 def out_of_stock_cost(printed, orders):

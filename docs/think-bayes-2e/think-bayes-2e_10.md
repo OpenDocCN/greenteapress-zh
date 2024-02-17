@@ -7,7 +7,7 @@
 > 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 
-<详细信息类="隐藏在输入上方"><总结 aria-label="切换隐藏内容">显示代码单元格内容隐藏代码单元格内容</总结>
+
 
 ```py
 # Get utils.py
@@ -22,7 +22,7 @@ def download(url):
         print('Downloaded ' + local)
 
 download('https://github.com/AllenDowney/ThinkBayes2/raw/master/soln/utils.py') 
-```</详细信息>
+```
 
 在上一章中，我们计算了总和的分布。在本章中，我们将计算最小值和最大值的分布，并使用它们来解决正向和反向问题。
 
@@ -73,7 +73,7 @@ cumulative = pmf.cumsum()
 
 这是它的样子，以及 PMF。
 
-<详细信息类="隐藏在输入上方"><总结 aria-label="切换隐藏内容">显示代码单元格内容隐藏代码单元格内容</总结>
+
 
 ```py
 from utils import decorate
@@ -82,13 +82,13 @@ def decorate_euro(title):
     decorate(xlabel='Proportion of heads (x)',
              ylabel='Probability',
              title=title) 
-```</详细信息> <详细信息类="隐藏在输入上方"><总结 aria-label="切换隐藏内容">显示代码单元格源隐藏代码单元格源</总结>
+``` 显示代码单元格源隐藏代码单元格源
 
 ```py
 cumulative.plot(label='CDF')
 pmf.plot(label='PMF')
 decorate_euro(title='Posterior distribution for the Euro problem') 
-```</详细信息> ![_images/5c45a9af712ec2288ce03ce1aa193619f0c49f4ea04ea44c86a7be39fa4344bf.png](img/8858c7133f1f61a9e62a4454609a6f7c.png)
+``` ![_images/5c45a9af712ec2288ce03ce1aa193619f0c49f4ea04ea44c86a7be39fa4344bf.png](img/8858c7133f1f61a9e62a4454609a6f7c.png)
 
 CDF 的范围总是从 0 到 1，与 PMF 相反，PMF 的最大值可以是任何概率。
 
@@ -142,7 +142,7 @@ cdf[0.61]
 
 但是，如果查找的数量不在分布中，就会得到一个`KeyError`。
 
-<详细信息类="隐藏在输入上方"><总结 aria-label="切换隐藏内容">显示代码单元格内容隐藏代码单元格内容</总结>
+
 
 ```py
 try:
@@ -153,7 +153,7 @@ except KeyError as e:
 
 ```py
 KeyError(0.615) 
-```</详细信息>
+```
 
 为了避免这个问题，您可以将`Cdf`作为函数调用，使用括号。如果参数不在`Cdf`中，它会在数量之间进行插值。
 
@@ -598,7 +598,7 @@ pd.DataFrame(dice)
 df = pd.DataFrame(dice).fillna(0).transpose() 
 ```
 
-显示代码单元格内容隐藏代码单元格内容
+
 
 ```py
 df 
@@ -715,7 +715,7 @@ decorate_dice('Distribution of damage with three different weapons')
 
 为了让你开始，这里有一个代表标准数组中属性分布的`Cdf`：
 
-显示代码单元格内容隐藏代码单元格内容
+
 
 ```py
 standard = [15,14,13,12,10,8]
@@ -724,7 +724,7 @@ cdf_standard = Cdf.from_seq(standard)
 
 我们可以将其与通过掷四个骰子并将最好的三个相加得到的属性分布进行比较。
 
-显示代码单元格内容隐藏代码单元格内容
+
 
 ```py
 cdf_best3.plot(label='best 3 of 4', color='C1', ls='--')
@@ -738,7 +738,7 @@ plt.ylabel('CDF');
 
 我将`cdf_standard`绘制为阶梯函数，以更清楚地显示它只包含了少量的数量。
 
-显示代码单元格内容隐藏代码单元格内容
+
 
 ```py
 # Solution
@@ -749,7 +749,7 @@ cdf_best3.mean(), cdf_standard.mean()
 
 ```py
 (12.296699999999998, 12.0) 
-``` 显示代码单元格内容隐藏代码单元格内容
+``` 
 
 ```py
 # Solution
@@ -760,7 +760,7 @@ cdf_best3.std(), cdf_standard.std()
 
 ```py
 (2.8381101299984817, 2.3804761428476167) 
-``` 显示代码单元格内容隐藏代码单元格内容
+``` 
 
 ```py
 # Solution
@@ -771,7 +771,7 @@ cdf_best3.lt_dist(8)
 
 ```py
 0.055999999999999994 
-``` 显示代码单元格内容隐藏代码单元格内容
+``` 
 
 ```py
 # Solution
@@ -782,7 +782,7 @@ cdf_best3.gt_dist(15)
 
 ```py
 0.13419999999999999 
-``` 显示代码单元格内容隐藏代码单元格内容
+``` 
 
 ```py
 # Solution
@@ -794,7 +794,7 @@ cdf_min6.lt_dist(8), 1 - (1-cdf_best3.lt_dist(8))**6
 
 ```py
 (0.2923280761096768, 0.2923280761096768) 
-``` 显示代码单元格内容隐藏代码单元格内容
+``` 
 
 ```py
 # Solution
@@ -824,7 +824,7 @@ cdf_max6.gt_dist(15), 1 - (1-cdf_best3.gt_dist(15))**6
 
 提示：计算后验分布，就像我们以前做过的那样，并将其作为`make_mixture`的一个参数传递。
 
-显示代码单元格内容隐藏代码单元格内容
+
 
 ```py
 # Solution
@@ -844,7 +844,7 @@ posterior
 | 6 0.425532 |
 | 8 0.319149 |
 
-| 10 | 0.255319 | 显示代码单元格内容隐藏代码单元格内容
+| 10 | 0.255319 | 
 
 ```py
 # Solution
@@ -856,7 +856,7 @@ d8 = make_die(8)
 d10 = make_die(10)
 
 dice = d6, d8, d10 
-``` 显示代码单元格内容隐藏代码单元格内容
+``` 
 
 ```py
 # Solution
@@ -868,7 +868,7 @@ mix3 = make_mixture(posterior, dice)
 mix3.bar() 
 ```
 
-![_images/3231b49676e5e552b7acffd5e5afd5d9c65961bec5ee73f35ab02ea8cbc004e6.png](img/bc26d662574ca89e65b2ecd142584a7a.png)显示代码单元格内容隐藏代码单元格内容
+![_images/3231b49676e5e552b7acffd5e5afd5d9c65961bec5ee73f35ab02ea8cbc004e6.png](img/bc26d662574ca89e65b2ecd142584a7a.png)
 
 ```py
 # Solution
@@ -895,7 +895,7 @@ mix3[6]
 
 为了让你开始，我将从具有给定参数的正态分布生成一年的数据。
 
-显示代码单元格内容隐藏代码单元格内容
+
 
 ```py
 mean = 950

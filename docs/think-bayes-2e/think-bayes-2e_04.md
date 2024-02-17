@@ -699,7 +699,7 @@ $$P(A) = \sum_i P(B_i) P(A|B_i)$$
 
 仔细考虑你传递给`conditional`的参数的顺序。
 
-显示代码单元格内容隐藏代码单元格内容
+
 
 ```py
 # Solution
@@ -709,7 +709,7 @@ conditional(liberal, given=democrat)
 
 ```py
 0.3891320002215698 
-``` 显示代码单元格内容隐藏代码单元格内容
+``` 
 
 ```py
 # Solution
@@ -735,7 +735,7 @@ conditional(democrat, given=liberal)
 
 +   Linda 是一名银行家和自由主义民主党人的概率，假设她是女性。
 
-显示代码单元格内容隐藏代码单元格内容
+
 
 ```py
 # Solution
@@ -745,7 +745,7 @@ conditional(banker, given=female)
 
 ```py
 0.02116102749801969 
-``` 显示代码单元格内容隐藏代码单元格内容
+``` 
 
 ```py
 # Solution

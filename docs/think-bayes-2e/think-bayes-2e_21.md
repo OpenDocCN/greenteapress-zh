@@ -131,7 +131,7 @@ posterior_conjugate = pmf_from_dist(posterior_gamma, lams)
 
 下图显示了使用网格算法计算的结果以及我们计算的后验分布。
 
-显示代码单元格内容隐藏代码单元格内容
+
 
 ```py
 from utils import decorate
@@ -488,7 +488,7 @@ $$\lambda e^{-\lambda t}$$
 
 记得用大约 90 分钟的游戏单位来表示这些数量。
 
-显示代码单元格内容隐藏代码单元格内容
+
 
 ```py
 # Solution
@@ -507,7 +507,7 @@ So we can use the same update function and call it like this:
 
 data = 1, 11/90
 posterior1 = update_gamma(prior_gamma, data) 
-``` 显示代码单元格内容隐藏代码单元格内容
+``` 
 
 ```py
 # Solution
@@ -516,7 +516,7 @@ posterior1 = update_gamma(prior_gamma, data)
 
 data = 1, 12/90
 posterior2 = update_gamma(posterior1, data) 
-``` 显示代码单元格内容隐藏代码单元格内容
+``` 
 
 ```py
 # Solution
@@ -526,7 +526,7 @@ prior_gamma.mean(), posterior1.mean(), posterior2.mean()
 
 ```py
 (1.4, 2.1386138613861387, 2.7079646017699113) 
-``` 显示代码单元格内容隐藏代码单元格内容
+``` 
 
 ```py
 # Solution
@@ -552,7 +552,7 @@ decorate_rate(title='World Cup Problem, Germany v Brazil')
 
 这是三角形先验。
 
-显示代码单元格内容隐藏代码单元格内容
+
 
 ```py
 from empiricaldist import Pmf
@@ -573,7 +573,7 @@ triangle.normalize()
 
 这是更新。
 
-显示代码单元格内容隐藏代码单元格内容
+
 
 ```py
 k, n = 140, 250
@@ -589,7 +589,7 @@ posterior.normalize()
 
 为了帮助你入门，这是我们用作均匀先验的贝塔分布。
 
-显示代码单元格内容隐藏代码单元格内容
+
 
 ```py
 alpha = 1
@@ -605,7 +605,7 @@ prior_beta.mean()
 
 这是它与三角形先验的比较。
 
-显示代码单元格内容隐藏代码单元格内容
+
 
 ```py
 prior_pmf = pmf_from_dist(prior_beta, xs)
@@ -620,7 +620,7 @@ decorate_euro('Prior distributions')
 
 现在由你来继续。
 
-显示代码单元格内容隐藏代码单元格内容
+
 
 ```py
 # Solution
@@ -632,13 +632,13 @@ posterior_beta.mean()
 
 ```py
 0.5595238095238095 
-``` 显示代码单元格内容隐藏代码单元格内容
+``` 
 
 ```py
 # Solution
 
 posterior_conjugate = pmf_from_dist(posterior_beta, xs) 
-``` 显示代码单元格内容隐藏代码单元格内容
+``` 
 
 ```py
 # Solution
@@ -651,7 +651,7 @@ decorate(xlabel='Proportion of heads (x)',
          title='Posterior distribution of x') 
 ```
 
-![_images/c876c409c11dd54ba4da7d89608ab9129059f96d92b73aa846a81dcf77d3d82c.png](img/70a181595d707f471e4b328a30987f04.png)显示代码单元格内容隐藏代码单元格内容
+![_images/c876c409c11dd54ba4da7d89608ab9129059f96d92b73aa846a81dcf77d3d82c.png](img/70a181595d707f471e4b328a30987f04.png)
 
 ```py
 # Solution

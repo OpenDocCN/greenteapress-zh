@@ -880,7 +880,7 @@ Sampling 2 chains for 1_000 tune and 500 draw iterations (2_000 + 1_000 draws to
 
 注意：`HyperGeometric`在版本 3.8 之后添加到 PyMC3 中，因此您可能需要更新您的安装来完成这个练习。
 
-显示代码单元格内容隐藏代码单元格内容
+
 
 ```py
 # Solution
@@ -925,7 +925,7 @@ data = [0.80497283, 2.11577082, 0.43308797, 0.10862644, 5.17334866,
        3.25745053, 3.05555883, 2.47401062, 0.05340806, 1.08386395] 
 ```
 
-显示代码单元格内容隐藏代码单元格内容
+
 
 ```py
 # Solution
@@ -960,11 +960,11 @@ The acceptance probability does not match the target. It is 0.8819724175144361, 
 
 现在估计受试组的参数。
 
-显示代码单元格内容隐藏代码单元格内容
+
 
 ```py
 data = responses['Treated'] 
-``` 显示代码单元格内容隐藏代码单元格内容
+``` 
 
 ```py
 # Solution
@@ -987,7 +987,7 @@ NUTS: [sigma, mu]
 
 ```py
 Sampling 2 chains for 1_000 tune and 500 draw iterations (2_000 + 1_000 draws total) took 2 seconds. 
-``` 显示代码单元格内容隐藏代码单元格内容
+``` 
 
 ```py
 # Solution

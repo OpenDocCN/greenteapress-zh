@@ -245,7 +245,7 @@ decorate(xlabel='Proportion of heads (x)',
 
 **练习：**现在计算在这种“偏置”的定义下数据的总概率，并计算贝叶斯因子，与公平假设相比。数据证据表明硬币是有偏的吗？
 
-显示代码单元格内容隐藏代码单元格内容
+
 
 ```py
 # Solution
@@ -256,7 +256,7 @@ like_triangle
 
 ```py
 0.00698132546485788 
-``` 显示代码单元格内容隐藏代码单元格内容
+``` 
 
 ```py
 # Solution
@@ -267,7 +267,7 @@ K
 
 ```py
 1.1970766535647157 
-``` 显示代码单元格内容隐藏代码单元格内容
+``` 
 
 ```py
 # Solution
@@ -648,7 +648,7 @@ summarize_beliefs(beliefs)
 
 更重要的是，让我们看看每台机器被玩了多少次。
 
-显示代码单元格内容隐藏代码单元格内容
+
 
 ```py
 def summarize_counter(counter):
@@ -707,7 +707,7 @@ summarize_counter(counter)
 
 此练习的详细信息在笔记本中。
 
-显示代码单元格内容隐藏代码单元格内容
+
 
 ```py
 def prob_correct(ability, difficulty):
@@ -723,7 +723,7 @@ def prob_correct(ability, difficulty):
 
 这是一个难度为 500，能力范围的逻辑曲线是什么样子。
 
-显示代码单元格内容隐藏代码单元格内容
+
 
 ```py
 abilities = np.linspace(100, 900)
@@ -1158,7 +1158,7 @@ np.mean(sample_800 > sample_700)
 
 对于第二个版本，什么是最大化测试在能力范围内精度的自适应策略？
 
-显示代码单元格内容隐藏代码单元格内容
+
 
 ```py
 # Solution
@@ -1185,7 +1185,7 @@ def choose(i, belief):
  returns: difficulty
  """
     return difficulties[i] 
-``` 显示代码单元格内容隐藏代码单元格内容
+``` 
 
 ```py
 # Solution

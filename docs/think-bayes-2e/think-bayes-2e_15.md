@@ -123,7 +123,7 @@ plot_cdfs(df, colname)
 
 这是 Culmen 深度的分布。
 
-显示代码单元格内容隐藏代码单元格内容
+
 
 ```py
 colname = 'Culmen Depth (mm)'
@@ -134,7 +134,7 @@ plot_cdfs(df, colname)
 
 这是体重的分布。
 
-显示代码单元格内容隐藏代码单元格内容
+
 
 ```py
 colname = 'Body Mass (g)'
@@ -777,7 +777,7 @@ accuracy(df)
 
 制作一个使用数据集中所有四个测量值的朴素贝叶斯分类器：喙长和深度、鳍长和体重。它比使用两个特征的模型更准确吗？
 
-显示代码单元格内容隐藏代码单元格内容
+
 
 ```py
 # Solution
@@ -786,7 +786,7 @@ accuracy(df)
 
 depth_map = make_norm_map(df, 'Culmen Depth (mm)')
 mass_map = make_norm_map(df, 'Body Mass (g)') 
-``` 显示代码单元格内容隐藏代码单元格内容
+``` 
 
 ```py
 # Solution
@@ -797,7 +797,7 @@ colnames4 = ['Culmen Length (mm)', 'Flipper Length (mm)',
              'Culmen Depth (mm)', 'Body Mass (g)']
 norm_maps4 = [culmen_map, flipper_map, 
               depth_map, mass_map] 
-``` 显示代码单元格内容隐藏代码单元格内容
+``` 
 
 ```py
 # Solution
@@ -827,12 +827,12 @@ accuracy(df)
 
 注意：一只 Gentoo 企鹅的`性别`值无效。我使用以下代码选择了一种物种并过滤掉无效数据。
 
-显示代码单元格内容隐藏代码单元格内容
+
 
 ```py
 gentoo = (df['Species2'] == 'Gentoo')
 subset = df[gentoo].copy() 
-``` 显示代码单元格内容隐藏代码单元格内容
+``` 
 
 ```py
 subset['Sex'].value_counts() 
@@ -843,7 +843,7 @@ Sex
 MALE      61
 FEMALE    58
 Name: count, dtype: int64 
-``` 显示代码单元格内容隐藏代码单元格内容
+``` 
 
 ```py
 valid = df['Sex'] != '.'
@@ -852,7 +852,7 @@ valid.sum()
 
 ```py
 342 
-``` 显示代码单元格内容隐藏代码单元格内容
+``` 
 
 ```py
 subset = df[valid & gentoo].copy() 
@@ -860,7 +860,7 @@ subset = df[valid & gentoo].copy()
 
 好的，你可以从这里完成。
 
-显示代码单元格内容隐藏代码单元格内容
+
 
 ```py
 # Solution
@@ -870,7 +870,7 @@ subset = df[valid & gentoo].copy()
 plot_cdfs(subset, 'Culmen Length (mm)', by='Sex') 
 ```
 
-![_images/593695247d65a10544511b5927c317a34961b74aa28b0b8262f09e23dc689ed0.png](img/6f185a1764714033ce3fadae7faa3dd2.png)显示代码单元格内容隐藏代码单元格内容
+![_images/593695247d65a10544511b5927c317a34961b74aa28b0b8262f09e23dc689ed0.png](img/6f185a1764714033ce3fadae7faa3dd2.png)
 
 ```py
 # Solution
@@ -878,7 +878,7 @@ plot_cdfs(subset, 'Culmen Length (mm)', by='Sex')
 plot_cdfs(subset, 'Culmen Depth (mm)', by='Sex') 
 ```
 
-![_images/849af936f99c3a4d8967490da0ee99cf202b4ae1d50a9228de5bd1cf929ff2c6.png](img/478c601e168af9c1103e0a86f2b8ee43.png)显示代码单元格内容隐藏代码单元格内容
+![_images/849af936f99c3a4d8967490da0ee99cf202b4ae1d50a9228de5bd1cf929ff2c6.png](img/478c601e168af9c1103e0a86f2b8ee43.png)
 
 ```py
 # Solution
@@ -886,7 +886,7 @@ plot_cdfs(subset, 'Culmen Depth (mm)', by='Sex')
 plot_cdfs(subset, 'Flipper Length (mm)', by='Sex') 
 ```
 
-![_images/00a72695a4dabd6313d863e44bab5a4aa428ed6f1190b4fb1ad50bc1dd4e7785.png](img/a8ee412d8b0bfcc92548ac420df21575.png)显示代码单元格内容隐藏代码单元格内容
+![_images/00a72695a4dabd6313d863e44bab5a4aa428ed6f1190b4fb1ad50bc1dd4e7785.png](img/a8ee412d8b0bfcc92548ac420df21575.png)
 
 ```py
 # Solution
@@ -894,7 +894,7 @@ plot_cdfs(subset, 'Flipper Length (mm)', by='Sex')
 plot_cdfs(subset, 'Body Mass (g)', by='Sex') 
 ```
 
-![_images/ff52a4c0adc07d4e1fa5c37434ef6ce625f9b8f831b1ea9da492b30eb5ee5a05.png](img/de3f103c40a5b9d88fda92d0ad0b3c28.png)显示代码单元格内容隐藏代码单元格内容
+![_images/ff52a4c0adc07d4e1fa5c37434ef6ce625f9b8f831b1ea9da492b30eb5ee5a05.png](img/de3f103c40a5b9d88fda92d0ad0b3c28.png)
 
 ```py
 # Solution
@@ -905,7 +905,7 @@ culmen_map = make_norm_map(subset, 'Culmen Length (mm)', by='Sex')
 flipper_map = make_norm_map(subset, 'Flipper Length (mm)', by='Sex')
 depth_map = make_norm_map(subset, 'Culmen Depth (mm)', by='Sex')
 mass_map = make_norm_map(subset, 'Body Mass (g)', by='Sex') 
-``` 显示代码单元格内容隐藏代码单元格内容
+``` 
 
 ```py
 # Solution
@@ -915,7 +915,7 @@ mass_map = make_norm_map(subset, 'Body Mass (g)', by='Sex')
 norm_maps4 = [culmen_map, flipper_map, depth_map, mass_map]
 colnames4 = ['Culmen Length (mm)', 'Flipper Length (mm)', 
              'Culmen Depth (mm)', 'Body Mass (g)'] 
-``` 显示代码单元格内容隐藏代码单元格内容
+``` 
 
 ```py
 # Solution

@@ -470,7 +470,7 @@ for num_sensitive in range(0, n+1):
 
 循环枚举`num_sensitive`的可能值。对于每个值，它计算总正确识别数量的分布，并将结果存储为 Pandas`DataFrame`中的一列。
 
-显示代码单元格内容隐藏代码单元格内容
+
 
 ```py
 table.head(3) 

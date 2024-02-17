@@ -645,7 +645,7 @@ decorate(xlabel='Height in cm',
 
 美国女性的平均身高为 163 厘米；标准差为 7.3 厘米。
 
-显示代码单元格内容隐藏代码单元格内容
+
 
 ```py
 # Solution
@@ -665,7 +665,7 @@ prior_C.normalize()
 
 ```py
 1.997970387889823 
-``` 显示代码单元格内容隐藏代码单元格内容
+``` 
 
 ```py
 # Solution
@@ -678,7 +678,7 @@ joint_AC.shape
 
 ```py
 (96, 96) 
-``` 显示代码单元格内容隐藏代码单元格内容
+``` 
 
 ```py
 # Solution
@@ -691,7 +691,7 @@ y = joint_AC.index
 X, Y = np.meshgrid(x, y)
 a = np.where(X-Y>=15, 1, 0)
 likelihood_AC = pd.DataFrame(a, index=y, columns=x) 
-``` 显示代码单元格内容隐藏代码单元格内容
+``` 
 
 ```py
 # Solution
@@ -703,7 +703,7 @@ decorate(ylabel='C height in cm',
          title='Likelihood of A-C>=15') 
 ```
 
-![_images/b4ce9f2bd62a61e3311858008a797a4a2efc2cc8ea61be3110d7325ab9da910a.png](img/d46bdea7dd841a7a636527b54e8fd124.png)显示代码单元格内容隐藏代码单元格内容
+![_images/b4ce9f2bd62a61e3311858008a797a4a2efc2cc8ea61be3110d7325ab9da910a.png](img/d46bdea7dd841a7a636527b54e8fd124.png)
 
 ```py
 # Solution
@@ -716,7 +716,7 @@ normalize(posterior_AC)
 
 ```py
 0.6839061829242195 
-``` 显示代码单元格内容隐藏代码单元格内容
+``` 
 
 ```py
 # Solution
@@ -728,7 +728,7 @@ decorate(ylabel='C height in cm',
          title='Joint posterior distribution of height for A and C') 
 ```
 
-![_images/290c2532c346858d5fc6608b0600e846e626a337ce17a947207b2272b1fc8c31.png](img/d1f82ed4fd480d24a85262be0004309e.png)显示代码单元格内容隐藏代码单元格内容
+![_images/290c2532c346858d5fc6608b0600e846e626a337ce17a947207b2272b1fc8c31.png](img/d1f82ed4fd480d24a85262be0004309e.png)
 
 ```py
 # Solution
@@ -737,7 +737,7 @@ decorate(ylabel='C height in cm',
 
 marginal_AC = marginal(posterior_AC, axis=0)
 marginal_C = marginal(posterior_AC, axis=1) 
-``` 显示代码单元格内容隐藏代码单元格内容
+``` 
 
 ```py
 # Solution
@@ -793,7 +793,7 @@ $$P(\mathrm{A~beats~B}) = \frac{1}{1 + 10^{(R_B-R_A)/400}}$$
 
 1.  计算`A`和`B`的后验均值。根据这个结果，他们的评级应该改变多少？
 
-显示代码单元格内容隐藏代码单元格内容
+
 
 ```py
 # Solution
@@ -813,7 +813,7 @@ prior_B_elo.normalize()
 
 ```py
 0.09972780668486173 
-``` 显示代码单元格内容隐藏代码单元格内容
+``` 
 
 ```py
 # Solution
@@ -828,7 +828,7 @@ decorate(xlabel='Elo rating',
          title='Prior distributions for A and B') 
 ```
 
-![_images/2b25e6e47c47b1066411fcbdc6fef1aa0ff264a2e1beedadbe5815e4455136f4.png](img/280d8fb1883c98dafa0ec36738513e7f.png)显示代码单元格内容隐藏代码单元格内容
+![_images/2b25e6e47c47b1066411fcbdc6fef1aa0ff264a2e1beedadbe5815e4455136f4.png](img/280d8fb1883c98dafa0ec36738513e7f.png)
 
 ```py
 # Solution
