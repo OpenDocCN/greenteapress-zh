@@ -1,4 +1,4 @@
-# 绘图
+# 第八章：绘图
 
 > 原文：[`allendowney.github.io/ElementsOfDataScience/06_plotting.html`](https://allendowney.github.io/ElementsOfDataScience/06_plotting.html)
 > 

@@ -1,4 +1,4 @@
-# 变量和值
+# 第三章：变量和值
 
 > 原文：[`allendowney.github.io/ElementsOfDataScience/01_variables.html`](https://allendowney.github.io/ElementsOfDataScience/01_variables.html)
 > 

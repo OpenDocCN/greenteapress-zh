@@ -1,4 +1,4 @@
-# Bootstrap 抽样
+# 第十四章：Bootstrap 抽样
 
 > 原文：[`allendowney.github.io/ElementsOfDataScience/12_bootstrap.html`](https://allendowney.github.io/ElementsOfDataScience/12_bootstrap.html)
 > 

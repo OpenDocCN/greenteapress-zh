@@ -1,4 +1,4 @@
-# 数据帧和序列
+# 第九章：数据帧和序列
 
 > 原文：[`allendowney.github.io/ElementsOfDataScience/07_dataframes.html`](https://allendowney.github.io/ElementsOfDataScience/07_dataframes.html)
 > 

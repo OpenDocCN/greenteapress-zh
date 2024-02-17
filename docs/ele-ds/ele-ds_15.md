@@ -1,4 +1,4 @@
-# 假设检验
+# 第十五章：假设检验
 
 > 原文：[`allendowney.github.io/ElementsOfDataScience/13_hypothesis.html`](https://allendowney.github.io/ElementsOfDataScience/13_hypothesis.html)
 > 

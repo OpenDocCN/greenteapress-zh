@@ -1,4 +1,4 @@
-# 分布
+# 第十章：分布
 
 > 原文：[`allendowney.github.io/ElementsOfDataScience/08_distributions.html`](https://allendowney.github.io/ElementsOfDataScience/08_distributions.html)
 > 

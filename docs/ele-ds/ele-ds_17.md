@@ -1,4 +1,4 @@
-# 重新采样和逻辑回归
+# 第十七章：重新采样和逻辑回归
 
 > 原文：[`allendowney.github.io/ElementsOfDataScience/resample_logit.html`](https://allendowney.github.io/ElementsOfDataScience/resample_logit.html)
 > 

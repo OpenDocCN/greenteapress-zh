@@ -1,4 +1,4 @@
-# 字典
+# 第七章：字典
 
 > 原文：[`allendowney.github.io/ElementsOfDataScience/05_dictionaries.html`](https://allendowney.github.io/ElementsOfDataScience/05_dictionaries.html)
 > 

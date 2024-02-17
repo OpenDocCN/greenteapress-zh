@@ -1,4 +1,4 @@
-# 重采样
+# 第十三章：重采样
 
 > 原文：[`allendowney.github.io/ElementsOfDataScience/11_resampling.html`](https://allendowney.github.io/ElementsOfDataScience/11_resampling.html)
 > 
