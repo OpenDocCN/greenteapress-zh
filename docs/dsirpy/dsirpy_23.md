@@ -1,6 +1,11 @@
 # 第二十三章：图
 
 > 原文：[`allendowney.github.io/DSIRP/graph.html`](https://allendowney.github.io/DSIRP/graph.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 这个笔记本是从[Think Complexity](https://greenteapress.com/wp/think-complexity-2e/)的第二章改编的。
 

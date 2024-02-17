@@ -1,6 +1,11 @@
 # 第十四章：优先队列和堆
 
 > 原文：[`allendowney.github.io/DSIRP/heap.html`](https://allendowney.github.io/DSIRP/heap.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 [单击此处在 Colab 上运行本章](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/heap.ipynb)
 

@@ -1,6 +1,11 @@
 # 第二十七章：爬虫
 
 > 原文：[`allendowney.github.io/DSIRP/crawler.html`](https://allendowney.github.io/DSIRP/crawler.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 [点击此处在 Colab 上运行本章](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/crawler.ipynb)
 

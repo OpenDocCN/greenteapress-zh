@@ -1,6 +1,11 @@
 # 第一章：介绍
 
 > 原文：[`allendowney.github.io/DSIRP/`](https://allendowney.github.io/DSIRP/)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 *Python 中的数据结构和信息检索*是使用 Web 搜索引擎作为引人注目的例子介绍数据结构和算法。它在一定程度上基于使用 Java 的*[Think Data Structures](https://greenteapress.com/wp/think-data-structures/)*。
 

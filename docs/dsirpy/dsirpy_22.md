@@ -1,6 +1,11 @@
 # 第二十二章：双端队列
 
 > 原文：[`allendowney.github.io/DSIRP/deque.html`](https://allendowney.github.io/DSIRP/deque.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 [单击此处在 Colab 上运行本章](https://colab.research.google.com/github/AllenDowney/DSIRP/blob/main/notebooks/deque.ipynb)
 

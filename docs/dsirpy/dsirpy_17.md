@@ -1,6 +1,11 @@
 # 第十七章：测验 4
 
 > 原文：[`allendowney.github.io/DSIRP/quiz04.html`](https://allendowney.github.io/DSIRP/quiz04.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 在开始这个测验之前：
 
