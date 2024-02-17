@@ -1,6 +1,10 @@
 # 字典
 
-> [`allendowney.github.io/ElementsOfDataScience/05_dictionaries.html`](https://allendowney.github.io/ElementsOfDataScience/05_dictionaries.html)
+> 原文：[`allendowney.github.io/ElementsOfDataScience/05_dictionaries.html`](https://allendowney.github.io/ElementsOfDataScience/05_dictionaries.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 [单击此处在 Colab 上运行此笔记本](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/05_dictionaries.ipynb) 或 [单击此处下载](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/05_dictionaries.ipynb)。
 

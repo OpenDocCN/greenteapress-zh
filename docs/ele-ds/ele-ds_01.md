@@ -1,6 +1,11 @@
 # 数据科学要素
 
 > 原文：[`allendowney.github.io/ElementsOfDataScience/README.html`](https://allendowney.github.io/ElementsOfDataScience/README.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 《数据科学要素》是为没有编程经验的人们介绍数据科学的。我的目标是呈现 Python 的一个小而强大的子集，使您能够尽快在数据科学中进行真正的工作。
 
@@ -84,7 +89,7 @@
 
 ### 笔记本 7
 
-数据框架：本笔记本介绍了数据框架，用于表示数据表。例如，它使用来自美国家庭增长调查的数据来找到婴儿的平均体重。
+数据帧架：本笔记本介绍了数据帧架，用于表示数据表。例如，它使用来自美国家庭增长调查的数据来找到婴儿的平均体重。
 
 [点击此处在 Colab 上运行此笔记本](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/07_dataframes.ipynb)
 

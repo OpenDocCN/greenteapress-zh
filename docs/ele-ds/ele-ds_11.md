@@ -1,6 +1,11 @@
 # 关系
 
 > 原文：[`allendowney.github.io/ElementsOfDataScience/09_relationships.html`](https://allendowney.github.io/ElementsOfDataScience/09_relationships.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 [点击这里在 Colab 上运行此笔记本](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/09_relationships.ipynb) 或 [点击这里下载它](https://github.com/AllenDowney/ElementsOfDataScience/raw/master/09_relationships.ipynb)。
 

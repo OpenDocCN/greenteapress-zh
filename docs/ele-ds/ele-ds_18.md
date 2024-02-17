@@ -1,6 +1,11 @@
 # 永远不要测试正态性
 
 > 原文：[`allendowney.github.io/ElementsOfDataScience/anderson.html`](https://allendowney.github.io/ElementsOfDataScience/anderson.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 早在 2013 年，我写了[这篇博客文章](https://allendowney.blogspot.com/2013/08/are-my-data-normal.html)解释为什么你永远不应该使用统计测试来检查样本是否来自高斯分布。
 

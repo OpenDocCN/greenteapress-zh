@@ -1,6 +1,11 @@
 # 变量和值
 
 > 原文：[`allendowney.github.io/ElementsOfDataScience/01_variables.html`](https://allendowney.github.io/ElementsOfDataScience/01_variables.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 [在 Colab 上运行此笔记本](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/01_variables.ipynb) 或
 

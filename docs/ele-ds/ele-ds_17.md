@@ -1,6 +1,11 @@
 # 重新采样和逻辑回归
 
 > 原文：[`allendowney.github.io/ElementsOfDataScience/resample_logit.html`](https://allendowney.github.io/ElementsOfDataScience/resample_logit.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 [单击此处在 Colab 上运行此笔记本](https://colab.research.google.com/github/AllenDowney/ElementsOfDataScience/blob/master/examples/resample_logit.ipynb)
 
