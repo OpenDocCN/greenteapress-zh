@@ -447,9 +447,9 @@ x
 
 如果你有两个表示位置的元组，你可以使用 haversine 函数计算它们之间的大致距离，沿着地球表面，如果你对此感兴趣，[你可以在这篇文章中阅读解释](https://janakiev.com/blog/gps-points-distance-python/)。要估算 haversine 距离，我们必须计算 haversine 函数，它的定义是：
 
-\(\mathrm{haversine}(\theta)=\sin²(\theta/2)\)
+$\mathrm{haversine}(\theta)=\sin²(\theta/2)$
 
-角度\(\theta\)是以弧度表示的。我们可以在 Python 中计算这个函数：
+角度$\theta$是以弧度表示的。我们可以在 Python 中计算这个函数：
 
 ```py
 import numpy as np

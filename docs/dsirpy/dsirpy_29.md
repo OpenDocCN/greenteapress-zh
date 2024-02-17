@@ -25,15 +25,17 @@ from timing import run_timing_test, plot_timing_test
 
 根据我们在[Wikipedia](https://en.wikipedia.org/wiki/Discrete_Fourier_transform)上的朋友：
 
-> 离散傅里叶变换将\(N\)个复数\({\displaystyle \mathbf{x} =x_{0},x_{1},\ldots ,x_{N-1}}\)序列转换为另一个复数序列\({\displaystyle \mathbf{X} =X_{0},X_{1},\ldots ,X_{N-1},}\)，其定义为$\(X_k = \sum_{n=0}^N x_n \cdot e^{-i 2 \pi k n / N} \)$
+> 离散傅里叶变换将$N$个复数${\displaystyle \mathbf{x} =x_{0},x_{1},\ldots ,x_{N-1}}$序列转换为另一个复数序列${\displaystyle \mathbf{X} =X_{0},X_{1},\ldots ,X_{N-1},}$，其定义为
+> 
+> $$X_k = \sum_{n=0}^N x_n \cdot e^{-i 2 \pi k n / N} $$
 
 注意：
 
-+   \(X\)和\(x\)的长度相同，为\(N\)。
++   $X$和$x$的长度相同，为$N$。
 
-+   \(n\)是指定\(x\)元素的索引，和
++   $n$是指定$x$元素的索引，和
 
-+   \(k\)是指定\(X\)元素的索引。
++   $k$是指定$X$元素的索引。
 
 让我们从一个小例子开始，使用 Numpy 的 FFT 实现来计算 DFT。
 
@@ -53,7 +55,7 @@ array([1.+0.j, 1.+0.j, 1.+0.j, 1.+0.j])
 
 现在我们知道答案是什么，让我们自己计算一下。
 
-这是计算\(X\)的一个元素的表达式。
+这是计算$X$的一个元素的表达式。
 
 ```py
 pi = np.pi
@@ -90,7 +92,7 @@ dft_k(x, k=1)
 (1+0j) 
 ```
 
-通常我们一次计算\(X\)，所以我们可以将`dft_k`包装在另一个函数中：
+通常我们一次计算$X$，所以我们可以将`dft_k`包装在另一个函数中：
 
 ```py
 def dft(x):
@@ -148,23 +150,23 @@ plot_timing_test(ns, ts, 'test_dft', exp=2)
 
 FFT 算法的关键是[Danielson-Lanczos 引理](https://mathworld.wolfram.com/Danielson-LanczosLemma.html)，它说
 
-\( X_k = E_k + e^{-i 2 \pi n / N} O_k \)
+$ X_k = E_k + e^{-i 2 \pi n / N} O_k $
 
 哪里
 
-+   \(E\)是\(x\)的偶数元素的 FFT，和
++   $E$是$x$的偶数元素的 FFT，和
 
-+   \(O\)是\(x\)的奇数元素的 DFT。
++   $O$是$x$的奇数元素的 DFT。
 
 在我们可以将这个表达式转换成代码之前，我们必须处理一个问题。
 
-请记住，如果\(x\)的长度为\(N\)，那么\(X\)的长度也是\(N\)。
+请记住，如果$x$的长度为$N$，那么$X$的长度也是$N$。
 
-如果我们选择\(x\)的偶数元素，结果是一个长度为\(N/2\)的序列，这意味着\(E\)的长度为\(N/2\)。\(O\)也是一样。
+如果我们选择$x$的偶数元素，结果是一个长度为$N/2$的序列，这意味着$E$的长度为$N/2$。$O$也是一样。
 
-但是如果\(k\)从\(0\)增加到\(N-1\)，当它超过\(N/2-1\)时，我们该怎么办？
+但是如果$k$从$0$增加到$N-1$，当它超过$N/2-1$时，我们该怎么办？
 
-幸运的是，DFT 是重复的，所以\(X_N\)和\(X_0\)是相同的。这意味着我们可以通过重复它们来扩展\(E\)和\(O\)的长度，使用 Numpy 函数`tile`可以做到这一点。
+幸运的是，DFT 是重复的，所以$X_N$和$X_0$是相同的。这意味着我们可以通过重复它们来扩展$E$和$O$的长度，使用 Numpy 函数`tile`可以做到这一点。
 
 所以，这是一个基于 D-L 引理的`merge`版本。
 

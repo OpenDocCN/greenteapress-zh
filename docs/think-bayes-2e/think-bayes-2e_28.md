@@ -123,7 +123,7 @@ def make_table(prior, likelihood):
 
 ## 第一次更新
 
-由于[长度偏差抽样](https://towardsdatascience.com/the-inspection-paradox-is-everywhere-2ef1c2e9d709)，你遇到的人更有可能来自男孩更多的家庭。具体来说，从一个有\(n\)个男孩的家庭中遇到某人的可能性与\(n\)成比例。
+由于[长度偏差抽样](https://towardsdatascience.com/the-inspection-paradox-is-everywhere-2ef1c2e9d709)，你遇到的人更有可能来自男孩更多的家庭。具体来说，从一个有$n$个男孩的家庭中遇到某人的可能性与$n$成比例。
 
 ```py
 likelihood1 = prior1.index.to_frame()['Boys']

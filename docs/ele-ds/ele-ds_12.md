@@ -305,7 +305,7 @@ df['EDUC2'] = df['EDUC']**2
 pred12 = results.predict(df) 
 ```
 
-`predict`的结果是一个包含每一行预测的`Series`。因此，我们可以将其与年龄作为\(x\)-轴和每个年龄组的预测收入作为\(y\)-轴进行绘制。我们可以绘制数据进行比较。
+`predict`的结果是一个包含每一行预测的`Series`。因此，我们可以将其与年龄作为$x$-轴和每个年龄组的预测收入作为$y$-轴进行绘制。我们可以绘制数据进行比较。
 
 ```py
 plt.plot(mean_income_by_age, 'o', alpha=0.5)

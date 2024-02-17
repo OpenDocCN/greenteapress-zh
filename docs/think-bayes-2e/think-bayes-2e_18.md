@@ -28,27 +28,27 @@
 
 我将定义
 
-+   \(N\)：实际种群大小，100。
++   $N$：实际种群大小，100。
 
-+   \(K\)：第一次采样中鉴定出的熊的数量，为 23。
++   $K$：第一次采样中鉴定出的熊的数量，为 23。
 
-+   \(n\)：在示例中，第二次采样中观察到的熊的数量，为 19。
++   $n$：在示例中，第二次采样中观察到的熊的数量，为 19。
 
-+   \(k\)：第二次采样中之前被鉴定出的熊的数量，4。
++   $k$：第二次采样中之前被鉴定出的熊的数量，4。
 
-对于给定的\(N\)、\(K\)和\(n\)的值，找到\(k\)只先前鉴定的熊的概率由[超几何分布](https://en.wikipedia.org/wiki/Hypergeometric_distribution)给出：
+对于给定的$N$、$K$和$n$的值，找到$k$只先前鉴定的熊的概率由[超几何分布](https://en.wikipedia.org/wiki/Hypergeometric_distribution)给出：
 
-\[\binom{K}{k} \binom{N-K}{n-k}/ \binom{N}{n}\]
+$$\binom{K}{k} \binom{N-K}{n-k}/ \binom{N}{n}$$
 
-其中[二项式系数](https://en.wikipedia.org/wiki/Binomial_coefficient)，\(\binom{K}{k}\)，是我们可以从大小为\(K\)的种群中选择大小为\(k\)的子集的数量。
+其中[二项式系数](https://en.wikipedia.org/wiki/Binomial_coefficient)，$\binom{K}{k}$，是我们可以从大小为$K$的种群中选择大小为$k$的子集的数量。
 
 要理解为什么，考虑：
 
-+   分母，\(\binom{N}{n}\)，是我们可以从\(N\)只熊的种群中选择\(n\)只的子集数量。
++   分母，$\binom{N}{n}$，是我们可以从$N$只熊的种群中选择$n$只的子集数量。
 
-+   分子是包含来自先前鉴定的\(K\)只熊中的\(k\)只熊和来自先前未见的\(N-K\)只熊中的\(n-k\)只熊的子集数量。
++   分子是包含来自先前鉴定的$K$只熊中的$k$只熊和来自先前未见的$N-K$只熊中的$n-k$只熊的子集数量。
 
-SciPy 提供了`hypergeom`，我们可以用它来计算一系列\(k\)值的概率。
+SciPy 提供了`hypergeom`，我们可以用它来计算一系列$k$值的概率。
 
 ```py
 import numpy as np
@@ -62,7 +62,7 @@ ks = np.arange(12)
 ps = hypergeom(N, K, n).pmf(ks) 
 ```
 
-结果是具有给定参数\(N\)、\(K\)和\(n\)的\(k\)的分布。看起来是这样的。
+结果是具有给定参数$N$、$K$和$n$的$k$的分布。看起来是这样的。
 
 <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
 
@@ -77,11 +77,11 @@ decorate(xlabel='Number of bears observed twice',
          title='Hypergeometric distribution of k (known population 100)') 
 ```</details> ![_images/89091d8fbc23233c4e404edd21d8ea5de9de3e5bc1e8080e25666147e0fa8aca.png](img/1a280182fb74f73c44052e57501013e1.png)
 
-\(k\)的最可能值是 4，这是实验中实际观察到的值。
+$k$的最可能值是 4，这是实验中实际观察到的值。
 
-这表明，鉴于这些数据，\(N=100\)是人口的一个合理估计。 
+这表明，鉴于这些数据，$N=100$是人口的一个合理估计。 
 
-我们已经计算了给定`N`、`K`和`n`的情况下\(k\)的分布。现在让我们反过来：给定\(K\)、\(n\)和\(k\)，我们如何估计总体人口\(N\)？
+我们已经计算了给定`N`、`K`和`n`的情况下$k$的分布。现在让我们反过来：给定$K$、$n$和$k$，我们如何估计总体人口$N$？
 
 ## 更新
 
@@ -247,9 +247,9 @@ y
 
 现在，数据的概率由[多项式分布](https://en.wikipedia.org/wiki/Multinomial_distribution)给出：
 
-\[\frac{N!}{\prod x_i!} \prod y_i^{x_i}\]
+$$\frac{N!}{\prod x_i!} \prod y_i^{x_i}$$
 
-其中\(N\)是实际人口，\(x\)是每个类别中的计数序列，\(y\)是每个类别的概率序列。
+其中$N$是实际人口，$x$是每个类别中的计数序列，$y$是每个类别的概率序列。
 
 SciPy 提供了`multinomial`，它提供了`pmf`，用于计算这个概率。这是这些`N`和`p`值的数据的概率。
 

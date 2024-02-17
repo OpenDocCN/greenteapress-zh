@@ -236,7 +236,7 @@ decorate(xlabel='Mean (mu)',
          title='Joint posterior distributions of mu and sigma') 
 ```</details> ![_images/07e09a7764bf63bd25d2de096380ab1b98da662b35273b5a5f32f41b7c0c928d.png](img/40c70f90c0bd3e979a2c0296876ae3c2.png)
 
-沿着\(x\)-轴，看起来处理组的平均分数更高。沿着\(y\)-轴，看起来处理组的标准差更低。
+沿着$x$-轴，看起来处理组的平均分数更高。沿着$y$-轴，看起来处理组的标准差更低。
 
 如果我们认为治疗导致了这些差异，数据表明治疗增加了分数的平均值并减少了它们的波动。我们可以通过查看`mu`和`sigma`的边际分布更清楚地看到这些差异。
 
@@ -393,7 +393,7 @@ array([ 2.4, 17.4])
 
 另一种选择是计算数据集的摘要并计算摘要的可能性。例如，如果我们计算数据的均值和标准差，我们可以计算每个假设下这些摘要统计的可能性。
 
-例如，假设我们知道人口的实际均值\(\mu\)是 42，实际标准差\(\sigma\)是 17。
+例如，假设我们知道人口的实际均值$\mu$是 42，实际标准差$\sigma$是 17。
 
 ```py
 mu = 42
@@ -410,17 +410,17 @@ m = 41
 s = 18 
 ```
 
-摘要统计`m`和`s`与参数\(\mu\)和\(\sigma\)相差不远，因此它们似乎不太可能。
+摘要统计`m`和`s`与参数$\mu$和$\sigma$相差不远，因此它们似乎不太可能。
 
 为了计算它们的可能性，我们将利用数理统计的三个结果：
 
-+   给定\(\mu\)和\(\sigma\)，`m`的分布是具有参数\(\mu\)和\(\sigma/\sqrt{n}\)的正态分布；
++   给定$\mu$和$\sigma$，`m`的分布是具有参数$\mu$和$\sigma/\sqrt{n}$的正态分布；
 
-+   \(s\)的分布更复杂，但如果我们计算变换\(t = n s² / \sigma²\)，\(t\)的分布是具有参数\(n-1\)的卡方分布；以及
++   $s$的分布更复杂，但如果我们计算变换$t = n s² / \sigma²$，$t$的分布是具有参数$n-1$的卡方分布；以及
 
 +   根据[巴苏定理](https://en.wikipedia.org/wiki/Basu%27s_theorem)，`m`和`s`是独立的。
 
-因此，让我们计算给定\(\mu\)和\(\sigma\)的`m`和`s`的可能性。
+因此，让我们计算给定$\mu$和$\sigma$的`m`和`s`的可能性。
 
 首先，我将创建一个代表`m`分布的`norm`对象。
 
@@ -480,7 +480,7 @@ like
 0.004801750420548287 
 ```
 
-现在我们可以计算任何\(\mu\)和\(\sigma\)值的数据的似然性，我们将在下一节中使用它们进行更新。
+现在我们可以计算任何$\mu$和$\sigma$值的数据的似然性，我们将在下一节中使用它们进行更新。
 
 ## 使用摘要统计数据进行更新
 
@@ -757,7 +757,7 @@ sample_stds.shape
 (1000,) 
 ```</details>
 
-现在我们将计算转换后的值，\(t = n s² / \sigma²\)。
+现在我们将计算转换后的值，$t = n s² / \sigma²$。
 
 <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
 
@@ -765,7 +765,7 @@ sample_stds.shape
 transformed = n * sample_stds**2 / sigma**2 
 ```</details>
 
-我们期望转换后的值遵循参数为\(n-1\)的卡方分布。SciPy 提供了`chi2`，我们可以用它来表示这个分布。
+我们期望转换后的值遵循参数为$n-1$的卡方分布。SciPy 提供了`chi2`，我们可以用它来表示这个分布。
 
 <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
 
@@ -934,11 +934,11 @@ decorate(xlabel='Difference in population standard deviation',
 
 ![_images/4a41f5f62c4bf9c935fcc913296e6af4942eeac649bc5a0689dca131f81d3784.png](img/f8db324dc26895f255a7e1e081881c19.png)</details>
 
-**练习：** [效应大小](http://en.wikipedia.org/wiki/Effect_size)是一种旨在量化现象大小的统计量。如果现象是两组之间均值的差异，一种常见的量化方法是科恩效应大小，表示为\(d\)。
+**练习：** [效应大小](http://en.wikipedia.org/wiki/Effect_size)是一种旨在量化现象大小的统计量。如果现象是两组之间均值的差异，一种常见的量化方法是科恩效应大小，表示为$d$。
 
-如果第 1 组的参数为\((\mu_1, \sigma_1)\)，第 2 组的参数为\((\mu_2, \sigma_2)\)，则科恩效应大小为
+如果第 1 组的参数为$(\mu_1, \sigma_1)$，第 2 组的参数为$(\mu_2, \sigma_2)$，则科恩效应大小为
 
-\[ d = \frac{\mu_1 - \mu_2}{(\sigma_1 + \sigma_2)/2} \]
+$$ d = \frac{\mu_1 - \mu_2}{(\sigma_1 + \sigma_2)/2} $$
 
 使用两组的联合后验分布来计算 Cohen's effect size 的后验分布。
 
@@ -981,7 +981,7 @@ sample_control.shape
 (1000,) 
 ```</details>
 
-结果是一个元组数组，每个元组包含\(\mu\)和\(\sigma\)的一对可能值。现在您可以循环遍历样本，计算每个样本的 Cohen effect size，并估计 effect sizes 的分布。
+结果是一个元组数组，每个元组包含$\mu$和$\sigma$的一对可能值。现在您可以循环遍历样本，计算每个样本的 Cohen effect size，并估计 effect sizes 的分布。
 
 <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容隐藏代码单元格内容</summary>
 

@@ -10,7 +10,7 @@
 
 第二位医生说：“我在 B 医院待了两个星期，已经有一天出生了 20 个婴儿。”
 
-你认为哪家医院平均分娩的婴儿更多？你可以假设一天出生的婴儿数量很好地符合[泊松分布](https://en.wikipedia.org/wiki/Poisson_distribution)的参数\(\lambda\)，这是希腊字母“lambda”的发音。
+你认为哪家医院平均分娩的婴儿更多？你可以假设一天出生的婴儿数量很好地符合[泊松分布](https://en.wikipedia.org/wiki/Poisson_distribution)的参数$\lambda$，这是希腊字母“lambda”的发音。
 
 以下函数计算参数为`lam`的泊松分布在整数范围`qs`上的 PMF：
 
@@ -32,7 +32,7 @@ def make_poisson_pmf(lam, qs):
     return pmf 
 ```
 
-例如，如果\(\lambda\)的实际值为 8，我们可以这样计算单日出生的婴儿的分布：
+例如，如果$\lambda$的实际值为 8，我们可以这样计算单日出生的婴儿的分布：
 
 ```py
 import numpy as np
@@ -55,7 +55,7 @@ decorate(xlabel='Number of babies',
          title='Distribution of babies in a single day') 
 ```</details> ![_images/455e7212e0df3a64e4f896ba479de5ffdd0a75b04650b5db54c0254de70941eb.png](img/a154135c5310ff6d54430faa88766d2f.png)
 
-这个分布的均值是参数\(\lambda\)。
+这个分布的均值是参数$\lambda$。
 
 ```py
 pmf.mean() 

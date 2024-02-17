@@ -24,11 +24,11 @@
 
 如果我们把所有的头的数量加起来，有三种可能的结果：0、1 或 2。0 和 2 的概率是 25%，1 的概率是 50%。
 
-更一般地，假设正面的概率是\(p\)，我们抛硬币\(n\)次。得到\(k\)个正面的概率由[二项分布](https://en.wikipedia.org/wiki/Binomial_distribution)给出：
+更一般地，假设正面的概率是$p$，我们抛硬币$n$次。得到$k$个正面的概率由[二项分布](https://en.wikipedia.org/wiki/Binomial_distribution)给出：
 
-\[\binom{n}{k} p^k (1-p)^{n-k}\]
+$$\binom{n}{k} p^k (1-p)^{n-k}$$
 
-对于从 0 到 n 的任何值的\(k\)，包括两者。术语\(\binom{n}{k}\)是[二项式系数](https://en.wikipedia.org/wiki/Binomial_coefficient)，通常发音为“n choose k”。
+对于从 0 到 n 的任何值的$k$，包括两者。术语$\binom{n}{k}$是[二项式系数](https://en.wikipedia.org/wiki/Binomial_coefficient)，通常发音为“n choose k”。
 
 我们可以自己评估这个表达式，但我们也可以使用 SciPy 函数`binom.pmf`。例如，如果我们抛一枚硬币`n=2`次，正面的概率是`p=0.5`，那么得到`k=1`个正面的概率是：
 
@@ -370,9 +370,9 @@ decorate_euro(title='Posterior distributions')
 
 一个更有效的替代方法是一次计算整个数据集的似然。对于每个假设的`x`值，我们必须计算在 250 次旋转中出现 140 次正面朝上的概率。
 
-好吧，我们知道如何做了；这是二项分布回答的问题。如果正面朝上的概率是\(p\)，则在\(n\)次旋转中出现\(k\)次正面朝上的概率是：
+好吧，我们知道如何做了；这是二项分布回答的问题。如果正面朝上的概率是$p$，则在$n$次旋转中出现$k$次正面朝上的概率是：
 
-\[\binom{n}{k} p^k (1-p)^{n-k}\]
+$$\binom{n}{k} p^k (1-p)^{n-k}$$
 
 我们可以使用 SciPy 来计算它。以下函数接受一个代表先验分布的`Pmf`和一个代表数据的整数元组：
 
@@ -703,7 +703,7 @@ posterior00.idxmax(), posterior02.idxmax(), posterior04.idxmax()
 
 这个数据是好还是坏？也就是说，它增加还是减少了你对 Alien Blaster 9000 的估计？
 
-提示：如果击中每个目标的概率是\(x\)，那么在两次测试中击中一个目标的概率是\(\left[2x(1-x)\right]²\)。
+提示：如果击中每个目标的概率是$x$，那么在两次测试中击中一个目标的概率是$\left[2x(1-x)\right]²$。
 
 <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格内容 隐藏代码单元格内容</summary>
 

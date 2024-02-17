@@ -12,7 +12,7 @@
 
 [Weibull distribution](https://en.wikipedia.org/wiki/Weibull_distribution)经常用于生存分析，因为它是制造产品寿命分布的良好模型，至少在某些范围内。
 
-SciPy 提供了几个版本的 Weibull 分布；我们将使用的是称为`weibull_min`的版本。为了使接口与我们的符号一致，我将把它包装在一个函数中，该函数以\(\lambda\)和\(k\)作为参数，\(\lambda\)主要影响分布的位置或“中心倾向”，\(k\)影响形状。
+SciPy 提供了几个版本的 Weibull 分布；我们将使用的是称为`weibull_min`的版本。为了使接口与我们的符号一致，我将把它包装在一个函数中，该函数以$\lambda$和$k$作为参数，$\lambda$主要影响分布的位置或“中心倾向”，$k$影响形状。
 
 ```py
 from scipy.stats import weibull_min
@@ -21,7 +21,7 @@ def weibull_dist(lam, k):
     return weibull_min(k, scale=lam) 
 ```
 
-例如，这是一个具有参数\(\lambda=3\)和\(k=0.8\)的 Weibull 分布。
+例如，这是一个具有参数$\lambda=3$和$k=0.8$的 Weibull 分布。
 
 ```py
 lam = 3
@@ -62,7 +62,7 @@ array([0.80497283, 2.11577082, 0.43308797, 0.10862644, 5.17334866,
 
 因此，给定分布的参数，我们可以生成一个样本。现在让我们看看是否可以反过来：给定样本，我们将估计参数。
 
-以下是\(\lambda\)的均匀先验分布：
+以下是$\lambda$的均匀先验分布：
 
 ```py
 from utils import make_uniform
@@ -71,7 +71,7 @@ lams = np.linspace(0.1, 10.1, num=101)
 prior_lam = make_uniform(lams, name='lambda') 
 ```
 
-\(k\)的均匀先验分布如下：
+$k$的均匀先验分布如下：
 
 ```py
 ks = np.linspace(0.1, 5.1, num=101)
@@ -86,9 +86,9 @@ from utils import make_joint
 prior = make_joint(prior_lam, prior_k) 
 ```
 
-结果是一个代表联合先验的`DataFrame`，其中列中包含\(\lambda\)的可能值，行中包含\(k\)的值。
+结果是一个代表联合先验的`DataFrame`，其中列中包含$\lambda$的可能值，行中包含$k$的值。
 
-现在我将使用`meshgrid`来制作一个带有\(\lambda\)的 3-D 网格（`axis=0`），\(k\)的第二个轴（`axis=1`），以及数据的第三个轴（`axis=2`）。
+现在我将使用`meshgrid`来制作一个带有$\lambda$的 3-D 网格（`axis=0`），$k$的第二个轴（`axis=1`），以及数据的第三个轴（`axis=2`）。
 
 ```py
 lam_mesh, k_mesh, data_mesh = np.meshgrid(
@@ -166,7 +166,7 @@ plot_contour(posterior)
 decorate(title='Posterior joint distribution of Weibull parameters') 
 ```</details> ![_images/77fcd1c56c2f0ce10efa56dbabec2d9b197d606003e4f5968c14f2f0cb4ed13f.png](img/c7172a47752cdfa035c49f16e0ef490f.png)
 
-\(\lambda\)的可能值的范围大约是 1 到 4，其中包含了我们用来生成数据的实际值 3。而\(k\)的范围大约是 0.5 到 1.5，其中包含了实际值 0.8。
+$\lambda$的可能值的范围大约是 1 到 4，其中包含了我们用来生成数据的实际值 3。而$k$的范围大约是 0.5 到 1.5，其中包含了实际值 0.8。
 
 ## 边缘分布
 
@@ -197,9 +197,9 @@ decorate(xlabel='lam',
 
 ![_images/4eab37f50de519d5098ae53189c5334a625a4117a40b09fa40489e916fa2bf0b.png](img/6821cba075bd877a9906a1bdafa5afea.png)</details>
 
-垂直灰线显示了\(\lambda\)的实际值。
+垂直灰线显示了$\lambda$的实际值。
 
-这是\(k\)的边际后验分布。
+这是$k$的边际后验分布。
 
 <details class="hide above-input"><summary aria-label="Toggle hidden content">Show code cell content Hide code cell content</summary>
 
@@ -437,14 +437,14 @@ decorate(title='Posterior joint distribution, incomplete data')
 
 ![_images/c7ee32a715f0f7f5eede80659e6afa17a007adbe93236237580dcfeb4d59e17d.png](img/300e9829c4f3c0af8a75c148fd5d2b39.png)
 
-与之前的等高线图相比，看起来\(\lambda\)的可能值范围显著更宽。通过观察边际分布，我们可以更清楚地看到这一点。
+与之前的等高线图相比，看起来$\lambda$的可能值范围显著更宽。通过观察边际分布，我们可以更清楚地看到这一点。
 
 ```py
 posterior_lam2 = marginal(posterior2, 0)
 posterior_k2 = marginal(posterior2, 1) 
 ```
 
-这是\(\lambda\)的后验边际分布，与我们使用所有完整数据得到的分布进行比较。
+这是$\lambda$的后验边际分布，与我们使用所有完整数据得到的分布进行比较。
 
 <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
 
@@ -462,7 +462,7 @@ decorate(xlabel='lambda',
 
 另外，请注意后验分布在右侧并没有完全趋近于 0。这表明先验分布的范围不足以覆盖该参数的最可能值。如果我担心使这个分布更准确，我会回去用更宽的先验再次运行更新。
 
-这是\(k\)的后验边际分布：
+这是$k$的后验边际分布：
 
 <details class="hide above-input"><summary aria-label="Toggle hidden content">显示代码单元格源代码 隐藏代码单元格源代码</summary>
 
@@ -542,7 +542,7 @@ pmf_bulb.mean()
 1413.84 
 ```</details>
 
-假设这些数据很好地符合 Weibull 分布，让我们估计适合数据的参数。同样，我将从\(\lambda\)和\(k\)的均匀先验开始：
+假设这些数据很好地符合 Weibull 分布，让我们估计适合数据的参数。同样，我将从$\lambda$和$k$的均匀先验开始：
 
 ```py
 lams = np.linspace(1000, 2000, num=51)
@@ -592,7 +592,7 @@ decorate(title='Joint posterior distribution, light bulbs')
 
 ## 后验均值
 
-要计算联合分布的后验均值，我们将制作一个包含\(\lambda\)和\(k\)的值的网格。
+要计算联合分布的后验均值，我们将制作一个包含$\lambda$和$k$的值的网格。
 
 ```py
 lam_mesh, k_mesh = np.meshgrid(
@@ -719,7 +719,7 @@ joint_weibull_mean(posterior_bulb2)
 
 如果我们确切地知道韦伯分布的参数，答案将是一个二项分布。
 
-例如，如果我们知道\(\lambda=1550\)和\(k=4.25\)，我们可以使用`weibull_dist`来计算灯泡在你回来之前死亡的概率：
+例如，如果我们知道$\lambda=1550$和$k=4.25$，我们可以使用`weibull_dist`来计算灯泡在你回来之前死亡的概率：
 
 ```py
 lam = 1550
@@ -758,7 +758,7 @@ decorate(xlabel='Number of dead bulbs',
 
 ![_images/42e12ef3e54e221fa4ede683f0bbf06d0c501a4eb94e1bc5da2cab501e520592.png](img/2a5755e75a3a3a6f94354ace263259b5.png)</details>
 
-但这是基于我们知道\(\lambda\)和\(k\)的假设，而我们并不知道。相反，我们有一个包含这些参数可能值和它们概率的后验分布。
+但这是基于我们知道$\lambda$和$k$的假设，而我们并不知道。相反，我们有一个包含这些参数可能值和它们概率的后验分布。
 
 因此，后验预测分布不是一个单一的二项式；相反，它是一个由后验概率加权的二项式混合物。
 
@@ -829,7 +829,7 @@ decorate(xlabel='Number of dead bulbs',
 
 ## 练习
 
-**练习：**使用关于灯泡寿命的数据，我们计算了 Weibull 分布的参数\(\lambda\)和\(k\)的后验分布，以及 1000 小时后 100 个灯泡中死亡灯泡的后验预测分布。
+**练习：**使用关于灯泡寿命的数据，我们计算了 Weibull 分布的参数$\lambda$和$k$的后验分布，以及 1000 小时后 100 个灯泡中死亡灯泡的后验预测分布。
 
 现在假设您进行实验：您安装了 100 个灯泡，1000 小时后回来，发现 20 个灯泡坏了。根据这些数据更新后验分布。后验均值变化多少？
 
@@ -901,9 +901,9 @@ joint_weibull_mean(posterior_bulb3)
 
 根据水文学家的说法，总日降雨量（有雨的日子）的分布很好地由两参数 gamma 分布建模。
 
-当我们在<<_TheGammaDistribution>>中使用一参数 gamma 分布时，我们使用希腊字母\(\alpha\)表示参数。
+当我们在<<_TheGammaDistribution>>中使用一参数 gamma 分布时，我们使用希腊字母$\alpha$表示参数。
 
-对于两参数 gamma 分布，我们将使用\(k\)表示“形状参数”，它决定了分布的形状，希腊字母\(\theta\)或`theta`表示“比例参数”。
+对于两参数 gamma 分布，我们将使用$k$表示“形状参数”，它决定了分布的形状，希腊字母$\theta$或`theta`表示“比例参数”。
 
 以下函数接受这些参数，并从 SciPy 返回一个`gamma`对象。
 
@@ -1003,7 +1003,7 @@ decorate(xlabel='Total rainfall (in)',
 
 我建议您按以下步骤进行：
 
-1.  为伽玛分布的参数构建先验分布。请注意，\(k\)和\(\theta\)必须大于 0。
+1.  为伽玛分布的参数构建先验分布。请注意，$k$和$\theta$必须大于 0。
 
 1.  使用观察到的降雨量来更新参数的分布。
 

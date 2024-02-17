@@ -95,11 +95,11 @@ factorial(3)
 
 反过来思考，从 1 开始，我们需要将 1 加倍多少次才能得到`k`？在数学符号中，问题是
 
-\[2^y = k\]
+$$2^y = k$$
 
 其中`y`是未知的步数。取两边的对数，以 2 为底：
 
-\[y = log_2 k\]
+$$y = log_2 k$$
 
 就增长顺序而言，这个算法是`O(log k)`。我们不必指定对数的底，因为一个底为 1 的对数是任何其他底的对数的常数倍。
 
@@ -173,9 +173,9 @@ fibonacci_memo(4)
 3 
 ```
 
-**练习：** [Ackermann 函数](http://en.wikipedia.org/wiki/Ackermann_function)，\(A(m, n)\)，定义如下：
+**练习：** [Ackermann 函数](http://en.wikipedia.org/wiki/Ackermann_function)，$A(m, n)$，定义如下：
 
-\[\begin{split} A(m, n) = \begin{cases} n+1 & \mbox{if } m = 0 \\ A(m-1, 1) & \mbox{if } m > 0 \mbox{ and } n = 0 \\ A(m-1, A(m, n-1)) & \mbox{if } m > 0 \mbox{ and } n > 0. \end{cases} \end{split}\]
+$$\begin{split} A(m, n) = \begin{cases} n+1 & \mbox{if } m = 0 \\ A(m-1, 1) & \mbox{if } m > 0 \mbox{ and } n = 0 \\ A(m-1, A(m, n-1)) & \mbox{if } m > 0 \mbox{ and } n > 0. \end{cases} \end{split}$$
 
 编写一个名为`ackermann`的函数来评估 Ackermann 函数。使用你的函数来评估`ackermann(3, 4)`，结果应该是 125。
 
@@ -228,7 +228,7 @@ reverse('reverse')
 > 
 > 因此，我们可以使用方程
 > 
-> \[GCD(a, b) = GCD(b, r)\]
+> $$GCD(a, b) = GCD(b, r)$$
 > 
 > 将计算 GCD 的问题逐步减少到计算更小的整数对的 GCD 的问题。
 > 

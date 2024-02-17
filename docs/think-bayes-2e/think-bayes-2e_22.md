@@ -14,9 +14,9 @@
 
 ## 世界杯问题
 
-在<<_PoissonProcesses>>中，我们将足球（足球）中的进球得分建模为由进球率\(\lambda\)表示的泊松过程。
+在<<_PoissonProcesses>>中，我们将足球（足球）中的进球得分建模为由进球率$\lambda$表示的泊松过程。
 
-我们使用伽玛分布来表示\(\lambda\)的先验分布，然后我们使用比赛结果来计算两支球队的后验分布。
+我们使用伽玛分布来表示$\lambda$的先验分布，然后我们使用比赛结果来计算两支球队的后验分布。
 
 为了回答第一个问题，我们使用后验分布来计算法国的“优势概率”。
 
@@ -26,7 +26,7 @@
 
 ## 网格近似
 
-就像我们在<<_TheGammaDistribution>>中所做的那样，我们将使用参数\(\alpha=1.4\)的伽玛分布来表示先验。
+就像我们在<<_TheGammaDistribution>>中所做的那样，我们将使用参数$\alpha=1.4$的伽玛分布来表示先验。
 
 ```py
 from scipy.stats import gamma
@@ -35,7 +35,7 @@ alpha = 1.4
 prior_dist = gamma(alpha) 
 ```
 
-我将使用`linspace`生成\(\lambda\)的可能值，并使用`pmf_from_dist`计算先验的离散近似。
+我将使用`linspace`生成$\lambda$的可能值，并使用`pmf_from_dist`计算先验的离散近似。
 
 ```py
 import numpy as np
@@ -492,15 +492,15 @@ pd.DataFrame([result.slope, result.intercept],
 | 斜率 | 0.717738 |
 | 截距 | -1.198646 |
 
-估计的斜率约为 0.72，这表明对数 GDP 增加一个单位（GDP 的因子为\(e \approx 2.7\)）与幸福阶梯上升 0.72 个单位相关。
+估计的斜率约为 0.72，这表明对数 GDP 增加一个单位（GDP 的因子为$e \approx 2.7$）与幸福阶梯上升 0.72 个单位相关。
 
 现在让我们使用 PyMC3 来估计相同的参数。我们将使用与第<<_RegressionModel>>节中相同的回归模型：
 
-\[y = a x + b + \epsilon\]
+$$y = a x + b + \epsilon$$
 
-其中\(y\)是因变量（阶梯分数），\(x\)是预测变量（对数 GDP），\(\epsilon\)是来自标准差为\(\sigma\)的正态分布的一系列值。
+其中$y$是因变量（阶梯分数），$x$是预测变量（对数 GDP），$\epsilon$是来自标准差为$\sigma$的正态分布的一系列值。
 
-\(a\)和\(b\)是回归线的斜率和截距。它们是未知参数，因此我们将使用数据来估计它们。
+$a$和$b$是回归线的斜率和截距。它们是未知参数，因此我们将使用数据来估计它们。
 
 以下是此模型的 PyMC3 规范。
 
@@ -826,9 +826,9 @@ MCMC 比网格方法更强大，但这种力量也伴随着一些缺点：
 
 ## 练习
 
-**练习：** 作为热身，让我们使用 PyMC3 来解决欧元问题。假设我们抛硬币 250 次，有 140 次是正面。\(x\)的后验分布是多少，即正面的概率？
+**练习：** 作为热身，让我们使用 PyMC3 来解决欧元问题。假设我们抛硬币 250 次，有 140 次是正面。$x$的后验分布是多少，即正面的概率？
 
-对于先验，使用参数\(\alpha=1\)和\(\beta=1\)的贝塔分布。
+对于先验，使用参数$\alpha=1$和$\beta=1$的贝塔分布。
 
 参见[PyMC3 文档](https://docs.pymc.io/api/distributions/continuous.html)以获取连续分布列表。
 
@@ -906,13 +906,13 @@ The number of effective samples is smaller than 25% for some parameters.
 
 ![_images/6508eeee449a1c8e82ce7ce0664789351b1fd247cb5460e9429a6934db033734.png](img/dee9f9d8c3a7ab7b7a7cad18a04ff162.png)</details>
 
-**练习：** 在<<_WeibullDistribution>>中，我们从 Weibull 分布中生成了一个样本，其中\(\lambda=3\)，\(k=0.8\)。然后我们使用数据来计算这些参数的后验分布的网格近似。
+**练习：** 在<<_WeibullDistribution>>中，我们从 Weibull 分布中生成了一个样本，其中$\lambda=3$，$k=0.8$。然后我们使用数据来计算这些参数的后验分布的网格近似。
 
 现在让我们用 PyMC3 做同样的事情。
 
 对于先验，你可以使用像我们在<<_SurvivalAnalysis>>中使用的均匀分布，或者你可以使用 PyMC3 提供的`HalfNormal`分布。
 
-注意：PyMC3 中的`Weibull`类使用的参数与 SciPy 不同。PyMC3 中的参数`alpha`对应于\(k\)，而`beta`对应于\(\lambda\)。
+注意：PyMC3 中的`Weibull`类使用的参数与 SciPy 不同。PyMC3 中的参数`alpha`对应于$k$，而`beta`对应于$\lambda$。
 
 以下是数据：
 

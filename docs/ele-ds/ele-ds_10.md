@@ -361,7 +361,7 @@ plt.title('Distribution of age');
 
 ![_images/08_distributions_66_0.png](img/08d79f8c37a2eb99d15d998d79c69455.png)
 
-\(x\)-轴是年龄，从 18 到 89。\(y\)-轴是累积概率，从 0 到 1。
+$x$-轴是年龄，从 18 到 89。$y$-轴是累积概率，从 0 到 1。
 
 `cdf_age`可以作为一个函数使用，因此如果给它一个年龄，它会返回相应的概率（在 NumPy 数组中）。
 

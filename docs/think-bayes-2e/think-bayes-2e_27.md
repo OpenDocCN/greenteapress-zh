@@ -42,7 +42,7 @@ def bayes_table(hypos, prior, likelihood):
 
 +   如果你在错误的一边，那就是 100%。
 
-+   如果你在正确的一边，它由指数分布的生存函数（补充 CDF）给出，即\(\exp(-\lambda t)\)，其中\(\lambda\)是速率参数，\(t\)是时间。
++   如果你在正确的一边，它由指数分布的生存函数（补充 CDF）给出，即$\exp(-\lambda t)$，其中$\lambda$是速率参数，$t$是时间。
 
 以下函数计算这个似然性：
 
@@ -96,7 +96,7 @@ bayes_table(hypos, prior, likelihood)
 
 0.9 秒后，连接器方向错误的概率约为 69%，所以你可能想考虑尝试另一边。
 
-但如果翻转需要 0.1 秒，也许你应该再试一会儿。为了弄清何时翻转，让我们再次对\(\lambda\)和\(t\)的一般值进行相同的分析。
+但如果翻转需要 0.1 秒，也许你应该再试一会儿。为了弄清何时翻转，让我们再次对$\lambda$和$t$的一般值进行相同的分析。
 
 ## 泛化
 
@@ -119,7 +119,7 @@ likelihood
 [exp(-lam*t), 1] 
 ```
 
-这是贝叶斯表，使用\(p\)和\(q\)作为假设的先验概率。
+这是贝叶斯表，使用$p$和$q$作为假设的先验概率。
 
 ```py
 prior = [p, q]
@@ -139,7 +139,7 @@ expr = table.loc['Right way', 'posterior']
 expr.simplify() 
 ```
 
-\[\displaystyle \frac{p}{p + q e^{lam t}}\]
+$$\displaystyle \frac{p}{p + q e^{lam t}}$$
 
 你可能会认出这是[逻辑函数](https://en.wikipedia.org/wiki/Logistic_function)的一种形式；我们可以这样计算：
 
@@ -181,7 +181,7 @@ eqn = Eq(expr, r)
 eqn 
 ```
 
-\[\displaystyle \frac{p e^{- lam t}}{p e^{- lam t} + q} = r\]
+$$\displaystyle \frac{p e^{- lam t}}{p e^{- lam t} + q} = r$$
 
 这是关于`t`的解，用`p`、`q`、`r`和`lam`表示。
 
@@ -189,7 +189,7 @@ eqn
 solve(eqn, t)[0] 
 ```
 
-\[\displaystyle \frac{\log{\left(\frac{p \left(1 - r\right)}{q r} \right)}}{lam}\]
+$$\displaystyle \frac{\log{\left(\frac{p \left(1 - r\right)}{q r} \right)}}{lam}$$
 
 这是我们如何用先验和后验几率来表达这个解决方案的方式。
 
