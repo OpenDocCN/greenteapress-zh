@@ -1,6 +1,11 @@
-# 翻转 USB 连接器
+# 第二十三章：翻转 USB 连接器
 
 > 原文：[`allendowney.github.io/ThinkBayes2/usb.html`](https://allendowney.github.io/ThinkBayes2/usb.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 这个笔记本是第二版[*Think Bayes*](https://greenteapress.com/wp/think-bayes/)中的一个例子。
 

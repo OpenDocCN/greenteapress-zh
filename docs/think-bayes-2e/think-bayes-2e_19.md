@@ -1,6 +1,11 @@
-# 逻辑回归
+# 第十六章：逻辑回归
 
 > 原文：[`allendowney.github.io/ThinkBayes2/chap16.html`](https://allendowney.github.io/ThinkBayes2/chap16.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 本章介绍了两个相关主题：对数几率和逻辑回归。
 

@@ -1,6 +1,11 @@
-# 最小值、最大值和混合
+# 第七章：最小值、最大值和混合
 
 > 原文：[`allendowney.github.io/ThinkBayes2/chap07.html`](https://allendowney.github.io/ThinkBayes2/chap07.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 <详细信息类="隐藏在输入上方"><总结 aria-label="切换隐藏内容">显示代码单元格内容隐藏代码单元格内容</总结>
 

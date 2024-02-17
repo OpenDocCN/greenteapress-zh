@@ -1,6 +1,11 @@
-# 概率全知魔方
+# 第三十一章：概率全知魔方
 
 > 原文：[`allendowney.github.io/ThinkBayes2/beta_binomial.html`](https://allendowney.github.io/ThinkBayes2/beta_binomial.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 > 
 > 这个例子使用数组计算来探索共轭分布的概念。它是 *[Think Bayes](https://greenteapress.com/wp/think-bayes/)* 的扩展，[第十八章](https://allendowney.github.io/ThinkBayes2/chap18.html)，解释了如何使用共轭先验进行贝叶斯更新，计算量很小。
 

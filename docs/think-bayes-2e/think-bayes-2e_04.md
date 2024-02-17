@@ -1,6 +1,11 @@
-# 概率
+# 第一章：概率
 
 > 原文：[`allendowney.github.io/ThinkBayes2/chap01.html`](https://allendowney.github.io/ThinkBayes2/chap01.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 贝叶斯统计的基础是贝叶斯定理，而贝叶斯定理的基础是条件概率。
 

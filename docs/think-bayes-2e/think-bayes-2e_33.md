@@ -1,6 +1,11 @@
-# 有多少错别字？
+# 第二十九章：有多少错别字？
 
 > 原文：[`allendowney.github.io/ThinkBayes2/ok.html`](https://allendowney.github.io/ThinkBayes2/ok.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 当我几周前开始在[Brilliant](https://brilliant.org)工作时，我得知我的新同事之一，米歇尔·麦克斯威尼，刚刚出版了一本名为*OK*的书，这本书全都是关于“好”的。
 

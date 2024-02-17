@@ -1,6 +1,11 @@
-# 标记和重捕
+# 第十五章：标记和重捕
 
 > 原文：[`allendowney.github.io/ThinkBayes2/chap15.html`](https://allendowney.github.io/ThinkBayes2/chap15.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 本章介绍了“标记和重捕”实验，其中我们从一个种群中对个体进行采样，以某种方式对它们进行标记，然后从同一种群中进行第二次采样。通过观察第二次采样中有多少个体被标记，我们可以估计种群的大小。
 

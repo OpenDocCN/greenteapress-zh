@@ -1,6 +1,11 @@
-# 决策分析
+# 第九章：决策分析
 
 > 原文：[`allendowney.github.io/ThinkBayes2/chap09.html`](https://allendowney.github.io/ThinkBayes2/chap09.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 本章提出了一个受到电视游戏节目《价格是对的》启发的问题。这是一个愚蠢的例子，但它展示了一种称为贝叶斯[决策分析](https://en.wikipedia.org/wiki/Decision_analysis)的有用过程。
 

@@ -1,6 +1,11 @@
-# Think Bayes 2
+# 贝叶斯思维第二版
 
 > 原文：[`allendowney.github.io/ThinkBayes2/`](https://allendowney.github.io/ThinkBayes2/)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 作者：Allen B. Downey
 

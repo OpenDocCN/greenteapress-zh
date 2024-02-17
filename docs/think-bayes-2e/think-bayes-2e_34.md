@@ -1,6 +1,11 @@
-# 多少本书？
+# 第三十章：多少本书？
 
 > 原文：[`allendowney.github.io/ThinkBayes2/bookstore.html`](https://allendowney.github.io/ThinkBayes2/bookstore.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 假设你是《可能是想多了》这本书的作者，当你去纽顿市的纽顿维尔书店时，你看到他们有两本你的书在展示。
 

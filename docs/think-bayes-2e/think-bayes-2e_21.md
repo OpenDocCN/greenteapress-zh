@@ -1,6 +1,11 @@
-# 共轭先验
+# 第十八章：共轭先验
 
 > 原文：[`allendowney.github.io/ThinkBayes2/chap18.html`](https://allendowney.github.io/ThinkBayes2/chap18.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 在之前的章节中，我们已经使用网格近似来解决各种问题。我其中一个目标是要表明这种方法足以解决许多现实世界的问题。我认为这是一个很好的开始，因为它清楚地展示了这些方法的工作原理。
 

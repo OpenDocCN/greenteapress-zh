@@ -1,6 +1,11 @@
 # 前言
 
 > 原文：[`allendowney.github.io/ThinkBayes2/preface.html`](https://allendowney.github.io/ThinkBayes2/preface.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 这本书的前提，以及*Think X*系列中的其他书籍，是如果你知道如何编程，你可以利用这一技能来学习其他主题。
 

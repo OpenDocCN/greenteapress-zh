@@ -1,6 +1,11 @@
-# 贝叶斯骰子
+# 第二十五章：贝叶斯骰子
 
 > 原文：[`allendowney.github.io/ThinkBayes2/bayes_dice.html`](https://allendowney.github.io/ThinkBayes2/bayes_dice.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 [点击这里在 Colab 上运行这个笔记本](https://colab.research.google.com/github/AllenDowney/ThinkBayes2/blob/master/examples/bayes_dice.ipynb)
 

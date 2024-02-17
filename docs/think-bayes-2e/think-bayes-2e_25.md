@@ -1,6 +1,11 @@
-# 红线问题
+# 第二十一章：红线问题
 
 > 原文：[`allendowney.github.io/ThinkBayes2/redline.html`](https://allendowney.github.io/ThinkBayes2/redline.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 红线是马萨诸塞州剑桥和波士顿之间的地铁。当我在剑桥工作时，我从肯德尔广场乘坐红线到南站，然后搭乘通勤列车到尼德姆。在高峰时间，红线列车平均每 7-8 分钟运行一次。
 

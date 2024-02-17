@@ -1,6 +1,10 @@
-# 近似贝叶斯计算
+# 第二十章：近似贝叶斯计算
 
-> [`allendowney.github.io/ThinkBayes2/chap20.html`](https://allendowney.github.io/ThinkBayes2/chap20.html)
+> 原文：[`allendowney.github.io/ThinkBayes2/chap20.html`](https://allendowney.github.io/ThinkBayes2/chap20.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 本章介绍了一种应对最复杂问题的最后手段，即近似贝叶斯计算（ABC）。我说这是最后的手段，因为它通常需要比其他方法更多的计算，所以如果您可以以其他方式解决问题，那就应该这样做。然而，在本章的例子中，ABC 不仅易于实现，而且高效。
 

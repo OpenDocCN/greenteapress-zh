@@ -1,6 +1,11 @@
-# 分布
+# 第三章：分布
 
 > 原文：[`allendowney.github.io/ThinkBayes2/chap03.html`](https://allendowney.github.io/ThinkBayes2/chap03.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 在上一章中，我们使用贝叶斯定理解决了一个饼干问题；然后我们再次使用贝叶斯表解决了这个问题。在本章中，冒昧地测试您的耐心，我们将再次使用`Pmf`对象解决这个问题，它代表了“概率质量函数”。我将解释这意味着什么，以及为什么它对贝叶斯统计学有用。
 

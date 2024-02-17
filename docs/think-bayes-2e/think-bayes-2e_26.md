@@ -1,6 +1,11 @@
-# 估计疫苗的有效性
+# 第二十二章：估计疫苗的有效性
 
 > 原文：[`allendowney.github.io/ThinkBayes2/vaccine2.html`](https://allendowney.github.io/ThinkBayes2/vaccine2.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 在最近的疫苗试验中，接种组没有人患病，因此疫苗制造商报告称其有效率为 100%。当然，现实世界中没有什么是 100%有效的，所以这个例子引发了一个问题：当病例数为 0 时，我们如何估计有效性？
 

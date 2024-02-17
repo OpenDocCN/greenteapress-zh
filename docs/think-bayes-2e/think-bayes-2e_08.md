@@ -1,6 +1,11 @@
-# 估计计数
+# 第五章：估计计数
 
 > 原文：[`allendowney.github.io/ThinkBayes2/chap05.html`](https://allendowney.github.io/ThinkBayes2/chap05.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 在前一章中，我们解决了涉及估计比例的问题。在欧元问题中，我们估计了硬币正面朝上的概率，在练习中，您估计了击球率、在税收上作假的人的比例以及击落入侵外星人的机会。
 

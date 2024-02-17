@@ -1,6 +1,10 @@
-# MCMC
+# 第十九章：MCMC
 
-> [`allendowney.github.io/ThinkBayes2/chap19.html`](https://allendowney.github.io/ThinkBayes2/chap19.html)
+> 原文：[`allendowney.github.io/ThinkBayes2/chap19.html`](https://allendowney.github.io/ThinkBayes2/chap19.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 在本书的大部分内容中，我们一直在使用网格方法来近似后验分布。对于具有一个或两个参数的模型，网格算法速度快，结果对于大多数实际目的而言足够精确。对于三个参数，它们开始变慢，而对于三个以上的参数，它们通常不实用。
 

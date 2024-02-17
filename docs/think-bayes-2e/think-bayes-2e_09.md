@@ -1,6 +1,11 @@
-# 赔率和加数
+# 第六章：赔率和加数
 
 > 原文：[`allendowney.github.io/ThinkBayes2/chap06.html`](https://allendowney.github.io/ThinkBayes2/chap06.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 本章介绍了表示确定度的一种新方式，**赔率**，以及贝叶斯定理的一种新形式，称为**贝叶斯定理**。如果你想在纸上或脑海中进行贝叶斯更新，贝叶斯定理是方便的。它还阐明了**证据**的重要概念以及我们如何量化证据的强度。
 

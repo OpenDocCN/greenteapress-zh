@@ -1,6 +1,11 @@
-# 回归
+# 第十七章：回归
 
 > 原文：[`allendowney.github.io/ThinkBayes2/chap17.html`](https://allendowney.github.io/ThinkBayes2/chap17.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 在上一章中，我们看到了几个逻辑回归的例子，它基于这样一个假设，即结果的可能性，以对数几率的形式表达，是某个数量（连续或离散）的线性函数。
 

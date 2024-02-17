@@ -1,6 +1,11 @@
-# 左撇子姐妹问题
+# 第二十四章：左撇子姐妹问题
 
 > 原文：[`allendowney.github.io/ThinkBayes2/sister.html`](https://allendowney.github.io/ThinkBayes2/sister.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 假设你遇到了一个看起来像你朋友玛丽的兄弟的人。你问他是否有一个叫玛丽的姐妹，他说“是的，但我不认为我认识你。”
 

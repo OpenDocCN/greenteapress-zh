@@ -1,6 +1,11 @@
-# 分类
+# 第十二章：分类
 
 > 原文：[`allendowney.github.io/ThinkBayes2/chap12.html`](https://allendowney.github.io/ThinkBayes2/chap12.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 分类可能是贝叶斯方法最著名的应用，它在 1990 年代作为第一代[垃圾邮件过滤器](https://en.wikipedia.org/wiki/Naive_Bayes_spam_filtering)的基础而闻名。
 

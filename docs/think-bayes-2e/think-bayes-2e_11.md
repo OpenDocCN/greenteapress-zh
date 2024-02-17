@@ -1,6 +1,11 @@
-# 泊松过程
+# 第八章：泊松过程
 
 > 原文：[`allendowney.github.io/ThinkBayes2/chap08.html`](https://allendowney.github.io/ThinkBayes2/chap08.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 本章介绍了[泊松过程](https://en.wikipedia.org/wiki/Poisson_point_process)，这是用来描述在随机间隔发生的事件的模型。作为泊松过程的一个例子，我们将对足球中的进球进行建模，这是美式英语中对其他人称为“足球”的比赛的称呼。我们将使用比赛中的进球数来估计泊松过程的参数；然后我们将使用后验分布来进行预测。
 

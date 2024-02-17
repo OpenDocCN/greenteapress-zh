@@ -1,6 +1,11 @@
-# 分层模型的网格算法
+# 第二十七章：分层模型的网格算法
 
 > 原文：[`allendowney.github.io/ThinkBayes2/hospital.html`](https://allendowney.github.io/ThinkBayes2/hospital.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 版权所有 2021 Allen B. Downey
 

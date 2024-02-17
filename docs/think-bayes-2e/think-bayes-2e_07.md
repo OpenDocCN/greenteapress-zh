@@ -1,6 +1,11 @@
-# 估计比例
+# 第四章：估计比例
 
 > 原文：[`allendowney.github.io/ThinkBayes2/chap04.html`](https://allendowney.github.io/ThinkBayes2/chap04.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 在上一章中，我们解决了 101 碗的问题，并且我承认这个问题并不是关于猜测饼干来自哪个碗，而是关于估计比例。
 

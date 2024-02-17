@@ -1,6 +1,11 @@
-# 比较
+# 第十一章：比较
 
 > 原文：[`allendowney.github.io/ThinkBayes2/chap11.html`](https://allendowney.github.io/ThinkBayes2/chap11.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 本章介绍了联合分布，这是处理多个变量的分布的基本工具。
 

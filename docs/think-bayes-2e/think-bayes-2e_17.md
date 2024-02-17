@@ -1,6 +1,11 @@
-# 生存分析
+# 第十四章：生存分析
 
 > 原文：[`allendowney.github.io/ThinkBayes2/chap14.html`](https://allendowney.github.io/ThinkBayes2/chap14.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 本章介绍了“生存分析”，这是一组用于回答关于事件发生时间的问题的统计方法。在医学领域，它实际上是关于生存，但它可以应用于任何类型事件的时间，或者可以是关于空间或其他维度的时间。
 

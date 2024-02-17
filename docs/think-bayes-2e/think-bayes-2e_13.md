@@ -1,6 +1,11 @@
-# 测试
+# 第十章：测试
 
 > 原文：[`allendowney.github.io/ThinkBayes2/chap10.html`](https://allendowney.github.io/ThinkBayes2/chap10.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 在<<_TheEuroProblem>>中，我提出了 David MacKay 的书中的一个问题，[*信息理论、推理和学习算法*](http://www.inference.org.uk/mackay/itila/p0.html)：
 

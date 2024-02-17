@@ -1,6 +1,11 @@
-# 推断
+# 第十三章：推断
 
 > 原文：[`allendowney.github.io/ThinkBayes2/chap13.html`](https://allendowney.github.io/ThinkBayes2/chap13.html)
+> 
+> 译者：[飞龙](https://github.com/wizardforcel)
+> 
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
 每当人们将贝叶斯推断与传统方法进行比较时，最常见的问题之一是：“p 值呢？”其中最常见的例子之一是比较两组，看看它们的平均值是否有差异。
 
