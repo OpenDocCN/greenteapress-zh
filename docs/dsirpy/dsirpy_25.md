@@ -1,4 +1,4 @@
-# 广度优先搜索
+# 第二十五章：广度优先搜索
 
 > 原文：[`allendowney.github.io/DSIRP/bfs.html`](https://allendowney.github.io/DSIRP/bfs.html)
 

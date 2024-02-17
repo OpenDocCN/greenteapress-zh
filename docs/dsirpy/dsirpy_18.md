@@ -1,4 +1,4 @@
-# Redis
+# 第十八章：Redis
 
 > 原文：[`allendowney.github.io/DSIRP/redis.html`](https://allendowney.github.io/DSIRP/redis.html)
 

@@ -1,4 +1,4 @@
-# 测验 4
+# 第十七章：测验 4
 
 > 原文：[`allendowney.github.io/DSIRP/quiz04.html`](https://allendowney.github.io/DSIRP/quiz04.html)
 

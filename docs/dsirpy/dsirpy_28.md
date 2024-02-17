@@ -1,4 +1,4 @@
-# 归并排序
+# 第二十八章：归并排序
 
 > 原文：[`allendowney.github.io/DSIRP/mergesort.html`](https://allendowney.github.io/DSIRP/mergesort.html)
 

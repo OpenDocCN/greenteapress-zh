@@ -1,4 +1,4 @@
-# 测验 2
+# 第九章：测验 2
 
 > 原文：[`allendowney.github.io/DSIRP/quiz02.html`](https://allendowney.github.io/DSIRP/quiz02.html)
 

@@ -1,4 +1,4 @@
-# 集合
+# 第七章：集合
 
 > 原文：[`allendowney.github.io/DSIRP/set.html`](https://allendowney.github.io/DSIRP/set.html)
 

@@ -1,4 +1,4 @@
-# 测验 3
+# 第十三章：测验 3
 
 > 原文：[`allendowney.github.io/DSIRP/quiz03.html`](https://allendowney.github.io/DSIRP/quiz03.html)
 

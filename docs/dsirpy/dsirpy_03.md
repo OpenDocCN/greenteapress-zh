@@ -1,4 +1,4 @@
-# 算法分析
+# 第三章：算法分析
 
 > 原文：[`allendowney.github.io/DSIRP/analysis.html`](https://allendowney.github.io/DSIRP/analysis.html)
 

@@ -1,4 +1,4 @@
-# 双端队列
+# 第二十二章：双端队列
 
 > 原文：[`allendowney.github.io/DSIRP/deque.html`](https://allendowney.github.io/DSIRP/deque.html)
 

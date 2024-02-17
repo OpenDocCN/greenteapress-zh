@@ -1,4 +1,4 @@
-# 到达哲学
+# 第十六章：到达哲学
 
 > 原文：[`allendowney.github.io/DSIRP/philosophy.html`](https://allendowney.github.io/DSIRP/philosophy.html)
 

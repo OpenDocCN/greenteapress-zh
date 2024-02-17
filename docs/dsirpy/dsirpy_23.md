@@ -1,4 +1,4 @@
-# 图
+# 第二十三章：图
 
 > 原文：[`allendowney.github.io/DSIRP/graph.html`](https://allendowney.github.io/DSIRP/graph.html)
 

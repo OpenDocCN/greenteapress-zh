@@ -1,4 +1,4 @@
-# 深度优先搜索
+# 第十章：深度优先搜索
 
 > 原文：[`allendowney.github.io/DSIRP/dfs.html`](https://allendowney.github.io/DSIRP/dfs.html)
 

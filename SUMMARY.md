@@ -2,3 +2,4 @@
 +   [数据结构思维中文版](docs/think-dast/README.md)
 +   [操作系统思维中文版](docs/think-os/README.md)
 +   [Python 编程思维第二版](docs/think-py-2e/README.md)
++   [Python 中的数据结构和信息检索](docs/dsirpy/README.md)

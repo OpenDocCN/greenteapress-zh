@@ -1,4 +1,4 @@
-# 实现映射类型
+# 第十二章：实现映射类型
 
 > 原文：[`allendowney.github.io/DSIRP/hashmap.html`](https://allendowney.github.io/DSIRP/hashmap.html)
 

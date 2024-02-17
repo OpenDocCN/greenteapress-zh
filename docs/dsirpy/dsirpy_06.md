@@ -1,4 +1,4 @@
-# 生成器和迭代器
+# 第六章：生成器和迭代器
 
 > 原文：[`allendowney.github.io/DSIRP/generator.html`](https://allendowney.github.io/DSIRP/generator.html)
 

@@ -1,4 +1,4 @@
-# 测验 6
+# 第二十六章：测验 6
 
 > 原文：[`allendowney.github.io/DSIRP/quiz06.html`](https://allendowney.github.io/DSIRP/quiz06.html)
 

@@ -1,4 +1,4 @@
-# 算法
+# 第二章：算法
 
 > 原文：[`allendowney.github.io/DSIRP/algorithms.html`](https://allendowney.github.io/DSIRP/algorithms.html)
 

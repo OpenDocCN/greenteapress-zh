@@ -1,4 +1,4 @@
-# 哈夫曼编码
+# 第十五章：哈夫曼编码
 
 > 原文：[`allendowney.github.io/DSIRP/huffman.html`](https://allendowney.github.io/DSIRP/huffman.html)
 

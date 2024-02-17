@@ -1,4 +1,4 @@
-# 层次遍历
+# 第二十四章：层次遍历
 
 > 原文：[`allendowney.github.io/DSIRP/level_order.html`](https://allendowney.github.io/DSIRP/level_order.html)
 

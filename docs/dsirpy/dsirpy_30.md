@@ -1,4 +1,4 @@
-# 测验 7
+# 第三十章：测验 7
 
 > 原文：[`allendowney.github.io/DSIRP/quiz07.html`](https://allendowney.github.io/DSIRP/quiz07.html)
 
