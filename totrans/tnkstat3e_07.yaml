@@ -1,366 +1,564 @@
 - en: Modeling Distributions
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 模型分布
 - en: 原文：[https://allendowney.github.io/ThinkStats/chap05.html](https://allendowney.github.io/ThinkStats/chap05.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ThinkStats/chap05.html](https://allendowney.github.io/ThinkStats/chap05.html)
 - en: The distributions we have used so far are called empirical distributions because
     they are based on empirical observations – in other words, data. Many datasets
     we see in the real world can be closely approximated by a theoretical distribution,
     which is usually based on a simple mathematical function. This chapter presents
     some of these theoretical distributions and datasets they can be used to model.
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们迄今为止使用的分布被称为经验分布，因为它们基于经验观察——换句话说，数据。我们在现实世界中看到的许多数据集都可以被一个理论分布紧密近似，这通常基于一个简单的数学函数。本章介绍了这些理论分布及其可以用来建模的数据集。
 - en: 'As examples, we’ll see that:'
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为例子，我们将看到：
 - en: In a skeet shooting competition, the number of hits and misses is well modeled
     by a binomial distribution.
+  id: totrans-4
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 在飞碟射击比赛中，命中和未命中的次数可以用二项分布很好地描述。
 - en: In games like hockey and soccer (football), the number of goals in a game follows
     a Poisson distribution, and the time between goals follows an exponential distribution.
+  id: totrans-5
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 在像曲棍球和足球（足球）这样的游戏中，一场比赛中的进球数遵循泊松分布，进球之间的时间间隔遵循指数分布。
 - en: Birth weights follow a normal distribution, also called a Gaussian, and adult
     weights follow a lognormal distribution.
+  id: totrans-6
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 出生体重遵循正态分布，也称为高斯分布，而成年体重遵循对数正态分布。
 - en: If you are not familiar with these distributions – or these sports – I will
     explain what you need to know. For each example, we’ll start with a simulation
     based on a simple model, and show that the simulation results follow a theoretical
     distribution. Then we’ll see how well real data agrees with the model.
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你对这些分布——或者这些运动——不熟悉，我将解释你需要知道的内容。对于每个例子，我们将从一个基于简单模型的模拟开始，并展示模拟结果遵循理论分布。然后我们将看到实际数据与模型的一致性如何。
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ThinkStats/blob/v3/nb/chap05.ipynb).'
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: '[点击此处运行此笔记本在Colab](https://colab.research.google.com/github/AllenDowney/ThinkStats/blob/v3/nb/chap05.ipynb)。'
 - en: '[PRE0]'
+  id: totrans-9
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '[PRE1]'
+  id: totrans-10
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '[PRE2]'
+  id: totrans-11
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: The Binomial Distribution
+  id: totrans-12
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 二项分布
 - en: As a first example, we’ll consider the sport of skeet shooting, in which competitors
     use shotguns to shoot clay disks that are thrown into the air. In international
     competition, including the Olympics, there are five rounds with 25 targets per
     round, with additional rounds as needed to determine a winner.
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为第一个例子，我们将考虑飞碟射击这项运动，其中参赛者使用猎枪射击被抛入空中的粘土碟。在国际比赛中，包括奥运会，有五轮，每轮25个目标，根据需要增加轮次以确定胜者。
 - en: As a model of a skeet-shooting competition, suppose that every participant has
     the same probability, `p`, of hitting every target. Of course, this model is a
     simplification – in reality, some competitors have a higher probability than others,
     and even for a single competitor, it might vary from one attempt to the next.
     But even if it is not realistic, this model makes some surprisingly accurate predictions,
     as we’ll see.
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为飞碟射击比赛的模型，假设每个参与者命中每个目标的概率相同，`p`。当然，这个模型是一种简化——在现实中，一些参赛者的概率比其他人高，即使是单个参赛者，也可能从一次尝试到下一次尝试而变化。但即使它不现实，这个模型也能做出一些令人惊讶的准确预测，正如我们将看到的。
 - en: To simulate the model, I’ll use the following function, which takes the number
     of targets, `n`, and the probability of hitting each one, `p`, and returns a sequence
     of 1s and 0s to indicate hits and misses.
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了模拟这个模型，我将使用以下函数，它接受目标数`n`和每个目标的命中概率`p`，并返回一个由1和0组成的序列，以表示命中和未命中。
 - en: '[PRE3]'
+  id: totrans-16
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: Here’s an example that simulates a round of 25 targets where the probability
     of hitting each one is 90%.
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里有一个模拟25个目标的例子，其中每个目标的命中概率为90%。
 - en: '[PRE4]'
+  id: totrans-18
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '[PRE5]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '[PRE6]'
+  id: totrans-20
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: If we generate a longer sequence and compute the `Pmf` of the results, we can
     confirm that the proportions of 1s and 0s are correct, at least approximately.
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们生成一个更长的序列并计算结果的`Pmf`，我们可以确认1和0的比例是正确的，至少是近似正确的。
 - en: '[PRE7]'
+  id: totrans-22
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '|  | probs |'
+  id: totrans-23
   prefs: []
   type: TYPE_TB
+  zh: '|  | probs |'
 - en: '| --- | --- |'
+  id: totrans-24
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| 0 | 0.101 |'
+  id: totrans-25
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 0.101 |'
 - en: '| 1 | 0.899 |'
+  id: totrans-26
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 0.899 |'
 - en: Now we can use `flip` to simulate a round of skeet shooting and return the number
     of hits.
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以使用`flip`来模拟一轮飞碟射击并返回命中的次数。
 - en: '[PRE8]'
+  id: totrans-28
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: In a large competition, suppose 200 competitors shoot 5 rounds each, all with
     the same probability of hitting the target, `p=0.9`. We can simulate a competition
     like that by calling `simulate_round` 1000 times.
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 在一场大型比赛中，假设200名参赛者每人射击5轮，所有射击命中目标的概率相同，`p=0.9`。我们可以通过调用`simulate_round` 1000次来模拟这样的比赛。
 - en: '[PRE9]'
+  id: totrans-30
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: The average score is close to `22.5`, which is the product of `n` and `p`.
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 平均分接近`22.5`，这是`n`和`p`的乘积。
 - en: '[PRE10]'
+  id: totrans-32
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '[PRE11]'
+  id: totrans-33
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: Here’s what the distribution of the results looks like.
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 下面是结果分布的图示。
 - en: '[PRE12]'
+  id: totrans-35
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '![_images/08b871c8bbfdd217fe337feeadaa2984b89f506f7bdad8b02bf0d46d70f3c7fd.png](../Images/b3bc935aa73ee60fbf8812155f6f2226.png)'
+  id: totrans-36
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/08b871c8bbfdd217fe337feeadaa2984b89f506f7bdad8b02bf0d46d70f3c7fd.png](../Images/b3bc935aa73ee60fbf8812155f6f2226.png)'
 - en: The peak is near the mean, and the distribution is skewed to the left.
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 顶峰接近平均值，分布向左偏斜。
 - en: Instead of running a simulation, we could have predicted this distribution.
     Mathematically, the distribution of these outcomes follows a **binomial distribution**,
     which has a PMF that is easy to compute.
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以不运行模拟，而是预测这个分布。从数学上讲，这些结果的分布遵循**二项分布**，其PMF易于计算。
 - en: '[PRE13]'
+  id: totrans-39
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: SciPy provides the `comb` function, which computes the number of combinations
     of `n` things taken `k` at a time, often pronounced “n choose k”.
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: SciPy提供了`comb`函数，该函数计算从`n`个物品中每次取`k`个的组合数，通常读作“n选k”。
 - en: '`binomial_pmf` computes the probability of getting `k` hits out of `n` attempts,
     given `p`. If we call this function with a range of `k` values, we can make a
     `Pmf` that represents the distribution of the outcomes.'
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: '`binomial_pmf`计算在给定`p`的情况下，从`n`次尝试中得到`k`次命中的概率。如果我们用一系列的`k`值调用此函数，我们可以创建一个表示结果分布的`Pmf`。'
 - en: '[PRE14]'
+  id: totrans-42
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: And here’s what it looks like compared to the simulation results.
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 下面是它与模拟结果相比的图示。
 - en: '[PRE15]'
+  id: totrans-44
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '![_images/c851788dc1b44f61b20879c685e9f525105beb15524c952000ede59511b73994.png](../Images/54a70a9fc860c39df46a4857e6ff6a80.png)'
+  id: totrans-45
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/c851788dc1b44f61b20879c685e9f525105beb15524c952000ede59511b73994.png](../Images/54a70a9fc860c39df46a4857e6ff6a80.png)'
 - en: They are similar, with small differences because of random variation in the
     simulation results. This agreement should not be surprising, because the simulation
     and the model are based on the same assumptions – particularly the assumption
     that every attempt has the same probability of success. A stronger test of a model
     is how it compares to real data.
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: 它们很相似，由于模拟结果中的随机变化，存在一些小的差异。这种一致性并不令人惊讶，因为模拟和模型基于相同的假设——尤其是每个尝试成功的概率相同的假设。对模型的一个更强测试是它与实际数据的比较。
 - en: From the Wikipedia page for the men’s skeet shooting competition at the 2020
     Summer Olympics, we can extract a table that shows the results for the qualification
     rounds. Instructions for downloading the data are in the notebook for this chapter.
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 从2020年夏季奥运会男子飞碟射击比赛的维基百科页面，我们可以提取一个表格，显示资格赛的结果。下载数据的说明在本书的笔记本中。
 - en: Downloaded from [https://en.wikipedia.org/wiki/Shooting_at_the_2020_Summer_Olympics_–_Men’s_skeet](https://en.wikipedia.org/wiki/Shooting_at_the_2020_Summer_Olympics_%E2%80%93_Men's_skeet)
     on July 15, 2024.
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 从[https://en.wikipedia.org/wiki/Shooting_at_the_2020_Summer_Olympics_%E2%80%93_Men's_skeet](https://en.wikipedia.org/wiki/Shooting_at_the_2020_Summer_Olympics_%E2%80%93_Men's_skeet)于2024年7月15日下载。
 - en: '[PRE16]'
+  id: totrans-49
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '[PRE17]'
+  id: totrans-50
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: '[PRE18]'
+  id: totrans-51
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: '|  | Rank | Athlete | Country | 1 | 2 | 3 | 4 | 5 | Total[3] | Shoot-off |
     Notes |'
+  id: totrans-52
   prefs: []
   type: TYPE_TB
+  zh: '|  | Rank | Athlete | Country | 1 | 2 | 3 | 4 | 5 | Total[3] | Shoot-off |
+    Notes |'
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  id: totrans-53
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
 - en: '| 0 | 1 | Éric Delaunay | France | 25 | 25 | 25 | 24 | 25 | 124 | +6 | Q, OR
     |'
+  id: totrans-54
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 1 | Éric Delaunay | France | 25 | 25 | 25 | 24 | 25 | 124 | +6 | Q, OR
+    |'
 - en: '| 1 | 2 | Tammaro Cassandro | Italy | 24 | 25 | 25 | 25 | 25 | 124 | +5 | Q,
     OR |'
+  id: totrans-55
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 2 | Tammaro Cassandro | Italy | 24 | 25 | 25 | 25 | 25 | 124 | +5 | Q,
+    OR |'
 - en: '| 2 | 3 | Eetu Kallioinen | Finland | 25 | 25 | 24 | 25 | 24 | 123 | NaN |
     Q |'
+  id: totrans-56
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 3 | Eetu Kallioinen | Finland | 25 | 25 | 24 | 25 | 24 | 123 | NaN |
+    Q |'
 - en: '| 3 | 4 | Vincent Hancock | United States | 25 | 25 | 25 | 25 | 22 | 122 |
     +8 | Q |'
+  id: totrans-57
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 4 | Vincent Hancock | United States | 25 | 25 | 25 | 25 | 22 | 122 |
+    +8 | Q |'
 - en: '| 4 | 5 | Abdullah Al-Rashidi | Kuwait | 25 | 25 | 24 | 25 | 23 | 122 | +7
     | Q |'
+  id: totrans-58
   prefs: []
   type: TYPE_TB
+  zh: '| 4 | 5 | Abdullah Al-Rashidi | Kuwait | 25 | 25 | 24 | 25 | 23 | 122 | +7
+    | Q |'
 - en: The table has one row for each competitor, with one column for each of five
     rounds. We’ll select the columns that contain these results and use the NumPy
     function `flatten` to put them into a single array.
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 表格为每位选手一行，每轮比赛有一个列。我们将选择包含这些结果的列，并使用NumPy函数`flatten`将它们放入一个单一的数组中。
 - en: '[PRE19]'
+  id: totrans-60
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: With 30 competitors, we have results from 150 rounds of 25 shots each, with
     3750 hits out of a total of 3575 attempts.
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: 有30名选手，我们有150轮25次射击的结果，总共3575次尝试中有3750次命中。
 - en: '[PRE20]'
+  id: totrans-62
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '[PRE21]'
+  id: totrans-63
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: So the overall success rate is 95.3%.
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，整体成功率是95.3%。
 - en: '[PRE22]'
+  id: totrans-65
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: '[PRE23]'
+  id: totrans-66
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: Now let’s compute a `Pmf` that represents the binomial distribution with `n=25`
     and the value of `p` we just computed.
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们计算一个`Pmf`，它代表`n=25`和刚刚计算出的`p`值的二项分布。
 - en: '[PRE24]'
+  id: totrans-68
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: And we can compare that to the `Pmf` of the actual results.
+  id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以将这个分布与实际结果的`Pmf`进行比较。
 - en: '[PRE25]'
+  id: totrans-70
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: '![_images/5ba25fda80b034b283df713496106e7b55e929e602dee01b8d19e0a15afc810c.png](../Images/85faeb855d8e5ea7b36328b284db979c.png)'
+  id: totrans-71
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/85faeb855d8e5ea7b36328b284db979c.png)'
 - en: The binomial model is a good fit for the distribution of the data – even though
     it makes the unrealistic assumption that all competitors have the same, unchanging
     capability.
+  id: totrans-72
   prefs: []
   type: TYPE_NORMAL
+  zh: 二项模型很好地拟合了数据的分布——尽管它做出了所有竞争者具有相同、不变能力的非现实假设。
 - en: The Poisson Distribution
+  id: totrans-73
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 泊松分布
 - en: As another example where the outcomes of sports events follow predictable patterns,
     let’s look at the number of goals scored in ice hockey games.
+  id: totrans-74
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为另一个例子，其中体育赛事的结果遵循可预测的模式，让我们看看冰球比赛中进球的数量。
 - en: We’ll start by simulating a 60-minute game, which is 3600 seconds, assuming
     that the teams score a total of 6 goals per game, on average, and that the goal-scoring
     probability, `p`, is the same during any second.
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们首先模拟一场60分钟的比赛，即3600秒，假设每场比赛平均进球数为6个，进球概率`p`在任何一秒都是相同的。
 - en: '[PRE26]'
+  id: totrans-76
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: '[PRE27]'
+  id: totrans-77
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: Now we can use the following function to simulate `n` seconds and return the
     total number of goals scored.
+  id: totrans-78
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以使用以下函数来模拟`n`秒，并返回进球总数。
 - en: '[PRE28]'
+  id: totrans-79
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: If we simulate many games, we can confirm that the average number of goals per
     game is close to 6.
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们模拟许多场比赛，我们可以确认每场比赛的平均进球数接近6。
 - en: '[PRE29]'
+  id: totrans-81
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: '[PRE30]'
+  id: totrans-82
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: We could use the binomial distribution to model these results, but when `n`
     is large and `p` is small, the results are also well-modeled by a **Poisson distribution**,
     which is specified by a value usually denoted with the Greek letter λ, which is
     pronounced “lambda” and represented in code with the variable `lam` (`lambda`
     is not a legal variable name because it is a Python keyword). `lam` represents
     the goal-scoring rate, which is 6 goals per game in the example.
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用二项分布来模拟这些结果，但当`n`很大且`p`很小时，结果也可以很好地由一个**泊松分布**来模拟，该分布由通常用希腊字母λ表示的值指定，读作“lambda”，在代码中用变量`lam`（`lambda`不是一个合法的变量名，因为它是一个Python关键字）表示。`lam`代表进球率，在示例中为每场比赛6个进球。
 - en: The PMF of the Poisson distribution is easy to compute – given `lam`, we can
     use the following function to compute the probability of seeing `k` goals in a
     game.
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: 泊松分布的概率质量函数（PMF）易于计算——给定`lam`，我们可以使用以下函数来计算一场比赛中出现`k`个进球的概率。
 - en: '[PRE31]'
+  id: totrans-85
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: SciPy provides the `factorial` function, which computes the product of the integers
     from `1` to `k`.
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: SciPy提供了`factorial`函数，该函数计算从`1`到`k`的整数的乘积。
 - en: If we call `poisson_pmf` with a range of `k` values, we can make a `Pmf` that
     represents the distribution of outcomes.
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们用一系列`k`值调用`poisson_pmf`，我们可以创建一个`Pmf`，它表示结果的分布。
 - en: '[PRE32]'
+  id: totrans-88
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: And confirm that the mean of the distribution is close to 6.
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: 并确认分布的均值接近6。
 - en: '[PRE33]'
+  id: totrans-90
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: '[PRE34]'
+  id: totrans-91
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: The following figure compares the results from the simulation to the Poisson
     distribution with the same mean.
+  id: totrans-92
   prefs: []
   type: TYPE_NORMAL
+  zh: 下图比较了模拟结果与具有相同均值的泊松分布。
 - en: '[PRE35]'
+  id: totrans-93
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: '![_images/7345f1e5cdf82cf939c920fe4d073b1341499c127ae56ec6db528580c08f8b7e.png](../Images/66b5acc712ae0d4b9830f54ecd5f381e.png)'
+  id: totrans-94
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/66b5acc712ae0d4b9830f54ecd5f381e.png)'
 - en: The distributions are similar except for small differences due to random variation.
     That should not be surprising, because the simulation and the Poisson model are
     based on the same assumption that the probability of scoring a goal is the same
     during any second of the game. So a stronger test is to see how well the model
     fits real data.
+  id: totrans-95
   prefs: []
   type: TYPE_NORMAL
+  zh: 分布相似，只是由于随机变化存在一些小差异。这并不令人惊讶，因为模拟和泊松模型都是基于相同的假设，即在任何一秒进球的概率是相同的。因此，一个更强的测试是看看模型如何拟合真实数据。
 - en: From HockeyReference, I downloaded results of every game of the National Hockey
     League (NHL) 2023-2024 regular season (not including the playoffs). I extracted
     information about goals scored during 60 minutes of regulation play, not including
@@ -368,672 +566,1018 @@
     for each game, and a list of times, in seconds since the beginning of the game,
     when a goal was scored. Instructions for downloading the data are in the notebook
     for this chapter.
+  id: totrans-96
   prefs: []
   type: TYPE_NORMAL
+  zh: 从HockeyReference网站上，我下载了2023-2024赛季国家冰球联盟（NHL）常规赛中每场比赛的结果（不包括季后赛）。我提取了关于在60分钟常规比赛时间内进球的信息，不包括加时赛或点球大战。结果存储在一个HDF文件中，每个游戏有一个键，以及一个列表，列出了自比赛开始以来进球的时间，以秒为单位。下载数据的说明在本书的笔记本中。
 - en: Raw data downloaded from [https://www.hockey-reference.com/leagues/NHL_2024_games.html](https://www.hockey-reference.com/leagues/NHL_2024_games.html)
     on July 16, 2024.
+  id: totrans-97
   prefs: []
   type: TYPE_NORMAL
+  zh: 从2024年7月16日下载的[https://www.hockey-reference.com/leagues/NHL_2024_games.html](https://www.hockey-reference.com/leagues/NHL_2024_games.html)的原始数据。
 - en: '[PRE36]'
+  id: totrans-98
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: Here’s how we read the keys from the file.
+  id: totrans-99
   prefs: []
   type: TYPE_NORMAL
+  zh: 下面是如何从文件中读取键。
 - en: '[PRE37]'
+  id: totrans-100
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE37]'
 - en: '[PRE38]'
+  id: totrans-101
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: There were 1312 games during the regular season. Each key contains the date
     of the game and a three-letter abbreviation for the home team. We can use `read_hdf`
     to look up a key and get the list of times when a goal was scored.
+  id: totrans-102
   prefs: []
   type: TYPE_NORMAL
+  zh: 在常规赛期间共有1312场比赛。每个键包含比赛日期和主队的三个字母缩写。我们可以使用`read_hdf`来查找键并获取进球时间的列表。
 - en: '[PRE39]'
+  id: totrans-103
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: '[PRE40]'
+  id: totrans-104
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE40]'
 - en: In the first game of the season, six goals were scored, the first after 424
     seconds of play, the last after 3513 seconds – with only 87 seconds left in the
     game.
+  id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: 在赛季的第一场比赛中，共进了六个球，第一个进球是在比赛进行424秒后，最后一个进球是在3513秒后——比赛还剩下87秒。
 - en: '[PRE41]'
+  id: totrans-106
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE41]'
 - en: '[PRE42]'
+  id: totrans-107
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE42]'
 - en: The following loop reads the results for all games, counts the number of goals
     in each one, and stores the results in a list.
+  id: totrans-108
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下循环读取所有比赛的结果，计算每场比赛的进球数，并将结果存储在列表中。
 - en: '[PRE43]'
+  id: totrans-109
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE43]'
 - en: The average number of goals per game is just over 6.
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: 每场比赛的平均进球数略超过6。
 - en: '[PRE44]'
+  id: totrans-111
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE44]'
 - en: '[PRE45]'
+  id: totrans-112
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE45]'
 - en: We can use `poisson_pmf` to make a `Pmf` that represents a Poisson distribution
     with the same mean as the data.
+  id: totrans-113
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用`poisson_pmf`来创建一个`Pmf`，它代表具有与数据相同均值的泊松分布。
 - en: '[PRE46]'
+  id: totrans-114
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE46]'
 - en: And here’s what it looks like compared to the PMF of the data.
+  id: totrans-115
   prefs: []
   type: TYPE_NORMAL
+  zh: 下面是它与数据的概率质量函数（PMF）相比的图示。
 - en: '[PRE47]'
+  id: totrans-116
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE47]'
 - en: '![_images/2757a443895f4d2f8f8c4977ebeaf5a8337a9bd48a364680d2822351c11db977.png](../Images/b914fe24a43ddd116c592854511d3144.png)'
+  id: totrans-117
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/b914fe24a43ddd116c592854511d3144.png)'
 - en: The Poisson distribution fits the data well, which suggests that it is a good
     model of the goal-scoring process in hockey.
+  id: totrans-118
   prefs: []
   type: TYPE_NORMAL
+  zh: 泊松分布很好地拟合了数据，这表明它是冰球进球过程的良好模型。
 - en: The Exponential Distribution
+  id: totrans-119
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 指数分布
 - en: In the previous section, we simulated a simple model of a hockey game where
     a goal has the same probability of being scored during any second of the game.
     Under the same model, it turns out, the time until the first goal follows an **exponential
     distribution**.
+  id: totrans-120
   prefs: []
   type: TYPE_NORMAL
+  zh: 在上一节中，我们模拟了一个简单的冰球比赛模型，其中进球在任何一秒被射中的概率相同。在相同的模型下，结果是，直到第一个进球的时间遵循一个**指数分布**。
 - en: To demonstrate, let’s assume again that the teams score a total of 6 goals,
     on average, and compute the probability of a goal during each second.
+  id: totrans-121
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了演示，让我们再次假设球队平均每场比赛进6个球，并计算每秒进球的概率。
 - en: '[PRE48]'
+  id: totrans-122
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE48]'
 - en: '[PRE49]'
+  id: totrans-123
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE49]'
 - en: The following function simulates `n` seconds and uses `argmax` to find the time
     of the first goal.
+  id: totrans-124
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数模拟`n`秒，并使用`argmax`找到第一个进球的时间。
 - en: '[PRE50]'
+  id: totrans-125
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE50]'
 - en: This works because the result from `flip` is a sequence of 1s and 0s, so the
     maximum is almost always 1. If there is at least one goal in the sequence, `argmax`
     returns the index of the first. If there are no goals, it returns 0, but that
     happens seldom enough that we’ll ignore it.
+  id: totrans-126
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是因为`flip`的结果是一串1和0，所以最大值几乎总是1。如果序列中至少有一个进球，`argmax`返回第一个进球的索引。如果没有进球，它返回0，但这很少发生，所以我们忽略它。
 - en: We’ll use `simulate_first_goal` to simulate 1001 games and make a list of the
     times until the first goal.
+  id: totrans-127
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将使用`simulate_first_goal`模拟1001场比赛，并创建一个直到第一个进球的时间列表。
 - en: '[PRE51]'
+  id: totrans-128
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE51]'
 - en: '[PRE52]'
+  id: totrans-129
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE52]'
 - en: '[PRE53]'
+  id: totrans-130
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE53]'
 - en: The average time until the first goal is close to 600 seconds, or 10 minutes.
     And that makes sense – if we expect 6 goals per sixty-minute game, we expect one
     goal every 10 minutes, on average.
+  id: totrans-131
   prefs: []
   type: TYPE_NORMAL
+  zh: 直到第一个进球的平均时间是接近600秒，即10分钟。这很有道理——如果我们预计每60分钟比赛有6个进球，那么平均每10分钟就会有一个进球。
 - en: When `n` is large and `p` is small, we can show mathematically that the expected
     time until the first goal follows an exponential distribution.
+  id: totrans-132
   prefs: []
   type: TYPE_NORMAL
+  zh: 当`n`很大且`p`很小时，我们可以从数学上证明第一个进球的期望时间遵循指数分布。
 - en: Because the simulation generates many unique time values, we’ll use CDFs to
     compare distributions, rather than PMFs. And the CDF of the exponential distribution
     is easy to compute.
+  id: totrans-133
   prefs: []
   type: TYPE_NORMAL
+  zh: 因为模拟生成了许多独特的时间值，我们将使用累积分布函数（CDFs）来比较分布，而不是概率质量函数（PMFs）。指数分布的CDF很容易计算。
 - en: '[PRE54]'
+  id: totrans-134
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE54]'
 - en: The value of `lam`, is the average number of events per unit of time – in this
     example it is goals per second. We can use the mean of the simulated results to
     compute `lam`.
+  id: totrans-135
   prefs: []
   type: TYPE_NORMAL
+  zh: '`lam`的值是单位时间内的平均事件数——在这个例子中是每秒的进球数。我们可以使用模拟结果的平均值来计算`lam`。'
 - en: '[PRE55]'
+  id: totrans-136
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE55]'
 - en: '[PRE56]'
+  id: totrans-137
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE56]'
 - en: If we call this function with a range of time values, we can approximate the
     distribution of first goal times. The NumPy function `linspace` creates an array
     of equally-spaced values; in this example, it computes 201 values from 0 to 3600,
     including both.
+  id: totrans-138
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们用时间值的范围调用此函数，我们可以近似第一次进球时间的分布。NumPy函数`linspace`创建一个等间距值的数组；在这个例子中，它计算从0到3600的201个值，包括两者。
 - en: '[PRE57]'
+  id: totrans-139
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE57]'
 - en: The following figure compares the simulation results to the exponential distribution
     we just computed.
+  id: totrans-140
   prefs: []
   type: TYPE_NORMAL
+  zh: 下图比较了模拟结果与我们刚刚计算的指数分布。
 - en: '[PRE58]'
+  id: totrans-141
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE58]'
 - en: '![_images/08478961d3367ee9eeabdcf3debbd108f091e3f46e02d8ae784d9948ebb249df.png](../Images/5c7d27ece5c396b48bee080aee0128a4.png)'
+  id: totrans-142
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/08478961d3367ee9eeabdcf3debbd108f091e3f46e02d8ae784d9948ebb249df.png](../Images/5c7d27ece5c396b48bee080aee0128a4.png)'
 - en: The exponential model fits the results from the simulation very well – but a
     stronger test is to see how it does with real data.
+  id: totrans-143
   prefs: []
   type: TYPE_NORMAL
+  zh: 指数模型与模拟结果非常吻合——但更严格的测试是看看它在真实数据上的表现如何。
 - en: The following loop reads the results for all games, gets the time of the first
     goal, and stores the result in a list. If no goals were scored, it adds `nan`
     to the list.
+  id: totrans-144
   prefs: []
   type: TYPE_NORMAL
+  zh: 下面的循环读取所有比赛的结果，获取第一次进球的时间，并将结果存储在列表中。如果没有进球，它会在列表中添加`nan`。
 - en: '[PRE59]'
+  id: totrans-145
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE59]'
 - en: '[PRE60]'
+  id: totrans-146
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE60]'
 - en: To estimate the goal-scoring rate, we can use `nanmean`, which computes the
     mean of the times, ignoring `nan` values.
+  id: totrans-147
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了估计进球率，我们可以使用`nanmean`，它计算时间的平均值，忽略`nan`值。
 - en: '[PRE61]'
+  id: totrans-148
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE61]'
 - en: '[PRE62]'
+  id: totrans-149
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE62]'
 - en: Now we can compute the CDF of an exponential distribution with the same goal-scoring
     rate as the data.
+  id: totrans-150
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，我们可以使用与数据相同的进球率来计算指数分布的累积分布函数（CDF）。
 - en: '[PRE63]'
+  id: totrans-151
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE63]'
 - en: To compute the CDF of the data, we’ll use the `dropna=False` argument, which
     includes `nan` values at the end.
+  id: totrans-152
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了计算数据的CDF，我们将使用`dropna=False`参数，它包括末尾的`nan`值。
 - en: '[PRE64]'
+  id: totrans-153
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE64]'
 - en: '|  | probs |'
+  id: totrans-154
   prefs: []
   type: TYPE_TB
+  zh: '|  | probs |'
 - en: '| --- | --- |'
+  id: totrans-155
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| 3286.0 | 0.996951 |'
+  id: totrans-156
   prefs: []
   type: TYPE_TB
+  zh: '| 3286.0 | 0.996951 |'
 - en: '| 3581.0 | 0.997713 |'
+  id: totrans-157
   prefs: []
   type: TYPE_TB
+  zh: '| 3581.0 | 0.997713 |'
 - en: '| NaN | 1.000000 |'
+  id: totrans-158
   prefs: []
   type: TYPE_TB
+  zh: '| NaN | 1.000000 |'
 - en: The following figure compares the exponential distribution to the distribution
     of the data.
+  id: totrans-159
   prefs: []
   type: TYPE_NORMAL
+  zh: 下图比较了指数分布与数据的分布。
 - en: '[PRE65]'
+  id: totrans-160
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE65]'
 - en: '![_images/0c6bffdb53c411d3e52ea8a97a3859d64ec63495d7e950a75097c1c0031e81fe.png](../Images/343459be3d0c97b6729e29aa5316eb4d.png)'
+  id: totrans-161
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/0c6bffdb53c411d3e52ea8a97a3859d64ec63495d7e950a75097c1c0031e81fe.png](../Images/343459be3d0c97b6729e29aa5316eb4d.png)'
 - en: The data deviate from the model in some places – it looks like there are fewer
     goals in the first 1000 seconds than the model predicts. But still, the model
     fits the data well.
+  id: totrans-162
   prefs: []
   type: TYPE_NORMAL
+  zh: 数据在某些地方偏离了模型——看起来在模型预测的前1000秒内进球比模型预测的少。但仍然，模型很好地拟合了数据。
 - en: The underlying assumption of these models – the Poisson model of goals and the
     exponential model of times – is that a goal is equally likely during any second
     of a game. If you ask a hockey fan whether that’s true, they would say no, and
     they would be right – the real world violates assumptions like these in many ways.
     Nevertheless, theoretical distributions often fit real data remarkably well.
+  id: totrans-163
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些模型的基础假设——进球的泊松模型和时间指数模型——是进球在任何游戏秒数中发生的可能性是相同的。如果你问一个曲棍球迷这是否正确，他们会说不是，而且他们会是对的——现实世界在许多方面违反了这样的假设。尽管如此，理论分布通常与真实数据非常吻合。
 - en: '## The Normal Distribution'
+  id: totrans-164
   prefs: []
   type: TYPE_NORMAL
+  zh: '## 正态分布'
 - en: Many things we measure in the real world follow a **normal distribution**, also
     known as a Gaussian distribution or a “bell curve”. To see where these distributions
     come from, let’s consider a model of the way giant pumpkins grow. Suppose that
     each day, a pumpkin gains 1 pound if the weather is bad, 2 pounds if the weather
     is fair, and 3 pounds if the weather is good. And suppose the weather each day
     is bad, fair, or good with the same probability.
+  id: totrans-165
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们在现实世界中测量的许多事物都遵循**正态分布**，也称为高斯分布或“钟形曲线”。为了了解这些分布的来源，让我们考虑一个关于巨型南瓜生长的模型。假设每天，如果天气不好，南瓜会增重1磅；如果天气晴朗，增重2磅；如果天气好，增重3磅。并且假设每天的天气以相同的概率是不好、晴朗或好。
 - en: We can use the following function to simulate this model for `n` days and return
     the total of the weight gains.
+  id: totrans-166
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用以下函数来模拟`n`天的模型并返回总重量增加量。
 - en: '[PRE66]'
+  id: totrans-167
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE66]'
 - en: NumPy’s `random` module provides a `choice` function that generates an array
     of `n` random selections from a sequence of values, `choices` in this example.
+  id: totrans-168
   prefs: []
   type: TYPE_NORMAL
+  zh: NumPy的`random`模块提供了一个`choice`函数，该函数从一个值序列中生成`n`个随机选择，在这个例子中是`choices`。
 - en: Now suppose 1001 people grow giant pumpkins in different places with different
     weather. If we simulate the growth process for 100 days, we get a list of 1001
     weights.
+  id: totrans-169
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在假设有1001人在不同地方、不同天气下种植巨型南瓜。如果我们模拟100天的生长过程，我们得到一个包含1001个重量的列表。
 - en: '[PRE67]'
+  id: totrans-170
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE67]'
 - en: '[PRE68]'
+  id: totrans-171
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE68]'
 - en: The mean is close to 200 pounds and the standard deviation is about 8 pounds.
     To see whether the weights follow a normal distribution, we’ll use the following
     function, which takes a sample and makes a `Cdf` that represents a normal distribution
     with the same mean and standard deviation as the sample, evaluated over the range
     from 4 standard deviations below the mean to 4 standard deviations above.
+  id: totrans-172
   prefs: []
   type: TYPE_NORMAL
+  zh: 平均值接近200磅，标准差约为8磅。为了查看重量是否遵循正态分布，我们将使用以下函数，该函数接受一个样本并创建一个`Cdf`，它代表具有与样本相同均值和标准差的正态分布，评估范围从平均值以下4个标准差到平均值以上4个标准差。
 - en: '[PRE69]'
+  id: totrans-173
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE69]'
 - en: Here’s how we use it.
+  id: totrans-174
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是我们的使用方法。
 - en: '[PRE70]'
+  id: totrans-175
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE70]'
 - en: Now we can make a `Cdf` that represents the distribution of the simulation results.
+  id: totrans-176
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，我们可以创建一个代表模拟结果分布的`Cdf`。
 - en: '[PRE71]'
+  id: totrans-177
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE71]'
 - en: We’ll use the following function to compare the distributions. `cdf_model` and
     `cdf_data` are `Cdf` objects. `xlabel` is a string, and `options` is a dictionary
     of options that controls the way `cdf_data` is plotted.
+  id: totrans-178
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将使用以下函数来比较分布。`cdf_model`和`cdf_data`是`Cdf`对象。`xlabel`是一个字符串，`options`是一个选项字典，它控制`cdf_data`的绘图方式。
 - en: '[PRE72]'
+  id: totrans-179
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE72]'
 - en: And here are the results.
+  id: totrans-180
   prefs: []
   type: TYPE_NORMAL
+  zh: 下面是结果。
 - en: '[PRE73]'
+  id: totrans-181
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE73]'
 - en: '![_images/fd3fd1223c522241a9cfd160ee9602accaaa0b4110ff37b3ed8f9b3a81758123.png](../Images/c22e74d93667004ceef9b475514331fd.png)'
+  id: totrans-182
   prefs: []
   type: TYPE_IMG
+  zh: '![图像](../Images/c22e74d93667004ceef9b475514331fd.png)'
 - en: The normal model fits the distribution of the weights very well. In general,
     when we add up enough random factors, the sum tends to follow a normal distribution.
     That’s a consequence of the Central Limit Theorem, which we’ll come back to in
     [Chapter 14](chap14.html#section-central-limit-theorem).
+  id: totrans-183
   prefs: []
   type: TYPE_NORMAL
+  zh: 正态模型很好地拟合了权重的分布。一般来说，当我们累加足够的随机因素时，总和往往会遵循正态分布。这是中心极限定理的结果，我们将在[第14章](chap14.html#section-central-limit-theorem)中再次讨论。
 - en: But first let’s see how well the normal distribution fits real data. As an example,
     we’ll look at the distribution of birth weights in the National Survey of Family
     Growth (NSFG). We can use `read_fem_preg` to read the data, then select the `totalwgt_lb`
     column, which records birth weights in pounds.
+  id: totrans-184
   prefs: []
   type: TYPE_NORMAL
+  zh: 但首先让我们看看正态分布如何拟合实际数据。作为一个例子，我们将查看国家家庭增长调查（NSFG）中出生体重的分布。我们可以使用`read_fem_preg`读取数据，然后选择`totalwgt_lb`列，该列记录以磅为单位的出生体重。
 - en: The following cells download the data files and install `statadict`, which we
     need to read the data.
+  id: totrans-185
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下单元格下载数据文件并安装`statadict`，我们需要它来读取数据。
 - en: '[PRE74]'
+  id: totrans-186
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE74]'
 - en: '[PRE75]'
+  id: totrans-187
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE75]'
 - en: '[PRE76]'
+  id: totrans-188
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE76]'
 - en: The average of the birth weights is about 7.27 pounds, and the standard deviation
     is 1.4 pounds, but as we’ve seen, there are some outliers in this dataset that
     are probably errors.
+  id: totrans-189
   prefs: []
   type: TYPE_NORMAL
+  zh: 出生体重的平均值约为7.27磅，标准差为1.4磅，但正如我们所看到的，这个数据集中有一些异常值，可能是错误。
 - en: '[PRE77]'
+  id: totrans-190
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE77]'
 - en: '[PRE78]'
+  id: totrans-191
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE78]'
 - en: To reduce the effect of the outliers on the estimated mean and standard deviation,
     we’ll use the SciPy function `trimboth` to remove the highest and lowest values.
+  id: totrans-192
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了减少异常值对估计均值和标准差的影响，我们将使用SciPy函数`trimboth`来移除最高和最低值。
 - en: '[PRE79]'
+  id: totrans-193
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE79]'
 - en: '[PRE80]'
+  id: totrans-194
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE80]'
 - en: With the trimmed data, the mean is a little lower and the standard deviation
     is substantially lower. We’ll use the trimmed data to make a normal model.
+  id: totrans-195
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用修剪后的数据，平均值略低，标准差显著降低。我们将使用修剪后的数据来制作正态模型。
 - en: '[PRE81]'
+  id: totrans-196
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE81]'
 - en: And compare it to the `Cdf` of the data.
+  id: totrans-197
   prefs: []
   type: TYPE_NORMAL
+  zh: 并将其与数据的`Cdf`进行比较。
 - en: '[PRE82]'
+  id: totrans-198
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE82]'
 - en: '![_images/7519965a8284ad77c330c840869a26fcc01a1e6135f1a3e928b8b0feac502565.png](../Images/57511d3446d77a185ef8709bc789a794.png)'
+  id: totrans-199
   prefs: []
   type: TYPE_IMG
+  zh: '![图像](../Images/57511d3446d77a185ef8709bc789a794.png)'
 - en: 'The normal model fits the data well except below 5 pounds, where the distribution
     of the data is to the left of the model – that is, the lightest babies are lighter
     than we’d expect in a normal distribution. The real world is usually more complicated
     than simple mathematical models.  ## The Lognormal Distribution'
+  id: totrans-200
   prefs: []
   type: TYPE_NORMAL
+  zh: 正态模型很好地拟合了数据，除了5磅以下的部分，那里的数据分布位于模型左侧——也就是说，最轻的婴儿比我们预期的正态分布要轻。现实世界通常比简单的数学模型更复杂。
 - en: In the previous section, we simulated pumpkin growth under the assumption that
     pumpkins grow 1-3 pounds per day, depending on the weather. Instead, let’s suppose
     their growth is proportional to their current weight, so big pumpkins gain more
     weight per day than small pumpkins – which is probably more realistic.
+  id: totrans-201
   prefs: []
   type: TYPE_NORMAL
+  zh: 在上一节中，我们假设南瓜每天增长1-3磅，根据天气情况模拟南瓜的生长。相反，让我们假设它们的增长与当前重量成正比，因此大南瓜每天增长的重量比小南瓜多——这可能是更现实的。
 - en: The following function simulates this kind of proportional growth, where a pumpkin
     gains 3% of its weight if the weather is bad, 5% if the weather is fair, and 7%
     if the weather is good. Again, we’ll assume that the weather is bad, fair, or
     good on any given day with equal probability.
+  id: totrans-202
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数模拟这种比例增长，其中南瓜在天气恶劣时增加其体重的3%，在天气晴朗时增加5%，在天气良好时增加7%。同样，我们将假设在任何给定的一天，天气恶劣、晴朗或良好的概率是相等的。
 - en: '[PRE83]'
+  id: totrans-203
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE83]'
 - en: If a pumpkin gains 3% of its weight, the final weight is the product of the
     initial weight and the factor 1.03. So we can compute the weight after 100 days
     by choosing random factors and multiplying them together.
+  id: totrans-204
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果南瓜增加了3%的体重，最终体重是初始体重与因子1.03的乘积。因此，我们可以通过选择随机因子并将它们相乘来计算100天后的体重。
 - en: We’ll call this function 1001 times to simulate 1001 pumpkins and save their
     weights.
+  id: totrans-205
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将调用这个函数1001次来模拟1001个南瓜并保存它们的体重。
 - en: '[PRE84]'
+  id: totrans-206
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE84]'
 - en: '[PRE85]'
+  id: totrans-207
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE85]'
 - en: The average weight is about 131 pounds; the standard deviation is about 21 pounds.
     So the pumpkins in this model are smaller but more variable than in the previous
     model.
+  id: totrans-208
   prefs: []
   type: TYPE_NORMAL
+  zh: 平均体重约为131磅；标准差约为21磅。因此，在这个模型中，南瓜比上一个模型小，但变化更大。
 - en: And we can show mathematically that they follow a **lognormal distribution**,
     which means that the logarithms of the weights follow a normal distribution. To
     check, we’ll compute the logs of the weights and their mean and standard deviation.
     We could use logarithms with any base, but I’ll use base 10 because it makes the
     results easier to interpret.
+  id: totrans-209
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以用数学方法证明它们遵循**对数正态分布**，这意味着体重的对数遵循正态分布。为了检查，我们将计算体重的对数以及它们的均值和标准差。我们可以使用任何底数的对数，但我将使用底数为10，因为这使结果更容易解释。
 - en: '[PRE86]'
+  id: totrans-210
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE86]'
 - en: '[PRE87]'
+  id: totrans-211
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE87]'
 - en: Now let’s compare the distribution of the logarithms to a normal distribution
     with the same mean and standard deviation.
+  id: totrans-212
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们将比较对数分布与具有相同均值和标准差的正态分布。
 - en: '[PRE88]'
+  id: totrans-213
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE88]'
 - en: '![_images/fc31422af01f443ef5adfa55b650526b18895d13a5ef3fb95b2ebb2f33036761.png](../Images/217527b756622a9d54e0a258e556f5f3.png)'
+  id: totrans-214
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/217527b756622a9d54e0a258e556f5f3.png)'
 - en: The model fits the simulation result very well, which is what we expected.
+  id: totrans-215
   prefs: []
   type: TYPE_NORMAL
+  zh: 模型与模拟结果非常吻合，这正是我们预期的。
 - en: If people are like pumpkins, where the change in weight from year to year is
     proportionate to their current weight, we might expect the distribution of adult
     weights to follow a lognormal distribution. Let’s find out.
+  id: totrans-216
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果人们的体重变化与南瓜相似，即每年的体重变化与当前体重成比例，我们可能会预期成年体重的分布遵循对数正态分布。让我们找出答案。
 - en: The National Center for Chronic Disease Prevention and Health Promotion conducts
     an annual survey as part of the Behavioral Risk Factor Surveillance System (BRFSS).
     In 2008, they interviewed 414,509 respondents and asked about their demographics,
     health, and health risks. Among the data they collected are the weights of 398,484
     respondents. Instructions for downloading the data are in the notebook for this
     chapter.
+  id: totrans-217
   prefs: []
   type: TYPE_NORMAL
+  zh: 国家慢性疾病预防和健康促进中心作为行为风险因素监测系统（BRFSS）的一部分进行年度调查。2008年，他们采访了414,509名受访者，并询问了他们的人口统计信息、健康状况和健康风险。他们收集的数据中包括398,484名受访者的体重。下载数据的说明在本书的笔记本中。
 - en: '[PRE89]'
+  id: totrans-218
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE89]'
 - en: The `thinkstats` module provides a function that reads BRFSS data and returns
     a Pandas `DataFrame`.
+  id: totrans-219
   prefs: []
   type: TYPE_NORMAL
+  zh: '`thinkstats`模块提供了一个函数，用于读取BRFSS数据并返回Pandas `DataFrame`。'
 - en: '[PRE90]'
+  id: totrans-220
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE90]'
 - en: Adult weights in kilograms are recorded in the `wtkg2` column.
+  id: totrans-221
   prefs: []
   type: TYPE_NORMAL
+  zh: 成人体重以公斤为单位记录在`wtkg2`列中。
 - en: '[PRE91]'
+  id: totrans-222
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE91]'
 - en: '[PRE92]'
+  id: totrans-223
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE92]'
 - en: The mean is about 79 kg. Before we compute logarithms, let’s see if the weights
     follow a normal distribution.
+  id: totrans-224
   prefs: []
   type: TYPE_NORMAL
+  zh: 平均体重约为79公斤。在我们计算对数之前，让我们看看体重是否遵循正态分布。
 - en: '[PRE93]'
+  id: totrans-225
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE93]'
 - en: '![_images/12ce2ebcee81043ddca2f3e0cac500efd089bfaea406e5ab9fd91185871f2faf.png](../Images/201dfb75d6e78e0b0d9c7add44407abf.png)'
+  id: totrans-226
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/201dfb75d6e78e0b0d9c7add44407abf.png)'
 - en: The normal distribution might be a good enough model for this data, for some
     purposes – but let’s see if we can do better.
+  id: totrans-227
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于某些目的来说，正态分布可能足够好地描述这些数据，但让我们看看我们是否能做得更好。
 - en: Here’s the distribution of the log-transformed weights and a normal model with
     the same mean and standard deviation.
+  id: totrans-228
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是对数转换后体重的分布和具有相同均值和标准差的正态模型。
 - en: '[PRE94]'
+  id: totrans-229
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE94]'
 - en: '[PRE95]'
+  id: totrans-230
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE95]'
 - en: '![_images/fa5390b4b1362c72412c85fdbb1da08506bca81c65968411636a85ad12674500.png](../Images/4cda7abac414ce6b3dcfe161e4c7a4b1.png)'
+  id: totrans-231
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/4cda7abac414ce6b3dcfe161e4c7a4b1.png)'
 - en: The normal model fits the logarithms better than it fits the weights themselves,
     which suggests that proportional growth is a better model of weight gain than
     additive growth.
+  id: totrans-232
   prefs: []
   type: TYPE_NORMAL
+  zh: 正态模型对对数的拟合优于对体重的拟合，这表明比例增长是体重增加比加性增长更好的模型。
 - en: Why model?
+  id: totrans-233
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 为什么建模？
 - en: At the beginning of this chapter, I said that many real world phenomena can
     be modeled with theoretical distributions. But it might not have been clear why
     we should care.
+  id: totrans-234
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本章的开头，我说过许多现实世界现象可以用理论分布来模拟。但可能不清楚为什么我们应该关心这一点。
 - en: Like all models, theoretical distributions are abstractions, which means they
     leave out details that are considered irrelevant. For example, an observed distribution
     might have measurement errors or quirks that are specific to the sample; theoretical
     models ignore these idiosyncrasies.
+  id: totrans-235
   prefs: []
   type: TYPE_NORMAL
+  zh: 与所有模型一样，理论分布是抽象的，这意味着它们忽略了被认为无关的细节。例如，观察到的分布可能包含测量误差或特定于样本的怪癖；理论模型忽略了这些特殊性。
 - en: Theoretical models are also a form of data compression. When a model fits a
     dataset well, a small set of numbers can summarize a large amount of data.
+  id: totrans-236
   prefs: []
   type: TYPE_NORMAL
+  zh: 理论模型也是一种数据压缩形式。当一个模型很好地拟合数据集时，一组小的数字可以总结大量数据。
 - en: It is sometimes surprising when data from a natural phenomenon fit a theoretical
     distribution, but these observations can provide insight into physical systems.
     Sometimes we can explain why an observed distribution has a particular form. For
     example, in the previous section we found that adult weights are well-modeled
     by a lognormal distribution, which suggests that changes in weight from year to
     year might be proportional to current weight.
+  id: totrans-237
   prefs: []
   type: TYPE_NORMAL
+  zh: 当自然现象的数据符合理论分布时，有时会令人惊讶，但这些观察可以提供对物理系统的洞察。有时我们可以解释为什么观察到的分布具有特定的形式。例如，在前一节中我们发现成年人的体重很好地符合对数正态分布，这表明体重年复一年的变化可能与当前体重成比例。
 - en: Also, theoretical distributions lend themselves to mathematical analysis, as
     we’ll see in [Chapter 14](chap14.html#chapter-analytic-methods).
+  id: totrans-238
   prefs: []
   type: TYPE_NORMAL
+  zh: 此外，理论分布适合进行数学分析，正如我们在第14章[Chapter 14](chap14.html#chapter-analytic-methods)中将会看到的。
 - en: But it is important to remember that all models are imperfect. Data from the
     real world never fit a theoretical distribution perfectly. People sometimes talk
     as if data are generated by models; for example, they might say that the distribution
     of human heights is normal, or the distribution of income is lognormal. Taken
     literally, these claims cannot be true – there are always differences between
     the real world and mathematical models.
+  id: totrans-239
   prefs: []
   type: TYPE_NORMAL
+  zh: 但重要的是要记住，所有模型都是不完美的。现实世界的数据永远不会完美地符合理论分布。人们有时会像谈论数据是由模型生成的；例如，他们可能会说人类身高的分布是正态的，或收入的分布是对数正态的。字面意义上，这些说法不能成立——现实世界和数学模型之间总是存在差异。
 - en: Models are useful if they capture the relevant aspects of the real world and
     leave out unneeded details. But what is relevant or unneeded depends on what you
     are planning to use the model for.
+  id: totrans-240
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果模型能够捕捉现实世界的相关方面并省略不必要的细节，那么模型是有用的。但相关或不必要取决于你打算如何使用该模型。
 - en: Glossary
+  id: totrans-241
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 术语表
 - en: '**binomial distribution:** A theoretical distribution often used to model the
     number of successes or hits in a sequence of hits and misses.'
+  id: totrans-242
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**二项分布**：一种理论分布，常用于模拟一系列成功或击中的次数。'
 - en: '**Poisson distribution:** A theoretical distribution often used to model the
     number of events that occur in an interval of time.'
+  id: totrans-243
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**泊松分布**：一种理论分布，常用于模拟在一段时间内发生的事件数量。'
 - en: '**exponential distribution:** A theoretical distribution often used to model
     the time between events.'
+  id: totrans-244
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**指数分布**：一种理论分布，常用于模拟事件之间的时间间隔。'
 - en: '**normal distribution:** A theoretical distribution often used to model data
     that follow a symmetric, bell-like curve.'
+  id: totrans-245
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**正态分布**：一种理论分布，常用于模拟呈对称、钟形曲线的数据。'
 - en: '**lognormal distribution:** A theoretical distribution often used to model
     data that follow a bell-like curve that is skewed to the right.'
+  id: totrans-246
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**对数正态分布**：一种理论分布，常用于模拟遵循向右偏斜的钟形曲线的数据。'
 - en: Exercises
+  id: totrans-247
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 练习
 - en: Exercise 5.1
+  id: totrans-248
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 练习 5.1
 - en: In the NSFG respondent file, the `numfmhh` column records the “number of family
     members in” each respondent’s household. We can use `read_fem_resp` to read the
     file, and `query` to select respondents who were 25 or older when they were interviewed.
+  id: totrans-249
   prefs: []
   type: TYPE_NORMAL
+  zh: 在NSFG受访者文件中，`numfmhh`列记录了每个受访者的家庭“家庭成员数量”。我们可以使用`read_fem_resp`来读取文件，并使用`query`来选择在受访时年龄为25岁或以上的受访者。
 - en: '[PRE96]'
+  id: totrans-250
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE96]'
 - en: '[PRE97]'
+  id: totrans-251
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE97]'
 - en: '[PRE98]'
+  id: totrans-252
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE98]'
 - en: Compute the `Pmf` of `numfmhh` for these older respondents and compare it with
     a Poisson distribution with the same mean. How well does the Poisson model fit
     the data?
+  id: totrans-253
   prefs: []
   type: TYPE_NORMAL
+  zh: 计算这些较老受访者的 `numfmhh` 的概率质量函数（Pmf），并将其与具有相同均值的泊松分布进行比较。泊松模型与数据的拟合程度如何？
 - en: Exercise 5.2
+  id: totrans-254
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 练习 5.2
 - en: Earlier in this chapter we saw that the time until the first goal in a hockey
     game follows an exponential distribution. If our model of goal-scoring is correct,
     a goal is equally likely at any time, regardless of how long it has been since
     the previous goal. And if that’s true, we expect the time between goals to follow
     an exponential distribution, too.
+  id: totrans-255
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本章的早期，我们看到了在曲棍球比赛中第一个进球的时间遵循指数分布。如果我们的进球模型是正确的，那么在任何时间进球的可能性都是相同的，无论上一个进球已经过去多久。如果这是真的，我们预计进球之间的时间间隔也将遵循指数分布。
 - en: The following loop reads the hockey data again, computes the time between successive
     goals, if there is more than one in a game, and collects the inter-goal times
     in a list.
+  id: totrans-256
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下循环再次读取曲棍球数据，计算连续进球之间的时间（如果一场比赛中有多于一个进球），并将进球间时间收集到一个列表中。
 - en: '[PRE99]'
+  id: totrans-257
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE99]'
 - en: '[PRE100]'
+  id: totrans-258
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE100]'
 - en: Use `exponential_cdf` to compute the CDF of an exponential distribution with
     the same mean as the observed intervals and compare this model to the CDF of the
     data.
+  id: totrans-259
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用 `exponential_cdf` 计算与观察到的间隔具有相同均值的指数分布的累积分布函数（CDF），并将此模型与数据的 CDF 进行比较。
 - en: Exercise 5.3
+  id: totrans-260
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 练习 5.3
 - en: 'Is the distribution of human height more like a normal or a lognormal distribution?
     To find out, we can select height data from the BRFSS like this:'
+  id: totrans-261
   prefs: []
   type: TYPE_NORMAL
+  zh: 人类身高的分布更像是正态分布还是对数正态分布？为了找出答案，我们可以从 BRFSS 中选择身高数据，如下所示：
 - en: '[PRE101]'
+  id: totrans-262
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE101]'
 - en: '[PRE102]'
+  id: totrans-263
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE102]'
 - en: Compute the CDF of these values and compare it to a normal distribution with
     the same mean and standard deviation. Then compute the logarithms of the heights
     and compute the distribution of the logarithms to a normal distribution. Based
     on a visual comparison, which model fits the data better?
+  id: totrans-264
   prefs: []
   type: TYPE_NORMAL
+  zh: 计算这些值的累积分布函数（CDF），并将其与具有相同均值和标准差的正态分布进行比较。然后计算高度的对数，并将对数分布与正态分布进行比较。根据视觉比较，哪个模型更适合数据？
 - en: '[Think Stats: Exploratory Data Analysis in Python, 3rd Edition](https://allendowney.github.io/ThinkStats/index.html)'
+  id: totrans-265
   prefs: []
   type: TYPE_NORMAL
+  zh: '[《Think Stats：Python 中的探索性数据分析》（第 3 版）](https://allendowney.github.io/ThinkStats/index.html)'
 - en: Copyright 2024 [Allen B. Downey](https://allendowney.com)
+  id: totrans-266
   prefs: []
   type: TYPE_NORMAL
+  zh: 版权 2024 [艾伦·B·唐尼](https://allendowney.com)
 - en: 'Code license: [MIT License](https://mit-license.org/)'
+  id: totrans-267
   prefs: []
   type: TYPE_NORMAL
+  zh: 代码许可：[MIT License](https://mit-license.org/)
 - en: 'Text license: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  id: totrans-268
   prefs: []
   type: TYPE_NORMAL
+  zh: 文本许可：[Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)

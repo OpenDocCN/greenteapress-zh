@@ -1,823 +1,1232 @@
 - en: Estimation
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 估计
 - en: 原文：[https://allendowney.github.io/ThinkStats/chap08.html](https://allendowney.github.io/ThinkStats/chap08.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ThinkStats/chap08.html](https://allendowney.github.io/ThinkStats/chap08.html)
 - en: Suppose you live in a town with a population of 10,000 people, and you want
     to predict who will win an upcoming election. In theory, you could ask everyone
     in town who they plan to vote for, and if they all answered honestly, you could
     make a reliable prediction.
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设你居住在一个有10,000人的小镇上，你想预测即将到来的选举中谁会获胜。从理论上讲，你可以询问镇上的每个人他们打算投给谁，如果他们都诚实地回答，你就可以做出可靠的预测。
 - en: But even in a small town, it is probably not practical to survey the entire
     population. Fortunately, is it not necessary. If you survey a random subset of
     the people, you can use the sample to infer the voting preferences of the population.
     This process – using a sample to make inferences about a population – is called
     statistical inference.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 但即使在小镇上，调查整个种群可能也不太实际。幸运的是，这并不必要。如果你调查了人群的随机子集，你可以使用样本来推断人群的投票偏好。这个过程——使用样本对人群进行推断——被称为统计推断。
 - en: Statistical inference includes estimation, which is the topic of this chapter,
     and hypothesis testing, which is the topic of the next chapter.
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 统计推断包括估计，这是本章的主题，以及假设检验，这是下一章的主题。
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ThinkStats/blob/v3/nb/chap08.ipynb).'
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: '[点击此处运行此笔记本在Colab](https://colab.research.google.com/github/AllenDowney/ThinkStats/blob/v3/nb/chap08.ipynb)。'
 - en: '[PRE0]'
+  id: totrans-6
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '[PRE1]'
+  id: totrans-7
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '[PRE2]  ## Weighing Penguins'
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE2]  ## 企鹅称重'
 - en: Suppose you are a researcher in Antarctica, studying local populations of penguins.
     One of your tasks is to monitor the average weight of the penguins as it varies
     over the course of the year. It would be impractical to weigh every penguin in
     the environment, so your plan is to collect a random sample of 10 penguins each
     week, weigh them, and use the sample to estimate the mean of the entire population
     – which is called the **population mean**.
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设你是一名在南极洲的研究员，正在研究当地的企鹅种群。你的一个任务是监控企鹅在整个年度中的平均体重变化。由于不可能对环境中的每只企鹅进行称重，因此你的计划是每周随机抽取10只企鹅进行称重，并使用这些样本来估计整个种群的平均值——这被称为**种群均值**。
 - en: 'There are many ways you could use the sample to estimate the population mean,
     but we’ll consider just two: the sample mean and the sample median. They are both
     reasonable choices, but let’s see which is better – and think about what we mean
     by “better”.'
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 你可以使用许多方法来使用样本估计种群均值，但我们将考虑其中的两种：样本均值和样本中位数。它们都是合理的选择，但让我们看看哪个更好——并思考一下我们所说的“更好”是什么意思。
 - en: For purposes of demonstration, we’ll assume that penguin weights are drawn from
     a normal distribution with known mean and standard deviation, which I’ll denote
     `mu` and `sigma` and assign values in kilograms.
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了演示目的，我们假设企鹅的体重服从一个已知均值和标准差的正态分布，我将用`mu`和`sigma`表示，并赋予千克单位。
 - en: '[PRE3]'
+  id: totrans-12
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: These values are the **parameters** of the normal distribution, which means
     that they specify a particular distribution. Given these parameters, we can use
     NumPy to simulate the sampling process and generate a sample of any size. For
     example, here’s a hypothetical sample of 10 weights.
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些值是正态分布的**参数**，这意味着它们指定了特定的分布。给定这些参数，我们可以使用NumPy来模拟抽样过程并生成任何大小的样本。例如，这里是一个假设的10个重量的样本。
 - en: '[PRE4]'
+  id: totrans-14
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '[PRE5]'
+  id: totrans-15
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '[PRE6]'
+  id: totrans-16
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: And here are the mean and median of the sample.
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里是样本的平均值和中位数。
 - en: '[PRE7]'
+  id: totrans-18
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '[PRE8]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: The mean and median are different enough that we should wonder which is a better
     estimate. To find out, we’ll use the following function to generate hypothetical
     samples with the given size, `n`.
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 平均值和中位数差异足够大，以至于我们应该思考哪个是更好的估计。为了找出答案，我们将使用以下函数生成给定大小`n`的假设样本。
 - en: '[PRE9]'
+  id: totrans-21
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: As a first experiment, let’s see how the sample mean and sample median behave
     as the sample size increases. We’ll use the NumPy function `logspace` to make
     a range of `ns` from 10 to 100,000, equally spaced on a logarithmic scale.
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为第一次实验，让我们看看样本均值和样本中位数随着样本大小的增加是如何表现的。我们将使用NumPy函数`logspace`来创建一个从10到100,000的对数尺度上的`ns`范围。
 - en: '[PRE10]'
+  id: totrans-23
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: 'We can use a list comprehension to generate a hypothetical sample for each
     value of `n`, compute the mean, and collect the results:'
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用列表推导来生成每个`n`值的假设样本，计算平均值，并收集结果：
 - en: '[PRE11]'
+  id: totrans-25
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: And we’ll do the same for the median.
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们也会对中位数做同样的处理。
 - en: '[PRE12]'
+  id: totrans-27
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: A statistic, like the sample mean or median, that’s used to estimate a property
     of a population is called an **estimator**.
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: 用来估计总体属性的统计量，如样本均值或中位数，被称为**估计量**。
 - en: The following figure shows how these estimators behave as we increase the sample
     size. The horizontal line shows the actual mean in the population.
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下图示展示了随着样本量的增加，这些估计量是如何表现的。水平线显示了总体中的实际均值。
 - en: '[PRE13]'
+  id: totrans-30
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: '![_images/8a89df65f38fa8c3eaa4ec9bf174f6ee3ac0648298efe16ea79baa534de24d46.png](../Images/3626ef39a880aebdb5029d366b757eca.png)'
+  id: totrans-31
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/3626ef39a880aebdb5029d366b757eca.png)'
 - en: For both estimators, the estimates converge to the actual value as the sample
     size increases. This demonstrates that they are **consistent**, which is one of
     the properties a good estimator should have. Based on this property, the mean
     and median seem equally good.
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于这两个估计量，随着样本量的增加，估计值会收敛到实际值。这证明了它们是**一致的**，这是良好估计量应具备的一个属性。基于这个属性，均值和中位数看起来同样好。
 - en: 'In the previous figure, you might notice that the estimates are sometimes too
     high and sometimes too low – and it looks like the variation is roughly symmetric
     around the true value. That suggests another experiment: if we collect many samples
     with the same size and compute many estimates, what is the average of the estimates?'
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: 在前面的图中，你可能会注意到估计值有时过高，有时过低——看起来变化大致对称于真实值。这表明另一个实验：如果我们收集许多相同大小的样本并计算许多估计值，估计值的平均值是多少？
 - en: The following loop simulates this scenario by generating 10,001 samples of 10
     penguins and computing the mean of each sample.
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 下面的循环通过生成10,001个10只企鹅的样本并计算每个样本的均值来模拟这种场景。
 - en: '[PRE14]'
+  id: totrans-35
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '[PRE15]'
+  id: totrans-36
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: 'The average of the means is close to the actual mean we used to generate the
     samples: 3.7 kg.'
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 均值平均值接近我们用来生成样本的实际均值：3.7千克。
 - en: The following loop simulates the same scenario, but this time it computes the
     median of each sample.
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 下面的循环模拟了相同的场景，但这次它计算每个样本的中位数。
 - en: '[PRE16]'
+  id: totrans-39
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '[PRE17]'
+  id: totrans-40
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: The average of these hypothetical medians is also very close to the actual population
     mean.
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些假设的中位数平均值也非常接近实际总体均值。
 - en: These results demonstrate that the sample mean and median are **unbiased** estimators,
     which means that they are correct on average. The word “bias” means different
     things in different contexts, which can be a source of confusion. In this context,
     “unbiased” means that the average of the estimates is the actual value.
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些结果表明，样本均值和中位数是**无偏**估计量，这意味着它们在平均上是正确的。在不同的语境中，“偏差”这个词有不同的含义，这可能会引起混淆。在这个语境中，“无偏”意味着估计的平均值是实际值。
 - en: 'So far, we’ve shown that both estimators are consistent and unbiased, but it’s
     still not clear which is better. Let’s try one more experiment: let’s see which
     estimator is more accurate. The word “accurate” also means different things in
     different contexts – as one way to quantify it, let’s consider the **mean squared
     error** (MSE). The following function computes the differences between the estimates
     and the actual value, and returns the mean of the squares of these errors.'
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 到目前为止，我们已经表明这两个估计量都是一致且无偏的，但仍然不清楚哪个更好。让我们再做一个实验：让我们看看哪个估计量更准确。在不同的语境中，“准确”这个词也有不同的含义——作为一种量化方法，让我们考虑**均方误差**（MSE）。以下函数计算估计值与实际值之间的差异，并返回这些误差平方的平均值。
 - en: '[PRE18]'
+  id: totrans-44
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: Notice that we can only compute MSE if we know the actual value. In practice,
     we usually don’t – after all, if we knew the actual value, we wouldn’t have to
     estimate it. But in our experiment, we know that the actual population mean is
     3.7 kg, so we can use it to compute the MSE of the sample means.
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 注意，我们只能计算均方误差如果我们知道实际值。在实践中，我们通常不知道——毕竟，如果我们知道实际值，我们就不需要估计它了。但在我们的实验中，我们知道实际总体均值是3.7千克，因此我们可以用它来计算样本均值的均方误差。
 - en: '[PRE19]'
+  id: totrans-46
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '[PRE20]'
+  id: totrans-47
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: If we have samples with size 10 and we use the sample mean to estimate the population
     mean, the average squared error is about 0.021 kilograms squared. Now here’s the
     MSE of the sample medians.
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们有大小为10的样本，并使用样本均值来估计总体均值，平均平方误差大约为0.021千克平方。现在来看样本中位数的均方误差。
 - en: '[PRE21]'
+  id: totrans-49
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: '[PRE22]'
+  id: totrans-50
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: If we use the sample medians to estimate the population mean, the average squared
     error is about 0.029 kilograms squared. In this example, the sample mean is better
     than the sample median; and in general, if the data are drawn from a normal distribution,
     it is the *best* unbiased estimator of the population mean, in the sense that
     it minimizes MSE.
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们使用样本中位数来估计总体均值，平均平方误差大约是0.029千克平方。在这个例子中，样本均值比样本中位数更好；而且一般来说，如果数据来自正态分布，它就是总体均值的最优无偏估计量，因为它最小化了均方误差（MSE）。
 - en: Minimizing MSE is a good property for an estimator to have, but MSE is not always
     the best way to summarize errors. For one thing, it is hard to interpret. In this
     example, the units of MSE are kilograms squared, so it’s hard to say what that
     means.
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: 最小化MSE是一个估计量应该具备的良好属性，但MSE并不总是总结误差的最佳方式。一方面，它很难解释。在这个例子中，MSE的单位是千克平方，因此很难说这意味着什么。
 - en: One solution is to use the square root of MSE, called “root mean squared error”,
     or RMSE. Another option is to use the average of the absolute values of the errors,
     called the “mean absolute error” or MAE. The following function computes MAE for
     a sequence of estimates.
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: 一个解决方案是使用均方误差的平方根，称为“均方根误差”（RMSE）。另一个选项是使用误差绝对值的平均值，称为“平均绝对误差”（MAE）。以下函数计算估计序列的MAE。
 - en: '[PRE23]'
+  id: totrans-54
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: Here’s the MAE of the sample means.
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是样本均值的MAE。
 - en: '[PRE24]'
+  id: totrans-56
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: '[PRE25]'
+  id: totrans-57
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: And the sample medians.
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 以及样本中位数。
 - en: '[PRE26]'
+  id: totrans-59
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: '[PRE27]'
+  id: totrans-60
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: On average, we expect the sample mean to be off by about 0.115 kg, and the sample
     median to be off by 0.137 kg. So the sample mean is probably the better choice,
     at least for this example.
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: 平均来说，我们预计样本均值偏离大约0.115千克，样本中位数偏离0.137千克。所以样本均值可能是更好的选择，至少在这个例子中。
 - en: Robustness
+  id: totrans-62
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 稳健性
 - en: Now let’s consider a different scenario. Suppose that 2% of the time, when you
     try to weigh a penguin, it accidentally presses the units button on the scale
     and the weight gets recorded in pounds instead of kilograms. Assuming that the
     error goes unnoticed, it introduces an outlier in the sample.
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们考虑一个不同的场景。假设有2%的时间，当你试图称量企鹅时，它意外地按下了秤上的单位按钮，重量被记录为磅而不是千克。假设这个错误没有被注意到，它会在样本中引入一个异常值。
 - en: The following function simulates this scenario, multiplying 2% of the weights
     by the conversion factor 2.2 pounds per kilogram.
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数模拟了这种情况，将2%的重量乘以每千克2.2磅的转换系数。
 - en: '[PRE28]'
+  id: totrans-65
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: To see what effect this has on the distribution, we’ll generate a large sample.
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了看到这对此分布有什么影响，我们将生成一个大样本。
 - en: '[PRE29]'
+  id: totrans-67
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: To plot the distribution of the sample, we’ll use KDE and the `Pdf` object from
     [Chapter 6](chap06.html#section-kernel-density-estimation).
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了绘制样本的分布，我们将使用核密度估计（KDE）和[第6章](chap06.html#section-kernel-density-estimation)中的`Pdf`对象。
 - en: '[PRE30]'
+  id: totrans-69
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: '![_images/eec8f313b7382e51850036931f3410bbc3b63968fefbb269026643e735035396.png](../Images/abbbb0010c3d98dac0dcf23e5ee2b059.png)'
+  id: totrans-70
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/abbbb0010c3d98dac0dcf23e5ee2b059.png)'
 - en: In addition to the mode near 3.7 kg, the measurement errors introduce a second
     mode near 8 kilograms.
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: 除了接近3.7千克的峰值外，测量误差还引入了一个接近8千克的第二个峰值。
 - en: Now let’s repeat the previous experiment, simulating many samples with size
     10, computing the mean of each sample, and then computing the average of the sample
     means.
+  id: totrans-72
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，让我们重复之前的实验，模拟许多大小为10的样本，计算每个样本的均值，然后计算样本均值的平均值。
 - en: '[PRE31]'
+  id: totrans-73
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: '[PRE32]'
+  id: totrans-74
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: The measurement errors cause the sample mean to be higher, on average, than
     3.7 kg.
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: 测量误差导致样本均值平均高于3.7千克。
 - en: Now here’s the same experiment using sample medians.
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们用样本中位数进行相同的实验。
 - en: '[PRE33]'
+  id: totrans-77
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: '[PRE34]'
+  id: totrans-78
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: The average of the sample medians is also higher than 3.7 kg, but it is not
     off by nearly as much. If we compare the MSE of the estimates, we see that the
     sample medians are substantially more accurate.
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: 样本中位数的平均值也高于3.7千克，但它偏离的程度并不大。如果我们比较估计的MSE，我们会看到样本中位数更准确。
 - en: '[PRE35]'
+  id: totrans-80
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: '[PRE36]'
+  id: totrans-81
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: If measurements actually come from a normal distribution, the sample mean minimizes
     MSE, but this scenario violates that assumption, so the sample mean doesn’t minimize
     MSE. The sample median is less sensitive to outliers, so it is less biased and
     its MSE is smaller. Estimators that deal well with outliers – and similar violations
     of assumptions – are said to be **robust**.
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果测量实际上来自正态分布，样本均值最小化MSE，但这种情况违反了该假设，因此样本均值不最小化MSE。样本中位数对异常值不太敏感，因此它更少有偏差，其MSE更小。能够很好地处理异常值（以及类似的假设违反）的估计量被称为**稳健的**。
 - en: '## Estimating Variance'
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: '## 估计方差'
 - en: As another example, suppose we want to estimate variance in the penguins’ weights.
     In [Chapter 1](chap01.html#section-summary-statistics), we saw that there are
     two ways to compute the variance of a sample. I promised to explain the difference
     later – and later is now.
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为另一个例子，假设我们想要估计企鹅体重的方差。在[第1章](chap01.html#section-summary-statistics)中，我们看到了计算样本方差有两种方法。我承诺稍后解释差异——现在就是时候了。
 - en: The reason there are two ways to compute the variance of a sample is that one
     is a biased estimator of the population variance, and the other is unbiased. The
     following function computes the biased estimator, which is the sum of the squared
     deviations divided by `n`.
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: 有两种计算样本方差的方法的原因是其中一种是对总体方差的偏估计，另一种是无偏估计。以下函数计算的是偏估计，即平方偏差之和除以`n`。
 - en: '[PRE37]'
+  id: totrans-86
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE37]'
 - en: To test it, we’ll simulate many samples with size 10, compute the biased variance
     of each sample, and then compute the average of the variances.
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了测试它，我们将模拟许多大小为10的样本，计算每个样本的偏方差，然后计算这些方差的平均值。
 - en: '[PRE38]'
+  id: totrans-88
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: '[PRE39]'
+  id: totrans-89
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: The result is about 0.19, but in this case, we know that the actual population
     variance is about 0.21, so this version of the sample variance is too low on average
     – which confirms that it is biased.
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果大约是0.19，但在这个例子中，我们知道实际总体方差大约是0.21，因此这种样本方差的版本平均来说太低——这证实了它是偏的。
 - en: '[PRE40]'
+  id: totrans-91
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE40]'
 - en: '[PRE41]'
+  id: totrans-92
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE41]'
 - en: The following function computes the unbiased estimator, which is the sum of
     the squared deviations divided by `n-1`.
+  id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数计算的是无偏估计，即平方偏差之和除以`n-1`。
 - en: '[PRE42]'
+  id: totrans-94
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE42]'
 - en: We can test it by generating many samples and computing the unbiased variance
     for each one.
+  id: totrans-95
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以通过生成许多样本并计算每个样本的无偏方差来测试它。
 - en: '[PRE43]'
+  id: totrans-96
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE43]'
 - en: '[PRE44]'
+  id: totrans-97
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE44]'
 - en: The average of the unbiased sample variances is very close to the actual value
     – which is what we expect if it is unbiased.
+  id: totrans-98
   prefs: []
   type: TYPE_NORMAL
+  zh: 无偏样本方差的平均值非常接近实际值——如果它是无偏的，我们预期会是这样的。
 - en: With sample size 10, the difference between the biased and unbiased estimators
     is about 10%, which might be non-negligible. With sample size 100, the difference
     is only 1%, which is small enough that it probably doesn’t matter in practice.
+  id: totrans-99
   prefs: []
   type: TYPE_NORMAL
+  zh: 当样本大小为10时，偏估计和无偏估计之间的差异大约是10%，这可能是不可忽视的。当样本大小为100时，差异仅为1%，这足够小，在实际情况中可能不会产生影响。
 - en: '[PRE45]'
+  id: totrans-100
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE45]'
 - en: '[PRE46]'
+  id: totrans-101
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE46]'
 - en: '[PRE47]'
+  id: totrans-102
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE47]'
 - en: '[PRE48]  ## Sampling Distributions'
+  id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE48]  ## 抽样分布'
 - en: So far we’ve been working with simulated data, assuming that penguin weights
     are drawn from a normal distribution with known parameters. Now let’s see what
     happens with real data.
+  id: totrans-104
   prefs: []
   type: TYPE_NORMAL
+  zh: 到目前为止，我们一直在处理模拟数据，假设企鹅体重是从具有已知参数的正态分布中抽取的。现在让我们看看真实数据会发生什么。
 - en: Between 2007 and 2010, researchers at Palmer Station in Antarctica measured
     and weighed 342 penguins from local populations. The data they collected is freely
     available – instructions for downloading it are in the notebook for this chapter.
+  id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: 在2007年至2010年期间，南极帕默站的研究人员测量并称重了来自当地种群中的342只企鹅。他们收集的数据是免费提供的——下载说明在本书的笔记本中。
 - en: The following cell downloads the data from a repository created by Allison Horst.
+  id: totrans-106
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下单元格从由Allison Horst创建的存储库中下载数据。
 - en: 'Horst AM, Hill AP, Gorman KB (2020). palmerpenguins: Palmer Archipelago (Antarctica)
     penguin data. R package version 0.1.0\. [https://allisonhorst.github.io/palmerpenguins/](https://allisonhorst.github.io/palmerpenguins/).
     doi: 10.5281/zenodo.3960218.'
+  id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: 'Horst AM, Hill AP, Gorman KB (2020). palmerpenguins: Palmer Archipelago (Antarctica)
+    penguin data. R package version 0.1.0\. [https://allisonhorst.github.io/palmerpenguins/](https://allisonhorst.github.io/palmerpenguins/).
+    doi: 10.5281/zenodo.3960218.'
 - en: 'The data was collected as part of the research that led to this paper: Gorman
     KB, Williams TD, Fraser WR (2014). Ecological sexual dimorphism and environmental
     variability within a community of Antarctic penguins (genus Pygoscelis). PLoS
     ONE 9(3):e90081\. [https://doi.org/10.1371/journal.pone.0090081](https://doi.org/10.1371/journal.pone.0090081)'
+  id: totrans-108
   prefs: []
   type: TYPE_NORMAL
+  zh: 数据是作为导致这篇论文的研究的一部分收集的：Gorman KB, Williams TD, Fraser WR (2014).南极企鹅（属Pygoscelis）群落中的生态性别二态性和环境变异性。PLoS
+    ONE 9(3):e90081\. [https://doi.org/10.1371/journal.pone.0090081](https://doi.org/10.1371/journal.pone.0090081)
 - en: '[PRE49]'
+  id: totrans-109
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE49]'
 - en: We can use Pandas to read the data.
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用Pandas读取数据。
 - en: '[PRE50]'
+  id: totrans-111
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE50]'
 - en: '[PRE51]'
+  id: totrans-112
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE51]'
 - en: The dataset includes three penguin species.
+  id: totrans-113
   prefs: []
   type: TYPE_NORMAL
+  zh: 数据集包括三种企鹅物种。
 - en: '[PRE52]'
+  id: totrans-114
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE52]'
 - en: '[PRE53]'
+  id: totrans-115
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE53]'
 - en: For the first example we’ll select just the Chinstrap penguins.
+  id: totrans-116
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于第一个例子，我们将只选择帝企鹅。
 - en: '[PRE54]'
+  id: totrans-117
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE54]'
 - en: We’ll use this function to plot estimated PDFs.
+  id: totrans-118
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将使用这个函数来绘制估计的PDF。
 - en: '[PRE55]'
+  id: totrans-119
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE55]'
 - en: Here’s the distribution of chinstrap penguin weights in kilograms. The vertical
     dotted line shows the sample mean.
+  id: totrans-120
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里是帝企鹅体重（千克）的分布情况。垂直虚线表示样本均值。
 - en: '[PRE56]'
+  id: totrans-121
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE56]'
 - en: '![_images/4f97248ce47bd7b1f2bc9a596ca2c4c1cefd8edf9178f40cf803d042f0447c00.png](../Images/44f02b9e770b5556d8200f995f277676.png)'
+  id: totrans-122
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/44f02b9e770b5556d8200f995f277676.png)'
 - en: The sample mean is about 3.7 kg.
+  id: totrans-123
   prefs: []
   type: TYPE_NORMAL
+  zh: 样本均值约为3.7千克。
 - en: '[PRE57]'
+  id: totrans-124
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE57]'
 - en: '[PRE58]'
+  id: totrans-125
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE58]'
 - en: If you are asked to estimate the population mean, 3.7 kg is a reasonable choice
     – but how precise is that estimate?
+  id: totrans-126
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你被要求估计总体均值，3.7千克是一个合理的选择——但这个估计有多精确呢？
 - en: One way to answer that question is to compute the **sampling distribution**
     of the mean, which shows how much the estimated mean varies from one sample to
     another. If we knew the actual mean and standard deviation in the population,
     we could model the sampling process and compute the sampling distribution. But
     if we knew the actual population mean, we wouldn’t have to estimate it!
+  id: totrans-127
   prefs: []
   type: TYPE_NORMAL
+  zh: 回答那个问题的方法之一是计算均值的**抽样分布**，它显示了估计均值从一个样本到另一个样本的变化程度。如果我们知道总体中的实际均值和标准差，我们可以模拟抽样过程并计算抽样分布。但如果我们知道实际总体均值，我们就不需要估计它了！
 - en: Fortunately, there’s a simple way to approximate the sampling distribution,
     called **resampling**. The core idea is to use the sample to make a model of the
     population, then use the model to simulate the sampling process.
+  id: totrans-128
   prefs: []
   type: TYPE_NORMAL
+  zh: 幸运的是，有一种简单的方法可以近似抽样分布，称为**重采样**。其核心思想是使用样本来构建总体模型，然后使用该模型来模拟抽样过程。
 - en: More specifically, we’ll use **parametric resampling**, which means we’ll use
     the sample to estimate the parameters of the population and then use a theoretical
     distribution to generate new samples.
+  id: totrans-129
   prefs: []
   type: TYPE_NORMAL
+  zh: 更具体地说，我们将使用**参数重采样**，这意味着我们将使用样本来估计总体的参数，然后使用理论分布来生成新的样本。
 - en: The following function implements this process with a normal distribution. Notice
     that the new samples are the same size as the original.
+  id: totrans-130
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数使用正态分布实现了这个过程。请注意，新的样本大小与原始样本相同。
 - en: '[PRE59]'
+  id: totrans-131
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE59]'
 - en: This loop uses `resample` to generate many samples and compute the mean of each
     one.
+  id: totrans-132
   prefs: []
   type: TYPE_NORMAL
+  zh: 此循环使用`resample`生成许多样本并计算每个样本的均值。
 - en: '[PRE60]'
+  id: totrans-133
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE60]'
 - en: The following figure shows the distribution of these sample means.
+  id: totrans-134
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下图显示了这些样本均值的分布。
 - en: '[PRE61]'
+  id: totrans-135
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE61]'
 - en: '![_images/8cb77fc51b75dd8db21d7b9ba3a14b0a6f0eff669632062dd368c72a249f3a6c.png](../Images/a06dfae260fb0dec044cdbc960094883.png)'
+  id: totrans-136
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/a06dfae260fb0dec044cdbc960094883.png)'
 - en: This result approximates the sampling distribution of the sample mean. It shows
     how much we expect the sample mean to vary if we collect many samples of the same
     size – assuming that our model of the population is accurate.
+  id: totrans-137
   prefs: []
   type: TYPE_NORMAL
+  zh: 此结果近似了样本均值的抽样分布。它显示了如果我们收集许多相同大小的样本，我们预计样本均值会有多大的变化——假设我们的总体模型是准确的。
 - en: Informally, we can see that the sample mean could be as low as 3.55, if we collected
     another sample with the same size, or as high as 3.9.
+  id: totrans-138
   prefs: []
   type: TYPE_NORMAL
+  zh: 非正式地，我们可以看到，如果收集另一个相同大小的样本，样本均值可能低至3.55，或者高至3.9。
 - en: Standard Error
+  id: totrans-139
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 标准误
 - en: To quantify the width of the sampling distribution, one option is to compute
     its standard deviation – the result is called the **standard error**.
+  id: totrans-140
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了量化抽样分布的宽度，一个选项是计算其标准差——结果被称为**标准误**。
 - en: '[PRE62]'
+  id: totrans-141
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE62]'
 - en: '[PRE63]'
+  id: totrans-142
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE63]'
 - en: In this case, the standard error is about 0.045 kg – so if we collect many samples,
     we expect the sample means to vary by about 0.045 kg, on average.
+  id: totrans-143
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这种情况下，标准误约为0.045千克——因此如果我们收集许多样本，我们预计样本均值平均变化约为0.045千克。
 - en: 'People often confuse standard error and standard deviation. Remember:'
+  id: totrans-144
   prefs: []
   type: TYPE_NORMAL
+  zh: 人们经常混淆标准误和标准差。记住：
 - en: Standard deviation quantifies variation in measurements.
+  id: totrans-145
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 标准差量化了测量中的变化。
 - en: Standard error quantifies the precision of an estimate.
+  id: totrans-146
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 标准误量化了估计的精确度。
 - en: In this dataset, the standard deviation of penguin weights is about 0.38 kg
     for chinstrap penguins.
+  id: totrans-147
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个数据集中，帝企鹅重量的标准差约为0.38千克。
 - en: '[PRE64]'
+  id: totrans-148
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE64]'
 - en: '[PRE65]'
+  id: totrans-149
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE65]'
 - en: The standard error of the average weight is about 0.046 kg.
+  id: totrans-150
   prefs: []
   type: TYPE_NORMAL
+  zh: 平均重量的标准误约为0.046千克。
 - en: '[PRE66]'
+  id: totrans-151
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE66]'
 - en: '[PRE67]'
+  id: totrans-152
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE67]'
 - en: Standard deviation tells you how much penguins differ in weight. Standard error
     tells you how precise an estimate is. They are answers to different questions.
+  id: totrans-153
   prefs: []
   type: TYPE_NORMAL
+  zh: 标准差告诉你企鹅体重差异有多大。标准误告诉你估计有多精确。它们是针对不同问题的答案。
 - en: 'However, there is a relationship between them. If we know the standard deviation
     and sample size, we can approximate the standard error of the means like this:'
+  id: totrans-154
   prefs: []
   type: TYPE_NORMAL
+  zh: 然而，它们之间存在一种关系。如果我们知道标准差和样本大小，我们可以这样近似均值的标准误：
 - en: '[PRE68]'
+  id: totrans-155
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE68]'
 - en: '[PRE69]'
+  id: totrans-156
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE69]'
 - en: '[PRE70]'
+  id: totrans-157
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE70]'
 - en: This result is close to what we got by resampling.
+  id: totrans-158
   prefs: []
   type: TYPE_NORMAL
+  zh: 此结果接近我们通过重采样得到的结果。
 - en: Confidence Intervals
+  id: totrans-159
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 置信区间
 - en: Another way to summarize the sampling distribution is to compute a **confidence
     interval**. For example, a 90% confidence interval contains 90% of the values
     in the sampling distribution, which we can find by computing the 5th and 95th
     percentiles. Here’s the 90% confidence interval for the average weight of chinstrap
     penguins.
+  id: totrans-160
   prefs: []
   type: TYPE_NORMAL
+  zh: 另一种总结抽样分布的方法是计算**置信区间**。例如，90%的置信区间包含了抽样分布中的90%的值，我们可以通过计算第5百分位数和第95百分位数来找到。以下是帝企鹅平均体重的90%置信区间。
 - en: '[PRE71]'
+  id: totrans-161
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE71]'
 - en: '[PRE72]'
+  id: totrans-162
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE72]'
 - en: To interpret a confidence interval, it is tempting to say that there is a 90%
     chance that the true value of the population parameter falls in the 90% confidence
     interval. In this example, we would say there is a 90% chance that the population
     mean for chinstrap penguins is between 3.66 and 3.81 kg.
+  id: totrans-163
   prefs: []
   type: TYPE_NORMAL
+  zh: 解释置信区间时，人们往往会说有90%的概率，真实值落在90%的置信区间内。在这个例子中，我们会说有90%的概率，帝企鹅的总体均值在3.66至3.81公斤之间。
 - en: Under a strict philosophy of probability called **frequentism**, this interpretation
     would not be allowed, and in many statistics books, you will be told that this
     interpretation is wrong.
+  id: totrans-164
   prefs: []
   type: TYPE_NORMAL
+  zh: 在一种称为**频率主义**的严格概率哲学下，这种解释是不被允许的，在许多统计学书籍中，你会被告知这种解释是错误的。
 - en: 'In my opinion, this prohibition is unnecessarily strict. Under reasonable philosophies
     of probability, a confidence interval means what people expect it to mean: there
     is a 90% chance that the true value falls in the 90% confidence interval.'
+  id: totrans-165
   prefs: []
   type: TYPE_NORMAL
+  zh: 在我看来，这个禁令过于严格了。在合理的概率哲学下，置信区间意味着人们期望它意味着的东西：有90%的概率，真实值落在90%的置信区间内。
 - en: However, confidence intervals only quantify variability due to sampling – that
     is, measuring only part of the population. The sampling distribution does not
     account for other sources of error, notably sampling bias and measurement error,
     which are the topics of the next section.
+  id: totrans-166
   prefs: []
   type: TYPE_NORMAL
+  zh: 然而，置信区间仅量化了由于抽样引起的变异性——也就是说，只测量了部分人口。抽样分布没有考虑到其他错误来源，特别是抽样偏差和测量误差，这些是下一节的主题。
 - en: Sources of Error
+  id: totrans-167
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 错误来源
 - en: Suppose that instead of the average weight of penguins in Antarctica, you want
     to know the average weight of women in the city where you live. You can’t randomly
     choose a representative sample of women and weigh them.
+  id: totrans-168
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设你想要知道的不是南极企鹅的平均体重，而是你所在城市的女性的平均体重。你无法随机选择一个代表性的女性样本并对其进行称重。
 - en: A simple alternative would be “telephone sampling” – that is, you could choose
     random numbers from the phone book, call and ask to speak to an adult woman, and
     ask how much she weighs. But telephone sampling has obvious problems.
+  id: totrans-169
   prefs: []
   type: TYPE_NORMAL
+  zh: 一个简单的替代方案是“电话抽样”——也就是说，你可以从电话簿中随机选择号码，打电话并要求与成年女性通话，询问她的体重。但电话抽样存在明显的问题。
 - en: For example, the sample is limited to people whose telephone numbers are listed,
     so it eliminates people without phones (who might be poorer than average) and
     people with unlisted numbers (who might be richer). Also, if you call home telephones
     during the day, you are less likely to sample people with jobs. And if you only
     sample the person who answers the phone, you are less likely to sample people
     who share a phone line.
+  id: totrans-170
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，样本仅限于电话号码被列出的人，因此排除了没有电话的人（他们可能比平均水平更穷）和电话号码未列出的人（他们可能比平均水平更富）。此外，如果你在白天打电话回家电话，你不太可能抽样到有工作的人。而且，如果你只抽样接电话的人，你不太可能抽样到共享电话线的人。
 - en: If factors like income, employment, and household size are related to weight
     – and it is plausible that they are – the results of your survey would be affected
     one way or another. This problem is called **sampling bias** because it is a property
     of the sampling process.
+  id: totrans-171
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果像收入、就业和家庭规模这样的因素与体重相关——而且这种可能性是合理的——那么你的调查结果会受到这样或那样的影响。这个问题被称为**抽样偏差**，因为它抽样过程的一个属性。
 - en: This sampling process is also vulnerable to self-selection, which is a kind
     of sampling bias. Some people will refuse to answer the question, and if the tendency
     to refuse is related to weight, that would affect the results.
+  id: totrans-172
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个抽样过程也容易受到自我选择的影响，这是一种抽样偏差。有些人会拒绝回答问题，如果拒绝的倾向与体重相关，那么这会影响结果。
 - en: Finally, if you ask people how much they weigh, rather than weighing them, the
     results might not be accurate. Even helpful respondents might round up or down
     if they are uncomfortable with their actual weight. And not all respondents are
     helpful. These inaccuracies are examples of **measurement error**.
+  id: totrans-173
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，如果你询问人们他们的体重，而不是实际称重，结果可能不准确。即使是有帮助的受访者，如果他们对自己的实际体重感到不舒服，也可能向上或向下取整。并不是所有受访者都有帮助。这些不准确是**测量误差**的例子。
 - en: When you report an estimated quantity, it is useful to quantify variability
     due to sampling by reporting a standard error or a confidence interval. But remember
     that this variability is only one source of error, and often it is not the biggest.
+  id: totrans-174
   prefs: []
   type: TYPE_NORMAL
+  zh: 当你报告一个估计量时，通过报告标准误差或置信区间来量化由于采样引起的变异性是有用的。但请记住，这种变异性只是错误的一个来源，而且通常不是最大的来源。
 - en: Glossary
+  id: totrans-175
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 术语表
 - en: '**population mean:** The true mean of a quantity in an entire population, as
     opposed to the sample mean, which is calculated from a subset.'
+  id: totrans-176
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**总体均值（population mean）**：整个总体中某个量的真实均值，与从子集计算出的样本均值相对。'
 - en: '**parameter**: One of the values that specify a particular distribution in
     a set of distributions – for example, the parameters of a normal distribution
     are the mean and standard deviation.'
+  id: totrans-177
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**参数（parameter）**：一组分布中指定特定分布的值之一——例如，正态分布的参数是均值和标准差。'
 - en: '**estimator**: A statistic calculated from a sample that is used to estimate
     a parameter of the population.'
+  id: totrans-178
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**估计量（estimator）**：从样本中计算出的统计量，用于估计总体参数。'
 - en: '**consistent:** An estimator is consistent if it converges to the actual value
     of a parameter as the sample size increases.'
+  id: totrans-179
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**一致（consistent）**：如果估计量随着样本大小的增加而收敛到参数的实际值，则估计量是一致的。'
 - en: '**unbiased:** An estimator is unbiased if, for a particular sample size, the
     average of the sample estimates is the actual value of the parameter.'
+  id: totrans-180
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**无偏（unbiased）**：如果对于特定的样本大小，样本估计值的平均值等于参数的实际值，则估计量是无偏的。'
 - en: '**mean squared error (MSE)**: A measure of the accuracy of an estimator – it’s
     the average squared difference between estimated and true parameter values, assuming
     the true value is known.'
+  id: totrans-181
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**均方误差（MSE）**：估计量准确性的度量——它是估计值与真实参数值之间平均平方差的平均值，假设真实值是已知的。'
 - en: '**robust:** An estimator is robust if it remains accurate even when a dataset
     contains outliers or errors – or does not perfectly follow a theoretical distribution.'
+  id: totrans-182
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**稳健（robust）**：如果估计量即使在数据集中包含异常值或错误，或者不完全遵循理论分布时仍保持准确，则估计量是稳健的。'
 - en: '**resampling:** A way to approximate the sampling distribution of an estimate
     by simulating the sampling process.'
+  id: totrans-183
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**重采样（resampling）**：通过模拟采样过程来近似估计量的采样分布的方法。'
 - en: '**parametric resampling:** A kind of resampling that estimates population parameters
     from sample data and then uses a theoretical distribution to simulate the sampling
     process.'
+  id: totrans-184
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**参数重采样（parametric resampling）**：一种重采样方法，它从样本数据中估计总体参数，然后使用理论分布来模拟采样过程。'
 - en: '**sampling distribution**: The distribution of a statistic across possible
     samples from the same population.'
+  id: totrans-185
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**采样分布（sampling distribution）**：从同一总体中可能的样本中统计量的分布。'
 - en: '**standard error**: The standard deviation of a sampling distribution, which
     quantifies the variability of an estimate due to random sampling (but not measurement
     error or non-representative sampling).'
+  id: totrans-186
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**标准误差（standard error）**：采样分布的标准差，它量化了由于随机采样（但不是测量误差或非代表性采样）导致的估计量的变异性。'
 - en: '**confidence interval**: An interval that contains the most likely values in
     a sampling distribution.'
+  id: totrans-187
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**置信区间（confidence interval）**：包含采样分布中最可能值的区间。'
 - en: '**sampling bias**: A flaw in the way a sample is collected that makes it unrepresentative
     of the population.'
+  id: totrans-188
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**采样偏差（sampling bias）**：在收集样本的方式中存在的缺陷，使得样本无法代表总体。'
 - en: '**measurement error**: Inaccuracy in how data are observed, measured, or recorded.'
+  id: totrans-189
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**测量误差（measurement error）**：数据观察、测量或记录中的不准确。'
 - en: Exercises
+  id: totrans-190
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 练习
 - en: Exercise 8.1
+  id: totrans-191
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 练习 8.1
 - en: One of the strengths of resampling methods is that they are easy to extend to
     other statistics. In this chapter, we computed the sample mean of penguin weights
     and then used resampling to approximate the sampling distribution of the mean.
     Now let’s do the same for standard deviation.
+  id: totrans-192
   prefs: []
   type: TYPE_NORMAL
+  zh: 重采样方法的一个优点是它们很容易扩展到其他统计量。在本章中，我们计算了企鹅重量的样本均值，然后使用重采样来近似均值的采样分布。现在让我们对标准差做同样的处理。
 - en: Compute the sample standard deviation of weights for chinstrap penguins. Then
     use `resample` to approximate the sampling distribution of the standard deviation.
     Use the sampling distribution to compute the standard error of the estimate and
     a 90% confidence interval.
+  id: totrans-193
   prefs: []
   type: TYPE_NORMAL
+  zh: 计算帝企鹅重量的样本标准差。然后使用`resample`来近似标准差的抽样分布。使用抽样分布来计算估计的标准误差和90%的置信区间。
 - en: Exercise 8.2
+  id: totrans-194
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 练习 8.2
 - en: The Behavioral Risk Factor Surveillance System (BRFSS) dataset includes self-reported
     heights and weights for a sample of adults in the United States. Use this data
     to estimate the average height of male adults. Use resample to approximate the
     sampling distribution and compute a 90% confidence interval.
+  id: totrans-195
   prefs: []
   type: TYPE_NORMAL
+  zh: 行为风险因素监测系统（BRFSS）数据集包括美国成年人的自我报告身高和体重样本。使用这些数据来估计成年男性的平均身高。使用重采样来近似抽样分布并计算90%的置信区间。
 - en: Because the sample size is very large, the confidence interval is very small,
     which means that variability due to random sampling is small. But other sources
     of error might be bigger – what other sources of error do you think affect the
     results?
+  id: totrans-196
   prefs: []
   type: TYPE_NORMAL
+  zh: 由于样本量非常大，置信区间非常小，这意味着随机抽样的变异性很小。但其他误差来源可能更大——你认为还有哪些误差来源会影响结果？
 - en: The following cells download the data, read it into a `DataFrame`, and select
     the heights of male respondents.
+  id: totrans-197
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下单元格下载数据，将其读入`DataFrame`，并选择男性受访者的身高。
 - en: '[PRE73]'
+  id: totrans-198
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE73]'
 - en: '[PRE74]'
+  id: totrans-199
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE74]'
 - en: '[PRE75]'
+  id: totrans-200
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE75]'
 - en: '[PRE76]'
+  id: totrans-201
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE76]'
 - en: Exercise 8.3
+  id: totrans-202
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 练习 8.3
 - en: In games like soccer and hockey, the time between goals tends to follow an exponential
     distribution (as we saw in [Chapter 6](chap06.html#section-exponential-pdf)).
     Suppose we observe a sample of times between goals. If we assume that the sample
@@ -825,151 +1234,231 @@
     the distribution? We might consider using either the sample mean or the sample
     median. Let’s see if either of them is a consistent, unbiased estimator. For the
     experiments, we’ll assume that the actual mean time between goals is 10 minutes.
+  id: totrans-203
   prefs: []
   type: TYPE_NORMAL
+  zh: 在足球和曲棍球等比赛中，进球之间的时间往往遵循指数分布（如我们在第6章中看到的[章节 6](chap06.html#section-exponential-pdf)）。假设我们观察到了进球之间的时间样本。如果我们假设样本来自指数分布，我们如何估计分布的实际均值？我们可能会考虑使用样本均值或样本中位数。让我们看看它们是否是一致的无偏估计量。对于实验，我们假设实际进球之间的平均时间是10分钟。
 - en: '[PRE77]'
+  id: totrans-204
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE77]'
 - en: The following function generates a sample from an exponential distribution with
     this mean and the given sample size.
+  id: totrans-205
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数从一个具有给定均值和样本大小的指数分布中生成样本。
 - en: '[PRE78]'
+  id: totrans-206
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE78]'
 - en: Use this function to generate samples with a range of sizes and compute the
     mean of each one. As `n` increases, do the sample means converge to the actual
     mean?
+  id: totrans-207
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用此功能生成一系列不同大小的样本，并计算每个样本的平均值。随着`n`的增加，样本均值是否会收敛到实际均值？
 - en: Next, generate samples with a range of sizes and compute the median of each
     one. Do the sample medians converge to the actual median?
+  id: totrans-208
   prefs: []
   type: TYPE_NORMAL
+  zh: 接下来，生成一系列不同大小的样本，并计算每个样本的中位数。样本中位数是否会收敛到实际中位数？
 - en: Here’s the actual median of an exponential distribution with the given mean.
+  id: totrans-209
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是给定均值的指数分布的实际中位数。
 - en: '[PRE79]'
+  id: totrans-210
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE79]'
 - en: '[PRE80]'
+  id: totrans-211
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE80]'
 - en: Next, generate many samples with size 10 and check whether the sample mean is
     an unbiased estimator of the population mean.
+  id: totrans-212
   prefs: []
   type: TYPE_NORMAL
+  zh: 接下来，生成许多大小为10的样本，并检查样本均值是否是总体均值的无偏估计量。
 - en: Finally, check whether the sample median is an unbiased estimator of the population
     median.
+  id: totrans-213
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，检查样本中位数是否是总体中位数的无偏估计量。
 - en: Exercise 8.4
+  id: totrans-214
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 练习 8.4
 - en: In this chapter we tested a biased estimator of variance and showed that it
     is, in fact, biased. And we showed that the unbiased estimator is unbiased. Now
     let’s try standard deviation.
+  id: totrans-215
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本章中，我们测试了一个有偏方差估计量，并表明它实际上是有偏的。我们还表明无偏估计量是无偏的。现在让我们尝试标准差。
 - en: 'To estimate the standard deviation of a population, we can compute the square
     root of the biased or unbiased estimator of variance, like this:'
+  id: totrans-216
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了估计总体标准差，我们可以计算方差的有偏或无偏估计值的平方根，如下所示：
 - en: '[PRE81]'
+  id: totrans-217
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE81]'
 - en: '[PRE82]'
+  id: totrans-218
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE82]'
 - en: Use `make_sample` to compute many samples of size 10 from a normal distribution
     with mean 3.7 and standard deviation 0.46. Check whether either of these is an
     unbiased estimator of standard deviation.
+  id: totrans-219
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用`make_sample`从均值为3.7和标准差为0.46的正态分布中计算许多大小为10的样本。检查这些样本中的任何一个是否是标准差的无偏估计量。
 - en: '[PRE83]'
+  id: totrans-220
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE83]'
 - en: '[PRE84]'
+  id: totrans-221
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE84]'
 - en: Exercise 8.5
+  id: totrans-222
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 练习 8.5
 - en: This exercise is based on the German tank problem, which is a simplified version
     of an actual analysis performed by the Economic Warfare Division of the American
     Embassy in London during World War II.
+  id: totrans-223
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个练习基于德国坦克问题，这是第二次世界大战期间美国驻伦敦大使馆经济战部门实际分析的一个简化版本。
 - en: Suppose you are an Allied spy and your job is to estimate how many tanks the
     Germans have built. As data, you have serial numbers recovered from `k` captured
     tanks.
+  id: totrans-224
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设你是一名盟军间谍，你的任务是估计德国建造了多少辆坦克。作为数据，你有从`k`辆被捕获的坦克中恢复的序列号。
 - en: 'If we assume that the Germans have `N` tanks numbered from 1 to `N`, and that
     all tanks in this range were equally likely to be captured, we can estimate `N`
     like this:'
+  id: totrans-225
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们假设德国有`N`辆坦克，编号从1到`N`，并且这个范围内的所有坦克被捕获的可能性是相等的，我们可以这样估计`N`：
 - en: '[PRE85]'
+  id: totrans-226
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE85]'
 - en: As an example, suppose `N` is 122.
+  id: totrans-227
   prefs: []
   type: TYPE_NORMAL
+  zh: 以一个例子来说明，假设`N`是122。
 - en: '[PRE86]'
+  id: totrans-228
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE86]'
 - en: We can use the following function to generate a random sample of `k` tanks.
+  id: totrans-229
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用以下函数来生成`k`辆坦克的随机样本。
 - en: '[PRE87]'
+  id: totrans-230
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE87]'
 - en: Here’s an example.
+  id: totrans-231
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里有一个例子。
 - en: '[PRE88]'
+  id: totrans-232
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE88]'
 - en: '[PRE89]'
+  id: totrans-233
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE89]'
 - en: '[PRE90]'
+  id: totrans-234
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE90]'
 - en: And here is the estimate based on this sample.
+  id: totrans-235
   prefs: []
   type: TYPE_NORMAL
+  zh: 下面是基于这个样本的估计。
 - en: '[PRE91]'
+  id: totrans-236
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE91]'
 - en: '[PRE92]'
+  id: totrans-237
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE92]'
 - en: Check whether this estimator is biased.
+  id: totrans-238
   prefs: []
   type: TYPE_NORMAL
+  zh: 检查这个估计器是否有偏差。
 - en: For more on this problem, see [this Wikipedia page][[https://en.wikipedia.org/wiki/German_tank_problem](https://en.wikipedia.org/wiki/German_tank_problem)]
     and Ruggles and Brodie, “An Empirical Approach to Economic Intelligence in World
     War II”, Journal of the American Statistical Association, March 1947, available
     [here](https://web.archive.org/web/20170123132042/https://www.cia.gov/library/readingroom/docs/CIA-RDP79R01001A001300010013-3.pdf).
+  id: totrans-239
   prefs: []
   type: TYPE_NORMAL
+  zh: 关于这个问题的更多内容，请参阅[这个维基百科页面][[https://en.wikipedia.org/wiki/German_tank_problem](https://en.wikipedia.org/wiki/German_tank_problem)]以及Ruggles和Brodie的《二战期间经济情报的经验方法》，美国统计学会杂志，1947年3月，可在[这里](https://web.archive.org/web/20170123132042/https://www.cia.gov/library/readingroom/docs/CIA-RDP79R01001A001300010013-3.pdf)找到。
 - en: For an explanation of how this estimator works, you might like [this video](https://www.youtube.com/watch?v=WLCwMRJBhuI).
+  id: totrans-240
   prefs: []
   type: TYPE_NORMAL
+  zh: 关于这个估计器如何工作的解释，你可能喜欢[这个视频](https://www.youtube.com/watch?v=WLCwMRJBhuI)。
 - en: Exercise 8.6
+  id: totrans-241
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 练习8.6
 - en: In several sports – especially basketball – many players and fans believe in
     a phenomenon called the “hot hand”, which implies that a player who has hit several
     consecutive shots is more likely to hit the next, and a player who has missed
     several times is more likely to miss.
+  id: totrans-242
   prefs: []
   type: TYPE_NORMAL
+  zh: 在几个体育项目中——尤其是篮球——许多球员和球迷相信一种称为“热手”的现象，这表明连续命中几个投篮的球员更有可能命中下一个，而连续失球的球员更有可能失球。
 - en: A famous paper proposed a way to test whether the hot hand is real or an illusion,
     by looking at sequences of hits and misses from professional basketball games.
     For each player, the authors computed the overall probability of making a shot,
@@ -979,66 +1468,98 @@
     that there is “no evidence for a positive correlation between the outcomes of
     successive shots”. And for several decades, many people believed that the hot
     hand had been debunked.
+  id: totrans-243
   prefs: []
   type: TYPE_NORMAL
+  zh: 一篇著名的论文提出了一种测试“热手”现象是否真实或是一种错觉的方法，即通过观察职业篮球比赛中的连续命中和失球序列。对于每位球员，作者计算了投篮的整体概率和连续三次命中后的投篮条件概率。对于九位球员中的八位，他们发现连续三次命中后投篮的概率是*更低*的。基于这一点和其他结果，他们得出结论，没有“连续投篮结果之间存在正相关性的证据”。几十年来，许多人相信“热手”已经被驳倒了。
 - en: However, this conclusion is based on a statistical error, at least in part.
     A 2018 paper showed that the statistic used in the first paper – the probability
     of making a shot after three hits – is biased. Even if the probability of making
     every shot is exactly 0.5, and there is actually no correlation between the outcomes,
     the probability of making a shot after three hits is *less than 0.5*.
+  id: totrans-244
   prefs: []
   type: TYPE_NORMAL
+  zh: 然而，这个结论是基于一个统计错误，至少部分如此。2018年的一篇论文显示，第一篇论文中使用的统计量——连续三次命中后的投篮概率——是有偏差的。即使每次投篮的概率正好是0.5，实际上没有相关性，连续三次命中后投篮的概率也是*小于0.5*的。
 - en: It is not obvious why that’s true, which is why the error went undetected for
     so long, and I won’t try to explain it here. But we can use the methods from this
     chapter to check it. We’ll use the following function to generate a sequence of
     0s and 1s with probability 0.5 and no correlation.
+  id: totrans-245
   prefs: []
   type: TYPE_NORMAL
+  zh: 这并不明显为什么这是真的，这也是为什么错误长期未被察觉的原因，我这里不会尝试解释它。但我们可以使用本章中的方法来检查它。我们将使用以下函数来生成概率为0.5且无相关性的0和1的序列。
 - en: '[PRE93]'
+  id: totrans-246
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE93]'
 - en: In the notebook for this chapter, I provide a function that finds all subsequences
     of three hits (1s) and returns the element of the sequence that follows.
+  id: totrans-247
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本章的笔记本中，我提供了一个函数，该函数可以找到所有三个连续击中（1s）的子序列，并返回序列中跟随的元素。
 - en: '[PRE94]'
+  id: totrans-248
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE94]'
 - en: 'Generate a large number of sequences with length 100 and for each sequence,
     find each shot that follows three hits. Compute the percentage of these shots
     that are hits. Hint: if the sequence does not contain three consecutive hits,
     the function returns an empty sequence, so your code will have to handle that.'
+  id: totrans-249
   prefs: []
   type: TYPE_NORMAL
+  zh: 生成大量长度为100的序列，并对每个序列，找出每个紧随三个击中的投篮。计算这些投篮中击中的百分比。提示：如果序列不包含三个连续的击中，该函数将返回一个空序列，因此你的代码必须处理这种情况。
 - en: If you run this simulation many times, what is the average percentage of hits?
     How does this result vary as you increase or decrease the length of the sequence?
+  id: totrans-250
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你多次运行这个模拟，平均击中百分比是多少？随着序列长度的增加或减少，这个结果如何变化？
 - en: 'The famous paper is Gilovich, T., Vallone, R., & Tversky, A. (1985). The hot
     hand in basketball: On the misperception of random sequences. *Cognitive psychology*,
     17(3), 295-314.'
+  id: totrans-251
   prefs: []
   type: TYPE_NORMAL
+  zh: '著名的论文是 Gilovich, T., Vallone, R., & Tversky, A. (1985). The hot hand in basketball:
+    On the misperception of random sequences. *认知心理学*，17(3)，295-314。'
 - en: The paper showing the statistical error is Miller, J. B., & Sanjurjo, A. (2018).
     Surprised by the hot hand fallacy? A truth in the law of small numbers. *Econometrica*,
     86(6), 2019-2047.
+  id: totrans-252
   prefs: []
   type: TYPE_NORMAL
+  zh: 展示统计错误的论文是 Miller, J. B., & Sanjurjo, A. (2018). Surprised by the hot hand fallacy?
+    A truth in the law of small numbers. *计量经济学*，86(6)，2019-2047。
 - en: The first paper is [available here](https://www.joelvelasco.net/teaching/122/Gilo.Vallone.Tversky.pdf).
     The second is [available here](https://marketing.wharton.upenn.edu/wp-content/uploads/2018/11/Paper-Joshua-Miller.pdf).
     For an overview of the topic and an explanation of the error, [you might like
     this video](https://www.youtube.com/watch?v=CR5vT44ZMK8).
+  id: totrans-253
   prefs: []
   type: TYPE_NORMAL
+  zh: 第一篇论文[在此处可用](https://www.joelvelasco.net/teaching/122/Gilo.Vallone.Tversky.pdf)。第二篇[在此处可用](https://marketing.wharton.upenn.edu/wp-content/uploads/2018/11/Paper-Joshua-Miller.pdf)。关于这个主题的概述和错误解释，[你可能喜欢这个视频](https://www.youtube.com/watch?v=CR5vT44ZMK8)。
 - en: '[Think Stats: Exploratory Data Analysis in Python, 3rd Edition](https://allendowney.github.io/ThinkStats/index.html)'
+  id: totrans-254
   prefs: []
   type: TYPE_NORMAL
+  zh: '[Think Stats: Exploratory Data Analysis in Python, 3rd Edition](https://allendowney.github.io/ThinkStats/index.html)'
 - en: Copyright 2024 [Allen B. Downey](https://allendowney.com)
+  id: totrans-255
   prefs: []
   type: TYPE_NORMAL
+  zh: 版权所有 2024 [艾伦·B·唐尼](https://allendowney.com)
 - en: 'Code license: [MIT License](https://mit-license.org/)'
+  id: totrans-256
   prefs: []
   type: TYPE_NORMAL
+  zh: 代码许可：[MIT License](https://mit-license.org/)
 - en: 'Text license: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  id: totrans-257
   prefs: []
   type: TYPE_NORMAL
+  zh: 文本许可：[Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)

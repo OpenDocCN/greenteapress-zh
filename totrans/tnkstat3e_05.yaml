@@ -1,789 +1,1234 @@
 - en: Probability Mass Functions
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 概率质量函数
 - en: 原文：[https://allendowney.github.io/ThinkStats/chap03.html](https://allendowney.github.io/ThinkStats/chap03.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ThinkStats/chap03.html](https://allendowney.github.io/ThinkStats/chap03.html)
 - en: In the previous chapter we represented distributions using a `FreqTab` object,
     which contains a set of values and their frequencies – that is, the number of
     times each value appears. In this chapter we’ll introduce another way to describe
     a distribution, a probability mass function (PMF).
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 在上一章中，我们使用`FreqTab`对象表示分布，它包含一组值及其频率——即每个值出现的次数。在这一章中，我们将介绍另一种描述分布的方法，即概率质量函数（PMF）。
 - en: To represent a PMF, we’ll use an object called a `Pmf`, which contains a set
     of values and their probabilities. We’ll use `Pmf` objects to compute the mean
     and variance of a distribution, and the skewness, which indicates whether it is
     skewed to the left or right. Finally, we will explore how a phenomenon called
     the “inspection paradox” can cause a sample to give a biased view of a distribution.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了表示概率质量函数（PMF），我们将使用一个名为`Pmf`的对象，它包含一组值及其概率。我们将使用`Pmf`对象来计算分布的均值和方差，以及偏度，这表明它是左偏还是右偏。最后，我们将探讨一个称为“检查悖论”的现象如何导致样本给出对分布的偏见观点。
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ThinkStats/blob/v3/nb/chap03.ipynb).'
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: '[在此处运行此笔记本](https://colab.research.google.com/github/AllenDowney/ThinkStats/blob/v3/nb/chap03.ipynb)。'
 - en: '[PRE0]'
+  id: totrans-5
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '[PRE1]'
+  id: totrans-6
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '[PRE2]'
+  id: totrans-7
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: PMFs
+  id: totrans-8
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: PMFs
 - en: A `Pmf` object is like a `FreqTab` that contains probabilities instead of frequencies.
     So one way to make a `Pmf` is to start with a `FreqTab`. For example, here’s a
     `FreqTab` that represents the distribution of values in a short sequence.
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: '`Pmf`对象就像一个包含概率而不是频率的`FreqTab`。因此，创建`Pmf`的一种方法是从一个`FreqTab`开始。例如，这里有一个`FreqTab`，它表示一个短序列中值的分布。'
 - en: '[PRE3]'
+  id: totrans-10
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '|  | freqs |'
+  id: totrans-11
   prefs: []
   type: TYPE_TB
+  zh: '|  | freqs |'
 - en: '| --- | --- |'
+  id: totrans-12
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| 1 | 1 |'
+  id: totrans-13
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 1 |'
 - en: '| 2 | 2 |'
+  id: totrans-14
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 2 |'
 - en: '| 3 | 1 |'
+  id: totrans-15
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 1 |'
 - en: '| 5 | 1 |'
+  id: totrans-16
   prefs: []
   type: TYPE_TB
+  zh: '| 5 | 1 |'
 - en: The sum of the frequencies is the size of the original sequence.
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: 频率的总和是原始序列的大小。
 - en: '[PRE4]'
+  id: totrans-18
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '[PRE5]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: If we divide the frequencies by `n`, they represent proportions, rather than
     counts.
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们将频率除以`n`，它们代表比例，而不是计数。
 - en: '[PRE6]'
+  id: totrans-21
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '|  | probs |'
+  id: totrans-22
   prefs: []
   type: TYPE_TB
+  zh: '|  | probs |'
 - en: '| --- | --- |'
+  id: totrans-23
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| 1 | 0.2 |'
+  id: totrans-24
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 0.2 |'
 - en: '| 2 | 0.4 |'
+  id: totrans-25
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 0.4 |'
 - en: '| 3 | 0.2 |'
+  id: totrans-26
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 0.2 |'
 - en: '| 5 | 0.2 |'
+  id: totrans-27
   prefs: []
   type: TYPE_TB
+  zh: '| 5 | 0.2 |'
 - en: This result indicates that 20% of the values in the sequence are 1, 40% are
     2, and so on.
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个结果表示序列中有20%的值是1，40%是2，依此类推。
 - en: 'We can also think of these proportions as probabilities in the following sense:
     if we choose a random value from the original sequence, the probability we choose
     the value 1 is 0.2, the probability we choose the value 2 is 0.4, and so on.'
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们也可以从以下意义上将这些比例视为概率：如果我们从原始序列中随机选择一个值，选择值为1的概率是0.2，选择值为2的概率是0.4，依此类推。
 - en: Because we divided through by `n`, the sum of the probabilities is 1, which
     means that this distribution is **normalized**.
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: 因为我们将除以`n`，所以概率的总和是1，这意味着这个分布是**归一化的**。
 - en: '[PRE7]'
+  id: totrans-31
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '[PRE8]'
+  id: totrans-32
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: A normalized `FreqTab` object represents a **probability mass function** (PMF),
     so-called because probabilities associated with discrete values are also called
     “probability masses”.
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: 归一化的`FreqTab`对象代表一个**概率质量函数**（PMF），之所以称为“概率质量函数”，是因为与离散值相关的概率也称为“概率质量”。
 - en: The `empiricaldist` library provides a `Pmf` object that represents a probability
     mass function, so instead of creating a `FreqTab` object and then normalizing
     it, we can create a `Pmf` object directly.
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: '`empiricaldist`库提供了一个表示概率质量函数的`Pmf`对象，因此，我们不需要创建`FreqTab`对象然后对其进行归一化，我们可以直接创建`Pmf`对象。'
 - en: '[PRE9]'
+  id: totrans-35
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '|  | probs |'
+  id: totrans-36
   prefs: []
   type: TYPE_TB
+  zh: '|  | probs |'
 - en: '| --- | --- |'
+  id: totrans-37
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| 1 | 0.2 |'
+  id: totrans-38
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 0.2 |'
 - en: '| 2 | 0.4 |'
+  id: totrans-39
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 0.4 |'
 - en: '| 3 | 0.2 |'
+  id: totrans-40
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 0.2 |'
 - en: '| 5 | 0.2 |'
+  id: totrans-41
   prefs: []
   type: TYPE_TB
+  zh: '| 5 | 0.2 |'
 - en: The `Pmf` is normalized so the total probability is 1.
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: '`Pmf`是归一化的，所以总概率是1。'
 - en: '[PRE10]'
+  id: totrans-43
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '[PRE11]'
+  id: totrans-44
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: '`Pmf` and `FreqTab` objects are similar in many ways. To look up the probability
     associated with a value, we can use the bracket operator.'
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: '`Pmf`和`FreqTab`对象在许多方面都很相似。为了查找与一个值相关的概率，我们可以使用方括号操作符。'
 - en: '[PRE12]'
+  id: totrans-46
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '[PRE13]'
+  id: totrans-47
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: Or use parentheses to call the `Pmf` like a function.
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 或者使用括号来像函数一样调用`Pmf`。
 - en: '[PRE14]'
+  id: totrans-49
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '[PRE15]'
+  id: totrans-50
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: To assign a probability to a value, you have to use the bracket operator.
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: 要给一个值分配一个概率，你必须使用方括号操作符。
 - en: '[PRE16]'
+  id: totrans-52
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '[PRE17]'
+  id: totrans-53
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: 'You can modify an existing `Pmf` by incrementing the probability associated
     with a value:'
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: 你可以通过增加与一个值相关的概率来修改现有的`Pmf`：
 - en: '[PRE18]'
+  id: totrans-55
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: '[PRE19]'
+  id: totrans-56
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: 'Or you can multiply a probability by a factor:'
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 或者你可以将一个概率乘以一个因子：
 - en: '[PRE20]'
+  id: totrans-58
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '[PRE21]'
+  id: totrans-59
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: If you modify a `Pmf`, the result may not be normalized – that is, the probabilities
     may no longer add up to 1.
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你修改一个`Pmf`，结果可能不会归一化——也就是说，概率可能不再加起来等于1。
 - en: '[PRE22]'
+  id: totrans-61
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: '[PRE23]'
+  id: totrans-62
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: The `normalize` method renormalizes the `Pmf` by dividing through by the sum
     – and returning the sum.
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: '`normalize` 方法通过除以总和来重新标准化 `Pmf`，并返回总和。'
 - en: '[PRE24]'
+  id: totrans-64
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: '[PRE25]'
+  id: totrans-65
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: '`Pmf` objects provide a `copy` method so you can make and modify a copy without
     affecting the original.'
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: '`Pmf` 对象提供了一个 `copy` 方法，这样你就可以创建并修改一个副本，而不会影响原始对象。'
 - en: '[PRE26]'
+  id: totrans-67
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: '|  | probs |'
+  id: totrans-68
   prefs: []
   type: TYPE_TB
+  zh: '|  | probs |'
 - en: '| --- | --- |'
+  id: totrans-69
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| 1 | 0.235294 |'
+  id: totrans-70
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 0.235294 |'
 - en: '| 2 | 0.294118 |'
+  id: totrans-71
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 0.294118 |'
 - en: '| 3 | 0.235294 |'
+  id: totrans-72
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 0.235294 |'
 - en: '| 5 | 0.235294 |'
+  id: totrans-73
   prefs: []
   type: TYPE_TB
+  zh: '| 5 | 0.235294 |'
 - en: Like a `FreqTab` object, a `Pmf` object has a `qs` attribute that accesses the
     quantities and a `ps` attribute that accesses the probabilities.
+  id: totrans-74
   prefs: []
   type: TYPE_NORMAL
+  zh: 与 `FreqTab` 对象一样，`Pmf` 对象有一个 `qs` 属性，可以访问数量，还有一个 `ps` 属性，可以访问概率。
 - en: It also has a `bar` method that plots the `Pmf` as a bar graph and a `plot`
     method that plots it as a line graph.
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: 它还有一个 `bar` 方法，可以将 `Pmf` 绘制为条形图，还有一个 `plot` 方法，可以将它绘制为折线图。
 - en: '## Summarizing a PMF'
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
+  zh: '## 总结 PMF'
 - en: In [Chapter 1](chap01.html#section-summary-statistics) we computed the mean
     of a sample by adding up the elements and dividing by the number of elements.
     Here’s a simple example.
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: 在 [第 1 章](chap01.html#section-summary-statistics) 中，我们通过将元素相加并除以元素数量来计算样本的平均值。这里有一个简单的例子。
 - en: '[PRE27]'
+  id: totrans-78
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: '[PRE28]'
+  id: totrans-79
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: Now suppose we compute the PMF of the values in the sequence.
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在假设我们计算序列值的 PMF。
 - en: '[PRE29]'
+  id: totrans-81
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: Given the `Pmf`, we can still compute the mean, but the process is different
     – we have to multiply the probabilities and quantities and add up the products.
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: 给定 `Pmf`，我们仍然可以计算平均值，但过程不同——我们必须将概率和数量相乘，然后将乘积相加。
 - en: '[PRE30]'
+  id: totrans-83
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: '[PRE31]'
+  id: totrans-84
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: Notice that we *don’t* have to divide by `n`, because we already did that when
     we normalized the `Pmf`. `Pmf` objects have a `mean` method that does the same
     thing.
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: 注意，我们不需要除以 `n`，因为我们已经在标准化 `Pmf` 时做了这件事。`Pmf` 对象有一个 `mean` 方法，做同样的事情。
 - en: '[PRE32]'
+  id: totrans-86
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: '[PRE33]'
+  id: totrans-87
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: Given a `Pmf`, we can compute the variance by computing the deviation of each
     quantity from the mean.
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: 给定一个 `Pmf`，我们可以通过计算每个数量与平均值的偏差来计算方差。
 - en: '[PRE34]'
+  id: totrans-89
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: Then we multiply the squared deviations by the probabilities and add up the
     products.
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后我们将平方偏差乘以概率，并将乘积相加。
 - en: '[PRE35]'
+  id: totrans-91
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: '[PRE36]'
+  id: totrans-92
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: The `var` method does the same thing.
+  id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: '`var` 方法做同样的事情。'
 - en: '[PRE37]'
+  id: totrans-94
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE37]'
 - en: '[PRE38]'
+  id: totrans-95
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: From the variance, we can compute the standard deviation in the usual way.
+  id: totrans-96
   prefs: []
   type: TYPE_NORMAL
+  zh: 从方差中，我们可以按照通常的方式计算标准差。
 - en: '[PRE39]'
+  id: totrans-97
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: '[PRE40]'
+  id: totrans-98
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE40]'
 - en: Or the `std` method does the same thing.
+  id: totrans-99
   prefs: []
   type: TYPE_NORMAL
+  zh: 或者 `std` 方法做同样的事情。
 - en: '[PRE41]'
+  id: totrans-100
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE41]'
 - en: '[PRE42]'
+  id: totrans-101
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE42]'
 - en: '`Pmf` also provides a `mode` method that finds the value with the highest probability.'
+  id: totrans-102
   prefs: []
   type: TYPE_NORMAL
+  zh: '`Pmf` 还提供了一个 `mode` 方法，可以找到概率最高的值。'
 - en: '[PRE43]'
+  id: totrans-103
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE43]'
 - en: '[PRE44]'
+  id: totrans-104
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE44]'
 - en: We’ll see more methods as we go along, but that’s enough to get started.
+  id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: 随着我们继续前进，我们将看到更多的方法，但这些都足以开始。
 - en: The Class Size Paradox
+  id: totrans-106
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 班级规模悖论
 - en: As an example of what we can do with `Pmf` objects, let’s consider a phenomenon
     I call “the class size paradox.”
+  id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为使用 `Pmf` 对象可以做到的事情的例子，让我们考虑一个我称之为“班级规模悖论”的现象。
 - en: 'At many American colleges and universities, the student-to-faculty ratio is
     about 10:1. But students are often surprised that many of their classes have more
     than 10 students, sometimes a lot more. There are two reasons for the discrepancy:'
+  id: totrans-108
   prefs: []
   type: TYPE_NORMAL
+  zh: 在许多美国大学和学院中，学生与教师的比例大约是 10:1。但学生常常惊讶地发现，他们中的许多课程的学生人数超过 10 人，有时甚至更多。这种差异有两个原因：
 - en: Students typically take 4 or 5 classes per semester, but professors often teach
     1 or 2.
+  id: totrans-109
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 学生通常每学期选修 4 或 5 门课程，但教授通常只教 1 或 2 门。
 - en: The number of students in a small class is small, and the number of students
     in a large class is large.
+  id: totrans-110
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 小班的学生人数少，大班的学生人数多。
 - en: The first effect is obvious, at least once it is pointed out; the second is
     more subtle. Let’s look at an example. Suppose that a college offers 65 classes
     in a given semester, and we are given the number of classes in each of the following
     size ranges.
+  id: totrans-111
   prefs: []
   type: TYPE_NORMAL
+  zh: 第一个影响是明显的，至少一旦指出；第二个影响更为微妙。让我们看一个例子。假设某大学在某个学期提供了 65 门课程，并且我们给出了以下大小范围内的课程数量。
 - en: '[PRE45]'
+  id: totrans-112
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE45]'
 - en: '|  | count |'
+  id: totrans-113
   prefs: []
   type: TYPE_TB
+  zh: '|  | count |'
 - en: '| --- | --- |'
+  id: totrans-114
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| class size |  |'
+  id: totrans-115
   prefs: []
   type: TYPE_TB
+  zh: '| class size |  |'
 - en: '| --- | --- |'
+  id: totrans-116
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| [5, 10) | 8 |'
+  id: totrans-117
   prefs: []
   type: TYPE_TB
+  zh: '| [5, 10) | 8 |'
 - en: '| [10, 15) | 8 |'
+  id: totrans-118
   prefs: []
   type: TYPE_TB
+  zh: '| [10, 15) | 8 |'
 - en: '| [15, 20) | 14 |'
+  id: totrans-119
   prefs: []
   type: TYPE_TB
+  zh: '| [15, 20) | 14 |'
 - en: '| [20, 25) | 4 |'
+  id: totrans-120
   prefs: []
   type: TYPE_TB
+  zh: '| [20, 25) | 4 |'
 - en: '| [25, 30) | 6 |'
+  id: totrans-121
   prefs: []
   type: TYPE_TB
+  zh: '| [25, 30) | 6 |'
 - en: '| [30, 35) | 12 |'
+  id: totrans-122
   prefs: []
   type: TYPE_TB
+  zh: '| [30, 35) | 12 |'
 - en: '| [35, 40) | 8 |'
+  id: totrans-123
   prefs: []
   type: TYPE_TB
+  zh: '| [35, 40) | 8 |'
 - en: '| [40, 45) | 3 |'
+  id: totrans-124
   prefs: []
   type: TYPE_TB
+  zh: '| [40, 45) | 3 |'
 - en: '| [45, 50) | 2 |'
+  id: totrans-125
   prefs: []
   type: TYPE_TB
+  zh: '| [45, 50) | 2 |'
 - en: The Pandas function `interval_range` makes an `Index` where each label represents
     a range of values. The notation `[5, 10)` means that `5` is included in the interval
     and `10` is not. Since we don’t know the sizes of the classes in each interval,
     let’s assume that all sizes are at the midpoint of the range.
+  id: totrans-126
   prefs: []
   type: TYPE_NORMAL
+  zh: Pandas 函数 `interval_range` 创建一个 `Index`，其中每个标签代表一个值范围。符号 `[5, 10)` 表示 `5` 包含在区间内，而
+    `10` 不包含。由于我们不知道每个区间内班级的大小，让我们假设所有大小都是范围的中点。
 - en: '[PRE46]'
+  id: totrans-127
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE46]'
 - en: '[PRE47]'
+  id: totrans-128
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE47]'
 - en: Now let’s make a `Pmf` that represents the distribution of class sizes. Because
     we know the sizes and their frequencies, we can create a `Pmf` directly, passing
     as arguments the counts, sizes, and a name. When we normalize the new `Pmf`, the
     result is the sum of the counts.
+  id: totrans-129
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们创建一个代表班级规模分布的`Pmf`。因为我们知道规模及其频率，我们可以直接创建一个`Pmf`，将计数、规模和名称作为参数传递。当我们对新的`Pmf`进行归一化时，结果是计数的总和。
 - en: '[PRE48]'
+  id: totrans-130
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE48]'
 - en: '[PRE49]'
+  id: totrans-131
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE49]'
 - en: If you ask the college for the average class size, they report the mean of this
     distribution, which is 23.7.
+  id: totrans-132
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你向大学询问平均班级规模，他们会报告这个分布的平均值，即23.7。
 - en: '[PRE50]'
+  id: totrans-133
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE50]'
 - en: '[PRE51]'
+  id: totrans-134
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE51]'
 - en: But if you survey a group of students, ask them how many students are in their
     classes, and compute the mean, the average is bigger. Let’s see how much bigger.
+  id: totrans-135
   prefs: []
   type: TYPE_NORMAL
+  zh: 但如果你对一组学生进行调查，询问他们班级中有多少学生，并计算平均值，平均数会更大。让我们看看会大多少。
 - en: The following function takes the actual `Pmf` of class sizes and makes a new
     `Pmf` that represents the class sizes as seen by students. The quantities in the
     two distributions are the same, but the probabilities in the distribution are
     multiplied by the quantities, because in a class with size `x`, there are `x`
     students who observe that class. So the probability of observing a class is proportional
     to its size.
+  id: totrans-136
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数接受实际的班级规模`Pmf`，并创建一个新的`Pmf`，该`Pmf`代表学生观察到的班级规模。两个分布中的数量是相同的，但分布中的概率是乘以数量的，因为在规模为`x`的班级中，有`x`名学生观察到了这个班级。因此，观察到一个班级的概率与其规模成正比。
 - en: '[PRE52]'
+  id: totrans-137
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE52]'
 - en: Now we can compute the biased `Pmf` as observed by students.
+  id: totrans-138
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以计算学生观察到的有偏差的`Pmf`。
 - en: '[PRE53]'
+  id: totrans-139
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE53]'
 - en: Here’s what the two distributions look like.
+  id: totrans-140
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里展示了这两个分布的形状。
 - en: '[PRE54]'
+  id: totrans-141
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE54]'
 - en: '![_images/329dd2226fddec5739141f3e29482265fd24228ef2edf510fd2fa3aeaa0e7aab.png](../Images/ca215be8e821d91060687873516b0e82.png)'
+  id: totrans-142
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/ca215be8e821d91060687873516b0e82.png)'
 - en: In the observed distribution there are fewer small classes and more large ones.
     And the biased mean is 29.1, almost 25% higher than the actual mean.
+  id: totrans-143
   prefs: []
   type: TYPE_NORMAL
+  zh: 在观察到的分布中，小班级较少，大班级较多。有偏差的平均值是29.1，比实际平均值高出近25%。
 - en: '[PRE55]'
+  id: totrans-144
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE55]'
 - en: '[PRE56]'
+  id: totrans-145
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE56]'
 - en: It is also possible to invert this operation. Suppose you want to find the distribution
     of class sizes at a college, but you can’t get reliable data. One option is to
     choose a random sample of students and ask how many students are in their classes.
+  id: totrans-146
   prefs: []
   type: TYPE_NORMAL
+  zh: 此操作也可以逆转。假设你想找到大学中班级规模分布，但你无法获得可靠的数据。一个选择是随机抽取学生样本，并询问他们班级中有多少学生。
 - en: The result would be biased for the reasons we’ve just seen, but you can use
     it to estimate the actual distribution. Here’s the function that unbiases a `Pmf`
     by dividing the probabilities by the sizes.
+  id: totrans-147
   prefs: []
   type: TYPE_NORMAL
+  zh: 由于我们刚刚看到的原因，结果会有偏差，但你可以用它来估计实际的分布。下面是一个通过除以大小来对`Pmf`进行去偏的函数。
 - en: '[PRE57]'
+  id: totrans-148
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE57]'
 - en: And here’s the result.
+  id: totrans-149
   prefs: []
   type: TYPE_NORMAL
+  zh: 下面是结果。
 - en: '[PRE58]'
+  id: totrans-150
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE58]'
 - en: '[PRE59]'
+  id: totrans-151
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE59]'
 - en: The mean of the debiased `Pmf` is the same as the mean of the actual distribution
     we started with.
+  id: totrans-152
   prefs: []
   type: TYPE_NORMAL
+  zh: 去偏`Pmf`的均值与最初实际分布的均值相同。
 - en: If you think this example is interesting, you might like Chapter 2 of *Probably
     Overthinking It*, which includes this and several other examples of what’s called
     the “inspection paradox”.
+  id: totrans-153
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你认为这个例子很有趣，你可能喜欢《很可能是在过度思考》的第二章，其中包含了这个以及其他几个被称为“检查悖论”的例子。
 - en: NSFG Data
+  id: totrans-154
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: NSFG 数据
 - en: In the previous chapter, we plotted frequency tables of pregnancy lengths for
     first babies and others. But the sizes of the groups are not the same, so we can’t
     compare the frequency tables directly. Because PMFs are normalized, we can compare
     them. So let’s load the NSFG data again and make `Pmf` objects to represent distributions
     of pregnancy lengths.
+  id: totrans-155
   prefs: []
   type: TYPE_NORMAL
+  zh: 在上一章中，我们绘制了第一胎和其他婴儿的怀孕长度频率表。但由于组的大小不同，我们无法直接比较频率表。因为PMFs是归一化的，我们可以比较它们。所以让我们再次加载NSFG数据，并创建`Pmf`对象来表示怀孕长度的分布。
 - en: The following cells download the data files and install `statadict`, which we
     need to read the data.
+  id: totrans-156
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下单元格下载数据文件并安装`statadict`，这是我们读取数据所需的。
 - en: '[PRE60]'
+  id: totrans-157
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE60]'
 - en: '[PRE61]'
+  id: totrans-158
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE61]'
 - en: The `nsfg` module provides a `read_nsfg_groups` function that reads the data,
     selects rows that represent live births, and partitions live births into first
     babies and others. It returns three `DataFrame` objects.
+  id: totrans-159
   prefs: []
   type: TYPE_NORMAL
+  zh: '`nsfg`模块提供了一个`read_nsfg_groups`函数，该函数读取数据，选择代表活产行的行，并将活产行分为第一胎和其他。它返回三个`DataFrame`对象。'
 - en: '[PRE62]'
+  id: totrans-160
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE62]'
 - en: We can use `firsts` and `others` to make a `Pmf` for the pregnancy lengths in
     each group.
+  id: totrans-161
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用`firsts`和`others`来为每个组中的怀孕长度创建一个`Pmf`。
 - en: '[PRE63]'
+  id: totrans-162
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE63]'
 - en: Here are the PMFs for first babies and others, plotted as bar graphs.
+  id: totrans-163
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里是第一胎和其他婴儿的PMFs，以条形图的形式展示。
 - en: '[PRE64]'
+  id: totrans-164
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE64]'
 - en: '![_images/969668e0953968aca7b4db5c4f02da3c9ebf8eea8585fd389fd31ff53c994bd5.png](../Images/c0134c516bbf2aaded02b2ee894b33fb.png)'
+  id: totrans-165
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/c0134c516bbf2aaded02b2ee894b33fb.png)'
 - en: By plotting the PMF instead of the frequency table, we can compare the two distributions
     without being misled by the difference in sizes of the samples. Based on this
     figure, first babies seem to be less likely than others to arrive on time (week
     39) and more likely to be late (weeks 41 and 42).
+  id: totrans-166
   prefs: []
   type: TYPE_NORMAL
+  zh: 通过绘制PMF而不是频率表，我们可以比较两个分布，而不会因为样本大小的差异而误导。根据此图，第一胎婴儿似乎比其他人更不可能准时到达（第39周）并且更有可能迟到（第41周和第42周）。
 - en: Other Visualizations
+  id: totrans-167
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 其他可视化
 - en: FreqTabograms and PMFs are useful while you are exploring data and trying to
     identify patterns and relationships. Once you have an idea what is going on, a
     good next step is to design a visualization that makes the patterns you have identified
     as clear as possible.
+  id: totrans-168
   prefs: []
   type: TYPE_NORMAL
+  zh: FreqTabograms和PMFs在探索数据并尝试识别模式和关系时非常有用。一旦你有了想法，下一步就是设计一个可视化，尽可能清晰地展示你已识别的模式。
 - en: In the NSFG data, the biggest differences in the distributions are near the
     mode. So it makes sense to zoom in on that part of the graph, and select data
     from weeks 35 to 46.
+  id: totrans-169
   prefs: []
   type: TYPE_NORMAL
+  zh: 在NSFG数据中，分布的最大差异接近峰值。因此，在图表的这一部分进行放大，并选择35周到46周的数据是有意义的。
 - en: When we call a `Pmf` object like a function, we can look up a sequence of quantities
     and get a sequence of probabilities.
+  id: totrans-170
   prefs: []
   type: TYPE_NORMAL
+  zh: 当我们像调用函数一样调用`Pmf`对象时，我们可以查找一系列数量并获取一系列概率。
 - en: '[PRE65]'
+  id: totrans-171
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE65]'
 - en: '[PRE66]'
+  id: totrans-172
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE66]'
 - en: '[PRE67]'
+  id: totrans-173
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE67]'
 - en: '[PRE68]'
+  id: totrans-174
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE68]'
 - en: So we can compute the differences in the probabilities like this.
+  id: totrans-175
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，我们可以这样计算概率的差异。
 - en: '[PRE69]'
+  id: totrans-176
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE69]'
 - en: '[PRE70]'
+  id: totrans-177
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE70]'
 - en: Here’s what they look like, multiplied by 100 to express the differences in
     percentage points.
+  id: totrans-178
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是它们的模样，乘以100以表示百分比点的差异。
 - en: '[PRE71]'
+  id: totrans-179
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE71]'
 - en: '![_images/be639c1c1b2aa7c3bbb9e1dee6ed45bab8624e52be84059a787a7007b6377ac0.png](../Images/dfaba7dc052555cec4f928868e9eaacd.png)'
+  id: totrans-180
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/dfaba7dc052555cec4f928868e9eaacd.png)'
 - en: 'This figure makes the pattern clearer: first babies are less likely to be born
     in week 39, and somewhat more likely to be born in weeks 41 and 42.'
+  id: totrans-181
   prefs: []
   type: TYPE_NORMAL
+  zh: 此图使模式更清晰：第一胎婴儿在39周出生的可能性较小，而在41周和42周出生的可能性略大。
 - en: When we see a pattern like this in a sample, we can’t be sure it also holds
     in the population – and we don’t know whether we would see it in another sample
     from the same population. We’ll revisit this question in [Chapter 9](chap09.html#chapter-hypothesis-testing).
+  id: totrans-182
   prefs: []
   type: TYPE_NORMAL
+  zh: 当我们在样本中看到这种模式时，我们不能确定它也在总体中成立——我们也不知道我们是否会在来自同一总体的另一个样本中看到它。我们将在第9章（chap09.html#chapter-hypothesis-testing）中重新审视这个问题。
 - en: Glossary
+  id: totrans-183
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 术语表
 - en: There are not as many new terms in this chapter as in the previous chapters.
+  id: totrans-184
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章的新术语不如前几章多。
 - en: '**normalized:** A set of probabilities are normalized if they add up to 1.'
+  id: totrans-185
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**归一化**：如果一组概率的总和为1，则称其为归一化。'
 - en: '**probability mass function (PMF)**: A function that represents a distribution
     by mapping each quantity to its probability.'
+  id: totrans-186
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**概率质量函数（PMF）**：一个将每个数量映射到其概率的函数。'
 - en: Exercises
+  id: totrans-187
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 练习
 - en: For the exercises in this chapter, we’ll use the NSFG respondent file, which
     contains one row for each respondent. Instructions for downloading the data are
     in the notebook for this chapter.
+  id: totrans-188
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于本章的练习，我们将使用NSFG受访者文件，其中每行代表一个受访者。下载数据的说明在本书的笔记本中。
 - en: '[PRE72]'
+  id: totrans-189
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE72]'
 - en: The codebook for this dataset is at [https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Dataset_Documentation/NSFG/Cycle6Codebook-Female.pdf](https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Dataset_Documentation/NSFG/Cycle6Codebook-Female.pdf).
+  id: totrans-190
   prefs: []
   type: TYPE_NORMAL
+  zh: 此数据集的代码簿位于[https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Dataset_Documentation/NSFG/Cycle6Codebook-Female.pdf](https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Dataset_Documentation/NSFG/Cycle6Codebook-Female.pdf)。
 - en: The `nsfg.py` module provides a function that reads the respondent file and
     returns a `DataFrame`.
+  id: totrans-191
   prefs: []
   type: TYPE_NORMAL
+  zh: '`nsfg.py`模块提供了一个函数，用于读取受访者文件并返回一个`DataFrame`。'
 - en: '[PRE73]'
+  id: totrans-192
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE73]'
 - en: '[PRE74]'
+  id: totrans-193
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE74]'
 - en: This `DataFrame` contains 7643 rows and 3092 columns.
+  id: totrans-194
   prefs: []
   type: TYPE_NORMAL
+  zh: 此`DataFrame`包含7643行和3092列。
 - en: Exercise 3.1
+  id: totrans-195
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 练习3.1
 - en: Select the column `numbabes`, which records the “number of babies born alive”
     to each respondent. Make a `FreqTab` object and display the frequencies of the
     values in this column. Check that they are consistent with the frequencies in
     the code book. Are there any special values that should be replaced with `NaN`?
+  id: totrans-196
   prefs: []
   type: TYPE_NORMAL
+  zh: 选择`numbabes`列，该列记录每个受访者的“出生存活婴儿数量”。创建一个`FreqTab`对象并显示该列值的频率。检查它们是否与代码簿中的频率一致。是否有任何特殊值应该替换为`NaN`？
 - en: Then make a `Pmf` object and plot it as a bar graph. Is the distribution symmetric,
     skewed to the left, or skewed to the right?
+  id: totrans-197
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后创建一个`Pmf`对象并将其作为条形图绘制。分布是对称的，左偏斜还是右偏斜？
 - en: '[PRE75]'
+  id: totrans-198
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE75]'
 - en: '![_images/29d6f838b294e581d299108b92eeda1c7f945f73539d261292111180458b441f.png](../Images/881dcc0a35a071942e937a177bead9b2.png)'
+  id: totrans-199
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/881dcc0a35a071942e937a177bead9b2.png)'
 - en: Exercise 3.2
+  id: totrans-200
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 练习 3.2
 - en: In the same way that the mean identifies a central point in a distribution,
     and variance quantifies its spread, there is another statistic, called **skewness**,
     that indicates whether a distribution is skewed to the left or right.
+  id: totrans-201
   prefs: []
   type: TYPE_NORMAL
+  zh: 与均值标识分布中的中心点，方差量化其分散程度一样，还有一个称为**偏度**的统计量，它表明分布是向左还是向右偏斜。
 - en: Given a sample, we can compute the skewness by computing the sum of the cubed
     deviations and dividing by the standard deviation cubed. For example, here’s how
     we compute the skewness of `numbabes`.
+  id: totrans-202
   prefs: []
   type: TYPE_NORMAL
+  zh: 给定一个样本，我们可以通过计算立方偏差之和并除以标准差立方来计算偏度。例如，以下是计算`numbabes`偏度的方法。
 - en: '[PRE76]'
+  id: totrans-203
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE76]'
 - en: '[PRE77]'
+  id: totrans-204
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE77]'
 - en: '[PRE78]'
+  id: totrans-205
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE78]'
 - en: A positive value indicates that a distribution is skewed to the right, and a
     negative value indicates that it is skewed to the left.
+  id: totrans-206
   prefs: []
   type: TYPE_NORMAL
+  zh: 正值表示分布向右偏斜，负值表示它向左偏斜。
 - en: 'If you are given a `Pmf`, rather than a sequence of values, you can compute
     skewness like this:'
+  id: totrans-207
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你给定的是一个`Pmf`而不是一系列值，你可以这样计算偏度：
 - en: Compute the deviation of each quantity in the `Pmf` from the mean.
+  id: totrans-208
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 计算每个数量在`Pmf`中与均值的偏差。
 - en: Cube the deviations, multiply by the probabilities in the `Pmf`, and add up
     the products.
+  id: totrans-209
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 将偏差值立方，乘以`Pmf`中的概率，然后将乘积相加。
 - en: Divide the sum by the standard deviation cubed.
+  id: totrans-210
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 将总和除以标准差立方。
 - en: Write a function called `pmf_skewness` that takes a `Pmf` object and returns
     its skewness.
+  id: totrans-211
   prefs: []
   type: TYPE_NORMAL
+  zh: 编写一个名为`pmf_skewness`的函数，该函数接受一个`Pmf`对象并返回其偏度。
 - en: Use your function and the `Pmf` of `numbabes` to compute skewness, and confirm
     you get the same result we computed above.
+  id: totrans-212
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用你的函数和`numbabes`的`Pmf`来计算偏度，并确认你得到我们上面计算出的相同结果。
 - en: Exercise 3.3
+  id: totrans-213
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 练习 3.3
 - en: Something like the class size paradox appears if you survey children and ask
     how many children are in their family. Families with many children are more likely
     to appear in your sample, and families with no children have no chance to be in
     the sample at all.
+  id: totrans-214
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你调查儿童并询问他们家庭中有多少孩子，就会出现类似班级规模悖论的情况。有多个孩子的家庭更有可能出现在你的样本中，而没有孩子的家庭根本不可能出现在样本中。
 - en: From `resp`, select `numkdhh`, which records the number of children under 18
     in each respondent’s household. Make a `Pmf` of the values in this column.
+  id: totrans-215
   prefs: []
   type: TYPE_NORMAL
+  zh: 从`resp`中选择`numkdhh`，它记录了每个受访者家庭中18岁以下孩子的数量。为这个列中的值创建一个`Pmf`。
 - en: Use the `bias` function to compute the distribution we would see if we surveyed
     the children and asked them how many children under 18 (including themselves)
     are in their household.
+  id: totrans-216
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用`bias`函数计算如果我们调查儿童并询问他们家庭中有多少18岁以下的儿童（包括他们自己）时我们会看到的分布。
 - en: Plot the actual and biased distributions, and compute their means.
+  id: totrans-217
   prefs: []
   type: TYPE_NORMAL
+  zh: 绘制实际和有偏分布，并计算它们的均值。
 - en: '[Think Stats: Exploratory Data Analysis in Python, 3rd Edition](https://allendowney.github.io/ThinkStats/index.html)'
+  id: totrans-218
   prefs: []
   type: TYPE_NORMAL
+  zh: '[Think Stats: Exploratory Data Analysis in Python, 3rd Edition](https://allendowney.github.io/ThinkStats/index.html)'
 - en: Copyright 2024 [Allen B. Downey](https://allendowney.com)
+  id: totrans-219
   prefs: []
   type: TYPE_NORMAL
+  zh: 版权所有 2024 [艾伦·B·唐尼](https://allendowney.com)
 - en: 'Code license: [MIT License](https://mit-license.org/)'
+  id: totrans-220
   prefs: []
   type: TYPE_NORMAL
+  zh: 代码许可：[MIT License](https://mit-license.org/)
 - en: 'Text license: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  id: totrans-221
   prefs: []
   type: TYPE_NORMAL
+  zh: 文本许可：[Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)

@@ -1,17 +1,23 @@
 - en: Time Series Analysis
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 时间序列分析
 - en: 原文：[https://allendowney.github.io/ThinkStats/chap12.html](https://allendowney.github.io/ThinkStats/chap12.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '[https://allendowney.github.io/ThinkStats/chap12.html](https://allendowney.github.io/ThinkStats/chap12.html)'
 - en: A **time series** is a sequence of measurements from a system that varies in
     time. Many of the tools we used in previous chapters, like regression, can also
     be used with time series. But there are additional methods that are particularly
     useful for this kind of data.
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: '**时间序列**是从随时间变化的系统中获取的一系列测量值。我们在前几章中使用的大多数工具，如回归，也可以用于时间序列。但还有一些特别适用于此类数据的方法。'
 - en: 'As examples, we’ll look at two datasets: renewable electricity generation in
     the United States from 2001 to 2024, and weather data over the same interval.
     We will develop methods to decompose a time series into a long-term trend and
@@ -19,1272 +25,1968 @@
     trends. And we’ll try out a widely-used model for analyzing time series data,
     with the formal name “autoregressive integrated moving average” and the easier-to-say
     acronym ARIMA.'
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为例子，我们将查看两个数据集：2001 年至 2024 年间美国的可再生能源发电量，以及同一时间段的天气数据。我们将开发将时间序列分解为长期趋势和重复季节性成分的方法。我们将使用线性回归模型来拟合和预测趋势。我们还将尝试一个广泛使用的分析时间序列数据模型，正式名称为“自回归积分移动平均”，简称
+    ARIMA。
 - en: The third edition of *Think Stats* is available now from [Bookshop.org](https://bookshop.org/a/98697/9781098190255)
     and [Amazon](https://amzn.to/42lmxwu) (those are affiliate links). If you are
     enjoying the free, online version, consider [buying me a coffee](https://buymeacoffee.com/allendowney).
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: '*Think Stats* 的第三版现在可以从 [Bookshop.org](https://bookshop.org/a/98697/9781098190255)
+    和 [Amazon](https://amzn.to/42lmxwu) 购买（这些是联盟链接）。如果你正在享受免费的在线版本，考虑 [为我买杯咖啡](https://buymeacoffee.com/allendowney)。'
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ThinkStats/blob/v3/nb/chap12.ipynb).'
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: '[点击此处运行此笔记本在 Colab 上](https://colab.research.google.com/github/AllenDowney/ThinkStats/blob/v3/nb/chap12.ipynb)。'
 - en: '[PRE0]'
+  id: totrans-6
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '[PRE1]'
+  id: totrans-7
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '[PRE2]'
+  id: totrans-8
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: Electricity
+  id: totrans-9
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 电力
 - en: As an example of time-series data, we’ll use a dataset from the U.S. Energy
     Information Administration – it includes total electricity generation per month
     from renewable sources from 2001 to 2024. Instructions for downloading the data
     are in the notebook for this chapter.
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为时间序列数据的例子，我们将使用美国能源信息署的数据集——它包括 2001 年至 2024 年间来自可再生能源的每月总发电量。下载数据的说明在本书的笔记本中。
 - en: The following cell downloads the data, which I downloaded September 17, 2024
     from [https://www.eia.gov/electricity/data/browser/](https://www.eia.gov/electricity/data/browser/).
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 下一个单元格将下载数据，我于 2024 年 9 月 17 日从 [https://www.eia.gov/electricity/data/browser/](https://www.eia.gov/electricity/data/browser/)
+    下载了这些数据。
 - en: '[PRE3]'
+  id: totrans-12
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: After loading the data, we have to make some transformations to get it into
     a format that’s easy to work with.
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 加载数据后，我们必须进行一些转换，以便将其转换为易于处理的形式。
 - en: '[PRE4]'
+  id: totrans-14
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: In the reformatted dataset, each column is a sequence of monthly totals in gigawatt-hours
     (GWh). Here are the column labels, showing the different sources of electricity,
     or “sectors”.
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 在重新格式化的数据集中，每一列都是每月总发电量的序列，单位为千兆瓦时（GWh）。以下是列标签，显示了不同的电力来源或“部门”。
 - en: '[PRE5]'
+  id: totrans-16
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '[PRE6]'
+  id: totrans-17
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: The labels in the index are strings indicating months and years – here are the
     first 12.
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 索引中的标签是表示月份和年份的字符串——以下是前 12 个月份。
 - en: '[PRE7]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '[PRE8]'
+  id: totrans-20
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: It will be easier to work with this data if we replace these strings with Pandas
     `Timestamp` objects. We can use the `date_range` function to generate a sequence
     of `Timestamp` objects, starting in January 2001 with the frequency code `"ME"`,
     which stands for “month end”, so it fills in the last day of each month.
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们将这些字符串替换为 Pandas `Timestamp` 对象，将更容易处理这些数据。我们可以使用 `date_range` 函数生成一系列 `Timestamp`
+    对象，从 2001 年 1 月开始，频率代码为 `"ME"`，代表“月末”，因此填充了每个月的最后一天。
 - en: '[PRE9]'
+  id: totrans-22
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '[PRE10]'
+  id: totrans-23
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: Now the index is a `DataTimeIndex` with the data type `datetime64[ns]`, which
     is defined in NumPy – `64` means each label uses 64 bits, and `ns` means it has
     nanosecond precision.
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在索引是一个 `DataTimeIndex`，数据类型为 `datetime64[ns]`，这是在 NumPy 中定义的——`64` 表示每个标签使用
+    64 位，`ns` 表示它具有纳秒精度。
 - en: Decomposition
+  id: totrans-25
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 分解
 - en: As a first example, we’ll look at how electricity generation from nuclear reactors
     changed over the interval from January 2001 to June 2024, and we’ll decompose
     the time series into a long-term trend and a periodic component. Here are monthly
     totals of electricity generation from nuclear reactors in the United States.
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为第一个例子，我们将看看从2001年1月到2024年6月的核电站发电量是如何变化的，并将时间序列分解为长期趋势和周期成分。以下是美国核电站的月度发电总量。
 - en: '[PRE11]'
+  id: totrans-27
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: '[PRE12]'
+  id: totrans-28
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '![_images/5289102378940cb17c9483596d0f66888ff7baf3de0a1e4c5e433d0b40374503.png](../Images/8381c6a5c8522d017fdab223a39600f8.png)'
+  id: totrans-29
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/8381c6a5c8522d017fdab223a39600f8.png)'
 - en: It looks like there are some increases and decreases, but they are hard to see
     clearly because there are large variations from month to month. To see the long-term
     trend more clearly, we can use the `rolling` and `mean` methods to compute a **moving
     average**.
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: 看起来有一些增加和减少，但它们很难清楚地看到，因为每个月之间有很大的变化。为了更清楚地看到长期趋势，我们可以使用 `rolling` 和 `mean`
+    方法来计算**移动平均**。
 - en: '[PRE13]'
+  id: totrans-31
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: The `window=12` argument selects overlapping intervals of 12 months, so the
     first interval contains 12 measurements starting with the first, the second interval
     contains 12 measurements starting with the second, and so on. For each interval,
     we compute the mean production.
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: '`window=12` 参数选择重叠的12个月份的区间，因此第一个区间包含从第一个开始的12个测量值，第二个区间包含从第二个开始的12个测量值，依此类推。对于每个区间，我们计算平均产量。'
 - en: Here’s what the results look like, along with the original data.
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: 下面是结果的样子，包括原始数据。
 - en: '[PRE14]'
+  id: totrans-34
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '![_images/fddffb19ad43c7de49ed4d883eca6a79daee48822b55756d7bdfc4fa863cb8e2.png](../Images/70e1a5899a3028ed395049f194079cea.png)'
+  id: totrans-35
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/70e1a5899a3028ed395049f194079cea.png)'
 - en: The trend is still quite variable. We could smooth it more by using a longer
     window, but we’ll stick with the 12-month window for now.
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 趋势仍然相当多变。我们可以通过使用更长的窗口来进一步平滑它，但现在我们将坚持使用12个月的窗口。
 - en: If we subtract the trend from the original data, the result is a “detrended”
     time series, which means that the long-term mean is close to constant. Here’s
     what it looks like.
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们从原始数据中减去趋势，结果是一个“去趋势”的时间序列，这意味着长期平均值接近常数。下面是它的样子。
 - en: '[PRE15]'
+  id: totrans-38
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '![_images/b6dedb24b5ef90ec2712d7c7bafc6ee2bcd3530abb3aaf3574ebb90e6978a60d.png](../Images/ab3d84f47a0627ec0c269020b38827e5.png)'
+  id: totrans-39
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/ab3d84f47a0627ec0c269020b38827e5.png)'
 - en: It seems like there is a repeating annual pattern, which makes sense because
     demand for electricity varies from one season to another, as it is used to generate
     heat in the winter and run air conditioning in the summer. To describe this annual
     pattern we can select the month part of the `datetime` objects in the index, group
     the data by month, and compute average production. Here’s what the monthly averages
     look like.
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: 看起来存在一个重复的年度模式，这是有道理的，因为电力的需求从季节到季节是变化的，它被用来在冬天产生热量和在夏天运行空调。为了描述这个年度模式，我们可以选择索引中
+    `datetime` 对象的月份部分，按月份对数据进行分组，并计算平均产量。下面是月平均产量的样子。
 - en: '[PRE16]'
+  id: totrans-41
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '![_images/4fa67aae15bd0e05fede22d8d8b3565f0033a243466ce6466dea1060f62bb6dd.png](../Images/2d8ef6fa542f1d345d321566de1848cf.png)'
+  id: totrans-42
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/2d8ef6fa542f1d345d321566de1848cf.png)'
 - en: On the x-axis, month 1 is January and month 12 is December. Electricity production
     is highest during the coldest and warmest months, and lowest during April and
     October.
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 在x轴上，第1个月是1月，第12个月是12月。电力生产在最冷和最热的月份最高，在4月和10月最低。
 - en: We can use `monthly_averages` to construct the seasonal component of the data,
     which is a series the same length as `nuclear`, where the element for each month
     is the average for that month. Here’s what it looks like.
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用 `monthly_averages` 来构建数据的季节成分，这是一个与 `nuclear` 长度相同的序列，其中每个月的元素是该月的平均值。下面是它的样子。
 - en: '[PRE17]'
+  id: totrans-45
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: '![_images/a5ef266fd7d805e2a207415363ceac89ba5fc670e7cb8c596bda6763d8b7b39e.png](../Images/322d907852b9215ccbb1a4f1c53a5203.png)'
+  id: totrans-46
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/322d907852b9215ccbb1a4f1c53a5203.png)'
 - en: Each 12-month period is identical to the others.
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 每个12个月份的周期与其他周期相同。
 - en: The sum of the trend and the seasonal component represents the expected value
     for each month.
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 趋势成分和季节成分的总和代表每个月的预期值。
 - en: '[PRE18]'
+  id: totrans-49
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: Here’s what it looks like compared to the original series.
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 下面是它与原始序列相比的样子。
 - en: '[PRE19]'
+  id: totrans-51
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '![_images/98b4a1d9f24862d8270f33a08b639def4b79c0de545d3fc7852be5ddb5812ccc.png](../Images/6c33f9d5c1902af83e665de8e84843ae.png)'
+  id: totrans-52
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/6c33f9d5c1902af83e665de8e84843ae.png)'
 - en: If we subtract this sum from the original series, the result is the residual
     component, which represents the departure from the expected value for each month.
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们从原始序列中减去这个总和，结果就是残差成分，它代表了每个月相对于预期值的偏离。
 - en: '[PRE20]'
+  id: totrans-54
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '![_images/ca50466288083fe8e3e2ef9553e95f40ad972f3665050036e76cf72cf7e79c67.png](../Images/2fc816194097a5ce37513905abef943b.png)'
+  id: totrans-55
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/2fc816194097a5ce37513905abef943b.png)'
 - en: We can think of the residual as the sum of everything in the world that affects
     energy production, but is not explained by the long-term trend or the seasonal
     component. Among other things, that sum includes weather, equipment that’s down
     for maintenance, and changes in demand due to specific events. Since the residual
     is the sum of many unpredictable, and sometimes unknowable, factors, we often
     treat it as a random quantity.
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以将残差视为影响能源生产的所有因素的总和，但这些因素既不是长期趋势也不是季节性成分所解释的。其中包括天气、因维护而停机的设备，以及由于特定事件引起的需求变化。由于残差是许多不可预测的，有时甚至无法知晓的因素的总和，我们通常将其视为一个随机量。
 - en: Here’s what the distribution of the residuals look like.
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是残差的分布情况。
 - en: '[PRE21]'
+  id: totrans-58
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: '![_images/e69047e36f53ae095f6c1b015a643873815077aeab0ddbdba2d47a98b1b5d020.png](../Images/1849beba0ca64a168beab3eb1c755174.png)'
+  id: totrans-59
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/1849beba0ca64a168beab3eb1c755174.png)'
 - en: It resembles the bell curve of the normal distribution, which is consistent
     with the assumption that it is the sum of many random contributions.
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 它类似于正态分布的钟形曲线，这与它是许多随机贡献的总和的假设是一致的。
 - en: To quantify how well this model describes the original series, we can compute
     the coefficient of determination, which indicates how much smaller the variance
     of the residuals is, compared to the variance of the original series.
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了量化这个模型如何描述原始序列，我们可以计算确定系数，它表示残差方差相对于原始序列方差的大小。
 - en: '[PRE22]'
+  id: totrans-62
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: '[PRE23]'
+  id: totrans-63
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: The \(R^2\) value is about 0.92, which means that the long-term trend and seasonal
     component account for 92% of the variability in the series. This \(R^2\) is substantially
     higher than the ones we saw in the previous chapter, but that’s common with time
     series data – especially in a case like this where we’ve constructed the model
     to resemble the data.
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: \(R^2\)值约为0.92，这意味着长期趋势和季节性成分解释了序列中92%的变化。这个\(R^2\)值比我们之前章节中看到的要高得多，但在时间序列数据中这是常见的——尤其是在我们构建的模型类似于数据的这种情况下。
 - en: The process we’ve just walked through is called **seasonal decomposition**.
     StatsModels provides a function that does it, called `seasonal_decompose`.
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们刚才所经历的过程被称为**季节性分解**。StatsModels提供了一个执行此操作的函数，称为`seasonal_decompose`。
 - en: '[PRE24]'
+  id: totrans-66
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: The `model="additive"` argument indicates the additive model, so the series
     is decomposed into the sum of a trend, seasonal component, and residual. We’ll
     see the multiplicative model soon. The `period=12` argument indicates that the
     duration of the seasonal component is 12 months.
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: '`model="additive"`参数表示加法模型，因此序列被分解为趋势、季节性成分和残差的总和。我们很快就会看到乘法模型。`period=12`参数表示季节性成分的持续时间为12个月。'
 - en: The result is an object that contains the three components. The notebook for
     this chapter provides a function that plots them.
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个包含三个成分的对象。本章的笔记本提供了一个绘制它们的函数。
 - en: '[PRE25]'
+  id: totrans-69
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: '[PRE26]'
+  id: totrans-70
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: '![_images/881e34a1c607017ad02b07d71f1b8f83f56f46086db0e67e15a62cce25d4f54c.png](../Images/7c4584a74da056acc8750693f01d4f0d.png)'
+  id: totrans-71
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/7c4584a74da056acc8750693f01d4f0d.png)'
 - en: The results are similar to those we computed ourselves, with small differences
     due to the details of the implementation.
+  id: totrans-72
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果与我们自己计算的结果相似，但由于实现细节的不同，存在一些小的差异。
 - en: This kind of seasonal decomposition provides insight into the structure of a
     time series. As we’ll see in the next section, it is also useful for making forecasts.
+  id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: 这种季节性分解有助于了解时间序列的结构。正如我们将在下一节中看到的，它对于进行预测也是很有用的。
 - en: Prediction
+  id: totrans-74
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 预测
 - en: We can use the results from seasonal decomposition to predict the future. To
     demonstrate, we’ll use the following function to split the time series into a
     **training series**, which we’ll use to generate predictions, and a **test series**,
     which we’ll use to see whether they are accurate.
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用季节分解的结果来预测未来。为了演示，我们将使用以下函数将时间序列拆分为一个**训练序列**，我们将用它来生成预测，以及一个**测试序列**，我们将用它来查看它们是否准确。
 - en: '[PRE27]'
+  id: totrans-76
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: With `n=60`, the duration of the test series is five years, starting in July
     2019.
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: 在 `n=60` 的情况下，测试序列的持续时间为五年，始于 2019 年 7 月。
 - en: '[PRE28]'
+  id: totrans-78
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: '[PRE29]'
+  id: totrans-79
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: Now, suppose it’s June 2019 and you are asked to generate a five-year forecast
     for electricity production from nuclear generators. To answer this question, we’ll
     use the training data to make a model and then use the model to generate predictions.
     We’ll start with a seasonal decomposition of the training data.
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，假设是 2019 年 6 月，你被要求生成核发电厂五年电力生产的预测。为了回答这个问题，我们将使用训练数据来构建模型，然后使用该模型来生成预测。我们将从训练数据的季节分解开始。
 - en: '[PRE30]'
+  id: totrans-81
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: Now we’ll fit a linear model to the trend. The explanatory variable, `months`,
     is the number of months from the beginning of the series.
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，我们将对趋势拟合一个线性模型。解释变量 `months` 是从序列开始到当前月份的月份数。
 - en: '[PRE31]'
+  id: totrans-83
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: Here is a summary of the results.
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是结果总结。
 - en: '[PRE32]'
+  id: totrans-85
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: '|  | coef | std err | t | P>&#124;t&#124; | [0.025 | 0.975] |'
+  id: totrans-86
   prefs: []
   type: TYPE_TB
+  zh: '|  | coef | std err | t | P>&#124;t&#124; | [0.025 | 0.975] |'
 - en: '| Intercept | 6.482e+04 | 131.524 | 492.869 | 0.000 | 6.46e+04 | 6.51e+04 |'
+  id: totrans-87
   prefs: []
   type: TYPE_TB
+  zh: '| Intercept | 6.482e+04 | 131.524 | 492.869 | 0.000 | 6.46e+04 | 6.51e+04 |'
 - en: '| months | 10.9886 | 1.044 | 10.530 | 0.000 | 8.931 | 13.046 |'
+  id: totrans-88
   prefs: []
   type: TYPE_TB
+  zh: '| months | 10.9886 | 1.044 | 10.530 | 0.000 | 8.931 | 13.046 |'
 - en: '| R-squared: | 0.3477 |'
+  id: totrans-89
   prefs: []
   type: TYPE_TB
+  zh: '| R-squared: | 0.3477 |'
 - en: The \(R^2\) value is about 0.35, which suggests that the model does not fit
     the data particularly well. We can get a better sense of that by plotting the
     fitted line. We’ll use the `predict` method to compute expected values for the
     training and test data.
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: \(R^2\) 值约为 0.35，这表明模型并不特别适合数据。我们可以通过绘制拟合线来更好地理解这一点。我们将使用 `predict` 方法来计算训练数据和测试数据的预期值。
 - en: '[PRE33]'
+  id: totrans-91
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: Here’s the trend component and the linear model.
+  id: totrans-92
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是趋势成分和线性模型。
 - en: '[PRE34]'
+  id: totrans-93
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: '![_images/10421b724eea60a0d4b770e733b0e1d6fe57918fb8f5332eadce262a8b1e9db6.png](../Images/cd87a97f633ab06825b13b8f32686943.png)'
+  id: totrans-94
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/cd87a97f633ab06825b13b8f32686943.png)'
 - en: There’s a lot going on that’s not captured by the linear model, but it looks
     like there is a generally increasing trend.
+  id: totrans-95
   prefs: []
   type: TYPE_NORMAL
+  zh: 有很多事情没有被线性模型捕捉到，但看起来总体上有一个上升趋势。
 - en: Next we’ll use the seasonal component from the decomposition to compute a `Series`
     of monthly averages.
+  id: totrans-96
   prefs: []
   type: TYPE_NORMAL
+  zh: 接下来，我们将使用分解中的季节成分来计算一系列月平均数。
 - en: '[PRE35]'
+  id: totrans-97
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: We can predict the seasonal component by looking up the dates from the fitted
     line in `monthly_averages`.
+  id: totrans-98
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以通过在 `monthly_averages` 中查找拟合线的日期来预测季节成分。
 - en: '[PRE36]'
+  id: totrans-99
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: Finally, to generate predictions, we’ll add the seasonal component to the trend.
+  id: totrans-100
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，为了生成预测，我们将季节成分添加到趋势中。
 - en: '[PRE37]'
+  id: totrans-101
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE37]'
 - en: Here’s the training data and the predictions.
+  id: totrans-102
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是训练数据和预测值。
 - en: '[PRE38]'
+  id: totrans-103
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: '![_images/6acb496d0f4a67a469eb0a6d5be12e29cc0a1f4636f5c9c3c057a17e5405e05e.png](../Images/ce4b48a07f2cb1e7af715b6ff4bec08c.png)'
+  id: totrans-104
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/ce4b48a07f2cb1e7af715b6ff4bec08c.png)'
 - en: The predictions fit the training data reasonably well, and the forecast looks
     like a reasonable projection, based on the assumption that the long-term trend
     will continue.
+  id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: 预测值与训练数据拟合得相当好，基于长期趋势将继续的假设，预测看起来像是一个合理的预测。
 - en: Now, from the vantage point of the future, let’s see how accurate this forecast
     turned out to be. Here are the predicted and actual values for the five-year interval
     from July 2019.
+  id: totrans-106
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，从未来的角度来看，让我们看看这个预测有多准确。以下是 2019 年 7 月至五年间的预测值和实际值。
 - en: '[PRE39]'
+  id: totrans-107
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: '![_images/40b223ff5bd9e25c209d5e64d67a2759df3c92c9c84258a89d5c112a627d3c4a.png](../Images/319e5e33b1e2c9f4f442eb1ffd5df532.png)'
+  id: totrans-108
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/319e5e33b1e2c9f4f442eb1ffd5df532.png)'
 - en: The first year of the forecast was pretty good, but production from nuclear
     reactors in 2020 was lower than expected – possibly due to the COVID-19 pandemic
     – and it never returned to the long-term trend.
+  id: totrans-109
   prefs: []
   type: TYPE_NORMAL
+  zh: 预测的第一年相当不错，但 2020 年核反应堆的生产低于预期——可能是由于 COVID-19 大流行——并且它从未回到长期趋势。
 - en: To quantify the accuracy of the predictions, we’ll use the mean absolute percentage
     error (MAPE), which the following function computes.
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了量化预测的准确性，我们将使用平均绝对百分比误差（MAPE），该函数如下计算。
 - en: '[PRE40]'
+  id: totrans-111
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE40]'
 - en: In this example, the predictions are off by 3.81% on average.
+  id: totrans-112
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个例子中，预测的平均误差为 3.81%。
 - en: '[PRE41]'
+  id: totrans-113
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE41]'
 - en: '[PRE42]'
+  id: totrans-114
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE42]'
 - en: We’ll come back to this example later in the chapter and see if we can do better
     with a different model.
+  id: totrans-115
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将在本章的后面回到这个例子，看看我们是否可以用不同的模型做得更好。
 - en: Multiplicative Model
+  id: totrans-116
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 乘法模型
 - en: The additive model we used in the previous section assumes that the time series
     is the *sum* of a long-term trend, a seasonal component, and a residual – which
     implies that the magnitude of the seasonal component and the residuals does not
     vary over time.
+  id: totrans-117
   prefs: []
   type: TYPE_NORMAL
+  zh: 在上一节中我们使用的加法模型假设时间序列是长期趋势、季节性成分和残差的*和*，这意味着季节性成分和残差的幅度不会随时间变化。
 - en: As an example that violates this assumption, let’s look at small-scale solar
     electricity production since 2014.
+  id: totrans-118
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为违反这个假设的一个例子，让我们看看自2014年以来小规模太阳能发电的情况。
 - en: '[PRE43]'
+  id: totrans-119
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE43]'
 - en: '![_images/183b4453b7abaf75aa41755f7ea490b08ac4fbcc174474def62556ca516b1027.png](../Images/a3c105f8c22380bfd0103fc5465acd4d.png)'
+  id: totrans-120
   prefs: []
   type: TYPE_IMG
+  zh: '![图片链接](../Images/a3c105f8c22380bfd0103fc5465acd4d.png)'
 - en: Over this interval, total production has increased several times over. And it’s
     clear that the magnitude of seasonal variation has increased as well.
+  id: totrans-121
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个区间内，总产量增加了几倍。很明显，季节性变化的幅度也增加了。
 - en: If we suppose that the magnitudes of seasonal and random variation are proportional
     to the magnitude of the trend, that suggests an alternative to the additive model
     in which the time series is the *product* of the three components.
+  id: totrans-122
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们假设季节性和随机变化的幅度与趋势的幅度成正比，那么这表明了一种替代加法模型的方法，其中时间序列是三个成分的*乘积*。
 - en: To try out this multiplicative model, we’ll split this series into training
     and test sets.
+  id: totrans-123
   prefs: []
   type: TYPE_NORMAL
+  zh: 要尝试这个乘法模型，我们将这个序列分为训练集和测试集。
 - en: '[PRE44]'
+  id: totrans-124
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE44]'
 - en: And call `seasonal_decompose` with the `model="multiplicative"` argument.
+  id: totrans-125
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用`seasonal_decompose`函数并传入`model="multiplicative"`参数。
 - en: '[PRE45]'
+  id: totrans-126
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE45]'
 - en: Here’s what the results look like.
+  id: totrans-127
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是结果看起来像什么。
 - en: '[PRE46]'
+  id: totrans-128
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE46]'
 - en: '![_images/63dda1f81a0756c857a21da832e0c66c4d1b4fa037bacbb6fec24536804860fc.png](../Images/1383ac1d77ebc45969109d2d8b5a2a3b.png)'
+  id: totrans-129
   prefs: []
   type: TYPE_IMG
+  zh: '![图片链接](../Images/1383ac1d77ebc45969109d2d8b5a2a3b.png)'
 - en: Now the seasonal and residual components are multiplicative factors. So, it
     looks like the seasonal component varies from about 25% below the trend to 25%
     above. And the residual component is usually less than 5% either way, with the
     exception of some larger factors in the first period. We can extract the components
     of the model like this.
+  id: totrans-130
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在的季节性和残差成分是乘法因子。因此，季节性成分似乎从低于趋势约25%变化到高于趋势约25%。残差成分通常小于5%，除了第一个周期中的一些较大因子。我们可以这样提取模型成分。
 - en: '[PRE47]'
+  id: totrans-131
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE47]'
 - en: The \(R^2\) value of this model is very high.
+  id: totrans-132
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个模型的\(R^2\)值非常高。
 - en: '[PRE48]'
+  id: totrans-133
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE48]'
 - en: '[PRE49]'
+  id: totrans-134
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE49]'
 - en: The production of a solar panel is largely a function of the sunlight it’s exposed
     to, so it makes sense that production follows an annual cycle so closely.
+  id: totrans-135
   prefs: []
   type: TYPE_NORMAL
+  zh: 太阳能板的产量很大程度上取决于它所暴露的阳光，因此产量遵循年度周期是有意义的。
 - en: To predict the long term trend, we’ll use a quadratic model.
+  id: totrans-136
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了预测长期趋势，我们将使用二次模型。
 - en: '[PRE50]'
+  id: totrans-137
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE50]'
 - en: In the Patsy formula, the substring `I(months**2)` adds a quadratic term to
     the model, so we don’t have to compute it explicitly. Here are the results.
+  id: totrans-138
   prefs: []
   type: TYPE_NORMAL
+  zh: 在Patsy公式中，子串`I(months**2)`向模型添加了一个二次项，所以我们不必显式地计算它。以下是结果。
 - en: '[PRE51]'
+  id: totrans-139
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE51]'
 - en: '|  | coef | std err | t | P>&#124;t&#124; | [0.025 | 0.975] |'
+  id: totrans-140
   prefs: []
   type: TYPE_TB
+  zh: '|  | 系数 | 标准误差 | t | P>&#124;t&#124; | [0.025 | 0.975] |'
 - en: '| Intercept | 766.1962 | 13.494 | 56.782 | 0.000 | 739.106 | 793.286 |'
+  id: totrans-141
   prefs: []
   type: TYPE_TB
+  zh: '| 截距 | 766.1962 | 13.494 | 56.782 | 0.000 | 739.106 | 793.286 |'
 - en: '| months | 22.2153 | 0.938 | 23.673 | 0.000 | 20.331 | 24.099 |'
+  id: totrans-142
   prefs: []
   type: TYPE_TB
+  zh: '| 月份 | 22.2153 | 0.938 | 23.673 | 0.000 | 20.331 | 24.099 |'
 - en: '| I(months ** 2) | 0.1762 | 0.014 | 12.480 | 0.000 | 0.148 | 0.205 |'
+  id: totrans-143
   prefs: []
   type: TYPE_TB
+  zh: '| I(months ** 2) | 0.1762 | 0.014 | 12.480 | 0.000 | 0.148 | 0.205 |'
 - en: '| R-squared: | 0.9983 |'
+  id: totrans-144
   prefs: []
   type: TYPE_TB
+  zh: '| R-squared: | 0.9983 |'
 - en: The p-values of the linear and quadratic terms are very small, which suggests
     that the quadratic model captures more information about the trend than a linear
     model would – and the \(R^2\) value is very high.
+  id: totrans-145
   prefs: []
   type: TYPE_NORMAL
+  zh: 线性和二次项的p值非常小，这表明二次模型比线性模型能捕捉到更多关于趋势的信息——并且\(R^2\)值非常高。
 - en: Now we can use the model to compute the expected value of the trend for the
     past and future.
+  id: totrans-146
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以使用这个模型来计算过去和未来的趋势的预期值。
 - en: '[PRE52]'
+  id: totrans-147
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE52]'
 - en: Here’s what it looks like.
+  id: totrans-148
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是它的样子。
 - en: '[PRE53]'
+  id: totrans-149
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE53]'
 - en: '![_images/104532b413e58aba536f953e311b974c5319f8f68f40b35a2028eb71d9d62b03.png](../Images/ac4566b21a02aa8b538302850ef17940.png)'
+  id: totrans-150
   prefs: []
   type: TYPE_IMG
+  zh: '![图片链接](../Images/ac4566b21a02aa8b538302850ef17940.png)'
 - en: The quadratic model fits the past trend well. Now we can use the seasonal component
     to predict future seasonal variation.
+  id: totrans-151
   prefs: []
   type: TYPE_NORMAL
+  zh: 二次模型很好地拟合了过去趋势。现在我们可以使用季节性成分来预测未来的季节性变化。
 - en: '[PRE54]'
+  id: totrans-152
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE54]'
 - en: Finally, to compute **retrodictions** for past values and predictions for the
     future, we multiply the trend and the seasonal component.
+  id: totrans-153
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，为了计算过去值的**回溯预测**和未来的预测，我们将趋势和季节成分相乘。
 - en: '[PRE55]'
+  id: totrans-154
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE55]'
 - en: Here is the result along with the training data.
+  id: totrans-155
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里是结果以及训练数据。
 - en: '[PRE56]'
+  id: totrans-156
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE56]'
 - en: '![_images/72adf4b5229c66a4d857fcae73b0bff2d3f16102ccff9990075cadedc4f10ae6.png](../Images/c98b3a86f7a3d00eadd7f9d2eccc6350.png)'
+  id: totrans-157
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/c98b3a86f7a3d00eadd7f9d2eccc6350.png)'
 - en: The retrodictions fit the training data well and the predictions seem plausible
     – now let’s see if they turned out to be accurate. Here are the predictions along
     with the test data.
+  id: totrans-158
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些预测与训练数据拟合得很好，预测看起来是合理的——现在让我们看看它们是否最终是准确的。以下是预测和测试数据。
 - en: '[PRE57]'
+  id: totrans-159
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE57]'
 - en: '![_images/ab7f8ae6a5ef72b928c7843f075ab68e726a4a06a8330de7dcb560b1a223a045.png](../Images/5326f16dacf82b0a9f8e827e626657af.png)'
+  id: totrans-160
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/5326f16dacf82b0a9f8e827e626657af.png)'
 - en: For the first three years, the predictions are very good. After that, it looks
     like actual growth exceeded expectations.
+  id: totrans-161
   prefs: []
   type: TYPE_NORMAL
+  zh: 在前三年，预测非常好。之后，看起来实际增长超过了预期。
 - en: In this example, seasonal decomposition worked well for modeling and predicting
     solar production, but in the previous example, it was not very effective for nuclear
     production. In the next section, we’ll try a different approach, autoregression.
+  id: totrans-162
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个例子中，季节分解对于建模和预测太阳能生产效果很好，但在先前的例子中，它对核能生产并不非常有效。在下一节中，我们将尝试不同的方法，即自回归。
 - en: Autoregression
+  id: totrans-163
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 自回归
 - en: The first idea of autoregression is that the future will be like the past. For
     example, in the time series we’ve looked at so far, there is a clear annual cycle.
     So if you are asked to make a prediction for next June, a good starting place
     would be last June.
+  id: totrans-164
   prefs: []
   type: TYPE_NORMAL
+  zh: 自回归的第一个想法是未来将与过去相似。例如，在我们迄今为止查看的时间序列中，有一个明显的年度周期。所以如果你被要求预测下个月的预测，一个好的起点是上个月。
 - en: To see how well that might work, let’s go back to `nuclear`, which contains
     monthly electricity production from nuclear generators, and compute differences
     between the same month in successive years, which are called “year-over-year”
     differences.
+  id: totrans-165
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了看看这可能有多好，让我们回到`nuclear`，它包含核发电厂的月度电力生产，并计算连续年份中同一月份的差异，这些差异被称为“年对年”差异。
 - en: '[PRE58]'
+  id: totrans-166
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE58]'
 - en: '![_images/a88ea4d6b22357cde1787a50a5641a326d003becf61c0a371317aa64983a4c41.png](../Images/26a6747fe931fe66c9fce0e77989e594.png)'
+  id: totrans-167
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/26a6747fe931fe66c9fce0e77989e594.png)'
 - en: The magnitudes of these differences are substantially smaller than the magnitudes
     of the original series, which suggests the second idea of autoregression, which
     is that it might be easier to predict these differences, rather than the original
     values.
+  id: totrans-168
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些差异的幅度远小于原始序列的幅度，这表明自回归的第二个想法，即预测这些差异可能比预测原始值更容易。
 - en: Toward that end, let’s see if there are correlations between successive elements
     in the series of differences. If so, we could use those correlations to predict
     future values based on previous values.
+  id: totrans-169
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了达到这个目的，让我们看看差异序列中连续元素之间是否存在相关性。如果有的话，我们可以使用这些相关性根据先前值预测未来值。
 - en: I’ll start by making a `DataFrame`, putting the differences in the first column
     and putting the same differences – shifted by 1, 2, and 3 months – into successive
     columns. These columns are named `lag1`, `lag2`, and `lag3`, because the series
     they contain have been **lagged** or delayed.
+  id: totrans-170
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将从创建一个`DataFrame`开始，将差异放在第一列，并将相同差异（滞后1个月、2个月和3个月）放入后续列。这些列被命名为`lag1`、`lag2`和`lag3`，因为它们包含的序列已经被**滞后**或延迟。
 - en: '[PRE59]'
+  id: totrans-171
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE59]'
 - en: Here are the correlations between these columns.
+  id: totrans-172
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里是这些列之间的相关性。
 - en: '[PRE60]'
+  id: totrans-173
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE60]'
 - en: '|  | diff |'
+  id: totrans-174
   prefs: []
   type: TYPE_TB
+  zh: '|  | diff |'
 - en: '| --- | --- |'
+  id: totrans-175
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| diff | 1.000000 |'
+  id: totrans-176
   prefs: []
   type: TYPE_TB
+  zh: '| diff | 1.000000 |'
 - en: '| lag1 | 0.562212 |'
+  id: totrans-177
   prefs: []
   type: TYPE_TB
+  zh: '| lag1 | 0.562212 |'
 - en: '| lag2 | 0.292454 |'
+  id: totrans-178
   prefs: []
   type: TYPE_TB
+  zh: '| lag2 | 0.292454 |'
 - en: '| lag3 | 0.222228 |'
+  id: totrans-179
   prefs: []
   type: TYPE_TB
+  zh: '| lag3 | 0.222228 |'
 - en: These correlations are called lagged correlations or **autocorrelations** –
     the prefix “auto” indicates that we’re taking the correlation of the series with
     itself. As a special case, the correlation between `diff` and `lag1` is called
     **serial correlation** because it is the correlation between successive elements
     in the series.
+  id: totrans-180
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些相关性被称为滞后相关性或**自相关**——前缀“auto”表示我们正在取序列与其自身的相关性。作为一个特殊情况，`diff`和`lag1`之间的相关性被称为**序列相关性**，因为它是在序列中连续元素之间的相关性。
 - en: These correlation are strong enough to suggest that they should help with prediction,
     so let’s put them into a multiple regression. The following function uses the
     columns from the `DataFrame` to make a Patsy formula with the first column as
     the response variable and the other columns as explanatory variables.
+  id: totrans-181
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些相关性足够强，足以表明它们应该有助于预测，所以让我们将它们放入多元回归中。以下函数使用`DataFrame`的列来创建一个Patsy公式，其中第一列作为响应变量，其他列作为解释变量。
 - en: '[PRE61]'
+  id: totrans-182
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE61]'
 - en: Here are the results of a linear model that predicts the next value in a sequence
     based on the previous three values.
+  id: totrans-183
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里是一个线性模型的结果，该模型根据前三个值预测序列中的下一个值。
 - en: '[PRE62]'
+  id: totrans-184
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE62]'
 - en: '|  | coef | std err | t | P>&#124;t&#124; | [0.025 | 0.975] |'
+  id: totrans-185
   prefs: []
   type: TYPE_TB
+  zh: '|  | coef | std err | t | P>&#124;t&#124; | [0.025 | 0.975] |'
 - en: '| Intercept | 24.2674 | 114.674 | 0.212 | 0.833 | -201.528 | 250.063 |'
+  id: totrans-186
   prefs: []
   type: TYPE_TB
+  zh: '| Intercept | 24.2674 | 114.674 | 0.212 | 0.833 | -201.528 | 250.063 |'
 - en: '| lag1 | 0.5847 | 0.061 | 9.528 | 0.000 | 0.464 | 0.706 |'
+  id: totrans-187
   prefs: []
   type: TYPE_TB
+  zh: '| lag1 | 0.5847 | 0.061 | 9.528 | 0.000 | 0.464 | 0.706 |'
 - en: '| lag2 | -0.0908 | 0.071 | -1.277 | 0.203 | -0.231 | 0.049 |'
+  id: totrans-188
   prefs: []
   type: TYPE_TB
+  zh: '| lag2 | -0.0908 | 0.071 | -1.277 | 0.203 | -0.231 | 0.049 |'
 - en: '| lag3 | 0.1026 | 0.062 | 1.666 | 0.097 | -0.019 | 0.224 |'
+  id: totrans-189
   prefs: []
   type: TYPE_TB
+  zh: '| lag3 | 0.1026 | 0.062 | 1.666 | 0.097 | -0.019 | 0.224 |'
 - en: '| R-squared: | 0.3239 |'
+  id: totrans-190
   prefs: []
   type: TYPE_TB
+  zh: '| R-squared: | 0.3239 |'
 - en: Now we can use the `predict` method to generate predictions for the past values
     in the series. Here’s what these retrodictions look like compared to the data.
+  id: totrans-191
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，我们可以使用`predict`方法生成序列中过去值的预测。以下是这些回溯预测与数据相比的图示。
 - en: '[PRE63]'
+  id: totrans-192
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE63]'
 - en: '![_images/67a9563d80bbdb7081135d430719689505c8371f9af0299b86babf83a1c50a11.png](../Images/da26024d910b9586e27e6648267e7919.png)'
+  id: totrans-193
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/67a9563d80bbdb7081135d430719689505c8371f9af0299b86babf83a1c50a11.png](../Images/da26024d910b9586e27e6648267e7919.png)'
 - en: The predictions are good in some places, but the \(R^2\) value is only about
     0.319, so there is room for improvement.
+  id: totrans-194
   prefs: []
   type: TYPE_NORMAL
+  zh: 预测在某些地方很好，但\(R^2\)值只有大约0.319，所以还有改进的空间。
 - en: '[PRE64]'
+  id: totrans-195
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE64]'
 - en: '[PRE65]'
+  id: totrans-196
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE65]'
 - en: One way to improve the predictions is to compute the residuals from this model
     and use another model to predict the residuals – which is the third idea of autoregression.
+  id: totrans-197
   prefs: []
   type: TYPE_NORMAL
+  zh: 提高预测的一种方法是从该模型计算残差，并使用另一个模型来预测残差——这是自回归的第三个想法。
 - en: Moving Average
+  id: totrans-198
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 移动平均
 - en: Suppose it’s June 2019, and you are asked to make a prediction for June 2020.
     Your first guess might be that this year’s value will be repeated next year.
+  id: totrans-199
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设现在是2019年6月，有人要求你预测2020年6月的值。你的第一个猜测可能是今年的值将在明年重复。
 - en: Now suppose it’s May 2020, and you are asked to revise your prediction for June
     2020. You could use the results from the last three months, and the autocorrelation
     model from the previous section, to predict the year-over-year difference.
+  id: totrans-200
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在假设是2020年5月，有人要求你修改你对2020年6月的预测。你可以使用过去三个月的结果和上一节中的自相关模型来预测年同比增长率。
 - en: Finally, suppose you check the predictions for the last few months, and see
     that they have been consistently too low. That suggests that the prediction for
     next month might also be too low, so you could revise it upward. The underlying
     assumption is that recent prediction errors predict future prediction errors.
+  id: totrans-201
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，假设你检查了最近几个月的预测，并发现它们一直过低。这表明下个月的预测也可能过低，因此你可以将其向上调整。基本假设是最近的预测误差可以预测未来的预测误差。
 - en: To see whether they do, we can make a `DataFrame` with the residuals from the
     autoregression model in the first column, and lagged versions of the residuals
     in the other columns. For this example, I’ll use lags of 1 and 6 months.
+  id: totrans-202
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了看看它们是否真的有效，我们可以创建一个`DataFrame`，其中第一列包含自回归模型的残差，其他列包含残差的滞后版本。在这个例子中，我将使用1个月和6个月的滞后。
 - en: '[PRE66]'
+  id: totrans-203
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE66]'
 - en: We can use `ols` to make an autoregression model for the residuals. This part
     of the model is called a “moving average” because it reduces variability in the
     predictions in a way that’s analogous to the effect of a moving average. I don’t
     find that term particularly helpful, but it is conventional.
+  id: totrans-204
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用`ols`为残差创建一个自回归模型。这个模型部分被称为“移动平均”，因为它以类似于移动平均效果的方式减少了预测中的变异性。我发现这个术语并不特别有帮助，但它是一种惯例。
 - en: Anyway, here’s a summary of the autoregression model for the residuals.
+  id: totrans-205
   prefs: []
   type: TYPE_NORMAL
+  zh: 无论如何，这里是对残差自回归模型的总结。
 - en: '[PRE67]'
+  id: totrans-206
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE67]'
 - en: '|  | coef | std err | t | P>&#124;t&#124; | [0.025 | 0.975] |'
+  id: totrans-207
   prefs: []
   type: TYPE_TB
+  zh: '|  | coef | std err | t | P>&#124;t&#124; | [0.025 | 0.975] |'
 - en: '| Intercept | -14.0016 | 114.697 | -0.122 | 0.903 | -239.863 | 211.860 |'
+  id: totrans-208
   prefs: []
   type: TYPE_TB
+  zh: '| Intercept | -14.0016 | 114.697 | -0.122 | 0.903 | -239.863 | 211.860 |'
 - en: '| lag1 | 0.0014 | 0.062 | 0.023 | 0.982 | -0.120 | 0.123 |'
+  id: totrans-209
   prefs: []
   type: TYPE_TB
+  zh: '| lag1 | 0.0014 | 0.062 | 0.023 | 0.982 | -0.120 | 0.123 |'
 - en: '| lag6 | -0.1592 | 0.063 | -2.547 | 0.011 | -0.282 | -0.036 |'
+  id: totrans-210
   prefs: []
   type: TYPE_TB
+  zh: '| lag6 | -0.1592 | 0.063 | -2.547 | 0.011 | -0.282 | -0.036 |'
 - en: '| R-squared: | 0.0247 |'
+  id: totrans-211
   prefs: []
   type: TYPE_TB
+  zh: '| R-squared: | 0.0247 |'
 - en: The \(R^2\) is quite small, so it looks like this part of the model won’t help
     very much. But the p-value for the 6-month lag is small, which suggests that it
     contributes more information than we’d expect by chance.
+  id: totrans-212
   prefs: []
   type: TYPE_NORMAL
+  zh: \(R^2\) 值相当小，所以看起来这个模型的部分不会很有帮助。但 6 个月滞后值的 p 值很小，这表明它比我们预期的偶然性贡献了更多信息。
 - en: Now we can use the model to generate retrodictions for the residuals.
+  id: totrans-213
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，我们可以使用该模型来生成残差的反预测。
 - en: '[PRE68]'
+  id: totrans-214
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE68]'
 - en: Then, to generate retrodictions for the year-over-year differences, we add the
     adjustment from the second model to the retrodictions from the first.
+  id: totrans-215
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后，为了生成逐年差异的反预测，我们将第二个模型的调整值添加到第一个模型的反预测中。
 - en: '[PRE69]'
+  id: totrans-216
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE69]'
 - en: The \(R^2\) value for the sum of the two models is about 0.332, which is just
     a little better than the result without the moving average adjustment (0.319).
+  id: totrans-217
   prefs: []
   type: TYPE_NORMAL
+  zh: 两个模型的总和的 \(R^2\) 值约为 0.332，这略好于没有移动平均调整的结果（0.319）。
 - en: '[PRE70]'
+  id: totrans-218
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE70]'
 - en: '[PRE71]'
+  id: totrans-219
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE71]'
 - en: Next we’ll use these year-over-year differences to generate retrodictions for
     the original values.
+  id: totrans-220
   prefs: []
   type: TYPE_NORMAL
+  zh: 接下来，我们将利用这些逐年差异来生成原始值的反预测。
 - en: Retrodiction with Autoregression
+  id: totrans-221
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 基于自回归的反预测
 - en: To generate retrodictions, we’ll start by putting the year-over-year differences
     in a `Series` that’s aligned with the index of the original.
+  id: totrans-222
   prefs: []
   type: TYPE_NORMAL
+  zh: 要生成反预测，我们首先将逐年差异放入与原始索引对齐的 `Series` 中。
 - en: '[PRE72]'
+  id: totrans-223
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE72]'
 - en: Using `isna` to check for `NaN` values, we find that the first 21 elements of
     the new `Series` are missing.
+  id: totrans-224
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用 `isna` 检查 `NaN` 值，我们发现新 `Series` 的前 21 个元素缺失。
 - en: '[PRE73]'
+  id: totrans-225
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE73]'
 - en: '[PRE74]'
+  id: totrans-226
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE74]'
 - en: That’s because we shifted the `Series` by 12 months to compute year-over-year
     differences, then we shifted the differences 3 months for the first autoregression
     model, and we shifted the residuals of the first model by 6 months for the second
     model. Each time we shift a `Series` like this, we lose a few values at the beginning,
     and the sum of these shifts is 21.
+  id: totrans-227
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是因为我们通过 12 个月将 `Series` 平移来计算逐年差异，然后我们将第一个自回归模型的差异平移了 3 个月，并将第一个模型的残差平移了 6
+    个月用于第二个模型。每次我们像这样平移一个 `Series`，我们都会在开头丢失一些值，这些平移的总和是 21。
 - en: So before we can generate retrodictions, we have to prime the pump by copying
     the first 21 elements from the original into a new `Series`.
+  id: totrans-228
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，在我们能够生成反预测之前，我们必须通过将原始数据的前 21 个元素复制到一个新的 `Series` 中来预热泵。
 - en: '[PRE75]'
+  id: totrans-229
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE75]'
 - en: Now we can run the following loop, which fills in the elements from index 21
     (which is the 22nd element) to the end. Each element is the sum of the value from
     the previous year and the predicted year-over-year difference.
+  id: totrans-230
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，我们可以运行以下循环，它从索引 21（即第 22 个元素）填充到末尾。每个元素是前一年的值和预测的逐年差异的总和。
 - en: '[PRE76]'
+  id: totrans-231
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE76]'
 - en: Now we’ll replace the elements we copied with `NaN` so we don’t get credit for
     “predicting” the first 21 values perfectly.
+  id: totrans-232
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，我们将用 `NaN` 替换我们复制的元素，这样我们就不因“完美预测”前 21 个值而获得信用。
 - en: '[PRE77]'
+  id: totrans-233
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE77]'
 - en: Here’s what the retrodictions look like compared to the original.
+  id: totrans-234
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是与原始值相比的反预测的样子。
 - en: '[PRE78]'
+  id: totrans-235
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE78]'
 - en: '![_images/30c56b70647a9d39ba3fc8237b91fbd0f1dea26952f48363f443248ef9d0a899.png](../Images/a1d8016d1af4242b7782dee28fdaef45.png)'
+  id: totrans-236
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/a1d8016d1af4242b7782dee28fdaef45.png)'
 - en: They look pretty good, and the \(R^2\) value is about 0.86.
+  id: totrans-237
   prefs: []
   type: TYPE_NORMAL
+  zh: 它们看起来相当不错，\(R^2\) 值约为 0.86。
 - en: '[PRE79]'
+  id: totrans-238
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE79]'
 - en: '[PRE80]'
+  id: totrans-239
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE80]'
 - en: The model we used to compute these retrodictions is called SARIMA, which is
     one of a family of models called ARIMA. Each part of these acronyms refers to
     an element of the model.
+  id: totrans-240
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们用来计算这些反预测的模型称为 SARIMA，它是被称为 ARIMA 的一组模型之一。这些缩写的每个部分都指代模型的一个元素。
 - en: '**S** stands for seasonal, because the first step was to compute differences
     between values separated by one seasonal period.'
+  id: totrans-241
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**S** 代表季节性，因为第一步是计算相隔一个季节周期的值之间的差异。'
 - en: '**AR** stands for autoregression, which we used to model lagged correlations
     in the differences.'
+  id: totrans-242
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**AR** 代表自回归，我们用它来建模差异中的滞后相关性。'
 - en: '**I** stands for integrated, because the iterative process we used to compute
     `pred_series` is analogous to integration in calculus.'
+  id: totrans-243
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**I** 代表积分，因为我们用来计算 `pred_series` 的迭代过程与微积分中的积分类似。'
 - en: '**MA** stands for moving average, which is the conventional name for the second
     autoregression model we ran with the residuals from the first.'
+  id: totrans-244
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**MA** 代表移动平均，这是我们在第一个模型的残差上运行的第二个自回归模型的常规名称。'
 - en: ARIMA models are powerful and versatile tools for modeling time series data.
+  id: totrans-245
   prefs: []
   type: TYPE_NORMAL
+  zh: ARIMA 模型是建模时间序列数据的强大且多功能的工具。
 - en: ARIMA
+  id: totrans-246
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: ARIMA
 - en: StatsModel provides a library called `tsa`, which stands for “time series analysis”
     – it includes a function called `ARIMA` that fits ARIMA models and generates forecasts.
+  id: totrans-247
   prefs: []
   type: TYPE_NORMAL
+  zh: StatsModel 提供了一个名为 `tsa` 的库，代表“时间序列分析”——它包括一个名为 `ARIMA` 的函数，用于拟合 ARIMA 模型并生成预测。
 - en: 'To fit the SARIMA model we developed in the previous sections, we’ll call this
     function with two tuples as arguments: `order` and `seasonal_order`. Here are
     the values in `order` that correspond to the model we used in the previous sections.'
+  id: totrans-248
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了拟合我们在前几节中开发的 SARIMA 模型，我们将使用两个元组作为参数调用此函数：`order` 和 `seasonal_order`。以下是 `order`
+    中与我们在前几节中使用的模型相对应的值。
 - en: '[PRE81]'
+  id: totrans-249
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE81]'
 - en: 'The values in `order` indicate:'
+  id: totrans-250
   prefs: []
   type: TYPE_NORMAL
+  zh: '`order` 中的值表示：'
 - en: Which lags should be included in the AR model – in this example it’s the first
     three.
+  id: totrans-251
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 应该在 AR 模型中包含哪些滞后项——在这个例子中是前三个。
 - en: How many times it should compute differences between successive elements – in
     this example it’s 0 because we computed a seasonal difference instead, and we’ll
     get to that in a minute.
+  id: totrans-252
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 它应该计算连续元素之间差异的次数——在这个例子中是 0，因为我们计算了季节差分，我们将在下一分钟讨论这一点。
 - en: Which lags should be included in the MA model – in this example it’s the first
     and sixth.
+  id: totrans-253
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 应该在 MA 模型中包含哪些滞后项——在这个例子中是第一个和第六个。
 - en: Now here are the values in `seasonal_order`.
+  id: totrans-254
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在是 `seasonal_order` 中的值。
 - en: '[PRE82]'
+  id: totrans-255
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE82]'
 - en: The first and third elements are 0, which means that this model does not include
     seasonal AR or seasonal MA. The second element is 1, which means it computes seasonal
     differences – and the last element is the seasonal period.
+  id: totrans-256
   prefs: []
   type: TYPE_NORMAL
+  zh: 第一个和第三个元素是 0，这意味着该模型不包含季节性 AR 或季节性 MA。第二个元素是 1，这意味着它计算季节差分——最后一个元素是季节周期。
 - en: Here’s how we use `ARIMA` to make and fit this model.
+  id: totrans-257
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是我们将如何使用 `ARIMA` 来制作和拟合这个模型的示例。
 - en: '[PRE83]'
+  id: totrans-258
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE83]'
 - en: '|  | coef | std err | z | P>&#124;z&#124; | [0.025 | 0.975] |'
+  id: totrans-259
   prefs: []
   type: TYPE_TB
+  zh: '|  | coef | std err | z | P>&#124;z&#124; | [0.025 | 0.975] |'
 - en: '| ar.L1 | 0.0458 | 0.379 | 0.121 | 0.904 | -0.697 | 0.788 |'
+  id: totrans-260
   prefs: []
   type: TYPE_TB
+  zh: '| ar.L1 | 0.0458 | 0.379 | 0.121 | 0.904 | -0.697 | 0.788 |'
 - en: '| ar.L2 | -0.0035 | 0.116 | -0.030 | 0.976 | -0.230 | 0.223 |'
+  id: totrans-261
   prefs: []
   type: TYPE_TB
+  zh: '| ar.L2 | -0.0035 | 0.116 | -0.030 | 0.976 | -0.230 | 0.223 |'
 - en: '| ar.L3 | 0.0375 | 0.049 | 0.769 | 0.442 | -0.058 | 0.133 |'
+  id: totrans-262
   prefs: []
   type: TYPE_TB
+  zh: '| ar.L3 | 0.0375 | 0.049 | 0.769 | 0.442 | -0.058 | 0.133 |'
 - en: '| ma.L1 | 0.2154 | 0.382 | 0.564 | 0.573 | -0.533 | 0.964 |'
+  id: totrans-263
   prefs: []
   type: TYPE_TB
+  zh: '| ma.L1 | 0.2154 | 0.382 | 0.564 | 0.573 | -0.533 | 0.964 |'
 - en: '| ma.L6 | -0.0672 | 0.019 | -3.500 | 0.000 | -0.105 | -0.030 |'
+  id: totrans-264
   prefs: []
   type: TYPE_TB
+  zh: '| ma.L6 | -0.0672 | 0.019 | -3.500 | 0.000 | -0.105 | -0.030 |'
 - en: '| sigma2 | 3.473e+06 | 1.9e-07 | 1.83e+13 | 0.000 | 3.47e+06 | 3.47e+06 |'
+  id: totrans-265
   prefs: []
   type: TYPE_TB
+  zh: '| sigma2 | 3.473e+06 | 1.9e-07 | 1.83e+13 | 0.000 | 3.47e+06 | 3.47e+06 |'
 - en: The results include estimated coefficients for the three lags in the AR model,
     the two lags in the MA model, and `sigma2`, which is the variance of the residuals.
+  id: totrans-266
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果包括 AR 模型中三个滞后项、MA 模型中两个滞后项以及 `sigma2` 的估计系数，`sigma2` 是残差的方差。
 - en: From `results_arima` we can extract `fittedvalues`, which contains the retrodictions.
     For the same reason there were missing values at the beginning of the retrodictions
     we computed, there are incorrect values at the beginning of `fittedvalues`, which
     we’ll drop.
+  id: totrans-267
   prefs: []
   type: TYPE_NORMAL
+  zh: 从 `results_arima` 中我们可以提取 `fittedvalues`，它包含回溯预测。由于我们在计算回溯预测时在开始处有缺失值，因此在 `fittedvalues`
+    的开始处也有不正确的值，我们将丢弃这些值。
 - en: '[PRE84]'
+  id: totrans-268
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE84]'
 - en: The fitted values are similar to the ones we computed, but not exactly the same
     – probably because `ARIMA` handles the initial conditions differently.
+  id: totrans-269
   prefs: []
   type: TYPE_NORMAL
+  zh: 拟合值与我们计算的类似，但并不完全相同——可能是因为 `ARIMA` 处理初始条件的方式不同。
 - en: '[PRE85]'
+  id: totrans-270
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE85]'
 - en: '![_images/bd53f76ed450000a2c4f52a05947fcad2eb513fa6a7ba0346a3e419f18504a26.png](../Images/f6395ac61b1cc30e9f46ead26fec6150.png)'
+  id: totrans-271
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/f6395ac61b1cc30e9f46ead26fec6150.png)'
 - en: The \(R^2\) value is also similar but not precisely the same.
+  id: totrans-272
   prefs: []
   type: TYPE_NORMAL
+  zh: \(R^2\) 值也类似，但并不完全相同。
 - en: '[PRE86]'
+  id: totrans-273
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE86]'
 - en: '[PRE87]'
+  id: totrans-274
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE87]'
 - en: The `ARIMA` function makes it easy to experiment with different versions of
     the model.
+  id: totrans-275
   prefs: []
   type: TYPE_NORMAL
+  zh: '`ARIMA` 函数使得实验不同的模型版本变得容易。'
 - en: As an exercise, try out different values in `order` and `seasonal_order` and
     see if you can find a model with higher \(R^2\).
+  id: totrans-276
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为练习，尝试在 `order` 和 `seasonal_order` 中使用不同的值，看看你是否能找到一个具有更高 \(R^2\) 的模型。
 - en: Prediction with ARIMA
+  id: totrans-277
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 使用 ARIMA 进行预测
 - en: The object returned by `ARIMA` provides a method called `get_forecast` that
     generates predictions. To demonstrate, we’ll split the time series into a training
     and test set, and fit the same model to the training set.
+  id: totrans-278
   prefs: []
   type: TYPE_NORMAL
+  zh: '`ARIMA` 返回的对象提供了一个名为 `get_forecast` 的方法，该方法生成预测。为了演示，我们将时间序列分为训练集和测试集，并将相同的模型拟合到训练集。'
 - en: '[PRE88]'
+  id: totrans-279
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE88]'
 - en: We can use the result to generate a forecast for the test set.
+  id: totrans-280
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用结果来为测试集生成预测。
 - en: '[PRE89]'
+  id: totrans-281
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE89]'
 - en: The result is an object that contains an attribute called `forecast_mean` and
     a function that returns a confidence interval.
+  id: totrans-282
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个包含一个名为 `forecast_mean` 的属性和一个返回置信区间的函数的对象。
 - en: '[PRE90]'
+  id: totrans-283
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE90]'
 - en: We can plot the results like this and compare them to the actual time series.
+  id: totrans-284
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以像这样绘制结果，并与实际的时间序列进行比较。
 - en: '[PRE91]'
+  id: totrans-285
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE91]'
 - en: '![_images/1bfbd07dc05c5aa7b68ba8557ce4cb6880237f80f566d7a28fe147468d34a4b5.png](../Images/69d7bf16fb6e8e87b7b832fd27be249c.png)'
+  id: totrans-286
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/1bfbd07dc05c5aa7b68ba8557ce4cb6880237f80f566d7a28fe147468d34a4b5.png](../Images/69d7bf16fb6e8e87b7b832fd27be249c.png)'
 - en: The actual values fall almost entirely within the confidence interval of the
     predictions. Here’s the MAPE of the predictions.
+  id: totrans-287
   prefs: []
   type: TYPE_NORMAL
+  zh: 实际值几乎完全位于预测的置信区间内。以下是预测的MAPE。
 - en: '[PRE92]'
+  id: totrans-288
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE92]'
 - en: '[PRE93]'
+  id: totrans-289
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE93]'
 - en: The predictions are off by 3.38% on average, somewhat better than the results
     we got from seasonal decomposition (3.81%).
+  id: totrans-290
   prefs: []
   type: TYPE_NORMAL
+  zh: 预测的平均误差为3.38%，略好于我们从季节分解中得到的结果（3.81%）。
 - en: ARIMA is more versatile than seasonal decomposition, and can often make better
     predictions. In this time series, the autocorrelations are not especially strong,
     so the advantage of ARIMA is modest.
+  id: totrans-291
   prefs: []
   type: TYPE_NORMAL
+  zh: ARIMA比季节分解更灵活，并且通常能做出更好的预测。在这个时间序列中，自相关性并不特别强，因此ARIMA的优势是适度的。
 - en: Glossary
+  id: totrans-292
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 术语表
 - en: '**time series**: A dataset where each value is associated with a specific time,
     often representing measurements taken at regular intervals.'
+  id: totrans-293
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**时间序列**：一个数据集，其中每个值都与特定的时间相关联，通常表示在固定间隔内进行的测量。'
 - en: '**seasonal decomposition:** A method of splitting a time series into a long-term
     trend, a repeating seasonal component, and a residual component.'
+  id: totrans-294
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**季节分解**：一种将时间序列分解为长期趋势、重复的季节成分和残差成分的方法。'
 - en: '**training series:** Part of a time series used to fit a model.'
+  id: totrans-295
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**训练序列**：用于拟合模型的时间序列的一部分。'
 - en: '**test series:** Part of a time series used to check the accuracy of predictions
     generated by a model.'
+  id: totrans-296
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**测试序列**：用于检查模型生成的预测准确性的时间序列的一部分。'
 - en: '**retrodiction:** A prediction for a value observed in the past, often used
     to test or validate a model.'
+  id: totrans-297
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**回溯预测**：对过去观察到的值的预测，通常用于测试或验证模型。'
 - en: '**window**: A sequence of consecutive values in a time series, used to compute
     a moving average.'
+  id: totrans-298
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**窗口**：时间序列中连续的值序列，用于计算移动平均。'
 - en: '**moving average**: A time series computed by averaging values in overlapping
     windows to smooth fluctuations.'
+  id: totrans-299
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**移动平均**：通过平均重叠窗口中的值来平滑波动的时间序列。'
 - en: '**serial correlation**: The correlation between successive elements of a time
     series.'
+  id: totrans-300
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**序列相关性**：时间序列连续元素之间的相关性。'
 - en: '**autocorrelation**: A correlation between a time series and a shifted or lagged
     version of itself.'
+  id: totrans-301
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**自相关性**：时间序列与其自身位移或滞后版本之间的相关性。'
 - en: '**lag**: The size of the shift in a serial correlation or autocorrelation.'
+  id: totrans-302
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**滞后**：序列相关性或自相关性中位移的大小。'
 - en: Exercises
+  id: totrans-303
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 练习
 - en: Exercise 12.1
+  id: totrans-304
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 练习12.1
 - en: As an example of seasonal decomposition, let’s model monthly average surface
     temperatures in the United States. We’ll use a dataset from Our World in Data
     that includes “temperature [in Celsius] of the air measured 2 meters above the
     ground, encompassing land, sea, and in-land water surfaces,” for most countries
     in the world from 1950 to 2024. Instructions for downloading the data are in the
     notebook for this chapter.
+  id: totrans-305
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为季节分解的一个例子，让我们来模拟美国月平均地表温度。我们将使用来自Our World in Data的数据集，该数据集包括“从1950年到2024年，大多数国家地面以上2米处测量的空气温度[摄氏度]，包括陆地、海洋和内陆水面”，用于大多数国家。数据下载说明在本书的笔记本中。
 - en: '[PRE94]'
+  id: totrans-306
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE94]'
 - en: '[PRE95]'
+  id: totrans-307
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE95]'
 - en: We can read the data like this.
+  id: totrans-308
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以像这样读取数据。
 - en: '[PRE96]'
+  id: totrans-309
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE96]'
 - en: '[PRE97]'
+  id: totrans-310
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE97]'
 - en: '|  | Entity | Code | Year | 2024 | 2023 | 2022 | 2021 | 2020 | 2019 | 2018
     | ... | 1959 | 1958 | 1956 | 1954 | 1952 | 1957 | 1955 | 1953 | 1951 | 1950 |'
+  id: totrans-311
   prefs: []
   type: TYPE_TB
+  zh: '|  | 实体 | 代码 | 年份 | 2024 | 2023 | 2022 | 2021 | 2020 | 2019 | 2018 | ... |
+    1959 | 1958 | 1956 | 1954 | 1952 | 1957 | 1955 | 1953 | 1951 | 1950 |'
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
     | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  id: totrans-312
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+    | --- | --- | --- | --- | --- | --- | --- | --- |'
 - en: '| 0 | Afghanistan | AFG | 1 | 3.300064 | -4.335608 | -0.322859 | -1.001608
     | -2.560545 | 0.585145 | 1.042471 | ... | -2.333814 | 0.576404 | -3.351925 | -2.276692
     | -2.812619 | -4.239172 | -2.191683 | -2.915993 | -3.126317 | -2.655707 |'
+  id: totrans-313
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 阿富汗 | AFG | 1 | 3.300064 | -4.335608 | -0.322859 | -1.001608 | -2.560545
+    | 0.585145 | 1.042471 | ... | -2.333814 | 0.576404 | -3.351925 | -2.276692 | -2.812619
+    | -4.239172 | -2.191683 | -2.915993 | -3.126317 | -2.655707 |'
 - en: '| 1 | Afghanistan | AFG | 2 | 1.024550 | 4.187041 | 2.165870 | 5.688000 | 2.880046
     | 0.068664 | 3.622793 | ... | -1.545529 | 0.264962 | 0.455350 | -0.304205 | 0.798226
     | -2.747945 | 1.999074 | 1.983414 | -2.642800 | -3.996040 |'
+  id: totrans-314
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 阿富汗 | AFG | 2 | 1.024550 | 4.187041 | 2.165870 | 5.688000 | 2.880046
+    | 0.068664 | 3.622793 | ... | -1.545529 | 0.264962 | 0.455350 | -0.304205 | 0.798226
+    | -2.747945 | 1.999074 | 1.983414 | -2.642800 | -3.996040 |'
 - en: '| 2 | Afghanistan | AFG | 3 | 5.843506 | 10.105444 | 10.483686 | 9.777976 |
     6.916731 | 5.758049 | 10.794412 | ... | 5.942937 | 7.716459 | 5.090270 | 4.357703
     | 4.796146 | 4.434027 | 7.066073 | 4.590406 | 3.054388 | 3.491112 |'
+  id: totrans-315
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 阿富汗 | AFG | 3 | 5.843506 | 10.105444 | 10.483686 | 9.777976 | 6.916731
+    | 5.758049 | 10.794412 | ... | 5.942937 | 7.716459 | 5.090270 | 4.357703 | 4.796146
+    | 4.434027 | 7.066073 | 4.590406 | 3.054388 | 3.491112 |'
 - en: '| 3 | Afghanistan | AFG | 4 | 11.627398 | 14.277164 | 17.227650 | 15.168276
     | 12.686832 | 13.838840 | 14.321226 | ... | 13.752827 | 14.712909 | 11.982360
     | 12.155265 | 13.119270 | 8.263829 | 10.418768 | 11.087193 | 9.682878 | 8.332797
     |'
+  id: totrans-316
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 阿富汗 | AFG | 4 | 11.627398 | 14.277164 | 17.227650 | 15.168276 | 12.686832
+    | 13.838840 | 14.321226 | ... | 13.752827 | 14.712909 | 11.982360 | 12.155265
+    | 13.119270 | 8.263829 | 10.418768 | 11.087193 | 9.682878 | 8.332797 |'
 - en: '| 4 | Afghanistan | AFG | 5 | 18.957850 | 19.078170 | 19.962734 | 19.885902
     | 18.884047 | 18.461287 | 18.100782 | ... | 17.388723 | 16.352045 | 20.125462
     | 18.432117 | 17.614851 | 15.505956 | 15.599709 | 17.865084 | 17.095737 | 17.329062
     |'
+  id: totrans-317
   prefs: []
   type: TYPE_TB
+  zh: '| 4 | 阿富汗 | AFG | 5 | 18.957850 | 19.078170 | 19.962734 | 19.885902 | 18.884047
+    | 18.461287 | 18.100782 | ... | 17.388723 | 16.352045 | 20.125462 | 18.432117
+    | 17.614851 | 15.505956 | 15.599709 | 17.865084 | 17.095737 | 17.329062 |'
 - en: 5 rows × 78 columns
+  id: totrans-318
   prefs: []
   type: TYPE_NORMAL
+  zh: 5行 × 78列
 - en: The following cell selects data for the United States from 2001 to the end of
     the series and packs it into a Pandas `Series`.
+  id: totrans-319
   prefs: []
   type: TYPE_NORMAL
+  zh: 下面的单元格从2001年到系列结束选择美国的数据，并将其打包到一个Pandas `Series`中。
 - en: '[PRE98]'
+  id: totrans-320
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE98]'
 - en: Here’s what it looks like.
+  id: totrans-321
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是它的样子。
 - en: '[PRE99]'
+  id: totrans-322
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE99]'
 - en: '![_images/a3410bb4a0364aa3e152c8b296b32ae9134070895ab25e65c30eb379291ec164.png](../Images/9d1667128e4130085b8d259b6a048b35.png)'
+  id: totrans-323
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/9d1667128e4130085b8d259b6a048b35.png)'
 - en: Not surprisingly, there is a strong seasonal pattern. Compute an additive seasonal
     decomposition with a period of 12 months. Fit a linear model to the trend line.
     What is the average annual increase in surface temperature during this interval?
     If you are curious, repeat this analysis with other intervals or data from other
     countries.
+  id: totrans-324
   prefs: []
   type: TYPE_NORMAL
+  zh: 毫不奇怪，这里有一个明显的季节性模式。使用12个月为周期的加性季节分解。将线性模型拟合到趋势线。在这个区间内，地表温度的平均年增长是多少？如果你好奇，可以用其他区间或来自其他国家的数据重复这个分析。
 - en: Exercise 12.2
+  id: totrans-325
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 练习12.2
 - en: Earlier in this chapter we used a multiplicative seasonal decomposition to model
     electricity production from small-scale solar power from 2014 to 2019 and forecast
     production from 2019 to 2024. Now let’s do the same with utility-scale solar power.
     Here’s what the time series looks like.
+  id: totrans-326
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本章的早期，我们使用乘性季节分解来模拟2014年至2019年小规模太阳能发电量，并预测2019年至2024年的产量。现在让我们用同样的方法来处理规模化的太阳能发电。这就是时间序列的样子。
 - en: '[PRE100]'
+  id: totrans-327
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE100]'
 - en: '![_images/d1fd07d05c800a1034a3be7efbaba6467fb86fddc406dd1ca143e69e5530cc4f.png](../Images/8b7dc9dd12f19aedeced4b7f80c4e0fd.png)'
+  id: totrans-328
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/8b7dc9dd12f19aedeced4b7f80c4e0fd.png)'
 - en: Use `split_series` to split this data into a training and test series. Compute
     a multiplicative decomposition of the training series with a 12-month period.
     Fit a linear or quadratic model to the trend and generate a five-year forecast,
     including a seasonal component. Plot the forecast along with the test series,
     and compute the mean absolute percentage error (MAPE).
+  id: totrans-329
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用`split_series`将数据分割成训练和测试系列。对训练系列进行12个月周期的乘性分解。将线性或二次模型拟合到趋势，并生成包括季节成分在内的五年预测。将预测与测试系列一起绘制，并计算平均绝对百分比误差（MAPE）。
 - en: Exercise 12.3
+  id: totrans-330
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 练习12.3
 - en: Let’s see how well an ARIMA model fits production from hydroelectric generators
     in the United States. Here’s what the time series looks like from 2001 to 2024.
+  id: totrans-331
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们看看ARIMA模型如何拟合美国水力发电站的产量。以下是2001年至2024年的时间序列图。
 - en: '[PRE101]'
+  id: totrans-332
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE101]'
 - en: '![_images/9c83923f610ab68d219dfcabbc52ec124727a086e5f732f1bcc8101421e93e3c.png](../Images/82fcbc849085c678a95e13b87f597579.png)'
+  id: totrans-333
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/82fcbc849085c678a95e13b87f597579.png)'
 - en: Fit a SARIMA model to this data with a seasonal period of 12 months. Experiment
     with different lags in the autoregression and moving average parts of the model
     and see if you can find a combination that maximizes the \(R^2\) value of the
     model. Generate a five-year forecast and plot it along with its confidence interval.
+  id: totrans-334
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用12个月季节周期的SARIMA模型拟合这些数据。在模型的自回归和移动平均部分尝试不同的滞后，看看是否能找到一个最大化模型\(R^2\)值的组合。生成五年预测并绘制其置信区间。
 - en: 'NOTE: Depending on what lags you include in the model, you might find that
     the first 12 to 24 elements of the fitted values are not reliable. You might want
     to remove them before plotting or computing \(R^2\).'
+  id: totrans-335
   prefs: []
   type: TYPE_NORMAL
+  zh: 注意：根据你包含在模型中的滞后，你可能会发现拟合值的前12到24个元素不可靠。你可能想在绘图或计算\(R^2\)之前移除它们。
 - en: '[Think Stats: Exploratory Data Analysis in Python, 3rd Edition](https://allendowney.github.io/ThinkStats/index.html)'
+  id: totrans-336
   prefs: []
   type: TYPE_NORMAL
+  zh: '[《Think Stats：Python中的探索性数据分析，第3版》](https://allendowney.github.io/ThinkStats/index.html)'
 - en: Copyright 2024 [Allen B. Downey](https://allendowney.com)
+  id: totrans-337
   prefs: []
   type: TYPE_NORMAL
+  zh: 版权所有 2024 [艾伦·B·唐尼](https://allendowney.com)
 - en: 'Code license: [MIT License](https://mit-license.org/)'
+  id: totrans-338
   prefs: []
   type: TYPE_NORMAL
+  zh: 代码许可：[MIT 许可证](https://mit-license.org/)
 - en: 'Text license: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  id: totrans-339
   prefs: []
   type: TYPE_NORMAL
+  zh: 文本许可：[Creative Commons 知识共享署名-非商业性使用-相同方式共享 4.0 国际](https://creativecommons.org/licenses/by-nc-sa/4.0/)

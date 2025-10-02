@@ -1,170 +1,240 @@
 - en: Exploratory Data Analysis
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 探索性数据分析
 - en: 原文：[https://allendowney.github.io/ThinkStats/chap01.html](https://allendowney.github.io/ThinkStats/chap01.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ThinkStats/chap01.html](https://allendowney.github.io/ThinkStats/chap01.html)
 - en: The thesis of this book is we can use data to answer questions, resolve debates,
     and make better decisions.
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 这本书的论点是我们可以使用数据来回答问题、解决辩论和做出更好的决策。
 - en: 'This chapter introduces the steps we’ll use to do that: loading and validating
     data, exploring, and choosing statistics that measure what we are interested in.
     As an example, we’ll use data from the National Survey of Family Growth (NSFG)
     to answer a question I heard when my wife and I were expecting our first child:
     do first babies tend to arrive late?'
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章介绍了我们将要使用的步骤：加载数据和验证数据、探索数据，并选择衡量我们感兴趣内容的统计方法。作为一个例子，我们将使用国家家庭成长调查（NSFG）的数据来回答当我和妻子期待我们第一个孩子时听到的问题：第一个孩子是否倾向于晚出生？
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ThinkStats/blob/v3/nb/chap01.ipynb).'
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: '[点击此处运行此笔记本在Colab上](https://colab.research.google.com/github/AllenDowney/ThinkStats/blob/v3/nb/chap01.ipynb)。'
 - en: '[PRE0]'
+  id: totrans-5
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '[PRE1]'
+  id: totrans-6
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '[PRE2]'
+  id: totrans-7
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: Evidence
+  id: totrans-8
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 证据
 - en: 'You might have heard that first babies are more likely to be late. If you search
     the web with this question, you will find plenty of discussion. Some people claim
     it’s true, others say it’s a myth, and some people say it’s the other way around:
     first babies come early.'
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 你可能听说过第一个孩子更有可能晚出生。如果你用这个问题在网络上搜索，你会找到很多讨论。有些人声称这是真的，有些人说这是一个神话，还有一些人说情况正好相反：第一个孩子会提前出生。
 - en: 'In many of these discussions, people provide data to support their claims.
     I found many examples like these:'
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 在许多这样的讨论中，人们提供数据来支持他们的主张。我发现了很多这样的例子：
 - en: “My two friends that have given birth recently to their first babies, BOTH went
     almost 2 weeks overdue before going into labour or being induced.”
+  id: totrans-11
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: “我最近有两个朋友生了第一个孩子，他们两个在分娩或被诱导分娩前都几乎迟到了两周。”
 - en: “My first one came 2 weeks late and now I think the second one is going to come
     out two weeks early!!”
+  id: totrans-12
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: “我的第一个孩子迟到了两周，现在我觉得第二个孩子可能会提前两周出生！！！”
 - en: “I don’t think that can be true because my sister was my mother’s first and
     she was early, as with many of my cousins.”
+  id: totrans-13
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: “我不认为这是真的，因为我的姐姐是我母亲第一个孩子，她很早就出生了，就像我的许多表亲一样。”
 - en: Reports like these are called **anecdotal evidence** because they are based
     on data that is unpublished and usually personal. In casual conversation, there
     is nothing wrong with anecdotes, so I don’t mean to pick on the people I quoted.
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 这样的报告被称为**轶事证据**，因为它们基于未发表的数据，通常是个人数据。在闲聊中，轶事并没有什么不妥，所以我并不是要批评我引用的人。
 - en: 'But we might want evidence that is more persuasive and an answer that is more
     reliable. By those standards, anecdotal evidence usually fails, because:'
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 但我们可能需要更有说服力的证据和更可靠的答案。按照这些标准，轶事证据通常是不够的，因为：
 - en: 'Small number of observations: If pregnancy length is longer for first babies,
     the difference is probably small compared to natural variation. In that case,
     we might have to compare a large number of pregnancies to know whether there is
     a difference.'
+  id: totrans-16
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 观察数量少：如果第一个孩子的怀孕时间更长，那么与自然变异相比，差异可能很小。在这种情况下，我们可能需要比较大量的怀孕案例来了解是否存在差异。
 - en: 'Selection bias: People who join a discussion of this question might be interested
     because their first babies were late. In that case the process of selecting data
     would bias the results.'
+  id: totrans-17
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 选择偏误：加入关于这个问题讨论的人可能是因为他们的第一个孩子晚出生而感兴趣的。在这种情况下，选择数据的过程可能会使结果产生偏差。
 - en: 'Confirmation bias: People who believe the claim might be more likely to contribute
     examples that confirm it. People who doubt the claim are more likely to cite counterexamples.'
+  id: totrans-18
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 确认偏误：相信这个说法的人可能更倾向于提供证实它的例子。怀疑这个说法的人更有可能引用反例。
 - en: 'Inaccuracy: Anecdotes are often personal stories, and might be misremembered,
     misrepresented, repeated inaccurately, etc.'
+  id: totrans-19
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 不准确性：轶事通常是个人故事，可能会被错误地记住、错误地表述、不准确地重复等。
 - en: 'To address the limitations of anecdotes, we will use the tools of statistics,
     which include:'
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了解决轶事的局限性，我们将使用统计工具，这包括：
 - en: 'Data collection: We will use data from a large national survey that was designed
     explicitly with the goal of generating statistically valid inferences about the
     U.S. population.'
+  id: totrans-21
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 数据收集：我们将使用来自一个大型国家调查的数据，该调查明确旨在生成关于美国人口的统计有效推断。
 - en: 'Descriptive statistics: We will generate statistics that summarize the data
     concisely, and evaluate different ways to visualize data.'
+  id: totrans-22
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 描述性统计：我们将生成总结数据的统计量，并评估不同的数据可视化方法。
 - en: 'Exploratory data analysis: We will look for patterns, differences, and other
     features that address the questions we are interested in. At the same time we
     will check for inconsistencies and identify limitations.'
+  id: totrans-23
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 探索性数据分析：我们将寻找模式、差异和其他特征，以解决我们感兴趣的问题。同时，我们将检查不一致性并确定局限性。
 - en: 'Estimation: We will use data from a sample to estimate characteristics of the
     general population.'
+  id: totrans-24
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 估计：我们将使用样本数据来估计总体特征。
 - en: 'Hypothesis testing: Where we see apparent effects, like a difference between
     two groups, we will evaluate whether the effect might have happened by chance.'
+  id: totrans-25
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 假设检验：当我们看到明显的效应，如两组之间的差异时，我们将评估这种效应是否可能偶然发生。
 - en: By performing these steps with care to avoid pitfalls, we can reach conclusions
     that are more justified and more likely to be correct.
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 通过小心执行这些步骤以避免陷阱，我们可以得出更加合理且更有可能正确的结论。
 - en: '## The National Survey of Family Growth'
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: '## 全国家庭成长调查'
 - en: Since 1973 the U.S. Centers for Disease Control and Prevention (CDC) have conducted
     the National Survey of Family Growth (NSFG), which is intended to gather “information
     on family life, marriage and divorce, pregnancy, infertility, use of contraception,
     and men’s and women’s health. The survey results are used…to plan health services
     and health education programs, and to do statistical studies of families, fertility,
     and health.”
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: 自1973年以来，美国疾病控制与预防中心（CDC）一直在进行全国家庭成长调查（NSFG），旨在收集有关“家庭生活、婚姻与离婚、怀孕、不孕、避孕药具的使用以及男女健康”的信息。调查结果被用于……规划健康服务和健康教育计划，以及进行家庭、生育和健康方面的统计分析。
 - en: You can read more about the NSFG at [http://cdc.gov/nchs/nsfg.htm](http://cdc.gov/nchs/nsfg.htm).
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 你可以在[http://cdc.gov/nchs/nsfg.htm](http://cdc.gov/nchs/nsfg.htm)了解更多关于NSFG的信息。
 - en: We will use data collected by this survey to investigate whether first babies
     tend to be born late, and other questions. In order to use this data effectively,
     we have to understand the design of the study.
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将使用此调查收集的数据来调查是否第一个孩子倾向于晚出生，以及其他问题。为了有效地使用这些数据，我们必须了解研究的设计。
 - en: In general, the goal of a statistical study is to draw conclusions about a **population**.
     In the NSFG, the target population is people in the United States aged 15-44.
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 通常，统计研究的目标是关于**总体**的结论。在NSFG中，目标总体是美国15-44岁的人群。
 - en: Ideally surveys would collect data from every member of the population, but
     that’s seldom possible. Instead we collect data from a subset of the population
     called a **sample**. The people who participate in a survey are called **respondents**.
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 理想情况下，调查将收集总体中每个成员的数据，但这很少可能实现。相反，我们收集来自称为**样本**的总体子集的数据。参与调查的人被称为**受访者**。
 - en: The NSFG is a **cross-sectional** study, which means that it captures a snapshot
     of a population at a point in time. The NSFG has been conducted several times
     now; each deployment is called a **cycle**. We will use data from Cycle 6, which
     was conducted from January 2002 to March 2003.
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: NSFG是一项**横断面**研究，这意味着它捕捉了在某一时间点的总体快照。NSFG已经进行了几次；每次部署被称为**周期**。我们将使用第6周期的数据，该周期从2002年1月持续到2003年3月。
 - en: In general, cross-sectional studies are meant to be **representative**, which
     means that the sample is similar to the target population in all ways that are
     important for the purposes of the study. That ideal is hard to achieve in practice,
     but people who conduct surveys come as close as they can.
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 通常，横断面研究旨在是**代表性的**，这意味着样本在所有对研究目的重要方面都与目标总体相似。在实践中实现这一理想很困难，但进行调查的人会尽可能接近。
 - en: The NSFG is not representative; instead it is **stratified**, which means that
     it deliberately **oversamples** some groups. The designers of the study recruited
     three groups – Hispanics, African-Americans and teenagers – at rates higher than
@@ -172,76 +242,101 @@
     of respondents in each group is large enough to draw valid conclusions. The drawback
     of oversampling is that it is not as easy to draw conclusions about the population
     based on statistics from the sample. We will come back to this point later.
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 美国国家家庭生育调查（NSFG）不具有代表性；相反，它是**分层**的，这意味着它故意**过度抽样**某些群体。该研究的制定者招募了三个群体——西班牙裔、非裔美国人和青少年——其在美国人口中的代表性高于其比例，以确保每个群体中受访者的数量足够多，以便得出有效的结论。过度抽样的缺点是，基于样本的统计数据，基于人口得出结论并不那么容易。我们稍后会回到这个点。
 - en: When working with this kind of data, it is important to be familiar with the
     **codebook**, which documents the design of the study, the survey questions, and
     the encoding of the responses.
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 当处理这类数据时，熟悉**代码簿**非常重要，它记录了研究的设计、调查问题和响应的编码。
 - en: The codebook and user’s guide for the NSFG data are available from [http://www.cdc.gov/nchs/nsfg/nsfg_cycle6.htm](http://www.cdc.gov/nchs/nsfg/nsfg_cycle6.htm)
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: NSFG数据的代码簿和用户指南可在[http://www.cdc.gov/nchs/nsfg/nsfg_cycle6.htm](http://www.cdc.gov/nchs/nsfg/nsfg_cycle6.htm)获取。
 - en: Reading the Data
+  id: totrans-38
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 数据读取
 - en: 'Before downloading NSFG data, you have to agree to the terms of use:'
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 在下载NSFG数据之前，您必须同意使用条款：
 - en: 'Any intentional identification or disclosure of an individual or establishment
     violates the assurances of confidentiality given to the providers of the information.
     Therefore, users will:'
+  id: totrans-40
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 任何对个人或机构的故意识别或披露都违反了向信息提供者提供的保密保证。因此，用户将：
 - en: ''
+  id: totrans-41
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: Use the data in this dataset for statistical reporting and analysis only.
+  id: totrans-42
   prefs:
   - PREF_BQ
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 仅使用此数据集中的数据进行统计分析。
 - en: ''
+  id: totrans-43
   prefs:
   - PREF_BQ
   - PREF_IND
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-44
   prefs:
   - PREF_BQ
   - PREF_IND
   type: TYPE_NORMAL
 - en: Make no attempt to learn the identity of any person or establishment included
     in these data.
+  id: totrans-45
   prefs:
   - PREF_BQ
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 不要试图了解这些数据中包含的任何个人或机构的身份。
 - en: ''
+  id: totrans-46
   prefs:
   - PREF_BQ
   - PREF_IND
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-47
   prefs:
   - PREF_BQ
   - PREF_IND
   type: TYPE_NORMAL
 - en: Not link this dataset with individually identifiable data from other NCHS or
     non-NCHS datasets.
+  id: totrans-48
   prefs:
   - PREF_BQ
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 不要将此数据集与来自其他NCHS或非NCHS数据集的个人可识别数据链接。
 - en: ''
+  id: totrans-49
   prefs:
   - PREF_BQ
   - PREF_IND
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-50
   prefs:
   - PREF_BQ
   - PREF_IND
@@ -249,500 +344,775 @@
 - en: Not engage in any efforts to assess disclosure methodologies applied to protect
     individuals and establishments or any research on methods of re-identification
     of individuals and establishments.
+  id: totrans-51
   prefs:
   - PREF_BQ
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 不要参与评估用于保护个人和机构的披露方法或任何关于个人和机构重新识别方法的研究。
 - en: If you agree to comply with these terms, instructions for downloading the data
     are in the notebook for this chapter.
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果您同意遵守这些条款，本章笔记本中提供了下载数据的说明。
 - en: The data files are available directly from the NSFG web site at [https://www.cdc.gov/nchs/data_access/ftp_dua.htm?url_redirect=ftp://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG](https://www.cdc.gov/nchs/data_access/ftp_dua.htm?url_redirect=ftp://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG),
     but we will download them from the repository for this book, which provides a
     compressed version of the data file.
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: 数据文件可以直接从NSFG网站获取，网址为[https://www.cdc.gov/nchs/data_access/ftp_dua.htm?url_redirect=ftp://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG](https://www.cdc.gov/nchs/data_access/ftp_dua.htm?url_redirect=ftp://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG)，但我们将从本书的存储库中下载它们，该存储库提供了数据文件的压缩版本。
 - en: The following cells download the data files and install `statadict`, which we
     need to read the data.
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下单元格下载数据文件并安装`statadict`，这是我们读取数据所需的。
 - en: '[PRE3]'
+  id: totrans-55
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '[PRE4]'
+  id: totrans-56
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: The data is stored in two files, a “dictionary” that describes the format of
     the data, and a data file.
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 数据存储在两个文件中，一个“字典”描述了数据的格式，一个数据文件。
 - en: '[PRE5]'
+  id: totrans-58
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: The notebook for this chapter defines a function that reads these files. It
     is called `read_stata` because this data format is compatible with a statistical
     software package called Stata.
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章笔记本定义了一个函数，用于读取这些文件。它被称为`read_stata`，因为这种数据格式与名为Stata的统计软件包兼容。
 - en: The following function takes these file names as arguments, reads the dictionary,
     and uses the results to read the data file.
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数将这些文件名作为参数，读取字典，并使用结果读取数据文件。
 - en: '[PRE6]'
+  id: totrans-61
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: Here’s how we use it.
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是我们的使用方法。
 - en: '[PRE7]'
+  id: totrans-63
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: The result is a `DataFrame`, which is a Pandas data structure that represents
     tabular data in rows and columns. This `DataFrame` contains a row for each pregnancy
     reported by a respondent and a column for each **variable**. A variable can contain
     responses to a survey question or values that are calculated based on responses
     to one or more questions.
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个`DataFrame`，这是Pandas数据结构，用于表示行和列的表格数据。这个`DataFrame`为每个受访者报告的怀孕包含一行，为每个**变量**包含一列。一个变量可以包含对调查问题的回答或基于一个或多个问题的回答计算出的值。
 - en: In addition to the data, a `DataFrame` also contains the variable names and
     their types, and it provides methods for accessing and modifying the data. The
     `DataFrame` has an attribute called `shape` that contains the number of rows and
     columns.
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: 除了数据之外，`DataFrame`还包含变量名及其类型，并提供访问和修改数据的方法。`DataFrame`有一个名为`shape`的属性，其中包含行数和列数。
 - en: '[PRE8]'
+  id: totrans-66
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '[PRE9]'
+  id: totrans-67
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: This dataset has 243 variables with information about 13,593 pregnancies. The
     `DataFrame` provides a method called `head` that displays the first few rows.
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: 该数据集包含243个变量，涉及13,593次怀孕的信息。`DataFrame`提供了一个名为`head`的方法，用于显示前几行。
 - en: '[PRE10]'
+  id: totrans-69
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '|  | caseid | pregordr | howpreg_n | howpreg_p | moscurrp | nowprgdk | pregend1
     | pregend2 | nbrnaliv | multbrth | ... | poverty_i | laborfor_i | religion_i |
     metro_i | basewgt | adj_mod_basewgt | finalwgt | secu_p | sest | cmintvw |'
+  id: totrans-70
   prefs: []
   type: TYPE_TB
+  zh: '|  | caseid | pregordr | howpreg_n | howpreg_p | moscurrp | nowprgdk | pregend1
+    | pregend2 | nbrnaliv | multbrth | ... | poverty_i | laborfor_i | religion_i |
+    metro_i | basewgt | adj_mod_basewgt | finalwgt | secu_p | sest | cmintvw |'
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
     | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  id: totrans-71
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+    | --- | --- | --- | --- | --- | --- | --- | --- |'
 - en: '| 0 | 1 | 1 | NaN | NaN | NaN | NaN | 6.0 | NaN | 1.0 | NaN | ... | 0 | 0 |
     0 | 0 | 3410.389399 | 3869.349602 | 6448.271112 | 2 | 9 | 1231 |'
+  id: totrans-72
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 1 | 1 | NaN | NaN | NaN | NaN | 6.0 | NaN | 1.0 | NaN | ... | 0 | 0 |
+    0 | 0 | 3410.389399 | 3869.349602 | 6448.271112 | 2 | 9 | 1231 |'
 - en: '| 1 | 1 | 2 | NaN | NaN | NaN | NaN | 6.0 | NaN | 1.0 | NaN | ... | 0 | 0 |
     0 | 0 | 3410.389399 | 3869.349602 | 6448.271112 | 2 | 9 | 1231 |'
+  id: totrans-73
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 1 | 2 | NaN | NaN | NaN | NaN | 6.0 | NaN | 1.0 | NaN | ... | 0 | 0 |
+    0 | 0 | 3410.389399 | 3869.349602 | 6448.271112 | 2 | 9 | 1231 |'
 - en: '| 2 | 2 | 1 | NaN | NaN | NaN | NaN | 5.0 | NaN | 3.0 | 5.0 | ... | 0 | 0 |
     0 | 0 | 7226.301740 | 8567.549110 | 12999.542264 | 2 | 12 | 1231 |'
+  id: totrans-74
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 2 | 1 | NaN | NaN | NaN | NaN | 5.0 | NaN | 3.0 | 5.0 | ... | 0 | 0 |
+    0 | 0 | 7226.301740 | 8567.549110 | 12999.542264 | 2 | 12 | 1231 |'
 - en: '| 3 | 2 | 2 | NaN | NaN | NaN | NaN | 6.0 | NaN | 1.0 | NaN | ... | 0 | 0 |
     0 | 0 | 7226.301740 | 8567.549110 | 12999.542264 | 2 | 12 | 1231 |'
+  id: totrans-75
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 2 | 2 | NaN | NaN | NaN | NaN | 6.0 | NaN | 1.0 | NaN | ... | 0 | 0 |
+    0 | 0 | 7226.301740 | 8567.549110 | 12999.542264 | 2 | 12 | 1231 |'
 - en: '| 4 | 2 | 3 | NaN | NaN | NaN | NaN | 6.0 | NaN | 1.0 | NaN | ... | 0 | 0 |
     0 | 0 | 7226.301740 | 8567.549110 | 12999.542264 | 2 | 12 | 1231 |'
+  id: totrans-76
   prefs: []
   type: TYPE_TB
+  zh: '| 4 | 2 | 3 | NaN | NaN | NaN | NaN | 6.0 | NaN | 1.0 | NaN | ... | 0 | 0 |
+    0 | 0 | 7226.301740 | 8567.549110 | 12999.542264 | 2 | 12 | 1231 |'
 - en: 5 rows × 243 columns
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: 5行 × 243列
 - en: The left column is the index of the `DataFrame`, which contains a label for
     each row. In this case, the labels are integers starting from 0, but they can
     also be strings and other types.
+  id: totrans-78
   prefs: []
   type: TYPE_NORMAL
+  zh: 左侧列是`DataFrame`的索引，其中包含每行的标签。在这种情况下，标签是从0开始的整数，但它们也可以是字符串和其他类型。
 - en: The `DataFrame` has an attribute called `columns` that contains the names of
     the variables.
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: '`DataFrame`有一个名为`columns`的属性，其中包含变量的名称。'
 - en: '[PRE11]'
+  id: totrans-80
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: '[PRE12]'
+  id: totrans-81
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: The column names are contained in an `Index` object, which is another Pandas
     data structure. To access a column from a `DataFrame`, you can use the column
     name as a key.
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: 列名包含在一个`Index`对象中，这是另一个Pandas数据结构。要从`DataFrame`中访问列，可以使用列名作为键。
 - en: '[PRE13]'
+  id: totrans-83
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: '[PRE14]'
+  id: totrans-84
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: The result is a Pandas `Series`, which represents a sequence of values. `Series`
     also provides `head`, which displays the first few values and their labels.
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是Pandas的`Series`，它表示一系列值。`Series`也提供了`head`方法，用于显示前几个值及其标签。
 - en: '[PRE15]'
+  id: totrans-86
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '[PRE16]'
+  id: totrans-87
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: The last line includes the name of the `Series` and `dtype`, which is the type
     of the values. In this example, `int64` indicates that the values are 64-bit integers.
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后一行包含`Series`的名称和`dtype`，即值的类型。在这个例子中，`int64`表示值是64位整数。
 - en: The NSFG dataset contains 243 variables in total. Here are some of the ones
     we’ll use for the explorations in this book.
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: NSFG数据集总共包含243个变量。以下是本书探索中将使用的一些变量。
 - en: '`caseid` is the integer ID of the respondent.'
+  id: totrans-90
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`caseid`是受访者的整数ID。'
 - en: '`pregordr` is a pregnancy serial number: the code for a respondent’s first
     pregnancy is 1, for the second pregnancy is 2, and so on.'
+  id: totrans-91
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`pregordr`是怀孕序列号：受访者第一次怀孕的代码是1，第二次怀孕是2，依此类推。'
 - en: '`prglngth` is the integer duration of the pregnancy in weeks.'
+  id: totrans-92
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`prglngth`是怀孕的整数持续时间（周）。'
 - en: '`outcome` is an integer code for the outcome of the pregnancy. The code 1 indicates
     a live birth.'
+  id: totrans-93
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`outcome` 是妊娠结果的整数代码。代码 1 表示活产。'
 - en: '`birthord` is a serial number for live births: the code for a respondent’s
     first child is 1, and so on. For outcomes other than live birth, this field is
     blank.'
+  id: totrans-94
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`birthord` 是活产的序列号：受访者的第一个孩子的代码是 1，依此类推。对于除活产之外的结果，此字段为空。'
 - en: '`birthwgt_lb` and `birthwgt_oz` contain the pounds and ounces parts of the
     birth weight of the baby.'
+  id: totrans-95
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`birthwgt_lb` 和 `birthwgt_oz` 包含婴儿出生体重的磅和盎司部分。'
 - en: '`agepreg` is the mother’s age at the end of the pregnancy.'
+  id: totrans-96
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`agepreg` 是妊娠结束时的母亲年龄。'
 - en: '`finalwgt` is the statistical weight associated with the respondent. It is
     a floating-point value that indicates the number of people in the U.S. population
     this respondent represents.'
+  id: totrans-97
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`finalwgt` 是与受访者相关的统计权重。它是一个浮点值，表示该受访者代表美国人口中的多少人。'
 - en: If you read the codebook carefully, you will see that many of the variables
     are **recodes**, which means that they are not part of the **raw data** collected
     by the survey – they are calculated using the raw data.
+  id: totrans-98
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果仔细阅读代码簿，你会看到许多变量是**重新编码**，这意味着它们不是调查收集的**原始数据**的一部分——它们是使用原始数据计算得出的。
 - en: For example, `prglngth` for live births is equal to the raw variable `wksgest`
     (weeks of gestation) if it is available; otherwise it is estimated using `mosgest
     * 4.33` (months of gestation times the average number of weeks in a month).
+  id: totrans-99
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，对于活产，如果可用，`prglngth` 等于原始变量 `wksgest`（妊娠周数）；否则，它使用 `mosgest * 4.33`（妊娠月数乘以每月平均周数）来估算。
 - en: Recodes are often based on logic that checks the consistency and accuracy of
     the data. In general it is a good idea to use recodes when they are available,
     unless there is a compelling reason to process the raw data yourself.
+  id: totrans-100
   prefs: []
   type: TYPE_NORMAL
+  zh: 重新编码通常基于检查数据的完整性和准确性的逻辑。一般来说，当可用时使用重新编码是一个好主意，除非有充分的理由自行处理原始数据。
 - en: Validation
+  id: totrans-101
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 验证
 - en: When data is exported from one software environment and imported into another,
     errors might be introduced. And when you are getting familiar with a new dataset,
     you might decode data incorrectly or misunderstandings its meaning. If you invest
     time to validate the data, you can save time later and avoid errors.
+  id: totrans-102
   prefs: []
   type: TYPE_NORMAL
+  zh: 当数据从一个软件环境导出并导入到另一个软件环境时，可能会引入错误。当你熟悉新的数据集时，你可能会错误地解码数据或误解其含义。如果你投入时间验证数据，你可以在以后节省时间并避免错误。
 - en: One way to validate data is to compute basic statistics and compare them with
     published results. For example, the NSFG codebook includes tables that summarize
     each variable. Here is the table for `outcome`, which encodes the outcome of each
     pregnancy.
+  id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: 验证数据的一种方法是通过计算基本统计量并将它们与已发布的结果进行比较。例如，NSFG 代码簿包括总结每个变量的表格。以下是 `outcome` 的表格，它编码了每个妊娠的结果。
 - en: '| Value | Label | Total |'
+  id: totrans-104
   prefs: []
   type: TYPE_TB
+  zh: '| 值 | 标签 | 总计 |'
 - en: '| --- | --- | --- |'
+  id: totrans-105
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- |'
 - en: '| 1 | LIVE BIRTH | 9148 |'
+  id: totrans-106
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 活产 | 9148 |'
 - en: '| 2 | INDUCED ABORTION | 1862 |'
+  id: totrans-107
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 人工流产 | 1862 |'
 - en: '| 3 | STILLBIRTH | 120 |'
+  id: totrans-108
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 死产 | 120 |'
 - en: '| 4 | MISCARRIAGE | 1921 |'
+  id: totrans-109
   prefs: []
   type: TYPE_TB
+  zh: '| 4 | 流产 | 1921 |'
 - en: '| 5 | ECTOPIC PREGNANCY | 190 |'
+  id: totrans-110
   prefs: []
   type: TYPE_TB
+  zh: '| 5 | 宫外孕 | 190 |'
 - en: '| 6 | CURRENT PREGNANCY | 352 |'
+  id: totrans-111
   prefs: []
   type: TYPE_TB
+  zh: '| 6 | 当前妊娠 | 352 |'
 - en: '| Total |  | 13593 |'
+  id: totrans-112
   prefs: []
   type: TYPE_TB
+  zh: '| 总计 |  | 13593 |'
 - en: The “Total” column indicates the number of pregnancies with each outcome. To
     check these totals, we’ll use the `value_counts` method, which counts the number
     of times each value appears, and `sort_index`, which sorts the results according
     to the values in the `Index` (the left column).
+  id: totrans-113
   prefs: []
   type: TYPE_NORMAL
+  zh: “总计”列表示具有每种结果的妊娠数量。为了检查这些总计，我们将使用 `value_counts` 方法，该方法计算每个值出现的次数，以及 `sort_index`，该方法根据
+    `Index`（左侧列）中的值对结果进行排序。
 - en: '[PRE17]'
+  id: totrans-114
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: '[PRE18]'
+  id: totrans-115
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: Comparing the results with the published table, we can confirm that the values
     in `outcome` are correct. Similarly, here is the published table for `birthwgt_lb`.
+  id: totrans-116
   prefs: []
   type: TYPE_NORMAL
+  zh: 将结果与已发布的表格进行比较，我们可以确认 `outcome` 中的值是正确的。同样，以下是 `birthwgt_lb` 的已发布表格。
 - en: '| Value | Label | Total |'
+  id: totrans-117
   prefs: []
   type: TYPE_TB
+  zh: '| 值 | 标签 | 总计 |'
 - en: '| --- | --- | --- |'
+  id: totrans-118
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- |'
 - en: '| . | inapplicable | 4449 |'
+  id: totrans-119
   prefs: []
   type: TYPE_TB
+  zh: '| . | 不适用 | 4449 |'
 - en: '| 0-5 | UNDER 6 POUNDS | 1125 |'
+  id: totrans-120
   prefs: []
   type: TYPE_TB
+  zh: '| 0-5 | 低于 6 磅 | 1125 |'
 - en: '| 6 | 6 POUNDS | 2223 |'
+  id: totrans-121
   prefs: []
   type: TYPE_TB
+  zh: '| 6 | 6 磅 | 2223 |'
 - en: '| 7 | 7 POUNDS | 3049 |'
+  id: totrans-122
   prefs: []
   type: TYPE_TB
+  zh: '| 7 | 7 磅 | 3049 |'
 - en: '| 8 | 8 POUNDS | 1889 |'
+  id: totrans-123
   prefs: []
   type: TYPE_TB
+  zh: '| 8 | 8 磅 | 1889 |'
 - en: '| 9-95 | 9 POUNDS OR MORE | 799 |'
+  id: totrans-124
   prefs: []
   type: TYPE_TB
+  zh: '| 9-95 | 9 磅或以上 | 799 |'
 - en: '| 97 | Not ascertained | 1 |'
+  id: totrans-125
   prefs: []
   type: TYPE_TB
+  zh: '| 97 | 未确定 | 1 |'
 - en: '| 98 | REFUSED | 1 |'
+  id: totrans-126
   prefs: []
   type: TYPE_TB
+  zh: '| 98 | 拒绝 | 1 |'
 - en: '| 99 | DON''T KNOW | 57 |'
+  id: totrans-127
   prefs: []
   type: TYPE_TB
+  zh: '| 99 | 未知 | 57 |'
 - en: '| Total |  | 13593 |'
+  id: totrans-128
   prefs: []
   type: TYPE_TB
+  zh: '| 总计 |  | 13593 |'
 - en: Birth weight is only recorded for pregnancies that ended in a live birth. The
     table indicates that there are 4449 cases where this variable is inapplicable.
     In addition, there is one case where the question was not asked, one where the
     respondent did not answer, and 57 cases where they did not know.
+  id: totrans-129
   prefs: []
   type: TYPE_NORMAL
+  zh: 出生重量仅记录在以活产结束的怀孕中。表格表明，有4449个案例中这个变量不适用。此外，还有一个案例中未提问，一个案例中受访者未回答，以及57个案例中他们不知道。
 - en: Again, we can use `value_counts` to compare the counts in the dataset to the
     counts in the codebook.
+  id: totrans-130
   prefs: []
   type: TYPE_NORMAL
+  zh: 再次，我们可以使用`value_counts`来比较数据集中的计数与代码簿中的计数。
 - en: '[PRE19]'
+  id: totrans-131
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '[PRE20]'
+  id: totrans-132
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: The argument `dropna=False` means that `value_counts` does not ignore values
     that are “NA” or “Not applicable”. These values appear in the results as `NaN`,
     which stands for “Not a number” – and the count of these values is consistent
     with the count of inapplicable cases in the codebook.
+  id: totrans-133
   prefs: []
   type: TYPE_NORMAL
+  zh: 参数`dropna=False`意味着`value_counts`不会忽略“NA”或“不适用”的值。这些值在结果中显示为`NaN`，代表“不是一个数字”——并且这些值的计数与代码簿中不适用的案例计数一致。
 - en: The counts for 6, 7, and 8 pounds are consistent with the codebook. To check
     the counts for the weight range from 0 to 5 pounds, we can use an attribute called
     `loc` – which is short for “location” – and a slice index to select a subset of
     the counts.
+  id: totrans-134
   prefs: []
   type: TYPE_NORMAL
+  zh: 6、7和8磅的计数与代码簿一致。为了检查0至5磅范围内的计数，我们可以使用一个名为`loc`的属性——它是“位置”的缩写——以及一个切片索引来选择计数的一个子集。
 - en: '[PRE21]'
+  id: totrans-135
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: '[PRE22]'
+  id: totrans-136
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: And we can use the `sum` method to add them up.
+  id: totrans-137
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们还可以使用`sum`方法将它们加起来。
 - en: '[PRE23]'
+  id: totrans-138
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: '[PRE24]'
+  id: totrans-139
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: The total is consistent with the codebook.
+  id: totrans-140
   prefs: []
   type: TYPE_NORMAL
+  zh: 总数与代码簿一致。
 - en: The values 97, 98, and 99 represent cases where the birth weight is unknown.
     There are several ways we might handle missing data. A simple option is to replace
     these values with `NaN`. At the same time, we will also replace a value that is
     clearly wrong, 51 pounds.
+  id: totrans-141
   prefs: []
   type: TYPE_NORMAL
+  zh: 值97、98和99代表出生重量未知的情况。我们可能有几种处理缺失数据的方法。一个简单的选项是将这些值替换为`NaN`。同时，我们还将替换一个明显错误的值，51磅。
 - en: 'We can use the replace method like this:'
+  id: totrans-142
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用这种方法使用`replace`方法：
 - en: '[PRE25]'
+  id: totrans-143
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: The first argument is a list of values to be replaced. The second argument,
     `np.nan`, gets the `NaN` value from NumPy.
+  id: totrans-144
   prefs: []
   type: TYPE_NORMAL
+  zh: 第一个参数是要替换的值的列表。第二个参数`np.nan`从NumPy获取`NaN`值。
 - en: When you read data like this, you often have to check for errors and deal with
     special values. Operations like this are called **data cleaning**.
+  id: totrans-145
   prefs: []
   type: TYPE_NORMAL
+  zh: 当你以这种方式读取数据时，你通常需要检查错误并处理特殊值。这种操作被称为**数据清洗**。
 - en: Transformation
+  id: totrans-146
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 转换
 - en: As another kind of data cleaning, sometimes we have to convert data into different
     formats, and perform other calculations.
+  id: totrans-147
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为另一种数据清洗方式，有时我们必须将数据转换为不同的格式，并执行其他计算。
 - en: For example, `agepreg` contains the mother’s age at the end of the pregnancy.
     According to the codebook, it is an integer number of centiyears (hundredths of
     a year), as we can tell if we use the `mean` method to compute its average.
+  id: totrans-148
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，`agepreg`包含怀孕结束时的母亲年龄。根据代码簿，它是一个以百分之一年（百分之一年）为单位的整数，正如我们可以通过使用`mean`方法计算其平均值来得知。
 - en: '[PRE26]'
+  id: totrans-149
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: '[PRE27]'
+  id: totrans-150
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: To convert it to years, we can divide through by 100.
+  id: totrans-151
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了将其转换为年，我们可以将其除以100。
 - en: '[PRE28]'
+  id: totrans-152
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: '[PRE29]'
+  id: totrans-153
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: Now the average is more credible.
+  id: totrans-154
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在平均值更可信了。
 - en: As another example, `birthwgt_lb` and `birthwgt_oz` contain birth weights with
     the pounds and ounces in separate columns. It will be more convenient to combine
     them into as single column that contains weights in pounds and fractions of a
     pound.
+  id: totrans-155
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为另一个例子，`birthwgt_lb`和`birthwgt_oz`包含出生重量，磅和盎司分别在不同的列中。将它们合并成一个包含磅和磅分数的单列将更方便。
 - en: First we’ll clean `birthwgt_oz` as we did with `birthwgt_lb`.
+  id: totrans-156
   prefs: []
   type: TYPE_NORMAL
+  zh: 首先，我们将像处理`birthwgt_lb`一样清洗`birthwgt_oz`。
 - en: '[PRE30]'
+  id: totrans-157
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: '[PRE31]'
+  id: totrans-158
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: '[PRE32]'
+  id: totrans-159
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: Now we can use the cleaned values to create a new column that combines pounds
     and ounces into a single quantity.
+  id: totrans-160
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以使用清洗后的值来创建一个新的列，该列将磅和盎司合并成一个单一的数量。
 - en: '[PRE33]'
+  id: totrans-161
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: '[PRE34]'
+  id: totrans-162
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: The average of the result seems plausible.
+  id: totrans-163
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果的平均值看起来是合理的。
 - en: '## Summary Statistics'
+  id: totrans-164
   prefs: []
   type: TYPE_NORMAL
+  zh: '## 摘要统计'
 - en: A **statistic** is a number derived from a dataset, usually intended to quantify
     some aspect of the data. Examples include the count, mean, variance, and standard
     deviation.
+  id: totrans-165
   prefs: []
   type: TYPE_NORMAL
+  zh: '**统计量**是从数据集中派生出的一个数字，通常旨在量化数据的某个方面。例如包括计数、平均值、方差和标准差。'
 - en: A `Series` object has a `count` method that returns the number of values that
     are not `nan`.
+  id: totrans-166
   prefs: []
   type: TYPE_NORMAL
+  zh: '`Series`对象有一个`count`方法，它返回非`nan`值的数量。'
 - en: '[PRE35]'
+  id: totrans-167
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: '[PRE36]'
+  id: totrans-168
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: It also provides a `sum` method that returns the sum of the values – we can
     use it to compute the mean like this.
+  id: totrans-169
   prefs: []
   type: TYPE_NORMAL
+  zh: 它还提供了一个返回值总和的`sum`方法——我们可以用它来计算平均值，如下所示。
 - en: '[PRE37]'
+  id: totrans-170
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE37]'
 - en: '[PRE38]'
+  id: totrans-171
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: But as we’ve already seen, there’s also a `mean` method that does the same thing.
+  id: totrans-172
   prefs: []
   type: TYPE_NORMAL
+  zh: 但正如我们已经看到的，还有一个 `mean` 方法可以做到同样的事情。
 - en: '[PRE39]'
+  id: totrans-173
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: '[PRE40]'
+  id: totrans-174
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE40]'
 - en: In this dataset, the average birth weight is about 7.3 pounds.
+  id: totrans-175
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个数据集中，平均出生体重约为 7.3 磅。
 - en: Variance is a statistic that quantifies the spread of a set of values. It is
     the mean of the squared deviations, which are the distances of each point from
     the mean.
+  id: totrans-176
   prefs: []
   type: TYPE_NORMAL
+  zh: 方差是一种统计量，用于量化一组值的分布。它是平方偏差的平均值，即每个点与平均值之间的距离。
 - en: '[PRE41]'
+  id: totrans-177
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE41]'
 - en: We can compute the mean of the squared deviations like this.
+  id: totrans-178
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以这样计算平方偏差的平均值。
 - en: '[PRE42]'
+  id: totrans-179
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE42]'
 - en: '[PRE43]'
+  id: totrans-180
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE43]'
 - en: As you might expect, `Series` provides a `var` method that does *almost* the
     same thing.
+  id: totrans-181
   prefs: []
   type: TYPE_NORMAL
+  zh: 如您所预期，`Series` 提供了一个 `var` 方法，它几乎做的是同样的事情。
 - en: '[PRE44]'
+  id: totrans-182
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE44]'
 - en: '[PRE45]'
+  id: totrans-183
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE45]'
 - en: The result is slightly different because when the `var` method computes the
     mean of the squared deviations, it divides by `n-1` rather than `n`. That’s because
     there are two ways to compute the variance of a sample, depending on what you
@@ -750,216 +1120,321 @@
     – but in practice it usually doesn’t matter. If you prefer the version with `n`
     in the denominator, you can get it by passing `ddof=0` as a keyword argument to
     the `var` method.
+  id: totrans-184
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果略有不同，因为当 `var` 方法计算平方偏差的平均值时，它除以 `n-1` 而不是 `n`。这是因为根据你试图做什么，有两种计算样本方差的方法。我将在
+    [第 8 章](chap08.html#section-estimating-variance) 中解释这种差异——但在实践中通常无关紧要。如果你更喜欢分母中有
+    `n` 的版本，你可以通过将 `ddof=0` 作为关键字参数传递给 `var` 方法来获得它。
 - en: '[PRE46]'
+  id: totrans-185
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE46]'
 - en: '[PRE47]'
+  id: totrans-186
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE47]'
 - en: In this dataset, the variance of the birth weights is about 1.98, but that value
     is hard to interpret – for one thing, it is in units of pounds squared. Variance
     is useful in some computations, but not a good way to describe a dataset. A better
     option is the **standard deviation**, which is the square root of variance. We
     can compute it like this.
+  id: totrans-187
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个数据集中，出生体重的方差大约是 1.98，但这个值很难解释——一方面，它是以磅平方为单位的。方差在某些计算中很有用，但不是描述数据集的好方法。更好的选择是
+    **标准差**，它是方差的平方根。我们可以这样计算它。
 - en: '[PRE48]'
+  id: totrans-188
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE48]'
 - en: '[PRE49]'
+  id: totrans-189
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE49]'
 - en: Or, we can use the `std` method.
+  id: totrans-190
   prefs: []
   type: TYPE_NORMAL
+  zh: 或者，我们可以使用 `std` 方法。
 - en: '[PRE50]'
+  id: totrans-191
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE50]'
 - en: '[PRE51]'
+  id: totrans-192
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE51]'
 - en: In this dataset, the standard deviation of birth weights is about 1.4 pounds.
     Informally, values that are one or two standard deviations from the mean are common
     – values farther from the mean are rare.
+  id: totrans-193
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个数据集中，出生体重的标准差约为 1.4 磅。非正式地说，距离平均值一个或两个标准差的值很常见——距离平均值更远的值很少见。
 - en: Interpretation
+  id: totrans-194
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 解释
 - en: 'To work with data effectively, you have to think on two levels at the same
     time: the level of statistics and the level of context. As an example, let’s select
     the rows in the pregnancy file with `caseid` 10229. The `query` method takes a
     string that can contain column names, comparison operators, and numbers, among
     other things.'
+  id: totrans-195
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了有效地处理数据，你必须同时从两个层面思考：统计层面和背景层面。例如，让我们选择怀孕文件中 `caseid` 为 10229 的行。`query` 方法接受一个字符串，可以包含列名、比较运算符和数字等。
 - en: '[PRE52]'
+  id: totrans-196
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE52]'
 - en: '[PRE53]'
+  id: totrans-197
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE53]'
 - en: The result is a `DataFrame` that contains only the rows where the query is `True`.
     This respondent reported seven pregnancies – here are their outcomes, which are
     recorded in chronological order.
+  id: totrans-198
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个只包含查询为 `True` 的行的 `DataFrame`。这位受访者报告了七次怀孕——以下是他们的结果，这些结果按时间顺序记录。
 - en: '[PRE54]'
+  id: totrans-199
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE54]'
 - en: '[PRE55]'
+  id: totrans-200
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE55]'
 - en: The outcome code `1` indicates a live birth. Code `4` indicates a miscarriage
     – that is, a pregnancy loss, usually with no known medical cause.
+  id: totrans-201
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果代码 `1` 表示活产。代码 `4` 表示流产——即怀孕丢失，通常没有已知的医学原因。
 - en: Statistically this respondent is not unusual. Pregnancy loss is common and there
     are other respondents who reported as many instances. But remembering the context,
     this data tells the story of a woman who was pregnant six times, each time ending
     in miscarriage. Her seventh and most recent pregnancy ended in a live birth. If
     we consider this data with empathy, it is natural to be moved by the story it
     tells.
+  id: totrans-202
   prefs: []
   type: TYPE_NORMAL
+  zh: 从统计学的角度来看，这位受访者并不异常。怀孕丢失很常见，还有其他受访者报告了同样多的实例。但考虑到背景，这些数据讲述了一个女人怀孕六次，每次都以流产告终的故事。她的第七次也是最最近的一次怀孕以活产结束。如果我们带着同情心考虑这些数据，那么这个故事自然会触动人心。
 - en: Each row in the NSFG dataset represents a person who provided honest answers
     to many personal and difficult questions. We can use this data to answer statistical
     questions about family life, reproduction, and health. At the same time, we have
     an obligation to consider the people represented by the data, and to afford them
     respect and gratitude.
+  id: totrans-203
   prefs: []
   type: TYPE_NORMAL
+  zh: NSFG数据集中的每一行代表一个对许多个人和困难问题给出诚实回答的人。我们可以使用这些数据来回答关于家庭生活、生育和健康的统计问题。同时，我们有责任考虑数据所代表的人，并给予他们尊重和感激。
 - en: Glossary
+  id: totrans-204
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 术语表
 - en: The end of each chapter provides a glossary of words that are defined in the
     chapter.
+  id: totrans-205
   prefs: []
   type: TYPE_NORMAL
+  zh: 每章的结尾提供了一个定义在章节中的词汇表。
 - en: '**anecdotal evidence:** Data collected informally from a small number of individual
     cases, often without systematic sampling.'
+  id: totrans-206
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**轶事证据**：从少量个体案例中非正式收集的数据，通常没有系统抽样。'
 - en: '**cross-sectional study:** A study that collects data from a representative
     sample of a population at a single point or interval in time.'
+  id: totrans-207
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**横断面研究**：在某一时间点或时间间隔内从代表性样本中收集数据的调查。'
 - en: '**cycle:** One data-collection interval in a study that collects data at multiple
     intervals in time.'
+  id: totrans-208
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**周期**：在一个在多个时间间隔收集数据的调查中，一个数据收集间隔。'
 - en: '**population:** The entire group of individuals or items that is the subject
     of a study.'
+  id: totrans-209
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**总体**：研究主题的整个个体或项目群体。'
 - en: '**sample:** A subset of a population, often chosen at random.'
+  id: totrans-210
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**样本**：总体的一部分，通常随机选择。'
 - en: '**respondents:** People who participate in a survey and respond to questions.'
+  id: totrans-211
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**受访者**：参与调查并回答问题的人。'
 - en: '**representative:** A sample is representative if it is similar to the population
     in ways that are important for the purposes of the study.'
+  id: totrans-212
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**代表性**：如果一个样本在研究目的上重要的方面与总体相似，则该样本是具有代表性的。'
 - en: '**stratified:** A sample is stratified if it deliberately oversamples some
     groups, usually to make sure that enough members are included to support valid
     conclusions.'
+  id: totrans-213
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**分层抽样**：如果一个样本故意对某些群体进行过抽样，通常是为了确保包含足够的成员以支持有效的结论，则该样本是分层的。'
 - en: '**oversampled:** A group is oversampled if its members have a higher chance
     of appearing in a sample.'
+  id: totrans-214
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**过抽样**：如果一个群体的成员在样本中出现的概率更高，则该群体是过抽样的。'
 - en: '**variable:** In survey data, a variable is a collection of responses to questions
     or values computed from responses.'
+  id: totrans-215
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**变量**：在调查数据中，变量是对问题的回答或从回答中计算出的值的集合。'
 - en: '**codebook:** A document that describes the variables in a dataset, and provides
     other information about the data.'
+  id: totrans-216
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**代码簿**：描述数据集中变量的文档，并提供有关数据的其他信息。'
 - en: '**recode:** A variable that is computed based on other variables in a dataset.'
+  id: totrans-217
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**重新编码**：基于数据集中其他变量的变量。'
 - en: '**raw data:** Data that has not been processed after collection.'
+  id: totrans-218
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**原始数据**：收集后未经处理的原始数据。'
 - en: '**data cleaning:** A process for identifying and correcting errors in a dataset,
     dealing with missing values, and computing recodes.'
+  id: totrans-219
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**数据清洗**：识别和纠正数据集中错误的过程，处理缺失值，并计算重新编码。'
 - en: '**statistic:** A value that describes or summarizes a property of a sample.'
+  id: totrans-220
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**统计量**：描述或总结样本属性的值。'
 - en: '**standard deviation:** A statistic that quantifies the spread of data around
     the mean.'
+  id: totrans-221
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**标准差**：一个统计量，用于量化数据围绕平均值的分布。'
 - en: Exercises
+  id: totrans-222
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 练习
 - en: The exercises for this chapter are based on the NSFG pregnancy file.
+  id: totrans-223
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章的练习基于NSFG怀孕文件。
 - en: Exercise 1.1
+  id: totrans-224
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 练习1.1
 - en: Select the `birthord` column from `preg`, print the value counts, and compare
     to results published in the codebook at [https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Dataset_Documentation/NSFG/Cycle6Codebook-Pregnancy.pdf](https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Dataset_Documentation/NSFG/Cycle6Codebook-Pregnancy.pdf).
+  id: totrans-225
   prefs: []
   type: TYPE_NORMAL
+  zh: 从`preg`中选择`birthord`列，打印值计数，并与[https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Dataset_Documentation/NSFG/Cycle6Codebook-Pregnancy.pdf](https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Dataset_Documentation/NSFG/Cycle6Codebook-Pregnancy.pdf)中发布的代码簿结果进行比较。
 - en: Exercise 1.2
+  id: totrans-226
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 练习1.2
 - en: Create a new column named `totalwgt_kg` that contains birth weight in kilograms
     (there are approximately 2.2 pounds per kilogram). Compute the mean and standard
     deviation of the new column.
+  id: totrans-227
   prefs: []
   type: TYPE_NORMAL
+  zh: 创建一个名为`totalwgt_kg`的新列，其中包含以千克为单位的出生体重（每千克大约有2.2磅）。计算新列的平均值和标准差。
 - en: Exercise 1.3
+  id: totrans-228
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 练习1.3
 - en: What are the pregnancy lengths for the respondent with `caseid` 2298?
+  id: totrans-229
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于`caseid`为2298的受访者，其怀孕时长是多少？
 - en: 'What was the birth weight of the first baby born to the respondent with `caseid`
     5013? Hint: You can use `and` to check more than one condition in a query.'
+  id: totrans-230
   prefs: []
   type: TYPE_NORMAL
+  zh: '`caseid`为5013的受访者第一个孩子的出生体重是多少？提示：您可以使用`and`在查询中检查多个条件。'
 - en: '[Think Stats: Exploratory Data Analysis in Python, 3rd Edition](https://allendowney.github.io/ThinkStats/index.html)'
+  id: totrans-231
   prefs: []
   type: TYPE_NORMAL
+  zh: '[Think Stats: Python 中的探索性数据分析，第 3 版](https://allendowney.github.io/ThinkStats/index.html)'
 - en: Copyright 2024 [Allen B. Downey](https://allendowney.com)
+  id: totrans-232
   prefs: []
   type: TYPE_NORMAL
+  zh: 版权所有 2024 [艾伦·B·唐尼](https://allendowney.com)
 - en: 'Code license: [MIT License](https://mit-license.org/)'
+  id: totrans-233
   prefs: []
   type: TYPE_NORMAL
+  zh: 代码许可：[MIT 许可证](https://mit-license.org/)
 - en: 'Text license: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  id: totrans-234
   prefs: []
   type: TYPE_NORMAL
+  zh: 文本许可：[Creative Commons 知识共享署名-非商业性使用-相同方式共享 4.0 国际](https://creativecommons.org/licenses/by-nc-sa/4.0/)

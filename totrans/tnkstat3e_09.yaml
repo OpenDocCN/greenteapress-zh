@@ -1,11 +1,15 @@
 - en: Relationships between variables
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 变量之间的关系
 - en: 原文：[https://allendowney.github.io/ThinkStats/chap07.html](https://allendowney.github.io/ThinkStats/chap07.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ThinkStats/chap07.html](https://allendowney.github.io/ThinkStats/chap07.html)
 - en: 'So far we have only looked at one variable at a time. In this chapter we start
     looking at relationships between variables. Two variables are related if knowing
     one gives you information about the other. For example, height and weight are
@@ -13,35 +17,51 @@
     relationship: there are short heavy people and tall light ones. But if you are
     trying to guess someone’s weight, you will be more accurate if you know their
     height than if you don’t.'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 到目前为止，我们一次只查看一个变量。在本章中，我们开始研究变量之间的关系。如果知道一个变量就能给你关于另一个变量的信息，那么这两个变量就是相关的。例如，身高和体重是相关的——个子高的人往往比较重。当然，这并不是一个完美的关系：也有又矮又重的人和又高又轻的人。但如果你试图猜测某人的体重，知道他们的身高会比不知道更准确。
 - en: This chapter presents several ways to visualize relationships between variables,
     and one way to quantify the strength of a relationship, correlation.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章介绍了多种可视化变量之间关系的方法，以及一种量化关系强度，即相关性的方法。
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ThinkStats/blob/v3/nb/chap07.ipynb).'
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: '[点击此处运行此笔记本在Colab上](https://colab.research.google.com/github/AllenDowney/ThinkStats/blob/v3/nb/chap07.ipynb)。'
 - en: '[PRE0]'
+  id: totrans-5
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '[PRE1]'
+  id: totrans-6
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '[PRE2]'
+  id: totrans-7
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: Scatter Plots
+  id: totrans-8
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 散点图
 - en: If you meet someone who is unusually good at math, do you expect their verbal
     skills to be better or worse than average? On one hand, you might imagine that
     people specialize in one area or the other, so someone who excels at one might
     be less good at the other. On the other hand, you might expect someone who is
     generally smart to be above average in both areas. Let’s find out which it is.
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你遇到一个数学特别擅长的人，你会期望他们的语言技能比平均水平更好还是更差？一方面，你可能会想象人们会在一个或另一个领域专长，所以擅长一个领域的人可能在另一个领域不那么擅长。另一方面，你可能会期望一个一般都很聪明的人在两个领域都高于平均水平。让我们找出哪个是正确的。
 - en: We’ll use data from the National Longitudinal Survey of Youth 1997 (NLSY97),
     which “follows the lives of a sample of 8,984 American youth born between 1980-84”.
     The public data set includes the participants’ scores on several standardized
@@ -49,928 +69,1405 @@
     ACT. Because test-takers get separate scores for the math and verbal sections,
     we can use this data to explore the relationship between mathematical and verbal
     ability.
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将使用1997年国家青年纵向调查（NLSY97）的数据，该调查“追踪了1980-84年间出生的8,984名美国青年的生活”。公共数据集包括参与者在几个标准化测试中的得分，包括在大学入学中最常用的SAT和ACT测试。因为测试者会得到数学和语言部分的单独分数，我们可以使用这些数据来探索数学能力和语言能力之间的关系。
 - en: I used the NLS Investigator to create an excerpt that contains the variables
     I’ll use for this analysis. With their permission, I can redistribute this excerpt.
     Instructions for downloading the data are in the notebook for this chapter.
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 我使用NLS Investigator创建了一个摘录，其中包含我将用于此分析的自变量。在他们的许可下，我可以重新分发这个摘录。关于下载数据的说明在本书的笔记本中。
 - en: '[PRE3]'
+  id: totrans-12
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: We can use `read_csv` to read the data and `replace` to replace the special
     codes for missing data with `np.nan`.
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用`read_csv`来读取数据，并使用`replace`将缺失数据的特殊代码替换为`np.nan`。
 - en: '[PRE4]'
+  id: totrans-14
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '[PRE5]'
+  id: totrans-15
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '[PRE6]'
+  id: totrans-16
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '|  | R0000100 | R0490200 | R0536300 | R0536401 | R0536402 | R1235800 | R1318200
     | R1482600 | R3961900 | R3989200 | ... | R9872200 | R9872300 | R9872400 | S1552700
     | U0008900 | U1845500 | U3444000 | U4949700 | Z9083800 | Z9083900 |'
+  id: totrans-17
   prefs: []
   type: TYPE_TB
+  zh: '|  | R0000100 | R0490200 | R0536300 | R0536401 | R0536402 | R1235800 | R1318200
+    | R1482600 | R3961900 | R3989200 | ... | R9872200 | R9872300 | R9872400 | S1552700
+    | U0008900 | U1845500 | U3444000 | U4949700 | Z9083800 | Z9083900 |'
 - en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
     | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  id: totrans-18
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+    | --- | --- | --- | --- | --- | --- | --- | --- |'
 - en: '| 0 | 1 | NaN | 2 | 9 | 1981 | 1 | NaN | 4 | NaN | NaN | ... | 293.0 | 250.0
     | 333.0 | NaN | 120000.0 | NaN | NaN | NaN | 16.0 | 4.0 |'
+  id: totrans-19
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 1 | NaN | 2 | 9 | 1981 | 1 | NaN | 4 | NaN | NaN | ... | 293.0 | 250.0
+    | 333.0 | NaN | 120000.0 | NaN | NaN | NaN | 16.0 | 4.0 |'
 - en: '| 1 | 2 | NaN | 1 | 7 | 1982 | 1 | 145.0 | 2 | NaN | NaN | ... | 114.0 | 230.0
     | 143.0 | NaN | 98928.0 | 116000.0 | 188857.0 | 180000.0 | 14.0 | 2.0 |'
+  id: totrans-20
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 2 | NaN | 1 | 7 | 1982 | 1 | 145.0 | 2 | NaN | NaN | ... | 114.0 | 230.0
+    | 143.0 | NaN | 98928.0 | 116000.0 | 188857.0 | 180000.0 | 14.0 | 2.0 |'
 - en: '| 2 | 3 | NaN | 2 | 9 | 1983 | 1 | 82.0 | 2 | NaN | NaN | ... | NaN | NaN |
     NaN | NaN | NaN | NaN | NaN | 75000.0 | 16.0 | 4.0 |'
+  id: totrans-21
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 3 | NaN | 2 | 9 | 1983 | 1 | 82.0 | 2 | NaN | NaN | ... | NaN | NaN |
+    NaN | NaN | NaN | NaN | NaN | 75000.0 | 16.0 | 4.0 |'
 - en: '| 3 | 4 | NaN | 2 | 2 | 1981 | 1 | NaN | 2 | NaN | NaN | ... | 195.0 | 230.0
     | 216.0 | NaN | 85000.0 | 45000.0 | NaN | NaN | 13.0 | 2.0 |'
+  id: totrans-22
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 4 | NaN | 2 | 2 | 1981 | 1 | NaN | 2 | NaN | NaN | ... | 195.0 | 230.0
+    | 216.0 | NaN | 85000.0 | 45000.0 | NaN | NaN | 13.0 | 2.0 |'
 - en: '| 4 | 5 | NaN | 1 | 10 | 1982 | 1 | NaN | 2 | NaN | NaN | ... | 293.0 | 230.0
     | 231.0 | NaN | 210000.0 | 212000.0 | NaN | 240000.0 | 12.0 | 2.0 |'
+  id: totrans-23
   prefs: []
   type: TYPE_TB
+  zh: '| 4 | 5 | NaN | 1 | 10 | 1982 | 1 | NaN | 2 | NaN | NaN | ... | 293.0 | 230.0
+    | 231.0 | NaN | 210000.0 | 212000.0 | NaN | 240000.0 | 12.0 | 2.0 |'
 - en: 5 rows × 34 columns
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 5行 × 34列
 - en: The `DataFrame` contains one row for each of the 8984 participants in the survey
     and one column for each of the 34 variables I selected. The column names don’t
     mean much by themselves, so let’s replace the ones we’ll use with more interpretable
     names.
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: '`DataFrame`包含调查中每个8984名参与者的一个行，以及我选择的每个34个变量的一个列。列名本身没有太多意义，所以让我们用我们将使用的更可解释的名称来替换它们。'
 - en: '[PRE7]'
+  id: totrans-26
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: Both columns contain a few values less than 200, which is not possible because
     200 is the lowest score, so we’ll replace them with `np.nan`.
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 两个列都包含一些小于200的值，这是不可能的，因为200是最低分，所以我们将它们替换为`np.nan`。
 - en: '[PRE8]'
+  id: totrans-28
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: Next we’ll use `dropna` to select only rows where both scores are valid.
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 接下来，我们将使用`dropna`来选择只有两个分数都有效的行。
 - en: '[PRE9]'
+  id: totrans-30
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '[PRE10]'
+  id: totrans-31
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: SAT scores are standardized so the mean is 500 and the standard deviation is
     100. In the NLSY sample, the means and standard deviations are close to these
     values.
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: SAT分数是标准化的，所以平均分是500，标准差是100。在NLSY样本中，平均值和标准差接近这些值。
 - en: '[PRE11]'
+  id: totrans-33
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: '[PRE12]'
+  id: totrans-34
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '[PRE13]'
+  id: totrans-35
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: '[PRE14]'
+  id: totrans-36
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: Now, to see whether there is a relationship between these variables, let’s look
     at a **scatter plot**.
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，为了看看这些变量之间是否存在关系，让我们看看一个**散点图**。
 - en: '[PRE15]'
+  id: totrans-38
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '![_images/ef1385f245677b407128ed90209b900187aa895b3c352a5f8a8b04c4900e38f1.png](../Images/3ccc00b02f0bbeea55013d8ade32e79a.png)'
+  id: totrans-39
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/ef1385f245677b407128ed90209b900187aa895b3c352a5f8a8b04c4900e38f1.png](../Images/3ccc00b02f0bbeea55013d8ade32e79a.png)'
 - en: Using the default options of the `scatter` function, we can see the general
     shape of the relationship. People who do well on one section of the test tend
     to do better on the other, too.
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用`scatter`函数的默认选项，我们可以看到关系的一般形状。在测试的一个部分表现好的人，在其他部分也倾向于表现更好。
 - en: However, this version of the figure is **overplotted**, which means there are
     a lot of overlapping points, which can create a misleading impression of the relationship.
     The center, where the density of points is highest, is not as dark as it should
     be – by comparison, the extreme values are darker than they should be. Overplotting
     tends to give too much visual weight to outliers.
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: 然而，这个版本的图形是**过度绘图**的，这意味着有很多重叠的点，这可能会产生误导性的关系印象。点密度最高的中心区域并不像应该的那样暗——相比之下，极端值比应该的更暗。过度绘图往往会给异常值过多的视觉权重。
 - en: We can improve the plot by reducing the size of the markers so they overlap
     less.
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以通过减小标记的大小来改进图形，这样它们就重叠得更少。
 - en: '[PRE16]'
+  id: totrans-43
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '![_images/231904025778f56e47c42d3dd4f26b31aed27a0ffb2244a96028ed6f330f2d22.png](../Images/93edbe951a5dd99862eb09a1589c9b96.png)'
+  id: totrans-44
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/231904025778f56e47c42d3dd4f26b31aed27a0ffb2244a96028ed6f330f2d22.png](../Images/93edbe951a5dd99862eb09a1589c9b96.png)'
 - en: Now we can see that the markers are aligned in rows and columns, because scores
     are rounded off to the nearest multiple of 10. Some information is lost in the
     process.
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以看到标记已经按行和列对齐，因为分数被四舍五入到最接近的10的倍数。在这个过程中，一些信息丢失了。
 - en: We can’t get that information back, but we can minimize the effect on the scatter
     plot by **jittering** the data, which means adding random noise to reverse the
     effect of rounding off. The following function takes a sequence and jitters it
     by adding random values from a normal distribution with mean 0 and the given standard
     deviation. The result is a NumPy array.
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们无法恢复这些信息，但我们可以通过**抖动**数据来最小化对散点图的影响，这意味着向数据中添加随机噪声以抵消四舍五入的影响。以下函数接受一个序列，并通过添加具有均值为0和给定标准差的正态分布的随机值来抖动它。结果是NumPy数组。
 - en: '[PRE17]'
+  id: totrans-47
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: If we jitter the scores with a standard deviation of 3, the rows and columns
     are no longer visible in the scatter plot.
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们用标准差为3的分数进行抖动，散点图中的行和列就不再可见了。
 - en: '[PRE18]'
+  id: totrans-49
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: '[PRE19]'
+  id: totrans-50
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '![_images/d9e7248487064f569ef286338bf94c0f34c614f42d6cc7b985f34d49fe39bda4.png](../Images/50ad77c6e70dc8a531b6f2ab25919dbf.png)'
+  id: totrans-51
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/d9e7248487064f569ef286338bf94c0f34c614f42d6cc7b985f34d49fe39bda4.png](../Images/50ad77c6e70dc8a531b6f2ab25919dbf)'
 - en: Jittering reduces the visual effect of rounding and makes the shape of the relationship
     clearer. But in general you should only jitter data for purposes of visualization
     and avoid using jittered data for analysis.
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: 抖动减少了四舍五入的视觉影响，使关系的形状更清晰。但一般来说，你应该只为可视化目的抖动数据，避免使用抖动数据进行分析。
 - en: 'In this example, even after adjusting the marker size and jittering the data,
     there is still some overplotting. So let’s try one more thing: we can use the
     `alpha` keyword to make the markers partly transparent.'
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个例子中，即使调整了标记大小并抖动数据，仍然存在一些重叠。所以让我们再试一次：我们可以使用`alpha`关键字使标记部分透明。
 - en: '[PRE20]'
+  id: totrans-54
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '![_images/a23074a61eca6e0a17b738fd292febb854d6267d8e87b1e352fe7b04c7964706.png](../Images/a3e31cd763e117bd799ae8e2da1f54ee.png)'
+  id: totrans-55
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/a3e31cd763e117bd799ae8e2da1f54ee.png)'
 - en: With transparency, overlapping data points look darker, so darkness is proportional
     to density.
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: 在透明度下，重叠的数据点看起来更暗，因此暗度与密度成正比。
 - en: Although scatter plots are a simple and widely-used visualization, they can
     be hard to get right. In general, it takes some trial and error to adjust marker
     sizes, transparency, and jittering to find the best visual representation of the
     relationship between variables.
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 虽然散点图是一种简单且广泛使用的可视化方法，但要正确使用它们可能很困难。一般来说，需要一些尝试和错误来调整标记大小、透明度和抖动，以找到变量之间关系的最佳视觉表示。
 - en: Decile Plots
+  id: totrans-58
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 十分位数图
 - en: Scatter plots provide a general impression of the relationship between variables,
     but there are other visualizations that provide more insight into the nature of
     the relationship. One of them is a **decile plot**.
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 散点图提供了变量之间关系的总体印象，但还有其他可视化方法可以更深入地了解关系的本质。其中之一是**十分位数图**。
 - en: To generate a decile plot, we’ll sort the respondents by verbal score and divide
     them into 10 groups, called **deciles**. We can use the `qcut` method to compute
     the deciles.
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 要生成十分位数图，我们将受访者按语言分数排序，并将他们分成10组，称为**十分位数**。我们可以使用`qcut`方法计算十分位数。
 - en: '[PRE21]'
+  id: totrans-61
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: '[PRE22]'
+  id: totrans-62
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: The number of respondents in each decile is roughly equal.
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 每个十分位数的受访者数量大致相等。
 - en: Now we can use the `groupby` method to divide the `DataFrame` into groups by
     `decile`.
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，我们可以使用`groupby`方法根据`decile`将`DataFrame`分成组。
 - en: '[PRE23]'
+  id: totrans-65
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: '[PRE24]'
+  id: totrans-66
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: The result is a `DataFrameGroupBy` object that represents the groups. We can
     select the `sat_math` column from it.
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个`DataFrameGroupBy`对象，表示组。我们可以从中选择`sat_math`列。
 - en: '[PRE25]'
+  id: totrans-68
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: '[PRE26]'
+  id: totrans-69
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: The result is a `SeriesGroupBy` object that represents the math scores in each
     decile. We can use the `quantile` function to compute the 10th, 50th, and 90th
     percentiles in each group.
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个`SeriesGroupBy`对象，表示每个十分位数的数学分数。我们可以使用`quantile`函数计算每个组的第10、50和90个百分位数。
 - en: '[PRE27]'
+  id: totrans-71
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: A decile plot shows these percentiles for each decile group. In the following
     figure, the line shows the median and the shaded region shows the area between
     the 10th and 90th percentiles.
+  id: totrans-72
   prefs: []
   type: TYPE_NORMAL
+  zh: 十分位数图显示了每个十分位数组的这些百分位数。在下面的图中，线表示中位数，阴影区域表示第10和第90百分位数之间的区域。
 - en: '[PRE28]'
+  id: totrans-73
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: '![_images/a2062d6590d24fcfd8a73e72aba32540fc72c179020548106dfa437cce05b5b8.png](../Images/83c6d65625ec4e99a45bdc9e4bde8155.png)'
+  id: totrans-74
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/83c6d65625ec4e99a45bdc9e4bde8155.png)'
 - en: As an alternative, we can compute the median verbal score in each group and
     plot those values on the x-axis, rather than the decile numbers.
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为一种替代方案，我们可以计算每个小组的中位数语言分数，并将这些值绘制在x轴上，而不是十分位数数字。
 - en: '[PRE29]'
+  id: totrans-76
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: '![_images/b30c80a443c531ef5f2ed5eb95bceb4d274b779bf865a8a551b50c00c8f8fce9.png](../Images/b5bb1f2d7430fd6db524fb36ee9e6acf.png)'
+  id: totrans-77
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/b5bb1f2d7430fd6db524fb36ee9e6acf.png)'
 - en: It looks like the relationship between these variables is linear – that is,
     each increase in the median verbal scores corresponds to a roughly equal increase
     in median math scores.
+  id: totrans-78
   prefs: []
   type: TYPE_NORMAL
+  zh: 看起来这些变量之间的关系是线性的——也就是说，中位数语言分数的每次增加都对应着中位数数学分数的大致相等增加。
 - en: More generally, we could divide the respondents into any number of groups, not
     necessarily 10, and we could compute other summary statistics in each group, not
     just these percentiles.
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: 更普遍地说，我们可以将受访者分成任意数量的组，不一定非要是10个，我们可以在每个组中计算其他汇总统计量，而不仅仅是这些百分位数。
 - en: Correlation
+  id: totrans-80
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 相关系数
 - en: When the NLSY participants were in 9th grade, many of them took the mathematics
     section of the Peabody Individual Achievement Test (PIAT). Let’s give the column
     that contains the results a more interpretable name.
+  id: totrans-81
   prefs: []
   type: TYPE_NORMAL
+  zh: 当NLSY参与者处于9年级时，他们中的许多人参加了皮博迪个人成就测试（PIAT）的数学部分。让我们给包含结果的列一个更易理解的名称。
 - en: '[PRE30]'
+  id: totrans-82
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: '[PRE31]'
+  id: totrans-83
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: Here’s what the distribution of scores looks like.
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: 下面是分数分布的图示。
 - en: '[PRE32]'
+  id: totrans-85
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: '![_images/631d4ff9822361b3089ee462030515ae7ca0f90f925b824b7510b579cc08126b.png](../Images/532175927cd81b65d2d498402ece6b1e.png)'
+  id: totrans-86
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/532175927cd81b65d2d498402ece6b1e.png)'
 - en: Students who do well on the PIAT in 9th grade are likely to do well on the SAT
     math section in 12th grade. For the NLSY participants who took both tests, the
     following scatter plot shows the relationship between their scores. It uses the
     `scatter` function in `thinkstats`, which adjusts the marker size and transparency,
     and optionally jitters the data.
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: 在9年级PIAT表现良好的学生很可能在12年级SAT数学部分表现良好。对于参加了这两次测试的NLSY参与者，以下散点图显示了他们的分数之间的关系。它使用了`thinkstats`中的`scatter`函数，该函数调整标记大小和透明度，并可选择抖动数据。
 - en: '[PRE33]'
+  id: totrans-88
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: '![_images/533f7031f7114cf3687097765e38b823adfbc13c468104b88ad3fe9f77f94aa0.png](../Images/2fb31340e87308c214ac5400a008725a.png)'
+  id: totrans-89
   prefs: []
   type: TYPE_IMG
+  zh: '![图片链接](../Images/2fb31340e87308c214ac5400a008725a.png)'
 - en: As expected, students who do well on the PIAT are likely to do well on the SAT
     math. And if math and verbal ability are related, we expect them do well on the
     SAT verbal section, too. The following figure shows the relationship between the
     PIAT and SAT verbal scores.
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: 如预期，在PIAT中表现良好的学生也可能会在SAT数学中表现良好。如果数学和语言能力相关，我们预计他们在SAT语言部分也会表现良好。下图显示了PIAT和SAT语言分数之间的关系。
 - en: '[PRE34]'
+  id: totrans-91
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: '![_images/105c53d7f220ad9299ec9d4f70f827901d26e4221b7973f57ff2aa1b949a15d3.png](../Images/5dd81b81889c745d6c2ef431d825004e.png)'
+  id: totrans-92
   prefs: []
   type: TYPE_IMG
+  zh: '![图片链接](../Images/5dd81b81889c745d6c2ef431d825004e.png)'
 - en: Students with higher PIAT scores also have higher SAT verbal scores, on average.
+  id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: PIAT分数较高的学生平均SAT语言分数也较高。
 - en: Comparing the scatter plots, the points in the first figure might be more compact,
     and the points in the second figure more dispersed. If so, that means that the
     PIAT math scores predict SAT math scores more accurately than they predict SAT
     verbal scores – and it makes sense if they do.
+  id: totrans-94
   prefs: []
   type: TYPE_NORMAL
+  zh: 比较散点图，第一个图中的点可能更紧凑，而第二个图中的点可能更分散。如果是这样，这意味着PIAT数学分数比它们预测SAT语言分数更准确地预测SAT数学分数——如果它们确实如此，这是有道理的。
 - en: To quantify the strength of these relationships, we can use the **Pearson correlation
     coefficient**, often just called “correlation”. To understand correlation, let’s
     start with standardization.
+  id: totrans-95
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了量化这些关系的强度，我们可以使用**皮尔逊相关系数**，通常简称为“相关系数”。为了理解相关系数，让我们从标准化开始。
 - en: To standardize a variable, we subtract off the mean and divide through by the
     standard deviation, as in this function.
+  id: totrans-96
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了标准化一个变量，我们减去平均值，然后除以标准差，就像这个函数中那样。
 - en: '[PRE35]'
+  id: totrans-97
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: To show how it’s used, we’ll select the rows where `piat_math` and `sat_math`
     are valid.
+  id: totrans-98
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了展示其用法，我们将选择`piat_math`和`sat_math`有效的行。
 - en: '[PRE36]'
+  id: totrans-99
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: And standardize the PIAT math scores.
+  id: totrans-100
   prefs: []
   type: TYPE_NORMAL
+  zh: 并且将PIAT数学分数进行标准化。
 - en: '[PRE37]'
+  id: totrans-101
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE37]'
 - en: '[PRE38]'
+  id: totrans-102
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: The results are **standard scores**, also called “z-scores”. Because of the
     way the standard scores are calculated, the mean is close to 0 and the standard
     deviation is close to 1.
+  id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是**标准分数**，也称为“z分数”。由于标准分数的计算方式，平均值接近0，标准差接近1。
 - en: Let’s also standardize the SAT math scores.
+  id: totrans-104
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们也将SAT数学分数进行标准化。
 - en: '[PRE39]'
+  id: totrans-105
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: '[PRE40]'
+  id: totrans-106
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE40]'
 - en: The following figure shows sequences of these scores for the first 100 participants.
+  id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: 下图显示了前100名参与者的这些分数序列。
 - en: Calling `subplot` with the arguments `2, 1, 1` tells Matplotlib to create multiple
     plots, arranged in two rows and one column, and initializes the first plot. Calling
     it again with the arguments `2, 1, 2` initializes the second plot. `axhline` draws
     a horizontal line that spans the width of the axes.
+  id: totrans-108
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用`subplot`函数并带有参数`2, 1, 1`告诉Matplotlib创建多个图表，排列成两行一列，并初始化第一个图表。再次使用带有参数`2,
+    1, 2`的`subplot`函数初始化第二个图表。`axhline`函数绘制一个横跨轴宽的水平线。
 - en: '![_images/abc24500398e51254ba3bd4404632ce6f187115628e6ec2416ba43d4cf9a2cdf.png](../Images/639c9bb6235d1e84f89ed8bdb37c0a9c.png)'
+  id: totrans-109
   prefs: []
   type: TYPE_IMG
+  zh: '![图片链接](../Images/639c9bb6235d1e84f89ed8bdb37c0a9c.png)'
 - en: 'These variables are clearly related: when one is above the mean, the other
     is likely to be above the mean, too. To quantify the strength of this relationship,
     we’ll multiply the standard scores element-wise and compute the average of the
     products.'
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些变量之间有明显的相关性：当一个变量高于平均值时，另一个变量也很可能高于平均值。为了量化这种关系的强度，我们将逐元素相乘标准分数并计算乘积的平均值。
 - en: When both scores are positive, their product is positive, so it tends to increase
     the average product. And when both scores are negative, their product is positive,
     so it also tends to increase the average product. When the scores have opposite
     signs, the product is negative, so it decreases the average product. As a result,
     the average product measures the similarity between the sequences.
+  id: totrans-111
   prefs: []
   type: TYPE_NORMAL
+  zh: 当两个分数都是正数时，它们的乘积是正数，因此它倾向于增加平均乘积。当两个分数都是负数时，它们的乘积也是正数，因此它也倾向于增加平均乘积。当分数有相反的符号时，乘积是负数，因此它减少了平均乘积。因此，平均乘积衡量了序列之间的相似性。
 - en: '[PRE41]'
+  id: totrans-112
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE41]'
 - en: '[PRE42]'
+  id: totrans-113
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE42]'
 - en: 'The result, which is about 0.64, is the correlation coefficient. Here’s one
     way to interpret it: if someone’s PIAT math score is 1 standard deviation above
     the mean, we expect their SAT math score to be 0.64 standard deviations above
     the mean, on average.'
+  id: totrans-114
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果，大约为0.64，是相关系数。这里有一种解释方式：如果某人的PIAT数学分数比平均值高一个标准差，我们预计他们的SAT数学分数平均会高出0.64个标准差。
 - en: The result is the same if we multiply the elements in the other order.
+  id: totrans-115
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们以其他顺序乘以元素，结果也是相同的。
 - en: '[PRE43]'
+  id: totrans-116
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE43]'
 - en: '[PRE44]'
+  id: totrans-117
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE44]'
 - en: 'So the correlation coefficient is symmetric: if someone’s SAT math score is
     1 standard deviation above the mean, we expect their PIAT math score to be 0.64
     standard deviations above the mean, on average.'
+  id: totrans-118
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，相关系数是对称的：如果某人的SAT数学分数比平均值高一个标准差，我们预计他们的PIAT数学分数平均会高0.64个标准差。
 - en: Correlation is a commonly-used statistic, so NumPy provides a function that
     computes it.
+  id: totrans-119
   prefs: []
   type: TYPE_NORMAL
+  zh: 相关系数是一个常用的统计量，因此NumPy提供了一个计算它的函数。
 - en: '[PRE45]'
+  id: totrans-120
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE45]'
 - en: '[PRE46]'
+  id: totrans-121
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE46]'
 - en: The result is a **correlation matrix**, with one row and one column for each
     variable. The value in the upper left is the correlation of `piat_math` with itself.
     The value in the lower right is the correlation of `sat_math` with itself. The
     correlation of any variable with itself is 1, which indicates perfect correlation.
+  id: totrans-122
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个**相关矩阵**，每个变量都有一个行和一个列。左上角的值是`piat_math`与其自身的相关性。右下角的值是`sat_math`与其自身的相关性。任何变量与其自身的相关性是1，这表示完全相关。
 - en: The values in the upper right and lower left are the correlation of `piat_math`
     with `sat_math` and the correlation of `sat_math` with `piat_math`, which are
     necessarily equal.
+  id: totrans-123
   prefs: []
   type: TYPE_NORMAL
+  zh: 上右和下左的值是`piat_math`与`sat_math`以及`sat_math`与`piat_math`的相关性，这两个值必然是相等的。
 - en: '`thinkstats` provides a `corrcoef` function that takes a `DataFrame` and two
     column names, selects the rows where both columns are valid, and computes their
     correlation.'
+  id: totrans-124
   prefs: []
   type: TYPE_NORMAL
+  zh: '`thinkstats`提供了一个`corrcoef`函数，它接受一个`DataFrame`和两个列名，选择两个列都有效的行，并计算它们的相关性。'
 - en: '[PRE47]'
+  id: totrans-125
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE47]'
 - en: '[PRE48]'
+  id: totrans-126
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE48]'
 - en: We can use this function to compute the correlation of `piat_math` and `sat_verbal`.
+  id: totrans-127
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用这个函数来计算`piat_math`和`sat_verbal`之间的相关性。
 - en: '[PRE49]'
+  id: totrans-128
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE49]'
 - en: '[PRE50]'
+  id: totrans-129
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE50]'
 - en: The correlation is about 0.51, so if someone’s PIAT math score is one standard
     deviation above the mean, we expect their SAT verbal score to be 0.51 standard
     deviations above the mean, on average.
+  id: totrans-130
   prefs: []
   type: TYPE_NORMAL
+  zh: 相关系数为0.51，因此如果某人的PIAT数学分数比平均值高一个标准差，我们预计他们的SAT语文分数平均会高出0.51个标准差。
 - en: As we might expect, PIAT math scores predict SAT math scores better than they
     predict SAT verbal scores.
+  id: totrans-131
   prefs: []
   type: TYPE_NORMAL
+  zh: 如我们所预期，PIAT数学分数比它们预测SAT语文分数更好地预测SAT数学分数。
 - en: Strength of Correlation
+  id: totrans-132
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 相关系数的强度
 - en: As you look at more scatter plots, you will get a sense of what different correlations
     look like. To help you develop this sense, the following figure shows scatter
     plots for randomly-generated data with the different correlations.
+  id: totrans-133
   prefs: []
   type: TYPE_NORMAL
+  zh: 随着你查看更多的散点图，你会对不同的相关性看起来是什么样子有一个感觉。为了帮助你培养这种感觉，以下图表展示了具有不同相关性的随机生成数据的散点图。
 - en: '[PRE51]'
+  id: totrans-134
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE51]'
 - en: '![_images/e7ee5372b41d12d05a35f4998779ee5d22318be735c0f5529c0a7e2c817d7941.png](../Images/5eba3559ca143f76fbf6a8cbf462a57e.png)'
+  id: totrans-135
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/5eba3559ca143f76fbf6a8cbf462a57e.png)'
 - en: The Greek letter ρ, which is spelled “rho” and pronounced like “row”, is the
     conventional symbol for the correlation coefficient.
+  id: totrans-136
   prefs: []
   type: TYPE_NORMAL
+  zh: 希腊字母ρ，读作“rho”，发音类似于“row”，是相关系数的传统符号。
 - en: Correlation can also be negative. Here are scatter plots for random data with
     a range of negative correlations.
+  id: totrans-137
   prefs: []
   type: TYPE_NORMAL
+  zh: 相关系数也可以是负的。以下是具有一系列负相关性的随机数据的散点图。
 - en: '![_images/41b0421758b6d666fc04fcd58b81662b8b51decc444db8f50062e6206da78084.png](../Images/7cb4ea024a3acfd6bd9d1c040529d2bb.png)'
+  id: totrans-138
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/7cb4ea024a3acfd6bd9d1c040529d2bb.png)'
 - en: The correlation coefficient is always between -1 and 1. If there is no relationship
     between two variables, their correlation is 0 – but if the correlation is 0, that
     doesn’t necessarily mean there is no relationship.
+  id: totrans-139
   prefs: []
   type: TYPE_NORMAL
+  zh: 相关系数总是在-1和1之间。如果两个变量之间没有关系，它们的相关系数为0——但如果相关系数为0，这并不一定意味着没有关系。
 - en: In particular, if there is a non-linear relationship, the correlation coefficient
     can be close to 0. In each of the following examples, there is a clear relationship
     between the variables in the sense that if we are given one of the values, we
     can make a substantially better prediction of the other. But in each case the
     correlation coefficient is close to 0.
+  id: totrans-140
   prefs: []
   type: TYPE_NORMAL
+  zh: 尤其是在存在非线性关系的情况下，相关系数可能接近于0。在以下每个例子中，变量之间存在明显的关系，即如果我们给出其中一个值，我们就可以对另一个值做出相当大的预测改进。但在每种情况下，相关系数都接近于0。
 - en: '![_images/8c360130f804b33bde85aab4a66bcd54a743597f6952a770a2cc499cda680917.png](../Images/7812e5c1870cf8b795a6a779aedc8c57.png)'
+  id: totrans-141
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/7812e5c1870cf8b795a6a779aedc8c57.png)'
 - en: Correlation quantifies the strength of a *linear* relationship between variables.
     If there is a non-linear relationship, the correlation coefficient can be misleading.
     And if the correlation is close to 0, that does *not* mean there is no relationship.
+  id: totrans-142
   prefs: []
   type: TYPE_NORMAL
+  zh: 相关系数量化了变量之间线性关系的强度。如果存在非线性关系，相关系数可能会误导。而且，如果相关系数接近于0，这并不意味着没有关系。
 - en: Rank Correlation
+  id: totrans-143
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 排名相关性
 - en: The NLSY is longitudinal, which means that it follows the same group of people
     over time. The group we’ve been studying includes people born between 1980 and
     1984. The ones who took the SAT probably took it in the late 1990s, when they
     were about 18 years old. So when they were asked about their income in 2021, they
     were in their late 30s or early 40s. Let’s give the column with the income data
     a more interpretable name.
+  id: totrans-144
   prefs: []
   type: TYPE_NORMAL
+  zh: NLSY是纵向的，这意味着它随着时间的推移跟踪同一组人。我们一直在研究的群体包括1980年至1984年出生的人。那些参加SAT考试的人可能在1990年代末参加，当时他们大约18岁。因此，当他们在2021年谈论他们的收入时，他们已经30多岁或40多岁。让我们给收入数据列一个更易理解的名称。
 - en: '[PRE52]'
+  id: totrans-145
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE52]'
 - en: '[PRE53]'
+  id: totrans-146
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE53]'
 - en: The values in this column are gross family income, which is total income of
     the respondent and the other members of their household, from all sources, reported
     in U.S. dollars (USD). Here’s what the distribution of income looks like.
+  id: totrans-147
   prefs: []
   type: TYPE_NORMAL
+  zh: 这一列的值是毛家庭收入，即受访者及其家庭其他成员从所有来源报告的总收入，以美元（USD）为单位。以下是收入分布的图示。
 - en: '[PRE54]'
+  id: totrans-148
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE54]'
 - en: '![_images/e574935346302b25c4d4344bb42a5340d9ddc26ccf4f83843b07178ee2943e46.png](../Images/eb2959ca77bd32095f605021b52069ff.png)'
+  id: totrans-149
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/eb2959ca77bd32095f605021b52069ff.png)'
 - en: Notice the step near $600,000 – values above this threshold were capped to protect
     the anonymity of the participants. Now here’s a scatter plot of the respondents’
     SAT math scores and their income later in life.
+  id: totrans-150
   prefs: []
   type: TYPE_NORMAL
+  zh: 注意到接近600,000的步骤——超过此阈值的值被限制以保护参与者的匿名性。现在，这是受访者SAT数学成绩和其未来收入的散点图。
 - en: '[PRE55]'
+  id: totrans-151
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE55]'
 - en: '![_images/2844d42f574e4808f6185343a8621fe066e72ec36324f39ca6f521c2468cd168.png](../Images/aaf83830d54a7732403e0ff4f6f0b3fa.png)'
+  id: totrans-152
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/aaf83830d54a7732403e0ff4f6f0b3fa.png)'
 - en: It looks like there is a relationship between these variables. Here is the correlation.
+  id: totrans-153
   prefs: []
   type: TYPE_NORMAL
+  zh: 看起来这些变量之间存在关系。以下是相关系数。
 - en: '[PRE56]'
+  id: totrans-154
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE56]'
 - en: '[PRE57]'
+  id: totrans-155
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE57]'
 - en: The correlation is about 0.3, which means that if someone gets a PIAT math score
     one standard deviation above the mean when they are 15 years old, we expect their
     income to be about 0.3 standard deviations above the mean when they are 40. That’s
     not as strong as the correlation between PIAT scores and SAT scores, but considering
     the number of factors that affect income, it’s pretty strong.
+  id: totrans-156
   prefs: []
   type: TYPE_NORMAL
+  zh: 相关系数约为0.3，这意味着如果某人在15岁时PIAT数学成绩比平均值高出一个标准差，我们预计他们在40岁时收入将比平均值高出约0.3个标准差。这不如PIAT成绩和SAT成绩之间的相关性强，但考虑到影响收入的因素数量，这相当强。
 - en: In fact, Pearson’s correlation coefficient might understate the strength of
     the relationship. As we can see in the previous scatter plot, both variables have
     an apparent excess of values at the extremes. Because the correlation coefficient
     is based on the product of deviations from the mean, it is sensitive to these
     extreme values.
+  id: totrans-157
   prefs: []
   type: TYPE_NORMAL
+  zh: 实际上，皮尔逊相关系数可能低估了关系的强度。正如我们在之前的散点图中可以看到的，两个变量在极端值方面都有明显的过剩。因为相关系数基于与平均值的偏差的乘积，它对这些极端值很敏感。
 - en: A more robust alternative is the **rank correlation**, which is based on the
     ranks of the scores rather than standardized scores. We can use the Pandas method
     `rank` to compute the rank of each score and each income.
+  id: totrans-158
   prefs: []
   type: TYPE_NORMAL
+  zh: 一个更稳健的替代方法是**秩相关**，它基于分数的秩而不是标准化分数。我们可以使用Pandas的`rank`方法来计算每个分数和每个收入的秩。
 - en: '[PRE58]'
+  id: totrans-159
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE58]'
 - en: With the `method="first"` argument, `rank` assigns ranks from 1 to the length
     of the sequence, which is 4101.
+  id: totrans-160
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用`method="first"`参数，`rank`将秩从1分配到序列的长度，即4101。
 - en: '[PRE59]'
+  id: totrans-161
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE59]'
 - en: '[PRE60]'
+  id: totrans-162
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE60]'
 - en: Here’s a scatter plot of income ranks versus math score ranks.
+  id: totrans-163
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一张收入秩与数学分数秩的散点图。
 - en: '[PRE61]'
+  id: totrans-164
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE61]'
 - en: '![_images/e69af4f34d79a816fdd005f3cfdc37d58ecea6356ed7e32c36ca4c403613b12c.png](../Images/8518a6bff7b3bc49b1a3ffbe4917168e.png)'
+  id: totrans-165
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/8518a6bff7b3bc49b1a3ffbe4917168e.png)'
 - en: And here’s the correlation of the ranks.
+  id: totrans-166
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是秩之间的相关性。
 - en: '[PRE62]'
+  id: totrans-167
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE62]'
 - en: '[PRE63]'
+  id: totrans-168
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE63]'
 - en: The result is about 0.38, somewhat higher than the Pearson correlation, which
     is 0.30. Because rank correlation is less sensitive to the effect of extreme values,
     it is probably a better measure of the strength of the relationship between these
     variables.
+  id: totrans-169
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果大约是0.38，略高于皮尔逊相关系数，后者为0.30。因为秩相关对极端值的影响不太敏感，所以它可能是衡量这些变量之间关系强度的一个更好的指标。
 - en: '`thinkplot` provides a `rankcorr` function that encapsulates the code in this
     section.'
+  id: totrans-170
   prefs: []
   type: TYPE_NORMAL
+  zh: '`thinkplot`提供了一个封装了本节代码的`rankcorr`函数。'
 - en: '[PRE64]'
+  id: totrans-171
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE64]'
 - en: '[PRE65]'
+  id: totrans-172
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE65]'
 - en: And SciPy provides a similar function called `spearmanr`, because rank correlation
     is also called Spearman’s correlation.
+  id: totrans-173
   prefs: []
   type: TYPE_NORMAL
+  zh: SciPy提供了一个类似的功能，称为`spearmanr`，因为秩相关也称为斯皮尔曼相关。
 - en: '[PRE66]'
+  id: totrans-174
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE66]'
 - en: '[PRE67]'
+  id: totrans-175
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE67]'
 - en: As an exercise, you’ll have a chance to compute the correlation between SAT
     verbal scores and income, using both Pearson correlation and rank correlation.
+  id: totrans-176
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为练习，你将有机会使用皮尔逊相关和秩相关来计算SAT语文分数和收入之间的相关性。
 - en: Correlation and Causation
+  id: totrans-177
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 相关性与因果关系
 - en: If variables A and B are correlated, the apparent correlation might be due to
     random sampling, or it might be the result of non-representative sampling, or
     it might indicate a real correlation between quantities in the population.
+  id: totrans-178
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果变量A和B相关，这种明显的相关性可能是由于随机抽样造成的，或者可能是由于非代表性抽样造成的，或者可能表明总体中数量之间存在真实的相关性。
 - en: 'If the correlation is real, there are three possible explanations: A causes
     B, or B causes A, or some other set of factors causes both A and B. These explanations
     are called “causal relationships”.'
+  id: totrans-179
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果相关性是真实的，有三个可能的解释：A导致B，或者B导致A，或者某些其他因素同时导致A和B。这些解释被称为“因果关系”。
 - en: Correlation alone does not distinguish between these explanations, so it does
     not tell you which ones are true. This rule is often summarized with the phrase
     “Correlation does not imply causation,” which is so pithy it has its own Wikipedia
     page.
+  id: totrans-180
   prefs: []
   type: TYPE_NORMAL
+  zh: 单独的相关性无法区分这些解释，因此它不能告诉你哪些是真实的。这个规则通常用短语“相关性不等于因果关系”来概括，这个短语如此简洁，以至于它有自己的维基百科页面。
 - en: '[http://wikipedia.org/wiki/Correlation_does_not_imply_causation](http://wikipedia.org/wiki/Correlation_does_not_imply_causation)'
+  id: totrans-181
   prefs: []
   type: TYPE_NORMAL
+  zh: '[http://wikipedia.org/wiki/Correlation_does_not_imply_causation](http://wikipedia.org/wiki/Correlation_does_not_imply_causation)'
 - en: So what can you do to provide evidence of causation?
+  id: totrans-182
   prefs: []
   type: TYPE_NORMAL
+  zh: 那么，你该如何提供因果关系的证据呢？
 - en: Use time. If A comes before B, then A can cause B but not the other way around.
     The order of events can help us infer the direction of causation, but it does
     not preclude the possibility that something else causes both A and B.
+  id: totrans-183
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 使用时间。如果A发生在B之前，那么A可以导致B，但不能反过来。事件发生的顺序可以帮助我们推断因果关系的方向，但这并不排除其他因素同时导致A和B的可能性。
 - en: Use randomness. If you divide a large sample into two groups at random and compute
     the means of almost any variable, you expect the difference to be small. If the
     groups are nearly identical in all variables but A and B, you can rule out the
     possibility that something else causes both A and B.
+  id: totrans-184
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 使用随机性。如果你随机将一个大样本分成两组并计算几乎任何变量的平均值，你期望差异很小。如果两组在所有变量上几乎相同，但在A和B上不同，你可以排除其他因素同时导致A和B的可能性。
 - en: 'These ideas are the motivation for the **randomized controlled trial**, in
     which subjects are assigned randomly to two (or more) groups: a **treatment group**
     that receives some kind of intervention, like a new medicine, and a **control
     group** that receives no intervention, or another treatment whose effects are
     known. A randomized controlled trial is the most reliable way to demonstrate a
     causal relationship, and the foundation of evidence-based medicine.'
+  id: totrans-185
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些想法是**随机对照试验**的动机，在随机对照试验中，受试者被随机分配到两个（或更多）组：一个**干预组**，该组接受某种干预，如新药，和一个**对照组**，该组不接受干预，或接受已知效果的另一种治疗。随机对照试验是证明因果关系最可靠的方法，也是循证医学的基础。
 - en: Unfortunately, controlled trials are sometimes impossible or unethical. An alternative
     is to look for a **natural experiment**, where similar groups are exposed to different
     conditions due to circumstances beyond the control of the experimenter.
+  id: totrans-186
   prefs: []
   type: TYPE_NORMAL
+  zh: 不幸的是，有时控制试验是不可能的或不道德的。一种替代方法是寻找**自然实验**，在这种情况下，由于实验者无法控制的情况，相似的组被暴露于不同的条件中。
 - en: Identifying and measuring causal relationships is the topic of a branch of statistics
     called **causal inference**.
+  id: totrans-187
   prefs: []
   type: TYPE_NORMAL
+  zh: 识别和测量因果关系是统计学的一个分支，称为**因果推断**。
 - en: Glossary
+  id: totrans-188
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 术语表
 - en: '**scatter plot**: A visualization that shows the relationship between two variables
     by plotting one point for each observation in the dataset.'
+  id: totrans-189
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**散点图**：一种可视化，通过为数据集中的每个观测值绘制一个点来显示两个变量之间的关系。'
 - en: '**overplotted:** A scatter plot is overplotted if many markers overlap, making
     it hard to distinguish areas of different density, which can misrepresent the
     relationship.'
+  id: totrans-190
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**过度绘图**：如果许多标记重叠，散点图就会过度绘图，这使得难以区分不同密度的区域，可能会错误地表示关系。'
 - en: '**jitter**: Random noise added to data points in a plot to make overlapping
     values more visible.'
+  id: totrans-191
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**抖动**：在图表中的数据点上添加随机噪声，以使重叠的值更易于可见。'
 - en: '**decile plot:** A plot that divides data into deciles (ten groups) based on
     one variable, then summarizes another variable for each group.'
+  id: totrans-192
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**十分位图**：一种将数据根据一个变量分成十分位（十个组）的图表，然后对每个组总结另一个变量。'
 - en: '**decile:** One of the groups created by sorting data and dividing it into
     ten roughly equal parts.'
+  id: totrans-193
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**十分位**：通过排序数据并将其分成大约相等的十部分所创建的组之一。'
 - en: '**Pearson correlation coefficient:** A statistic that measures the strength
     and sign (positive or negative) of the linear relationship between two variables.'
+  id: totrans-194
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**皮尔逊相关系数**：一个统计量，用于衡量两个变量之间线性关系的强度和符号（正或负）。'
 - en: '**standard score**: A quantity that has been standardized so that it is expressed
     in standard deviations from the mean.'
+  id: totrans-195
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**标准分数**：一个经过标准化处理的量，表示它相对于平均值的标准差。'
 - en: '**correlation matrix:** A table showing the correlation coefficients for each
     pair of variables in a dataset.'
+  id: totrans-196
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**相关矩阵**：一个表格，显示数据集中每对变量的相关系数。'
 - en: '**rank correlation**: A robust way to quantify the strength of a relationship
     by using the ranks of values instead of the actual values.'
+  id: totrans-197
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**秩相关**：一种通过使用值的秩而不是实际值来量化关系强度的稳健方法。'
 - en: '**randomized controlled trial**: An experiment where subjects are randomly
     assigned to groups that receive different treatments.'
+  id: totrans-198
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**随机对照试验**：一种实验，其中受试者被随机分配到接受不同治疗的组。'
 - en: '**treatment group**: In an experiment, the group that receives the intervention
     being tested.'
+  id: totrans-199
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**干预组**：在实验中，接受正在测试的干预的组。'
 - en: '**control group**: In an experiment, the group that does not receive the intervention,
     or receives a treatment whose effect is known.'
+  id: totrans-200
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**对照组**：在实验中，不接受干预或接受已知效果的治疗的组。'
 - en: '**natural experiment**: An experiment that uses naturally occurring groups,
     which can sometimes mimic random assignment.'
+  id: totrans-201
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**自然实验**：一种使用自然形成的组进行的实验，有时可以模仿随机分配。'
 - en: '**causal inference:** Methods for identifying and quantifying cause-and-effect
     relationships.'
+  id: totrans-202
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**因果推断**：识别和量化因果关系的方法。'
 - en: Exercises
+  id: totrans-203
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 练习
 - en: Exercise 7.1
+  id: totrans-204
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 练习7.1
 - en: The `thinkstats` module provides a function called `decile_plot` that encapsulates
     the code from earlier in this chapter. We can call it like this to visualize the
     relationship between SAT verbal and math scores.
+  id: totrans-205
   prefs: []
   type: TYPE_NORMAL
+  zh: '`thinkstats`模块提供了一个名为`decile_plot`的函数，它封装了本章前面的代码。我们可以这样调用它来可视化SAT语文和数学分数之间的关系。'
 - en: '[PRE68]'
+  id: totrans-206
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE68]'
 - en: '![_images/b30c80a443c531ef5f2ed5eb95bceb4d274b779bf865a8a551b50c00c8f8fce9.png](../Images/b5bb1f2d7430fd6db524fb36ee9e6acf.png)'
+  id: totrans-207
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/b5bb1f2d7430fd6db524fb36ee9e6acf.png)'
 - en: Make a decile plot of PIAT math scores and income. Does it appear to be a linear
     relationship?
+  id: totrans-208
   prefs: []
   type: TYPE_NORMAL
+  zh: 制作PIAT数学分数和收入的十分位图。这似乎是线性关系吗？
 - en: Exercise 7.2
+  id: totrans-209
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 练习7.2
 - en: Make a scatter plot of income versus SAT math scores. Compute Pearson’s correlation
     and rank correlation. Are they substantially different?
+  id: totrans-210
   prefs: []
   type: TYPE_NORMAL
+  zh: 绘制收入与SAT数学分数的散点图。计算皮尔逊相关系数和等级相关系数。它们有显著差异吗？
 - en: Make a scatter plot of income versus SAT verbal scores, and compute both correlations.
     Which is a stronger prediction of future income, math or verbal scores?
+  id: totrans-211
   prefs: []
   type: TYPE_NORMAL
+  zh: 绘制收入与SAT语文分数的散点图，并计算两个相关系数。哪个是未来收入的更强预测指标？
 - en: Exercise 7.3
+  id: totrans-212
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 练习7.3
 - en: Let’s see how a student’s high school grade point average (GPA) is correlated
     with their SAT scores. Here’s the variable in the NLSY dataset that encodes GPA.
+  id: totrans-213
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们看看学生的高中平均成绩（GPA）与他们的SAT分数之间的相关性。这是NLSY数据集中编码GPA的变量。
 - en: '[PRE69]'
+  id: totrans-214
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE69]'
 - en: '[PRE70]'
+  id: totrans-215
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE70]'
 - en: And here’s what the distribution of GPAs looks like.
+  id: totrans-216
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是GPA分布看起来像什么。
 - en: '[PRE71]'
+  id: totrans-217
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE71]'
 - en: '![_images/10ee1880583686152f330ca89da0a2f8f8eb3e8335dedcc4a0e739031d0f56bb.png](../Images/1c39f45be7fab9f419caa2512f70dcba.png)'
+  id: totrans-218
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/1c39f45be7fab9f419caa2512f70dcba.png)'
 - en: Make a scatter plot that shows the relationship between GPA and SAT math scores
     and compute the correlation coefficient. Do the same for the relationship between
     GPA and SAT verbal scores. Which SAT score is a better predictor of GPA?
+  id: totrans-219
   prefs: []
   type: TYPE_NORMAL
+  zh: 绘制GPA与SAT数学分数之间的关系散点图，并计算相关系数。对于GPA与SAT语文分数之间的关系也做同样处理。哪个SAT分数是GPA更好的预测指标？
 - en: Exercise 7.4
+  id: totrans-220
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 练习7.4
 - en: Let’s investigate the relationship between education and income. The NLSY dataset
     includes a column that reports the highest degree earned by each respondent. The
     values are encoded as integers.
+  id: totrans-221
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们调查教育和收入之间的关系。NLSY数据集包括一个列，报告了每个受访者的最高学位。这些值被编码为整数。
 - en: '[PRE72]'
+  id: totrans-222
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE72]'
 - en: '[PRE73]'
+  id: totrans-223
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE73]'
 - en: But we can use these lists to decode them.
+  id: totrans-224
   prefs: []
   type: TYPE_NORMAL
+  zh: 但我们可以使用这些列表来解码它们。
 - en: '[PRE74]'
+  id: totrans-225
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE74]'
 - en: And make a `Pmf` that represents the distribution of educational attainment.
+  id: totrans-226
   prefs: []
   type: TYPE_NORMAL
+  zh: 并制作一个表示教育成就分布的`Pmf`。
 - en: '[PRE75]'
+  id: totrans-227
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE75]'
 - en: '![_images/f2adc1546180aa4400110a2d53874b37868ccdd820600b090edb960346f0e8b1.png](../Images/2d779d953e6cd1e18a04c787c604a934.png)'
+  id: totrans-228
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/2d779d953e6cd1e18a04c787c604a934.png)'
 - en: Make a scatter plot of `income` versus `degree`. To avoid overplotting, jitter
     the values of `degree` and adjust the marker size and transparency.
+  id: totrans-229
   prefs: []
   type: TYPE_NORMAL
+  zh: 绘制`income`与`degree`的散点图。为了避免重叠，对`degree`的值进行抖动，并调整标记大小和透明度。
 - en: Use the `groupby` method to group respondents by `degree`. From the `DataFrameGroupBy`
     object, select the `income` column; then use the `quantile` method to compute
     the median, 10th and 90th percentiles in each group. Use `fill_between` to plot
     the region between the 10th and 90th percentiles, and use `plot` to plot the medians.
+  id: totrans-230
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用`groupby`方法按`degree`对受访者进行分组。从`DataFrameGroupBy`对象中选择`income`列；然后使用`quantile`方法计算每个组的均值、10分位数和90分位数。使用`fill_between`绘制10分位数和90分位数之间的区域，并使用`plot`绘制均值。
 - en: What can you say about the income premium associated with each additional degree?
+  id: totrans-231
   prefs: []
   type: TYPE_NORMAL
+  zh: 你能说些什么关于每增加一个学位所关联的收入溢价？
 - en: Exercise 7.4
+  id: totrans-232
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 练习7.4
 - en: The Behavioral Risk Factor Surveillance System (BRFSS) dataset includes self-reported
     heights and weights for about 400,000 respondents. Instructions for downloading
     the data are in the notebook for this chapter.
+  id: totrans-233
   prefs: []
   type: TYPE_NORMAL
+  zh: 行为风险因素监测系统（BRFSS）数据集包括大约40万受访者的自报身高和体重。下载数据的说明在本章的笔记本中。
 - en: Make a scatter plot that shows the relationship between height and weight. You
     might have to jitter the data to blur the visible rows and columns due to rounding.
     And with such a large sample, you will have to adjust the marker size and transparency
     to avoid overplotting. Also, because there are outliers in both measurements,
     you might want to use `xlim` and `ylim` to zoom in on a region that covers most
     of the respondents.
+  id: totrans-234
   prefs: []
   type: TYPE_NORMAL
+  zh: 绘制身高与体重的散点图。你可能需要抖动数据以模糊由于四舍五入而可见的行和列。由于样本量很大，你将不得不调整标记大小和透明度以避免重叠。此外，由于两种测量都有异常值，你可能想使用`xlim`和`ylim`来放大覆盖大多数受访者的区域。
 - en: Here’s how we can load the data.
+  id: totrans-235
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是我们如何加载数据的方法。
 - en: '[PRE76]'
+  id: totrans-236
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE76]'
 - en: '[PRE77]'
+  id: totrans-237
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE77]'
 - en: '[PRE78]'
+  id: totrans-238
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE78]'
 - en: Make a decile plot of weight versus height. Does the relationship seem to be
     linear? Compute the correlation coefficient and rank correlation. Are they substantially
     different? Which one do you think better quantifies the relationship between these
     variables?
+  id: totrans-239
   prefs: []
   type: TYPE_NORMAL
+  zh: 制作体重与身高的十分位图。这种关系看起来是线性的吗？计算相关系数和等级相关系数。它们有显著差异吗？你认为哪一个更好地量化了这些变量之间的关系？
 - en: '[Think Stats: Exploratory Data Analysis in Python, 3rd Edition](https://allendowney.github.io/ThinkStats/index.html)'
+  id: totrans-240
   prefs: []
   type: TYPE_NORMAL
+  zh: '[Think Stats: Exploratory Data Analysis in Python, 3rd Edition](https://allendowney.github.io/ThinkStats/index.html)'
 - en: Copyright 2024 [Allen B. Downey](https://allendowney.com)
+  id: totrans-241
   prefs: []
   type: TYPE_NORMAL
+  zh: 版权所有 2024 [艾伦·B·唐尼](https://allendowney.com)
 - en: 'Code license: [MIT License](https://mit-license.org/)'
+  id: totrans-242
   prefs: []
   type: TYPE_NORMAL
+  zh: 代码许可：[MIT License](https://mit-license.org/)
 - en: 'Text license: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  id: totrans-243
   prefs: []
   type: TYPE_NORMAL
+  zh: 文本许可：[Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)

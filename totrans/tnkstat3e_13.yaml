@@ -1,261 +1,407 @@
 - en: Multiple Regression
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 多元回归
 - en: 原文：[https://allendowney.github.io/ThinkStats/chap11.html](https://allendowney.github.io/ThinkStats/chap11.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ThinkStats/chap11.html](https://allendowney.github.io/ThinkStats/chap11.html)
 - en: The linear least squares fit in the previous chapter is an example of **regression**,
     which is the more general problem of modeling the relationship between one set
     of variables, called **response variables** or dependent variables, and another
     set of variables, called **explanatory variables** or independent variables.
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 上一章中的线性最小二乘拟合是**回归**的一个例子，它是建模一组变量（称为**响应变量**或因变量）与另一组变量（称为**解释变量**或自变量）之间关系的一个更一般的问题。
 - en: In the examples in the previous chapter, there is only one response variable
     and one explanatory variable, which is called **simple regression**. In this chapter,
     we move on to **multiple regression**, with more than one explanatory variable,
     but still only one response variable. If there is more than one response variable,
     that’s multivariate regression, which we won’t cover in this book.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 在上一章的示例中，只有一个响应变量和一个解释变量，这被称为**简单回归**。在本章中，我们将继续探讨**多元回归**，其中包含多个解释变量，但仍然只有一个响应变量。如果有多个响应变量，那就是多元回归，我们在这本书中不会涉及。
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ThinkStats/blob/v3/nb/chap11.ipynb).'
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: '[点击此处运行此笔记本在 Colab 上](https://colab.research.google.com/github/AllenDowney/ThinkStats/blob/v3/nb/chap11.ipynb)。'
 - en: '[PRE0]'
+  id: totrans-5
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '[PRE1]'
+  id: totrans-6
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '[PRE2]'
+  id: totrans-7
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: StatsModels
+  id: totrans-8
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: StatsModels
 - en: In the previous chapter we used the SciPy function `linregress` to compute least
     squares fits. This function performs simple regression, but not multiple regression.
     For that, we’ll use `StatsModels`, a package that provides several forms of regression
     and other analyses.
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 在上一章中，我们使用了 SciPy 函数 `linregress` 来计算最小二乘拟合。此函数执行简单回归，但不能执行多元回归。为此，我们将使用 `StatsModels`，这是一个提供多种回归和其他分析的包。
 - en: As an first example, we’ll continue exploring the penguin data.
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为第一个例子，我们将继续探索企鹅数据。
 - en: The following cell downloads the data from a repository created by Allison Horst.
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下单元格从 Allison Horst 创建的存储库中下载数据。
 - en: 'Horst AM, Hill AP, Gorman KB (2020). palmerpenguins: Palmer Archipelago (Antarctica)
     penguin data. R package version 0.1.0\. [https://allisonhorst.github.io/palmerpenguins/](https://allisonhorst.github.io/palmerpenguins/).
     doi: 10.5281/zenodo.3960218.'
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 'Horst AM, Hill AP, Gorman KB (2020)。palmerpenguins：帕默群岛（南极）企鹅数据。R 包版本 0.1.0。[https://allisonhorst.github.io/palmerpenguins/](https://allisonhorst.github.io/palmerpenguins/)。doi:
+    10.5281/zenodo.3960218。'
 - en: 'The data was collected as part of the research that led to this paper: Gorman
     KB, Williams TD, Fraser WR (2014). Ecological sexual dimorphism and environmental
     variability within a community of Antarctic penguins (genus Pygoscelis). PLoS
     ONE 9(3):e90081\. [https://doi.org/10.1371/journal.pone.0090081](https://doi.org/10.1371/journal.pone.0090081)'
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 数据是作为导致这篇论文的研究的一部分收集的：Gorman KB, Williams TD, Fraser WR (2014)。南极企鹅（属 Pygoscelis）群落中的生态性别二态性和环境可变性。PLoS
+    ONE 9(3):e90081。[https://doi.org/10.1371/journal.pone.0090081](https://doi.org/10.1371/journal.pone.0090081)
 - en: '[PRE3]'
+  id: totrans-14
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: When we load the data, we’ll use the following dictionary to give the columns
     names that don’t contain spaces, which will make them easier to use with StatsModels.
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 当我们加载数据时，我们将使用以下字典来给出不包含空格的列名，这将使它们更容易与 StatsModels 一起使用。
 - en: '[PRE4]'
+  id: totrans-16
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: Now we can load the data, drop the rows with missing mass, and rename the columns.
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以加载数据，删除缺失体重的行，并重命名列。
 - en: '[PRE5]'
+  id: totrans-18
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '[PRE6]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: The dataset contains three species of penguins. We’ll work with just the Adélie
     penguins.
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 数据集包含三种企鹅物种。我们将仅使用阿德利企鹅。
 - en: '[PRE7]'
+  id: totrans-21
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '[PRE8]'
+  id: totrans-22
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: In the previous chapter, we computed a least squares fit between the penguins’
     flipper lengths and weights.
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: 在上一章中，我们计算了企鹅的鳍长和体重之间的最小二乘拟合。
 - en: '[PRE9]'
+  id: totrans-24
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: As a reminder, here’s how we did that with `linregress`.
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为提醒，以下是使用 `linregress` 实现的方法。
 - en: '[PRE10]'
+  id: totrans-26
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '[PRE11]'
+  id: totrans-27
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: '`StatsModels` provides two interfaces (APIs) – we’ll use the “formula” API,
     which uses the Patsy formula language to specify the response and explanatory
     variables. The following formula string specifies that the response variable,
     `mass`, is a linear function of one explanatory variable, `flipper_length`.'
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: '`StatsModels` 提供了两个接口（APIs）——我们将使用“公式”API，它使用 Patsy 公式语言来指定响应变量和解释变量。以下公式字符串指定响应变量
+    `mass` 是一个解释变量 `flipper_length` 的线性函数。'
 - en: '[PRE12]'
+  id: totrans-29
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: We can pass this formula to the `StatsModels` function `ols`, along with the
     data.
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以将此公式传递给 `StatsModels` 函数 `ols`，以及数据。
 - en: '[PRE13]'
+  id: totrans-31
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: '[PRE14]'
+  id: totrans-32
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: The name `ols` stands for “ordinary least squares”, which indicates that this
     function computes a least squares fit under the most common, or “ordinary”, set
     of assumptions.
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: 名称 `ols` 代表“普通最小二乘法”，这表明此函数在最常见的或“普通”的假设下计算最小二乘拟合。
 - en: The result is an `OLS` object that represents the model. In general, a model
     is a simplified description of the relationship between variables. In this example,
     it’s a linear model, which means that it assumes that the response variable is
     a linear function of the explanatory variables.
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个表示模型的 `OLS` 对象。一般来说，模型是变量之间关系的简化描述。在这个例子中，它是一个线性模型，这意味着它假设响应变量是解释变量的线性函数。
 - en: The `fit` method fits the model to the data and returns a `RegressionResults`
     object that contains the result.
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: '`fit` 方法将模型拟合到数据，并返回一个包含结果的 `RegressionResults` 对象。'
 - en: '[PRE15]'
+  id: totrans-36
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '[PRE16]'
+  id: totrans-37
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '[PRE17]'
+  id: totrans-38
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: The `RegressionResults` object contains a lot of information, so `thinkstats`
     provides a function that just displays the information we need for now.
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: '`RegressionResults` 对象包含大量信息，因此 `thinkstats` 提供了一个仅显示我们现在所需信息的函数。'
 - en: '[PRE18]'
+  id: totrans-40
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: '|  | coef | std err | t | P>&#124;t&#124; | [0.025 | 0.975] |'
+  id: totrans-41
   prefs: []
   type: TYPE_TB
+  zh: '|  | coef | std err | t | P>&#124;t&#124; | [0.025 | 0.975] |'
 - en: '| Intercept | -2535.8368 | 964.798 | -2.628 | 0.009 | -4442.291 | -629.382
     |'
+  id: totrans-42
   prefs: []
   type: TYPE_TB
+  zh: '| Intercept | -2535.8368 | 964.798 | -2.628 | 0.009 | -4442.291 | -629.382
+    |'
 - en: '| flipper_length | 32.8317 | 5.076 | 6.468 | 0.000 | 22.801 | 42.862 |'
+  id: totrans-43
   prefs: []
   type: TYPE_TB
+  zh: '| flipper_length | 32.8317 | 5.076 | 6.468 | 0.000 | 22.801 | 42.862 |'
 - en: '| R-squared: | 0.2192 |'
+  id: totrans-44
   prefs: []
   type: TYPE_TB
+  zh: '| R-squared: | 0.2192 |'
 - en: The first column contains the intercept and slope, which are the **coefficients**
     of the model. We can confirm that they are the same as the coefficients we got
     from `linregress`.
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 第一列包含截距和斜率，即模型的 **系数**。我们可以确认它们与我们从 `linregress` 得到的系数相同。
 - en: '[PRE19]'
+  id: totrans-46
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '[PRE20]'
+  id: totrans-47
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: The second column contains the standard errors of the coefficients – again,
     they are the same as the values we got from `linregress`.
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 第二列包含系数的标准误差 – 同样，它们与我们从 `linregress` 得到的值相同。
 - en: '[PRE21]'
+  id: totrans-49
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: '[PRE22]'
+  id: totrans-50
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: The next column reports \(t\) statistics, which are used to compute p-values
     – we can ignore them, because the p-values are in the next column, labeled `P>|t|`.
     The p-value for `flipper_length` is rounded down to 0, but we can display it like
     this.
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: 下一个列报告 \(t\) 统计量，用于计算 p 值 – 我们可以忽略它们，因为 p 值在下一列，标记为 `P>|t|`。`flipper_length`
+    的 p 值四舍五入到 0，但我们可以这样显示。
 - en: '[PRE23]'
+  id: totrans-52
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: '[PRE24]'
+  id: totrans-53
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: And confirm that `linregress` computed the same result.
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: 并确认 `linregress` 计算了相同的结果。
 - en: '[PRE25]'
+  id: totrans-55
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: '[PRE26]'
+  id: totrans-56
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: The p-value is very small, which means that if there were actually no relationship
     between weight and flipper length, it is very unlikely we would see a slope as
     big as the estimated value by chance.
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: p 值非常小，这意味着如果实际上体重和鳍长之间没有关系，我们几乎不可能偶然看到与估计值一样大的斜率。
 - en: The last two columns, labeled `[0.025` and `0.975]`, report 95% confidence intervals
     for the intercept and slope. So the 95% CI for the slope is [22.8, 42.9].
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后两列，标记为 `[0.025` 和 `0.975]`，报告了截距和斜率的 95% 置信区间。因此，斜率的 95% 置信区间是 [22.8, 42.9]。
 - en: The last line reports the \(R^2\) value of the model, which is about 0.22 –
     that means we can reduce MSE by about 22% if we use flipper length to predict
     weight, compared to using only the average weight.
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后一行报告了模型的 \(R^2\) 值，大约为 0.22 – 这意味着如果我们使用鳍长来预测体重，与只使用平均体重相比，我们可以将均方误差降低约 22%。
 - en: The \(R^2\) value we get from simple correlation is the square of the correlation
     coefficient, \(r\). So we can compare `rsquared` computed by `ols` with the square
     of the `rvalue` computed by `linregress`.
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 从简单相关得到的 \(R^2\) 值是相关系数 \(r\) 的平方。因此，我们可以将 `ols` 计算出的 `rsquared` 与 `linregress`
+    计算出的 `rvalue` 的平方进行比较。
 - en: '[PRE27]'
+  id: totrans-61
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: '[PRE28]'
+  id: totrans-62
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: hey are the same except for a small difference due to floating-point approximation.
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 它们除了由于浮点近似产生的小差异外，都是相同的。
 - en: Before we go on to multiple regression, let’s compute one more simple regression,
     with `culmen_length` as the explanatory variable (the culmen is the top ridge
     of the bill).
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: 在我们进行多元回归之前，让我们计算一个更简单的回归，以 `culmen_length` 作为解释变量（culmen 是喙的顶部脊）。
 - en: '[PRE29]'
+  id: totrans-65
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: '|  | coef | std err | t | P>&#124;t&#124; | [0.025 | 0.975] |'
+  id: totrans-66
   prefs: []
   type: TYPE_TB
+  zh: '|  | coef | std err | t | P>&#124;t&#124; | [0.025 | 0.975] |'
 - en: '| Intercept | 34.8830 | 458.439 | 0.076 | 0.939 | -870.998 | 940.764 |'
+  id: totrans-67
   prefs: []
   type: TYPE_TB
+  zh: '| 截距 | 34.8830 | 458.439 | 0.076 | 0.939 | -870.998 | 940.764 |'
 - en: '| culmen_length | 94.4998 | 11.790 | 8.015 | 0.000 | 71.202 | 117.798 |'
+  id: totrans-68
   prefs: []
   type: TYPE_TB
+  zh: '| culmen_length | 94.4998 | 11.790 | 8.015 | 0.000 | 71.202 | 117.798 |'
 - en: '| R-squared: | 0.3013 |'
+  id: totrans-69
   prefs: []
   type: TYPE_TB
+  zh: '| R-squared: | 0.3013 |'
 - en: Again, the p-value of the slope is very small, which means that if there were
     actually no relationship between mass and culmen length, it is unlikely we would
     see a slope this big by chance. You might notice that the p-value associated with
@@ -263,294 +409,450 @@
     about whether the intercept might be zero. In this model, the intercept is close
     to zero, but that’s just a coincidence – it doesn’t indicate a problem with the
     model.
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: 再次，斜率的 p 值非常小，这意味着如果实际上质量和喙长之间没有关系，我们不太可能偶然看到这么大的斜率。你可能注意到与截距相关的 p 值较大，但这不是问题，因为我们不关心截距是否可能为零。在这个模型中，截距接近零，但这只是一个巧合——它并不表明模型存在问题。
 - en: The \(R^2\) value for this model is about 0.30, so the reduction in MSE is a
     little higher if we use culmen length rather than flipper length as an explanatory
     variable (the \(R^2\) value with flipper length is 0.22). Now, let’s see what
     happens if we combine them.
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个模型的 \(R^2\) 值约为 0.30，所以如果我们使用喙长而不是鳍长作为解释变量，MSE 的减少会略高（鳍长的 \(R^2\) 值为 0.22）。现在，让我们看看将它们结合起来会发生什么。
 - en: On To Multiple Regression
+  id: totrans-72
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 接下来是多元回归
 - en: Here’s the Patsy formula for a multiple regression model where mass is a linear
     function of both flipper length and culmen length.
+  id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里是关于质量是鳍长和喙长线性函数的多元回归模型的 Patsy 公式。
 - en: '[PRE30]'
+  id: totrans-74
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: And here is the result of fitting this model to the data.
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里是将此模型拟合到数据的结果。
 - en: '[PRE31]'
+  id: totrans-76
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: '|  | coef | std err | t | P>&#124;t&#124; | [0.025 | 0.975] |'
+  id: totrans-77
   prefs: []
   type: TYPE_TB
+  zh: '|  | coef | std err | t | P>&#124;t&#124; | [0.025 | 0.975] |'
 - en: '| Intercept | -3573.0817 | 866.739 | -4.122 | 0.000 | -5285.864 | -1860.299
     |'
+  id: totrans-78
   prefs: []
   type: TYPE_TB
+  zh: '| Intercept | -3573.0817 | 866.739 | -4.122 | 0.000 | -5285.864 | -1860.299
+    |'
 - en: '| flipper_length | 22.7024 | 4.742 | 4.787 | 0.000 | 13.331 | 32.074 |'
+  id: totrans-79
   prefs: []
   type: TYPE_TB
+  zh: '| flipper_length | 22.7024 | 4.742 | 4.787 | 0.000 | 13.331 | 32.074 |'
 - en: '| culmen_length | 76.3402 | 11.644 | 6.556 | 0.000 | 53.331 | 99.350 |'
+  id: totrans-80
   prefs: []
   type: TYPE_TB
+  zh: '| culmen_length | 76.3402 | 11.644 | 6.556 | 0.000 | 53.331 | 99.350 |'
 - en: '| R-squared: | 0.3949 |'
+  id: totrans-81
   prefs: []
   type: TYPE_TB
+  zh: '| R-squared: | 0.3949 |'
 - en: 'This model has three coefficients: an intercept and two slopes. The slope associated
     with flipper length is 22.7, which means we expect a penguin with a longer flipper,
     by one millimeter, to weight more, by 22.7 grams – assuming that culmen length
     is the same. Similarly, we expect a penguin with a longer culmen, by one millimeter,
     to weight more, by 76.3 grams – assuming that flipper length is the same.'
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个模型有三个系数：一个截距和两个斜率。与鳍长相关的斜率是 22.7，这意味着我们预计鳍长增加一毫米的企鹅，重量会增加 22.7 克——假设喙长相同。同样，我们预计喙长增加一毫米的企鹅，重量会增加
+    76.3 克——假设鳍长相同。
 - en: The p-values associated with both slopes are small, which means that the contribution
     of both explanatory variables would be unlikely to happen by chance.
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: 与两个斜率相关的 p 值都很小，这意味着两个解释变量的贡献不太可能偶然发生。
 - en: And the \(R^2\) value is 0.39, higher than the model with only culmen length
     (0.30) and the model with only flipper length (0.22). So predictions based on
     both explanatory variables are better than predictions based on either one alone.
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: 而 \(R^2\) 值为 0.39，高于只有喙长（0.30）的模型和只有鳍长（0.22）的模型。因此，基于两个解释变量的预测比基于任何一个单独的解释变量都要好。
 - en: But they are not as much better as we might have hoped. If flipper length reduces
     MSE by 22% and culmen length reduces it by 30%, why don’t the two of them together
     reduce it by a total of 52%? The reason is that the explanatory variables are
     correlated with each other.
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: 但它们并不像我们希望的那样好。如果鳍长减少了 MSE 的 22%，喙长减少了 30%，为什么两者加在一起不能总共减少 52% 呢？原因是解释变量彼此相关。
 - en: '[PRE32]'
+  id: totrans-86
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: '[PRE33]'
+  id: totrans-87
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: A penguin with a longer flipper also has a longer culmen, on average. The explanatory
     variables contain some information about each other, which means that they contain
     some of the same information about the response variable. When we add an explanatory
     variable to the model, the improvement in \(R^2\) reflects only the new information
     provided by the new variable.
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: 一只鳍更长的企鹅平均来说喙也更长。解释变量包含一些彼此之间的信息，这意味着它们包含关于响应变量的部分相同信息。当我们向模型添加一个解释变量时，\(R^2\)
+    的提高仅反映了新变量提供的新信息。
 - en: We see the same pattern if we add culmen depth as a third explanatory variable.
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们添加喙深作为第三个解释变量，我们会看到相同的模式。
 - en: '[PRE34]'
+  id: totrans-90
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: '|  | coef | std err | t | P>&#124;t&#124; | [0.025 | 0.975] |'
+  id: totrans-91
   prefs: []
   type: TYPE_TB
+  zh: '|  | coef | std err | t | P>&#124;t&#124; | [0.025 | 0.975] |'
 - en: '| Intercept | -4341.3019 | 795.117 | -5.460 | 0.000 | -5912.639 | -2769.964
     |'
+  id: totrans-92
   prefs: []
   type: TYPE_TB
+  zh: '| Intercept | -4341.3019 | 795.117 | -5.460 | 0.000 | -5912.639 | -2769.964
+    |'
 - en: '| flipper_length | 17.4215 | 4.385 | 3.973 | 0.000 | 8.756 | 26.087 |'
+  id: totrans-93
   prefs: []
   type: TYPE_TB
+  zh: '| flipper_length | 17.4215 | 4.385 | 3.973 | 0.000 | 8.756 | 26.087 |'
 - en: '| culmen_length | 55.3676 | 11.133 | 4.973 | 0.000 | 33.366 | 77.369 |'
+  id: totrans-94
   prefs: []
   type: TYPE_TB
+  zh: '| culmen_length | 55.3676 | 11.133 | 4.973 | 0.000 | 33.366 | 77.369 |'
 - en: '| culmen_depth | 140.8946 | 24.216 | 5.818 | 0.000 | 93.037 | 188.752 |'
+  id: totrans-95
   prefs: []
   type: TYPE_TB
+  zh: '| culmen_depth | 140.8946 | 24.216 | 5.818 | 0.000 | 93.037 | 188.752 |'
 - en: '| R-squared: | 0.5082 |'
+  id: totrans-96
   prefs: []
   type: TYPE_TB
+  zh: '| R-squared: | 0.5082 |'
 - en: This model has four coefficients. All of the p-values are small, which means
     that the contribution of each explanatory variable would be unlikely to happen
     by chance. And the \(R^2\) value is about 0.51, somewhat better than the previous
     model with two explanatory variables (0.39), and better than either model with
     a single variable (0.22 and 0.30).
+  id: totrans-97
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个模型有四个系数。所有的p值都很小，这意味着每个解释变量的贡献不太可能偶然发生。并且 \(R^2\) 值约为0.51，略好于具有两个解释变量的先前模型（0.39），并且优于具有单个变量的任何模型（0.22和0.30）。
 - en: But again, the incremental improvement is smaller than we might have hoped,
     because culmen depth is correlated with the other two measurements.
+  id: totrans-98
   prefs: []
   type: TYPE_NORMAL
+  zh: 但再次，增量改进小于我们可能希望的，因为culmen深度与其他两个测量值相关。
 - en: '[PRE35]'
+  id: totrans-99
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: '[PRE36]'
+  id: totrans-100
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: This example demonstrates a common use of multiple regression, combining multiple
     explanatory variables to make better predictions. Another common use is to quantify
     the contribution of one set of variables while controlling for the contribution
     of another set.
+  id: totrans-101
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个例子演示了多元回归的常见用途，通过结合多个解释变量来做出更好的预测。另一个常见用途是在控制另一组变量的贡献的同时，量化一组变量的贡献。
 - en: Control Variables
+  id: totrans-102
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 控制变量
 - en: In Section [Chapter 4](chap04.html#section-comparing-cdfs) we saw that first
     babies are lighter than other babies, on average. And in [Chapter 9](chap09.html#section-test-correlation)
     we saw that birth weight is correlated with the mother’s age – older mothers have
     heavier babies on average.
+  id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: 在第 [第4章](chap04.html#section-comparing-cdfs) 中，我们看到了第一个孩子平均比其他孩子轻。在第 [第9章](chap09.html#section-test-correlation)
+    中，我们看到了出生体重与母亲年龄相关——年龄较大的母亲平均有更重的孩子。
 - en: These results might be related. If mothers of first babies are younger than
     mothers of other babies – which seems likely – that might explain why their babies
     are lighter. We can use multiple regression to test this conjecture, by estimating
     the difference in birth weight between first babies and others while controlling
     for the mothers’ ages.
+  id: totrans-104
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些结果可能相关。如果第一个孩子的母亲比其他孩子的母亲年轻——这似乎很可能是这样——那么这或许可以解释为什么他们的孩子体重较轻。我们可以通过估计第一个孩子和其他孩子在出生体重上的差异，同时控制母亲的年龄，来使用多元回归测试这个假设。
 - en: Instructions for downloading the NSFG data are in the notebook for this chapter.
+  id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: 下载 NSFG 数据的说明在本书的笔记本中。
 - en: The following cells download the data files and install `statadict`, which we
     need to read the data.
+  id: totrans-106
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下单元格下载数据文件并安装 `statadict`，这是我们读取数据所需的。
 - en: '[PRE37]'
+  id: totrans-107
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE37]'
 - en: '[PRE38]'
+  id: totrans-108
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: We can use `get_nsfg_groups` to read the data, select live births, and group
     live births into first babies and others.
+  id: totrans-109
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用 `get_nsfg_groups` 来读取数据，选择活产，并将活产分为第一个孩子和其他孩子。
 - en: '[PRE39]'
+  id: totrans-110
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: We’ll use `dropna` to select the rows with valid birth weights, birth order,
     and mother’s ages.
+  id: totrans-111
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将使用 `dropna` 来选择具有有效出生体重、出生顺序和母亲年龄的行。
 - en: '[PRE40]'
+  id: totrans-112
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE40]'
 - en: Now we can use `StatsModels` to confirm that birth weight is correlated with
     age, and to estimate the slope – assuming that it is a linear relationship.
+  id: totrans-113
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，我们可以使用 `StatsModels` 来确认出生体重与年龄相关，并估计斜率——假设这是一种线性关系。
 - en: '[PRE41]'
+  id: totrans-114
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE41]'
 - en: '|  | coef | std err | t | P>&#124;t&#124; | [0.025 | 0.975] |'
+  id: totrans-115
   prefs: []
   type: TYPE_TB
+  zh: '|  | coef | std err | t | P>&#124;t&#124; | [0.025 | 0.975] |'
 - en: '| Intercept | 6.8304 | 0.068 | 100.470 | 0.000 | 6.697 | 6.964 |'
+  id: totrans-116
   prefs: []
   type: TYPE_TB
+  zh: '| Intercept | 6.8304 | 0.068 | 100.470 | 0.000 | 6.697 | 6.964 |'
 - en: '| agepreg | 0.0175 | 0.003 | 6.559 | 0.000 | 0.012 | 0.023 |'
+  id: totrans-117
   prefs: []
   type: TYPE_TB
+  zh: '| agepreg | 0.0175 | 0.003 | 6.559 | 0.000 | 0.012 | 0.023 |'
 - en: '| R-squared: | 0.004738 |'
+  id: totrans-118
   prefs: []
   type: TYPE_TB
+  zh: '| R-squared: | 0.004738 |'
 - en: The slope is small, only 0.0175 pounds per year. So if two mothers differ in
     age by a decade, we expect their babies to differ in weight by 0.175 pounds. But
     the p-value is small, so this slope – small as it is – would be unlikely if there
     were actually no relationship.
+  id: totrans-119
   prefs: []
   type: TYPE_NORMAL
+  zh: 斜率很小，只有每年0.0175磅。所以如果两个母亲的年龄相差十年，我们预计他们的孩子的体重将相差0.175磅。但是p值很小，所以即使实际上没有关系，这个斜率——尽管很小——也很可能不会出现。
 - en: The \(R^2\) value is also small, which means that mother’s age is not very useful
     as a predictive variable. If we know the mother’s age, our ability to predict
     the baby’s weight is hardly improved at all.
+  id: totrans-120
   prefs: []
   type: TYPE_NORMAL
+  zh: \(R^2\) 值也较小，这意味着母亲的年龄作为预测变量并不是非常有用。如果我们知道母亲的年龄，我们预测婴儿体重的能力几乎不会有所提高。
 - en: This combination of a small p-value and a small \(R^2\) value is a common source
     of confusion, because it seems contradictory – if the relationship is statistically
     significant, it seems like it should be predictive. But this example shows that
     there is no contradiction – a relationship can be statistically significant but
     not very useful for prediction. If we visualize the results, we’ll see why. First
     let’s select the relevant columns.
+  id: totrans-121
   prefs: []
   type: TYPE_NORMAL
+  zh: 这种小p值和小\(R^2\)值的组合是常见的混淆来源，因为它似乎自相矛盾——如果关系在统计上显著，它似乎应该具有预测性。但这个例子表明，这并不矛盾——一个关系可以是统计上显著的，但并不非常适合预测。如果我们可视化结果，我们会看到原因。首先，让我们选择相关的列。
 - en: '[PRE42]'
+  id: totrans-122
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE42]'
 - en: To compute the fitted line, we could extract the intercept and slope from `result_age`,
     but we don’t have to. The `RegressionResults` object provides a `predict` method
     we can use instead. First we’ll compute a range of values for `agepreg`.
+  id: totrans-123
   prefs: []
   type: TYPE_NORMAL
+  zh: 要计算拟合线，我们可以从`result_age`中提取截距和斜率，但不必这样做。`RegressionResults`对象提供了一个我们可以使用的`predict`方法。首先，我们将计算`agepreg`的值范围。
 - en: '[PRE43]'
+  id: totrans-124
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE43]'
 - en: To use `predict`, we have to put values for the explanatory variables in a `DataFrame`.
+  id: totrans-125
   prefs: []
   type: TYPE_NORMAL
+  zh: 要使用`predict`，我们必须将解释变量的值放入一个`DataFrame`中。
 - en: '[PRE44]'
+  id: totrans-126
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE44]'
 - en: The columns in the `DataFrame` have to have the same names as the explanatory
     variables. Then we can pass it to `predict`.
+  id: totrans-127
   prefs: []
   type: TYPE_NORMAL
+  zh: '`DataFrame`中的列必须与解释变量具有相同的名称。然后我们才能将其传递给`predict`。'
 - en: '[PRE45]'
+  id: totrans-128
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE45]'
 - en: The result is a `Series` containing the predicted values. Here’s what they look
     like, along with a scatter plot of the data.
+  id: totrans-129
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个包含预测值的`Series`。以下是它们的形状，以及数据的散点图。
 - en: '[PRE46]'
+  id: totrans-130
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE46]'
 - en: '![_images/cda101f361df541b28c8f63c79ee4f28dfa51697aa87a2bebc4a0b01a492658d.png](../Images/dc2cad1af8271d0ecff4c23cffb73d42.png)'
+  id: totrans-131
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/dc2cad1af8271d0ecff4c23cffb73d42.png)'
 - en: Because the slope of the fitted line is small, we can barely see the difference
     in the expected birth weight between the youngest and oldest mothers. The variation
     in birth weight, at every maternal age, is much larger.
+  id: totrans-132
   prefs: []
   type: TYPE_NORMAL
+  zh: 因为拟合线的斜率很小，所以我们几乎看不到年轻母亲和年长母亲预期出生体重的差异。在每一个母亲年龄，出生体重的变化要大得多。
 - en: Next we’ll use `StatsModels` to confirm that first babies are lighter than others.
     To make that work, we’ll create a Boolean `Series` that is `True` for first babies
     and `False` for others, and add it as a new column called `is_first`.
+  id: totrans-133
   prefs: []
   type: TYPE_NORMAL
+  zh: 接下来，我们将使用`StatsModels`来确认第一个出生的孩子比其他孩子轻。为了实现这一点，我们将创建一个布尔`Series`，对于第一个出生的孩子为`True`，对于其他人则为`False`，并将其添加为名为`is_first`的新列。
 - en: '[PRE47]'
+  id: totrans-134
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE47]'
 - en: '[PRE48]'
+  id: totrans-135
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE48]'
 - en: '[PRE49]'
+  id: totrans-136
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE49]'
 - en: Here’s the formula for a model with birth weight as the response variable and
     `is_first` as the explanatory variable. In the Patsy formula language, `C` and
     the parentheses around the variable name indicate that it is **categorical** –
     that is, it represents categories like “first baby” rather than measurements like
     birth weight.
+  id: totrans-137
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是将出生体重作为响应变量，`is_first`作为解释变量的模型的公式。在Patsy公式语言中，`C`和变量名周围的括号表示它是**分类的**——也就是说，它代表像“第一个孩子”这样的类别，而不是像出生体重这样的测量值。
 - en: '[PRE50]'
+  id: totrans-138
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE50]'
 - en: Now we can fit the model and display the results, as usual.
+  id: totrans-139
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以拟合模型并显示结果，就像往常一样。
 - en: '[PRE51]'
+  id: totrans-140
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE51]'
 - en: '|  | coef | std err | t | P>&#124;t&#124; | [0.025 | 0.975] |'
+  id: totrans-141
   prefs: []
   type: TYPE_TB
+  zh: '|  | coef | std err | t | P>&#124;t&#124; | [0.025 | 0.975] |'
 - en: '| Intercept | 7.3259 | 0.021 | 356.007 | 0.000 | 7.286 | 7.366 |'
+  id: totrans-142
   prefs: []
   type: TYPE_TB
+  zh: '| Intercept | 7.3259 | 0.021 | 356.007 | 0.000 | 7.286 | 7.366 |'
 - en: '| C(is_first)[T.True] | -0.1248 | 0.030 | -4.212 | 0.000 | -0.183 | -0.067
     |'
+  id: totrans-143
   prefs: []
   type: TYPE_TB
+  zh: '| C(is_first)[T.True] | -0.1248 | 0.030 | -4.212 | 0.000 | -0.183 | -0.067
+    |'
 - en: '| R-squared: | 0.00196 |'
+  id: totrans-144
   prefs: []
   type: TYPE_TB
+  zh: '| R-squared: | 0.00196 |'
 - en: In the results, the label `C(is_first)[T.True]` indicates that `is_first` is
     a categorical variable and the coefficient is associated with the value `True`.
     The `T` before `True` stands for “treatment” – in the language of a controlled
@@ -558,596 +860,904 @@
     considered the reference group. These designations are arbitrary – we could consider
     first babies to be the reference group and others to be the treatment group. But
     we need to know which is which in order to interpret the results.
+  id: totrans-145
   prefs: []
   type: TYPE_NORMAL
+  zh: 在结果中，标签`C(is_first)[T.True]`表示`is_first`是一个分类变量，系数与值`True`相关。`True`前面的`T`代表“治疗”——在控制实验的语言中，第一个出生的孩子被视为治疗组，其他孩子被视为参照组。这些指定是任意的——我们也可以考虑第一个出生的孩子为参照组，其他人为治疗组。但我们需要知道哪个是哪个，以便解释结果。
 - en: The intercept is about 7.3, which means that the average weight of the reference
     group is 7.3 pounds. The coefficient of `is_first` is -0.12, which means that
     the average weight of the treatment group – first babies – is 0.12 pounds lighter.
     We can check both of these results by computing them directly.
+  id: totrans-146
   prefs: []
   type: TYPE_NORMAL
+  zh: 截距约为 7.3，这意味着参考组的平均体重为 7.3 磅。`is_first` 的系数为 -0.12，这意味着治疗组（第一个孩子）的平均体重比参考组轻
+    0.12 磅。我们可以通过直接计算来检查这两个结果。
 - en: '[PRE52]'
+  id: totrans-147
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE52]'
 - en: '[PRE53]'
+  id: totrans-148
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE53]'
 - en: '[PRE54]'
+  id: totrans-149
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE54]'
 - en: '[PRE55]'
+  id: totrans-150
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE55]'
 - en: In addition to these coefficients, `StatsModels` also computes p-values, confidence
     intervals, and \(R^2\). The p-value associated with first babies is small, which
     means that the difference between the groups is statistically significant. And
     the \(R^2\) value is small, which means that if we’re trying to guess the weight
     of a baby, it doesn’t help much to know whether it is a first baby.
+  id: totrans-151
   prefs: []
   type: TYPE_NORMAL
+  zh: 除了这些系数外，`StatsModels` 还计算了 p 值、置信区间和 \(R^2\)。与第一个孩子相关的 p 值很小，这意味着两组之间的差异在统计上具有显著性。而
+    \(R^2\) 值很小，这意味着如果我们试图猜测一个婴儿的体重，知道它是否是第一个孩子并不会有多大帮助。
 - en: Now let’s see if it’s plausible that the difference in birth weight is due to
     the difference in maternal age. On average, mothers of first babies are about
     3.6 years younger than other mothers.
+  id: totrans-152
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们来看一下，出生体重的差异是否可能是由于母亲年龄的差异。平均而言，第一个孩子的母亲比其他母亲年轻约 3.6 岁。
 - en: '[PRE56]'
+  id: totrans-153
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE56]'
 - en: '[PRE57]'
+  id: totrans-154
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE57]'
 - en: And the slope of birth weight as a function of age is 0.0175 pounds per year.
+  id: totrans-155
   prefs: []
   type: TYPE_NORMAL
+  zh: 并且出生体重作为年龄函数的斜率是每年 0.0175 磅。
 - en: '[PRE58]'
+  id: totrans-156
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE58]'
 - en: '[PRE59]'
+  id: totrans-157
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE59]'
 - en: If we multiply the slope by the difference in ages, we get the expected difference
     in birth weight for first babies and others, due to mother’s age.
+  id: totrans-158
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们将斜率乘以年龄差异，我们就能得到由于母亲年龄差异而导致的第一个孩子和其他孩子预期出生体重的差异。
 - en: '[PRE60]'
+  id: totrans-159
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE60]'
 - en: '[PRE61]'
+  id: totrans-160
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE61]'
 - en: The result is 0.063 pounds, which is about half of the observed difference.
     So it seems like the observed difference in birth weight can be partly explained
     by the difference in mother’s age.
+  id: totrans-161
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是 0.063 磅，大约是观察到的差异的一半。所以看起来观察到的出生体重差异可以部分地用母亲年龄的差异来解释。
 - en: Using multiple regression, we can estimate coefficients for maternal age and
     first babies at the same time.
+  id: totrans-162
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用多元回归，我们可以同时估计母亲年龄和第一个孩子的系数。
 - en: '[PRE62]'
+  id: totrans-163
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE62]'
 - en: '|  | coef | std err | t | P>&#124;t&#124; | [0.025 | 0.975] |'
+  id: totrans-164
   prefs: []
   type: TYPE_TB
+  zh: '|  | coef | std err | t | P>&#124;t&#124; | [0.025 | 0.975] |'
 - en: '| Intercept | 6.9142 | 0.078 | 89.073 | 0.000 | 6.762 | 7.066 |'
+  id: totrans-165
   prefs: []
   type: TYPE_TB
+  zh: '| Intercept | 6.9142 | 0.078 | 89.073 | 0.000 | 6.762 | 7.066 |'
 - en: '| C(is_first)[T.True] | -0.0698 | 0.031 | -2.236 | 0.025 | -0.131 | -0.009
     |'
+  id: totrans-166
   prefs: []
   type: TYPE_TB
+  zh: '| C(is_first)[T.True] | -0.0698 | 0.031 | -2.236 | 0.025 | -0.131 | -0.009
+    |'
 - en: '| agepreg | 0.0154 | 0.003 | 5.499 | 0.000 | 0.010 | 0.021 |'
+  id: totrans-167
   prefs: []
   type: TYPE_TB
+  zh: '| agepreg | 0.0154 | 0.003 | 5.499 | 0.000 | 0.010 | 0.021 |'
 - en: '| R-squared: | 0.005289 |'
+  id: totrans-168
   prefs: []
   type: TYPE_TB
+  zh: '| R-squared: | 0.005289 |'
 - en: The coefficient of `is_first` is -0.0698, which means that first babies are
     0.0698 pounds lighter than others, on average, after accounting for the difference
     due to maternal age. That’s about half of the difference we get without accounting
     for maternal age.
+  id: totrans-169
   prefs: []
   type: TYPE_NORMAL
+  zh: '`is_first` 的系数为 -0.0698，这意味着在考虑了母亲年龄差异后，第一个孩子平均比其他孩子轻 0.0698 磅。这大约是未考虑母亲年龄差异时差异的一半。'
 - en: And the p-value is 0.025, which is still considered statistically significant,
     but it is in the borderline range where we can’t exclude the possibility that
     a difference this size could happen by chance.
+  id: totrans-170
   prefs: []
   type: TYPE_NORMAL
+  zh: 并且 p 值为 0.025，这仍然被认为是统计上显著的，但它处于一个边缘范围，我们不能排除这种大小的差异可能偶然发生的可能性。
 - en: Because this model takes into account the weight difference due to maternal
     age, we can say that it **controls for** maternal age. But it assumes that the
     relationship between weight and maternal age is linear. So let’s see if that’s
     true.
+  id: totrans-171
   prefs: []
   type: TYPE_NORMAL
+  zh: 由于这个模型考虑了由于母亲年龄导致的体重差异，我们可以说它**控制了**母亲年龄。但它假设体重和母亲年龄之间的关系是线性的。所以让我们看看这是否正确。
 - en: Nonlinear Relationships
+  id: totrans-172
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 非线性关系
 - en: To check whether the contribution of `agepreg` might be nonlinear, we can add
     a new column to the dataset, which contains the values of `agepreg` squared.
+  id: totrans-173
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了检查 `agepreg` 的贡献是否可能是非线性的，我们可以在数据集中添加一个新列，其中包含 `agepreg` 的平方值。
 - en: '[PRE63]'
+  id: totrans-174
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE63]'
 - en: Now we can define a model that includes a linear relationship *and* a quadratic
     relationship.
+  id: totrans-175
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以定义一个包含线性关系和二次关系的模型。
 - en: '[PRE64]'
+  id: totrans-176
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE64]'
 - en: We can fit the model in the usual way.
+  id: totrans-177
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以用通常的方式拟合这个模型。
 - en: '[PRE65]'
+  id: totrans-178
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE65]'
 - en: '|  | coef | std err | t | P>&#124;t&#124; | [0.025 | 0.975] |'
+  id: totrans-179
   prefs: []
   type: TYPE_TB
+  zh: '|  | coef | std err | t | P>&#124;t&#124; | [0.025 | 0.975] |'
 - en: '| Intercept | 5.5720 | 0.275 | 20.226 | 0.000 | 5.032 | 6.112 |'
+  id: totrans-180
   prefs: []
   type: TYPE_TB
+  zh: '| Intercept | 5.5720 | 0.275 | 20.226 | 0.000 | 5.032 | 6.112 |'
 - en: '| agepreg | 0.1186 | 0.022 | 5.485 | 0.000 | 0.076 | 0.161 |'
+  id: totrans-181
   prefs: []
   type: TYPE_TB
+  zh: '| agepreg | 0.1186 | 0.022 | 5.485 | 0.000 | 0.076 | 0.161 |'
 - en: '| agepreg2 | -0.0019 | 0.000 | -4.714 | 0.000 | -0.003 | -0.001 |'
+  id: totrans-182
   prefs: []
   type: TYPE_TB
+  zh: '| agepreg2 | -0.0019 | 0.000 | -4.714 | 0.000 | -0.003 | -0.001 |'
 - en: '| R-squared: | 0.00718 |'
+  id: totrans-183
   prefs: []
   type: TYPE_TB
+  zh: '| R-squared: | 0.00718 |'
 - en: The p-value associated with the quadratic term, `agepreg2`, is very small, which
     suggests that it contributes more information about birth weight than we would
     expect by chance. And the \(R^2\) value for this model is 0.0072, higher than
     for the linear model (0.0047).
+  id: totrans-184
   prefs: []
   type: TYPE_NORMAL
+  zh: 与二次项`agepreg2`相关的p值非常小，这表明它比我们预期的偶然性提供了更多关于出生体重的信息。并且该模型的\(R^2\)值为0.0072，高于线性模型的\(R^2\)值（0.0047）。
 - en: By estimating coefficients for `agepreg` and `agepreg2`, we are effectively
     fitting a parabola to the data. To see that, we can use the `RegressionResults`
     object to generate predictions for a range of maternal ages.
+  id: totrans-185
   prefs: []
   type: TYPE_NORMAL
+  zh: 通过估计`agepreg`和`agepreg2`的系数，我们实际上是在将抛物线拟合到数据中。为了验证这一点，我们可以使用`RegressionResults`对象为一系列母体年龄生成预测。
 - en: First we’ll create a temporary `DataFrame` that contains columns named `agepreg`
     and `agepreg2`, based on the range of ages in `agepreg_range`.
+  id: totrans-186
   prefs: []
   type: TYPE_NORMAL
+  zh: 首先，我们将创建一个临时的`DataFrame`，其中包含名为`agepreg`和`agepreg2`的列，基于`agepreg_range`中的年龄范围。
 - en: '[PRE66]'
+  id: totrans-187
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE66]'
 - en: Now we can use the `predict` method, passing the `DataFrame` as an argument
     and getting back a `Series` of predictions.
+  id: totrans-188
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，我们可以使用`predict`方法，将`DataFrame`作为参数传递，并返回一个预测的`Series`。
 - en: '[PRE67]'
+  id: totrans-189
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE67]'
 - en: Here’s what the fitted parabola looks like, along with a scatter plot of the
     data.
+  id: totrans-190
   prefs: []
   type: TYPE_NORMAL
+  zh: 下面是拟合的抛物线以及数据的散点图。
 - en: '[PRE68]'
+  id: totrans-191
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE68]'
 - en: '![_images/d94663cfe1d824e31e3655424abdf4415e1e69bdd489d7dcdec9e41d61c5e329.png](../Images/88b5a77519dcb7b3dd177e25910904b4.png)'
+  id: totrans-192
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/d94663cfe1d824e31e3655424abdf4415e1e69bdd489d7dcdec9e41d61c5e329.png](../Images/88b5a77519dcb7b3dd177e25910904b4.png)'
 - en: The curvature is subtle, but it suggests that birth weights are lower for the
     youngest and oldest mothers, and higher in the middle.
+  id: totrans-193
   prefs: []
   type: TYPE_NORMAL
+  zh: 曲率微妙，但暗示着最年轻和最年长的母亲的出生体重较低，而中间的较高。
 - en: The quadratic model captures the relationship between these variables better
     than the linear model, which means it can account more effectively for the difference
     in birth weight due to maternal age. So let’s see what happens when we add `is_first`
     to the quadratic model.
+  id: totrans-194
   prefs: []
   type: TYPE_NORMAL
+  zh: 二次模型比线性模型更好地捕捉这些变量之间的关系，这意味着它可以更有效地解释由于母体年龄差异导致的出生体重差异。因此，让我们看看当我们将`is_first`添加到二次模型中会发生什么。
 - en: '[PRE69]'
+  id: totrans-195
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE69]'
 - en: '|  | coef | std err | t | P>&#124;t&#124; | [0.025 | 0.975] |'
+  id: totrans-196
   prefs: []
   type: TYPE_TB
+  zh: '|  | coef | std err | t | P>&#124;t&#124; | [0.025 | 0.975] |'
 - en: '| Intercept | 5.6923 | 0.286 | 19.937 | 0.000 | 5.133 | 6.252 |'
+  id: totrans-197
   prefs: []
   type: TYPE_TB
+  zh: '| Intercept | 5.6923 | 0.286 | 19.937 | 0.000 | 5.133 | 6.252 |'
 - en: '| C(is_first)[T.True] | -0.0504 | 0.031 | -1.602 | 0.109 | -0.112 | 0.011 |'
+  id: totrans-198
   prefs: []
   type: TYPE_TB
+  zh: '| C(is_first)[T.True] | -0.0504 | 0.031 | -1.602 | 0.109 | -0.112 | 0.011 |'
 - en: '| agepreg | 0.1124 | 0.022 | 5.113 | 0.000 | 0.069 | 0.155 |'
+  id: totrans-199
   prefs: []
   type: TYPE_TB
+  zh: '| agepreg | 0.1124 | 0.022 | 5.113 | 0.000 | 0.069 | 0.155 |'
 - en: '| agepreg2 | -0.0018 | 0.000 | -4.447 | 0.000 | -0.003 | -0.001 |'
+  id: totrans-200
   prefs: []
   type: TYPE_TB
+  zh: '| agepreg2 | -0.0018 | 0.000 | -4.447 | 0.000 | -0.003 | -0.001 |'
 - en: '| R-squared: | 0.007462 |'
+  id: totrans-201
   prefs: []
   type: TYPE_TB
+  zh: '| R-squared: | 0.007462 |'
 - en: With a more effective control for maternal age, the estimated difference between
     first babies and others is 0.0504 pounds, smaller than the estimate with just
     the linear model (0.0698 pounds). And the p-value associated with `is_first` is
     0.109, which mean it is plausible that the remaining difference between these
     groups is due to chance.
+  id: totrans-202
   prefs: []
   type: TYPE_NORMAL
+  zh: 通过更有效地控制母体年龄，我们估计第一个孩子与其他孩子之间的体重差异为0.0504磅，小于仅使用线性模型时的估计（0.0698磅）。并且与`is_first`相关的p值为0.109，这意味着这些组之间剩余的差异可能是由于偶然性。
 - en: We can conclude that the difference in birth weight is explained – at least
     in part and possibly in full – by the difference in mother’s age.
+  id: totrans-203
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以得出结论，出生体重的差异至少部分地，可能全部地，是由母亲年龄的差异所解释的。
 - en: Logistic Regression
+  id: totrans-204
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 逻辑回归
 - en: Linear regression is based on a model where the expected value of the response
     variable is the weighted sum of the explanatory variables and an intercept. This
     model is appropriate when the response variable is a continuous quantity like
     birth weight or penguin mass, but not when the response variable is a discrete
     quantity like a count or a category.
+  id: totrans-205
   prefs: []
   type: TYPE_NORMAL
+  zh: 线性回归基于一个模型，其中响应变量的期望值是解释变量的加权和以及一个截距。当响应变量是连续量，如出生体重或企鹅体重时，此模型是合适的，但当响应变量是离散量，如计数或类别时，则不合适。
 - en: 'For these kinds of response variables, we can use **generalized linear models**
     or GLMs. For example:'
+  id: totrans-206
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于这些类型的响应变量，我们可以使用**广义线性模型**或GLMs。例如：
 - en: If the response variable is a count, we can use Poisson regression.
+  id: totrans-207
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果响应变量是计数，我们可以使用泊松回归。
 - en: If it’s categorical with only two categories, we can use logistic regression.
+  id: totrans-208
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果它是只有两个类别的分类变量，我们可以使用逻辑回归。
 - en: If it’s categorical with more than two categories, we can use multinomial logistic
     regression.
+  id: totrans-209
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果它是具有两个以上类别的分类变量，我们可以使用多项逻辑回归。
 - en: If it’s categorical and the categories can be arranged in order, we can use
     ordered logistic regression.
+  id: totrans-210
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果它是有序的，并且类别可以按顺序排列，我们可以使用有序逻辑回归。
 - en: We won’t cover all of them in this book – just **logistic regression**, which
     is the most widely used. As an example, we’ll use the penguin dataset again, and
     see if we can tell whether a penguin is male or female, based on its weight and
     other measurements.
+  id: totrans-211
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们不会在这本书中涵盖所有这些——只涵盖最常用的**逻辑回归**。作为一个例子，我们将再次使用企鹅数据集，看看我们是否可以根据其体重和其他测量值来判断企鹅是雄性还是雌性。
 - en: '`StatsModels` provides a function that does logistic regression – it’s called
     `logit` because that’s the name of a mathematical function that appears in the
     definition of logistic regression. Before we can use the `logit` function, we
     have to transform the response variable so the values are `0` and `1`.'
+  id: totrans-212
   prefs: []
   type: TYPE_NORMAL
+  zh: '`StatsModels` 提供了一个进行逻辑回归的函数——它被称为 `logit`，因为这是逻辑回归定义中出现的数学函数的名称。在我们能够使用 `logit`
+    函数之前，我们必须将响应变量转换，使其值为 `0` 和 `1`。'
 - en: '[PRE70]'
+  id: totrans-213
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE70]'
 - en: '[PRE71]'
+  id: totrans-214
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE71]'
 - en: '[PRE72]'
+  id: totrans-215
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE72]'
 - en: We’ll start with a simple model with `y` as the response variable and `mass`
     as the explanatory variable. Here’s how we make and fit the model – the argument
     `disp=False` suppresses messages about the fitting process.
+  id: totrans-216
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将从以`y`作为响应变量和`质量`作为解释变量的简单模型开始。以下是创建和拟合模型的方法——参数`disp=False`抑制了关于拟合过程的输出。
 - en: '[PRE73]'
+  id: totrans-217
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE73]'
 - en: And here are the results.
+  id: totrans-218
   prefs: []
   type: TYPE_NORMAL
+  zh: 下面是结果。
 - en: '[PRE74]'
+  id: totrans-219
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE74]'
 - en: '|  | coef | std err | z | P>&#124;z&#124; | [0.025 | 0.975] |'
+  id: totrans-220
   prefs: []
   type: TYPE_TB
+  zh: '|  | 系数 | 标准误 | z | P>&#124;z&#124; | [0.025 | 0.975] |'
 - en: '| Intercept | -25.9871 | 4.221 | -6.156 | 0.000 | -34.261 | -17.713 |'
+  id: totrans-221
   prefs: []
   type: TYPE_TB
+  zh: '| 截距 | -25.9871 | 4.221 | -6.156 | 0.000 | -34.261 | -17.713 |'
 - en: '| mass | 0.0070 | 0.001 | 6.138 | 0.000 | 0.005 | 0.009 |'
+  id: totrans-222
   prefs: []
   type: TYPE_TB
+  zh: '| 质量 | 0.0070 | 0.001 | 6.138 | 0.000 | 0.005 | 0.009 |'
 - en: '| Pseudo R-squared: | 0.5264 |'
+  id: totrans-223
   prefs: []
   type: TYPE_TB
+  zh: '| 伪 R 平方 | 0.5264 |'
 - en: The coefficient of determination, \(R^2\), does not apply to logistic regression,
     but there are several alternatives that are used as “pseudo \(R^2\) values.” The
     pseudo \(R^2\) value for this model is about 0.526, which doesn’t mean much by
     itself, but we will use it to compare models.
+  id: totrans-224
   prefs: []
   type: TYPE_NORMAL
+  zh: 决定系数 \(R^2\) 不适用于逻辑回归，但有一些替代方案被用作“伪 \(R^2\) 值”。该模型的伪 \(R^2\) 值约为 0.526，这本身并没有什么意义，但我们将用它来比较模型。
 - en: The coefficient of `mass` is positive, which means that heavier penguins are
     more likely to be male. Other than that, the coefficients are not easy to interpret
     – we can understand the model better by plotting the predictions. We’ll make a
     `DataFrame` with a range of values for `mass`, and use `predict` to compute a
     `Series` of predictions.
+  id: totrans-225
   prefs: []
   type: TYPE_NORMAL
+  zh: '`质量`的系数为正，这意味着体重较重的企鹅更有可能是雄性。除此之外，系数不易解释——我们可以通过绘制预测图来更好地理解模型。我们将创建一个包含`质量`值范围的`DataFrame`，并使用`predict`来计算一系列预测值。'
 - en: '[PRE75]'
+  id: totrans-226
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE75]'
 - en: Each predicted value is the probability a penguin is male as a function of its
     weight. Here’s what the predicted values look like.
+  id: totrans-227
   prefs: []
   type: TYPE_NORMAL
+  zh: 每个预测值都是企鹅为雄性的概率，这是其体重的函数。以下是预测值的外观。
 - en: '[PRE76]'
+  id: totrans-228
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE76]'
 - en: '![_images/c3e7e2a0a8a5c8b5e43914e573c0fc1edebf5ee62c0448ddb4ef9c70a63f350b.png](../Images/c3290d5a64b564339e470735b9bd74ba.png)'
+  id: totrans-229
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/c3e7e2a0a8a5c8b5e43914e573c0fc1edebf5ee62c0448ddb4ef9c70a63f350b.png](../Images/c3290d5a64b564339e470735b9bd74ba.png)'
 - en: The lightest penguins are almost certain to be female, and the heaviest are
     likely to be male – in the middle, a penguin weighing 3750 grams is about equally
     likely to be male or female.
+  id: totrans-230
   prefs: []
   type: TYPE_NORMAL
+  zh: 最轻的企鹅几乎肯定是雌性，而最重的企鹅很可能是雄性——在中间，体重为 3750 克的企鹅是雄性或雌性的可能性大致相等。
 - en: Now let’s see what happens if we add the other measurements as explanatory variables.
+  id: totrans-231
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们来看看如果我们添加其他测量值作为解释变量会发生什么。
 - en: '[PRE77]'
+  id: totrans-232
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE77]'
 - en: '|  | coef | std err | z | P>&#124;z&#124; | [0.025 | 0.975] |'
+  id: totrans-233
   prefs: []
   type: TYPE_TB
+  zh: '|  | 系数 | 标准误 | z | P>&#124;z&#124; | [0.025 | 0.975] |'
 - en: '| Intercept | -60.6075 | 13.793 | -4.394 | 0.000 | -87.642 | -33.573 |'
+  id: totrans-234
   prefs: []
   type: TYPE_TB
+  zh: '| 截距 | -60.6075 | 13.793 | -4.394 | 0.000 | -87.642 | -33.573 |'
 - en: '| mass | 0.0059 | 0.001 | 4.153 | 0.000 | 0.003 | 0.009 |'
+  id: totrans-235
   prefs: []
   type: TYPE_TB
+  zh: '| 质量 | 0.0059 | 0.001 | 4.153 | 0.000 | 0.003 | 0.009 |'
 - en: '| flipper_length | -0.0209 | 0.052 | -0.403 | 0.687 | -0.123 | 0.081 |'
+  id: totrans-236
   prefs: []
   type: TYPE_TB
+  zh: '| 翼展长度 | -0.0209 | 0.052 | -0.403 | 0.687 | -0.123 | 0.081 |'
 - en: '| culmen_length | 0.6208 | 0.176 | 3.536 | 0.000 | 0.277 | 0.965 |'
+  id: totrans-237
   prefs: []
   type: TYPE_TB
+  zh: '| 顶点长度 | 0.6208 | 0.176 | 3.536 | 0.000 | 0.277 | 0.965 |'
 - en: '| culmen_depth | 1.0111 | 0.349 | 2.896 | 0.004 | 0.327 | 1.695 |'
+  id: totrans-238
   prefs: []
   type: TYPE_TB
+  zh: '| 顶点深度 | 1.0111 | 0.349 | 2.896 | 0.004 | 0.327 | 1.695 |'
 - en: '| Pseudo R-squared: | 0.6622 |'
+  id: totrans-239
   prefs: []
   type: TYPE_TB
+  zh: '| 伪 R 平方 | 0.6622 |'
 - en: The pseudo \(R^2\) value of this model is 0.662, higher than the previous model
     (0.526) – so the additional measurements contain additional information that distinguishes
     male and female penguins.
+  id: totrans-240
   prefs: []
   type: TYPE_NORMAL
+  zh: 该模型的伪 \(R^2\) 值为 0.662，高于之前的模型（0.526）——因此，额外的测量包含区分雄性和雌性企鹅的信息。
 - en: The p-values for culmen length and depth are small, which indicates that they
     contribute more information than we expect by chance. The p-value for flipper
     length is large, which suggests that if you know a penguin’s weight and bill dimensions,
     flipper length doesn’t contribute additional information.
+  id: totrans-241
   prefs: []
   type: TYPE_NORMAL
+  zh: culmen_length和depth的p值很小，这表明它们比我们预期的偶然性贡献了更多信息。flipper_length的p值很大，这表明如果你知道企鹅的体重和喙尺寸，flipper_length不会提供额外的信息。
 - en: To understand this model, let’s look at some of its predictions. We’ll use the
     following function, which takes a sequence of masses and a specific value for
     `culmen_length`. It sets the other measurements to their mean values, computes
     predicted probabilities as a function of mass, and plots the results.
+  id: totrans-242
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了理解这个模型，让我们看看它的某些预测。我们将使用以下函数，它接受一系列质量和特定的`culmen_length`值。它将其他测量值设置为它们的平均值，计算作为质量函数的预测概率，并绘制结果。
 - en: '[PRE78]'
+  id: totrans-243
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE78]'
 - en: 'Here’s what the results look like for three values of `culmen_length`: one
     standard deviation above average, average, and one standard deviation below average.'
+  id: totrans-244
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里是`culmen_length`三个值的结果：平均值的1个标准差以上，平均值，和平均值的1个标准差以下。
 - en: '[PRE79]'
+  id: totrans-245
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE79]'
 - en: '[PRE80]'
+  id: totrans-246
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE80]'
 - en: '![_images/af727ffae8b33babe2578c8c6d52d5c3aaed4c4c7dc724ab57bce7a0ce063d53.png](../Images/6ed0ce5788cc6db900a4106f67140fd8.png)'
+  id: totrans-247
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/af727ffae8b33babe2578c8c6d52d5c3aaed4c4c7dc724ab57bce7a0ce063d53.png](../Images/6ed0ce5788cc6db900a4106f67140fd8.png)'
 - en: As we saw in the simpler model, heavier penguins are more likely to be male.
     Also, at any weight, a penguin with a longer bill is more likely to be male.
+  id: totrans-248
   prefs: []
   type: TYPE_NORMAL
+  zh: 正如我们在更简单的模型中看到的，体重较重的企鹅更有可能是雄性。此外，在任何体重下，喙较长的企鹅更有可能是雄性。
 - en: This model is more useful than it might seem – in fact, it is similar to models
     that were used in the original research paper this dataset was collected for.
     The primary topic of that research is sexual dimorphism, which is the degree to
     which male and female bodies differ. One way to quantify dimorphism is to use
     measurements to classify males and females. In a species with higher dimorphism,
     we expect these classifications to be more accurate.
+  id: totrans-249
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个模型比它看起来更有用——事实上，它与用于收集此数据集的原始研究论文中使用的模型相似。该研究的主要主题是性二形性，即雄性和雌性身体差异的程度。量化二形性的方法之一是使用测量值来分类雄性和雌性。在一个二形性较高的物种中，我们预计这些分类将更加准确。
 - en: The original paper is Gorman KB, Williams TD, Fraser WR (2014). Ecological sexual
     dimorphism and environmental variability within a community of Antarctic penguins
     (genus Pygoscelis). PLoS ONE 9(3):e90081\. [https://doi.org/10.1371/journal.pone.0090081](https://doi.org/10.1371/journal.pone.0090081)
+  id: totrans-250
   prefs: []
   type: TYPE_NORMAL
+  zh: 原始论文是Gorman KB, Williams TD, Fraser WR (2014)。南极企鹅（属Pygoscelis）群落中的生态性二形性和环境可变性。PLoS
+    ONE 9(3):e90081。 [https://doi.org/10.1371/journal.pone.0090081](https://doi.org/10.1371/journal.pone.0090081)
 - en: To test this methodology, let’s try the same model on a different species. In
     addition to the Adélie penguins we’ve worked with so far, the dataset also contains
     measurements from 123 Gentoo penguins. We’ll use the following function to select
     them.
+  id: totrans-251
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了测试这个方法，让我们尝试在另一种物种上使用相同的模型。除了我们之前工作的阿德利企鹅外，数据集还包含123只金图企鹅的测量值。我们将使用以下函数来选择它们。
 - en: '[PRE81]'
+  id: totrans-252
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE81]'
 - en: '[PRE82]'
+  id: totrans-253
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE82]'
 - en: '[PRE83]'
+  id: totrans-254
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE83]'
 - en: Here are the results of the logistic regression model.
+  id: totrans-255
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里是逻辑回归模型的预测结果。
 - en: '[PRE84]'
+  id: totrans-256
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE84]'
 - en: '|  | coef | std err | z | P>&#124;z&#124; | [0.025 | 0.975] |'
+  id: totrans-257
   prefs: []
   type: TYPE_TB
+  zh: '|  | coef | std err | z | P>&#124;z&#124; | [0.025 | 0.975] |'
 - en: '| Intercept | -173.9123 | 62.326 | -2.790 | 0.005 | -296.069 | -51.756 |'
+  id: totrans-258
   prefs: []
   type: TYPE_TB
+  zh: '| Intercept | -173.9123 | 62.326 | -2.790 | 0.005 | -296.069 | -51.756 |'
 - en: '| mass | 0.0105 | 0.004 | 2.948 | 0.003 | 0.004 | 0.017 |'
+  id: totrans-259
   prefs: []
   type: TYPE_TB
+  zh: '| mass | 0.0105 | 0.004 | 2.948 | 0.003 | 0.004 | 0.017 |'
 - en: '| flipper_length | 0.2839 | 0.183 | 1.549 | 0.121 | -0.075 | 0.643 |'
+  id: totrans-260
   prefs: []
   type: TYPE_TB
+  zh: '| flipper_length | 0.2839 | 0.183 | 1.549 | 0.121 | -0.075 | 0.643 |'
 - en: '| culmen_length | 0.2734 | 0.285 | 0.958 | 0.338 | -0.286 | 0.833 |'
+  id: totrans-261
   prefs: []
   type: TYPE_TB
+  zh: '| culmen_length | 0.2734 | 0.285 | 0.958 | 0.338 | -0.286 | 0.833 |'
 - en: '| culmen_depth | 3.0843 | 1.291 | 2.389 | 0.017 | 0.554 | 5.614 |'
+  id: totrans-262
   prefs: []
   type: TYPE_TB
+  zh: '| culmen_depth | 3.0843 | 1.291 | 2.389 | 0.017 | 0.554 | 5.614 |'
 - en: '| Pseudo R-squared: | 0.848 |'
+  id: totrans-263
   prefs: []
   type: TYPE_TB
+  zh: '| 伪\(R^2\)： | 0.848 |'
 - en: The pseudo-\(R^2\) value is 0.848, higher than what we got with Adélie penguins
     (0.662). That means Gentoo penguins can be classified more accurately using physical
     measurements, compared to Adélie penguins, which suggests that Gentoo penguins
     are more dimorphic.
+  id: totrans-264
   prefs: []
   type: TYPE_NORMAL
+  zh: 伪\(R^2\)值为0.848，高于我们用阿德利企鹅得到的值（0.662）。这意味着与阿德利企鹅相比，可以使用物理测量值更准确地分类金图企鹅，这表明金图企鹅的性二形性更高。
 - en: Glossary
+  id: totrans-265
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 术语表
 - en: '**regression**: A method for estimating coefficients that fit a model to data.'
+  id: totrans-266
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**回归**：一种估计系数的方法，使模型与数据拟合。'
 - en: '**response variables**: The variables a regression model tries to predict,
     also known as dependent variables.'
+  id: totrans-267
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**响应变量**：回归模型试图预测的变量，也称为因变量。'
 - en: '**explanatory variables**: The variables a model uses to predict the response
     variables, also known as independent variables.'
+  id: totrans-268
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**解释变量**：模型用来预测响应变量的变量，也称为独立变量。'
 - en: '**simple regression**: A regression with one response variable and one explanatory
     variable.'
+  id: totrans-269
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**简单回归**：一个包含一个响应变量和一个解释变量的回归。'
 - en: '**multiple regression**: A regression with multiple explanatory variables,
     but only one response variable.'
+  id: totrans-270
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**多元回归**：一个包含多个解释变量但只有一个响应变量的回归。'
 - en: '**coefficients:** In a regression model, the coefficients are the intercept
     and the estimated slopes for the explanatory variables.'
+  id: totrans-271
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**系数**：在回归模型中，系数是解释变量的截距和估计斜率。'
 - en: '**categorical variable**: A variable that can have one of a discrete set of
     values, usually not numerical.'
+  id: totrans-272
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**分类变量**：可以有一个离散值集的变量，通常不是数值。'
 - en: '**control variable**: A variable included in a regression to separate the direct
     effect of an explanatory variable from an indirect effect.'
+  id: totrans-273
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**控制变量**：在回归中包含的变量，用于将解释变量的直接效应与间接效应分开。'
 - en: '**generalized linear models:** A set of regression models based on different
     mathematical relationships between the explanatory and response variables.'
+  id: totrans-274
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**广义线性模型**：基于解释变量和响应变量之间不同数学关系的一系列回归模型。'
 - en: '**logistic regression**: A generalized linear model used when the response
     variable has only two possible values.'
+  id: totrans-275
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**逻辑回归**：当响应变量只有两个可能值时使用的广义线性模型。'
 - en: Exercises
+  id: totrans-276
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 练习
 - en: Exercise 11.1
+  id: totrans-277
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 练习 11.1
 - en: Are baby boys heavier than baby girls? To answer this question, we’ll use the
     NSFG data again.
+  id: totrans-278
   prefs: []
   type: TYPE_NORMAL
+  zh: 婴儿男孩比婴儿女孩重吗？为了回答这个问题，我们将再次使用NSFG数据。
 - en: Fit a linear regression model with `totalwgt_lb` as the response variable and
     `babysex` as a categorical explanatory variable – the value of this variable is
     `1` for boys and `2` for girls. What is the estimated difference in weight? Is
     it statistically significant? What if you control for the mother’s age – does
     maternal age account for some or all of the apparent difference?
+  id: totrans-279
   prefs: []
   type: TYPE_NORMAL
+  zh: 拟合一个线性回归模型，以`totalwgt_lb`作为响应变量，以`babysex`作为分类解释变量——该变量的值为`1`表示男孩，`2`表示女孩。估计的体重差异是多少？这是否具有统计学意义？如果你控制了母亲的年龄——母亲的年龄是否解释了部分或全部的明显差异？
 - en: Exercise 11.2
+  id: totrans-280
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 练习 11.2
 - en: The Trivers-Willard hypothesis suggests that for many mammals the sex ratio
     depends on “maternal condition” – that is, factors like the mother’s age, size,
     health, and social status. Some studies have shown this effect among humans, but
     results are mixed.
+  id: totrans-281
   prefs: []
   type: TYPE_NORMAL
+  zh: 特里弗斯-威尔拉德假说认为，对于许多哺乳动物，性别比例取决于“母体状况”——也就是说，像母亲的年龄、体型、健康状况和社会地位这样的因素。一些研究表明人类中存在这种效应，但结果不一。
 - en: See [https://en.wikipedia.org/wiki/Trivers-Willard_hypothesis](https://en.wikipedia.org/wiki/Trivers-Willard_hypothesis).
+  id: totrans-282
   prefs: []
   type: TYPE_NORMAL
+  zh: 查看 [https://en.wikipedia.org/wiki/Trivers-Willard_hypothesis](https://en.wikipedia.org/wiki/Trivers-Willard_hypothesis)。
 - en: Let’s see if there is a relationship between mother’s age and the probability
     of having a boy. Fit a logistic regression model with the baby’s sex as the response
     variable and mother’s age as an explanatory variable. Are older mothers more or
     less likely to have boys? What if you use a quadratic model of maternal age?
+  id: totrans-283
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们看看母亲的年龄和生男孩的概率之间是否存在关系。拟合一个逻辑回归模型，以婴儿的性别作为响应变量，母亲的年龄作为解释变量。年龄较大的母亲更有可能还是不太可能生男孩？如果你使用母亲的年龄的二次模型会怎样？
 - en: In order to use `babysex` as a response variable in a logistic regression, we’ll
     recode it with the value `1` for boys and `0` for girls.
+  id: totrans-284
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了在逻辑回归中使用`babysex`作为响应变量，我们将它重新编码为男孩的值为`1`，女孩的值为`0`。
 - en: '[PRE85]'
+  id: totrans-285
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE85]'
 - en: Exercise 11.3
+  id: totrans-286
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 练习 11.3
 - en: For the Adelie penguins, fit a linear regression model that predicts penguin
     weights as a function of `flipper_length`, `culmen_depth`, and `Sex` as a categorical
     variable. If we control for flipper length and culmen depth, how much heavier
     are male penguins? Generate and plot predictions for a range of flipper lengths,
     for male and female penguins, with `culmen_depth` set to its average value.
+  id: totrans-287
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于阿德利企鹅，拟合一个线性回归模型，预测企鹅的体重作为`flipper_length`、`culmen_depth`和作为分类变量的`Sex`的函数。如果我们控制了鳍长和喙深，雄性企鹅会重多少？为一系列鳍长、雄性和雌性企鹅生成并绘制预测图，其中`culmen_depth`设置为平均值。
 - en: Exercise 11.4
+  id: totrans-288
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 练习 11.4
 - en: Let’s see if Chinstrap penguins are more or less dimorphic than the other penguin
     species in the dataset, as quantified by the pseudo \(R^2\) value of the model.
     Use `get_species` to select the Chinstrap penguins, then use logistic regression
     to fit a logistic regression model with sex as the response variable and all four
     measurements as explanatory variables. How does the pseudo \(R^2\) value compare
     to the other models?
+  id: totrans-289
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们看看帝企鹅在数据集中是否比其他企鹅物种的异质性更多或更少，这是通过模型的伪 \(R^2\) 值来衡量的。使用 `get_species` 函数来选择帝企鹅，然后使用逻辑回归来拟合一个以性别作为响应变量，所有四个测量值作为解释变量的逻辑回归模型。伪
+    \(R^2\) 值与其他模型相比如何？
 - en: '[PRE86]'
+  id: totrans-290
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE86]'
 - en: '[PRE87]'
+  id: totrans-291
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE87]'
 - en: '[Think Stats: Exploratory Data Analysis in Python, 3rd Edition](https://allendowney.github.io/ThinkStats/index.html)'
+  id: totrans-292
   prefs: []
   type: TYPE_NORMAL
+  zh: '[《Think Stats：Python 中的探索性数据分析，第 3 版》](https://allendowney.github.io/ThinkStats/index.html)'
 - en: Copyright 2024 [Allen B. Downey](https://allendowney.com)
+  id: totrans-293
   prefs: []
   type: TYPE_NORMAL
+  zh: 版权所有 2024 [艾伦·B·唐尼](https://allendowney.com)
 - en: 'Code license: [MIT License](https://mit-license.org/)'
+  id: totrans-294
   prefs: []
   type: TYPE_NORMAL
+  zh: 代码许可：[MIT 许可证](https://mit-license.org/)
 - en: 'Text license: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  id: totrans-295
   prefs: []
   type: TYPE_NORMAL
+  zh: 文本许可：[Creative Commons 知识共享署名-非商业性使用-相同方式共享 4.0 国际](https://creativecommons.org/licenses/by-nc-sa/4.0/)

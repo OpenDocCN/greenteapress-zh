@@ -1,163 +1,251 @@
 - en: Survival analysis
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 生存分析
 - en: 原文：[https://allendowney.github.io/ThinkStats/chap13.html](https://allendowney.github.io/ThinkStats/chap13.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ThinkStats/chap13.html](https://allendowney.github.io/ThinkStats/chap13.html)
 - en: Survival analysis is a way to describe how long things last. It is often used
     to study human lifetimes, but it also applies to “survival” of mechanical and
     electronic components, or more generally to an interval in time before any kind
     of event – or even an interval in space.
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 生存分析是一种描述事物持续时间的分析方法。它通常用于研究人类寿命，但也适用于机械和电子组件的“生存”，或者更普遍地，用于任何事件发生之前的时间间隔——甚至空间间隔。
 - en: We’ll start with a simple example, the lifespans of light bulbs, and then consider
     a more substantial example, age at first marriage and how it has changed in the
     United States over the last 50 years.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将从简单的例子开始，即灯泡的寿命，然后考虑一个更复杂的例子，即首次结婚的年龄以及过去50年美国这一变化。
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ThinkStats/blob/v3/nb/chap13.ipynb).'
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: '[点击此处运行此笔记本在Colab上](https://colab.research.google.com/github/AllenDowney/ThinkStats/blob/v3/nb/chap13.ipynb)。'
 - en: '[PRE0]'
+  id: totrans-5
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '[PRE1]'
+  id: totrans-6
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '[PRE2]'
+  id: totrans-7
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: Survival Functions
+  id: totrans-8
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 生存函数
 - en: A fundamental concept in survival analysis is the **survival function**, which
     is the fraction of a population that survives longer than a given duration. As
     a first example, we’ll compute a survival function for the lifespans of light
     bulbs.
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 生存分析中的一个基本概念是**生存函数**，它表示在给定持续时间后存活下来的群体比例。作为一个例子，我们将计算灯泡寿命的生存函数。
 - en: We’ll use data from an experiment conducted in 2007. Researchers installed 50
     new light bulbs and left them on continuously. They checked on the bulbs every
     12 hours and recorded the lifespan of any that expired – and ran the experiment
     until all 50 bulbs expired. Instructions for downloading the data are in the notebook
     for this chapter.
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将使用2007年进行的一项实验的数据。研究人员安装了50个新的灯泡，并持续点亮。他们每12小时检查一次灯泡，并记录任何失效的灯泡的寿命——直到所有50个灯泡都失效。下载数据的说明在本书的笔记本中。
 - en: The following cell downloads the data, which is documented [here](https://gist.github.com/epogrebnyak/7933e16c0ad215742c4c104be4fbdeb1).
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 下面的单元格下载了数据，其文档在此[链接](https://gist.github.com/epogrebnyak/7933e16c0ad215742c4c104be4fbdeb1)中。
 - en: 'Dataset from:'
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 数据集来源：
 - en: 'V.J. Menon and D.C. Agrawal, Renewal Rate of Filament Lamps: Theory and Experiment.
     Journal of Failure Analysis and Prevention. December 2007, p. 421, Table 2/ DOI:
     10.1007/s11668-007-9074-9'
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: V.J. Menon 和 D.C. Agrawal，灯丝灯泡的更新率：理论与实验。失效分析预防杂志。2007年12月，第421页，表2/ DOI：10.1007/s11668-007-9074-9
 - en: '[PRE3]'
+  id: totrans-14
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: We can read the data like this.
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以像这样读取数据。
 - en: '[PRE4]'
+  id: totrans-16
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '|  | h | f | K |'
+  id: totrans-17
   prefs: []
   type: TYPE_TB
+  zh: '|  | h | f | K |'
 - en: '| --- | --- | --- | --- |'
+  id: totrans-18
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- |'
 - en: '| i |  |  |  |'
+  id: totrans-19
   prefs: []
   type: TYPE_TB
+  zh: '| i |  |  |  |'
 - en: '| --- | --- | --- | --- |'
+  id: totrans-20
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- |'
 - en: '| 28 | 1812 | 1 | 4 |'
+  id: totrans-21
   prefs: []
   type: TYPE_TB
+  zh: '| 28 | 1812 | 1 | 4 |'
 - en: '| 29 | 1836 | 1 | 3 |'
+  id: totrans-22
   prefs: []
   type: TYPE_TB
+  zh: '| 29 | 1836 | 1 | 3 |'
 - en: '| 30 | 1860 | 1 | 2 |'
+  id: totrans-23
   prefs: []
   type: TYPE_TB
+  zh: '| 30 | 1860 | 1 | 2 |'
 - en: '| 31 | 1980 | 1 | 1 |'
+  id: totrans-24
   prefs: []
   type: TYPE_TB
+  zh: '| 31 | 1980 | 1 | 1 |'
 - en: '| 32 | 2568 | 1 | 0 |'
+  id: totrans-25
   prefs: []
   type: TYPE_TB
+  zh: '| 32 | 2568 | 1 | 0 |'
 - en: The `h` column contains lifespans in hours. The `f` column records the number
     of bulbs that expired at each value of `h`. To represent the distribution of lifespans,
     we’ll put these values in a `Pmf` object and normalize it.
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: '`h`列包含以小时为单位的寿命。`f`列记录了在`h`的每个值下失效的灯泡数量。为了表示寿命的分布，我们将这些值放入`Pmf`对象中并对其进行归一化。'
 - en: '[PRE5]'
+  id: totrans-27
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '[PRE6]'
+  id: totrans-28
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: We can use `make_cdf` to compute the CDF, which indicates the fraction of bulbs
     that expire at or before each value of `h`. For example, 78% of the bulbs expire
     at or before 1656 hours.
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用`make_cdf`来计算累积分布函数（CDF），它表示在`h`的每个值或之前失效的灯泡的比例。例如，78%的灯泡在1656小时或之前失效。
 - en: '[PRE7]'
+  id: totrans-30
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '[PRE8]'
+  id: totrans-31
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: The survival function is the fraction of bulbs that expire *after* each value
     of `h`, which is the complement of the CDF. So we can compute it like this.
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 生存函数是指在`h`的每个值之后失效的灯泡的比例，它是累积分布函数的补数。因此，我们可以这样计算它。
 - en: '[PRE9]'
+  id: totrans-33
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '[PRE10]'
+  id: totrans-34
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: 22% of the bulbs expired after 1656 hours.
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 22%的灯泡在1656小时后失效。
 - en: The `empiricaldist` library provides a `Surv` object that represents a survival
     function, and a method called `make_surv` that makes one.
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: '`empiricaldist`库提供了一个表示生存函数的`Surv`对象，以及一个名为`make_surv`的方法来创建一个生存函数。'
 - en: '[PRE11]'
+  id: totrans-37
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: '[PRE12]'
+  id: totrans-38
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: If we plot the CDF and the survival function, we can see that they are complementary
     – that is, their sum is 1 at all values of `h`.
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们绘制累积分布函数（CDF）和生存函数，我们可以看到它们是互补的——也就是说，在`h`的所有值上它们的和为1。
 - en: '[PRE13]'
+  id: totrans-40
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: '![_images/4b327fefc98d9cd63de1eb35106ee680bae03079a5a5c38df5bc0616dea4139b.png](../Images/43edb107636ed5d36fa792e305a05a28.png)'
+  id: totrans-41
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/4b327fefc98d9cd63de1eb35106ee680bae03079a5a5c38df5bc0616dea4139b.png](../Images/43edb107636ed5d36fa792e305a05a28.png)'
 - en: In that sense, the CDF and survival function are equivalent – if we are given
     either one, we can compute the other – but in the context of survival analysis
     it is more common to work with survival curves. And computing a survival curve
     is a step toward the next important concept, the hazard function.
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个意义上，累积分布函数（CDF）和生存函数是等价的——如果我们给出其中一个，我们可以计算出另一个——但在生存分析中，更常见的是使用生存曲线。计算生存曲线是下一个重要概念，即失效函数的步骤。
 - en: Hazard Function
+  id: totrans-43
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 失效函数
 - en: In the light bulb dataset, each value of `h` represents a 12-hour interval ending
     at hour `h` – which I will call “interval `h`”. Suppose we know that a light bulb
     has survived up to interval `h`, and we would like to know the probability that
@@ -167,497 +255,758 @@
     sum of these is the fraction of bulbs that *could* expire during interval `h`,
     which are said to be “at risk”. As an example, 26% of the bulbs were at risk during
     interval 1656.
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: 在灯泡数据集中，`h`的每个值代表一个以小时`h`结束的12小时间隔——我将称之为“间隔`h`”。假设我们知道一个灯泡已经存活到间隔`h`，我们想知道它在间隔`h`内失效的概率。为了回答这个问题，我们可以使用生存函数，它表示超过间隔`h`的灯泡的比例，以及PMF，它表示在间隔`h`内失效的比例。这两个值的和是可能在间隔`h`内失效的灯泡的比例，这些灯泡被称为“处于风险中”。例如，26%的灯泡在1656间隔内处于风险中。
 - en: '[PRE14]'
+  id: totrans-45
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '[PRE15]'
+  id: totrans-46
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: And 4% of all bulbs expired during interval 1656.
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 并且4%的所有灯泡在1656间隔内失效。
 - en: '[PRE16]'
+  id: totrans-48
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '[PRE17]'
+  id: totrans-49
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: The **hazard** is the ratio of `pmf_bulblife` and `at_risk`.
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: '**失效函数**是`pmf_bulblife`和`at_risk`的比率。'
 - en: '[PRE18]'
+  id: totrans-51
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: '[PRE19]'
+  id: totrans-52
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: Of all bulbs that survived up to interval 1656, about 15% expired during interval
     1656.
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: 在所有存活到1656区间的灯泡中，大约有15%在1656区间内失效。
 - en: Instead of computing the hazard function ourselves, we can use `empiricaldist`,
     which provides a `Hazard` object that represents a hazard function, and a `make_hazard`
     method that computes it.
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们不必自己计算失效函数，可以使用`empiricaldist`，它提供了一个表示失效函数的`Hazard`对象，以及一个计算它的`make_hazard`方法。
 - en: '[PRE20]'
+  id: totrans-55
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '[PRE21]'
+  id: totrans-56
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: Here’s what the hazard function looks like for the light bulbs.
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里展示了灯泡的失效函数是什么样的。
 - en: '[PRE22]'
+  id: totrans-58
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: '![_images/f61318bbaf785683905ace59395cda61ef85e9d87979b031ccfd7ca23441d28e.png](../Images/41dd9f4e91ec2cb16d196613e347ff46.png)'
+  id: totrans-59
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/41dd9f4e91ec2cb16d196613e347ff46.png)'
 - en: We can see that the hazard is higher in some places than others, but this way
     of visualizing the hazard function can be misleading, especially in parts of the
     range where we don’t have much data. A better alternative is to plot the **cumulative
     hazard function**, which is the cumulative sum of the hazards.
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以看到在某些地方失效函数比其他地方高，但这种方式可视化失效函数可能会误导人，尤其是在我们数据不多的一部分范围内。一个更好的选择是绘制**累积失效函数**，它是失效函数的累积和。
 - en: '[PRE23]'
+  id: totrans-61
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: '![_images/ec4d8ae4729ac6c5907db03385cc674ce8a63af523f6aafa9596f1c03d74ca02.png](../Images/500d716494dd38443f09a2df7a406616.png)'
+  id: totrans-62
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/500d716494dd38443f09a2df7a406616.png)'
 - en: Where the probability of expiring is high, the cumulative hazard function is
     steep. Where the probability of expiring is low, the cumulative hazard function
     is flat. In this example, we can see that the hazard is highest between 1500 and
     2000 hours. After that, the hazard decreases – although this outcome is based
     on just one unusually long-lived bulb, so it might look different in another dataset.
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 在失效概率高的地方，累积失效函数是陡峭的。在失效概率低的地方，累积失效函数是平缓的。在这个例子中，我们可以看到在1500到2000小时之间失效函数最高。之后，失效函数下降——尽管这个结果仅基于一个寿命异常长的灯泡，所以在其他数据集中可能看起来不同。
 - en: Now that we have the general idea of survival and hazard functions, let’s apply
     them to a more substantial dataset.
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: 既然我们已经了解了生存和失效函数的一般概念，让我们将它们应用到更大的数据集上。
 - en: Marriage Data
+  id: totrans-65
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 婚姻数据
 - en: In many countries, people are getting married later than they used to, and more
     people stay unmarried. To explore these trends in the United States, we’ll use
     the tools of survival analysis and data from the National Survey of Family Growth
     (NSFG).
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: 在许多国家，人们的结婚年龄比以前晚，而且越来越多的人保持未婚。为了探索美国这些趋势，我们将使用生存分析工具和国家家庭成长调查（NSFG）的数据。
 - en: The NSFG dataset we used in previous chapters is the pregnancy file, which contains
     one row for each pregnancy reported by the survey respondents. In this chapter,
     we’ll work with the respondent file, which contains information about the respondents
     themselves.
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们在前面章节中使用的NSFG数据集是怀孕文件，它包含每个调查受访者报告的怀孕的行。在本章中，我们将处理受访者文件，其中包含有关受访者本人的信息。
 - en: I have compiled responses from nine iterations of the survey, conducted between
     1982 and 2019, and selected data related to marriage. Instructions for downloading
     this excerpt are in the notebook for this chapter.
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: 我已经整理了1982年至2019年之间进行的九次调查的回应，并选择了与婚姻相关的数据。下载此摘录的说明在本书的笔记本中。
 - en: The following cell downloads the data, which is a CSV file I created that combines
     data from several iterations of the NSFG survey, from 1982 to 2019.
+  id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下单元格下载了数据，这是一个CSV文件，我创建的，它结合了1982年至2019年NSFG调查的多个迭代的数据。
 - en: Details of the data preparation are in [this notebook](https://github.com/AllenDowney/MarriageNSFG/blob/master/clean_nsfg.ipynb).
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: 数据准备详情请参阅[这个笔记本](https://github.com/AllenDowney/MarriageNSFG/blob/master/clean_nsfg.ipynb)。
 - en: '[PRE24]'
+  id: totrans-71
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: We can read the data like this.
+  id: totrans-72
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以像这样读取数据。
 - en: '[PRE25]'
+  id: totrans-73
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: '[PRE26]'
+  id: totrans-74
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: The excerpt includes one row for each of more than 70,000 respondents, and has
     the following variables related to age and marriage.
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: 摘录中包括超过70,000名受访者的每一行，并包含以下与年龄和婚姻相关的变量。
 - en: '`cmbirth`: The respondent’s date of birth, known for all respondents.'
+  id: totrans-76
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`cmbirth`：受访者的出生日期，对所有受访者都已知。'
 - en: '`cmintvw`: The date the respondent was interviewed, known for all respondents.'
+  id: totrans-77
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`cmintvw`：受访者被采访的日期，对所有受访者都已知。'
 - en: '`cmmarrhx`: The date the respondent was first married, if applicable and known.'
+  id: totrans-78
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`cmmarrhx`：如果适用且已知，受访者的首次结婚日期。'
 - en: '`evrmarry`: 1 if the respondent had been married prior to the date of interview,
     0 otherwise.'
+  id: totrans-79
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`evrmarry`：如果受访者在采访日期之前已经结婚，则为1，否则为0。'
 - en: The first three variables are encoded in “century-months” – that is, the integer
     number of months since December 1899. So century-month 1 is January 1900.
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 前三个变量编码为“世纪-月份”——即自1899年12月以来的整数月数。因此，世纪-月份1是1900年1月。
 - en: To explore generational changes, we’ll group respondents by their decade of
     birth. We’ll use the following function, which takes a value of `cmbirth` and
     computes the corresponding decade of birth. It uses the integer division operator
     `//` to divide by 10 and round down.
+  id: totrans-81
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了探索代际变化，我们将受访者按出生十年分组。我们将使用以下函数，它接受`cmbirth`的值并计算相应的出生十年。它使用整数除法运算符`//`除以10并向下取整。
 - en: '[PRE27]'
+  id: totrans-82
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: We can use this function and the `apply` method to compute each respondent’s
     decade of birth and assign it to a new column called `cohort`. In this context,
     a **cohort** is a group of people with something in common – like the decade they
     were born – who are treated as a group for purposes of analysis.
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用此函数和`apply`方法来计算每个受访者的出生十年，并将其分配给一个名为`cohort`的新列。在这个上下文中，**群体**是一群有共同点的人——比如他们出生的十年——在分析中作为一个群体被对待。
 - en: The result from `value_counts` shows the number of people in each cohort.
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: '`value_counts`的结果显示了每个群体中的人数。'
 - en: '[PRE28]'
+  id: totrans-85
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: '[PRE29]'
+  id: totrans-86
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: The dataset includes more than 10,000 respondents born in each decade from the
     1950s to the 1980s, and fewer respondents in the earlier and later decades.
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: 数据集包括1950年代至1980年代每个十年出生的10,000多名受访者，以及早期和后期十年中受访者较少。
 - en: Next we’ll compute each respondent’s age when married (if applicable) and their
     age when interviewed.
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: 接下来，我们将计算每个受访者在结婚时的年龄（如果适用）以及他们在采访时的年龄。
 - en: '[PRE30]'
+  id: totrans-89
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: To get started with this data, we’ll use the following function, which takes
     as arguments a `DataFrame` and a list of cohorts, and returns a dictionary that
     maps from each cohort to a `Surv` object. For each cohort, it selects their ages
     at first marriage and uses `Surv.from_seq` to compute a survival function. The
     `dropna=False` argument includes `NaN` values in the survival function, so the
     result includes people who have not married.
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: 要开始使用这些数据，我们将使用以下函数，它接受一个`DataFrame`和一个群体列表作为参数，并返回一个字典，将每个群体映射到一个`Surv`对象。对于每个群体，它选择他们首次结婚时的年龄，并使用`Surv.from_seq`来计算生存函数。`dropna=False`参数将`NaN`值包含在生存函数中，因此结果包括尚未结婚的人。
 - en: '[PRE31]'
+  id: totrans-91
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: Here’s how we use this function.
+  id: totrans-92
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是使用此函数的方法。
 - en: '[PRE32]'
+  id: totrans-93
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: And here are the results for people born in the 1940s, 1960s, and 1980s.
+  id: totrans-94
   prefs: []
   type: TYPE_NORMAL
+  zh: 下面是出生于1940年代、1960年代和1980年代的人的结果。
 - en: '[PRE33]'
+  id: totrans-95
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: '[PRE34]'
+  id: totrans-96
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: '![_images/b721d866d71b0d0109fa767b1f35391485fc49d71d5a69b50a6874f9455433a9.png](../Images/c472e08b88259f4302161b149d94de95.png)'
+  id: totrans-97
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/c472e08b88259f4302161b149d94de95.png)'
 - en: 'If we take these results at face value, they show that people in earlier generations
     got married younger, and more of them got married eventually. However, we should
     not interpret these results yet, because they are not correct. There are two problems
     we have to address:'
+  id: totrans-98
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们直接接受这些结果，它们表明早期世代的人结婚较早，而且更多的人最终结婚了。然而，我们不应立即解释这些结果，因为它们是不正确的。我们必须解决两个问题：
 - en: As discussed in [Chapter 1](chap01.html#section-nsfg), the NSFG uses stratified
     sampling, which means that it deliberately oversamples some groups.
+  id: totrans-99
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如[第1章](chap01.html#section-nsfg)所述，NSFG使用分层抽样，这意味着它故意对某些群体进行过抽样。
 - en: Also, this way of computing the survival function does not properly take into
     account people who are not married yet.
+  id: totrans-100
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 此外，这种计算生存函数的方法并没有充分考虑尚未结婚的人。
 - en: For the first problem, we’ll use a kind of resampling called a **weighted bootstrap**.
     For the second problem, we’ll use a method called Kaplan-Meier estimation. We’ll
     start with resampling.
+  id: totrans-101
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于第一个问题，我们将使用一种称为**加权自助法**的重抽样方法。对于第二个问题，我们将使用一种称为Kaplan-Meier估计的方法。我们将从重抽样开始。
 - en: Weighted Bootstrap
+  id: totrans-102
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 加权自助法
 - en: The NSFG dataset includes a column called `finalwgt` that contains each respondent’s
     sampling weight, which is the number of people in the population they represent.
     We can use these weights during the resampling process to correct for stratified
     sampling. The following function takes a `DataFrame` and the name of the column
     that contains the sampling weights. It resamples the rows of the `DataFrame`,
     taking the sampling weights into account, and returns a new `DataFrame`.
+  id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: NSFG数据集包括一个名为`finalwgt`的列，其中包含每个受访者的抽样权重，即他们所代表的总人口中的数量。我们可以在重抽样过程中使用这些权重来校正分层抽样。以下函数接受一个`DataFrame`和包含抽样权重的列名。它根据抽样权重重抽样`DataFrame`的行，并返回一个新的`DataFrame`。
 - en: '[PRE35]'
+  id: totrans-104
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: The current dataset includes respondents from several iterations of the survey,
     called cycles, so in order to resample, we have to group the respondents by cycle,
     resample each group, and then put the groups back together. That’s what the following
     function does.
+  id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: 当前数据集包括来自调查几个迭代周期的受访者，称为周期，因此为了重抽样，我们必须按周期对受访者进行分组，对每个组进行重抽样，然后将组重新组合。这正是以下函数所做的事情。
 - en: '[PRE36]'
+  id: totrans-106
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: To get started, we’ll resample the data once.
+  id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: 要开始，我们将重抽样数据一次。
 - en: '[PRE37]'
+  id: totrans-108
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE37]'
 - en: '[PRE38]'
+  id: totrans-109
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: Later we’ll resample the data several times, so we can see how much variation
     there is due to random sampling.
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: 之后我们将多次重抽样数据，以便我们可以看到由于随机抽样引起的多少变异。
 - en: The following figure shows the results with resampling, compared to the results
     from the previous section without resampling, shown as dotted lines.
+  id: totrans-111
   prefs: []
   type: TYPE_NORMAL
+  zh: 下图显示了重抽样后的结果，与之前章节未重抽样的结果（以虚线表示）进行了比较。
 - en: '[PRE39]'
+  id: totrans-112
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: '![_images/f27b6bcf8a08c708a272e059ca8a18f8e3ee91f79a43b783f5c545d56a64f9b9.png](../Images/272270efa1e2c72d300a5c52c9e06772.png)'
+  id: totrans-113
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/272270efa1e2c72d300a5c52c9e06772.png)'
 - en: '[PRE40]'
+  id: totrans-114
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE40]'
 - en: The difference, with and without resampling, is substantial, which shows that
     we need to correct for stratified sampling to get accurate results.
+  id: totrans-115
   prefs: []
   type: TYPE_NORMAL
+  zh: 有无重抽样的差异是显著的，这表明我们需要对分层抽样进行校正以获得准确的结果。
 - en: Now let’s get to the second problem, dealing with incomplete data.
+  id: totrans-116
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，让我们来解决第二个问题，处理不完整的数据。
 - en: Estimating Hazard Functions
+  id: totrans-117
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 估计风险函数
 - en: In the light bulb example, we know the life spans for all 50 bulbs, so we can
     compute the survival function directly – and we can use the survival function
     to compute the hazard function.
+  id: totrans-118
   prefs: []
   type: TYPE_NORMAL
+  zh: 在灯泡示例中，我们知道所有50个灯泡的寿命，因此我们可以直接计算生存函数——我们还可以使用生存函数来计算风险函数。
 - en: In the marriage example, we know the age at first marriage for some respondents,
     the ones who had been married before they were interviewed. But for respondents
     who had never married, we don’t know at what age they would marry in the future
     – or if they will.
+  id: totrans-119
   prefs: []
   type: TYPE_NORMAL
+  zh: 在婚姻示例中，我们知道一些受访者在被采访之前已经结婚的初次结婚年龄。但对于从未结婚的受访者，我们不知道他们将来会在多大年龄结婚——或者是否会结婚。
 - en: This kind of missing data is said to be **censored**. That term might seem odd,
     because censored information is usually hidden deliberately, but in this case
     it is hidden just because we don’t know the future.
+  id: totrans-120
   prefs: []
   type: TYPE_NORMAL
+  zh: 这种缺失数据被称为**截尾**。这个术语可能听起来有些奇怪，因为截尾信息通常是故意隐藏的，但在这个情况下，它只是因为我们不知道未来。
 - en: 'However, we have partial information we can work with: if someone is unmarried
     when they are surveyed, we know that the age when they get married (if they do)
     must be greater than their current age.'
+  id: totrans-121
   prefs: []
   type: TYPE_NORMAL
+  zh: 然而，我们有一些可以工作的部分信息：如果某人在调查时未婚，我们知道他们结婚的年龄（如果他们结婚的话）必须大于他们当前的年龄。
 - en: We can use this partial information to estimate the hazard function; then we
     can use the hazard function to compute the survival function. This process is
     called **Kaplan-Meier estimation**.
+  id: totrans-122
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用这些部分信息来估计风险函数；然后我们可以使用风险函数来计算生存函数。这个过程被称为**Kaplan-Meier估计**。
 - en: To demonstrate, I’ll select just one cohort from the resampled data.
+  id: totrans-123
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了演示，我将从重新抽样的数据中选取一个队列。
 - en: '[PRE41]'
+  id: totrans-124
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE41]'
 - en: For respondents who were married when they were surveyed, we’ll select their
     age at first marriage. There are 9921 of them, which we’ll call “complete” cases.
+  id: totrans-125
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于在调查时已婚的受访者，我们将选择他们的初婚年龄。共有9921人，我们将它们称为“完整”案例。
 - en: '[PRE42]'
+  id: totrans-126
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE42]'
 - en: '[PRE43]'
+  id: totrans-127
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE43]'
 - en: For respondents who had not married, we’ll select their age when they were surveyed.
     There are 5468 of them, which we’ll call the “ongoing” cases.
+  id: totrans-128
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于那些未婚的受访者，我们将选择他们在调查时的年龄。共有5468人，我们将它们称为“持续”案例。
 - en: '[PRE44]'
+  id: totrans-129
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE44]'
 - en: '[PRE45]'
+  id: totrans-130
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE45]'
 - en: Now, to estimate the hazard function, we’ll compute the total number of cases
     that were “at risk” at each age, including everyone who was unmarried up to that
     age. It will be convenient to make a `FreqTab` object that counts the number of
     complete and ongoing cases at each age.
+  id: totrans-131
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，为了估计风险函数，我们将计算每个年龄的“处于风险中”的案例总数，包括到那个年龄为止所有未婚的人。创建一个`FreqTab`对象，该对象按年龄统计完整和持续案例的数量将很方便。
 - en: '[PRE46]'
+  id: totrans-132
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE46]'
 - en: As an example, there are 58 respondents who reported that they were married
     for the first time at age 25.
+  id: totrans-133
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，有58位受访者报告称他们在25岁时第一次结婚。
 - en: '[PRE47]'
+  id: totrans-134
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE47]'
 - en: '[PRE48]'
+  id: totrans-135
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE48]'
 - en: And another 5 respondents who were surveyed at age 25 and reported that they
     had never married.
+  id: totrans-136
   prefs: []
   type: TYPE_NORMAL
+  zh: 还有5位在25岁时接受调查并报告称他们从未结婚的人。
 - en: '[PRE49]'
+  id: totrans-137
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE49]'
 - en: '[PRE50]'
+  id: totrans-138
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE50]'
 - en: From these `FreqTab` objects, we can compute unnormalized `Surv` objects that
     contain the number of complete and ongoing cases that exceed each age.
+  id: totrans-139
   prefs: []
   type: TYPE_NORMAL
+  zh: 从这些`FreqTab`对象中，我们可以计算未归一化的`Surv`对象，这些对象包含超过每个年龄的完整和持续案例数量。
 - en: '[PRE51]'
+  id: totrans-140
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE51]'
 - en: For example, there are 2848 people who reported getting married after age 25.
+  id: totrans-141
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，有2848人报告称他们在25岁之后结婚。
 - en: '[PRE52]'
+  id: totrans-142
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE52]'
 - en: '[PRE53]'
+  id: totrans-143
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE53]'
 - en: And 2273 people surveyed after age 25 who had never married.
+  id: totrans-144
   prefs: []
   type: TYPE_NORMAL
+  zh: 以及25岁之后接受调查且从未结婚的2273人。
 - en: '[PRE54]'
+  id: totrans-145
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE54]'
 - en: '[PRE55]'
+  id: totrans-146
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE55]'
 - en: The sum of the four numbers we just computed is the number of respondents who
     were at risk – that is, people who could have married at age 25. The term “at
     risk” is a legacy of survival analysis in medicine, where it often refers to risk
     of disease or death. It might seem incongruent in the context of marriage, which
     is generally considered a positive milestone. That said, here’s how we compute
     it.
+  id: totrans-147
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们刚刚计算的四个数字之和是处于风险中的受访者人数——也就是说，在25岁时可能结婚的人。术语“处于风险中”是医学中生存分析的遗产，它通常指疾病或死亡的风险。在婚姻的背景下，这似乎有些不一致，因为婚姻通常被认为是一个积极的里程碑。话虽如此，这是我们的计算方法。
 - en: '[PRE56]'
+  id: totrans-148
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE56]'
 - en: '[PRE57]'
+  id: totrans-149
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE57]'
 - en: Of those, the number who actually married at age 25 is `ft_complete[25]`. So
     we can compute the hazard function at age 25 like this.
+  id: totrans-150
   prefs: []
   type: TYPE_NORMAL
+  zh: 其中，实际在25岁结婚的人数是`ft_complete[25]`。因此，我们可以这样计算25岁时的风险函数。
 - en: '[PRE58]'
+  id: totrans-151
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE58]'
 - en: '[PRE59]'
+  id: totrans-152
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE59]'
 - en: That’s how we can compute the hazard function at a single age. Now let’s compute
     the whole function, for all ages. We’ll use the `union` method of the `Index`
     class to compute a Pandas `Index` that contains all of the ages from `ft_complete`
     and `ft_ongoing`, in order.
+  id: totrans-153
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是我们如何计算单个年龄的风险函数。现在让我们计算整个函数，适用于所有年龄。我们将使用`Index`类的`union`方法来计算一个包含`ft_complete`和`ft_ongoing`中所有年龄的Pandas
+    `Index`。
 - en: '[PRE60]'
+  id: totrans-154
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE60]'
 - en: Now we can compute the number of people at risk at every age, by looking up
     the ages in `ts` in each of the `FreqTab` and `Surv` objects.
+  id: totrans-155
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，我们可以通过在每个`FreqTab`和`Surv`对象中查找`ts`中的年龄来计算每个年龄处于风险中的人数。
 - en: '[PRE61]'
+  id: totrans-156
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE61]'
 - en: Finally, we can compute the hazard function at each age, and put the results
     into a `Hazard` object.
+  id: totrans-157
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，我们可以计算每个年龄的风险函数，并将结果放入`Hazard`对象中。
 - en: '[PRE62]'
+  id: totrans-158
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE62]'
 - en: Here’s what the cumulative hazard function looks like.
+  id: totrans-159
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是累积风险函数的形状。
 - en: '[PRE63]'
+  id: totrans-160
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE63]'
 - en: '![_images/f3552c1e500d46d488fbb5f01af5b46e9f301f33836909ddca98e1fc5578ef07.png](../Images/13d56ec1a37187f51b80c824cf33be6f.png)'
+  id: totrans-161
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/13d56ec1a37187f51b80c824cf33be6f.png)'
 - en: It is steepest between ages 20 and 30, which means that an unmarried person
     is at the greatest “risk” of getting married at these ages. After that, the cumulative
     hazard levels off, which means that the hazard gradually decreases.
+  id: totrans-162
   prefs: []
   type: TYPE_NORMAL
+  zh: 它在20岁到30岁之间最陡峭，这意味着未婚者在这些年龄段的结婚“风险”最大。之后，累积风险水平稳定，这意味着风险逐渐降低。
 - en: Estimating Survival Functions
+  id: totrans-163
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 估计生存函数
 - en: If we are given a survival function, we know how to compute the hazard function.
     Now let’s go in the other direction.
+  id: totrans-164
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们给定一个生存函数，我们知道如何计算风险函数。现在让我们反过来。
 - en: Here’s one way to think of it. The hazard function indicates the probability
     of getting married at each age, if you have not already married. So the complement
     of the hazard function is the probability of staying unmarried at each age.
+  id: totrans-165
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里有一个思考方式。风险函数表示如果你尚未结婚，在每一个年龄结婚的概率。所以风险函数的补数是每个年龄保持未婚的概率。
 - en: In order to “survive” past a given age, `t`, you have to stay unmarried at every
     age up to and including `t`. And the probability of doing that is the product
     of the complementary hazard function, which we can compute like this.
+  id: totrans-166
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了“生存”到给定的年龄`t`，你必须在每个年龄保持未婚，包括`t`。做到这一点的概率是互补风险函数的乘积，我们可以这样计算。
 - en: '[PRE64]'
+  id: totrans-167
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE64]'
 - en: The `Hazard` object has a `make_surv` method that does this computation.
+  id: totrans-168
   prefs: []
   type: TYPE_NORMAL
+  zh: '`Hazard`对象有一个`make_surv`方法来完成这个计算。'
 - en: '[PRE65]'
+  id: totrans-169
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE65]'
 - en: Here’s what the result looks like, compared to the previous result (dotted line),
     which corrected for stratified resampling, but did not handle censored data.
+  id: totrans-170
   prefs: []
   type: TYPE_NORMAL
+  zh: 下面是结果的样子，与之前的结果（虚线）相比，之前的结果纠正了分层重采样，但没有处理截尾数据。
 - en: '[PRE66]'
+  id: totrans-171
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE66]'
 - en: '![_images/2f32d31a1f4cedf5d0604cc266c6e2361faf81386eeac8bc51203c3229c7cffa.png](../Images/68732cef43fa7f22a6d765dca4f8a9a8.png)'
+  id: totrans-172
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/68732cef43fa7f22a6d765dca4f8a9a8.png)'
 - en: We can see how important it is to handle censored data correctly.
+  id: totrans-173
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以看到正确处理截尾数据的重要性。
 - en: A survival function like this was the basis of a famous magazine article in
     1986 – *Newsweek* reported that a 40-year old unmarried woman was “more likely
     to be killed by a terrorist” than get married. That claim was widely reported
@@ -665,478 +1014,720 @@
     on faulty analysis) and turned out to be even more wrong (because of cultural
     changes that were already in progress). In 2006, *Newsweek* ran an another article
     acknowledging their error.
+  id: totrans-174
   prefs: []
   type: TYPE_NORMAL
+  zh: 这样的生存函数是1986年一篇著名杂志文章的基础 – 《新闻周刊》报道称，40岁的未婚女性“被恐怖分子杀害的可能性”比结婚的可能性更大。这个说法被广泛报道，并成为流行文化的一部分，但当时是错误的（因为它是基于错误的分析），后来证明更加错误（因为文化变化已经在进行中）。2006年，《新闻周刊》又发表了一篇文章，承认他们的错误。
 - en: I encourage you to read more about this article, the statistics it was based
     on, and the reaction. It should remind you of the ethical obligation to perform
     statistical analysis with care, interpret the results with appropriate skepticism,
     and present them to the public accurately and honestly.
+  id: totrans-175
   prefs: []
   type: TYPE_NORMAL
+  zh: 我鼓励你阅读更多关于这篇文章、其依据的统计数据以及公众的反应。这应该会提醒你，进行统计分析时要有道德上的责任，用适当的怀疑态度来解释结果，并准确、诚实地向公众展示。
 - en: '[Snopes has a good article on the topic](https://www.snopes.com/fact-check/marry-go-round/).'
+  id: totrans-176
   prefs: []
   type: TYPE_NORMAL
+  zh: '[Snopes有关于这个主题的好文章](https://www.snopes.com/fact-check/marry-go-round/)。'
 - en: The following function encapsulates the steps of Kaplan-Meier estimation. It
     takes as arguments sequences of survival times for complete and ongoing cases,
     and returns a `Hazard` object.
+  id: totrans-177
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数封装了Kaplan-Meier估计的步骤。它接受完整和持续病例的生存时间序列作为参数，并返回一个`Hazard`对象。
 - en: '[PRE67]'
+  id: totrans-178
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE67]'
 - en: And here’s a function that takes a group of respondents, extracts survival times,
     calls `estimate_hazard` to get the hazard function, and then computes the corresponding
     survival function.
+  id: totrans-179
   prefs: []
   type: TYPE_NORMAL
+  zh: 下面是一个函数，它接受一组受访者，提取生存时间，调用`estimate_hazard`来获取风险函数，然后计算相应的生存函数。
 - en: '[PRE68]'
+  id: totrans-180
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE68]'
 - en: Soon we’ll use these functions to compute confidence intervals for survival
     functions. But first let’s see another way to compute Kaplan-Meier estimates.
+  id: totrans-181
   prefs: []
   type: TYPE_NORMAL
+  zh: 很快，我们将使用这些函数来计算生存函数的置信区间。但首先，让我们看看另一种计算Kaplan-Meier估计的方法。
 - en: Lifelines
+  id: totrans-182
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: Lifelines
 - en: A Python package called `lifelines` provides tools for survival analysis, including
     functions that compute Kaplan-Meier estimates.
+  id: totrans-183
   prefs: []
   type: TYPE_NORMAL
+  zh: 一个名为`lifelines`的Python包提供了生存分析的工具，包括计算Kaplan-Meier估计的函数。
 - en: The following cell installs `lifelines` if necessary.
+  id: totrans-184
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下单元格在需要时安装`lifelines`。
 - en: '[PRE69]'
+  id: totrans-185
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE69]'
 - en: We can use it to confirm that the result in the previous section is correct.
     First we’ll compute the survival function using `estimate_survival`.
+  id: totrans-186
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用它来确认上一节中的结果是正确的。首先，我们将使用`estimate_survival`计算生存函数。
 - en: '[PRE70]'
+  id: totrans-187
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE70]'
 - en: Next we’ll compute it using `lifelines`. First we’ll get the data into the format
     `lifelines` requires.
+  id: totrans-188
   prefs: []
   type: TYPE_NORMAL
+  zh: 接下来，我们将使用`lifelines`来计算它。首先，我们需要将数据转换成`lifelines`所需的格式。
 - en: '[PRE71]'
+  id: totrans-189
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE71]'
 - en: Now we can make a `KaplanMeierFitter` object and fit the data.
+  id: totrans-190
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，我们可以创建一个`KaplanMeierFitter`对象并拟合数据。
 - en: '[PRE72]'
+  id: totrans-191
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE72]'
 - en: '[PRE73]'
+  id: totrans-192
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE73]'
 - en: After fitting the data, we can call the `plot` function to display the results,
     which include the estimated survival function and a confidence interval – although
     the confidence interval is not correct in this case because it doesn’t correct
     for stratified sampling.
+  id: totrans-193
   prefs: []
   type: TYPE_NORMAL
+  zh: 在拟合数据后，我们可以调用`plot`函数来显示结果，包括估计的生存函数和置信区间——尽管在这个案例中置信区间是不正确的，因为它没有对分层抽样进行校正。
 - en: '[PRE74]'
+  id: totrans-194
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE74]'
 - en: '![_images/8607ce98344389d6b166680905db153438d143f4355f7ac898e0a9889e32a49e.png](../Images/a532cab8cf163c51537f14c1b79f8d83.png)'
+  id: totrans-195
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/a532cab8cf163c51537f14c1b79f8d83.png)'
 - en: Unlike the survival function we computed, the one from `lifelines` starts from
     0. But the rest of the function is the same, within floating-point error.
+  id: totrans-196
   prefs: []
   type: TYPE_NORMAL
+  zh: 与我们计算的生存函数不同，`lifelines`中的生存函数从0开始。但其余的函数在浮点误差范围内是相同的。
 - en: '[PRE75]'
+  id: totrans-197
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE75]'
 - en: '[PRE76]'
+  id: totrans-198
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE76]'
 - en: In the next section, we’ll use weighted resampling to compute confidence intervals
     that take stratified sampling into account.
+  id: totrans-199
   prefs: []
   type: TYPE_NORMAL
+  zh: 在下一节中，我们将使用加权重采样来计算考虑分层抽样的置信区间。
 - en: Confidence Intervals
+  id: totrans-200
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 置信区间
 - en: The Kaplan-Meier estimate we computed is based on a single resampling of the
     dataset. To get an idea of how much variation there is due to random sampling,
     we’ll run the analysis with several resamplings and plot the results.
+  id: totrans-201
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们计算的Kaplan-Meier估计是基于数据集的单次重采样。为了了解由于随机抽样引起的变异程度，我们将使用多次重采样进行分析，并绘制结果。
 - en: We’ll use the following function, which takes a `DataFrame` and a list of cohorts,
     estimates the survival function for each cohort, and returns a dictionary that
     maps from each integer cohort to a `Surv` object.
+  id: totrans-202
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将使用以下函数，该函数接受一个`DataFrame`和一个队列列表，为每个队列估计生存函数，并返回一个字典，将每个整数队列映射到一个`Surv`对象。
 - en: This function is identical to `make_survival_map`, except that it calls `estimate_survival`,
     which uses Kaplan-Meier estimation, rather than `Surv.from_seq`, which only works
     if there is no censored data.
+  id: totrans-203
   prefs: []
   type: TYPE_NORMAL
+  zh: 此函数与`make_survival_map`相同，除了它调用`estimate_survival`，该函数使用Kaplan-Meier估计，而不是`Surv.from_seq`，后者仅在无删失数据的情况下工作。
 - en: '[PRE77]'
+  id: totrans-204
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE77]'
 - en: The following loop generates 101 random resamplings of the dataset and makes
     a list of 101 dictionaries containing the estimated survival functions.
+  id: totrans-205
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下循环生成了数据集的101次随机重采样，并创建了一个包含101个字典的列表，这些字典包含了估计的生存函数。
 - en: '[PRE78]'
+  id: totrans-206
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE78]'
 - en: To plot the results, we’ll use the following function, which takes that list
     of dictionaries, an integer cohort, and a color string. It loops through the dictionaries,
     selects the survival function for the given cohort, and plots it with a nearly
     transparent line – which is one way to visualize the variability between resamplings.
+  id: totrans-207
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了绘制结果，我们将使用以下函数，该函数接受一个字典列表、一个整数队列和一个颜色字符串。它遍历字典，选择给定队列的生存函数，并以几乎透明的线条绘制它——这是可视化重采样之间变异的一种方法。
 - en: '[PRE79]'
+  id: totrans-208
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE79]'
 - en: Here are the results for birth cohorts from the 1940s to the 1990s.
+  id: totrans-209
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里是1940年代到1990年代出生队列的结果。
 - en: '[PRE80]'
+  id: totrans-210
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE80]'
 - en: '![_images/857e37c477c353c4342f6ed14a5a01fa4e82dbbdfb36b1a60c4da15dadfbb095.png](../Images/5153b02007fc0b61a695bfe9dee5400d.png)'
+  id: totrans-211
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/5153b02007fc0b61a695bfe9dee5400d.png)'
 - en: This visualization is good enough for exploration, but the lines look blurry
     and some of the labels overlap. More work might be needed to make a publication-ready
     figure, but we’ll keep it simple for now.
+  id: totrans-212
   prefs: []
   type: TYPE_NORMAL
+  zh: 这种可视化对于探索来说已经足够好了，但线条看起来有些模糊，一些标签也重叠了。可能需要更多的工作来制作一个可用于发表的图表，但现在我们会保持简单。
 - en: 'Several patterns are visible:'
+  id: totrans-213
   prefs: []
   type: TYPE_NORMAL
+  zh: 可以看到几个明显的模式：
 - en: Women born in the 1940s married earliest – cohorts born in the 1950s and 1960s
     married later, but about the same fraction stayed unmarried.
+  id: totrans-214
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 1940年代出生的女性结婚最早——1950年代和1960年代出生的队列结婚较晚，但未婚的比例大致相同。
 - en: Women born in the 1970s married later *and* stayed unmarried at higher rates
     than previous cohorts.
+  id: totrans-215
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 1970年代出生的女性结婚较晚，并且未婚的比例高于之前的队列。
 - en: Cohorts born in the 1980s and 1990s are marrying even later, and are on track
     to stay unmarried at even higher rates – although these patterns could change
     in the future.
+  id: totrans-216
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 1980年代和1990年代出生的队列结婚的时间更晚，并且未婚的比例更高——尽管这些模式在未来可能会改变。
 - en: We’ll have to wait for the next data release from the NSFG to learn more.
+  id: totrans-217
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将不得不等待NSFG的下一个数据发布来了解更多信息。
 - en: Expected Remaining Lifetime
+  id: totrans-218
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 预期剩余寿命
 - en: Given a distribution, we can compute the expected remaining lifetime as a function
     of elapsed time. For example, given the distribution of pregnancy lengths, we
     can compute the expected time until delivery. To demonstrate, we’ll use pregnancy
     data from the NSFG.
+  id: totrans-219
   prefs: []
   type: TYPE_NORMAL
+  zh: 给定一个分布，我们可以计算预期剩余寿命作为已过时间的函数。例如，给定怀孕长度的分布，我们可以计算分娩的预期时间。为了演示，我们将使用NSFG的怀孕数据。
 - en: The following cells download the data files and install `statadict`, which we
     need to read the data.
+  id: totrans-220
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下单元格下载数据文件并安装`statadict`，这是我们读取数据所需的。
 - en: '[PRE81]'
+  id: totrans-221
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE81]'
 - en: '[PRE82]'
+  id: totrans-222
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE82]'
 - en: We’ll use `get_nsfg_groups` to read the data and divide it into first babies
     and others.
+  id: totrans-223
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将使用`get_nsfg_groups`来读取数据，并将其分为第一胎和其他。
 - en: '[PRE83]'
+  id: totrans-224
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE83]'
 - en: We’ll start with a single resampling of the data.
+  id: totrans-225
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将首先对数据进行一次重采样。
 - en: '[PRE84]'
+  id: totrans-226
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE84]'
 - en: Here’s the PMF of pregnancy durations.
+  id: totrans-227
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是怀孕持续时间的PMF。
 - en: '[PRE85]'
+  id: totrans-228
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE85]'
 - en: Now suppose it’s the beginning of the 36th week of pregnancy. Remembering that
     the most common pregnancy length is 39 weeks, we expect the remaining time to
     be 3-4 weeks. To make that estimate more precise, we can identify the values in
     the distribution that equal or exceed 36 weeks.
+  id: totrans-229
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在假设是怀孕的第36周的开始。记住最常见的怀孕长度是39周，我们预计剩余时间为3-4周。为了使这个估计更精确，我们可以识别分布中等于或超过36周的那些值。
 - en: '[PRE86]'
+  id: totrans-230
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE86]'
 - en: Next we’ll make a new `Pmf` object that contains only those values, shifted
     left so the current time is at 0.
+  id: totrans-231
   prefs: []
   type: TYPE_NORMAL
+  zh: 接下来，我们将创建一个新的`Pmf`对象，它只包含那些值，并将它们左移，使当前时间为0。
 - en: '[PRE87]'
+  id: totrans-232
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE87]'
 - en: Because we selected a subset of the values in the `Pmf`, the probabilities no
     longer add up to 1, but we can normalize the `Pmf` so they do.
+  id: totrans-233
   prefs: []
   type: TYPE_NORMAL
+  zh: 由于我们选择了`Pmf`中的值的一个子集，概率不再加起来为1，但我们可以归一化`Pmf`，使它们加起来为1。
 - en: '[PRE88]'
+  id: totrans-234
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE88]'
 - en: '[PRE89]'
+  id: totrans-235
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE89]'
 - en: Here’s the result, which shows the distribution of remaining time at the beginning
     of the 36th week.
+  id: totrans-236
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是结果，它显示了第36周开始时的剩余时间分布。
 - en: '[PRE90]'
+  id: totrans-237
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE90]'
 - en: '![_images/40fb6b96fad202426770af9618cbf06f7e5c8c7b2625c5425e543bd2985b1737.png](../Images/b35790b2de6d473b65b158c8f3b42cea.png)'
+  id: totrans-238
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/b35790b2de6d473b65b158c8f3b42cea.png)'
 - en: The mean of this distribution is the expected remaining time.
+  id: totrans-239
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个分布的均值是预期的剩余时间。
 - en: '[PRE91]'
+  id: totrans-240
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE91]'
 - en: '[PRE92]'
+  id: totrans-241
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE92]'
 - en: The following function encapsulates these steps and computes the distribution
     of remaining time for a given `Pmf` at a given time, `t`.
+  id: totrans-242
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数封装了这些步骤，并计算给定时间`t`下`Pmf`的剩余时间分布。
 - en: '[PRE93]'
+  id: totrans-243
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE93]'
 - en: The following function takes a `Pmf` of pregnancy lengths and computes the expected
     remaining time at the beginning of each week from the 36th to the 43rd.
+  id: totrans-244
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数接受一个怀孕长度的`Pmf`，并计算从第36周到第43周每周开始的预期剩余时间。
 - en: '[PRE94]'
+  id: totrans-245
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE94]'
 - en: Here are the results for a single resampling of the data.
+  id: totrans-246
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是数据单次重采样的结果。
 - en: '[PRE95]'
+  id: totrans-247
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE95]'
 - en: '[PRE96]'
+  id: totrans-248
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE96]'
 - en: To see how much variation there is due to random sampling, we can run this analysis
     with several resamplings and plot the results.
+  id: totrans-249
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了看到由于随机采样引起的多少变化，我们可以运行多次重采样分析，并绘制结果。
 - en: '[PRE97]'
+  id: totrans-250
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE97]'
 - en: '![_images/203affde7f36d1b69038756a0f4b3fa8945234c040f14534ffcfb3b91fc93f2c.png](../Images/e69217b8e7e173d0c2ff64d4744798b0.png)'
+  id: totrans-251
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/e69217b8e7e173d0c2ff64d4744798b0.png)'
 - en: Between weeks 36 and 39, the expected remaining time decreases until, at the
     beginning of the 39th week, it is about 0.6 weeks. But after that, the curve levels
     off. At the beginning of the 40th week, the expected remaining time is still close
     to 0.6 weeks – actually a little higher – and at the beginning of the 41st, 42nd,
     and 43rd, it is almost the same. For people waiting anxiously for a baby to be
     born, this behavior seems quite cruel.
+  id: totrans-252
   prefs: []
   type: TYPE_NORMAL
+  zh: 在第36周到第39周之间，预期的剩余时间逐渐减少，直到在第39周开始时，大约是0.6周。但之后，曲线趋于平稳。在第40周开始时，预期的剩余时间仍然接近0.6周——实际上略高——在第41周、第42周和第43周开始时，几乎相同。对于焦急等待婴儿出生的人来说，这种行为似乎相当残酷。
 - en: Glossary
+  id: totrans-253
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 术语表
 - en: '**survival analysis**: A set of methods for describing and predicting the time
     until an event of interest, often focused on lifetimes or durations.'
+  id: totrans-254
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**生存分析**：一组描述和预测感兴趣事件发生时间的的方法，通常关注寿命或持续时间。'
 - en: '**survival function**: A function that maps from a time, \(t\), to the probability
     of surviving beyond \(t\).'
+  id: totrans-255
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**生存函数**：一个将时间`t`映射到超过`t`的生存概率的函数。'
 - en: '**hazard function**: A function that maps from \(t\) to the fraction of cases
     that experience the event at \(t\), out of all cases that survive until \(t\)
     .'
+  id: totrans-256
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**风险函数**：一个将`t`映射到在`t`时刻经历事件的案例比例的函数，这些案例在`t`时刻之前幸存。'
 - en: '**cumulative hazard function**: The cumulative sum of the hazard function,
     often useful for visualization.'
+  id: totrans-257
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**累积风险函数**：风险函数的累积和，通常对可视化很有用。'
 - en: '**weighted bootstrap:** A form of resampling that uses sampling weights to
     correct for stratified sampling by simulating a representative sample.'
+  id: totrans-258
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**加权bootstrap**：一种使用采样权重来纠正分层抽样的重采样形式，通过模拟代表性样本。'
 - en: '**censored data**: Data that is only partially known because the event of interest
     has not yet occurred or was unobserved.'
+  id: totrans-259
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**被审查的数据**：仅部分已知的数据，因为感兴趣的事件尚未发生或未被观察到。'
 - en: '**Kaplan-Meier estimation**: A method for estimating survival and hazard functions
     in datasets with censored observations.'
+  id: totrans-260
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**Kaplan-Meier 估计**：一种用于估计具有截尾观察值的数据集中的生存和风险函数的方法。'
 - en: '**cohort**: A set of subjects with shared characteristics – like decade of
     birth – analyzed as a group.'
+  id: totrans-261
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**队列**：具有共享特征（如出生十年）的一组主题，作为一个组进行分析。'
 - en: Exercises
+  id: totrans-262
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 练习
 - en: Exercise 13.1
+  id: totrans-263
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 练习 13.1
 - en: We can use the methods in this chapter to estimate hazard and survival functions
     for the duration of a marriage. To keep things simple, we’ll consider only first
     marriages, and we’ll focus on divorce as the endpoint, rather than separation
     or death.
+  id: totrans-264
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用本章中的方法估计婚姻持续时间的风险和生存函数。为了使事情简单，我们将只考虑第一次婚姻，并且我们将关注离婚作为终点，而不是分离或死亡。
 - en: In the NSFG data, the `cmdivorcx` column contains the date of divorce for each
     respondent’s first marriage, if applicable, encoded in century-months. Compute
     the duration of marriages that have ended in divorce, and the duration, so far,
     of marriages that are ongoing.
+  id: totrans-265
   prefs: []
   type: TYPE_NORMAL
+  zh: 在 NSFG 数据中，`cmdivorcx` 列包含每个受访者的第一次婚姻的离婚日期（如果适用），以世纪-月份编码。计算以离婚结束的婚姻的持续时间，以及至今仍在进行的婚姻的持续时间。
 - en: For complete cases, compute the elapsed time between `cmdivorcx` and `cmmarrhx`.
     If both values are valid – not `NaN` – that means the respondent’s first marriage
     ended in divorce.
+  id: totrans-266
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 对于完整案例，计算 `cmdivorcx` 和 `cmmarrhx` 之间的经过时间。如果这两个值都有效——不是 `NaN` ——这意味着受访者的第一次婚姻以离婚结束。
 - en: To identify ongoing cases, select people who have only married once and who
     are still married. You can use `fmarno`, which records the number of times each
     respondent has married, and `fmarital`, which encodes their marital status – the
     value 1 indicates that the respondent is married.
+  id: totrans-267
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 为了识别持续案例，选择只结过一次婚并且仍然已婚的人。你可以使用 `fmarno`，它记录了每个受访者结婚的次数，以及 `fmarital`，它编码了他们的婚姻状况——值1表示受访者已婚。
 - en: In some cases the values of these variables are only approximate, so you might
     find a small number of negative differences, but they should not be more than
     one year.
+  id: totrans-268
   prefs: []
   type: TYPE_NORMAL
+  zh: 在某些情况下，这些变量的值只是近似值，因此你可能会发现一小部分负数差异，但它们不应超过一年。
 - en: Estimate the hazard and survival functions for the duration of marriage. Plot
     the cumulative hazard function – when is the danger of divorce highest? Plot the
     survival function – what fraction of marriages end in divorce?
+  id: totrans-269
   prefs: []
   type: TYPE_NORMAL
+  zh: 估计婚姻持续时间的风险和生存函数。绘制累积风险函数——离婚的危险性最高是在什么时候？绘制生存函数——有多少比例的婚姻以离婚结束？
 - en: '[PRE98]'
+  id: totrans-270
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE98]'
 - en: Exercise 13.2
+  id: totrans-271
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 练习 13.2
 - en: In 2012, a team of demographers at the University of Southern California estimated
     life expectancy for people born in Sweden in the early 1800s and 1900s. For ages
     from 0 to 91 years, they estimated the age-specific mortality rate, which is the
     fraction of people who die at a given age, out of all who survive until that age
     – which you might recognize as the hazard function.
+  id: totrans-272
   prefs: []
   type: TYPE_NORMAL
+  zh: 2012年，南加州大学的一组人口统计学家估计了19世纪初和20世纪初出生在瑞典的人的预期寿命。对于0至91岁的年龄，他们估计了年龄特定的死亡率，即给定年龄死亡的人数占所有在该年龄之前存活下来的人的比例——你可能认识这是风险函数。
 - en: I used an online graph digitizer to get the data from the figure in their paper
     and store it in a CSV file. Instructions for downloading the data are in the notebook
     for this chapter.
+  id: totrans-273
   prefs: []
   type: TYPE_NORMAL
+  zh: 我使用在线图形数字化工具从他们的论文中的图表获取数据，并将其存储在 CSV 文件中。下载数据的说明在本书的笔记本中。
 - en: 'Data source: Beltrán-Sánchez, H., Crimmins, E. M., & Finch, C. E. (2012). Early
     cohort mortality predicts the rate of aging in the cohort: a historical analysis.
     *Journal of developmental origins of health and disease*, 3(5), 380-386.'
+  id: totrans-274
   prefs: []
   type: TYPE_NORMAL
+  zh: 数据来源：Beltrán-Sánchez, H., Crimmins, E. M., & Finch, C. E. (2012). 早期队列死亡率预测队列的衰老速度：历史分析。*发育起源的健康与疾病杂志*，3(5)，380-386。
 - en: The following cell downloads the data.
+  id: totrans-275
   prefs: []
   type: TYPE_NORMAL
+  zh: 下面的单元格下载了数据。
 - en: '[PRE99]'
+  id: totrans-276
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE99]'
 - en: We can load the data like this.
+  id: totrans-277
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以像这样加载数据。
 - en: '[PRE100]'
+  id: totrans-278
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE100]'
 - en: The following function interpolates the data to make a hazard function with
     approximate mortality rates for each age from 0 to 99.
+  id: totrans-279
   prefs: []
   type: TYPE_NORMAL
+  zh: 下面的函数将数据插值以创建一个具有从0到99岁每个年龄的近似死亡率的危险函数。
 - en: '[PRE101]'
+  id: totrans-280
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE101]'
 - en: Now we can make a `Hazard` object like this.
+  id: totrans-281
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以创建一个这样的 `Hazard` 对象。
 - en: '[PRE102]'
+  id: totrans-282
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE102]'
 - en: Here’s what the mortality rates look like.
+  id: totrans-283
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是死亡率的样子。
 - en: '[PRE103]'
+  id: totrans-284
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE103]'
 - en: '![_images/75e69939ebfeef40ace8cf9d70fb79a6e072afb77b87796a903e22639241ef19.png](../Images/fd98088a28e20449224587a2ccea2a1f.png)'
+  id: totrans-285
   prefs: []
   type: TYPE_IMG
+  zh: '![图片链接](../Images/fd98088a28e20449224587a2ccea2a1f.png)'
 - en: Use `make_surv` to make a survival function based on these rates, and `make_cdf`
     to compute the corresponding CDF. Plot the results.
+  id: totrans-286
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用 `make_surv` 来根据这些比率制作生存函数，并使用 `make_cdf` 来计算相应的累积分布函数（CDF）。绘制结果。
 - en: Then use `make_pmf` to make a `Pmf` object that represents the distribution
     of lifetimes, and plot it. Finally, use `compute_pmf_remaining` to compute the
     average remaining lifetime at each age from 0 to 99. Plot the result.
+  id: totrans-287
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后使用 `make_pmf` 来制作表示寿命分布的 `Pmf` 对象，并绘制它。最后，使用 `compute_pmf_remaining` 来计算从0岁到99岁每个年龄的平均剩余寿命。绘制结果。
 - en: In the remaining lifetime curve, you should see a counterintuitive pattern –
     for the first few years of life, remaining lifetime increases. Because infant
     mortality was so high in the early 1800s, an older child was expected to live
     longer than a younger child. After about age 5, life expectancy returns to the
     pattern we expect – young people are expected to live longer than old people.
+  id: totrans-288
   prefs: []
   type: TYPE_NORMAL
+  zh: 在剩余寿命曲线上，你应该会看到一个反直觉的模式——在生命的最初几年，剩余寿命会增加。因为19世纪初期的婴儿死亡率非常高，所以预期较大的孩子比年幼的孩子活得更久。大约5岁之后，预期寿命会回到我们预期的模式——年轻人预期比老年人活得更久。
 - en: If you are interested in this topic, you might like Chapter 5 of my book, *Probably
     Overthinking It*, which presents similarly counterintuitive results from many
     areas of statistics.
+  id: totrans-289
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你对这个主题感兴趣，可能会喜欢我的书《很可能是在过度思考》的第5章，该章节展示了来自统计学许多领域的类似反直觉结果。
 - en: Available from [https://probablyoverthinking.it](https://probablyoverthinking.it).
+  id: totrans-290
   prefs: []
   type: TYPE_NORMAL
+  zh: 可从 [https://probablyoverthinking.it](https://probablyoverthinking.it) 获取。
 - en: '[Think Stats: Exploratory Data Analysis in Python, 3rd Edition](https://allendowney.github.io/ThinkStats/index.html)'
+  id: totrans-291
   prefs: []
   type: TYPE_NORMAL
+  zh: '[《Think Stats：Python中的探索性数据分析，第3版》](https://allendowney.github.io/ThinkStats/index.html)'
 - en: Copyright 2024 [Allen B. Downey](https://allendowney.com)
+  id: totrans-292
   prefs: []
   type: TYPE_NORMAL
+  zh: 版权所有 2024 [艾伦·B·唐尼](https://allendowney.com)
 - en: 'Code license: [MIT License](https://mit-license.org/)'
+  id: totrans-293
   prefs: []
   type: TYPE_NORMAL
+  zh: 代码许可：[MIT 许可证](https://mit-license.org/)
 - en: 'Text license: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  id: totrans-294
   prefs: []
   type: TYPE_NORMAL
+  zh: 文本许可：[Creative Commons Attribution-NonCommercial-ShareAlike 4.0 国际](https://creativecommons.org/licenses/by-nc-sa/4.0/)

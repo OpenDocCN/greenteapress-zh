@@ -1,197 +1,267 @@
 - en: Preface
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 前言
 - en: 原文：[https://allendowney.github.io/ThinkStats/chap00.html](https://allendowney.github.io/ThinkStats/chap00.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ThinkStats/chap00.html](https://allendowney.github.io/ThinkStats/chap00.html)
 - en: From the earliest history of statistics, there have been two ideas about what
     statistics is. In one view, it is a branch of mathematics with the goal of establishing
     a theoretical foundation for probability and statistical inference. In another
     view, it is a set of tools and practices for working with data, answering questions,
     and making better decisions. Many introductory classes in statistics are based
     on the first view. This book is based on the second.
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 从统计学最早的起源开始，就有两种关于统计学是什么的观点。一种观点认为，统计学是数学的一个分支，其目标是建立概率和统计推断的理论基础。另一种观点认为，统计学是一套处理数据、回答问题和做出更好决策的工具和实践。许多统计学入门课程基于第一种观点。本书基于第二种观点。
 - en: '*Think Stats* is an introduction to practical methods for exploring and visualizing
     data, discovering relationships and trends, and communicating results. The organization
     of the book follows the process I use when I start working with a dataset:'
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: '*Think Stats* 是一本介绍探索和可视化数据、发现关系和趋势以及传达结果的实用方法的入门书。本书的组织结构遵循我开始处理数据集时使用的流程：'
 - en: 'Importing and cleaning: Whatever format the data is in, it usually takes some
     time and effort to read the data, clean and transform it, and check that everything
     made it through the translation process intact.'
+  id: totrans-4
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 导入和清理：无论数据格式如何，通常需要一些时间和精力来读取数据、清理和转换它，并检查是否一切在翻译过程中完好无损。
 - en: 'Single variable explorations: I usually start by examining one variable at
     a time, finding out what the variables mean, looking at distributions of the values,
     and choosing appropriate summary statistics.'
+  id: totrans-5
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 单变量探索：我通常一次检查一个变量，找出变量的含义，查看值的分布，并选择适当的汇总统计量。
 - en: 'Pair-wise explorations: To identify possible relationships between variables,
     I look at tables and scatter plots, and compute correlations and linear fits.'
+  id: totrans-6
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 对偶探索：为了识别变量之间可能的关系，我会查看表格和散点图，并计算相关性和线性拟合。
 - en: 'Multivariate analysis: If there are apparent relationships between variables,
     I use multiple regression to add control variables and investigate more complex
     relationships.'
+  id: totrans-7
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 多变量分析：如果有变量之间存在明显的关系，我会使用多元回归来添加控制变量并研究更复杂的关系。
 - en: 'Estimation and hypothesis testing: When reporting statistical results, it is
     important to answer three questions: How big is the effect? How much variability
     should we expect if we run the same measurement again? Is it plausible that the
     apparent effect is due to chance?'
+  id: totrans-8
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 估计和假设检验：在报告统计结果时，重要的是要回答三个问题：效果有多大？如果我们再次进行相同的测量，我们应该期望多少可变性？明显的效应是否可能是偶然的？
 - en: 'Visualization: During exploration, visualization is an important tool for finding
     possible relationships and effects. Then if an apparent effect holds up to scrutiny,
     visualization is an effective way to communicate results.'
+  id: totrans-9
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 可视化：在探索过程中，可视化是寻找可能的关系和效应的重要工具。然后，如果明显的效应经得起推敲，可视化是传达结果的有效方式。
 - en: 'This book takes a computational approach, which has several advantages over
     more mathematical treatments:'
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 这本书采用计算方法，与更数学的处理方法相比有几个优点：
 - en: I present most ideas using Python code, rather than mathematical notation. In
     general, Python code is more readable – also, because it is executable, the reader
     can run it and modify it to develop insight.
+  id: totrans-11
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 我通常使用Python代码而不是数学符号来展示大多数观点。一般来说，Python代码更易读——此外，因为它可执行，读者可以运行它并修改它来发展洞察力。
 - en: Each chapter includes exercises readers can do to check and solidify their learning.
     When you write programs, you express your understanding in code – while you are
     debugging the program, you are also checking your understanding.
+  id: totrans-12
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 每章都包括读者可以做的练习，以检查和巩固他们的学习。当你编写程序时，你在代码中表达你的理解——当你调试程序时，你也在检查你的理解。
 - en: Some exercises involve experiments to test statistical behavior. For example,
     you can explore the Central Limit Theorem (CLT) by generating random samples and
     computing their sums. The resulting visualizations show why the CLT works and
     when it doesn’t.
+  id: totrans-13
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 一些练习涉及实验来测试统计行为。例如，你可以通过生成随机样本并计算它们的总和来探索中心极限定理（CLT）。结果的可视化显示了CLT为什么有效以及何时无效。
 - en: Some ideas that are hard to grasp mathematically are easy to understand by simulation.
     For example, we approximate p-values by running random simulations, which reinforces
     the meaning of hypothesis testing.
+  id: totrans-14
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 一些在数学上难以理解的概念，通过模拟可以更容易地理解。例如，我们通过运行随机模拟来近似p值，这加强了假设检验的意义。
 - en: Because the book is based on a general-purpose programming language (Python),
     readers can import data from almost any source. They are not limited to datasets
     that have been cleaned and formatted for a particular statistical tool.
+  id: totrans-15
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 由于本书基于通用编程语言（Python），读者可以从几乎任何来源导入数据。他们不受特定统计工具已清洗和格式化数据集的限制。
 - en: 'To demonstrate my approach to statistical analysis, the examples and exercises
     use data from several sources, including:'
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了展示我的统计分析方法，示例和练习使用了来自多个来源的数据，包括：
 - en: The National Survey of Family Growth (NSFG), conducted by the U.S. Centers for
     Disease Control and Prevention (CDC) to gather “information on family life, marriage
     and divorce, pregnancy, infertility, use of contraception, and men’s and women’s
     health.” (See [https://www.cdc.gov/nchs/nsfg/index.htm](https://www.cdc.gov/nchs/nsfg/index.htm).)
+  id: totrans-17
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 美国疾病控制与预防中心（CDC）进行的全国家庭成长调查（NSFG），旨在收集有关“家庭生活、婚姻和离婚、怀孕、不孕、避孕药具的使用以及男性和女性健康”的信息。（见[https://www.cdc.gov/nchs/nsfg/index.htm](https://www.cdc.gov/nchs/nsfg/index.htm)）
 - en: The Behavioral Risk Factor Surveillance System (BRFSS), conducted by the National
     Center for Chronic Disease Prevention and Health Promotion to “track health conditions
     and risk behaviors in the United States.” (See [http://cdc.gov/BRFSS/](http://cdc.gov/BRFSS/).)
+  id: totrans-18
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 行为风险因素监测系统（BRFSS），由国家慢性疾病预防和健康促进中心进行，旨在“追踪美国的健康状况和风险行为。”（见[http://cdc.gov/BRFSS/](http://cdc.gov/BRFSS/)）
 - en: The Palmer Penguins, which includes measurements from a sample of penguins near
     Palmer Station in Antarctica (see [https://allisonhorst.github.io/palmerpenguins/](https://allisonhorst.github.io/palmerpenguins/)).
+  id: totrans-19
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 帕默企鹅数据集，该数据集包括来自南极洲帕默站附近企鹅样本的测量数据（见[https://allisonhorst.github.io/palmerpenguins/](https://allisonhorst.github.io/palmerpenguins/)）。
 - en: Data from the U.S. Energy Information Administration (EIA) on electricity generation
     from renewable sources in the United States.
+  id: totrans-20
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 美国能源信息署（EIA）关于美国可再生能源发电的数据。
 - en: I am grateful to the people and agencies that collected this data and made it
     available – and I hope that working with real data from a variety of domains makes
     the book more engaging for readers.
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 我感谢收集这些数据并使其可用的个人和机构——并且我希望与来自各个领域的真实数据一起工作可以使本书对读者更具吸引力。
 - en: What’s New?
+  id: totrans-22
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 新增内容？
 - en: For this third edition, I started by moving the book into Jupyter notebooks.
     This change has one immediate benefit – you can read the text, run the code, and
     work on the exercises all in one place. And the notebooks are designed to work
     on Google Colab, so you can get started without installing anything.
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于这一版，我首先将本书移入Jupyter笔记本。这种变化有一个直接的好处——你可以在一个地方阅读文本、运行代码和完成练习。而且笔记本设计用于在Google
+    Colab上工作，因此你可以不安装任何东西就开始使用。
 - en: The move to notebooks has another benefit – the code is more visible. In the
     first two editions, some of the code was in the book and some was in supporting
     files available online. In retrospect, it’s clear that splitting the material
     in this way was not ideal, and it made the code more complicated than it needed
     to be. In the third edition, I was able to simplify the code and make it more
     readable.
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 转向笔记本还有另一个好处——代码更易于查看。在前两版中，一些代码在书中，一些代码在在线提供的支持文件中。回顾起来，很明显，以这种方式分割材料并不理想，并且使代码比必要的更复杂。在第三版中，我能够简化代码并使其更易于阅读。
 - en: Since the last edition was published, I’ve developed a library called `empiricaldist`
     that provides objects that represent statistical distributions. This library is
     more mature now, so the updated code makes better use of it.
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 自从上一版出版以来，我开发了一个名为`empiricaldist`的库，它提供了表示统计分布的对象。这个库现在更加成熟，因此更新的代码更好地利用了它。
 - en: When I started this project, NumPy and SciPy were not as widely used, and Pandas
     even less, so the original code used Python data structures like lists and dictionaries.
     This edition uses arrays and Pandas structures extensively, and makes more use
     of functions these libraries provide.
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 当我开始这个项目时，NumPy和SciPy并没有像现在这样广泛使用，Pandas更是如此，因此原始代码使用了Python的数据结构，如列表和字典。这一版广泛使用了数组和Pandas结构，并更多地使用了这些库提供的函数。
 - en: The third edition covers the same topics as the original, in almost the same
     order, but the text is substantially revised. Some of the examples are new; others
     are updated with new data. I’ve developed new exercises, revised some of the old
     ones, and removed a few. I think the updated exercises are better connected to
     the examples, and more interesting.
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 第三版涵盖了与原版几乎相同的内容，顺序也几乎相同，但文本进行了大幅修订。一些示例是新的；其他示例则更新了新的数据。我开发了新的练习，修改了一些旧的练习，并删除了一些。我认为更新的练习与示例的联系更好，而且更有趣。
 - en: Since the first edition, this book has been based on the thesis that many ideas
     that are hard to explain with math are easier to explain with code. In this edition,
     I have doubled down on this idea, to the point where there is almost no mathematical
     notation left.
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: 自第一版以来，这本书基于这样一个论点：许多难以用数学解释的想法用代码更容易解释。在本版中，我进一步强化了这个观点，以至于几乎不再有数学符号。
 - en: Overall, I think these changes make *Think Stats* a better book. I hope you
     like it!
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 总体来说，我认为这些变化使《Think Stats》成为一本更好的书。希望你们喜欢它！
 - en: Using the code
+  id: totrans-30
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 使用代码
 - en: The code and data used in this book are available from [AllenDowney/ThinkStats](https://github.com/AllenDowney/ThinkStats),
     which is a Git repository on GitHub. Git is a version control system that helps
     to keep track of the files that make up a project. A collection of files under
     Git’s control is called a **repository**. GitHub is a hosting service that provides
     storage for Git repositories and a convenient web interface.
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 本书使用的代码和数据可以从[AllenDowney/ThinkStats](https://github.com/AllenDowney/ThinkStats)获取，这是一个GitHub上的Git仓库。Git是一个版本控制系统，有助于跟踪构成项目的文件。Git控制下的文件集合被称为**仓库**。GitHub是一个托管服务，为Git仓库提供存储空间并提供方便的Web界面。
 - en: For each chapter in this book, the repository provides a Jupyter notebook, which
     is a document that contains the text, code, and the results of running the code.
     You can use these notebooks to run the code and work on the exercises.
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于本书的每一章，仓库提供了一个Jupyter笔记本，这是一个包含文本、代码和代码运行结果的文档。你可以使用这些笔记本来运行代码并完成练习。
 - en: There are two ways you can run the notebooks. By far the easier one is to use
     Colab, which is a service provided by Google where you can run the notebooks in
     a web browser without installing anything on your computer. If you start from
     the *Think Stats* home page at [https://allendowney.github.io/ThinkStats/](https://allendowney.github.io/ThinkStats/),
     you will find links to the notebooks, including one that introduces Colab and
     Jupyter notebooks.
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: 你有两种方法可以运行笔记本。到目前为止，最简单的方法是使用Colab，这是由Google提供的一项服务，你可以在Web浏览器中运行笔记本而无需在电脑上安装任何东西。如果你从[https://allendowney.github.io/ThinkStats/](https://allendowney.github.io/ThinkStats/)的*Think
+    Stats*主页开始，你会找到笔记本的链接，包括一个介绍Colab和Jupyter笔记本的链接。
 - en: If you don’t want to use Colab, you can download the notebooks and run them
     on your computer, but in that case you will have to install Python, Jupyter, and
     the libraries the book uses, including NumPy, SciPy, and StatsModels. If you have
@@ -201,15 +271,19 @@
     a barrier to getting the most out of this book. If you want to learn about exploratory
     data analysis in Python, you don’t want to spend your time and cognitive capacity
     on installing software!
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你不想使用Colab，你可以下载笔记本并在你的电脑上运行它们，但那样的话，你必须安装Python、Jupyter以及书中使用的库，包括NumPy、SciPy和StatsModels。如果你有安装软件的经验，设置一个可以运行笔记本的环境并不困难。但如果你没有这样的经验，你的第一次尝试可能会很具挑战性，有时甚至令人沮丧。在这种情况下，这可能会成为充分利用本书的障碍。如果你想学习Python中的探索性数据分析，你不想把时间和认知能力花在安装软件上！
 - en: 'So I strongly recommend that you run at least the first few chapters on Colab.
     Then, if you want to set up your own environment, you can do it without interrupting
     your progress in the book. And one last suggestion: if you have any problems installing
     software, take advantage of tools like ChatGPT – they generally provide good guidance
     on these topics.'
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，我强烈建议你在Colab上至少运行前几章。然后，如果你想设置自己的环境，你可以在不影响书中进度的情况下完成。最后，还有一个建议：如果你在安装软件时遇到任何问题，可以利用像ChatGPT这样的工具——它们通常在这些话题上提供很好的指导。
 - en: I wrote this book assuming that the reader is familiar with core Python, including
     object-oriented features. If you are familiar with NumPy and Pandas, that will
     help, but it’s not necessary – I’ll explain what you need to know. I assume that
@@ -217,34 +291,53 @@
     You don’t need to know linear algebra or calculus. There is one place where I
     mention derivatives and integrals, but if you are not familiar with those concepts,
     they are entirely optional. Finally, I don’t assume you know anything about statistics.
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 我写这本书假设读者熟悉核心Python，包括面向对象特性。如果你熟悉NumPy和Pandas，那会有帮助，但不是必需的——我会解释你需要知道的内容。我假设读者了解基本的数学，包括对数，例如，以及求和。你不需要知道线性代数或微积分。有一个地方我提到了导数和积分，但如果你不熟悉这些概念，它们完全是可选的。最后，我不假设你了解任何关于统计学的内容。
 - en: Acknowledgments
+  id: totrans-37
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 致谢
 - en: Thanks to the readers who contributed corrections and suggestion to previous
     editions of this book, and to the students at Olin College who suffered through
     the rougher drafts.
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 感谢为本书前几版提供纠错和建议的读者，以及那些忍受了粗糙草稿的奥利恩学院的同学们。
 - en: 'Many thanks to the technical reviewers of this edition: Zachary del Rosario,
     Jerzy Wieczorek, Thomas Nield, Walter Paczkowski, and Peter Bruce.'
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 感谢本版的审稿人：Zachary del Rosario、Jerzy Wieczorek、Thomas Nield、Walter Paczkowski
+    和 Peter Bruce。
 - en: And thank you to everyone at O’Reilly Media, especially editors Sara Hunter
     and Aaron Black, and …TODO
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: 还要感谢奥莱利媒体的所有人，特别是编辑Sara Hunter和Aaron Black，以及…待定
 - en: '[Think Stats: Exploratory Data Analysis in Python, 3rd Edition](https://allendowney.github.io/ThinkStats/index.html)'
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: '[《Think Stats：Python中的探索性数据分析，第3版](https://allendowney.github.io/ThinkStats/index.html)'
 - en: Copyright 2024 [Allen B. Downey](https://allendowney.com)
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: 版权所有 2024 [艾伦·B·唐尼](https://allendowney.com)
 - en: 'Code license: [MIT License](https://mit-license.org/)'
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 代码许可：[MIT 许可证](https://mit-license.org/)
 - en: 'Text license: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: 文本许可：[Creative Commons Attribution-NonCommercial-ShareAlike 4.0 国际](https://creativecommons.org/licenses/by-nc-sa/4.0/)

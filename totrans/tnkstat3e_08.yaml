@@ -1,592 +1,910 @@
 - en: Probability Density Functions
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 概率密度函数
 - en: 原文：[https://allendowney.github.io/ThinkStats/chap06.html](https://allendowney.github.io/ThinkStats/chap06.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ThinkStats/chap06.html](https://allendowney.github.io/ThinkStats/chap06.html)
 - en: In the previous chapter, we modeled data with theoretical distributions including
     the binomial, Poisson, exponential, and normal distributions.
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 在上一章中，我们使用二项分布、泊松分布、指数分布和正态分布等理论分布来模拟数据。
 - en: The binomial and Poisson distributions are **discrete**, which means that the
     outcomes have to be distinct or separate elements, like an integer number of hits
     and misses, or goals scored. In a discrete distribution, each outcome is associated
     with a probability mass.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 二项分布和泊松分布是**离散的**，这意味着结果必须是不同的或独立的元素，比如击中和失误的整数次数，或者进球数。在离散分布中，每个结果都与一个概率质量相关联。
 - en: The exponential and normal distribution are **continuous**, which means the
     outcomes can be at any point in a range of possible values. In a continuous distribution,
     each outcome is associated with a **probability density**. Probability density
     is an abstract idea, and many people find it difficult at first, but we’ll take
     it one step at a time. As a first step, let’s think again about comparing distributions.
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 指数分布和正态分布是**连续的**，这意味着结果可以位于可能值范围内的任何点。在连续分布中，每个结果都与一个**概率密度**相关联。概率密度是一个抽象的概念，许多人一开始会觉得很难理解，但我们会一步一步来。作为第一步，让我们再次思考如何比较分布。
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ThinkStats/blob/v3/nb/chap06.ipynb).'
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: '[点击此处运行此笔记本在Colab上](https://colab.research.google.com/github/AllenDowney/ThinkStats/blob/v3/nb/chap06.ipynb)。'
 - en: '[PRE0]'
+  id: totrans-6
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '[PRE1]'
+  id: totrans-7
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '[PRE2]'
+  id: totrans-8
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: Comparing Distributions
+  id: totrans-9
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 比较分布
 - en: In the previous chapter, when we compared discrete distributions, we used a
     bar plot to show their probability mass functions (PMFs). When we compared continuous
     distributions, we used a line plot to show their cumulative distribution functions
     (CDFs).
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 在上一章中，当我们比较离散分布时，我们使用条形图来展示它们的概率质量函数（PMFs）。当我们比较连续分布时，我们使用线形图来展示它们的累积分布函数（CDFs）。
 - en: For the discrete distributions, we could also have used CDFs. For example, here’s
     the PMF of a Poisson distribution with `lam=2.2`, which is a good model for the
     distribution of household size in the NSFG data.
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于离散分布，我们也可以使用累积分布函数（CDFs）。例如，这里有一个参数为`lam=2.2`的泊松分布的概率质量函数（PMF），这是一个很好的模型，用于描述NSFG数据中家庭规模的分布。
 - en: The following cells download the data files and install `statadict`, which we
     need to read the data.
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 下面的单元格下载数据文件并安装`statadict`，这是我们读取数据所需的。
 - en: '[PRE3]'
+  id: totrans-13
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '[PRE4]'
+  id: totrans-14
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: We can use `read_fem_resp` to read the respondent data file.
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用`read_fem_resp`来读取受访者数据文件。
 - en: '[PRE5]'
+  id: totrans-16
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: Next we’ll select household sizes for people 25 and older.
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: 接下来，我们将选择25岁及以上人群的家庭规模。
 - en: '[PRE6]'
+  id: totrans-18
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: And make a `Pmf` that represents the distribution of responses.
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后创建一个`Pmf`来表示响应的分布。
 - en: '[PRE7]'
+  id: totrans-20
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: Here’s another `Pmf` that represents a Poisson distribution with the same mean.
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里还有一个表示具有相同均值的泊松分布的`Pmf`。
 - en: '[PRE8]'
+  id: totrans-22
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: And here’s how the distribution of the data compares to the Poisson model.
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: 下面是数据分布与泊松模型的比较。
 - en: '[PRE9]'
+  id: totrans-24
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '![_images/8974be9a32a18639d89ff8f55a4c49784b7d7d99973a3601dd7a41d353848bc4.png](../Images/6a1aed0dfc2b05e00aedb47ce5d8d290.png)'
+  id: totrans-25
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/6a1aed0dfc2b05e00aedb47ce5d8d290.png)'
 - en: Comparing the PMFs, we can see that the model fits the data well, but with some
     deviations.
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 比较PMFs，我们可以看到模型很好地拟合了数据，但有一些偏差。
 - en: To get a sense of how substantial those deviations are, it can be helpful to
     compare CDFs. We can use `make_cdf` to compute the CDFs of the data and the model.
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了了解这些偏差的实质，比较CDFs可能会有所帮助。我们可以使用`make_cdf`来计算数据和模型的CDFs。
 - en: '[PRE10]'
+  id: totrans-28
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: Here’s what they look like.
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 下面是它们的形状。
 - en: '[PRE11]'
+  id: totrans-30
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: '![_images/1ca6da206b32913a16766f7137989e704c4ee742df24768dba54d0119753b10d.png](../Images/bed2f252ff351b9acb3acc26cc57cead.png)'
+  id: totrans-31
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/bed2f252ff351b9acb3acc26cc57cead.png)'
 - en: When we compare CDFs, the deviations are less prominent, but we can see where
     and how the distributions differ. PMFs tend to emphasize small differences – sometimes
     CDFs provide a better sense of the big picture.
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 当我们比较CDFs时，偏差不那么明显，但我们能看到分布差异的具体位置和方式。概率质量函数（PMFs）往往强调小的差异——有时CDFs能更好地展现整体情况。
 - en: CDFs also work well with continuous data. As an example, let’s look at the distribution
     of birth weights again, which is in the NSFG pregnancy file.
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: CDFs也适用于连续数据。作为一个例子，让我们再次看看出生体重的分布，它位于NSFG怀孕文件中。
 - en: '[PRE12]'
+  id: totrans-34
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '[PRE13]'
+  id: totrans-35
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: Here is the code we used in the previous chapter to fit a normal model to the
     data.
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是我们在上一章中使用来拟合数据的正态模型的代码。
 - en: '[PRE14]'
+  id: totrans-37
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: And here’s the distribution of the data compared to the normal model.
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 下面是数据分布与正态模型的比较。
 - en: '[PRE15]'
+  id: totrans-39
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '![_images/0f059acc80b677d315b92b600192e4ee3a406565034d102e3ef8f9928250e72d.png](../Images/8a19b815bbef834107a1d0b120c5e40c.png)'
+  id: totrans-40
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/8a19b815bbef834107a1d0b120c5e40c.png)'
 - en: As we saw in the previous chapter, the normal model fits the data well except
     in the range of the lightest babies.
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: 正如我们在上一章中看到的，正态模型很好地拟合了数据，除了最轻婴儿的范围。
 - en: 'In my opinion, CDFs are usually the best way to compare data to a model. But
     for audiences that are not familiar with CDFs, there is one more option: probability
     density functions.'
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: 在我看来，累积分布函数（CDFs）通常是比较数据与模型的最佳方式。但对于不熟悉CDFs的观众来说，还有一个选项：概率密度函数。
 - en: Probability Density
+  id: totrans-43
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 概率密度
 - en: We’ll start with the **probability density function (PDF)** of the normal distribution,
     which computes the density for the quantities, `xs`, given `mu` and `sigma`.
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将从正态分布的概率密度函数（PDF）开始，该函数计算给定`mu`和`sigma`的量`xs`的密度。
 - en: '[PRE16]'
+  id: totrans-45
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: For `mu` and `sigma` we’ll use the mean and standard deviation of the trimmed
     birth weights.
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于`mu`和`sigma`，我们将使用修剪后新生儿体重的均值和标准差。
 - en: '[PRE17]'
+  id: totrans-47
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: Now we’ll evaluate `normal_pdf` for a range of weights.
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们将评估一系列重量的`normal_pdf`。
 - en: '[PRE18]'
+  id: totrans-49
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: And plot it.
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后绘制它。
 - en: '[PRE19]'
+  id: totrans-51
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '![_images/c10589a8f2c883171d1f20e16d4eb39c8d58000526eb5720af1ee0180767ff81.png](../Images/e51be7e874004975653971c0d2895065.png)'
+  id: totrans-52
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/e51be7e874004975653971c0d2895065.png)'
 - en: The result looks like a bell curve, which is characteristic of the normal distribution.
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果看起来像钟形曲线，这是正态分布的特征。
 - en: When we evaluate `normal_pdf`, the result is a probability density. For example,
     here’s the density function evaluated at the mean, which is where the density
     is highest.
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: 当我们评估`normal_pdf`时，结果是概率密度。例如，这里是在均值处评估的密度函数，这是密度最高的地方。
 - en: '[PRE20]'
+  id: totrans-55
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '[PRE21]'
+  id: totrans-56
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: By itself, a probability density doesn’t mean much – most importantly, it is
     *not* a probability. It would be incorrect to say that the probability is 32%
     that a randomly-chosen birth weight equals `m`. In fact, the probability that
     a birth weight is truly, exactly, and precisely equal to `m` – or any other specific
     value – is zero.
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 单独来看，概率密度并没有什么意义——最重要的是，它**不是**一个概率。说随机选择的新生儿体重等于`m`的概率是32%是不正确的。事实上，新生儿体重真正、完全、精确地等于`m`——或任何其他特定值——的概率是零。
 - en: However, we can use the probability densities to compute the probability that
     an outcome falls in an interval between two values, by computing the area under
     the curve.
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 然而，我们可以使用概率密度来计算结果落在两个值之间的区间的概率，通过计算曲线下的面积。
 - en: We could do that with the `normal_pdf` function, but it is more convenient to
     use the `NormalPdf` class, which is defined in the `thinkstats` module. Here’s
     how we create a `NormalPdf` object with the same mean and standard deviation as
     the birth weights in the NSFG dataset.
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以用`normal_pdf`函数做到这一点，但使用定义在`thinkstats`模块中的`NormalPdf`类更方便。以下是如何创建与NSFG数据集中新生儿体重相同的均值和标准差的`NormalPdf`对象。
 - en: '[PRE22]'
+  id: totrans-60
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: '[PRE23]'
+  id: totrans-61
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: If we call this object like a function, it evaluates the normal PDF.
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们像调用函数一样调用这个对象，它将评估正态PDF。
 - en: '[PRE24]'
+  id: totrans-63
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: '[PRE25]'
+  id: totrans-64
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: Now, to compute the area under the PDF, we can use the following function, which
     takes a `NormalPdf` object and the bounds of an interval, `low` and `high`. It
     evaluates the normal PDF at equally-spaced quantities between `low` and `high`,
     and uses the SciPy function `simpson` to estimate the area under the curve (`simpson`
     is so named because it uses an algorithm called Simpson’s method).
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，为了计算概率密度函数（PDF）下的面积，我们可以使用以下函数，该函数接受一个`NormalPdf`对象和一个区间的边界，`low`和`high`。它评估`low`和`high`之间等间距的量，并使用SciPy函数`simpson`来估计曲线下的面积（`simpson`之所以这样命名，是因为它使用了一个称为辛普森方法的算法）。
 - en: '[PRE26]'
+  id: totrans-66
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: If we compute the area under the curve from the lowest to the highest point
     in the graph, the result is close to 1.
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们从图中的最低点到最高点计算曲线下的面积，结果接近1。
 - en: '[PRE27]'
+  id: totrans-68
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: '[PRE28]'
+  id: totrans-69
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: If we extend the interval from negative infinity to positive infinity, the total
     area is exactly 1.
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们将区间从负无穷大到正无穷大扩展，总面积正好是1。
 - en: If we start from 0 – or any value far below the mean – we can compute the fraction
     of birth weights less than or equal to 8.5 pounds.
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们从0——或任何远低于均值的值开始——我们可以计算体重小于或等于8.5磅的婴儿体重的比例。
 - en: '[PRE29]'
+  id: totrans-72
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: '[PRE30]'
+  id: totrans-73
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: You might recall that the “fraction less than or equal to a given value” is
     the definition of the CDF. So we could compute the same result using the CDF of
     the normal distribution.
+  id: totrans-74
   prefs: []
   type: TYPE_NORMAL
+  zh: 你可能还记得，“小于或等于给定值的分数”是累积分布函数（CDF）的定义。因此，我们可以使用正态分布的CDF来计算相同的结果。
 - en: '[PRE31]'
+  id: totrans-75
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: '[PRE32]'
+  id: totrans-76
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: Similarly, we can use the area under the density curve to compute the fraction
     of birth weights between 6 and 8 pounds.
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: 同样，我们可以使用密度曲线下的面积来计算6到8磅之间出生体重的分数。
 - en: '[PRE33]'
+  id: totrans-78
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: '[PRE34]'
+  id: totrans-79
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: Or we can get the same result using the CDF to compute the fraction less than
     8 and then subtracting off the fraction less than 6.
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 或者，我们可以使用CDF来计算小于8的分数，然后减去小于6的分数。
 - en: '[PRE35]'
+  id: totrans-81
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: '[PRE36]'
+  id: totrans-82
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: So the CDF is the area under the curve of the PDF. If you know calculus, another
     way to say the same thing is that the CDF is the integral of the PDF. And conversely,
     the PDF is the derivative of the CDF.
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，CDF是PDF曲线下的面积。如果你知道微积分，另一种表达相同意思的方式是CDF是PDF的积分。反之，PDF是CDF的导数。
 - en: '## The Exponential PDF'
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: '## 指数概率密度函数（PDF）'
 - en: To get your head around probability density, it might help to see another example.
     In the previous chapter, we used an exponential distribution to model the time
     until the first goal in a hockey game. We used the following function to compute
     the exponential CDF, where `lam` is the rate in goals per unit of time.
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了理解概率密度，看看另一个例子可能会有所帮助。在前一章中，我们使用指数分布来模拟冰球比赛中第一个进球的时间。我们使用了以下函数来计算指数CDF，其中`lam`是每单位时间进球的速率。
 - en: '[PRE37]'
+  id: totrans-86
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE37]'
 - en: We can compute the PDF of the exponential distribution like this.
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以这样计算指数分布的PDF。
 - en: '[PRE38]'
+  id: totrans-88
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: '`thinkstats` provides an `ExponentialPdf` object that uses this function to
     compute the exponential PDF. We can use one to represent an exponential distribution
     with rate 6 goals per game.'
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: '`thinkstats`提供了一个使用此函数来计算指数PDF的`ExponentialPdf`对象。我们可以用它来表示每场比赛6个进球的指数分布。'
 - en: '[PRE39]'
+  id: totrans-90
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: '[PRE40]'
+  id: totrans-91
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE40]'
 - en: '`ExponentialPdf` provides a `plot` function we can use to plot the PDF – notice
     that the unit of time is games here, rather than seconds as in the previous chapter.'
+  id: totrans-92
   prefs: []
   type: TYPE_NORMAL
+  zh: '`ExponentialPdf`提供了一个`plot`函数，我们可以用它来绘制PDF - 注意，这里的单位是比赛，而不是前一章中的秒。'
 - en: '[PRE41]'
+  id: totrans-93
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE41]'
 - en: '![_images/891c14a2fdf668835672dca8501011151fcbcb99a025bb748b80f5d07c4e2d0a.png](../Images/4453769f0aaca05ac65c682259c2a677.png)'
+  id: totrans-94
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/4453769f0aaca05ac65c682259c2a677.png)'
 - en: Looking at the y-axis, you might notice that some of these densities are greater
     than 1, which is a reminder that a probability density is not a probability. But
     the area under a density curve is a probability, so it should never be greater
     than 1.
+  id: totrans-95
   prefs: []
   type: TYPE_NORMAL
+  zh: 观察y轴，你可能注意到这些密度中的一些大于1，这是一个提醒，概率密度不是一个概率。但是，密度曲线下的面积是一个概率，因此它永远不会大于1。
 - en: If we compute the area under this curve from 0 to 1.5 games, we can confirm
     that the result is close to 1.
+  id: totrans-96
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们从0到1.5场比赛的曲线下计算面积，我们可以确认结果接近1。
 - en: '[PRE42]'
+  id: totrans-97
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE42]'
 - en: '[PRE43]'
+  id: totrans-98
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE43]'
 - en: If we extend the interval much farther, the result is slightly greater than
     1, but that’s because we’re approximating the area numerically. Mathematically,
     it is exactly 1, as we can confirm using the exponential CDF.
+  id: totrans-99
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们将区间扩展得更大，结果略大于1，但这是因为我们在数值上近似面积。从数学上讲，它正好是1，正如我们可以使用指数CDF来确认的那样。
 - en: '[PRE44]'
+  id: totrans-100
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE44]'
 - en: '[PRE45]'
+  id: totrans-101
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE45]'
 - en: We can use the area under the density curve to compute the probability of a
     goal during any interval. For example, here is the probability of a goal during
     the first minute of a 60-minute game.
+  id: totrans-102
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用密度曲线下的面积来计算任何区间内进球的概率。例如，这是60分钟比赛中第一分钟进球的概率。
 - en: '[PRE46]'
+  id: totrans-103
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE46]'
 - en: '[PRE47]'
+  id: totrans-104
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE47]'
 - en: We can compute the same result using the exponential CDF.
+  id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用指数CDF来计算相同的结果。
 - en: '[PRE48]'
+  id: totrans-106
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE48]'
 - en: '[PRE49]'
+  id: totrans-107
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE49]'
 - en: In summary, if we evaluate a PDF, the result is a probability density – which
     is not a probability. However, if we compute the area under the PDF, the result
     is the probability that a quantity falls in an interval. Or we can find the same
     probability by evaluating the CDF at the beginning and end of the interval and
     computing the difference.
+  id: totrans-108
   prefs: []
   type: TYPE_NORMAL
+  zh: 总结来说，如果我们评估PDF，结果是概率密度 - 这不是一个概率。然而，如果我们计算PDF下的面积，结果是某个量落在区间内的概率。或者，我们也可以通过在区间的开始和结束处评估CDF并计算差值来找到相同的概率。
 - en: Comparing PMFs and PDFs
+  id: totrans-109
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 比较概率质量函数（PMFs）和概率密度函数（PDFs）
 - en: It is a common error to compare the PMF of a sample with the PDF of a theoretical
     model. For example, suppose we want to compare the distribution of birth weights
     to a normal model. Here’s a `Pmf` that represents the distribution of the data.
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: 将样本的PMF与理论模型的PDF进行比较是一个常见的错误。例如，假设我们想将出生体重的分布与正态模型进行比较。这是一个表示数据分布的`Pmf`。
 - en: '[PRE50]'
+  id: totrans-111
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE50]'
 - en: And we already have `pdf_model`, which represents the PDF of the normal distribution
     with the same mean and standard deviation. Here’s what happens if we plot them
     on the same axis.
+  id: totrans-112
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们已经有了`pdf_model`，它代表具有相同均值和标准差的正态分布的PDF。如果我们把它们画在同一个轴上，会发生什么。
 - en: '[PRE51]'
+  id: totrans-113
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE51]'
 - en: '![_images/70e9e2294bad711a1792630bbc10fdd361111eff6e7a81ebaa19514be66ef015.png](../Images/d2ebc99fc9b06c3d51952cd67f50d402.png)'
+  id: totrans-114
   prefs: []
   type: TYPE_IMG
+  zh: '![图片链接](../Images/d2ebc99fc9b06c3d51952cd67f50d402.png)'
 - en: It doesn’t work very well. One reason is that they are not in the same units.
     A PMF contains probability masses and a PDF contains probability densities, so
     we can’t compare them, and we shouldn’t plot them on the same axes.
+  id: totrans-115
   prefs: []
   type: TYPE_NORMAL
+  zh: 它效果不太好。一个原因是它们不在同一个单位上。PMF包含概率质量，而PDF包含概率密度，所以我们不能比较它们，也不应该在同一个轴上绘制它们。
 - en: As a first attempt to solve the problem, we can make a `Pmf` that approximates
     the normal distribution by evaluating the PDF at a discrete set of points. `NormalPdf`
     provides a `make_pmf` method that does that.
+  id: totrans-116
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为解决这个问题的第一次尝试，我们可以制作一个`Pmf`，通过在离散的点集上评估PDF来近似正态分布。`NormalPdf`提供了一个`make_pmf`方法来做这件事。
 - en: '[PRE52]'
+  id: totrans-117
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE52]'
 - en: The result is a normalized `Pmf` that contains probability masses, so we can
     at least plot it on the same axes as the PMF of the data.
+  id: totrans-118
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个包含概率质量的标准化`Pmf`，所以我们至少可以把它画在和数据PMF相同的轴上。
 - en: '[PRE53]'
+  id: totrans-119
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE53]'
 - en: '![_images/3e9332bab1e28655138571525bdec3f742e0194da9d94a7c8ec73d40e1e6bd7d.png](../Images/fdfc6e4cc03dd79dcfef47c1e5d281ae.png)'
+  id: totrans-120
   prefs: []
   type: TYPE_IMG
+  zh: '![图片链接](../Images/fdfc6e4cc03dd79dcfef47c1e5d281ae.png)'
 - en: But this is still not a good way to compare distributions. One problem is that
     the two `Pmf` objects contain different numbers of quantities, and the quantities
     in `pmf_birth_weight` are not equally spaced, so the probability masses are not
     really comparable.
+  id: totrans-121
   prefs: []
   type: TYPE_NORMAL
+  zh: 但这仍然不是比较分布的好方法。一个问题就是两个`Pmf`对象包含不同数量的量，而且`pmf_birth_weight`中的量不是等间距的，所以概率质量实际上是不可比较的。
 - en: '[PRE54]'
+  id: totrans-122
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE54]'
 - en: '[PRE55]'
+  id: totrans-123
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE55]'
 - en: The other problem is that the `Pmf` of the data is noisy. So let’s try something
     else.
+  id: totrans-124
   prefs: []
   type: TYPE_NORMAL
+  zh: 另一个问题就是数据的`Pmf`是嘈杂的。所以让我们试试别的。
 - en: '## Kernel Density Estimation'
+  id: totrans-125
   prefs: []
   type: TYPE_NORMAL
+  zh: '## 核密度估计'
 - en: Instead of using the model to make a PMF, we can use the data to make a PDF.
     To show how that works, I’ll start with a small sample of the data.
+  id: totrans-126
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们不是用模型来制作PMF，而是可以用数据来制作PDF。为了展示这是如何工作的，我将从一个小的数据样本开始。
 - en: '[PRE56]'
+  id: totrans-127
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE56]'
 - en: '[PRE57]'
+  id: totrans-128
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE57]'
 - en: The `Pmf` of this sample looks like this.
+  id: totrans-129
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个样本的`Pmf`看起来是这样的。
 - en: '[PRE58]'
+  id: totrans-130
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE58]'
 - en: '![_images/c25c55034e4eff3184a5ca104ce90f90604f62bd11b11e366fd89460e5d48b24.png](../Images/2817a7f3224b200feebec57d4bc00c41.png)'
+  id: totrans-131
   prefs: []
   type: TYPE_IMG
+  zh: '![图片链接](../Images/2817a7f3224b200feebec57d4bc00c41.png)'
 - en: This way of representing the distribution treats the data as if it is discrete,
     so each probability mass is stacked up on a single point. But birth weight is
     actually continuous, so the quantities between the measurements are also possible.
     We can represent that possibility by replacing each discrete probability mass
     with a continuous probability density, like this.
+  id: totrans-132
   prefs: []
   type: TYPE_NORMAL
+  zh: 这种表示分布的方式将数据视为离散的，所以每个概率质量都堆叠在单个点上。但出生重量实际上是连续的，所以测量之间的量也是可能的。我们可以通过用连续概率密度替换每个离散概率质量来表示这种可能性，如下所示。
 - en: '[PRE59]'
+  id: totrans-133
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE59]'
 - en: '![_images/7c794efb7cdc35d7faa305bc8a3d16f4923e788570c7e1f2465c59dfe113f110.png](../Images/79e06234a1546ea944d86a82c5f4fc2f.png)'
+  id: totrans-134
   prefs: []
   type: TYPE_IMG
+  zh: '![图片链接](../Images/79e06234a1546ea944d86a82c5f4fc2f.png)'
 - en: For each weight in the sample, we create a `NormalPdf` with the observed weight
     as the mean – now let’s add them up.
+  id: totrans-135
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于样本中的每个重量，我们创建一个以观察到的重量为均值的`NormalPdf` – 现在我们来把它们加起来。
 - en: '[PRE60]'
+  id: totrans-136
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE60]'
 - en: '![_images/1c8ef212176ed8053a4b95e95923fddb26774e6782f924a6bbab43d021634950.png](../Images/c3c3f9d75b33d942ab63bf662ac3fa3d.png)'
+  id: totrans-137
   prefs: []
   type: TYPE_IMG
+  zh: '![图片链接](../Images/c3c3f9d75b33d942ab63bf662ac3fa3d.png)'
 - en: When we add up the probability densities for each data point, the result is
     an estimate of the probability density for the whole sample. This process is called
     **kernel density estimation** or KDE. In this context, a “kernel” is one of the
     small density functions we added up. Because the kernels we used are normal distributions
     – also known as Gaussians – we could say more specifically that we computed a
     Gaussian KDE.
+  id: totrans-138
   prefs: []
   type: TYPE_NORMAL
+  zh: 当我们为每个数据点加总概率密度时，结果是整个样本的概率密度估计。这个过程被称为**核密度估计**或KDE。在这个上下文中，“核”是我们加总的小密度函数之一。因为我们使用的核是正态分布，也称为高斯分布，所以我们更具体地说，我们计算了一个高斯KDE。
 - en: SciPy provides a function called `gaussian_kde` that implements this algorithm.
     Here’s how we can use it to estimate the distribution of birth weights.
+  id: totrans-139
   prefs: []
   type: TYPE_NORMAL
+  zh: SciPy提供了一个名为 `gaussian_kde` 的函数，该函数实现了此算法。以下是我们可以如何使用它来估计出生体重的分布。
 - en: '[PRE61]'
+  id: totrans-140
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE61]'
 - en: The result is an object that represents the estimated PDF, which we can evaluate
     by calling it like a function.
+  id: totrans-141
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个表示估计PDF的对象，我们可以通过像调用函数一样调用它来评估它。
 - en: '[PRE62]'
+  id: totrans-142
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE62]'
 - en: Here’s what the result looks like.
+  id: totrans-143
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是结果的样子。
 - en: '[PRE63]'
+  id: totrans-144
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE63]'
 - en: '![_images/195df5d8f92dbdfc4cc6278ffee89efe39b68e122d1bacba997e3467832fd8af.png](../Images/8bcb7b1258b52505dd146b3f34100cb9.png)'
+  id: totrans-145
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/8bcb7b1258b52505dd146b3f34100cb9.png)'
 - en: '`thinkstats` provides a `Pdf` object that takes the result from `gaussian_kde`,
     and a domain that indicates where the density should be evaluated. Here’s how
     we make one.'
+  id: totrans-146
   prefs: []
   type: TYPE_NORMAL
+  zh: '`thinkstats` 提供了一个 `Pdf` 对象，它接受 `gaussian_kde` 的结果，以及一个表示应在何处评估密度的域。以下是我们的实现方法。'
 - en: '[PRE64]'
+  id: totrans-147
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE64]'
 - en: '`Pdf` provides a `plot` method we can use to compare the estimated PDF of the
     sample to the PDF of a normal distribution.'
+  id: totrans-148
   prefs: []
   type: TYPE_NORMAL
+  zh: '`Pdf` 提供了一个 `plot` 方法，我们可以用它来比较样本的估计PDF与正态分布的PDF。'
 - en: '[PRE65]'
+  id: totrans-149
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE65]'
 - en: '![_images/7de21eb81e07ccdc455c06cbede4a710f3dcccf932e610a8ebccfbd66f0ce499.png](../Images/63c4a333979790b8483330eb71619384.png)'
+  id: totrans-150
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/63c4a333979790b8483330eb71619384.png)'
 - en: Kernel density estimation makes it possible to compare the distribution of a
     dataset to a theoretical model, and for some audiences, this is a good way to
     visualize the comparison. But for audiences that are familiar with CDFs, comparing
     CDFs is often better.
+  id: totrans-151
   prefs: []
   type: TYPE_NORMAL
+  zh: 核密度估计使得将数据集的分布与理论模型进行比较成为可能，对于某些听众来说，这是一种很好的可视化比较的方法。但对于熟悉CDFs的听众来说，比较CDFs通常更好。
 - en: The Distribution Framework
+  id: totrans-152
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 分布框架
 - en: 'At this point we have a complete set of ways to represent distributions: PMFs,
     CDFs, and PDFs The following figure shows these representations and the transitions
     from one to another. For example, if we have a `Pmf`, we can use the `cumsum`
     function to compute the cumulative sum of the probabilities and get a `Cdf` that
     represents the same distribution.'
+  id: totrans-153
   prefs: []
   type: TYPE_NORMAL
+  zh: 到目前为止，我们有一套完整的方式来表示分布：PMFs、CDFs和PDFs。以下图显示了这些表示以及从一个到另一个的转换。例如，如果我们有一个 `Pmf`，我们可以使用
+    `cumsum` 函数来计算概率的累积和，从而得到一个表示相同分布的 `Cdf`。
 - en: '[![https://github.com/AllenDowney/ThinkStats/raw/v3/figs/distribution_framework.png](../Images/939e997ac7a972aa771bab99da9260b5.png)](https://github.com/AllenDowney/ThinkStats/raw/v3/figs/distribution_framework.png)'
+  id: totrans-154
   prefs: []
   type: TYPE_NORMAL
+  zh: '![图片](../Images/939e997ac7a972aa771bab99da9260b5.png)[链接](https://github.com/AllenDowney/ThinkStats/raw/v3/figs/distribution_framework.png)'
 - en: To demonstrate these transitions, we’ll use a new dataset that “contains the
     time of birth, sex, and birth weight for each of 44 babies born in one 24-hour
     period at a Brisbane, Australia, hospital,” according to the description. Instructions
     for downloading the data are in the notebook for this chapter.
+  id: totrans-155
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了演示这些转换，我们将使用一个新的数据集，该数据集“包含在澳大利亚布里斯班一家医院24小时内出生的44个婴儿的出生时间、性别和出生体重”，根据描述。下载数据的说明在本书的笔记本中。
 - en: According to the information in the file
+  id: totrans-156
   prefs: []
   type: TYPE_NORMAL
+  zh: 根据文件中的信息
 - en: 'Source: Steele, S. (December 21, 1997), “Babies by the Dozen for Christmas:
     24-Hour Baby Boom,” *The Sunday Mail* (Brisbane), p. 7.'
+  id: totrans-157
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 来源：Steele, S. (1997年12月21日)，“圣诞节的十二个婴儿：24小时婴儿潮”，*The Sunday Mail*（布里斯班），第7页。
 - en: ''
+  id: totrans-158
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
@@ -594,328 +912,503 @@
     24-hour period at the Mater Mothers’ Hospital in Brisbane, Queensland, Australia,
     on December 18, 1997\. For each of the 44 babies, *The Sunday Mail* recorded the
     time of birth, the sex of the child, and the birth weight in grams.'
+  id: totrans-159
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 数据背后的故事：1997年12月18日，在澳大利亚昆士兰州布里斯班Mater Mothers’ Hospital，在24小时内出生了44个婴儿——创下了新纪录。对于这44个婴儿中的每一个，*The
+    Sunday Mail* 记录了出生时间、孩子的性别和出生体重（克）。
 - en: ''
+  id: totrans-160
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: Additional information about this dataset can be found in the “Datasets and
     Stories” article “A Simple Dataset for Demonstrating Common Distributions” in
     the *Journal of Statistics Education* (Dunn 1999).
+  id: totrans-161
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 关于此数据集的更多信息可以在《统计学教育杂志》中找到“数据集和故事”文章“用于演示常见分布的简单数据集”（Dunn 1999）。
 - en: ''
+  id: totrans-162
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: Downloaded from [https://jse.amstat.org/datasets/babyboom.txt](https://jse.amstat.org/datasets/babyboom.txt)
+  id: totrans-163
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 从[https://jse.amstat.org/datasets/babyboom.txt](https://jse.amstat.org/datasets/babyboom.txt)下载
 - en: '[PRE66]'
+  id: totrans-164
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE66]'
 - en: We can read the data like this.
+  id: totrans-165
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以像这样读取数据。
 - en: '[PRE67]'
+  id: totrans-166
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE67]'
 - en: '|  | time | sex | weight_g | minutes |'
+  id: totrans-167
   prefs: []
   type: TYPE_TB
+  zh: '|  | 时间 | 性别 | 体重_g | 分钟 |'
 - en: '| --- | --- | --- | --- | --- |'
+  id: totrans-168
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- |'
 - en: '| 0 | 5 | 1 | 3837 | 5 |'
+  id: totrans-169
   prefs: []
   type: TYPE_TB
+  zh: '| 0 | 5 | 1 | 3837 | 5 |'
 - en: '| 1 | 104 | 1 | 3334 | 64 |'
+  id: totrans-170
   prefs: []
   type: TYPE_TB
+  zh: '| 1 | 104 | 1 | 3334 | 64 |'
 - en: '| 2 | 118 | 2 | 3554 | 78 |'
+  id: totrans-171
   prefs: []
   type: TYPE_TB
+  zh: '| 2 | 118 | 2 | 3554 | 78 |'
 - en: '| 3 | 155 | 2 | 3838 | 115 |'
+  id: totrans-172
   prefs: []
   type: TYPE_TB
+  zh: '| 3 | 155 | 2 | 3838 | 115 |'
 - en: '| 4 | 257 | 2 | 3625 | 177 |'
+  id: totrans-173
   prefs: []
   type: TYPE_TB
+  zh: '| 4 | 257 | 2 | 3625 | 177 |'
 - en: The `minutes` column records “the number of minutes since midnight for each
     birth”. So we can use the `diff` method to compute the interval between each successive
     birth.
+  id: totrans-174
   prefs: []
   type: TYPE_NORMAL
+  zh: '`minutes` 列记录“每个出生自午夜以来的分钟数”。因此，我们可以使用 `diff` 方法来计算每个连续出生之间的间隔。'
 - en: '[PRE68]'
+  id: totrans-175
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE68]'
 - en: If births happen with equal probability during any minute of the day, we expect
     these intervals to follow an exponential distribution. In reality, that assumption
     is not precisely true, but the exponential distribution might still be a good
     model for the data.
+  id: totrans-176
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果出生在任何一分钟内发生的概率相等，我们预计这些间隔将遵循指数分布。在现实中，这个假设并不完全准确，但指数分布可能仍然是一个好的数据模型。
 - en: To find out, we’ll start by making a `Pmf` that represents the distribution
     of intervals.
+  id: totrans-177
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了找出答案，我们将首先创建一个表示间隔分布的 `Pmf`。
 - en: '[PRE69]'
+  id: totrans-178
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE69]'
 - en: '![_images/34c47d21f86b51bcbe9724195b1604a1c48627c75668d87ee61c3af66017371d.png](../Images/1820ee3d40e29d316745cafee0c36d1d.png)'
+  id: totrans-179
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/1820ee3d40e29d316745cafee0c36d1d.png)'
 - en: Then we can use `make_cdf` to compute the cumulative probabilities and store
     them in a `Cdf` object.
+  id: totrans-180
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后，我们可以使用 `make_cdf` 计算累积概率并将它们存储在 `Cdf` 对象中。
 - en: '[PRE70]'
+  id: totrans-181
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE70]'
 - en: '![_images/49259d0bbb5c74840cdebdfc495c8a980099127d6d13523996f3b0a2388b42c6.png](../Images/188ac034cc748559da43ca915a491430.png)'
+  id: totrans-182
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/188ac034cc748559da43ca915a491430.png)'
 - en: The `Pmf` and `Cdf` are equivalent in the sense that if we are given either
     one, we can compute the other. To demonstrate, we’ll use the `make_pmf` method,
     which computes the differences between successive probabilities in a `Cdf` and
     returns a `Pmf`.
+  id: totrans-183
   prefs: []
   type: TYPE_NORMAL
+  zh: '`Pmf` 和 `Cdf` 在意义上是等效的，即如果我们给出任何一个，我们都可以计算出另一个。为了演示，我们将使用 `make_pmf` 方法，该方法计算
+    `Cdf` 中连续概率之间的差异，并返回一个 `Pmf`。'
 - en: '[PRE71]'
+  id: totrans-184
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE71]'
 - en: The result should be identical to the original `Pmf`, but there might be small
     floating-point errors. We can use `allclose` to check that the result is close
     to the original `Pmf`.
+  id: totrans-185
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果应该与原始 `Pmf` 相同，但可能会有小的浮点数错误。我们可以使用 `allclose` 来检查结果是否接近原始 `Pmf`。
 - en: '[PRE72]'
+  id: totrans-186
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE72]'
 - en: '[PRE73]'
+  id: totrans-187
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE73]'
 - en: And it is.
+  id: totrans-188
   prefs: []
   type: TYPE_NORMAL
+  zh: 它确实是。
 - en: From a `Pmf`, we can estimate a density function by calling `gaussian_kde` with
     the probabilities from the `Pmf` as weights.
+  id: totrans-189
   prefs: []
   type: TYPE_NORMAL
+  zh: 从一个 `Pmf` 中，我们可以通过使用 `Pmf` 中的概率作为权重调用 `gaussian_kde` 来估计一个密度函数。
 - en: '[PRE74]'
+  id: totrans-190
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE74]'
 - en: To plot the results, we can use `kde` to make a `Pdf` object, and call the `plot`
     method.
+  id: totrans-191
   prefs: []
   type: TYPE_NORMAL
+  zh: 要绘制结果，我们可以使用 `kde` 创建一个 `Pdf` 对象，并调用 `plot` 方法。
 - en: '[PRE75]'
+  id: totrans-192
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE75]'
 - en: '![_images/db882bf507531afc79d5a8cabd5520600b2e17dd8488038100e3b06eeebd8106.png](../Images/66b2c7b9f9835caa9842b9e49d63770e.png)'
+  id: totrans-193
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/66b2c7b9f9835caa9842b9e49d63770e.png)'
 - en: To see whether the estimated density follows an exponential model, we can make
     an `ExponentialCdf` with the same mean as the data.
+  id: totrans-194
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了查看估计的密度是否遵循指数模型，我们可以使用与数据相同均值的 `ExponentialCdf`。
 - en: '[PRE76]'
+  id: totrans-195
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE76]'
 - en: Here’s what it looks like compared to the CDF of the data.
+  id: totrans-196
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是与数据 CDF 相比的样子。
 - en: '[PRE77]'
+  id: totrans-197
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE77]'
 - en: '![_images/e9f9c71e77c62efca7bc6272f6147da8d4cd8c9a3ed547b67cff6657c108bd54.png](../Images/8db331c2af04bf40faa790cd4c975a38.png)'
+  id: totrans-198
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/8db331c2af04bf40faa790cd4c975a38.png)'
 - en: The exponential model fits the CDF of the data well.
+  id: totrans-199
   prefs: []
   type: TYPE_NORMAL
+  zh: 指数模型很好地拟合了数据的 CDF。
 - en: Given an `ExponentialCdf`, we can use `make_cdf` to **discretize** the CDF –
     that is, to make a discrete approximation by evaluating the CDF at a sequence
     of equally spaced quantities.
+  id: totrans-200
   prefs: []
   type: TYPE_NORMAL
+  zh: 给定一个 `ExponentialCdf`，我们可以使用 `make_cdf` 来**离散化**CDF – 即通过在一系列等间距的数量上评估CDF来得到一个离散近似。
 - en: '[PRE78]'
+  id: totrans-201
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE78]'
 - en: '![_images/72161c6be9eb1c5efb4228cb597aff4fe3709d966fb152a7bffc5c379dbb78a0.png](../Images/273a9d2e6226a27e6a08d1e23c708977.png)'
+  id: totrans-202
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/273a9d2e6226a27e6a08d1e23c708977.png)'
 - en: Finally, to get from a discrete CDF to a continuous CDF, we can interpolate
     between the steps, which is what we see if we use the `plot` method instead of
     the `step` method.
+  id: totrans-203
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，要从离散 CDF 转换到连续 CDF，我们可以在步骤之间进行插值，这就是如果我们使用 `plot` 方法而不是 `step` 方法时看到的情况。
 - en: '[PRE79]'
+  id: totrans-204
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE79]'
 - en: '![_images/97909aa93ab8c5db17021272a8edc2a7848147119d26d96170454ab77343bc5b.png](../Images/4b79959c4de14fb33841b86c51586d8d.png)'
+  id: totrans-205
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/4b79959c4de14fb33841b86c51586d8d.png)'
 - en: Finally, a PDF is the derivative of a continuous CDF, and a CDF is the integral
     of a PDF.
+  id: totrans-206
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，PDF 是连续 CDF 的导数，而 CDF 是 PDF 的积分。
 - en: To demonstrate, we can use SymPy to define the CDF of an exponential distribution
     and compute its derivative.
+  id: totrans-207
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了演示，我们可以使用 SymPy 定义指数分布的累积分布函数（CDF）并计算其导数。
 - en: '[PRE80]'
+  id: totrans-208
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE80]'
 - en: \[\displaystyle 1 - e^{- x λ}\]
+  id: totrans-209
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\displaystyle 1 - e^{- x λ}\]
 - en: '[PRE81]'
+  id: totrans-210
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE81]'
 - en: \[\displaystyle λ e^{- x λ}\]
+  id: totrans-211
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\displaystyle λ e^{- x λ}\]
 - en: And if we integrate the result, we get the CDF back – although we lose the constant
     of integration in the process.
+  id: totrans-212
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们对结果进行积分，我们就会得到 CDF，尽管在这个过程中我们失去了积分常数。
 - en: '[PRE82]'
+  id: totrans-213
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE82]'
 - en: \[\displaystyle - e^{- x λ}\]
+  id: totrans-214
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\displaystyle - e^{- x λ}\]
 - en: This example shows how we use `Pmf`, `Cdf`, and `Pdf` objects to represent PMFs,
     CDFs, and PDFs, and demonstrates the process for converting from each to the others.
+  id: totrans-215
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个例子展示了我们如何使用 `Pmf`、`Cdf` 和 `Pdf` 对象来表示概率质量函数、累积分布函数和概率密度函数，并演示了将每个转换为其他的过程。
 - en: Glossary
+  id: totrans-216
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 术语表
 - en: '**continuous:** A quantity is continuous if it can have any value in a range
     on the number line. Most things we measure in the world – like weight, distance,
     and time – are continuous.'
+  id: totrans-217
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**连续的**：如果一个量可以在数轴上的一个范围内取任何值，则该量是连续的。我们世界中测量的大多数事物——如重量、距离和时间——都是连续的。'
 - en: '**discrete:** A quantity is discrete if it can have a limited set of values,
     like integers or categories. Exact counts are discrete, as well as categorical
     variables.'
+  id: totrans-218
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**离散的**：如果一个量可以有一个有限的值集，如整数或类别，则该量是离散的。精确计数和分类变量也是离散的。'
 - en: '**probability density function (PDF)**: A function that shows how density (not
     probability) is spread across the values of a continuous variable. The area under
     the PDF within an interval gives the probability that the variable falls in that
     interval range.'
+  id: totrans-219
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**概率密度函数 (PDF)**：一个函数，它显示了密度（不是概率）是如何在连续变量的值上分布的。PDF 在区间下的面积给出了变量落在该区间范围内的概率。'
 - en: '**probability density**: The value of a PDF at a specific point; it’s not a
     probability itself, but it can be used to compute a probability.'
+  id: totrans-220
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**概率密度**：PDF 在特定点的值；它本身不是概率，但它可以用来计算概率。'
 - en: '**kernel density estimation (KDE)**: A method for estimating a PDF based on
     a sample.'
+  id: totrans-221
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**核密度估计 (KDE)**：一种基于样本估计 PDF 的方法。'
 - en: '**discretize**: To approximate a continuous quantity by dividing its range
     into discrete levels or categories.'
+  id: totrans-222
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**离散化**：通过将连续量的范围划分为离散的级别或类别来近似连续量。'
 - en: Exercises
+  id: totrans-223
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 练习
 - en: Exercise 6.1
+  id: totrans-224
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 练习 6.1
 - en: In World Cup soccer (football), suppose the time until the first goal is well
     modeled by an exponential distribution with rate `lam=2.5` goals per game. Make
     an `ExponentialPdf` to represent this distribution and use `area_under` to compute
     the probability that the time until the first goal is less than half of a game.
     Then use an `ExponentialCdf` to compute the same probability and check that the
     results are consistent.
+  id: totrans-225
   prefs: []
   type: TYPE_NORMAL
+  zh: 在世界杯足球（足球）比赛中，假设直到第一个进球的时间可以用速率 `lam=2.5` 个进球每场比赛的指数分布很好地建模。创建一个 `ExponentialPdf`
+    来表示这个分布，并使用 `area_under` 来计算直到第一个进球的时间小于半场比赛时间的概率。然后使用 `ExponentialCdf` 来计算相同的概率，并检查结果是否一致。
 - en: Use `ExponentialPdf` to compute the probability the first goal is scored in
     the second half of the game. Then use an `ExponentialCdf` to compute the same
     probability and check that the results are consistent.
+  id: totrans-226
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用 `ExponentialPdf` 来计算第一个进球在比赛下半场得分的概率。然后使用 `ExponentialCdf` 来计算相同的概率，并检查结果是否一致。
 - en: Exercise 6.2
+  id: totrans-227
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 练习 6.2
 - en: In order to join Blue Man Group, you have to be male between 5’10” and 6’1”,
     which is roughly 178 to 185 centimeters. Let’s see what fraction of the male adult
     population in the United States meets this requirement.
+  id: totrans-228
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了加入蓝人乐队，你必须是一名身高在 5’10” 到 6’1” 之间的男性，这大约是 178 到 185 厘米。让我们看看在美国的成年男性人口中有多少比例符合这一要求。
 - en: The heights of male participants in the BRFSS are well modeled by a normal distribution
     with mean 178 cm and standard deviation 7 cm.
+  id: totrans-229
   prefs: []
   type: TYPE_NORMAL
+  zh: BRFSS 中男性参与者的身高可以用均值为 178 厘米和标准差 7 厘米的正态分布很好地建模。
 - en: '[PRE83]'
+  id: totrans-230
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE83]'
 - en: '[PRE84]'
+  id: totrans-231
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE84]'
 - en: '[PRE85]'
+  id: totrans-232
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE85]'
 - en: '[PRE86]'
+  id: totrans-233
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE86]'
 - en: Here’s a `NormalCdf` object that represents a normal distribution with the same
     mean and standard deviation as the trimmed data.
+  id: totrans-234
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个代表具有与修剪数据相同的均值和标准差的正态分布的 `NormalCdf` 对象。
 - en: '[PRE87]'
+  id: totrans-235
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE87]'
 - en: And here’s how it compares to the CDF of the data.
+  id: totrans-236
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是它与数据 CDF 的比较。
 - en: '[PRE88]'
+  id: totrans-237
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE88]'
 - en: '![_images/e1e1518c0e8a3a1fea3020ad16b832bf9512aed3a9cfe1a8d0cfdb0153488e3f.png](../Images/56dd5d7b0470622eaa09dbb8ef7aff9b.png)'
+  id: totrans-238
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/56dd5d7b0470622eaa09dbb8ef7aff9b.png)'
 - en: 'Use `gaussian_kde` to make a `Pdf` that approximates the PDF of male height.
     Hint: Investigate the `bw_method` argument, which can be used to control the smoothness
     of the estimated density. Plot the estimated density and compare it to a `NormalPdf`
     with mean `m` and standard deviation `s`.'
+  id: totrans-239
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用 `gaussian_kde` 来创建一个近似男性身高的 PDF。提示：调查 `bw_method` 参数，它可以用来控制估计密度的平滑度。绘制估计密度，并将其与均值为
+    `m` 和标准差为 `s` 的 `NormalPdf` 进行比较。
 - en: Use a `NormalPdf` and `area_under` to compute the fraction of people in the
     normal model that are between 178 and 185 centimeters. Use a `NormalCdf` to compute
     the same fraction, and check that the results are consistent. Finally, use the
     empirical `Cdf` of the data to see what fraction of people in the dataset are
     in the same range.
+  id: totrans-240
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用 `NormalPdf` 和 `area_under` 来计算在正常模型中身高在178至185厘米之间的人的比例。使用 `NormalCdf` 来计算相同比例，并检查结果是否一致。最后，使用数据的经验
+    `Cdf` 来查看数据集中有多少人在同一范围内。
 - en: '[Think Stats: Exploratory Data Analysis in Python, 3rd Edition](https://allendowney.github.io/ThinkStats/index.html)'
+  id: totrans-241
   prefs: []
   type: TYPE_NORMAL
+  zh: '[Think Stats: Exploratory Data Analysis in Python, 3rd Edition](https://allendowney.github.io/ThinkStats/index.html)'
 - en: Copyright 2024 [Allen B. Downey](https://allendowney.com)
+  id: totrans-242
   prefs: []
   type: TYPE_NORMAL
+  zh: 版权所有 2024 [艾伦·B·唐尼](https://allendowney.com)
 - en: 'Code license: [MIT License](https://mit-license.org/)'
+  id: totrans-243
   prefs: []
   type: TYPE_NORMAL
+  zh: 代码许可：[MIT 许可证](https://mit-license.org/)
 - en: 'Text license: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  id: totrans-244
   prefs: []
   type: TYPE_NORMAL
+  zh: 文本许可：[Creative Commons Attribution-NonCommercial-ShareAlike 4.0 国际](https://creativecommons.org/licenses/by-nc-sa/4.0/)

@@ -1,929 +1,1420 @@
 - en: Least Squares
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 最小二乘法
 - en: 原文：[https://allendowney.github.io/ThinkStats/chap10.html](https://allendowney.github.io/ThinkStats/chap10.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://allendowney.github.io/ThinkStats/chap10.html](https://allendowney.github.io/ThinkStats/chap10.html)
 - en: This chapter and the next introduce the idea of fitting a model to data. In
     this context, a **model** consists of a mathematical description of the relationship
     between variables – like a straight line – and a description of random variation
     – like a normal distribution.
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章和下一章介绍了将模型拟合到数据中的概念。在这个上下文中，**模型**由变量之间关系的数学描述（例如一条直线）和随机变异性描述（例如正态分布）组成。
 - en: When we say that a model fits data, we usually mean that it minimizes errors,
     which are the distances between the model and the data. We’ll start with one of
     the most widely-used ways of fitting a model, minimizing the sum of the squared
     errors, which is called a least squares fit.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 当我们说一个模型拟合数据时，我们通常意味着它最小化了误差，即模型和数据之间的距离。我们将从最广泛使用的一种拟合模型的方法开始，即最小化平方误差之和，这被称为最小二乘拟合。
 - en: We’ll also start with models that work with just two variables at a time. The
     next chapter introduces models that can handle more than two variables.
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们还将从一次只处理两个变量的模型开始。下一章将介绍可以处理超过两个变量的模型。
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ThinkStats/blob/v3/nb/chap10.ipynb).'
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: '[点击此处运行此笔记本在Colab上](https://colab.research.google.com/github/AllenDowney/ThinkStats/blob/v3/nb/chap10.ipynb)。'
 - en: '[PRE0]'
+  id: totrans-6
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '[PRE1]'
+  id: totrans-7
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '[PRE2]'
+  id: totrans-8
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: Least Squares Fit
+  id: totrans-9
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 最小二乘拟合
 - en: As a first example, let’s return to the scenario from [Chapter 8](chap08.html#section-weighing-penguins).
     Suppose you are a researcher in Antarctica, studying local populations of penguins.
     As part of your data collection, you capture a sample of penguins, measure and
     weigh them – and then release them unharmed.
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为第一个例子，让我们回到第8章的场景[章节8](chap08.html#section-weighing-penguins)。假设你是南极的研究员，研究当地的企鹅种群。作为数据收集的一部分，你捕获了一组企鹅，测量并称重它们——然后未受伤害地释放它们。
 - en: As you would soon learn, it can be difficult to get penguins to stay on the
     scale long enough to get an accurate measurement. Suppose that for some penguins
     we have measurements like flipper and bill sizes, but no weights. Let’s see if
     we can use the other measurements to fill in the missing data – this process is
     called **imputation**.
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 如你很快就会了解到，让企鹅在秤上停留足够长的时间以获得准确的测量可能很困难。假设对于一些企鹅，我们有鳍长和喙大小的测量数据，但没有体重。让我们看看我们是否可以使用其他测量数据来填补缺失的数据——这个过程被称为**插补**。
 - en: We’ll start by exploring the relationship between the weights and measurements,
     using data collected between 2007 and 2010 by researchers at Palmer Station in
     Antarctica. The data they collected is freely available – instructions for downloading
     it are in the notebook for this chapter.
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将首先探索重量和测量之间的关系，使用2007年至2010年间在南极帕默站收集的数据。他们收集的数据是免费提供的——下载说明在本书的笔记本中。
 - en: The following cell downloads the data from a repository created by Allison Horst.
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 下一个单元将下载由Allison Horst创建的存储库中的数据。
 - en: 'Horst AM, Hill AP, Gorman KB (2020). palmerpenguins: Palmer Archipelago (Antarctica)
     penguin data. R package version 0.1.0\. [https://allisonhorst.github.io/palmerpenguins/](https://allisonhorst.github.io/palmerpenguins/).
     doi: 10.5281/zenodo.3960218.'
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 'Horst AM, Hill AP, Gorman KB (2020)。palmerpenguins：帕默群岛（南极）企鹅数据。R包版本0.1.0。[https://allisonhorst.github.io/palmerpenguins/](https://allisonhorst.github.io/palmerpenguins/)。doi:
+    10.5281/zenodo.3960218。'
 - en: 'The data was collected as part of the research that led to this paper: Gorman
     KB, Williams TD, Fraser WR (2014). Ecological sexual dimorphism and environmental
     variability within a community of Antarctic penguins (genus Pygoscelis). PLoS
     ONE 9(3):e90081\. [https://doi.org/10.1371/journal.pone.0090081](https://doi.org/10.1371/journal.pone.0090081)'
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些数据是作为导致这篇论文的研究的一部分收集的：Gorman KB, Williams TD, Fraser WR (2014)。南极企鹅（属Pygoscelis）群落中的生态性别二态性和环境变异性。PLoS
+    ONE 9(3):e90081。[https://doi.org/10.1371/journal.pone.0090081](https://doi.org/10.1371/journal.pone.0090081)
 - en: '[PRE3]'
+  id: totrans-16
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: We can use `read_csv` to read the data.
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用`read_csv`来读取数据。
 - en: '[PRE4]'
+  id: totrans-18
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '[PRE5]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: The dataset includes measurements of 151 Adélie penguins. We can use `query`
     to select the rows that contain this data.
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 数据集包括对151只阿德利企鹅的测量数据。我们可以使用`query`来选择包含这些数据的行。
 - en: '[PRE6]'
+  id: totrans-21
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '[PRE7]'
+  id: totrans-22
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: Now suppose we know the flipper length of an Adélie penguin – let’s see how
     well we can predict its weight. First we’ll select these columns from the `DataFrame`.
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在假设我们知道一只阿德利企鹅的鳍长——让我们看看我们如何预测它的体重。首先，我们将从`DataFrame`中选择这些列。
 - en: '[PRE8]'
+  id: totrans-24
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: Here’s a scatter plot showing the relationship between these quantities.
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里有一个散点图显示了这些数量之间的关系。
 - en: '[PRE9]'
+  id: totrans-26
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '![_images/c1497e43f443a03d9aefd5923bece65ad0f62beba904785a691698be286484fc.png](../Images/31bd8d4945c669a8e26a5bf1600eeda7.png)'
+  id: totrans-27
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/31bd8d4945c669a8e26a5bf1600eeda7.png)'
 - en: It looks like they are related – we can quantify the strength of the relationship
     by computing the coefficient of correlation.
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: 看起来它们是相关的——我们可以通过计算相关系数来量化这种关系的强度。
 - en: '[PRE10]'
+  id: totrans-29
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '[PRE11]'
+  id: totrans-30
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: The correlation is about 0.47, so penguins with longer flippers tend to be heavier.
     That’s useful because it means we can guess a penguin’s weight more accurately
     if we know its flipper length – but correlation alone doesn’t tell us how to make
     those guesses. For that, we need to choose a **line of best fit**.
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 相关系数约为0.47，这意味着鳍较长的企鹅往往更重。这很有用，因为它意味着如果我们知道企鹅的鳍长，我们就可以更准确地猜测它的体重——但仅仅相关系数本身并不能告诉我们如何做出这些猜测。为此，我们需要选择一条**最佳拟合线**。
 - en: There are many ways to define the “best” line, but for data like this a common
     choice is a **linear least squares** fit, which is the straight line that minimizes
     the mean squared error (MSE).
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 定义“最佳”线的方法有很多，但对于此类数据，一个常见的选择是**线性最小二乘法**拟合，这是最小化均方误差（MSE）的直线。
 - en: SciPy provides a function called `linregress` that computes a least squares
     fit. The name is short for **linear regression**, which is another term for a
     model like this. The arguments of `linregress` are the `x` values and the `y`
     values, in that order.
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: SciPy提供了一个名为`linregress`的函数，用于计算最小二乘拟合。这个名字是**线性回归**的简称，这是此类模型的另一种说法。`linregress`的参数是`x`值和`y`值，顺序如下。
 - en: '[PRE12]'
+  id: totrans-34
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '[PRE13]'
+  id: totrans-35
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: The result is a `LinregressResult` object that contains the slope and intercept
     of the fitted line, along with other information we’ll unpack soon. The slope
     is about 32.8, which means that each additional millimeter of flipper length is
     associated with an additional 32.8 grams of body weight.
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个包含拟合线的斜率和截距的`LinregressResult`对象，以及我们很快就会解包的其他信息。斜率约为32.8，这意味着每增加1毫米的鳍长度，体重就会增加32.8克。
 - en: The intercept is -2535 grams, which might seem nonsensical, since a measured
     weight can’t be negative. It might make more sense if we use the slope and intercept
     to evaluate the fitted line at the average flipper length.
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 截距为-2535克，这可能看起来有些不合逻辑，因为测量的重量不能是负数。如果我们使用斜率和截距来评估平均鳍长度的拟合线，这可能更有意义。
 - en: '[PRE14]'
+  id: totrans-38
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '[PRE15]'
+  id: totrans-39
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: For a penguin with the average flipper length, about 190 mm, the expected body
     weight is about 3700 grams.
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于鳍长平均约为190毫米的企鹅，预期的体重约为3700克。
 - en: The following function takes the result from `linregress` and a sequence of
     `xs` and finds the point on the fitted line for each value of `x`.
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数从`linregress`的结果和一个`xs`序列中找到每个`x`值的拟合线上的点。
 - en: '[PRE16]'
+  id: totrans-42
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: The name `predict` might seem odd here – in natural language, a **prediction**
     usually pertains to something happening in the future, but in the context of regression,
     the points on the fitted line are also called predictions.
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: “predict”这个名字在这里可能看起来有些奇怪——在自然语言中，**预测**通常与未来发生的事情有关，但在回归的上下文中，拟合线上的点也被称为预测。
 - en: We can use `predict` to compute the points on the line for a range of flipper
     sizes.
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用`predict`来计算一系列鳍长度的线上的点。
 - en: '[PRE17]'
+  id: totrans-45
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: Here’s the fitted line along with the scatter plot of the data.
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是拟合线以及数据的散点图。
 - en: '[PRE18]'
+  id: totrans-47
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: '![_images/7a9504e113fd8974cb69f6a98c5a33729bd2366c24678199dbae4578866a29e8.png](../Images/1afebe5df1100f2adeae0b38ba6943d8.png)'
+  id: totrans-48
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/1afebe5df1100f2adeae0b38ba6943d8.png)'
 - en: As expected, the fitted line goes through the center of the data and follows
     the trend. And some of the predictions are accurate – but many of the data points
     are far from the line. To get a sense of how good (or bad) the predictions are,
     we can compute the prediction error, which is the vertical distance of each point
     from the line. The following function computes these errors, which are also called
     **residuals**.
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: 如预期的那样，拟合线穿过数据的中心并遵循趋势。一些预测是准确的——但许多数据点离线很远。为了了解预测有多好（或有多坏），我们可以计算预测误差，即每个点与线的垂直距离。以下函数计算这些误差，这些误差也称为**残差**。
 - en: '[PRE19]'
+  id: totrans-50
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: Here are the residuals for body mass as a function of flipper length.
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里是体重作为鳍长函数的残差。
 - en: '[PRE20]'
+  id: totrans-52
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: As an example, we can look at the results for the first penguin in the dataset.
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，我们可以查看数据集中第一只企鹅的结果。
 - en: '[PRE21]'
+  id: totrans-54
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: '[PRE22]'
+  id: totrans-55
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: The flipper length of the selected penguin is 181 mm and the predicted body
     mass is 3407 grams. Now let’s see what the actual mass is.
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: 被选中的企鹅鳍长为181毫米，预测的体重为3407克。现在让我们看看实际的体重是多少。
 - en: '[PRE23]'
+  id: totrans-57
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: '[PRE24]'
+  id: totrans-58
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: The actual mass of this penguin is 3750 grams, and the residual – after subtracting
     away the prediction – is 343 grams.
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 这只企鹅的实际重量是 3750 克，残差（减去预测值后）是 343 克。
 - en: The average of the squared residuals is the mean squared error (MSE) of the
     predictions.
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 平方残差的平均值是预测的均方误差（MSE）。
 - en: '[PRE25]'
+  id: totrans-61
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: '[PRE26]'
+  id: totrans-62
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: By itself, this number doesn’t mean very much. We can make more sense of it
     by computing the coefficient of determination.
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 仅凭这个数字本身并没有太多意义。我们可以通过计算决定系数来使它更有意义。
 - en: Coefficient of Determination
+  id: totrans-64
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 决定系数
 - en: Suppose you want to guess the weight of a penguin. If you know its flipper length,
     you can use the least squares fit to inform your guess, and the MSE quantifies
     the accuracy of your guesses, on average.
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设你想猜测一只企鹅的重量。如果你知道它的鳍长，你可以使用最小二乘法来提供你的猜测，MSE 量化了你的猜测的平均准确性。
 - en: But what if you don’t know the flipper length – what would you guess? It turns
     out that guessing the mean is the best strategy in the sense that it minimizes
     the MSE. If we always guess the mean, the prediction errors are the deviations
     from the mean.
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: 但如果你不知道鳍长，你会猜什么？结果证明，猜测均值是最好的策略，因为它最小化了 MSE。如果我们总是猜测均值，预测误差就是与均值的偏差。
 - en: '[PRE27]'
+  id: totrans-67
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: And the MSE is the mean squared deviation.
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: MSE 是均方偏差。
 - en: '[PRE28]'
+  id: totrans-69
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: '[PRE29]'
+  id: totrans-70
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: You might remember that the mean squared deviation is the variance.
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: 你可能还记得，均方偏差是方差。
 - en: '[PRE30]'
+  id: totrans-72
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: '[PRE31]'
+  id: totrans-73
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: So we can think of the variance of the masses as the MSE if we always guess
     the mean, and the variance of the residuals as the MSE if we use the regression
     line. If we compute the ratio of these variances and subtract it from 1, the result
     indicates how much the MSE is reduced if we use flipper lengths to inform our
     guesses.
+  id: totrans-74
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，如果我们总是猜测均值，可以将质量的方差视为 MSE，如果我们使用回归线，则将残差的方差视为 MSE。如果我们计算这些方差的比率并从 1 中减去它，结果表示如果我们使用鳍长来提供猜测信息，MSE
+    减少了多少。
 - en: The following function computes this value, which is technically called the
     **coefficient of determination**, but because it is denoted \(R^2\), most people
     call it “R squared”.
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数计算这个值，技术上称为 **决定系数**，但由于它表示为 \(R^2\)，大多数人称之为“R 平方”。
 - en: '[PRE32]'
+  id: totrans-76
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: In the example, \(R^2\) is about 0.22, which means that the fitted line reduces
     MSE by 22%.
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个例子中，\(R^2\) 大约是 0.22，这意味着拟合线将 MSE 减少了 22%。
 - en: '[PRE33]'
+  id: totrans-78
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: '[PRE34]'
+  id: totrans-79
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: It turns out that there’s a relationship between the coefficient of determination,
     \(R^2\), and the coefficient of correlation, \(r\). As you might guess based on
     the notation, \(r^2 = R^2\).
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果表明，决定系数 \(R^2\) 和相关系数 \(r\) 之间存在关系。根据符号，你可能已经猜到了，\(r^2 = R^2\)。
 - en: We can show that’s true by computing the square root of \(R^2\).
+  id: totrans-81
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以通过计算 \(R^2\) 的平方根来证明这一点。
 - en: '[PRE35]'
+  id: totrans-82
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: '[PRE36]'
+  id: totrans-83
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: And comparing it to the correlation we computed earlier.
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: 并将其与我们之前计算的相关性进行比较。
 - en: '[PRE37]'
+  id: totrans-85
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE37]'
 - en: '[PRE38]'
+  id: totrans-86
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: They are the same except for a small difference due to floating-point approximation.
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: 它们除了由于浮点近似产生的小差异外，都是相同的。
 - en: The `linregress` function also computes this value and returns it as an attribute
     in the `RegressionResult` object.
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: '`linregress` 函数也计算这个值，并将其作为 `RegressionResult` 对象的属性返回。'
 - en: '[PRE39]'
+  id: totrans-89
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: '[PRE40]'
+  id: totrans-90
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE40]'
 - en: 'The coefficients of determination and correlation convey mostly the same information,
     but they are interpreted differently:'
+  id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: 决定系数和相关性传达了大部分相同的信息，但它们的解释不同：
 - en: Correlation quantifies the strength of the relationship on a scale from -1 to
     1.
+  id: totrans-92
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 相关系数量化了关系强度，其范围从 -1 到 1。
 - en: \(R^2\) quantifies the ability of the fitted line to reduce MSE.
+  id: totrans-93
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: \(R^2\) 量化了拟合线减少 MSE 的能力。
 - en: Also, \(R^2\) is always positive, so it doesn’t indicate whether the correlation
     is positive or negative.
+  id: totrans-94
   prefs: []
   type: TYPE_NORMAL
+  zh: 此外，\(R^2\) 总是正的，所以它不指示相关性是正还是负。
 - en: Minimizing MSE
+  id: totrans-95
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 最小化 MSE
 - en: Earlier I said that the least squares fit is the straight line that minimizes
     the mean squared error (MSE). We won’t prove that, but we can test it by adding
     small random values to the intercept and slope, and checking whether the MSE gets
     worse.
+  id: totrans-96
   prefs: []
   type: TYPE_NORMAL
+  zh: 之前我说过，最小二乘法是使均方误差（MSE）最小化的直线。我们不会证明这一点，但我们可以通过向截距和斜率添加小的随机值来测试它，并检查 MSE 是否变得更糟。
 - en: '[PRE41]'
+  id: totrans-97
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE41]'
 - en: To run the test, we need to make an object with `intercept` and `slope` attributes
     – we’ll use the `SimpleNamespace` object provided by the `types` module.
+  id: totrans-98
   prefs: []
   type: TYPE_NORMAL
+  zh: 要运行测试，我们需要创建一个具有 `intercept` 和 `slope` 属性的对象——我们将使用 `types` 模块提供的 `SimpleNamespace`
+    对象。
 - en: '[PRE42]'
+  id: totrans-99
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE42]'
 - en: '[PRE43]'
+  id: totrans-100
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE43]'
 - en: We can pass this object to `compute_residuals` and use the residuals to compute
     the MSE.
+  id: totrans-101
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以将此对象传递给 `compute_residuals` 并使用残差来计算 MSE。
 - en: '[PRE44]'
+  id: totrans-102
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE44]'
 - en: If we compare the result to the MSE of the least squares line, it is always
     worse.
+  id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们将结果与最小二乘线的均方误差（MSE）进行比较，它总是更差。
 - en: '[PRE45]'
+  id: totrans-104
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE45]'
 - en: '[PRE46]'
+  id: totrans-105
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE46]'
 - en: Minimizing MSE is nice, but it’s not the only definition of “best”. One alternative
     is to minimize the absolute values of the errors. Another is to minimize the shortest
     distance from each point to the fitted line, which is called the “total error”.
     In some contexts, guessing too high might be better (or worse) than guessing too
     low. In that case you might want to compute a cost function for each residual,
     and minimize total cost.
+  id: totrans-106
   prefs: []
   type: TYPE_NORMAL
+  zh: 最小化均方误差很好，但“最佳”的定义不止这一个。一个替代方案是最小化误差的绝对值。另一个替代方案是最小化每个点到拟合线的最短距离，这被称为“总误差”。在某些情况下，过高估计可能比过低估计更好（或更差）。在这种情况下，你可能想为每个残差计算一个成本函数，并最小化总成本。
 - en: But the least squares fit is much more widely used than these alternatives,
     primarily because it is efficient to compute. The following function shows how.
+  id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是，最小二乘法拟合比这些替代方案更广泛地被使用，主要是因为它计算效率高。以下函数展示了如何做到这一点。
 - en: '[PRE47]'
+  id: totrans-108
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE47]'
 - en: To test this function, we’ll use flipper length and body mass again.
+  id: totrans-109
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了测试这个函数，我们将再次使用翻车鱼长度和体重。
 - en: '[PRE48]'
+  id: totrans-110
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE48]'
 - en: '[PRE49]'
+  id: totrans-111
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE49]'
 - en: And we can confirm that we get the same results we got from `linregress`.
+  id: totrans-112
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以确认我们得到的结果与`linregress`得到的结果相同。
 - en: '[PRE50]'
+  id: totrans-113
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE50]'
 - en: '[PRE51]'
+  id: totrans-114
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE51]'
 - en: Minimizing MSE made sense when computational efficiency was more important than
     choosing the method most appropriate to the problem at hand. But that’s no longer
     the case, so it is worth considering whether squared residuals are the right thing
     to minimize.
+  id: totrans-115
   prefs: []
   type: TYPE_NORMAL
+  zh: 当计算效率比选择最适合当前问题的方法更重要时，最小化均方误差是有意义的。但情况已不再如此，因此考虑是否应该最小化平方残差是有价值的。
 - en: Estimation
+  id: totrans-116
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 估计
 - en: The parameters `slope` and `intercept` are estimates based on a sample. Like
     other estimates, they are vulnerable to non-representative sampling, measurement
     error, and variability due to random sampling. As usual, it’s hard to quantify
     the effect of non-representative sampling and measurement error. It’s easier to
     quantify the effect of random sampling.
+  id: totrans-117
   prefs: []
   type: TYPE_NORMAL
+  zh: '`slope`（斜率）和`intercept`（截距）参数是基于样本的估计。像其他估计一样，它们容易受到非代表性抽样、测量误差和随机抽样引起的变异性的影响。通常，很难量化非代表性抽样和测量误差的影响。而量化随机抽样的影响则更容易一些。'
 - en: 'One way to do that is a kind of resampling called **bootstrapping**: we’ll
     treat the sample as if it were the whole population and draw new samples, with
     replacement, from the observed data. The following function takes a `DataFrame`
     and uses the `sample` method to resample the rows and return a new `DataFrame`.'
+  id: totrans-118
   prefs: []
   type: TYPE_NORMAL
+  zh: 实现这一目标的一种方法是称为**自助法**的重新抽样方法：我们将样本视为整个总体，并从观察到的数据中用放回抽样的方式抽取新的样本。以下函数接受一个`DataFrame`，使用`sample`方法重新抽样行，并返回一个新的`DataFrame`。
 - en: '[PRE52]'
+  id: totrans-119
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE52]'
 - en: And the following function takes a `DataFrame`, finds the least squares fit,
     and returns the slope of the fitted line.
+  id: totrans-120
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数接受一个`DataFrame`，找到最小二乘法拟合，并返回拟合线的斜率。
 - en: '[PRE53]'
+  id: totrans-121
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE53]'
 - en: We can use these functions to generate many simulated datasets and compute the
     slope for each one.
+  id: totrans-122
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用这些函数生成许多模拟数据集，并对每个数据集计算斜率。
 - en: '[PRE54]'
+  id: totrans-123
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE54]'
 - en: '[PRE55]'
+  id: totrans-124
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE55]'
 - en: The result is a sample from the sampling distribution of the slope. Here’s what
     it looks like.
+  id: totrans-125
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是从斜率抽样分布中的一个样本。它看起来是这样的。
 - en: '[PRE56]'
+  id: totrans-126
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE56]'
 - en: '![_images/bea8c2bcf4ff1888a13da5443b8659d73cda43e2f5e723f81b08dae2a14e1987.png](../Images/569787a56cf6e79f9de33fe7bc8f0238.png)'
+  id: totrans-127
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/569787a56cf6e79f9de33fe7bc8f0238.png)'
 - en: We can use `percentile` to compute a 90% confidence interval.
+  id: totrans-128
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用`percentile`来计算90%置信区间。
 - en: '[PRE57]'
+  id: totrans-129
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE57]'
 - en: '[PRE58]'
+  id: totrans-130
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE58]'
 - en: So we could report that the estimated slope is 33 grams / mm with a 90% CI [25,
     40] grams / mm.
+  id: totrans-131
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，我们可以报告估计的斜率为33克/毫米，90%置信区间为[25, 40]克/毫米。
 - en: The standard error of the estimate is the standard deviation of the sampling
     distribution.
+  id: totrans-132
   prefs: []
   type: TYPE_NORMAL
+  zh: 估计的标准误差是抽样分布的标准差。
 - en: '[PRE59]'
+  id: totrans-133
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE59]'
 - en: '[PRE60]'
+  id: totrans-134
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE60]'
 - en: The `RegressionResult` object we got from `linregress` provides an approximation
     of the standard error, based on some assumptions about the shape of the distribution.
+  id: totrans-135
   prefs: []
   type: TYPE_NORMAL
+  zh: 从`linregress`得到的`RegressionResult`对象提供了一个基于分布形状假设的标准误差近似值。
 - en: '[PRE61]'
+  id: totrans-136
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE61]'
 - en: '[PRE62]'
+  id: totrans-137
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE62]'
 - en: The standard error we computed by resampling is a little smaller, but the difference
     probably doesn’t matter in practice.
+  id: totrans-138
   prefs: []
   type: TYPE_NORMAL
+  zh: 通过重新抽样计算的标准误差略小，但在实际应用中这种差异可能并不重要。
 - en: Visualizing Uncertainty
+  id: totrans-139
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 可视化不确定性
 - en: Each time we resample the dataset, we get a different fitted line. To see how
     much variation there is in the lines, one option is to loop through them and plot
     them all. The following function takes a resampled `DataFrame`, computes a least
     squares fit, and generates predicted values for a sequence of `xs`.
+  id: totrans-140
   prefs: []
   type: TYPE_NORMAL
+  zh: 每次我们对数据集进行重采样时，都会得到不同的拟合线。为了了解这些线之间的变异性，一个选项是遍历它们并将它们全部绘制出来。以下函数接受一个重采样的 `DataFrame`，计算最小二乘拟合，并为一系列
+    `xs` 生成预测值。
 - en: '[PRE63]'
+  id: totrans-141
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE63]'
 - en: Here’s the sequence of `xs` we’ll use.
+  id: totrans-142
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里是我们将使用的 `xs` 序列。
 - en: '[PRE64]'
+  id: totrans-143
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE64]'
 - en: And here’s what the fitted lines look like, along with a scatter plot of the
     data.
+  id: totrans-144
   prefs: []
   type: TYPE_NORMAL
+  zh: 下面是拟合线以及数据的散点图的样子。
 - en: '[PRE65]'
+  id: totrans-145
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE65]'
 - en: '![_images/30885975c39318a2a5e8815d946b6245f9fda4f4f2609cc366748d884a68c749.png](../Images/e5eb3b662e18a662e664271f5805cf7a.png)'
+  id: totrans-146
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/e5eb3b662e18a662e664271f5805cf7a.png)'
 - en: Near the middle, the fitted lines are close together – at the extremes, they
     are farther apart.
+  id: totrans-147
   prefs: []
   type: TYPE_NORMAL
+  zh: 在中间附近，拟合线彼此靠近 - 在极端情况下，它们相距较远。
 - en: Another way to represent the variability of the fitted lines is to plot a 90%
     confidence interval for each predicted value. We can do that by collecting the
     fitted lines as a list of arrays.
+  id: totrans-148
   prefs: []
   type: TYPE_NORMAL
+  zh: 另一种表示拟合线变异性的方法是绘制每个预测值的90%置信区间。我们可以通过收集拟合线作为一个数组列表来实现这一点。
 - en: '[PRE66]'
+  id: totrans-149
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE66]'
 - en: We can think of this list of arrays as a two-dimensional array with one row
     for each fitted line and one column corresponding to each of the `xs`.
+  id: totrans-150
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以将这个数组列表视为一个二维数组，其中每一行对应一条拟合线，每一列对应于每个 `xs`。
 - en: We can use `percentile` with the `axis=0` argument to find the 5th, 50th, and
     95th percentiles of the `ys` corresponding to each of the `xs`.
+  id: totrans-151
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用 `percentile` 函数，并设置 `axis=0` 参数来找到与每个 `xs` 对应的 `ys` 的第5、第50和第95百分位数。
 - en: '[PRE67]'
+  id: totrans-152
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE67]'
 - en: Now we’ll use `fill_between` to plot a region between the 5th and 95 percentiles,
     which represents the 90% CI, along with the median value in each column and a
     scatter plot of the data.
+  id: totrans-153
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们将使用 `fill_between` 来绘制位于第5百分位数和第95百分位数之间的区域，这代表了90%的置信区间，同时还包括每列的中值和数据的散点图。
 - en: '[PRE68]'
+  id: totrans-154
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE68]'
 - en: '![_images/5967287882b5ae2e30aafbd931f96e8b761844203d0074f0dc9f1af90d4d8c65.png](../Images/dfc049dbd6b44dd65edd186b8aee9ea3.png)'
+  id: totrans-155
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/dfc049dbd6b44dd65edd186b8aee9ea3.png)'
 - en: This is my favorite way to represent the variability of a fitted line due to
     random sampling.
+  id: totrans-156
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是表示由于随机抽样而导致的拟合线变异性的一种我最喜欢的方式。
 - en: Transformation
+  id: totrans-157
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 转换
 - en: Before fitting a line to data, it is sometimes useful to transform one or both
     variables, for example by computing the squares of the values, their square roots,
     or their logarithms. To demonstrate, we’ll use heights and weights from the Behavioral
     Risk Factor Surveillance System (BRFSS), described in [Chapter 5](chap05.html#section-lognormal-distribution).
+  id: totrans-158
   prefs: []
   type: TYPE_NORMAL
+  zh: 在拟合数据线之前，有时对其中一个或两个变量进行转换是有用的，例如通过计算值的平方、平方根或对数。为了演示，我们将使用行为风险因素监测系统（BRFSS）中的身高和体重数据，这些数据在[第5章](chap05.html#section-lognormal-distribution)中描述。
 - en: The following cell downloads the BRFSS data.
+  id: totrans-159
   prefs: []
   type: TYPE_NORMAL
+  zh: 下一个单元格将下载 BRFSS 数据。
 - en: '[PRE69]'
+  id: totrans-160
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE69]'
 - en: We can load the BRFSS data like this.
+  id: totrans-161
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以像这样加载 BRFSS 数据。
 - en: '[PRE70]'
+  id: totrans-162
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE70]'
 - en: Next we’ll find the rows with valid data and select the columns containing heights
     and weights.
+  id: totrans-163
   prefs: []
   type: TYPE_NORMAL
+  zh: 接下来，我们将找到包含有效数据的行，并选择包含身高和体重的列。
 - en: '[PRE71]'
+  id: totrans-164
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE71]'
 - en: We can use `linregress` to compute the slope and intercept of the least squares
     fit.
+  id: totrans-165
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用 `linregress` 函数来计算最小二乘拟合的斜率和截距。
 - en: '[PRE72]'
+  id: totrans-166
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE72]'
 - en: '[PRE73]'
+  id: totrans-167
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE73]'
 - en: The slope is about 0.96, which means that an increase of 1 centimeter corresponds
     to an increase of almost 1 kilogram, on average. We can use `predict` again to
     generate predicted values for a range of `xs`.
+  id: totrans-168
   prefs: []
   type: TYPE_NORMAL
+  zh: 斜率大约为 0.96，这意味着平均而言，每增加 1 厘米对应增加近 1 公斤。我们可以再次使用 `predict` 函数来生成一系列 `xs` 的预测值。
 - en: '[PRE74]'
+  id: totrans-169
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE74]'
 - en: Before we make a scatter plot of the data, it’s useful to jitter the heights
     and weights.
+  id: totrans-170
   prefs: []
   type: TYPE_NORMAL
+  zh: 在我们绘制数据的散点图之前，对身高和体重进行抖动是有用的。
 - en: '[PRE75]'
+  id: totrans-171
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE75]'
 - en: And we’ll use the mean and standard deviation of the heights to choose the limits
     of the \(x\) axis.
+  id: totrans-172
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将使用身高和体重的平均值和标准差来选择 \(x\) 轴的界限。
 - en: '[PRE76]'
+  id: totrans-173
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE76]'
 - en: Here’s a scatter plot of the jittered data along with the fitted line.
+  id: totrans-174
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里展示的是经过抖动处理的数据的散点图以及拟合线。
 - en: '[PRE77]'
+  id: totrans-175
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE77]'
 - en: '![_images/99f7709b0cd0c254ea57d67675c260d921f898f9bd54e45e919d51983372e087.png](../Images/042db579a7788754fe7b90d735575cfb.png)'
+  id: totrans-176
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/042db579a7788754fe7b90d735575cfb.png)'
 - en: The fitted line doesn’t pass through the densest part of the scatter plot. That’s
     because the weights don’t follow a normal distribution. As we saw in [Chapter
     5](chap05.html#section-lognormal-distribution), adult weights tend to follow a
     lognormal distribution, which is skewed toward larger values – and those values
     pull the fitted line up.
+  id: totrans-177
   prefs: []
   type: TYPE_NORMAL
+  zh: 拟合线没有穿过散点图中最密集的部分。这是因为重量并不遵循正态分布。正如我们在[第5章](chap05.html#section-lognormal-distribution)中看到的，成年人的体重倾向于遵循对数正态分布，这种分布偏向于较大的值——这些值将拟合线向上拉。
 - en: Another cause for concern is the distribution of the residuals, which looks
     like this.
+  id: totrans-178
   prefs: []
   type: TYPE_NORMAL
+  zh: 另一个令人担忧的原因是残差的分布，看起来像这样。
 - en: '[PRE78]'
+  id: totrans-179
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE78]'
 - en: '[PRE79]'
+  id: totrans-180
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE79]'
 - en: '![_images/df348d0cf285c7af9f7329f9f7ab1ad1c3db7f53cf3644907936d1992ef2ceb7.png](../Images/0237011c4f48171c22a06ba7f6c211c4.png)'
+  id: totrans-181
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/0237011c4f48171c22a06ba7f6c211c4.png)'
 - en: The distribution of the residuals is skewed to the right. By itself, that’s
     not necessarily a problem, but it suggests that the least squares fit has not
     characterized the relationship between these variables properly.
+  id: totrans-182
   prefs: []
   type: TYPE_NORMAL
+  zh: 残差的分布向右偏斜。单从这一点来看，这并不一定是问题，但它表明最小二乘拟合并没有正确地描述这些变量之间的关系。
 - en: If the weights follow a lognormal distribution, their logarithms follow a normal
     distribution. So let’s see what happens if we fit a line to the logarithms of
     weight as a function of height.
+  id: totrans-183
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果重量遵循对数正态分布，它们的对数遵循正态分布。那么让我们看看如果我们拟合一个线来表示重量对高度的对数函数会发生什么。
 - en: '[PRE80]'
+  id: totrans-184
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE80]'
 - en: '[PRE81]'
+  id: totrans-185
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE81]'
 - en: Because we transformed one of the variables, the slope and intercept are harder
     to interpret. But we can use `predict` to compute the fitted line.
+  id: totrans-186
   prefs: []
   type: TYPE_NORMAL
+  zh: 因为我们变换了一个变量，所以斜率和截距更难解释。但我们可以使用 `predict` 来计算拟合线。
 - en: '[PRE82]'
+  id: totrans-187
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE82]'
 - en: And then plot it along with a scatter plot of the transformed data.
+  id: totrans-188
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后将其与变换数据的散点图一起绘制。
 - en: '[PRE83]'
+  id: totrans-189
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE83]'
 - en: '![_images/43cb4016f0e05c73f57be4571c5a3717623132807d7711f8b365f6b913c4ead4.png](../Images/abfea30922f39942ec607829e73ad5b4.png)'
+  id: totrans-190
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/abfea30922f39942ec607829e73ad5b4.png)'
 - en: The fitted line passes through the densest part of the plot, and the actual
     values extend about the same distance above and below the line – so the distribution
     of the residuals is roughly symmetric.
+  id: totrans-191
   prefs: []
   type: TYPE_NORMAL
+  zh: 拟合线穿过图表中最密集的部分，实际值在直线上下延伸大约相同的距离——因此残差的分布大致是对称的。
 - en: '[PRE84]'
+  id: totrans-192
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE84]'
 - en: '[PRE85]'
+  id: totrans-193
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE85]'
 - en: '![_images/f63c4baee11a0b5e2f31d2c8c46026c04a111c0b34c7bd185318b2cc71aad4c6.png](../Images/97a217555d2ca06d4a7a15437641ef0d.png)'
+  id: totrans-194
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/97a217555d2ca06d4a7a15437641ef0d.png)'
 - en: The appearance of the scatter plot and the distribution of the residuals suggest
     that the relationship of height and log-transformed weight is well described by
     the fitted line. If we compare the \(r\) values of the two regressions, we see
     that the correlation of height with log-transformed weights is slightly higher.
+  id: totrans-195
   prefs: []
   type: TYPE_NORMAL
+  zh: 散点图的外观和残差的分布表明，高度和对数变换后的重量之间的关系很好地被拟合线描述。如果我们比较两个回归的 \(r\) 值，我们会看到高度与对数变换后的重量的相关性略高。
 - en: '[PRE86]'
+  id: totrans-196
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE86]'
 - en: '[PRE87]'
+  id: totrans-197
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE87]'
 - en: Which means that the \(R^2\) value is slightly higher, too.
+  id: totrans-198
   prefs: []
   type: TYPE_NORMAL
+  zh: 这意味着 \(R^2\) 值也会稍微高一些。
 - en: '[PRE88]'
+  id: totrans-199
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE88]'
 - en: '[PRE89]'
+  id: totrans-200
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE89]'
 - en: If we use heights to guess weights, the guesses are a little better if we work
     with the log-transformed weights.
+  id: totrans-201
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们用高度来猜测重量，如果我们处理的是对数变换后的重量，那么猜测会更好一些。
 - en: However, transforming the data makes the parameters of the model harder to interpret
     – it can help to invert the transformation before presenting the results. For
     example, the inverse of a logarithm in base 10 is exponentiation with base 10.
     Here’s what the fitted line looks like after the inverse transformation, along
     with the untransformed data.
+  id: totrans-202
   prefs: []
   type: TYPE_NORMAL
+  zh: 然而，变换数据使得模型的参数更难解释——在呈现结果之前反转变换可能会有所帮助。例如，以10为底的对数的逆是10为底的指数。这是逆变换后的拟合线，以及未变换的数据。
 - en: '[PRE90]'
+  id: totrans-203
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE90]'
 - en: '![_images/05277c82c794c22d37f9c609147a3c17ef59cc8a0da9e9525303ea3b478396f6.png](../Images/d27aa2418a2b45840a3cd0b3b03aae4b.png)'
+  id: totrans-204
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/d27aa2418a2b45840a3cd0b3b03aae4b.png)'
 - en: A fitted line that’s straight with respect to the transformed data is curved
     with respect to the original data.
+  id: totrans-205
   prefs: []
   type: TYPE_NORMAL
+  zh: 与变换后的数据相比是直线的拟合线，与原始数据相比是曲线的。
 - en: Glossary
+  id: totrans-206
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 术语表
 - en: '**model**: In the context of regression, a model is a mathematical description
     of the relationship between variables – such as a straight line – along with a
     description of random variation – such as a normal distribution.'
+  id: totrans-207
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**模型**：在回归的上下文中，模型是变量之间关系的数学描述——例如一条直线——以及随机变化的描述——例如正态分布。'
 - en: '**imputation:** A process for estimating and filling in missing values in a
     dataset.'
+  id: totrans-208
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**插补**：一种估计和填补数据集中缺失值的过程。'
 - en: '**line of best fit:** A line (or curve) that best describes a relationship
     between variables, by some definition of “best”.'
+  id: totrans-209
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**最佳拟合线**：一条（或曲线）最好地描述变量之间关系的线（或曲线），通过某种“最佳”的定义。'
 - en: '**linear regression:** A method for finding a line of best fit.'
+  id: totrans-210
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**线性回归**：一种寻找最佳拟合线的方法。'
 - en: '**prediction**: A point on a line of best fit – in the context of regression,
     it is not necessarily a claim about the future.'
+  id: totrans-211
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**预测**：最佳拟合线上的一个点——在回归的上下文中，它不一定是关于未来的声明。'
 - en: '**residual**: The difference between an observed value and a value predicted
     by a line of best fit.'
+  id: totrans-212
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**残差**：观察值与最佳拟合线预测值之间的差异。'
 - en: '**linear least squares fit:** A line that minimizes the sum of squared residuals.'
+  id: totrans-213
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**线性最小二乘拟合**：一条使残差平方和最小的线。'
 - en: '**coefficient of determination**: A statistic, denoted \(R^2\) and often pronounced
     “R squared”, that quantifies how well a model fits the data.'
+  id: totrans-214
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**决定系数**：一个统计量，表示为\(R^2\)，通常读作“R平方”，它量化了模型拟合数据的好坏。'
 - en: '**bootstrap resampling**: A way of resampling by treating the sample as a population
     and drawing new samples with the same size as the original, with replacement.'
+  id: totrans-215
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**自助重采样**：一种通过将样本视为总体并以与原始样本相同的大小进行有放回抽样的重采样方法。'
 - en: Exercises
+  id: totrans-216
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 练习
 - en: Exercise 10.1
+  id: totrans-217
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 练习10.1
 - en: 'In this chapter we computed a least squares fit for penguin weights as a function
     of flipper length. There are two other measurements in the dataset we can also
     consider: culmen length and culmen depth (the culmen is the top ridge of the bill).'
+  id: totrans-218
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本章中，我们计算了企鹅体重作为鳍长度的函数的最小二乘拟合。数据集中还有两个其他测量值可以考虑：喙长和喙深（喙是喙顶部的脊）。
 - en: Compute the least squares fit for weight as a function of culmen length. Make
     a scatter plot of these variables and plot the fitted line.
+  id: totrans-219
   prefs: []
   type: TYPE_NORMAL
+  zh: 计算体重作为喙长函数的最小二乘拟合。绘制这些变量的散点图并绘制拟合线。
 - en: Based on the `rvalue` attribute of the `RegressionResult` object, what is the
     correlation of these variables? What is the coefficient of determination? Which
     is a better predictor of weight, culmen length or flipper length?
+  id: totrans-220
   prefs: []
   type: TYPE_NORMAL
+  zh: 根据`RegressionResult`对象的`rvalue`属性，这些变量的相关系数是多少？决定系数是多少？哪个是体重更好的预测指标，喙长还是鳍长？
 - en: '[PRE91]'
+  id: totrans-221
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE91]'
 - en: Exercise 10.2
+  id: totrans-222
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 练习10.2
 - en: 'In this chapter we used resampling to approximate the sampling distribution
     for the slope of a fitted line. We can approximate the sampling distribution of
     the intercept the same way:'
+  id: totrans-223
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本章中，我们使用重采样来近似拟合线的斜率的抽样分布。我们可以以相同的方式近似截距的抽样分布：
 - en: Write a function called `estimate_intercept` that takes a resampled `DataFrame`
     as an argument, computes the least squares fit of penguin weight as a function
     of flipper length, and returns the intercept.
+  id: totrans-224
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 编写一个名为`estimate_intercept`的函数，该函数接受一个重采样的`DataFrame`作为参数，计算企鹅体重作为鳍长度的最小二乘拟合，并返回截距。
 - en: Call the function with many resampled versions of `adelie` and collect the intercepts.
+  id: totrans-225
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 使用许多重采样的`adelie`调用该函数并收集截距。
 - en: Use `plot_kde` to plot the sampling distribution of the intercept.
+  id: totrans-226
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 使用`plot_kde`绘制截距的抽样分布。
 - en: Compute the standard error and a 90% confidence interval.
+  id: totrans-227
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 计算标准误差和90%置信区间。
 - en: Check that the standard error you get from resampling is consistent with the
     `intercept_stderr` attribute in the `RegressionResult` object – it might be a
     little smaller.
+  id: totrans-228
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 检查从重采样得到的标准误差是否与`RegressionResult`对象中的`intercept_stderr`属性一致——它可能略小一些。
 - en: Exercise 10.3
+  id: totrans-229
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 练习10.3
 - en: A person’s Body Mass Index (BMI) is their weight in kilograms divided by their
     height in meters raised to the second power. In the BRFSS dataset, we can compute
     BMI like this, after converting heights from centimeters to meters.
+  id: totrans-230
   prefs: []
   type: TYPE_NORMAL
+  zh: 人的体质指数（BMI）是他们的体重（千克）除以他们的身高（米）的平方。在BRFSS数据集中，我们可以这样计算BMI，在将身高从厘米转换为米之后。
 - en: '[PRE92]'
+  id: totrans-231
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE92]'
 - en: In this definition, heights are squared, rather than raised to some other exponent,
     because of the observation – early in the history of statistics – that average
     weight increases roughly in proportion to height squared.
+  id: totrans-232
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个定义中，高度是平方的，而不是提高到某个其他指数，这是因为观察——在统计学历史早期——平均体重大致与高度平方成正比。
 - en: 'To see whether that’s true, we can use data from the BRFSS, a least squares
     fit, and a little bit of math. Suppose weight is proportional to height raised
     to an unknown exponent, \(a\). In that case, we can write:'
+  id: totrans-233
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了验证这一点，我们可以使用BRFSS数据、最小二乘拟合和一些数学知识。假设体重与高度的不知指数\(a\)成正比。在这种情况下，我们可以写出：
 - en: \[w = b h^a\]
+  id: totrans-234
   prefs: []
   type: TYPE_NORMAL
+  zh: \[w = b h^a\]
 - en: 'where \(w\) is weight, \(h\) is height, and \(b\) is an unknown constant of
     proportionality. Taking logarithms of both sides:'
+  id: totrans-235
   prefs: []
   type: TYPE_NORMAL
+  zh: 其中 \(w\) 是体重，\(h\) 是身高，\(b\) 是一个未知的比例常数。对等式两边取对数：
 - en: \[\log w = \log b + a \log h\]
+  id: totrans-236
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\log w = \log b + a \log h\]
 - en: So, if we compute a least squares fit for log-transformed weights as a function
     of log-transformed heights, the slope of the fitted line estimates the unknown
     exponent \(a\).
+  id: totrans-237
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，如果我们计算以对数变换的高度为函数的对数变换重量的最小二乘拟合，拟合线的斜率估计了未知的指数 \(a\)。
 - en: Compute the logarithms of height and weight. You can use any base for the logarithms,
     as long as it’s the same for both transformations. Compute a least squares fit.
     Is the slope close to 2?
+  id: totrans-238
   prefs: []
   type: TYPE_NORMAL
+  zh: 计算身高和体重的对数。你可以使用任何底数进行对数变换，只要两个变换使用相同的底数即可。计算最小二乘拟合。斜率接近2吗？
 - en: '[Think Stats: Exploratory Data Analysis in Python, 3rd Edition](https://allendowney.github.io/ThinkStats/index.html)'
+  id: totrans-239
   prefs: []
   type: TYPE_NORMAL
+  zh: '[《Python数据探索：Think Stats》第3版](https://allendowney.github.io/ThinkStats/index.html)'
 - en: Copyright 2024 [Allen B. Downey](https://allendowney.com)
+  id: totrans-240
   prefs: []
   type: TYPE_NORMAL
+  zh: 版权所有 2024 [艾伦·B·唐尼](https://allendowney.com)
 - en: 'Code license: [MIT License](https://mit-license.org/)'
+  id: totrans-241
   prefs: []
   type: TYPE_NORMAL
+  zh: 代码许可：[MIT许可](https://mit-license.org/)
 - en: 'Text license: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  id: totrans-242
   prefs: []
   type: TYPE_NORMAL
+  zh: 文本许可：[Creative Commons署名-非商业性使用-相同方式共享4.0国际](https://creativecommons.org/licenses/by-nc-sa/4.0/)

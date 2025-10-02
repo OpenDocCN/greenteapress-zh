@@ -1,725 +1,1107 @@
 - en: Distributions
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 分布
 - en: 原文：[https://allendowney.github.io/ThinkStats/chap02.html](https://allendowney.github.io/ThinkStats/chap02.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '[原文链接](https://allendowney.github.io/ThinkStats/chap02.html)'
 - en: This chapter introduces one of the most fundamental ideas in statistics, the
     distribution. We’ll start with frequency tables – which represent the values in
     a dataset and the number of times each of them appears – and use them to explore
     data from the National Survey of Family Growth (NSFG). We’ll also look for extreme
     or erroneous values, called outliers, and consider ways to handle them.
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章介绍了统计学中最基本的思想之一，即分布。我们将从频率表开始——它表示数据集中的值及其出现的次数——并使用它们来探索来自国家家庭增长调查（NSFG）的数据。我们还将寻找极端或错误值，称为异常值，并考虑处理它们的方法。
 - en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ThinkStats/blob/v3/nb/chap02.ipynb).'
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: '[在此处运行此笔记本](https://colab.research.google.com/github/AllenDowney/ThinkStats/blob/v3/nb/chap02.ipynb)。'
 - en: '[PRE0]'
+  id: totrans-4
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '[PRE1]'
+  id: totrans-5
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '[PRE2]'
+  id: totrans-6
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: Frequency Tables
+  id: totrans-7
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 频率表
 - en: One way to describe a variable is a **frequency table**, which contains the
     values of the variable and their **frequencies** – that is, the number of times
     each value appears. This description is called the **distribution** of the variable.
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 描述变量的一个方法是一个**频率表**，它包含变量的值及其**频率**——也就是说，每个值出现的次数。这种描述被称为变量的**分布**。
 - en: To represent distributions, we’ll use a library called `empiricaldist`. In this
     context, “empirical” means that the distributions are based on data rather than
     mathematical models. `empiricaldist` provides a class called `FreqTab` that we
     can use to compute and plot frequency tables. We can import it like this.
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了表示分布，我们将使用一个名为 `empiricaldist` 的库。在这个上下文中，“empirical”意味着这些分布是基于数据而不是数学模型。`empiricaldist`
+    提供了一个名为 `FreqTab` 的类，我们可以使用它来计算和绘制频率表。我们可以这样导入它。
 - en: '[PRE3]'
+  id: totrans-10
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: To show how it works, we’ll start with a small list of values.
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了展示它是如何工作的，我们将从一个小的值列表开始。
 - en: '[PRE4]'
+  id: totrans-12
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '`FreqTab` provides a method called `from_seq` that takes a sequence and makes
     a `FreqTab` object.'
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: '`FreqTab` 提供了一个名为 `from_seq` 的方法，它接受一个序列并将其转换为 `FreqTab` 对象。'
 - en: '[PRE5]'
+  id: totrans-14
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '|  | freqs |'
+  id: totrans-15
   prefs: []
   type: TYPE_TB
+  zh: '|  | freqs |'
 - en: '| --- | --- |'
+  id: totrans-16
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| 1.0 | 1 |'
+  id: totrans-17
   prefs: []
   type: TYPE_TB
+  zh: '| 1.0 | 1 |'
 - en: '| 2.0 | 2 |'
+  id: totrans-18
   prefs: []
   type: TYPE_TB
+  zh: '| 2.0 | 2 |'
 - en: '| 3.0 | 1 |'
+  id: totrans-19
   prefs: []
   type: TYPE_TB
+  zh: '| 3.0 | 1 |'
 - en: '| 5.0 | 1 |'
+  id: totrans-20
   prefs: []
   type: TYPE_TB
+  zh: '| 5.0 | 1 |'
 - en: A `FreqTab` object is a kind of Pandas `Series` that contains values and their
     frequencies. In this example, the value `1.0` corresponds to frequency 1, the
     value `2.0` corresponds to frequency 2, etc.
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: '`FreqTab` 对象是一种包含值及其频率的 Pandas `Series`。在这个例子中，值 `1.0` 对应频率 1，值 `2.0` 对应频率
+    2，等等。'
 - en: '`FreqTab` provides a method called `bar` that plots the frequency table as
     a bar chart.'
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: '`FreqTab` 提供了一个名为 `bar` 的方法，它将频率表绘制为条形图。'
 - en: '[PRE6]'
+  id: totrans-23
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '![_images/38cccabec368062f7c957bc062b975b2eb398c88981d728edffb6662929d05a0.png](../Images/6e86a5cad8ecb7e5dd373af698659658.png)'
+  id: totrans-24
   prefs: []
   type: TYPE_IMG
+  zh: '![_images/38cccabec368062f7c957bc062b975b2eb398c88981d728edffb6662929d05a0.png](../Images/6e86a5cad8ecb7e5dd373af698659658.png)'
 - en: Because a `FreqTab` is a Pandas `Series`, we can use the bracket operator to
     look up a value and get its frequency.
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 因为 `FreqTab` 是 Pandas `Series`，我们可以使用方括号运算符来查找值并获取其频率。
 - en: '[PRE7]'
+  id: totrans-26
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '[PRE8]'
+  id: totrans-27
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: But unlike a Pandas `Series`, we can also call a `FreqTab` object like a function
     to look up a value.
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: 但与 Pandas `Series` 不同，我们还可以像函数一样调用 `FreqTab` 对象来查找值。
 - en: '[PRE9]'
+  id: totrans-29
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '[PRE10]'
+  id: totrans-30
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: If we look up a value that does not appear in the `FreqTab`, the function syntax
     returns `0`.
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们查找 `FreqTab` 中不存在的值，函数语法将返回 `0`。
 - en: '[PRE11]'
+  id: totrans-32
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: '[PRE12]'
+  id: totrans-33
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: A `FreqTab` object has an attribute called `qs` that returns an array of values
     – `qs` stands for quantities, although technically not all values are quantities.
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: '`FreqTab` 对象有一个名为 `qs` 的属性，它返回一个值数组——`qs` 代表数量，尽管技术上并非所有值都是数量。'
 - en: '[PRE13]'
+  id: totrans-35
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: '[PRE14]'
+  id: totrans-36
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '`FreqTab` also has an attribute called `fs` that returns an array of frequencies.'
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: '`FreqTab` 还有一个名为 `fs` 的属性，它返回一个频率数组。'
 - en: '[PRE15]'
+  id: totrans-38
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '[PRE16]'
+  id: totrans-39
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '`FreqTab` provides an `items` method we can use to loop through quantity-frequency
     pairs:'
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: '`FreqTab` 提供了一个 `items` 方法，我们可以使用它来遍历数量-频率对：'
 - en: '[PRE17]'
+  id: totrans-41
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: '[PRE18]'
+  id: totrans-42
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: We’ll see more `FreqTab` methods as we go along.
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将在继续的过程中看到更多的 `FreqTab` 方法。
 - en: NSFG Distributions
+  id: totrans-44
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: NSFG 分布
 - en: When you start working with a new dataset, I suggest you explore the variables
     you are planning to use one at a time, and a good way to start is by looking at
     frequency tables.
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 当你开始使用一个新的数据集时，我建议你逐个探索你计划使用的变量，一个好的开始方式是查看频率表。
 - en: As an example, let’s look at data from the National Survey of Family Growth
     (NSFG). In the previous chapter, we downloaded this dataset, read it into a Pandas
     `DataFrame`, and cleaned a few of the variables. The code we used to load and
     clean the data is in a module called `nsfg.py` – instructions for installing this
     module are in the notebook for this chapter.
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为例子，让我们看看国家家庭增长调查（NSFG）的数据。在前一章中，我们下载了这个数据集，将其读入Pandas `DataFrame`，并对几个变量进行了清理。我们用来加载数据和清理数据的代码在一个名为`nsfg.py`的模块中——关于安装此模块的说明在本章的笔记本中。
 - en: The following cells download the data files and install `statadict`, which we
     need to read the data.
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下单元格下载数据文件并安装`statadict`，这是我们读取数据所需的。
 - en: '[PRE19]'
+  id: totrans-48
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '[PRE20]'
+  id: totrans-49
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: We can import it and read the pregnancy file like this.
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以这样导入它并读取妊娠文件。
 - en: '[PRE21]'
+  id: totrans-51
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: For the examples in this chapter, we’ll focus on pregnancies that ended in live
     birth. We can use the `query` method to select the rows where `outcome` is 1.
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本章的例子中，我们将关注以活产结束的妊娠。我们可以使用`query`方法来选择`outcome`为1的行。
 - en: '[PRE22]'
+  id: totrans-53
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: In the string that’s passed to `query`, variable names like `outcome` refer
     to column names in the `DataFrame`. This string can also contain operators like
     `==` and operands like `1`.
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: 在传递给`query`的字符串中，像`outcome`这样的变量名指的是`DataFrame`中的列名。这个字符串还可以包含像`==`这样的运算符和像`1`这样的操作数。
 - en: Now we can use `FreqTab.from_seq` to count the number of times each quantity
     appears in `birthwgt_lb`, which is the pounds part of the birth weights. The `name`
     argument gives the `FreqTab` object a name, which is used as a label when we plot
     it.
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们可以使用`FreqTab.from_seq`来计算每个数量在`birthwgt_lb`（出生体重的磅部分）中出现的次数。`name`参数给`FreqTab`对象一个名称，当我们在绘图时用作标签。
 - en: '[PRE23]'
+  id: totrans-56
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: Here’s what the distribution looks like.
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里是分布的形状。
 - en: '[PRE24]'
+  id: totrans-58
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: '![_images/1225faefc9cc328f587038caa330467083abbfad0df65fe7ac30c19f7de66934.png](../Images/51dd09f443e83d16ae8fb1de2f546454.png)'
+  id: totrans-59
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/51dd09f443e83d16ae8fb1de2f546454.png)'
 - en: Looking at a distribution like this, the first thing we notice is the shape,
     which resembles the famous bell curve, more formally called a normal distribution
     or a Gaussian distribution. The other notable feature of the distribution is the
     **mode**, which is the most common value. To find the mode, we can use the method
     `idxmax`, which finds the quantity associated with the highest frequency.
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 看到这样的分布，我们首先注意到的是形状，它类似于著名的钟形曲线，更正式地称为正态分布或高斯分布。分布的另一个显著特征是**峰值**，即最常见的值。要找到峰值，我们可以使用`idxmax`方法，它找到与最高频率相关的数量。
 - en: '[PRE25]'
+  id: totrans-61
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE25]'
 - en: '[PRE26]'
+  id: totrans-62
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: '`FreqTab` provides a method called `mode` that does the same thing.'
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: '`FreqTab`提供了一个名为`mode`的方法，它做的是同样的事情。'
 - en: '[PRE27]'
+  id: totrans-64
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: '[PRE28]'
+  id: totrans-65
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: In this distribution, the mode is at 7 pounds.
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个分布中，峰值在7磅。
 - en: As another example, here’s the frequency table of `birthwgt_oz`, which is the
     ounces part of birth weight.
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为另一个例子，这是`birthwgt_oz`的频率表，它是出生体重的盎司部分。
 - en: '[PRE29]'
+  id: totrans-68
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: '![_images/295e6c3c74a56a495b3c3b3770e02da72343f26ab49b06bd530b1b5532aa5951.png](../Images/329a8a4835761f7cb900543243060a13.png)'
+  id: totrans-69
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/329a8a4835761f7cb900543243060a13.png)'
 - en: Because nature doesn’t know about pounds and ounces, we might expect all values
     of `birthwgt_oz` to be equally likely – that is, this distribution should be **uniform**.
     But it looks like `0` is more common than the other quantities, and `1` and `15`
     are less common, which suggests that respondents round off birth weights that
     are close to a whole number of pounds.
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: 因为自然界不知道磅和盎司，我们可能会预期`birthwgt_oz`的所有值出现的可能性都是相同的——也就是说，这个分布应该是**均匀分布**。但看起来`0`比其他数值更常见，而`1`和`15`则不那么常见，这表明受访者会将接近整数磅的出生体重四舍五入。
 - en: As another example, let’s look at the frequency table of `agepreg`, which is
     the mother’s age at the end of pregnancy.
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为另一个例子，让我们看看`agepreg`的频率表，这是妊娠结束时母亲的年龄。
 - en: '[PRE30]'
+  id: totrans-72
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: In the NSFG, age is recorded in years and months, so there are more unique values
     than in the other distributions we’ve looked at. For that reason, we’ll pass `width=0.1`
     as a keyword argument to the `bar` method, which adjusts the width of the bars
     so they don’t overlap too much.
+  id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: 在NSFG中，年龄以年和月为单位记录，因此比我们之前看到的分布有更多的唯一值。因此，我们将`width=0.1`作为关键字参数传递给`bar`方法，该方法调整条形的宽度，以便它们不会重叠太多。
 - en: '[PRE31]'
+  id: totrans-74
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: '![_images/d36be578217dbc1d4ccb1b37fe09e25271eaad1f93339057d94107d4f917c49e.png](../Images/0aad170a0a4bf796f83f5b54eae38ea5.png)'
+  id: totrans-75
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/0aad170a0a4bf796f83f5b54eae38ea5.png)'
 - en: The distribution is very roughly bell-shaped, but it is **skewed** to the right
     – that is, the tail extends farther right than left.
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
+  zh: 分布非常粗略地呈钟形，但它是**右偏**的——也就是说，尾巴比左边延伸得更远。
 - en: Finally, let’s look at the frequency table of `prglngth`, which is the length
     of the pregnancy in weeks. The `xlim` argument sets the limit of the x-axis to
     the range from 20 to 50 weeks – there are not many values outside this range,
     and they are probably errors.
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，让我们看看`prglngth`的频率表，这是怀孕的周数。`xlim`参数将x轴的极限设置为从20周到50周的范围——这个范围之外没有很多值，它们可能是错误的。
 - en: '[PRE32]'
+  id: totrans-78
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: '![_images/2b603baf7dd3e5c07f5a1eb73351efd3a220a91e2635cc45a7a3fc31ca327ab1.png](../Images/95b0bb97217f464836f1c3312dafa36e.png)'
+  id: totrans-79
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/95b0bb97217f464836f1c3312dafa36e.png)'
 - en: By far the most common quantity is 39 weeks. The left tail is longer than the
     right – early babies are common, but pregnancies seldom go past 43 weeks, and
     doctors often intervene if they do.
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 最常见的数量是39周。左尾比右尾长——早产的婴儿很常见，但怀孕很少超过43周，如果确实如此，医生通常会干预。
 - en: Outliers
+  id: totrans-81
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 异常值
 - en: Looking at frequency tables, it is easy to identify the shape of the distribution
     and the most common quantities, but rare quantities are not always visible. Before
     going on, it is a good idea to check for **outliers**, which are extreme values
     that might be measurement or recording errors, or might be accurate reports of
     rare events.
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: 查看频率表，很容易识别分布的形状和最常见的数量，但稀有数量并不总是显而易见。在继续之前，检查**异常值**是个好主意，这些异常值可能是测量或记录错误，也可能是对稀有事件的准确报告。
 - en: To identify outliers, the following function takes a `FreqTab` object and an
     integer `n`, and uses a slice index to select the `n` smallest quantities and
     their frequencies.
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了识别异常值，以下函数接受一个`FreqTab`对象和一个整数`n`，并使用切片索引来选择`n`个最小的数量及其频率。
 - en: '[PRE33]'
+  id: totrans-84
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: In the frequency table of `prglngth`, here are the 10 smallest values.
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: 在`prglngth`的频率表中，这里有10个最小的值。
 - en: '[PRE34]'
+  id: totrans-86
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: '[PRE35]'
+  id: totrans-87
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: Since we selected the rows for live births, pregnancy lengths less than 10 weeks
     are certainly errors. The most likely explanation is that the outcome was not
     coded correctly. Lengths higher than 30 weeks are probably legitimate. Between
     10 and 30 weeks, it is hard to be sure – some quantities are probably errors,
     but some are correctly recorded preterm births.
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: 由于我们选择了活产行，怀孕长度小于10周肯定是错误。最可能的解释是结果没有被正确编码。长度超过30周可能是合法的。在10到30周之间，很难确定——一些数量可能是错误，但一些是正确记录的早产儿。
 - en: The following function selects the largest values from a `FreqTab` object.
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数从`FreqTab`对象中选择最大值。
 - en: '[PRE36]'
+  id: totrans-90
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: Here are the longest pregnancy lengths in the dataset.
+  id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是数据集中最长的怀孕长度。
 - en: '[PRE37]'
+  id: totrans-92
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE37]'
 - en: '[PRE38]'
+  id: totrans-93
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: Again, some of these values are probably errors. Most doctors recommend induced
     labor if a pregnancy exceeds 41 weeks, so 50 weeks seems unlikely to be correct.
     But there is no clear line between values that are certainly errors and values
     that might be correct reports of rare events.
+  id: totrans-94
   prefs: []
   type: TYPE_NORMAL
+  zh: 再次强调，其中一些值可能是错误。大多数医生建议如果怀孕超过41周就进行引产，所以50周似乎不太可能是正确的。但是，在确定错误值和可能为稀有事件正确报告的值之间没有明确的界限。
 - en: The best way to handle outliers depends on “domain knowledge” – that is, information
     about where the data come from and what they mean. And it depends on what analysis
     you are planning to perform.
+  id: totrans-95
   prefs: []
   type: TYPE_NORMAL
+  zh: 处理异常值最好的方法取决于“领域知识”——也就是说，关于数据来源及其含义的信息。并且它取决于你计划执行的分析。
 - en: In this example, the motivating question is whether first babies tend to be
     earlier or later than other babies. So we’ll use statistics that are not thrown
     off too much by a small number of incorrect values.
+  id: totrans-96
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个例子中，激励问题是初生儿是否比其他婴儿更早或更晚。所以我们将使用不会因少量错误值而受到太大影响的统计数据。
 - en: First Babies
+  id: totrans-97
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 初生儿
 - en: Now let’s compare the distribution of pregnancy lengths for first babies and
     others. We can use the `query` method to select rows that represent first babies
     and others.
+  id: totrans-98
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们比较初生儿和其他人的怀孕长度分布。我们可以使用`query`方法来选择代表初生儿和其他人的行。
 - en: '[PRE39]'
+  id: totrans-99
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: And make a `FreqTab` of pregnancy lengths for each group.
+  id: totrans-100
   prefs: []
   type: TYPE_NORMAL
+  zh: 为每个组制作一个`FreqTab`的怀孕长度表。
 - en: '[PRE40]'
+  id: totrans-101
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE40]'
 - en: The following function plots two frequency tables side-by-side.
+  id: totrans-102
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下函数可以并排绘制两个频率表。
 - en: '[PRE41]'
+  id: totrans-103
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE41]'
 - en: Here’s what they look like.
+  id: totrans-104
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是它们的分布情况。
 - en: '[PRE42]'
+  id: totrans-105
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE42]'
 - en: '![_images/7476e6cd1892ee8b93ce13c513e3c5558cb2e14dd985a3621e7ec9166262e9dd.png](../Images/efdd4881c7aefd92f8af65c005324617.png)'
+  id: totrans-106
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](../Images/efdd4881c7aefd92f8af65c005324617.png)'
 - en: There is no obvious difference in the shape of the distributions or in the outliers.
     It looks like more of the non-first babies are born during week 39, but there
     are more non-first babies in the dataset, so we should not compare the counts
     directly.
+  id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: 分布形状或异常值之间没有明显的差异。看起来更多的非初产妇在39周出生，但数据集中有更多的非初产妇，所以我们不应该直接比较计数。
 - en: '[PRE43]'
+  id: totrans-108
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE43]'
 - en: '[PRE44]'
+  id: totrans-109
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE44]'
 - en: Comparing the means of the distributions, it looks like first babies are a little
     bit later on average.
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: 比较分布的均值，初产妇的平均出生时间似乎稍晚一些。
 - en: '[PRE45]'
+  id: totrans-111
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE45]'
 - en: '[PRE46]'
+  id: totrans-112
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE46]'
 - en: But the difference is only 0.078 weeks, which is about 13 hours.
+  id: totrans-113
   prefs: []
   type: TYPE_NORMAL
+  zh: 但差异仅为0.078周，大约是13小时。
 - en: '[PRE47]'
+  id: totrans-114
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE47]'
 - en: '[PRE48]'
+  id: totrans-115
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE48]'
 - en: 'There are several possible causes of this apparent difference:'
+  id: totrans-116
   prefs: []
   type: TYPE_NORMAL
+  zh: 这种明显的差异可能有几个可能的原因：
 - en: There might be an actual difference in average pregnancy length between first
     babies and others.
+  id: totrans-117
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 首胎和其他人之间在平均怀孕长度上可能存在实际差异。
 - en: The apparent difference we see in this dataset might be the result of bias in
     the sampling process – that is, the selection of survey respondents.
+  id: totrans-118
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 我们在这个数据集中看到的这种明显的差异可能是抽样过程中的偏差的结果——也就是说，调查受访者的选择。
 - en: The apparent difference might be the result of measurement error – for example,
     the self-reported pregnancy lengths might be more accurate for first babies or
     others.
+  id: totrans-119
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 这种明显的差异可能是测量误差的结果——例如，初产妇或其他人的自我报告的怀孕长度可能更准确。
 - en: The apparent difference might be the result of random variation in the sampling
     process.
+  id: totrans-120
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 这种明显的差异可能是抽样过程中的随机变化的结果。
 - en: 'In later chapters, we will consider these possible explanations more carefully,
     but for now we will take this result at face value: in this dataset, there is
     a small difference in pregnancy length between these groups.'
+  id: totrans-121
   prefs: []
   type: TYPE_NORMAL
+  zh: 在后面的章节中，我们将更仔细地考虑这些可能的原因，但现在我们将这个结果视为事实：在这个数据集中，这些组之间在怀孕长度上存在微小差异。
 - en: Effect Size
+  id: totrans-122
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 效应量
 - en: A difference like this is sometimes called an “effect”. There are several ways
     to quantify the magnitude of an effect. The simplest is to report the difference
     in absolute terms – in this example, the difference is 0.078 weeks.
+  id: totrans-123
   prefs: []
   type: TYPE_NORMAL
+  zh: 这种差异有时被称为“效应”。有几种方法可以量化效应的大小。最简单的是报告绝对差异——在这个例子中，差异是0.078周。
 - en: Another is to report the difference in relative terms. For example, we might
     say that first pregnancies are 0.2% longer than others, on average.
+  id: totrans-124
   prefs: []
   type: TYPE_NORMAL
+  zh: 另一种方法是报告相对差异。例如，我们可能会说，初产妇的平均怀孕时间比其他人长0.2%。
 - en: '[PRE49]'
+  id: totrans-125
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE49]'
 - en: '[PRE50]'
+  id: totrans-126
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE50]'
 - en: Another option is to report a **standardized** effect size, which is a statistic
     intended to quantify the size of an effect in a way that is comparable between
     different quantities and different groups.
+  id: totrans-127
   prefs: []
   type: TYPE_NORMAL
+  zh: 另一种选择是报告一个**标准化**的效应量，这是一个旨在以不同数量和不同组之间可比较的方式量化效应大小的统计量。
 - en: Standardizing means we express the difference as a multiple of the standard
     deviation. So we might be tempted to write something like this.
+  id: totrans-128
   prefs: []
   type: TYPE_NORMAL
+  zh: 标准化意味着我们以标准差的倍数来表示差异。因此，我们可能会倾向于写一些像这样的事情。
 - en: '[PRE51]'
+  id: totrans-129
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE51]'
 - en: '[PRE52]'
+  id: totrans-130
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE52]'
 - en: But notice that we used both groups to compute the standard deviation. If the
     groups are substantially different, the standard deviation when we put them together
     is larger than in either group, which might make the effect size seem small.
+  id: totrans-131
   prefs: []
   type: TYPE_NORMAL
+  zh: 但请注意，我们使用了两组来计算标准差。如果两组有显著差异，当我们把它们放在一起时，标准差会比任何一个组都大，这可能会使效应量看起来很小。
 - en: An alternative is to use the standard deviation of just one group, but it’s
     not clear which. So we could take the average of the two standard deviations,
     but if the groups are different sizes, that would give too much weight to one
     group and not enough to the other.
+  id: totrans-132
   prefs: []
   type: TYPE_NORMAL
+  zh: 另一种选择是只使用一个组的标准差，但不确定是哪一个。因此，我们可以取两个标准差的平均值，但如果组的大小不同，这会给一个组过多的权重，而给另一个组不足的权重。
 - en: A common solution is to use **pooled standard deviation**, which is the square
     root of pooled variance, which is the weighted sum of the variances in the groups.
     To compute it, we’ll start with the variances.
+  id: totrans-133
   prefs: []
   type: TYPE_NORMAL
+  zh: 一种常见的解决方案是使用**合并标准差**，它是合并方差的平方根，而合并方差是各组方差的加权总和。为了计算它，我们将从方差开始。
 - en: '[PRE53]'
+  id: totrans-134
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE53]'
 - en: '[PRE54]'
+  id: totrans-135
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE54]'
 - en: Here is the weighted sum, with the group sizes as weights.
+  id: totrans-136
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里是加权总和，组大小作为权重。
 - en: '[PRE55]'
+  id: totrans-137
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE55]'
 - en: Finally, here is the pooled standard deviation.
+  id: totrans-138
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，这是合并标准差。
 - en: '[PRE56]'
+  id: totrans-139
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE56]'
 - en: '[PRE57]'
+  id: totrans-140
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE57]'
 - en: The pooled standard deviation is between the standard deviations of the groups.
+  id: totrans-141
   prefs: []
   type: TYPE_NORMAL
+  zh: 合并标准差位于各组标准差之间。
 - en: '[PRE58]'
+  id: totrans-142
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE58]'
 - en: '[PRE59]'
+  id: totrans-143
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE59]'
 - en: A standardized effect size that uses pooled standard deviation is called **Cohen’s
     effect size**. Here’s a function that computes it.
+  id: totrans-144
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用合并标准差的标准效应量被称为**Cohen效应量**。这里有一个计算它的函数。
 - en: '[PRE60]'
+  id: totrans-145
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE60]'
 - en: And here’s the effect size for the difference in mean pregnancy lengths.
+  id: totrans-146
   prefs: []
   type: TYPE_NORMAL
+  zh: 下面是平均怀孕长度差异的效应量。
 - en: '[PRE61]'
+  id: totrans-147
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE61]'
 - en: '[PRE62]'
+  id: totrans-148
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE62]'
 - en: In this example, the difference is 0.029 standard deviations, which is small.
     To put that in perspective, the difference in height between men and women is
     about 1.7 standard deviations.
+  id: totrans-149
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本例中，差异为0.029个标准差，这是一个小的差异。为了更好地理解这一点，男性和女性之间身高的差异大约是1.7个标准差。
 - en: Reporting results
+  id: totrans-150
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 报告结果
 - en: We have seen several ways to describe the difference in pregnancy length (if
     there is one) between first babies and others. How should we report these results?
+  id: totrans-151
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们已经看到了几种描述第一胎和其他婴儿之间怀孕长度差异（如果有的话）的方法。我们应该如何报告这些结果？
 - en: The answer depends on who is asking the question. A scientist might be interested
     in any (real) effect, no matter how small. A doctor might only care about effects
     that are **practically significant** – that is, differences that matter in practice.
     A pregnant woman might be interested in results that are relevant to her, like
     the probability of delivering early or late.
+  id: totrans-152
   prefs: []
   type: TYPE_NORMAL
+  zh: 答案取决于提问者是谁。科学家可能对任何（真实）效应都感兴趣，无论大小如何。医生可能只关心那些**实际有意义的**效应——也就是说，在实践中有意义的差异。一个孕妇可能对与她相关的研究结果感兴趣，比如早产的几率或晚产的几率。
 - en: How you report results also depends on your goals. If you are trying to demonstrate
     the importance of an effect, you might choose summary statistics that emphasize
     differences. If you are trying to reassure a patient, you might choose statistics
     that put the differences in context.
+  id: totrans-153
   prefs: []
   type: TYPE_NORMAL
+  zh: 你如何报告结果也取决于你的目标。如果你试图证明一个效应的重要性，你可能会选择强调差异的汇总统计量。如果你试图安慰一个病人，你可能会选择将差异置于背景中的统计量。
 - en: Of course your decisions should also be guided by professional ethics. It’s
     OK to be persuasive – you *should* design statistical reports and visualizations
     that tell a story clearly. But you should also do your best to make your reports
     honest, and to acknowledge uncertainty and limitations.
+  id: totrans-154
   prefs: []
   type: TYPE_NORMAL
+  zh: 当然，你的决定也应该受到专业伦理的指导。说服人是可以的——你应该设计清晰讲述故事的统计报告和可视化。但你也应该尽力使你的报告诚实，并承认不确定性和局限性。
 - en: Glossary
+  id: totrans-155
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 术语表
 - en: '**distribution**: The set of values and how frequently each value appears in
     a dataset.'
+  id: totrans-156
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**分布**：数据集中值及其出现频率的集合。'
 - en: '**frequency table**: A mapping from values to frequencies.'
+  id: totrans-157
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**频率表**：从值到频率的映射。'
 - en: '**frequency**: The number of times a value appears in a sample.'
+  id: totrans-158
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**频率**：一个值在样本中出现的次数。'
 - en: '**skewed:** A distribution is skewed if it is asymmetrical, with extreme quantities
     extending farther in one direction than the other.'
+  id: totrans-159
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**偏态**：如果一个分布是不对称的，且极端数值在一个方向上比另一个方向延伸得更远，则该分布是偏态的。'
 - en: '**mode**: The most frequent quantity in a sample, or one of the most frequent
     quantities.'
+  id: totrans-160
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**众数**：样本中最频繁的数值，或最频繁的数值之一。'
 - en: '**uniform distribution**: A distribution in which all quantities have the same
     frequency.'
+  id: totrans-161
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**均匀分布**：一个分布，其中所有数值具有相同的频率。'
 - en: '**outlier**: An extreme quantity in a distribution.'
+  id: totrans-162
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**异常值**：分布中的一个极端数值。'
 - en: '**standardized:** A statistic is standardized if it is expressed in terms that
     are comparable across different datasets and domains.'
+  id: totrans-163
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**标准化**：如果一个统计量以不同数据集和领域可比的术语表示，则该统计量是标准化的。'
 - en: '**pooled standard deviation:** A statistic that combines data from two or more
     groups to compute a common standard deviation.'
+  id: totrans-164
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**合并标准差**：一个统计量，它结合了两个或更多组的数据来计算一个共同的标准差。'
 - en: '**Cohen’s effect size:** A standardized statistic that quantifies the difference
     in the means of two groups.'
+  id: totrans-165
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**Cohen效应量**：一个标准化的统计量，用于量化两组均值之间的差异。'
 - en: '**practically significant:** An effect is practically significant if it is
     big enough to matter in practice.'
+  id: totrans-166
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**实际有意义的**：如果一个效应足够大，在实践中有意义，则该效应是实际有意义的。'
 - en: Exercises
+  id: totrans-167
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 练习
 - en: For the exercises in this chapter, we’ll load the NSFG female respondent file,
     which contains one row for each female respondent. Instructions for downloading
     the data and the codebook are in the notebook for this chapter.
+  id: totrans-168
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于本章的练习，我们将加载NSFG女性受访者文件，该文件包含每个女性受访者的一个记录。下载数据和代码簿的说明在本书的笔记本中。
 - en: '[PRE63]'
+  id: totrans-169
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE63]'
 - en: The codebook for the female respondent file is at [https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Dataset_Documentation/NSFG/Cycle6Codebook-Female.pdf](https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Dataset_Documentation/NSFG/Cycle6Codebook-Female.pdf).
+  id: totrans-170
   prefs: []
   type: TYPE_NORMAL
+  zh: 女性受访者文件代码簿位于[https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Dataset_Documentation/NSFG/Cycle6Codebook-Female.pdf](https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Dataset_Documentation/NSFG/Cycle6Codebook-Female.pdf)。
 - en: The `nsfg.py` module provides a function that reads the female respondent file,
     cleans some of the variables, and returns a `DataFrame`.
+  id: totrans-171
   prefs: []
   type: TYPE_NORMAL
+  zh: '`nsfg.py`模块提供了一个函数，用于读取女性受访者文件，清理一些变量，并返回一个`DataFrame`。'
 - en: '[PRE64]'
+  id: totrans-172
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE64]'
 - en: '[PRE65]'
+  id: totrans-173
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE65]'
 - en: This `DataFrame` contains 3092 columns, but we’ll use just a few of them.
+  id: totrans-174
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个`DataFrame`包含3092列，但我们只会使用其中的一小部分。
 - en: Exercise 2.1
+  id: totrans-175
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 练习2.1
 - en: We’ll start with `totincr`, which records the total income for the respondent’s
     family, encoded with a value from 1 to 14. You can read the codebook for the respondent
     file to see what income level each value represents.
+  id: totrans-176
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将从`totincr`开始，它记录受访者的家庭总收入，用1到14的值进行编码。你可以阅读受访者文件的代码簿，以查看每个值代表什么收入水平。
 - en: Make a `FreqTab` object to represent the distribution of this variable and plot
     it as a bar chart.
+  id: totrans-177
   prefs: []
   type: TYPE_NORMAL
+  zh: 创建一个表示这个变量分布的`FreqTab`对象，并将其绘制为条形图。
 - en: Exercise 2.2
+  id: totrans-178
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 练习2.2
 - en: Make a frequency table of the `parity` column, which records the number of children
     each respondent has borne. How would you describe the shape of this distribution?
+  id: totrans-179
   prefs: []
   type: TYPE_NORMAL
+  zh: 制作一个记录每个受访者所生育子女数量的`parity`列频率表。你将如何描述这个分布的形状？
 - en: Use the `largest` function to find the largest values of `parity`. Are there
     any values you think are errors?
+  id: totrans-180
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用`largest`函数找到`parity`的最大值。你认为是否有任何值是错误的？
 - en: Exercise 2.3
+  id: totrans-181
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 练习2.3
 - en: Let’s investigate whether women with higher or lower income bear more children.
     Use the query method to select the respondents with the highest income (level
     14). Plot the frequency table of `parity` for just the high income respondents.
+  id: totrans-182
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们调查收入较高或较低的女性生育的孩子数量。使用查询方法选择收入最高的受访者（第14级）。仅绘制高收入受访者的`parity`频率表。
 - en: Compare the mean `parity` for high income respondents and others.
+  id: totrans-183
   prefs: []
   type: TYPE_NORMAL
+  zh: 比较高收入受访者和其他人的平均`parity`。
 - en: Compute Cohen’s effect size for this difference. How does it compare with the
     difference in pregnancy length for first babies and others?
+  id: totrans-184
   prefs: []
   type: TYPE_NORMAL
+  zh: 计算这个差异的Cohen效应量。它与第一胎和其他人的怀孕长度差异相比如何？
 - en: Do these results show that people with higher income have fewer children, or
     can you think of another explanation for the apparent difference?
+  id: totrans-185
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些结果是否表明收入较高的人生育的孩子较少，或者你能想到其他解释这个明显差异的原因吗？
 - en: '[Think Stats: Exploratory Data Analysis in Python, 3rd Edition](https://allendowney.github.io/ThinkStats/index.html)'
+  id: totrans-186
   prefs: []
   type: TYPE_NORMAL
+  zh: '[Think Stats: Python中的探索性数据分析，第3版](https://allendowney.github.io/ThinkStats/index.html)'
 - en: Copyright 2024 [Allen B. Downey](https://allendowney.com)
+  id: totrans-187
   prefs: []
   type: TYPE_NORMAL
+  zh: 版权所有 2024 [艾伦·B·唐尼](https://allendowney.com)
 - en: 'Code license: [MIT License](https://mit-license.org/)'
+  id: totrans-188
   prefs: []
   type: TYPE_NORMAL
+  zh: 代码许可：[MIT许可](https://mit-license.org/)
 - en: 'Text license: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  id: totrans-189
   prefs: []
   type: TYPE_NORMAL
+  zh: 文本许可：[Creative Commons Attribution-NonCommercial-ShareAlike 4.0国际](https://creativecommons.org/licenses/by-nc-sa/4.0/)
