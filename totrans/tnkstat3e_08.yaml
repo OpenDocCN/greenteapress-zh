@@ -1,0 +1,921 @@
+- en: Probability Density Functions
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/ThinkStats/chap06.html](https://allendowney.github.io/ThinkStats/chap06.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: In the previous chapter, we modeled data with theoretical distributions including
+    the binomial, Poisson, exponential, and normal distributions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The binomial and Poisson distributions are **discrete**, which means that the
+    outcomes have to be distinct or separate elements, like an integer number of hits
+    and misses, or goals scored. In a discrete distribution, each outcome is associated
+    with a probability mass.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The exponential and normal distribution are **continuous**, which means the
+    outcomes can be at any point in a range of possible values. In a continuous distribution,
+    each outcome is associated with a **probability density**. Probability density
+    is an abstract idea, and many people find it difficult at first, but we’ll take
+    it one step at a time. As a first step, let’s think again about comparing distributions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ThinkStats/blob/v3/nb/chap06.ipynb).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: Comparing Distributions
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In the previous chapter, when we compared discrete distributions, we used a
+    bar plot to show their probability mass functions (PMFs). When we compared continuous
+    distributions, we used a line plot to show their cumulative distribution functions
+    (CDFs).
+  prefs: []
+  type: TYPE_NORMAL
+- en: For the discrete distributions, we could also have used CDFs. For example, here’s
+    the PMF of a Poisson distribution with `lam=2.2`, which is a good model for the
+    distribution of household size in the NSFG data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following cells download the data files and install `statadict`, which we
+    need to read the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can use `read_fem_resp` to read the respondent data file.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: Next we’ll select household sizes for people 25 and older.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: And make a `Pmf` that represents the distribution of responses.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s another `Pmf` that represents a Poisson distribution with the same mean.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here’s how the distribution of the data compares to the Poisson model.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/8974be9a32a18639d89ff8f55a4c49784b7d7d99973a3601dd7a41d353848bc4.png](../Images/6a1aed0dfc2b05e00aedb47ce5d8d290.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Comparing the PMFs, we can see that the model fits the data well, but with some
+    deviations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To get a sense of how substantial those deviations are, it can be helpful to
+    compare CDFs. We can use `make_cdf` to compute the CDFs of the data and the model.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s what they look like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/1ca6da206b32913a16766f7137989e704c4ee742df24768dba54d0119753b10d.png](../Images/bed2f252ff351b9acb3acc26cc57cead.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: When we compare CDFs, the deviations are less prominent, but we can see where
+    and how the distributions differ. PMFs tend to emphasize small differences – sometimes
+    CDFs provide a better sense of the big picture.
+  prefs: []
+  type: TYPE_NORMAL
+- en: CDFs also work well with continuous data. As an example, let’s look at the distribution
+    of birth weights again, which is in the NSFG pregnancy file.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here is the code we used in the previous chapter to fit a normal model to the
+    data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here’s the distribution of the data compared to the normal model.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/0f059acc80b677d315b92b600192e4ee3a406565034d102e3ef8f9928250e72d.png](../Images/8a19b815bbef834107a1d0b120c5e40c.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: As we saw in the previous chapter, the normal model fits the data well except
+    in the range of the lightest babies.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In my opinion, CDFs are usually the best way to compare data to a model. But
+    for audiences that are not familiar with CDFs, there is one more option: probability
+    density functions.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Probability Density
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: We’ll start with the **probability density function (PDF)** of the normal distribution,
+    which computes the density for the quantities, `xs`, given `mu` and `sigma`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: For `mu` and `sigma` we’ll use the mean and standard deviation of the trimmed
+    birth weights.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we’ll evaluate `normal_pdf` for a range of weights.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: And plot it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/c10589a8f2c883171d1f20e16d4eb39c8d58000526eb5720af1ee0180767ff81.png](../Images/e51be7e874004975653971c0d2895065.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The result looks like a bell curve, which is characteristic of the normal distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: When we evaluate `normal_pdf`, the result is a probability density. For example,
+    here’s the density function evaluated at the mean, which is where the density
+    is highest.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: By itself, a probability density doesn’t mean much – most importantly, it is
+    *not* a probability. It would be incorrect to say that the probability is 32%
+    that a randomly-chosen birth weight equals `m`. In fact, the probability that
+    a birth weight is truly, exactly, and precisely equal to `m` – or any other specific
+    value – is zero.
+  prefs: []
+  type: TYPE_NORMAL
+- en: However, we can use the probability densities to compute the probability that
+    an outcome falls in an interval between two values, by computing the area under
+    the curve.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We could do that with the `normal_pdf` function, but it is more convenient to
+    use the `NormalPdf` class, which is defined in the `thinkstats` module. Here’s
+    how we create a `NormalPdf` object with the same mean and standard deviation as
+    the birth weights in the NSFG dataset.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: If we call this object like a function, it evaluates the normal PDF.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now, to compute the area under the PDF, we can use the following function, which
+    takes a `NormalPdf` object and the bounds of an interval, `low` and `high`. It
+    evaluates the normal PDF at equally-spaced quantities between `low` and `high`,
+    and uses the SciPy function `simpson` to estimate the area under the curve (`simpson`
+    is so named because it uses an algorithm called Simpson’s method).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: If we compute the area under the curve from the lowest to the highest point
+    in the graph, the result is close to 1.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: If we extend the interval from negative infinity to positive infinity, the total
+    area is exactly 1.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If we start from 0 – or any value far below the mean – we can compute the fraction
+    of birth weights less than or equal to 8.5 pounds.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: You might recall that the “fraction less than or equal to a given value” is
+    the definition of the CDF. So we could compute the same result using the CDF of
+    the normal distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: Similarly, we can use the area under the density curve to compute the fraction
+    of birth weights between 6 and 8 pounds.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: Or we can get the same result using the CDF to compute the fraction less than
+    8 and then subtracting off the fraction less than 6.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: So the CDF is the area under the curve of the PDF. If you know calculus, another
+    way to say the same thing is that the CDF is the integral of the PDF. And conversely,
+    the PDF is the derivative of the CDF.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '## The Exponential PDF'
+  prefs: []
+  type: TYPE_NORMAL
+- en: To get your head around probability density, it might help to see another example.
+    In the previous chapter, we used an exponential distribution to model the time
+    until the first goal in a hockey game. We used the following function to compute
+    the exponential CDF, where `lam` is the rate in goals per unit of time.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE37]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can compute the PDF of the exponential distribution like this.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`thinkstats` provides an `ExponentialPdf` object that uses this function to
+    compute the exponential PDF. We can use one to represent an exponential distribution
+    with rate 6 goals per game.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE39]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE40]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`ExponentialPdf` provides a `plot` function we can use to plot the PDF – notice
+    that the unit of time is games here, rather than seconds as in the previous chapter.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE41]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/891c14a2fdf668835672dca8501011151fcbcb99a025bb748b80f5d07c4e2d0a.png](../Images/4453769f0aaca05ac65c682259c2a677.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Looking at the y-axis, you might notice that some of these densities are greater
+    than 1, which is a reminder that a probability density is not a probability. But
+    the area under a density curve is a probability, so it should never be greater
+    than 1.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If we compute the area under this curve from 0 to 1.5 games, we can confirm
+    that the result is close to 1.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE42]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE43]'
+  prefs: []
+  type: TYPE_PRE
+- en: If we extend the interval much farther, the result is slightly greater than
+    1, but that’s because we’re approximating the area numerically. Mathematically,
+    it is exactly 1, as we can confirm using the exponential CDF.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE44]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE45]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can use the area under the density curve to compute the probability of a
+    goal during any interval. For example, here is the probability of a goal during
+    the first minute of a 60-minute game.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE46]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE47]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can compute the same result using the exponential CDF.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE48]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE49]'
+  prefs: []
+  type: TYPE_PRE
+- en: In summary, if we evaluate a PDF, the result is a probability density – which
+    is not a probability. However, if we compute the area under the PDF, the result
+    is the probability that a quantity falls in an interval. Or we can find the same
+    probability by evaluating the CDF at the beginning and end of the interval and
+    computing the difference.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Comparing PMFs and PDFs
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: It is a common error to compare the PMF of a sample with the PDF of a theoretical
+    model. For example, suppose we want to compare the distribution of birth weights
+    to a normal model. Here’s a `Pmf` that represents the distribution of the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE50]'
+  prefs: []
+  type: TYPE_PRE
+- en: And we already have `pdf_model`, which represents the PDF of the normal distribution
+    with the same mean and standard deviation. Here’s what happens if we plot them
+    on the same axis.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE51]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/70e9e2294bad711a1792630bbc10fdd361111eff6e7a81ebaa19514be66ef015.png](../Images/d2ebc99fc9b06c3d51952cd67f50d402.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: It doesn’t work very well. One reason is that they are not in the same units.
+    A PMF contains probability masses and a PDF contains probability densities, so
+    we can’t compare them, and we shouldn’t plot them on the same axes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As a first attempt to solve the problem, we can make a `Pmf` that approximates
+    the normal distribution by evaluating the PDF at a discrete set of points. `NormalPdf`
+    provides a `make_pmf` method that does that.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE52]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is a normalized `Pmf` that contains probability masses, so we can
+    at least plot it on the same axes as the PMF of the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE53]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/3e9332bab1e28655138571525bdec3f742e0194da9d94a7c8ec73d40e1e6bd7d.png](../Images/fdfc6e4cc03dd79dcfef47c1e5d281ae.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: But this is still not a good way to compare distributions. One problem is that
+    the two `Pmf` objects contain different numbers of quantities, and the quantities
+    in `pmf_birth_weight` are not equally spaced, so the probability masses are not
+    really comparable.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE54]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE55]'
+  prefs: []
+  type: TYPE_PRE
+- en: The other problem is that the `Pmf` of the data is noisy. So let’s try something
+    else.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '## Kernel Density Estimation'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Instead of using the model to make a PMF, we can use the data to make a PDF.
+    To show how that works, I’ll start with a small sample of the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE56]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE57]'
+  prefs: []
+  type: TYPE_PRE
+- en: The `Pmf` of this sample looks like this.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE58]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/c25c55034e4eff3184a5ca104ce90f90604f62bd11b11e366fd89460e5d48b24.png](../Images/2817a7f3224b200feebec57d4bc00c41.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: This way of representing the distribution treats the data as if it is discrete,
+    so each probability mass is stacked up on a single point. But birth weight is
+    actually continuous, so the quantities between the measurements are also possible.
+    We can represent that possibility by replacing each discrete probability mass
+    with a continuous probability density, like this.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE59]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/7c794efb7cdc35d7faa305bc8a3d16f4923e788570c7e1f2465c59dfe113f110.png](../Images/79e06234a1546ea944d86a82c5f4fc2f.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: For each weight in the sample, we create a `NormalPdf` with the observed weight
+    as the mean – now let’s add them up.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE60]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/1c8ef212176ed8053a4b95e95923fddb26774e6782f924a6bbab43d021634950.png](../Images/c3c3f9d75b33d942ab63bf662ac3fa3d.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: When we add up the probability densities for each data point, the result is
+    an estimate of the probability density for the whole sample. This process is called
+    **kernel density estimation** or KDE. In this context, a “kernel” is one of the
+    small density functions we added up. Because the kernels we used are normal distributions
+    – also known as Gaussians – we could say more specifically that we computed a
+    Gaussian KDE.
+  prefs: []
+  type: TYPE_NORMAL
+- en: SciPy provides a function called `gaussian_kde` that implements this algorithm.
+    Here’s how we can use it to estimate the distribution of birth weights.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE61]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is an object that represents the estimated PDF, which we can evaluate
+    by calling it like a function.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE62]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s what the result looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE63]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/195df5d8f92dbdfc4cc6278ffee89efe39b68e122d1bacba997e3467832fd8af.png](../Images/8bcb7b1258b52505dd146b3f34100cb9.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: '`thinkstats` provides a `Pdf` object that takes the result from `gaussian_kde`,
+    and a domain that indicates where the density should be evaluated. Here’s how
+    we make one.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE64]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`Pdf` provides a `plot` method we can use to compare the estimated PDF of the
+    sample to the PDF of a normal distribution.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE65]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/7de21eb81e07ccdc455c06cbede4a710f3dcccf932e610a8ebccfbd66f0ce499.png](../Images/63c4a333979790b8483330eb71619384.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Kernel density estimation makes it possible to compare the distribution of a
+    dataset to a theoretical model, and for some audiences, this is a good way to
+    visualize the comparison. But for audiences that are familiar with CDFs, comparing
+    CDFs is often better.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Distribution Framework
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'At this point we have a complete set of ways to represent distributions: PMFs,
+    CDFs, and PDFs The following figure shows these representations and the transitions
+    from one to another. For example, if we have a `Pmf`, we can use the `cumsum`
+    function to compute the cumulative sum of the probabilities and get a `Cdf` that
+    represents the same distribution.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[![https://github.com/AllenDowney/ThinkStats/raw/v3/figs/distribution_framework.png](../Images/939e997ac7a972aa771bab99da9260b5.png)](https://github.com/AllenDowney/ThinkStats/raw/v3/figs/distribution_framework.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: To demonstrate these transitions, we’ll use a new dataset that “contains the
+    time of birth, sex, and birth weight for each of 44 babies born in one 24-hour
+    period at a Brisbane, Australia, hospital,” according to the description. Instructions
+    for downloading the data are in the notebook for this chapter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: According to the information in the file
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Source: Steele, S. (December 21, 1997), “Babies by the Dozen for Christmas:
+    24-Hour Baby Boom,” *The Sunday Mail* (Brisbane), p. 7.'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'STORY BEHIND THE DATA: Forty-four babies – a new record – were born in one
+    24-hour period at the Mater Mothers’ Hospital in Brisbane, Queensland, Australia,
+    on December 18, 1997\. For each of the 44 babies, *The Sunday Mail* recorded the
+    time of birth, the sex of the child, and the birth weight in grams.'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Additional information about this dataset can be found in the “Datasets and
+    Stories” article “A Simple Dataset for Demonstrating Common Distributions” in
+    the *Journal of Statistics Education* (Dunn 1999).
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Downloaded from [https://jse.amstat.org/datasets/babyboom.txt](https://jse.amstat.org/datasets/babyboom.txt)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '[PRE66]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can read the data like this.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE67]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | time | sex | weight_g | minutes |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 5 | 1 | 3837 | 5 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 104 | 1 | 3334 | 64 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 118 | 2 | 3554 | 78 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 155 | 2 | 3838 | 115 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 4 | 257 | 2 | 3625 | 177 |'
+  prefs: []
+  type: TYPE_TB
+- en: The `minutes` column records “the number of minutes since midnight for each
+    birth”. So we can use the `diff` method to compute the interval between each successive
+    birth.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE68]'
+  prefs: []
+  type: TYPE_PRE
+- en: If births happen with equal probability during any minute of the day, we expect
+    these intervals to follow an exponential distribution. In reality, that assumption
+    is not precisely true, but the exponential distribution might still be a good
+    model for the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To find out, we’ll start by making a `Pmf` that represents the distribution
+    of intervals.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE69]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/34c47d21f86b51bcbe9724195b1604a1c48627c75668d87ee61c3af66017371d.png](../Images/1820ee3d40e29d316745cafee0c36d1d.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Then we can use `make_cdf` to compute the cumulative probabilities and store
+    them in a `Cdf` object.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE70]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/49259d0bbb5c74840cdebdfc495c8a980099127d6d13523996f3b0a2388b42c6.png](../Images/188ac034cc748559da43ca915a491430.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The `Pmf` and `Cdf` are equivalent in the sense that if we are given either
+    one, we can compute the other. To demonstrate, we’ll use the `make_pmf` method,
+    which computes the differences between successive probabilities in a `Cdf` and
+    returns a `Pmf`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE71]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result should be identical to the original `Pmf`, but there might be small
+    floating-point errors. We can use `allclose` to check that the result is close
+    to the original `Pmf`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE72]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE73]'
+  prefs: []
+  type: TYPE_PRE
+- en: And it is.
+  prefs: []
+  type: TYPE_NORMAL
+- en: From a `Pmf`, we can estimate a density function by calling `gaussian_kde` with
+    the probabilities from the `Pmf` as weights.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE74]'
+  prefs: []
+  type: TYPE_PRE
+- en: To plot the results, we can use `kde` to make a `Pdf` object, and call the `plot`
+    method.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE75]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/db882bf507531afc79d5a8cabd5520600b2e17dd8488038100e3b06eeebd8106.png](../Images/66b2c7b9f9835caa9842b9e49d63770e.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: To see whether the estimated density follows an exponential model, we can make
+    an `ExponentialCdf` with the same mean as the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE76]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s what it looks like compared to the CDF of the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE77]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/e9f9c71e77c62efca7bc6272f6147da8d4cd8c9a3ed547b67cff6657c108bd54.png](../Images/8db331c2af04bf40faa790cd4c975a38.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The exponential model fits the CDF of the data well.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Given an `ExponentialCdf`, we can use `make_cdf` to **discretize** the CDF –
+    that is, to make a discrete approximation by evaluating the CDF at a sequence
+    of equally spaced quantities.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE78]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/72161c6be9eb1c5efb4228cb597aff4fe3709d966fb152a7bffc5c379dbb78a0.png](../Images/273a9d2e6226a27e6a08d1e23c708977.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Finally, to get from a discrete CDF to a continuous CDF, we can interpolate
+    between the steps, which is what we see if we use the `plot` method instead of
+    the `step` method.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE79]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/97909aa93ab8c5db17021272a8edc2a7848147119d26d96170454ab77343bc5b.png](../Images/4b79959c4de14fb33841b86c51586d8d.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Finally, a PDF is the derivative of a continuous CDF, and a CDF is the integral
+    of a PDF.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To demonstrate, we can use SymPy to define the CDF of an exponential distribution
+    and compute its derivative.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE80]'
+  prefs: []
+  type: TYPE_PRE
+- en: \[\displaystyle 1 - e^{- x λ}\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE81]'
+  prefs: []
+  type: TYPE_PRE
+- en: \[\displaystyle λ e^{- x λ}\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: And if we integrate the result, we get the CDF back – although we lose the constant
+    of integration in the process.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE82]'
+  prefs: []
+  type: TYPE_PRE
+- en: \[\displaystyle - e^{- x λ}\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: This example shows how we use `Pmf`, `Cdf`, and `Pdf` objects to represent PMFs,
+    CDFs, and PDFs, and demonstrates the process for converting from each to the others.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Glossary
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '**continuous:** A quantity is continuous if it can have any value in a range
+    on the number line. Most things we measure in the world – like weight, distance,
+    and time – are continuous.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**discrete:** A quantity is discrete if it can have a limited set of values,
+    like integers or categories. Exact counts are discrete, as well as categorical
+    variables.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**probability density function (PDF)**: A function that shows how density (not
+    probability) is spread across the values of a continuous variable. The area under
+    the PDF within an interval gives the probability that the variable falls in that
+    interval range.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**probability density**: The value of a PDF at a specific point; it’s not a
+    probability itself, but it can be used to compute a probability.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**kernel density estimation (KDE)**: A method for estimating a PDF based on
+    a sample.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**discretize**: To approximate a continuous quantity by dividing its range
+    into discrete levels or categories.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Exercises
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Exercise 6.1
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: In World Cup soccer (football), suppose the time until the first goal is well
+    modeled by an exponential distribution with rate `lam=2.5` goals per game. Make
+    an `ExponentialPdf` to represent this distribution and use `area_under` to compute
+    the probability that the time until the first goal is less than half of a game.
+    Then use an `ExponentialCdf` to compute the same probability and check that the
+    results are consistent.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Use `ExponentialPdf` to compute the probability the first goal is scored in
+    the second half of the game. Then use an `ExponentialCdf` to compute the same
+    probability and check that the results are consistent.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exercise 6.2
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: In order to join Blue Man Group, you have to be male between 5’10” and 6’1”,
+    which is roughly 178 to 185 centimeters. Let’s see what fraction of the male adult
+    population in the United States meets this requirement.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The heights of male participants in the BRFSS are well modeled by a normal distribution
+    with mean 178 cm and standard deviation 7 cm.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE83]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE84]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE85]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE86]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s a `NormalCdf` object that represents a normal distribution with the same
+    mean and standard deviation as the trimmed data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE87]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here’s how it compares to the CDF of the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE88]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/e1e1518c0e8a3a1fea3020ad16b832bf9512aed3a9cfe1a8d0cfdb0153488e3f.png](../Images/56dd5d7b0470622eaa09dbb8ef7aff9b.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Use `gaussian_kde` to make a `Pdf` that approximates the PDF of male height.
+    Hint: Investigate the `bw_method` argument, which can be used to control the smoothness
+    of the estimated density. Plot the estimated density and compare it to a `NormalPdf`
+    with mean `m` and standard deviation `s`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Use a `NormalPdf` and `area_under` to compute the fraction of people in the
+    normal model that are between 178 and 185 centimeters. Use a `NormalCdf` to compute
+    the same fraction, and check that the results are consistent. Finally, use the
+    empirical `Cdf` of the data to see what fraction of people in the dataset are
+    in the same range.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Think Stats: Exploratory Data Analysis in Python, 3rd Edition](https://allendowney.github.io/ThinkStats/index.html)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Copyright 2024 [Allen B. Downey](https://allendowney.com)
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Code license: [MIT License](https://mit-license.org/)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Text license: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  prefs: []
+  type: TYPE_NORMAL

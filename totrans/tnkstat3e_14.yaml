@@ -1,0 +1,1290 @@
+- en: Time Series Analysis
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/ThinkStats/chap12.html](https://allendowney.github.io/ThinkStats/chap12.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: A **time series** is a sequence of measurements from a system that varies in
+    time. Many of the tools we used in previous chapters, like regression, can also
+    be used with time series. But there are additional methods that are particularly
+    useful for this kind of data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'As examples, we’ll look at two datasets: renewable electricity generation in
+    the United States from 2001 to 2024, and weather data over the same interval.
+    We will develop methods to decompose a time series into a long-term trend and
+    a repeated seasonal component. We’ll use linear regression models to fit and forecast
+    trends. And we’ll try out a widely-used model for analyzing time series data,
+    with the formal name “autoregressive integrated moving average” and the easier-to-say
+    acronym ARIMA.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The third edition of *Think Stats* is available now from [Bookshop.org](https://bookshop.org/a/98697/9781098190255)
+    and [Amazon](https://amzn.to/42lmxwu) (those are affiliate links). If you are
+    enjoying the free, online version, consider [buying me a coffee](https://buymeacoffee.com/allendowney).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ThinkStats/blob/v3/nb/chap12.ipynb).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: Electricity
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: As an example of time-series data, we’ll use a dataset from the U.S. Energy
+    Information Administration – it includes total electricity generation per month
+    from renewable sources from 2001 to 2024. Instructions for downloading the data
+    are in the notebook for this chapter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following cell downloads the data, which I downloaded September 17, 2024
+    from [https://www.eia.gov/electricity/data/browser/](https://www.eia.gov/electricity/data/browser/).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: After loading the data, we have to make some transformations to get it into
+    a format that’s easy to work with.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: In the reformatted dataset, each column is a sequence of monthly totals in gigawatt-hours
+    (GWh). Here are the column labels, showing the different sources of electricity,
+    or “sectors”.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: The labels in the index are strings indicating months and years – here are the
+    first 12.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: It will be easier to work with this data if we replace these strings with Pandas
+    `Timestamp` objects. We can use the `date_range` function to generate a sequence
+    of `Timestamp` objects, starting in January 2001 with the frequency code `"ME"`,
+    which stands for “month end”, so it fills in the last day of each month.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now the index is a `DataTimeIndex` with the data type `datetime64[ns]`, which
+    is defined in NumPy – `64` means each label uses 64 bits, and `ns` means it has
+    nanosecond precision.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Decomposition
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: As a first example, we’ll look at how electricity generation from nuclear reactors
+    changed over the interval from January 2001 to June 2024, and we’ll decompose
+    the time series into a long-term trend and a periodic component. Here are monthly
+    totals of electricity generation from nuclear reactors in the United States.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/5289102378940cb17c9483596d0f66888ff7baf3de0a1e4c5e433d0b40374503.png](../Images/8381c6a5c8522d017fdab223a39600f8.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: It looks like there are some increases and decreases, but they are hard to see
+    clearly because there are large variations from month to month. To see the long-term
+    trend more clearly, we can use the `rolling` and `mean` methods to compute a **moving
+    average**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: The `window=12` argument selects overlapping intervals of 12 months, so the
+    first interval contains 12 measurements starting with the first, the second interval
+    contains 12 measurements starting with the second, and so on. For each interval,
+    we compute the mean production.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s what the results look like, along with the original data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/fddffb19ad43c7de49ed4d883eca6a79daee48822b55756d7bdfc4fa863cb8e2.png](../Images/70e1a5899a3028ed395049f194079cea.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The trend is still quite variable. We could smooth it more by using a longer
+    window, but we’ll stick with the 12-month window for now.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If we subtract the trend from the original data, the result is a “detrended”
+    time series, which means that the long-term mean is close to constant. Here’s
+    what it looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/b6dedb24b5ef90ec2712d7c7bafc6ee2bcd3530abb3aaf3574ebb90e6978a60d.png](../Images/ab3d84f47a0627ec0c269020b38827e5.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: It seems like there is a repeating annual pattern, which makes sense because
+    demand for electricity varies from one season to another, as it is used to generate
+    heat in the winter and run air conditioning in the summer. To describe this annual
+    pattern we can select the month part of the `datetime` objects in the index, group
+    the data by month, and compute average production. Here’s what the monthly averages
+    look like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/4fa67aae15bd0e05fede22d8d8b3565f0033a243466ce6466dea1060f62bb6dd.png](../Images/2d8ef6fa542f1d345d321566de1848cf.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: On the x-axis, month 1 is January and month 12 is December. Electricity production
+    is highest during the coldest and warmest months, and lowest during April and
+    October.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can use `monthly_averages` to construct the seasonal component of the data,
+    which is a series the same length as `nuclear`, where the element for each month
+    is the average for that month. Here’s what it looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/a5ef266fd7d805e2a207415363ceac89ba5fc670e7cb8c596bda6763d8b7b39e.png](../Images/322d907852b9215ccbb1a4f1c53a5203.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Each 12-month period is identical to the others.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The sum of the trend and the seasonal component represents the expected value
+    for each month.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s what it looks like compared to the original series.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/98b4a1d9f24862d8270f33a08b639def4b79c0de545d3fc7852be5ddb5812ccc.png](../Images/6c33f9d5c1902af83e665de8e84843ae.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: If we subtract this sum from the original series, the result is the residual
+    component, which represents the departure from the expected value for each month.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/ca50466288083fe8e3e2ef9553e95f40ad972f3665050036e76cf72cf7e79c67.png](../Images/2fc816194097a5ce37513905abef943b.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: We can think of the residual as the sum of everything in the world that affects
+    energy production, but is not explained by the long-term trend or the seasonal
+    component. Among other things, that sum includes weather, equipment that’s down
+    for maintenance, and changes in demand due to specific events. Since the residual
+    is the sum of many unpredictable, and sometimes unknowable, factors, we often
+    treat it as a random quantity.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s what the distribution of the residuals look like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/e69047e36f53ae095f6c1b015a643873815077aeab0ddbdba2d47a98b1b5d020.png](../Images/1849beba0ca64a168beab3eb1c755174.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: It resembles the bell curve of the normal distribution, which is consistent
+    with the assumption that it is the sum of many random contributions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To quantify how well this model describes the original series, we can compute
+    the coefficient of determination, which indicates how much smaller the variance
+    of the residuals is, compared to the variance of the original series.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: The \(R^2\) value is about 0.92, which means that the long-term trend and seasonal
+    component account for 92% of the variability in the series. This \(R^2\) is substantially
+    higher than the ones we saw in the previous chapter, but that’s common with time
+    series data – especially in a case like this where we’ve constructed the model
+    to resemble the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The process we’ve just walked through is called **seasonal decomposition**.
+    StatsModels provides a function that does it, called `seasonal_decompose`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: The `model="additive"` argument indicates the additive model, so the series
+    is decomposed into the sum of a trend, seasonal component, and residual. We’ll
+    see the multiplicative model soon. The `period=12` argument indicates that the
+    duration of the seasonal component is 12 months.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The result is an object that contains the three components. The notebook for
+    this chapter provides a function that plots them.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/881e34a1c607017ad02b07d71f1b8f83f56f46086db0e67e15a62cce25d4f54c.png](../Images/7c4584a74da056acc8750693f01d4f0d.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The results are similar to those we computed ourselves, with small differences
+    due to the details of the implementation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This kind of seasonal decomposition provides insight into the structure of a
+    time series. As we’ll see in the next section, it is also useful for making forecasts.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Prediction
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: We can use the results from seasonal decomposition to predict the future. To
+    demonstrate, we’ll use the following function to split the time series into a
+    **training series**, which we’ll use to generate predictions, and a **test series**,
+    which we’ll use to see whether they are accurate.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: With `n=60`, the duration of the test series is five years, starting in July
+    2019.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now, suppose it’s June 2019 and you are asked to generate a five-year forecast
+    for electricity production from nuclear generators. To answer this question, we’ll
+    use the training data to make a model and then use the model to generate predictions.
+    We’ll start with a seasonal decomposition of the training data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we’ll fit a linear model to the trend. The explanatory variable, `months`,
+    is the number of months from the beginning of the series.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here is a summary of the results.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | coef | std err | t | P>&#124;t&#124; | [0.025 | 0.975] |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Intercept | 6.482e+04 | 131.524 | 492.869 | 0.000 | 6.46e+04 | 6.51e+04 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| months | 10.9886 | 1.044 | 10.530 | 0.000 | 8.931 | 13.046 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| R-squared: | 0.3477 |'
+  prefs: []
+  type: TYPE_TB
+- en: The \(R^2\) value is about 0.35, which suggests that the model does not fit
+    the data particularly well. We can get a better sense of that by plotting the
+    fitted line. We’ll use the `predict` method to compute expected values for the
+    training and test data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s the trend component and the linear model.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/10421b724eea60a0d4b770e733b0e1d6fe57918fb8f5332eadce262a8b1e9db6.png](../Images/cd87a97f633ab06825b13b8f32686943.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: There’s a lot going on that’s not captured by the linear model, but it looks
+    like there is a generally increasing trend.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Next we’ll use the seasonal component from the decomposition to compute a `Series`
+    of monthly averages.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can predict the seasonal component by looking up the dates from the fitted
+    line in `monthly_averages`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: Finally, to generate predictions, we’ll add the seasonal component to the trend.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE37]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s the training data and the predictions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/6acb496d0f4a67a469eb0a6d5be12e29cc0a1f4636f5c9c3c057a17e5405e05e.png](../Images/ce4b48a07f2cb1e7af715b6ff4bec08c.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The predictions fit the training data reasonably well, and the forecast looks
+    like a reasonable projection, based on the assumption that the long-term trend
+    will continue.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now, from the vantage point of the future, let’s see how accurate this forecast
+    turned out to be. Here are the predicted and actual values for the five-year interval
+    from July 2019.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE39]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/40b223ff5bd9e25c209d5e64d67a2759df3c92c9c84258a89d5c112a627d3c4a.png](../Images/319e5e33b1e2c9f4f442eb1ffd5df532.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The first year of the forecast was pretty good, but production from nuclear
+    reactors in 2020 was lower than expected – possibly due to the COVID-19 pandemic
+    – and it never returned to the long-term trend.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To quantify the accuracy of the predictions, we’ll use the mean absolute percentage
+    error (MAPE), which the following function computes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE40]'
+  prefs: []
+  type: TYPE_PRE
+- en: In this example, the predictions are off by 3.81% on average.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE41]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE42]'
+  prefs: []
+  type: TYPE_PRE
+- en: We’ll come back to this example later in the chapter and see if we can do better
+    with a different model.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Multiplicative Model
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The additive model we used in the previous section assumes that the time series
+    is the *sum* of a long-term trend, a seasonal component, and a residual – which
+    implies that the magnitude of the seasonal component and the residuals does not
+    vary over time.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As an example that violates this assumption, let’s look at small-scale solar
+    electricity production since 2014.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE43]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/183b4453b7abaf75aa41755f7ea490b08ac4fbcc174474def62556ca516b1027.png](../Images/a3c105f8c22380bfd0103fc5465acd4d.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Over this interval, total production has increased several times over. And it’s
+    clear that the magnitude of seasonal variation has increased as well.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If we suppose that the magnitudes of seasonal and random variation are proportional
+    to the magnitude of the trend, that suggests an alternative to the additive model
+    in which the time series is the *product* of the three components.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To try out this multiplicative model, we’ll split this series into training
+    and test sets.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE44]'
+  prefs: []
+  type: TYPE_PRE
+- en: And call `seasonal_decompose` with the `model="multiplicative"` argument.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE45]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s what the results look like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE46]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/63dda1f81a0756c857a21da832e0c66c4d1b4fa037bacbb6fec24536804860fc.png](../Images/1383ac1d77ebc45969109d2d8b5a2a3b.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Now the seasonal and residual components are multiplicative factors. So, it
+    looks like the seasonal component varies from about 25% below the trend to 25%
+    above. And the residual component is usually less than 5% either way, with the
+    exception of some larger factors in the first period. We can extract the components
+    of the model like this.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE47]'
+  prefs: []
+  type: TYPE_PRE
+- en: The \(R^2\) value of this model is very high.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE48]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE49]'
+  prefs: []
+  type: TYPE_PRE
+- en: The production of a solar panel is largely a function of the sunlight it’s exposed
+    to, so it makes sense that production follows an annual cycle so closely.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To predict the long term trend, we’ll use a quadratic model.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE50]'
+  prefs: []
+  type: TYPE_PRE
+- en: In the Patsy formula, the substring `I(months**2)` adds a quadratic term to
+    the model, so we don’t have to compute it explicitly. Here are the results.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE51]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | coef | std err | t | P>&#124;t&#124; | [0.025 | 0.975] |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Intercept | 766.1962 | 13.494 | 56.782 | 0.000 | 739.106 | 793.286 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| months | 22.2153 | 0.938 | 23.673 | 0.000 | 20.331 | 24.099 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| I(months ** 2) | 0.1762 | 0.014 | 12.480 | 0.000 | 0.148 | 0.205 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| R-squared: | 0.9983 |'
+  prefs: []
+  type: TYPE_TB
+- en: The p-values of the linear and quadratic terms are very small, which suggests
+    that the quadratic model captures more information about the trend than a linear
+    model would – and the \(R^2\) value is very high.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now we can use the model to compute the expected value of the trend for the
+    past and future.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE52]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s what it looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE53]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/104532b413e58aba536f953e311b974c5319f8f68f40b35a2028eb71d9d62b03.png](../Images/ac4566b21a02aa8b538302850ef17940.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The quadratic model fits the past trend well. Now we can use the seasonal component
+    to predict future seasonal variation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE54]'
+  prefs: []
+  type: TYPE_PRE
+- en: Finally, to compute **retrodictions** for past values and predictions for the
+    future, we multiply the trend and the seasonal component.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE55]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here is the result along with the training data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE56]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/72adf4b5229c66a4d857fcae73b0bff2d3f16102ccff9990075cadedc4f10ae6.png](../Images/c98b3a86f7a3d00eadd7f9d2eccc6350.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The retrodictions fit the training data well and the predictions seem plausible
+    – now let’s see if they turned out to be accurate. Here are the predictions along
+    with the test data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE57]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/ab7f8ae6a5ef72b928c7843f075ab68e726a4a06a8330de7dcb560b1a223a045.png](../Images/5326f16dacf82b0a9f8e827e626657af.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: For the first three years, the predictions are very good. After that, it looks
+    like actual growth exceeded expectations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this example, seasonal decomposition worked well for modeling and predicting
+    solar production, but in the previous example, it was not very effective for nuclear
+    production. In the next section, we’ll try a different approach, autoregression.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Autoregression
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The first idea of autoregression is that the future will be like the past. For
+    example, in the time series we’ve looked at so far, there is a clear annual cycle.
+    So if you are asked to make a prediction for next June, a good starting place
+    would be last June.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To see how well that might work, let’s go back to `nuclear`, which contains
+    monthly electricity production from nuclear generators, and compute differences
+    between the same month in successive years, which are called “year-over-year”
+    differences.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE58]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/a88ea4d6b22357cde1787a50a5641a326d003becf61c0a371317aa64983a4c41.png](../Images/26a6747fe931fe66c9fce0e77989e594.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The magnitudes of these differences are substantially smaller than the magnitudes
+    of the original series, which suggests the second idea of autoregression, which
+    is that it might be easier to predict these differences, rather than the original
+    values.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Toward that end, let’s see if there are correlations between successive elements
+    in the series of differences. If so, we could use those correlations to predict
+    future values based on previous values.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I’ll start by making a `DataFrame`, putting the differences in the first column
+    and putting the same differences – shifted by 1, 2, and 3 months – into successive
+    columns. These columns are named `lag1`, `lag2`, and `lag3`, because the series
+    they contain have been **lagged** or delayed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE59]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here are the correlations between these columns.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE60]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | diff |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| diff | 1.000000 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| lag1 | 0.562212 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| lag2 | 0.292454 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| lag3 | 0.222228 |'
+  prefs: []
+  type: TYPE_TB
+- en: These correlations are called lagged correlations or **autocorrelations** –
+    the prefix “auto” indicates that we’re taking the correlation of the series with
+    itself. As a special case, the correlation between `diff` and `lag1` is called
+    **serial correlation** because it is the correlation between successive elements
+    in the series.
+  prefs: []
+  type: TYPE_NORMAL
+- en: These correlation are strong enough to suggest that they should help with prediction,
+    so let’s put them into a multiple regression. The following function uses the
+    columns from the `DataFrame` to make a Patsy formula with the first column as
+    the response variable and the other columns as explanatory variables.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE61]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here are the results of a linear model that predicts the next value in a sequence
+    based on the previous three values.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE62]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | coef | std err | t | P>&#124;t&#124; | [0.025 | 0.975] |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Intercept | 24.2674 | 114.674 | 0.212 | 0.833 | -201.528 | 250.063 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| lag1 | 0.5847 | 0.061 | 9.528 | 0.000 | 0.464 | 0.706 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| lag2 | -0.0908 | 0.071 | -1.277 | 0.203 | -0.231 | 0.049 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| lag3 | 0.1026 | 0.062 | 1.666 | 0.097 | -0.019 | 0.224 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| R-squared: | 0.3239 |'
+  prefs: []
+  type: TYPE_TB
+- en: Now we can use the `predict` method to generate predictions for the past values
+    in the series. Here’s what these retrodictions look like compared to the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE63]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/67a9563d80bbdb7081135d430719689505c8371f9af0299b86babf83a1c50a11.png](../Images/da26024d910b9586e27e6648267e7919.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The predictions are good in some places, but the \(R^2\) value is only about
+    0.319, so there is room for improvement.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE64]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE65]'
+  prefs: []
+  type: TYPE_PRE
+- en: One way to improve the predictions is to compute the residuals from this model
+    and use another model to predict the residuals – which is the third idea of autoregression.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Moving Average
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Suppose it’s June 2019, and you are asked to make a prediction for June 2020.
+    Your first guess might be that this year’s value will be repeated next year.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now suppose it’s May 2020, and you are asked to revise your prediction for June
+    2020. You could use the results from the last three months, and the autocorrelation
+    model from the previous section, to predict the year-over-year difference.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Finally, suppose you check the predictions for the last few months, and see
+    that they have been consistently too low. That suggests that the prediction for
+    next month might also be too low, so you could revise it upward. The underlying
+    assumption is that recent prediction errors predict future prediction errors.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To see whether they do, we can make a `DataFrame` with the residuals from the
+    autoregression model in the first column, and lagged versions of the residuals
+    in the other columns. For this example, I’ll use lags of 1 and 6 months.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE66]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can use `ols` to make an autoregression model for the residuals. This part
+    of the model is called a “moving average” because it reduces variability in the
+    predictions in a way that’s analogous to the effect of a moving average. I don’t
+    find that term particularly helpful, but it is conventional.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Anyway, here’s a summary of the autoregression model for the residuals.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE67]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | coef | std err | t | P>&#124;t&#124; | [0.025 | 0.975] |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Intercept | -14.0016 | 114.697 | -0.122 | 0.903 | -239.863 | 211.860 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| lag1 | 0.0014 | 0.062 | 0.023 | 0.982 | -0.120 | 0.123 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| lag6 | -0.1592 | 0.063 | -2.547 | 0.011 | -0.282 | -0.036 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| R-squared: | 0.0247 |'
+  prefs: []
+  type: TYPE_TB
+- en: The \(R^2\) is quite small, so it looks like this part of the model won’t help
+    very much. But the p-value for the 6-month lag is small, which suggests that it
+    contributes more information than we’d expect by chance.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now we can use the model to generate retrodictions for the residuals.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE68]'
+  prefs: []
+  type: TYPE_PRE
+- en: Then, to generate retrodictions for the year-over-year differences, we add the
+    adjustment from the second model to the retrodictions from the first.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE69]'
+  prefs: []
+  type: TYPE_PRE
+- en: The \(R^2\) value for the sum of the two models is about 0.332, which is just
+    a little better than the result without the moving average adjustment (0.319).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE70]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE71]'
+  prefs: []
+  type: TYPE_PRE
+- en: Next we’ll use these year-over-year differences to generate retrodictions for
+    the original values.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Retrodiction with Autoregression
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: To generate retrodictions, we’ll start by putting the year-over-year differences
+    in a `Series` that’s aligned with the index of the original.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE72]'
+  prefs: []
+  type: TYPE_PRE
+- en: Using `isna` to check for `NaN` values, we find that the first 21 elements of
+    the new `Series` are missing.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE73]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE74]'
+  prefs: []
+  type: TYPE_PRE
+- en: That’s because we shifted the `Series` by 12 months to compute year-over-year
+    differences, then we shifted the differences 3 months for the first autoregression
+    model, and we shifted the residuals of the first model by 6 months for the second
+    model. Each time we shift a `Series` like this, we lose a few values at the beginning,
+    and the sum of these shifts is 21.
+  prefs: []
+  type: TYPE_NORMAL
+- en: So before we can generate retrodictions, we have to prime the pump by copying
+    the first 21 elements from the original into a new `Series`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE75]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can run the following loop, which fills in the elements from index 21
+    (which is the 22nd element) to the end. Each element is the sum of the value from
+    the previous year and the predicted year-over-year difference.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE76]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we’ll replace the elements we copied with `NaN` so we don’t get credit for
+    “predicting” the first 21 values perfectly.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE77]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s what the retrodictions look like compared to the original.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE78]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/30c56b70647a9d39ba3fc8237b91fbd0f1dea26952f48363f443248ef9d0a899.png](../Images/a1d8016d1af4242b7782dee28fdaef45.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: They look pretty good, and the \(R^2\) value is about 0.86.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE79]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE80]'
+  prefs: []
+  type: TYPE_PRE
+- en: The model we used to compute these retrodictions is called SARIMA, which is
+    one of a family of models called ARIMA. Each part of these acronyms refers to
+    an element of the model.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**S** stands for seasonal, because the first step was to compute differences
+    between values separated by one seasonal period.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**AR** stands for autoregression, which we used to model lagged correlations
+    in the differences.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**I** stands for integrated, because the iterative process we used to compute
+    `pred_series` is analogous to integration in calculus.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**MA** stands for moving average, which is the conventional name for the second
+    autoregression model we ran with the residuals from the first.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: ARIMA models are powerful and versatile tools for modeling time series data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: ARIMA
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: StatsModel provides a library called `tsa`, which stands for “time series analysis”
+    – it includes a function called `ARIMA` that fits ARIMA models and generates forecasts.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To fit the SARIMA model we developed in the previous sections, we’ll call this
+    function with two tuples as arguments: `order` and `seasonal_order`. Here are
+    the values in `order` that correspond to the model we used in the previous sections.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE81]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The values in `order` indicate:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Which lags should be included in the AR model – in this example it’s the first
+    three.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How many times it should compute differences between successive elements – in
+    this example it’s 0 because we computed a seasonal difference instead, and we’ll
+    get to that in a minute.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Which lags should be included in the MA model – in this example it’s the first
+    and sixth.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Now here are the values in `seasonal_order`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE82]'
+  prefs: []
+  type: TYPE_PRE
+- en: The first and third elements are 0, which means that this model does not include
+    seasonal AR or seasonal MA. The second element is 1, which means it computes seasonal
+    differences – and the last element is the seasonal period.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s how we use `ARIMA` to make and fit this model.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE83]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | coef | std err | z | P>&#124;z&#124; | [0.025 | 0.975] |'
+  prefs: []
+  type: TYPE_TB
+- en: '| ar.L1 | 0.0458 | 0.379 | 0.121 | 0.904 | -0.697 | 0.788 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| ar.L2 | -0.0035 | 0.116 | -0.030 | 0.976 | -0.230 | 0.223 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| ar.L3 | 0.0375 | 0.049 | 0.769 | 0.442 | -0.058 | 0.133 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| ma.L1 | 0.2154 | 0.382 | 0.564 | 0.573 | -0.533 | 0.964 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| ma.L6 | -0.0672 | 0.019 | -3.500 | 0.000 | -0.105 | -0.030 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| sigma2 | 3.473e+06 | 1.9e-07 | 1.83e+13 | 0.000 | 3.47e+06 | 3.47e+06 |'
+  prefs: []
+  type: TYPE_TB
+- en: The results include estimated coefficients for the three lags in the AR model,
+    the two lags in the MA model, and `sigma2`, which is the variance of the residuals.
+  prefs: []
+  type: TYPE_NORMAL
+- en: From `results_arima` we can extract `fittedvalues`, which contains the retrodictions.
+    For the same reason there were missing values at the beginning of the retrodictions
+    we computed, there are incorrect values at the beginning of `fittedvalues`, which
+    we’ll drop.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE84]'
+  prefs: []
+  type: TYPE_PRE
+- en: The fitted values are similar to the ones we computed, but not exactly the same
+    – probably because `ARIMA` handles the initial conditions differently.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE85]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/bd53f76ed450000a2c4f52a05947fcad2eb513fa6a7ba0346a3e419f18504a26.png](../Images/f6395ac61b1cc30e9f46ead26fec6150.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The \(R^2\) value is also similar but not precisely the same.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE86]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE87]'
+  prefs: []
+  type: TYPE_PRE
+- en: The `ARIMA` function makes it easy to experiment with different versions of
+    the model.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As an exercise, try out different values in `order` and `seasonal_order` and
+    see if you can find a model with higher \(R^2\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Prediction with ARIMA
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The object returned by `ARIMA` provides a method called `get_forecast` that
+    generates predictions. To demonstrate, we’ll split the time series into a training
+    and test set, and fit the same model to the training set.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE88]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can use the result to generate a forecast for the test set.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE89]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is an object that contains an attribute called `forecast_mean` and
+    a function that returns a confidence interval.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE90]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can plot the results like this and compare them to the actual time series.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE91]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/1bfbd07dc05c5aa7b68ba8557ce4cb6880237f80f566d7a28fe147468d34a4b5.png](../Images/69d7bf16fb6e8e87b7b832fd27be249c.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The actual values fall almost entirely within the confidence interval of the
+    predictions. Here’s the MAPE of the predictions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE92]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE93]'
+  prefs: []
+  type: TYPE_PRE
+- en: The predictions are off by 3.38% on average, somewhat better than the results
+    we got from seasonal decomposition (3.81%).
+  prefs: []
+  type: TYPE_NORMAL
+- en: ARIMA is more versatile than seasonal decomposition, and can often make better
+    predictions. In this time series, the autocorrelations are not especially strong,
+    so the advantage of ARIMA is modest.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Glossary
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '**time series**: A dataset where each value is associated with a specific time,
+    often representing measurements taken at regular intervals.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**seasonal decomposition:** A method of splitting a time series into a long-term
+    trend, a repeating seasonal component, and a residual component.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**training series:** Part of a time series used to fit a model.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**test series:** Part of a time series used to check the accuracy of predictions
+    generated by a model.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**retrodiction:** A prediction for a value observed in the past, often used
+    to test or validate a model.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**window**: A sequence of consecutive values in a time series, used to compute
+    a moving average.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**moving average**: A time series computed by averaging values in overlapping
+    windows to smooth fluctuations.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**serial correlation**: The correlation between successive elements of a time
+    series.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**autocorrelation**: A correlation between a time series and a shifted or lagged
+    version of itself.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**lag**: The size of the shift in a serial correlation or autocorrelation.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Exercises
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Exercise 12.1
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: As an example of seasonal decomposition, let’s model monthly average surface
+    temperatures in the United States. We’ll use a dataset from Our World in Data
+    that includes “temperature [in Celsius] of the air measured 2 meters above the
+    ground, encompassing land, sea, and in-land water surfaces,” for most countries
+    in the world from 1950 to 2024. Instructions for downloading the data are in the
+    notebook for this chapter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE94]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE95]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can read the data like this.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE96]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE97]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | Entity | Code | Year | 2024 | 2023 | 2022 | 2021 | 2020 | 2019 | 2018
+    | ... | 1959 | 1958 | 1956 | 1954 | 1952 | 1957 | 1955 | 1953 | 1951 | 1950 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+    | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | Afghanistan | AFG | 1 | 3.300064 | -4.335608 | -0.322859 | -1.001608
+    | -2.560545 | 0.585145 | 1.042471 | ... | -2.333814 | 0.576404 | -3.351925 | -2.276692
+    | -2.812619 | -4.239172 | -2.191683 | -2.915993 | -3.126317 | -2.655707 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | Afghanistan | AFG | 2 | 1.024550 | 4.187041 | 2.165870 | 5.688000 | 2.880046
+    | 0.068664 | 3.622793 | ... | -1.545529 | 0.264962 | 0.455350 | -0.304205 | 0.798226
+    | -2.747945 | 1.999074 | 1.983414 | -2.642800 | -3.996040 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | Afghanistan | AFG | 3 | 5.843506 | 10.105444 | 10.483686 | 9.777976 |
+    6.916731 | 5.758049 | 10.794412 | ... | 5.942937 | 7.716459 | 5.090270 | 4.357703
+    | 4.796146 | 4.434027 | 7.066073 | 4.590406 | 3.054388 | 3.491112 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | Afghanistan | AFG | 4 | 11.627398 | 14.277164 | 17.227650 | 15.168276
+    | 12.686832 | 13.838840 | 14.321226 | ... | 13.752827 | 14.712909 | 11.982360
+    | 12.155265 | 13.119270 | 8.263829 | 10.418768 | 11.087193 | 9.682878 | 8.332797
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 4 | Afghanistan | AFG | 5 | 18.957850 | 19.078170 | 19.962734 | 19.885902
+    | 18.884047 | 18.461287 | 18.100782 | ... | 17.388723 | 16.352045 | 20.125462
+    | 18.432117 | 17.614851 | 15.505956 | 15.599709 | 17.865084 | 17.095737 | 17.329062
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: 5 rows × 78 columns
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following cell selects data for the United States from 2001 to the end of
+    the series and packs it into a Pandas `Series`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE98]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s what it looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE99]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/a3410bb4a0364aa3e152c8b296b32ae9134070895ab25e65c30eb379291ec164.png](../Images/9d1667128e4130085b8d259b6a048b35.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Not surprisingly, there is a strong seasonal pattern. Compute an additive seasonal
+    decomposition with a period of 12 months. Fit a linear model to the trend line.
+    What is the average annual increase in surface temperature during this interval?
+    If you are curious, repeat this analysis with other intervals or data from other
+    countries.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exercise 12.2
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Earlier in this chapter we used a multiplicative seasonal decomposition to model
+    electricity production from small-scale solar power from 2014 to 2019 and forecast
+    production from 2019 to 2024. Now let’s do the same with utility-scale solar power.
+    Here’s what the time series looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE100]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/d1fd07d05c800a1034a3be7efbaba6467fb86fddc406dd1ca143e69e5530cc4f.png](../Images/8b7dc9dd12f19aedeced4b7f80c4e0fd.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Use `split_series` to split this data into a training and test series. Compute
+    a multiplicative decomposition of the training series with a 12-month period.
+    Fit a linear or quadratic model to the trend and generate a five-year forecast,
+    including a seasonal component. Plot the forecast along with the test series,
+    and compute the mean absolute percentage error (MAPE).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exercise 12.3
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Let’s see how well an ARIMA model fits production from hydroelectric generators
+    in the United States. Here’s what the time series looks like from 2001 to 2024.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE101]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/9c83923f610ab68d219dfcabbc52ec124727a086e5f732f1bcc8101421e93e3c.png](../Images/82fcbc849085c678a95e13b87f597579.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Fit a SARIMA model to this data with a seasonal period of 12 months. Experiment
+    with different lags in the autoregression and moving average parts of the model
+    and see if you can find a combination that maximizes the \(R^2\) value of the
+    model. Generate a five-year forecast and plot it along with its confidence interval.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'NOTE: Depending on what lags you include in the model, you might find that
+    the first 12 to 24 elements of the fitted values are not reliable. You might want
+    to remove them before plotting or computing \(R^2\).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Think Stats: Exploratory Data Analysis in Python, 3rd Edition](https://allendowney.github.io/ThinkStats/index.html)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Copyright 2024 [Allen B. Downey](https://allendowney.com)
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Code license: [MIT License](https://mit-license.org/)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Text license: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  prefs: []
+  type: TYPE_NORMAL

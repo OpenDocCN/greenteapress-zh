@@ -1,0 +1,982 @@
+- en: Cumulative Distribution Functions
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/ThinkStats/chap04.html](https://allendowney.github.io/ThinkStats/chap04.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Frequency tables and PMFs are the most familiar ways to represent distributions,
+    but as we’ll see in this chapter, they have limitations. An alternative is the
+    cumulative distribution function (CDF), which is useful for computing percentiles,
+    and especially useful for comparing distributions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Also in this chapter, we’ll compute percentile-based statistics to quantify
+    the location, spread, and skewness of a distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ThinkStats/blob/v3/nb/chap04.ipynb).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: Percentiles and Percentile Ranks
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: If you have taken a standardized test, you probably got your results in the
+    form of a raw score and a **percentile rank**. In this context, the percentile
+    rank is the percentage of people who got the same score as you or lower. So if
+    you are “in the 90th percentile,” you did as well as or better than 90% of the
+    people who took the exam.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To understand percentiles and percentile ranks, let’s consider an example based
+    on running speeds. Some years ago I ran the James Joyce Ramble, which is a 10
+    kilometer road race in Massachusetts. After the race, I downloaded the results
+    to see how my time compared to other runners.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Instructions for downloading the data are in the notebook for this chapter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: The `relay.py` module provides a function that reads the results and returns
+    a Pandas `DataFrame`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | Place | Div/Tot | Division | Guntime | Nettime | Min/Mile | MPH |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 1 | 1/362 | M2039 | 30:43 | 30:42 | 4:57 | 12.121212 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 2 | 2/362 | M2039 | 31:36 | 31:36 | 5:06 | 11.764706 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 3 | 3/362 | M2039 | 31:42 | 31:42 | 5:07 | 11.726384 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 4 | 4/362 | M2039 | 32:28 | 32:27 | 5:14 | 11.464968 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 4 | 5 | 5/362 | M2039 | 32:52 | 32:52 | 5:18 | 11.320755 |'
+  prefs: []
+  type: TYPE_TB
+- en: '`results` contains one row for each of 1633 runners who finished the race.
+    The column we’ll use to quantify performance is `MPH`, which contains each runner’s
+    average speed in miles per hour. We’ll select this column and use `values` to
+    extract the speeds as a NumPy array.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: I finished in 42:44, so we can find my row like this.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | Place | Div/Tot | Division | Guntime | Nettime | Min/Mile | MPH |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 96 | 97 | 26/256 | M4049 | 42:48 | 42:44 | 6:53 | 8.716707 |'
+  prefs: []
+  type: TYPE_TB
+- en: The index of my row is 96, so we can extract my speed like this.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can use `sum` to count the number of runners at my speed or slower.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: And we can use `mean` to compute the percentage of runners at my speed or slower.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is my percentile rank in the field, which was about 94%.
+  prefs: []
+  type: TYPE_NORMAL
+- en: More generally, the following function computes the percentile rank of a particular
+    value in a sequence of values.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: In `results`, the `Division` column indicates the division each runner was in,
+    identified by gender and age range – for example, I was in the M4049 division,
+    which includes male runners aged 40 to 49. We can use the `query` method to select
+    the rows for people in my division and extract their speeds.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can use `percentile_rank` to compute my percentile rank in my division.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: Going in the other direction, if we are given a percentile rank, the following
+    function finds the corresponding value in a sequence.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`n` is the number of elements in the sequence; `i` is the index of the element
+    with the given percentile rank. When we look up a percentile rank, the corresponding
+    value is called a **percentile**.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: In my division, the 90th percentile was about 8.6 mph.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now, some years after I ran that race, I am in the `M5059` division. So let’s
+    see how fast I would have to run to have the same percentile rank in my new division.
+    We can answer that question by converting my percentile rank in the `M4049` division,
+    which is about 90.2%, to a speed in the `M5059` division.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: The person in the `M5059` division with the same percentile rank as me ran just
+    over 8 mph. We can use `query` to find him.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | Place | Div/Tot | Division | Guntime | Nettime | Min/Mile | MPH |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 222 | 223 | 18/171 | M5059 | 46:30 | 46:25 | 7:29 | 8.017817 |'
+  prefs: []
+  type: TYPE_TB
+- en: He finished in 46:25 and came in 18th out of 171 people in his division.
+  prefs: []
+  type: TYPE_NORMAL
+- en: With this introduction to percentile ranks and percentiles, we are ready for
+    cumulative distribution functions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: CDFs
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: A **cumulative distribution function**, or CDF, is another way to describe the
+    distribution of a set of values, along with a frequency table or PMF. Given a
+    value `x`, the CDF computes the fraction of values less than or equal to `x`.
+    As an example, we’ll start with a short sequence.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: One way to compute a CDF is to start with a PMF. Here is a `Pmf` object that
+    represents the distribution of values in `t`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 0.2 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 0.4 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 0.2 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 5 | 0.2 |'
+  prefs: []
+  type: TYPE_TB
+- en: As we saw in the previous chapter, we can use the bracket operator to look up
+    a value in a `Pmf`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is the proportion of values in the sequence equal to the given value.
+    In this example, two out of five values are equal to `2`, so the result is 0.4.
+    We can also think of this proportion as the probability that a randomly chosen
+    value from the sequence equals `2`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`Pmf` has a `make_cdf` method that computes the cumulative sum of the probabilities
+    in the `Pmf`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 0.2 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 0.6 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 0.8 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 5 | 1.0 |'
+  prefs: []
+  type: TYPE_TB
+- en: The result is a `Cdf` object, which is a kind of Pandas `Series`. We can use
+    the bracket operator to look up a value.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is the proportion of values in the sequence less than or equal to
+    the given value. In this example, three out of five values in the sequence are
+    less than or equal to `2`, so the result is 0.6. We can also think of this proportion
+    as the probability that a randomly chosen value from the sequence is less than
+    or equal to `2`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can use parentheses to call the `Cdf` object like a function.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: The cumulative distribution function is defined for all numbers, not just the
+    ones that appear in the sequence.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: To visualize the `Cdf`, we can use the `step` method, which plots the `Cdf`
+    as a step function.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/9d2e9ff444c6bf56e6b534478952beeb0821525d8775c45979726bd52003d32f.png](../Images/6223b8a3d69c903f60571154b84c6183.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: As a second example, let’s make a `Cdf` that represents the distribution of
+    running speeds from the previous section. The `Cdf` class provides a `from_seq`
+    function we can use to create a `Cdf` object from a sequence.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here’s what it looks like – the vertical line is at my speed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/2bc46a52e68ac6ac83090f0315cdd087e8549f3ac5e9b4acc021bfbf6c3616e7.png](../Images/662d72a6f033d90289978ea18d2f5310.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: If we look up my speed, the result is the fraction of runners at my speed or
+    slower. If we multiply by 100, we get my percentile rank.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE37]'
+  prefs: []
+  type: TYPE_PRE
+- en: So that’s one way to think about the `Cdf` – given a value, it computes something
+    like a percentile rank, except that it’s a proportion between 0 and 1 rather than
+    a percentage between 0 and 100.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`Cdf` provides an `inverse` method that computes the inverse of the cumulative
+    distribution function – given a proportion between 0 and 1, it finds the corresponding
+    value.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: For example, if someone says they ran as fast or faster than 50% of the field,
+    we can find their speed like this.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE39]'
+  prefs: []
+  type: TYPE_PRE
+- en: If you have a proportion and you use the inverse CDF to find the corresponding
+    value, the result is called a **quantile** – so the inverse CDF is sometimes called
+    the quantile function.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If you have have a quantile and you use the CDF to find the corresponding proportion,
+    the result doesn’t really have a name, strangely. To be consistent with percentile
+    and percentile rank, it could be called a “quantile rank”, but as far as I can
+    tell, no one calls it that. Most often, it is just called a “cumulative probability”.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '## Comparing CDFs'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'CDFs are especially useful for comparing distributions. As an example, let’s
+    compare the distribution of birth weights for first babies and others. We’ll load
+    the NSFG dataset again, and divide it into three `DataFrames`: all live births,
+    first babies, and others.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following cells download the data files and install `statadict`, which we
+    need to read the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE40]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE41]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE42]'
+  prefs: []
+  type: TYPE_PRE
+- en: From `firsts` and `others` we’ll select total birth weights in pounds, using
+    `dropna` to remove values that are `nan`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE43]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE44]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE45]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE46]'
+  prefs: []
+  type: TYPE_PRE
+- en: It looks like first babies are a little lighter on average. But there are several
+    ways a difference like that could happen – for example, there might be a small
+    number of first babies who are especially light, or a small number of other babies
+    who are especially heavy. In those cases, the distributions would have different
+    shapes. As another possibility, the distributions might have the same shape, but
+    different locations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To compare the distributions, we can try plotting the PMFs.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE47]'
+  prefs: []
+  type: TYPE_PRE
+- en: But as we can see in the following figure, it doesn’t work very well.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE48]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/5ceff1964b7e595815042c6a25cb49238d959a616a431eca6c5a4520e4e9e8c4.png](../Images/40ff5e508db7d21c10ac38790438b34c.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: I adjusted the width and transparency of the bars to show the distributions
+    as clearly as possible, but it is hard to compare them. There are many peaks and
+    valleys, and some apparent differences, but it is hard to tell which of these
+    features are meaningful. Also, it is hard to see overall patterns; for example,
+    it is not visually apparent which distribution has the higher mean.
+  prefs: []
+  type: TYPE_NORMAL
+- en: These problems can be mitigated by binning the data – that is, dividing the
+    range of quantities into non-overlapping intervals and counting the number of
+    quantities in each bin. Binning can be useful, but it is tricky to get the size
+    of the bins right. If they are big enough to smooth out noise, they might also
+    smooth out useful information.
+  prefs: []
+  type: TYPE_NORMAL
+- en: A good alternative is to plot the CDFs.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE49]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s what they look like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE50]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/38f4c729cdfc8ab726197491c97cdd23e815aa9c30fc9369ef7c3f83edd2a453.png](../Images/471ac6e643ae8ca2ba5d21c878dadbc3.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: This figure makes the shape of the distributions, and the differences between
+    them, much clearer. The curve for first babies is consistently to the left of
+    the curve for others, which indicates that first babies are slightly lighter throughout
+    the distribution – with a larger discrepancy above the midpoint.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Percentile-Based Statistics
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In [Chapter 3](chap03.html#section-summarizing-pmfs) we computed the arithmetic
+    mean, which identifies a central point in a distribution, and the standard deviation,
+    which quantifies how spread out the distribution is. And in a previous exercise
+    we computed skewness, which indicates whether a distribution is skewed left or
+    right. One drawback of all of these statistics is that they are sensitive to outliers.
+    A single extreme value in a dataset can have a large effect on mean, standard
+    deviation, and skewness.
+  prefs: []
+  type: TYPE_NORMAL
+- en: An alternative is to use statistics that are based on percentiles of the distribution,
+    which tend to be more **robust**, which means that they are less sensitive to
+    outliers. To demonstrate, let’s load the NSFG data again without doing any data
+    cleaning.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE51]'
+  prefs: []
+  type: TYPE_PRE
+- en: Recall that birth weight is recorded in two columns, one for the pounds and
+    one for the ounces.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE52]'
+  prefs: []
+  type: TYPE_PRE
+- en: If we make a `Hist` object with the values from `birthwgt_oz`, we can see that
+    they include the special values 97, 98, and 99, which indicate missing data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE53]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | freqs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| birthwgt_oz |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 14.0 | 475 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 15.0 | 378 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 97.0 | 1 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 98.0 | 1 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 99.0 | 46 |'
+  prefs: []
+  type: TYPE_TB
+- en: The `birthwgt_lb` column includes the same special values; it also includes
+    the value 51, which has to be a mistake.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE54]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | freqs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| birthwgt_lb |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 15.0 | 1 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 51.0 | 1 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 97.0 | 1 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 98.0 | 1 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 99.0 | 57 |'
+  prefs: []
+  type: TYPE_TB
+- en: Now let’s imagine two scenarios. In one scenario, we clean these variables by
+    replacing missing and invalid values with `nan`, and then compute total weight
+    in pounds. Dividing `birthwgt_oz_clean` by 16 converts it to pounds in decimal.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE55]'
+  prefs: []
+  type: TYPE_PRE
+- en: In the other scenario, we neglect to clean the data and accidentally compute
+    the total weight with these bogus values.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE56]'
+  prefs: []
+  type: TYPE_PRE
+- en: The bogus dataset contains only 49 bogus values, which is about 0.5% of the
+    data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE57]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE58]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now let’s compute the mean of the data in both scenarios.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE59]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE60]'
+  prefs: []
+  type: TYPE_PRE
+- en: The bogus values have a moderate effect on the mean. If we take the mean of
+    the cleaned data to be correct, the mean of the bogus data is off by less than
+    1%.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE61]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE62]'
+  prefs: []
+  type: TYPE_PRE
+- en: An error like that might go undetected – but now let’s see what happens to the
+    standard deviations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE63]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE64]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE65]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE66]'
+  prefs: []
+  type: TYPE_PRE
+- en: The standard deviation of the bogus data is off by almost 50%, so that’s more
+    noticeable. Finally, here’s the skewness of the two datasets.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE67]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE68]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE69]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE70]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE71]'
+  prefs: []
+  type: TYPE_PRE
+- en: The skewness of the bogus dataset is off by a factor of almost 40, and it has
+    the wrong sign! With the outliers added to the data, the distribution is strongly
+    skewed to the right, as indicated by large positive skewness. But the distribution
+    of the valid data is slightly skewed to the left, as indicated by small negative
+    skewness.
+  prefs: []
+  type: TYPE_NORMAL
+- en: These results show that a small number of outliers have a moderate effect on
+    the mean, a strong effect on the standard deviation, and a disastrous effect on
+    skewness.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'An alternative is to use statistics based on percentiles. Specifically:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The median, which is the 50th percentile, identifies a central point in a distribution,
+    like the mean.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The interquartile range, which is the difference between the 25th and 75th percentiles,
+    quantifies the spread of the distribution, like the standard deviation.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The quartile skewness uses the quartiles of the distribution (25th, 50th, and
+    75th percentiles) to quantify the skewness.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The `Cdf` object provides an efficient way to compute these percentile-based
+    statistics. To demonstrate, let’s make a `Cdf` object from the bogus and clean
+    datasets.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE72]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following function takes a `Cdf` and uses its `inverse` method to compute
+    the 50th percentile, which is the median (at least, it is one way to define the
+    median of a dataset).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE73]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can compute the median of both datasets.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE74]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE75]'
+  prefs: []
+  type: TYPE_PRE
+- en: The results are identical, so in this case, the outliers have no effect on the
+    median at all. In general, outliers have a smaller effect on the median than on
+    the mean.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The **interquartile range** (IQR) is the difference between the 75th and 25th
+    percentiles. The following function takes a `Cdf` and returns the IQR.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE76]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here are the interquartile ranges of the two datasets.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE77]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE78]'
+  prefs: []
+  type: TYPE_PRE
+- en: In general, outliers have less effect on the IQR than on the standard deviation
+    – in this case they have no effect at all.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Finally, here’s a function that computes quartile skewness, which depends on
+    three statistics:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The median,
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The midpoint of 25th and 75th percentiles, and
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The semi-IQR, which is half of the IQR.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[PRE79]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here’s the quartile skewness for the two datasets.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE80]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE81]'
+  prefs: []
+  type: TYPE_PRE
+- en: The small number of outliers in these examples has no effect on the quartile
+    skewness. These examples show that percentile-based statistics are less sensitive
+    to outliers and errors in the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Random Numbers
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '`Cdf` objects provide an efficient way to generate random numbers from a distribution.
+    First we generate random numbers from a uniform distribution between 0 and 1.
+    Then we evaluate the inverse CDF at those points. The following function implements
+    this algorithm.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE82]'
+  prefs: []
+  type: TYPE_PRE
+- en: To demonstrate, let’s generate a random sample of running speeds.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE83]'
+  prefs: []
+  type: TYPE_PRE
+- en: To confirm that it worked, we can compare the CDFs of the sample and the original
+    dataset.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE84]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/f5dd82c9efd6929670f0fcb6a83cc6d2f724a42d92b438d5e2eabf2df4000d2a.png](../Images/d51cd2f42c53b184bd1289fc6de1ba5f.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The sample follows the distribution of the original data. To understand how
+    this algorithm works, consider this question: Suppose we choose a random sample
+    from the population of running speeds and look up the percentile ranks of the
+    speeds in the sample. Now suppose we compute the CDF of the percentile ranks.
+    What do you think it will look like?'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s find out. Here are the percentile ranks for the sample we generated.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE85]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here is the CDF of the percentile ranks.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE86]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/52f3765a77c885aca02c14ff7ccc676cf5ecd89b5fc49c8c20618034fcb053f9.png](../Images/8a0850f37951301fdff6c19ab35c16e6.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The CDF of the percentile ranks is close to a straight line between 0 and 1.
+    And that makes sense, because in any distribution, the proportion with percentile
+    rank less than 50% is 0.5; the proportion with percentile rank less than 90% is
+    0.9, and so on.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`Cdf` provides a `sample` method that uses this algorithm, so we could also
+    generate a sample like this.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE87]'
+  prefs: []
+  type: TYPE_PRE
+- en: Glossary
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '**percentile rank**: The percentage of values in a distribution that are less
+    than or equal to a given quantity.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**percentile**: The value in a distribution associated with a given percentile
+    rank.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**cumulative distribution function (CDF)**: A function that maps a value to
+    the proportion of the distribution less than or equal to that value.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**quantile**: The value in a distribution that is greater than or equal to
+    a given proportion of values.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**robust**: A statistic is robust if it is less affected by extreme values
+    or outliers.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**interquartile range (IQR)**: The difference between the 75th and 25th percentiles,
+    used to measure the spread of a distribution.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Exercises
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Exercise 4.1
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: How much did you weigh at birth? If you don’t know, call your mother or someone
+    else who knows. And if no one knows, you can use my birth weight, 8.5 pounds,
+    for this exercise.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using the NSFG data (all live births), compute the distribution of birth weights
+    and use it to find your percentile rank. If you were a first baby, find your percentile
+    rank in the distribution for first babies. Otherwise use the distribution for
+    others. If you are in the 90th percentile or higher, call your mother back and
+    apologize.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE88]'
+  prefs: []
+  type: TYPE_PRE
+- en: Exercise 4.2
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: For live births in the NSFG dataset, the column `babysex` indicates whether
+    the baby was male or female. We can use `query` to select the rows for male and
+    female babies.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE89]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE90]'
+  prefs: []
+  type: TYPE_PRE
+- en: Make `Cdf` objects that represent the distribution of birth weights for male
+    and female babies. Plot the two CDFs. What are the differences in the shape and
+    location of the distributions?
+  prefs: []
+  type: TYPE_NORMAL
+- en: If a male baby weighs 8.5 pounds, what is his percentile rank? What is the weight
+    of a female baby with the same percentile rank?
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exercise 4.3
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: From the NSFG dataset pregnancy data, select the `agepreg` column and make a
+    `Cdf` to represent the distribution of age at conception for each pregnancy. Use
+    the CDF to compute the percentage of ages less than or equal to 20, and the percentage
+    less than or equal to 30. Use those results to compute the percentage between
+    20 and 30.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE91]'
+  prefs: []
+  type: TYPE_PRE
+- en: Exercise 4.4
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Here are the running speeds of the people who finished the James Joyce Ramble,
+    described earlier in this chapter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE92]'
+  prefs: []
+  type: TYPE_PRE
+- en: Make a `Cdf` that represents the distribution of these speeds, and use it to
+    compute the median, IQR, and quartile skewness. Does the distribution skew to
+    the left or right?
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exercise 4.5
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: The numbers generated by `np.random.random` are supposed to be uniform between
+    0 and 1, which means that the CDF of a sample should be a straight line. Let’s
+    see if that’s true. Here’s a sample of 1001 numbers. Plot the CDF of this sample.
+    Does it look like a straight line?
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE93]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[Think Stats: Exploratory Data Analysis in Python, 3rd Edition](https://allendowney.github.io/ThinkStats/index.html)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Copyright 2024 [Allen B. Downey](https://allendowney.com)
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Code license: [MIT License](https://mit-license.org/)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Text license: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  prefs: []
+  type: TYPE_NORMAL

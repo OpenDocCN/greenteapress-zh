@@ -1,0 +1,1142 @@
+- en: Survival analysis
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/ThinkStats/chap13.html](https://allendowney.github.io/ThinkStats/chap13.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Survival analysis is a way to describe how long things last. It is often used
+    to study human lifetimes, but it also applies to “survival” of mechanical and
+    electronic components, or more generally to an interval in time before any kind
+    of event – or even an interval in space.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We’ll start with a simple example, the lifespans of light bulbs, and then consider
+    a more substantial example, age at first marriage and how it has changed in the
+    United States over the last 50 years.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ThinkStats/blob/v3/nb/chap13.ipynb).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: Survival Functions
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: A fundamental concept in survival analysis is the **survival function**, which
+    is the fraction of a population that survives longer than a given duration. As
+    a first example, we’ll compute a survival function for the lifespans of light
+    bulbs.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We’ll use data from an experiment conducted in 2007. Researchers installed 50
+    new light bulbs and left them on continuously. They checked on the bulbs every
+    12 hours and recorded the lifespan of any that expired – and ran the experiment
+    until all 50 bulbs expired. Instructions for downloading the data are in the notebook
+    for this chapter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following cell downloads the data, which is documented [here](https://gist.github.com/epogrebnyak/7933e16c0ad215742c4c104be4fbdeb1).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Dataset from:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'V.J. Menon and D.C. Agrawal, Renewal Rate of Filament Lamps: Theory and Experiment.
+    Journal of Failure Analysis and Prevention. December 2007, p. 421, Table 2/ DOI:
+    10.1007/s11668-007-9074-9'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can read the data like this.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | h | f | K |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| i |  |  |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 28 | 1812 | 1 | 4 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 29 | 1836 | 1 | 3 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 30 | 1860 | 1 | 2 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 31 | 1980 | 1 | 1 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 32 | 2568 | 1 | 0 |'
+  prefs: []
+  type: TYPE_TB
+- en: The `h` column contains lifespans in hours. The `f` column records the number
+    of bulbs that expired at each value of `h`. To represent the distribution of lifespans,
+    we’ll put these values in a `Pmf` object and normalize it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can use `make_cdf` to compute the CDF, which indicates the fraction of bulbs
+    that expire at or before each value of `h`. For example, 78% of the bulbs expire
+    at or before 1656 hours.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: The survival function is the fraction of bulbs that expire *after* each value
+    of `h`, which is the complement of the CDF. So we can compute it like this.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: 22% of the bulbs expired after 1656 hours.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The `empiricaldist` library provides a `Surv` object that represents a survival
+    function, and a method called `make_surv` that makes one.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: If we plot the CDF and the survival function, we can see that they are complementary
+    – that is, their sum is 1 at all values of `h`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/4b327fefc98d9cd63de1eb35106ee680bae03079a5a5c38df5bc0616dea4139b.png](../Images/43edb107636ed5d36fa792e305a05a28.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: In that sense, the CDF and survival function are equivalent – if we are given
+    either one, we can compute the other – but in the context of survival analysis
+    it is more common to work with survival curves. And computing a survival curve
+    is a step toward the next important concept, the hazard function.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Hazard Function
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In the light bulb dataset, each value of `h` represents a 12-hour interval ending
+    at hour `h` – which I will call “interval `h`”. Suppose we know that a light bulb
+    has survived up to interval `h`, and we would like to know the probability that
+    it expires during interval `h`. To answer this question, we can use the survival
+    function, which indicates the fraction of bulbs that survive past interval `h`,
+    and the PMF, which indicates the fraction that expire during interval `h`. The
+    sum of these is the fraction of bulbs that *could* expire during interval `h`,
+    which are said to be “at risk”. As an example, 26% of the bulbs were at risk during
+    interval 1656.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: And 4% of all bulbs expired during interval 1656.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: The **hazard** is the ratio of `pmf_bulblife` and `at_risk`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: Of all bulbs that survived up to interval 1656, about 15% expired during interval
+    1656.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Instead of computing the hazard function ourselves, we can use `empiricaldist`,
+    which provides a `Hazard` object that represents a hazard function, and a `make_hazard`
+    method that computes it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s what the hazard function looks like for the light bulbs.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/f61318bbaf785683905ace59395cda61ef85e9d87979b031ccfd7ca23441d28e.png](../Images/41dd9f4e91ec2cb16d196613e347ff46.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: We can see that the hazard is higher in some places than others, but this way
+    of visualizing the hazard function can be misleading, especially in parts of the
+    range where we don’t have much data. A better alternative is to plot the **cumulative
+    hazard function**, which is the cumulative sum of the hazards.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/ec4d8ae4729ac6c5907db03385cc674ce8a63af523f6aafa9596f1c03d74ca02.png](../Images/500d716494dd38443f09a2df7a406616.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Where the probability of expiring is high, the cumulative hazard function is
+    steep. Where the probability of expiring is low, the cumulative hazard function
+    is flat. In this example, we can see that the hazard is highest between 1500 and
+    2000 hours. After that, the hazard decreases – although this outcome is based
+    on just one unusually long-lived bulb, so it might look different in another dataset.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now that we have the general idea of survival and hazard functions, let’s apply
+    them to a more substantial dataset.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Marriage Data
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In many countries, people are getting married later than they used to, and more
+    people stay unmarried. To explore these trends in the United States, we’ll use
+    the tools of survival analysis and data from the National Survey of Family Growth
+    (NSFG).
+  prefs: []
+  type: TYPE_NORMAL
+- en: The NSFG dataset we used in previous chapters is the pregnancy file, which contains
+    one row for each pregnancy reported by the survey respondents. In this chapter,
+    we’ll work with the respondent file, which contains information about the respondents
+    themselves.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I have compiled responses from nine iterations of the survey, conducted between
+    1982 and 2019, and selected data related to marriage. Instructions for downloading
+    this excerpt are in the notebook for this chapter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following cell downloads the data, which is a CSV file I created that combines
+    data from several iterations of the NSFG survey, from 1982 to 2019.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Details of the data preparation are in [this notebook](https://github.com/AllenDowney/MarriageNSFG/blob/master/clean_nsfg.ipynb).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can read the data like this.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: The excerpt includes one row for each of more than 70,000 respondents, and has
+    the following variables related to age and marriage.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`cmbirth`: The respondent’s date of birth, known for all respondents.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`cmintvw`: The date the respondent was interviewed, known for all respondents.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`cmmarrhx`: The date the respondent was first married, if applicable and known.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`evrmarry`: 1 if the respondent had been married prior to the date of interview,
+    0 otherwise.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The first three variables are encoded in “century-months” – that is, the integer
+    number of months since December 1899. So century-month 1 is January 1900.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To explore generational changes, we’ll group respondents by their decade of
+    birth. We’ll use the following function, which takes a value of `cmbirth` and
+    computes the corresponding decade of birth. It uses the integer division operator
+    `//` to divide by 10 and round down.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can use this function and the `apply` method to compute each respondent’s
+    decade of birth and assign it to a new column called `cohort`. In this context,
+    a **cohort** is a group of people with something in common – like the decade they
+    were born – who are treated as a group for purposes of analysis.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The result from `value_counts` shows the number of people in each cohort.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: The dataset includes more than 10,000 respondents born in each decade from the
+    1950s to the 1980s, and fewer respondents in the earlier and later decades.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Next we’ll compute each respondent’s age when married (if applicable) and their
+    age when interviewed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: To get started with this data, we’ll use the following function, which takes
+    as arguments a `DataFrame` and a list of cohorts, and returns a dictionary that
+    maps from each cohort to a `Surv` object. For each cohort, it selects their ages
+    at first marriage and uses `Surv.from_seq` to compute a survival function. The
+    `dropna=False` argument includes `NaN` values in the survival function, so the
+    result includes people who have not married.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s how we use this function.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here are the results for people born in the 1940s, 1960s, and 1980s.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/b721d866d71b0d0109fa767b1f35391485fc49d71d5a69b50a6874f9455433a9.png](../Images/c472e08b88259f4302161b149d94de95.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'If we take these results at face value, they show that people in earlier generations
+    got married younger, and more of them got married eventually. However, we should
+    not interpret these results yet, because they are not correct. There are two problems
+    we have to address:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: As discussed in [Chapter 1](chap01.html#section-nsfg), the NSFG uses stratified
+    sampling, which means that it deliberately oversamples some groups.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Also, this way of computing the survival function does not properly take into
+    account people who are not married yet.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: For the first problem, we’ll use a kind of resampling called a **weighted bootstrap**.
+    For the second problem, we’ll use a method called Kaplan-Meier estimation. We’ll
+    start with resampling.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Weighted Bootstrap
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The NSFG dataset includes a column called `finalwgt` that contains each respondent’s
+    sampling weight, which is the number of people in the population they represent.
+    We can use these weights during the resampling process to correct for stratified
+    sampling. The following function takes a `DataFrame` and the name of the column
+    that contains the sampling weights. It resamples the rows of the `DataFrame`,
+    taking the sampling weights into account, and returns a new `DataFrame`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: The current dataset includes respondents from several iterations of the survey,
+    called cycles, so in order to resample, we have to group the respondents by cycle,
+    resample each group, and then put the groups back together. That’s what the following
+    function does.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: To get started, we’ll resample the data once.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE37]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: Later we’ll resample the data several times, so we can see how much variation
+    there is due to random sampling.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following figure shows the results with resampling, compared to the results
+    from the previous section without resampling, shown as dotted lines.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE39]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/f27b6bcf8a08c708a272e059ca8a18f8e3ee91f79a43b783f5c545d56a64f9b9.png](../Images/272270efa1e2c72d300a5c52c9e06772.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: '[PRE40]'
+  prefs: []
+  type: TYPE_PRE
+- en: The difference, with and without resampling, is substantial, which shows that
+    we need to correct for stratified sampling to get accurate results.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now let’s get to the second problem, dealing with incomplete data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Estimating Hazard Functions
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In the light bulb example, we know the life spans for all 50 bulbs, so we can
+    compute the survival function directly – and we can use the survival function
+    to compute the hazard function.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the marriage example, we know the age at first marriage for some respondents,
+    the ones who had been married before they were interviewed. But for respondents
+    who had never married, we don’t know at what age they would marry in the future
+    – or if they will.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This kind of missing data is said to be **censored**. That term might seem odd,
+    because censored information is usually hidden deliberately, but in this case
+    it is hidden just because we don’t know the future.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'However, we have partial information we can work with: if someone is unmarried
+    when they are surveyed, we know that the age when they get married (if they do)
+    must be greater than their current age.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can use this partial information to estimate the hazard function; then we
+    can use the hazard function to compute the survival function. This process is
+    called **Kaplan-Meier estimation**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To demonstrate, I’ll select just one cohort from the resampled data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE41]'
+  prefs: []
+  type: TYPE_PRE
+- en: For respondents who were married when they were surveyed, we’ll select their
+    age at first marriage. There are 9921 of them, which we’ll call “complete” cases.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE42]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE43]'
+  prefs: []
+  type: TYPE_PRE
+- en: For respondents who had not married, we’ll select their age when they were surveyed.
+    There are 5468 of them, which we’ll call the “ongoing” cases.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE44]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE45]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now, to estimate the hazard function, we’ll compute the total number of cases
+    that were “at risk” at each age, including everyone who was unmarried up to that
+    age. It will be convenient to make a `FreqTab` object that counts the number of
+    complete and ongoing cases at each age.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE46]'
+  prefs: []
+  type: TYPE_PRE
+- en: As an example, there are 58 respondents who reported that they were married
+    for the first time at age 25.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE47]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE48]'
+  prefs: []
+  type: TYPE_PRE
+- en: And another 5 respondents who were surveyed at age 25 and reported that they
+    had never married.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE49]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE50]'
+  prefs: []
+  type: TYPE_PRE
+- en: From these `FreqTab` objects, we can compute unnormalized `Surv` objects that
+    contain the number of complete and ongoing cases that exceed each age.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE51]'
+  prefs: []
+  type: TYPE_PRE
+- en: For example, there are 2848 people who reported getting married after age 25.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE52]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE53]'
+  prefs: []
+  type: TYPE_PRE
+- en: And 2273 people surveyed after age 25 who had never married.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE54]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE55]'
+  prefs: []
+  type: TYPE_PRE
+- en: The sum of the four numbers we just computed is the number of respondents who
+    were at risk – that is, people who could have married at age 25. The term “at
+    risk” is a legacy of survival analysis in medicine, where it often refers to risk
+    of disease or death. It might seem incongruent in the context of marriage, which
+    is generally considered a positive milestone. That said, here’s how we compute
+    it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE56]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE57]'
+  prefs: []
+  type: TYPE_PRE
+- en: Of those, the number who actually married at age 25 is `ft_complete[25]`. So
+    we can compute the hazard function at age 25 like this.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE58]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE59]'
+  prefs: []
+  type: TYPE_PRE
+- en: That’s how we can compute the hazard function at a single age. Now let’s compute
+    the whole function, for all ages. We’ll use the `union` method of the `Index`
+    class to compute a Pandas `Index` that contains all of the ages from `ft_complete`
+    and `ft_ongoing`, in order.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE60]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can compute the number of people at risk at every age, by looking up
+    the ages in `ts` in each of the `FreqTab` and `Surv` objects.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE61]'
+  prefs: []
+  type: TYPE_PRE
+- en: Finally, we can compute the hazard function at each age, and put the results
+    into a `Hazard` object.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE62]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s what the cumulative hazard function looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE63]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/f3552c1e500d46d488fbb5f01af5b46e9f301f33836909ddca98e1fc5578ef07.png](../Images/13d56ec1a37187f51b80c824cf33be6f.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: It is steepest between ages 20 and 30, which means that an unmarried person
+    is at the greatest “risk” of getting married at these ages. After that, the cumulative
+    hazard levels off, which means that the hazard gradually decreases.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Estimating Survival Functions
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: If we are given a survival function, we know how to compute the hazard function.
+    Now let’s go in the other direction.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s one way to think of it. The hazard function indicates the probability
+    of getting married at each age, if you have not already married. So the complement
+    of the hazard function is the probability of staying unmarried at each age.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In order to “survive” past a given age, `t`, you have to stay unmarried at every
+    age up to and including `t`. And the probability of doing that is the product
+    of the complementary hazard function, which we can compute like this.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE64]'
+  prefs: []
+  type: TYPE_PRE
+- en: The `Hazard` object has a `make_surv` method that does this computation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE65]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s what the result looks like, compared to the previous result (dotted line),
+    which corrected for stratified resampling, but did not handle censored data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE66]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/2f32d31a1f4cedf5d0604cc266c6e2361faf81386eeac8bc51203c3229c7cffa.png](../Images/68732cef43fa7f22a6d765dca4f8a9a8.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: We can see how important it is to handle censored data correctly.
+  prefs: []
+  type: TYPE_NORMAL
+- en: A survival function like this was the basis of a famous magazine article in
+    1986 – *Newsweek* reported that a 40-year old unmarried woman was “more likely
+    to be killed by a terrorist” than get married. That claim was widely reported
+    and became part of popular culture, but it was wrong then (because it was based
+    on faulty analysis) and turned out to be even more wrong (because of cultural
+    changes that were already in progress). In 2006, *Newsweek* ran an another article
+    acknowledging their error.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I encourage you to read more about this article, the statistics it was based
+    on, and the reaction. It should remind you of the ethical obligation to perform
+    statistical analysis with care, interpret the results with appropriate skepticism,
+    and present them to the public accurately and honestly.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Snopes has a good article on the topic](https://www.snopes.com/fact-check/marry-go-round/).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following function encapsulates the steps of Kaplan-Meier estimation. It
+    takes as arguments sequences of survival times for complete and ongoing cases,
+    and returns a `Hazard` object.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE67]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here’s a function that takes a group of respondents, extracts survival times,
+    calls `estimate_hazard` to get the hazard function, and then computes the corresponding
+    survival function.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE68]'
+  prefs: []
+  type: TYPE_PRE
+- en: Soon we’ll use these functions to compute confidence intervals for survival
+    functions. But first let’s see another way to compute Kaplan-Meier estimates.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Lifelines
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: A Python package called `lifelines` provides tools for survival analysis, including
+    functions that compute Kaplan-Meier estimates.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following cell installs `lifelines` if necessary.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE69]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can use it to confirm that the result in the previous section is correct.
+    First we’ll compute the survival function using `estimate_survival`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE70]'
+  prefs: []
+  type: TYPE_PRE
+- en: Next we’ll compute it using `lifelines`. First we’ll get the data into the format
+    `lifelines` requires.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE71]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can make a `KaplanMeierFitter` object and fit the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE72]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE73]'
+  prefs: []
+  type: TYPE_PRE
+- en: After fitting the data, we can call the `plot` function to display the results,
+    which include the estimated survival function and a confidence interval – although
+    the confidence interval is not correct in this case because it doesn’t correct
+    for stratified sampling.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE74]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/8607ce98344389d6b166680905db153438d143f4355f7ac898e0a9889e32a49e.png](../Images/a532cab8cf163c51537f14c1b79f8d83.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Unlike the survival function we computed, the one from `lifelines` starts from
+    0. But the rest of the function is the same, within floating-point error.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE75]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE76]'
+  prefs: []
+  type: TYPE_PRE
+- en: In the next section, we’ll use weighted resampling to compute confidence intervals
+    that take stratified sampling into account.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Confidence Intervals
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The Kaplan-Meier estimate we computed is based on a single resampling of the
+    dataset. To get an idea of how much variation there is due to random sampling,
+    we’ll run the analysis with several resamplings and plot the results.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We’ll use the following function, which takes a `DataFrame` and a list of cohorts,
+    estimates the survival function for each cohort, and returns a dictionary that
+    maps from each integer cohort to a `Surv` object.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This function is identical to `make_survival_map`, except that it calls `estimate_survival`,
+    which uses Kaplan-Meier estimation, rather than `Surv.from_seq`, which only works
+    if there is no censored data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE77]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following loop generates 101 random resamplings of the dataset and makes
+    a list of 101 dictionaries containing the estimated survival functions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE78]'
+  prefs: []
+  type: TYPE_PRE
+- en: To plot the results, we’ll use the following function, which takes that list
+    of dictionaries, an integer cohort, and a color string. It loops through the dictionaries,
+    selects the survival function for the given cohort, and plots it with a nearly
+    transparent line – which is one way to visualize the variability between resamplings.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE79]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here are the results for birth cohorts from the 1940s to the 1990s.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE80]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/857e37c477c353c4342f6ed14a5a01fa4e82dbbdfb36b1a60c4da15dadfbb095.png](../Images/5153b02007fc0b61a695bfe9dee5400d.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: This visualization is good enough for exploration, but the lines look blurry
+    and some of the labels overlap. More work might be needed to make a publication-ready
+    figure, but we’ll keep it simple for now.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Several patterns are visible:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Women born in the 1940s married earliest – cohorts born in the 1950s and 1960s
+    married later, but about the same fraction stayed unmarried.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Women born in the 1970s married later *and* stayed unmarried at higher rates
+    than previous cohorts.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Cohorts born in the 1980s and 1990s are marrying even later, and are on track
+    to stay unmarried at even higher rates – although these patterns could change
+    in the future.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: We’ll have to wait for the next data release from the NSFG to learn more.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Expected Remaining Lifetime
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Given a distribution, we can compute the expected remaining lifetime as a function
+    of elapsed time. For example, given the distribution of pregnancy lengths, we
+    can compute the expected time until delivery. To demonstrate, we’ll use pregnancy
+    data from the NSFG.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following cells download the data files and install `statadict`, which we
+    need to read the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE81]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE82]'
+  prefs: []
+  type: TYPE_PRE
+- en: We’ll use `get_nsfg_groups` to read the data and divide it into first babies
+    and others.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE83]'
+  prefs: []
+  type: TYPE_PRE
+- en: We’ll start with a single resampling of the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE84]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s the PMF of pregnancy durations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE85]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now suppose it’s the beginning of the 36th week of pregnancy. Remembering that
+    the most common pregnancy length is 39 weeks, we expect the remaining time to
+    be 3-4 weeks. To make that estimate more precise, we can identify the values in
+    the distribution that equal or exceed 36 weeks.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE86]'
+  prefs: []
+  type: TYPE_PRE
+- en: Next we’ll make a new `Pmf` object that contains only those values, shifted
+    left so the current time is at 0.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE87]'
+  prefs: []
+  type: TYPE_PRE
+- en: Because we selected a subset of the values in the `Pmf`, the probabilities no
+    longer add up to 1, but we can normalize the `Pmf` so they do.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE88]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE89]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s the result, which shows the distribution of remaining time at the beginning
+    of the 36th week.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE90]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/40fb6b96fad202426770af9618cbf06f7e5c8c7b2625c5425e543bd2985b1737.png](../Images/b35790b2de6d473b65b158c8f3b42cea.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The mean of this distribution is the expected remaining time.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE91]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE92]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following function encapsulates these steps and computes the distribution
+    of remaining time for a given `Pmf` at a given time, `t`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE93]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following function takes a `Pmf` of pregnancy lengths and computes the expected
+    remaining time at the beginning of each week from the 36th to the 43rd.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE94]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here are the results for a single resampling of the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE95]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE96]'
+  prefs: []
+  type: TYPE_PRE
+- en: To see how much variation there is due to random sampling, we can run this analysis
+    with several resamplings and plot the results.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE97]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/203affde7f36d1b69038756a0f4b3fa8945234c040f14534ffcfb3b91fc93f2c.png](../Images/e69217b8e7e173d0c2ff64d4744798b0.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Between weeks 36 and 39, the expected remaining time decreases until, at the
+    beginning of the 39th week, it is about 0.6 weeks. But after that, the curve levels
+    off. At the beginning of the 40th week, the expected remaining time is still close
+    to 0.6 weeks – actually a little higher – and at the beginning of the 41st, 42nd,
+    and 43rd, it is almost the same. For people waiting anxiously for a baby to be
+    born, this behavior seems quite cruel.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Glossary
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '**survival analysis**: A set of methods for describing and predicting the time
+    until an event of interest, often focused on lifetimes or durations.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**survival function**: A function that maps from a time, \(t\), to the probability
+    of surviving beyond \(t\).'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**hazard function**: A function that maps from \(t\) to the fraction of cases
+    that experience the event at \(t\), out of all cases that survive until \(t\)
+    .'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**cumulative hazard function**: The cumulative sum of the hazard function,
+    often useful for visualization.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**weighted bootstrap:** A form of resampling that uses sampling weights to
+    correct for stratified sampling by simulating a representative sample.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**censored data**: Data that is only partially known because the event of interest
+    has not yet occurred or was unobserved.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Kaplan-Meier estimation**: A method for estimating survival and hazard functions
+    in datasets with censored observations.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**cohort**: A set of subjects with shared characteristics – like decade of
+    birth – analyzed as a group.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Exercises
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Exercise 13.1
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: We can use the methods in this chapter to estimate hazard and survival functions
+    for the duration of a marriage. To keep things simple, we’ll consider only first
+    marriages, and we’ll focus on divorce as the endpoint, rather than separation
+    or death.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the NSFG data, the `cmdivorcx` column contains the date of divorce for each
+    respondent’s first marriage, if applicable, encoded in century-months. Compute
+    the duration of marriages that have ended in divorce, and the duration, so far,
+    of marriages that are ongoing.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For complete cases, compute the elapsed time between `cmdivorcx` and `cmmarrhx`.
+    If both values are valid – not `NaN` – that means the respondent’s first marriage
+    ended in divorce.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: To identify ongoing cases, select people who have only married once and who
+    are still married. You can use `fmarno`, which records the number of times each
+    respondent has married, and `fmarital`, which encodes their marital status – the
+    value 1 indicates that the respondent is married.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: In some cases the values of these variables are only approximate, so you might
+    find a small number of negative differences, but they should not be more than
+    one year.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Estimate the hazard and survival functions for the duration of marriage. Plot
+    the cumulative hazard function – when is the danger of divorce highest? Plot the
+    survival function – what fraction of marriages end in divorce?
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE98]'
+  prefs: []
+  type: TYPE_PRE
+- en: Exercise 13.2
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: In 2012, a team of demographers at the University of Southern California estimated
+    life expectancy for people born in Sweden in the early 1800s and 1900s. For ages
+    from 0 to 91 years, they estimated the age-specific mortality rate, which is the
+    fraction of people who die at a given age, out of all who survive until that age
+    – which you might recognize as the hazard function.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I used an online graph digitizer to get the data from the figure in their paper
+    and store it in a CSV file. Instructions for downloading the data are in the notebook
+    for this chapter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Data source: Beltrán-Sánchez, H., Crimmins, E. M., & Finch, C. E. (2012). Early
+    cohort mortality predicts the rate of aging in the cohort: a historical analysis.
+    *Journal of developmental origins of health and disease*, 3(5), 380-386.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following cell downloads the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE99]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can load the data like this.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE100]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following function interpolates the data to make a hazard function with
+    approximate mortality rates for each age from 0 to 99.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE101]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can make a `Hazard` object like this.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE102]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s what the mortality rates look like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE103]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/75e69939ebfeef40ace8cf9d70fb79a6e072afb77b87796a903e22639241ef19.png](../Images/fd98088a28e20449224587a2ccea2a1f.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Use `make_surv` to make a survival function based on these rates, and `make_cdf`
+    to compute the corresponding CDF. Plot the results.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Then use `make_pmf` to make a `Pmf` object that represents the distribution
+    of lifetimes, and plot it. Finally, use `compute_pmf_remaining` to compute the
+    average remaining lifetime at each age from 0 to 99. Plot the result.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the remaining lifetime curve, you should see a counterintuitive pattern –
+    for the first few years of life, remaining lifetime increases. Because infant
+    mortality was so high in the early 1800s, an older child was expected to live
+    longer than a younger child. After about age 5, life expectancy returns to the
+    pattern we expect – young people are expected to live longer than old people.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If you are interested in this topic, you might like Chapter 5 of my book, *Probably
+    Overthinking It*, which presents similarly counterintuitive results from many
+    areas of statistics.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Available from [https://probablyoverthinking.it](https://probablyoverthinking.it).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Think Stats: Exploratory Data Analysis in Python, 3rd Edition](https://allendowney.github.io/ThinkStats/index.html)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Copyright 2024 [Allen B. Downey](https://allendowney.com)
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Code license: [MIT License](https://mit-license.org/)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Text license: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  prefs: []
+  type: TYPE_NORMAL

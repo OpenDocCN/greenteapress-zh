@@ -1,0 +1,789 @@
+- en: Probability Mass Functions
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/ThinkStats/chap03.html](https://allendowney.github.io/ThinkStats/chap03.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: In the previous chapter we represented distributions using a `FreqTab` object,
+    which contains a set of values and their frequencies – that is, the number of
+    times each value appears. In this chapter we’ll introduce another way to describe
+    a distribution, a probability mass function (PMF).
+  prefs: []
+  type: TYPE_NORMAL
+- en: To represent a PMF, we’ll use an object called a `Pmf`, which contains a set
+    of values and their probabilities. We’ll use `Pmf` objects to compute the mean
+    and variance of a distribution, and the skewness, which indicates whether it is
+    skewed to the left or right. Finally, we will explore how a phenomenon called
+    the “inspection paradox” can cause a sample to give a biased view of a distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ThinkStats/blob/v3/nb/chap03.ipynb).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: PMFs
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: A `Pmf` object is like a `FreqTab` that contains probabilities instead of frequencies.
+    So one way to make a `Pmf` is to start with a `FreqTab`. For example, here’s a
+    `FreqTab` that represents the distribution of values in a short sequence.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | freqs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 1 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 2 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 1 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 5 | 1 |'
+  prefs: []
+  type: TYPE_TB
+- en: The sum of the frequencies is the size of the original sequence.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: If we divide the frequencies by `n`, they represent proportions, rather than
+    counts.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 0.2 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 0.4 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 0.2 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 5 | 0.2 |'
+  prefs: []
+  type: TYPE_TB
+- en: This result indicates that 20% of the values in the sequence are 1, 40% are
+    2, and so on.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We can also think of these proportions as probabilities in the following sense:
+    if we choose a random value from the original sequence, the probability we choose
+    the value 1 is 0.2, the probability we choose the value 2 is 0.4, and so on.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Because we divided through by `n`, the sum of the probabilities is 1, which
+    means that this distribution is **normalized**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: A normalized `FreqTab` object represents a **probability mass function** (PMF),
+    so-called because probabilities associated with discrete values are also called
+    “probability masses”.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The `empiricaldist` library provides a `Pmf` object that represents a probability
+    mass function, so instead of creating a `FreqTab` object and then normalizing
+    it, we can create a `Pmf` object directly.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 0.2 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 0.4 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 0.2 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 5 | 0.2 |'
+  prefs: []
+  type: TYPE_TB
+- en: The `Pmf` is normalized so the total probability is 1.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`Pmf` and `FreqTab` objects are similar in many ways. To look up the probability
+    associated with a value, we can use the bracket operator.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: Or use parentheses to call the `Pmf` like a function.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: To assign a probability to a value, you have to use the bracket operator.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'You can modify an existing `Pmf` by incrementing the probability associated
+    with a value:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Or you can multiply a probability by a factor:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: If you modify a `Pmf`, the result may not be normalized – that is, the probabilities
+    may no longer add up to 1.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: The `normalize` method renormalizes the `Pmf` by dividing through by the sum
+    – and returning the sum.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`Pmf` objects provide a `copy` method so you can make and modify a copy without
+    affecting the original.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 0.235294 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 0.294118 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 0.235294 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 5 | 0.235294 |'
+  prefs: []
+  type: TYPE_TB
+- en: Like a `FreqTab` object, a `Pmf` object has a `qs` attribute that accesses the
+    quantities and a `ps` attribute that accesses the probabilities.
+  prefs: []
+  type: TYPE_NORMAL
+- en: It also has a `bar` method that plots the `Pmf` as a bar graph and a `plot`
+    method that plots it as a line graph.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '## Summarizing a PMF'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In [Chapter 1](chap01.html#section-summary-statistics) we computed the mean
+    of a sample by adding up the elements and dividing by the number of elements.
+    Here’s a simple example.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now suppose we compute the PMF of the values in the sequence.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: Given the `Pmf`, we can still compute the mean, but the process is different
+    – we have to multiply the probabilities and quantities and add up the products.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: Notice that we *don’t* have to divide by `n`, because we already did that when
+    we normalized the `Pmf`. `Pmf` objects have a `mean` method that does the same
+    thing.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: Given a `Pmf`, we can compute the variance by computing the deviation of each
+    quantity from the mean.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: Then we multiply the squared deviations by the probabilities and add up the
+    products.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: The `var` method does the same thing.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE37]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: From the variance, we can compute the standard deviation in the usual way.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE39]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE40]'
+  prefs: []
+  type: TYPE_PRE
+- en: Or the `std` method does the same thing.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE41]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE42]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`Pmf` also provides a `mode` method that finds the value with the highest probability.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE43]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE44]'
+  prefs: []
+  type: TYPE_PRE
+- en: We’ll see more methods as we go along, but that’s enough to get started.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Class Size Paradox
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: As an example of what we can do with `Pmf` objects, let’s consider a phenomenon
+    I call “the class size paradox.”
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'At many American colleges and universities, the student-to-faculty ratio is
+    about 10:1. But students are often surprised that many of their classes have more
+    than 10 students, sometimes a lot more. There are two reasons for the discrepancy:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Students typically take 4 or 5 classes per semester, but professors often teach
+    1 or 2.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The number of students in a small class is small, and the number of students
+    in a large class is large.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The first effect is obvious, at least once it is pointed out; the second is
+    more subtle. Let’s look at an example. Suppose that a college offers 65 classes
+    in a given semester, and we are given the number of classes in each of the following
+    size ranges.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE45]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | count |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| class size |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| [5, 10) | 8 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| [10, 15) | 8 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| [15, 20) | 14 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| [20, 25) | 4 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| [25, 30) | 6 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| [30, 35) | 12 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| [35, 40) | 8 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| [40, 45) | 3 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| [45, 50) | 2 |'
+  prefs: []
+  type: TYPE_TB
+- en: The Pandas function `interval_range` makes an `Index` where each label represents
+    a range of values. The notation `[5, 10)` means that `5` is included in the interval
+    and `10` is not. Since we don’t know the sizes of the classes in each interval,
+    let’s assume that all sizes are at the midpoint of the range.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE46]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE47]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now let’s make a `Pmf` that represents the distribution of class sizes. Because
+    we know the sizes and their frequencies, we can create a `Pmf` directly, passing
+    as arguments the counts, sizes, and a name. When we normalize the new `Pmf`, the
+    result is the sum of the counts.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE48]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE49]'
+  prefs: []
+  type: TYPE_PRE
+- en: If you ask the college for the average class size, they report the mean of this
+    distribution, which is 23.7.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE50]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE51]'
+  prefs: []
+  type: TYPE_PRE
+- en: But if you survey a group of students, ask them how many students are in their
+    classes, and compute the mean, the average is bigger. Let’s see how much bigger.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following function takes the actual `Pmf` of class sizes and makes a new
+    `Pmf` that represents the class sizes as seen by students. The quantities in the
+    two distributions are the same, but the probabilities in the distribution are
+    multiplied by the quantities, because in a class with size `x`, there are `x`
+    students who observe that class. So the probability of observing a class is proportional
+    to its size.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE52]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can compute the biased `Pmf` as observed by students.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE53]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s what the two distributions look like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE54]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/329dd2226fddec5739141f3e29482265fd24228ef2edf510fd2fa3aeaa0e7aab.png](../Images/ca215be8e821d91060687873516b0e82.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: In the observed distribution there are fewer small classes and more large ones.
+    And the biased mean is 29.1, almost 25% higher than the actual mean.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE55]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE56]'
+  prefs: []
+  type: TYPE_PRE
+- en: It is also possible to invert this operation. Suppose you want to find the distribution
+    of class sizes at a college, but you can’t get reliable data. One option is to
+    choose a random sample of students and ask how many students are in their classes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The result would be biased for the reasons we’ve just seen, but you can use
+    it to estimate the actual distribution. Here’s the function that unbiases a `Pmf`
+    by dividing the probabilities by the sizes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE57]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here’s the result.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE58]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE59]'
+  prefs: []
+  type: TYPE_PRE
+- en: The mean of the debiased `Pmf` is the same as the mean of the actual distribution
+    we started with.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If you think this example is interesting, you might like Chapter 2 of *Probably
+    Overthinking It*, which includes this and several other examples of what’s called
+    the “inspection paradox”.
+  prefs: []
+  type: TYPE_NORMAL
+- en: NSFG Data
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In the previous chapter, we plotted frequency tables of pregnancy lengths for
+    first babies and others. But the sizes of the groups are not the same, so we can’t
+    compare the frequency tables directly. Because PMFs are normalized, we can compare
+    them. So let’s load the NSFG data again and make `Pmf` objects to represent distributions
+    of pregnancy lengths.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following cells download the data files and install `statadict`, which we
+    need to read the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE60]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE61]'
+  prefs: []
+  type: TYPE_PRE
+- en: The `nsfg` module provides a `read_nsfg_groups` function that reads the data,
+    selects rows that represent live births, and partitions live births into first
+    babies and others. It returns three `DataFrame` objects.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE62]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can use `firsts` and `others` to make a `Pmf` for the pregnancy lengths in
+    each group.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE63]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here are the PMFs for first babies and others, plotted as bar graphs.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE64]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/969668e0953968aca7b4db5c4f02da3c9ebf8eea8585fd389fd31ff53c994bd5.png](../Images/c0134c516bbf2aaded02b2ee894b33fb.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: By plotting the PMF instead of the frequency table, we can compare the two distributions
+    without being misled by the difference in sizes of the samples. Based on this
+    figure, first babies seem to be less likely than others to arrive on time (week
+    39) and more likely to be late (weeks 41 and 42).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Other Visualizations
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: FreqTabograms and PMFs are useful while you are exploring data and trying to
+    identify patterns and relationships. Once you have an idea what is going on, a
+    good next step is to design a visualization that makes the patterns you have identified
+    as clear as possible.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the NSFG data, the biggest differences in the distributions are near the
+    mode. So it makes sense to zoom in on that part of the graph, and select data
+    from weeks 35 to 46.
+  prefs: []
+  type: TYPE_NORMAL
+- en: When we call a `Pmf` object like a function, we can look up a sequence of quantities
+    and get a sequence of probabilities.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE65]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE66]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE67]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE68]'
+  prefs: []
+  type: TYPE_PRE
+- en: So we can compute the differences in the probabilities like this.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE69]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE70]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s what they look like, multiplied by 100 to express the differences in
+    percentage points.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE71]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/be639c1c1b2aa7c3bbb9e1dee6ed45bab8624e52be84059a787a7007b6377ac0.png](../Images/dfaba7dc052555cec4f928868e9eaacd.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'This figure makes the pattern clearer: first babies are less likely to be born
+    in week 39, and somewhat more likely to be born in weeks 41 and 42.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: When we see a pattern like this in a sample, we can’t be sure it also holds
+    in the population – and we don’t know whether we would see it in another sample
+    from the same population. We’ll revisit this question in [Chapter 9](chap09.html#chapter-hypothesis-testing).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Glossary
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: There are not as many new terms in this chapter as in the previous chapters.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**normalized:** A set of probabilities are normalized if they add up to 1.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**probability mass function (PMF)**: A function that represents a distribution
+    by mapping each quantity to its probability.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Exercises
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: For the exercises in this chapter, we’ll use the NSFG respondent file, which
+    contains one row for each respondent. Instructions for downloading the data are
+    in the notebook for this chapter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE72]'
+  prefs: []
+  type: TYPE_PRE
+- en: The codebook for this dataset is at [https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Dataset_Documentation/NSFG/Cycle6Codebook-Female.pdf](https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Dataset_Documentation/NSFG/Cycle6Codebook-Female.pdf).
+  prefs: []
+  type: TYPE_NORMAL
+- en: The `nsfg.py` module provides a function that reads the respondent file and
+    returns a `DataFrame`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE73]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE74]'
+  prefs: []
+  type: TYPE_PRE
+- en: This `DataFrame` contains 7643 rows and 3092 columns.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exercise 3.1
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Select the column `numbabes`, which records the “number of babies born alive”
+    to each respondent. Make a `FreqTab` object and display the frequencies of the
+    values in this column. Check that they are consistent with the frequencies in
+    the code book. Are there any special values that should be replaced with `NaN`?
+  prefs: []
+  type: TYPE_NORMAL
+- en: Then make a `Pmf` object and plot it as a bar graph. Is the distribution symmetric,
+    skewed to the left, or skewed to the right?
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE75]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/29d6f838b294e581d299108b92eeda1c7f945f73539d261292111180458b441f.png](../Images/881dcc0a35a071942e937a177bead9b2.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Exercise 3.2
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: In the same way that the mean identifies a central point in a distribution,
+    and variance quantifies its spread, there is another statistic, called **skewness**,
+    that indicates whether a distribution is skewed to the left or right.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Given a sample, we can compute the skewness by computing the sum of the cubed
+    deviations and dividing by the standard deviation cubed. For example, here’s how
+    we compute the skewness of `numbabes`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE76]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE77]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE78]'
+  prefs: []
+  type: TYPE_PRE
+- en: A positive value indicates that a distribution is skewed to the right, and a
+    negative value indicates that it is skewed to the left.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If you are given a `Pmf`, rather than a sequence of values, you can compute
+    skewness like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Compute the deviation of each quantity in the `Pmf` from the mean.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Cube the deviations, multiply by the probabilities in the `Pmf`, and add up
+    the products.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Divide the sum by the standard deviation cubed.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Write a function called `pmf_skewness` that takes a `Pmf` object and returns
+    its skewness.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Use your function and the `Pmf` of `numbabes` to compute skewness, and confirm
+    you get the same result we computed above.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exercise 3.3
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Something like the class size paradox appears if you survey children and ask
+    how many children are in their family. Families with many children are more likely
+    to appear in your sample, and families with no children have no chance to be in
+    the sample at all.
+  prefs: []
+  type: TYPE_NORMAL
+- en: From `resp`, select `numkdhh`, which records the number of children under 18
+    in each respondent’s household. Make a `Pmf` of the values in this column.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Use the `bias` function to compute the distribution we would see if we surveyed
+    the children and asked them how many children under 18 (including themselves)
+    are in their household.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Plot the actual and biased distributions, and compute their means.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Think Stats: Exploratory Data Analysis in Python, 3rd Edition](https://allendowney.github.io/ThinkStats/index.html)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Copyright 2024 [Allen B. Downey](https://allendowney.com)
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Code license: [MIT License](https://mit-license.org/)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Text license: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  prefs: []
+  type: TYPE_NORMAL

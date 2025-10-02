@@ -1,0 +1,929 @@
+- en: Least Squares
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/ThinkStats/chap10.html](https://allendowney.github.io/ThinkStats/chap10.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: This chapter and the next introduce the idea of fitting a model to data. In
+    this context, a **model** consists of a mathematical description of the relationship
+    between variables – like a straight line – and a description of random variation
+    – like a normal distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: When we say that a model fits data, we usually mean that it minimizes errors,
+    which are the distances between the model and the data. We’ll start with one of
+    the most widely-used ways of fitting a model, minimizing the sum of the squared
+    errors, which is called a least squares fit.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We’ll also start with models that work with just two variables at a time. The
+    next chapter introduces models that can handle more than two variables.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ThinkStats/blob/v3/nb/chap10.ipynb).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: Least Squares Fit
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: As a first example, let’s return to the scenario from [Chapter 8](chap08.html#section-weighing-penguins).
+    Suppose you are a researcher in Antarctica, studying local populations of penguins.
+    As part of your data collection, you capture a sample of penguins, measure and
+    weigh them – and then release them unharmed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As you would soon learn, it can be difficult to get penguins to stay on the
+    scale long enough to get an accurate measurement. Suppose that for some penguins
+    we have measurements like flipper and bill sizes, but no weights. Let’s see if
+    we can use the other measurements to fill in the missing data – this process is
+    called **imputation**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We’ll start by exploring the relationship between the weights and measurements,
+    using data collected between 2007 and 2010 by researchers at Palmer Station in
+    Antarctica. The data they collected is freely available – instructions for downloading
+    it are in the notebook for this chapter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following cell downloads the data from a repository created by Allison Horst.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Horst AM, Hill AP, Gorman KB (2020). palmerpenguins: Palmer Archipelago (Antarctica)
+    penguin data. R package version 0.1.0\. [https://allisonhorst.github.io/palmerpenguins/](https://allisonhorst.github.io/palmerpenguins/).
+    doi: 10.5281/zenodo.3960218.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The data was collected as part of the research that led to this paper: Gorman
+    KB, Williams TD, Fraser WR (2014). Ecological sexual dimorphism and environmental
+    variability within a community of Antarctic penguins (genus Pygoscelis). PLoS
+    ONE 9(3):e90081\. [https://doi.org/10.1371/journal.pone.0090081](https://doi.org/10.1371/journal.pone.0090081)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can use `read_csv` to read the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: The dataset includes measurements of 151 Adélie penguins. We can use `query`
+    to select the rows that contain this data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now suppose we know the flipper length of an Adélie penguin – let’s see how
+    well we can predict its weight. First we’ll select these columns from the `DataFrame`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s a scatter plot showing the relationship between these quantities.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/c1497e43f443a03d9aefd5923bece65ad0f62beba904785a691698be286484fc.png](../Images/31bd8d4945c669a8e26a5bf1600eeda7.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: It looks like they are related – we can quantify the strength of the relationship
+    by computing the coefficient of correlation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: The correlation is about 0.47, so penguins with longer flippers tend to be heavier.
+    That’s useful because it means we can guess a penguin’s weight more accurately
+    if we know its flipper length – but correlation alone doesn’t tell us how to make
+    those guesses. For that, we need to choose a **line of best fit**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: There are many ways to define the “best” line, but for data like this a common
+    choice is a **linear least squares** fit, which is the straight line that minimizes
+    the mean squared error (MSE).
+  prefs: []
+  type: TYPE_NORMAL
+- en: SciPy provides a function called `linregress` that computes a least squares
+    fit. The name is short for **linear regression**, which is another term for a
+    model like this. The arguments of `linregress` are the `x` values and the `y`
+    values, in that order.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is a `LinregressResult` object that contains the slope and intercept
+    of the fitted line, along with other information we’ll unpack soon. The slope
+    is about 32.8, which means that each additional millimeter of flipper length is
+    associated with an additional 32.8 grams of body weight.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The intercept is -2535 grams, which might seem nonsensical, since a measured
+    weight can’t be negative. It might make more sense if we use the slope and intercept
+    to evaluate the fitted line at the average flipper length.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: For a penguin with the average flipper length, about 190 mm, the expected body
+    weight is about 3700 grams.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following function takes the result from `linregress` and a sequence of
+    `xs` and finds the point on the fitted line for each value of `x`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: The name `predict` might seem odd here – in natural language, a **prediction**
+    usually pertains to something happening in the future, but in the context of regression,
+    the points on the fitted line are also called predictions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can use `predict` to compute the points on the line for a range of flipper
+    sizes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s the fitted line along with the scatter plot of the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/7a9504e113fd8974cb69f6a98c5a33729bd2366c24678199dbae4578866a29e8.png](../Images/1afebe5df1100f2adeae0b38ba6943d8.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: As expected, the fitted line goes through the center of the data and follows
+    the trend. And some of the predictions are accurate – but many of the data points
+    are far from the line. To get a sense of how good (or bad) the predictions are,
+    we can compute the prediction error, which is the vertical distance of each point
+    from the line. The following function computes these errors, which are also called
+    **residuals**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here are the residuals for body mass as a function of flipper length.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: As an example, we can look at the results for the first penguin in the dataset.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: The flipper length of the selected penguin is 181 mm and the predicted body
+    mass is 3407 grams. Now let’s see what the actual mass is.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: The actual mass of this penguin is 3750 grams, and the residual – after subtracting
+    away the prediction – is 343 grams.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The average of the squared residuals is the mean squared error (MSE) of the
+    predictions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: By itself, this number doesn’t mean very much. We can make more sense of it
+    by computing the coefficient of determination.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Coefficient of Determination
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Suppose you want to guess the weight of a penguin. If you know its flipper length,
+    you can use the least squares fit to inform your guess, and the MSE quantifies
+    the accuracy of your guesses, on average.
+  prefs: []
+  type: TYPE_NORMAL
+- en: But what if you don’t know the flipper length – what would you guess? It turns
+    out that guessing the mean is the best strategy in the sense that it minimizes
+    the MSE. If we always guess the mean, the prediction errors are the deviations
+    from the mean.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: And the MSE is the mean squared deviation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: You might remember that the mean squared deviation is the variance.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: So we can think of the variance of the masses as the MSE if we always guess
+    the mean, and the variance of the residuals as the MSE if we use the regression
+    line. If we compute the ratio of these variances and subtract it from 1, the result
+    indicates how much the MSE is reduced if we use flipper lengths to inform our
+    guesses.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following function computes this value, which is technically called the
+    **coefficient of determination**, but because it is denoted \(R^2\), most people
+    call it “R squared”.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: In the example, \(R^2\) is about 0.22, which means that the fitted line reduces
+    MSE by 22%.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: It turns out that there’s a relationship between the coefficient of determination,
+    \(R^2\), and the coefficient of correlation, \(r\). As you might guess based on
+    the notation, \(r^2 = R^2\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can show that’s true by computing the square root of \(R^2\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: And comparing it to the correlation we computed earlier.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE37]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: They are the same except for a small difference due to floating-point approximation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The `linregress` function also computes this value and returns it as an attribute
+    in the `RegressionResult` object.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE39]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE40]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The coefficients of determination and correlation convey mostly the same information,
+    but they are interpreted differently:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Correlation quantifies the strength of the relationship on a scale from -1 to
+    1.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: \(R^2\) quantifies the ability of the fitted line to reduce MSE.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Also, \(R^2\) is always positive, so it doesn’t indicate whether the correlation
+    is positive or negative.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Minimizing MSE
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Earlier I said that the least squares fit is the straight line that minimizes
+    the mean squared error (MSE). We won’t prove that, but we can test it by adding
+    small random values to the intercept and slope, and checking whether the MSE gets
+    worse.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE41]'
+  prefs: []
+  type: TYPE_PRE
+- en: To run the test, we need to make an object with `intercept` and `slope` attributes
+    – we’ll use the `SimpleNamespace` object provided by the `types` module.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE42]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE43]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can pass this object to `compute_residuals` and use the residuals to compute
+    the MSE.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE44]'
+  prefs: []
+  type: TYPE_PRE
+- en: If we compare the result to the MSE of the least squares line, it is always
+    worse.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE45]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE46]'
+  prefs: []
+  type: TYPE_PRE
+- en: Minimizing MSE is nice, but it’s not the only definition of “best”. One alternative
+    is to minimize the absolute values of the errors. Another is to minimize the shortest
+    distance from each point to the fitted line, which is called the “total error”.
+    In some contexts, guessing too high might be better (or worse) than guessing too
+    low. In that case you might want to compute a cost function for each residual,
+    and minimize total cost.
+  prefs: []
+  type: TYPE_NORMAL
+- en: But the least squares fit is much more widely used than these alternatives,
+    primarily because it is efficient to compute. The following function shows how.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE47]'
+  prefs: []
+  type: TYPE_PRE
+- en: To test this function, we’ll use flipper length and body mass again.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE48]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE49]'
+  prefs: []
+  type: TYPE_PRE
+- en: And we can confirm that we get the same results we got from `linregress`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE50]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE51]'
+  prefs: []
+  type: TYPE_PRE
+- en: Minimizing MSE made sense when computational efficiency was more important than
+    choosing the method most appropriate to the problem at hand. But that’s no longer
+    the case, so it is worth considering whether squared residuals are the right thing
+    to minimize.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Estimation
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The parameters `slope` and `intercept` are estimates based on a sample. Like
+    other estimates, they are vulnerable to non-representative sampling, measurement
+    error, and variability due to random sampling. As usual, it’s hard to quantify
+    the effect of non-representative sampling and measurement error. It’s easier to
+    quantify the effect of random sampling.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'One way to do that is a kind of resampling called **bootstrapping**: we’ll
+    treat the sample as if it were the whole population and draw new samples, with
+    replacement, from the observed data. The following function takes a `DataFrame`
+    and uses the `sample` method to resample the rows and return a new `DataFrame`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE52]'
+  prefs: []
+  type: TYPE_PRE
+- en: And the following function takes a `DataFrame`, finds the least squares fit,
+    and returns the slope of the fitted line.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE53]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can use these functions to generate many simulated datasets and compute the
+    slope for each one.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE54]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE55]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is a sample from the sampling distribution of the slope. Here’s what
+    it looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE56]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/bea8c2bcf4ff1888a13da5443b8659d73cda43e2f5e723f81b08dae2a14e1987.png](../Images/569787a56cf6e79f9de33fe7bc8f0238.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: We can use `percentile` to compute a 90% confidence interval.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE57]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE58]'
+  prefs: []
+  type: TYPE_PRE
+- en: So we could report that the estimated slope is 33 grams / mm with a 90% CI [25,
+    40] grams / mm.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The standard error of the estimate is the standard deviation of the sampling
+    distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE59]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE60]'
+  prefs: []
+  type: TYPE_PRE
+- en: The `RegressionResult` object we got from `linregress` provides an approximation
+    of the standard error, based on some assumptions about the shape of the distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE61]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE62]'
+  prefs: []
+  type: TYPE_PRE
+- en: The standard error we computed by resampling is a little smaller, but the difference
+    probably doesn’t matter in practice.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Visualizing Uncertainty
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Each time we resample the dataset, we get a different fitted line. To see how
+    much variation there is in the lines, one option is to loop through them and plot
+    them all. The following function takes a resampled `DataFrame`, computes a least
+    squares fit, and generates predicted values for a sequence of `xs`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE63]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s the sequence of `xs` we’ll use.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE64]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here’s what the fitted lines look like, along with a scatter plot of the
+    data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE65]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/30885975c39318a2a5e8815d946b6245f9fda4f4f2609cc366748d884a68c749.png](../Images/e5eb3b662e18a662e664271f5805cf7a.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Near the middle, the fitted lines are close together – at the extremes, they
+    are farther apart.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Another way to represent the variability of the fitted lines is to plot a 90%
+    confidence interval for each predicted value. We can do that by collecting the
+    fitted lines as a list of arrays.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE66]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can think of this list of arrays as a two-dimensional array with one row
+    for each fitted line and one column corresponding to each of the `xs`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can use `percentile` with the `axis=0` argument to find the 5th, 50th, and
+    95th percentiles of the `ys` corresponding to each of the `xs`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE67]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we’ll use `fill_between` to plot a region between the 5th and 95 percentiles,
+    which represents the 90% CI, along with the median value in each column and a
+    scatter plot of the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE68]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/5967287882b5ae2e30aafbd931f96e8b761844203d0074f0dc9f1af90d4d8c65.png](../Images/dfc049dbd6b44dd65edd186b8aee9ea3.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: This is my favorite way to represent the variability of a fitted line due to
+    random sampling.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Transformation
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Before fitting a line to data, it is sometimes useful to transform one or both
+    variables, for example by computing the squares of the values, their square roots,
+    or their logarithms. To demonstrate, we’ll use heights and weights from the Behavioral
+    Risk Factor Surveillance System (BRFSS), described in [Chapter 5](chap05.html#section-lognormal-distribution).
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following cell downloads the BRFSS data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE69]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can load the BRFSS data like this.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE70]'
+  prefs: []
+  type: TYPE_PRE
+- en: Next we’ll find the rows with valid data and select the columns containing heights
+    and weights.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE71]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can use `linregress` to compute the slope and intercept of the least squares
+    fit.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE72]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE73]'
+  prefs: []
+  type: TYPE_PRE
+- en: The slope is about 0.96, which means that an increase of 1 centimeter corresponds
+    to an increase of almost 1 kilogram, on average. We can use `predict` again to
+    generate predicted values for a range of `xs`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE74]'
+  prefs: []
+  type: TYPE_PRE
+- en: Before we make a scatter plot of the data, it’s useful to jitter the heights
+    and weights.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE75]'
+  prefs: []
+  type: TYPE_PRE
+- en: And we’ll use the mean and standard deviation of the heights to choose the limits
+    of the \(x\) axis.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE76]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s a scatter plot of the jittered data along with the fitted line.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE77]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/99f7709b0cd0c254ea57d67675c260d921f898f9bd54e45e919d51983372e087.png](../Images/042db579a7788754fe7b90d735575cfb.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The fitted line doesn’t pass through the densest part of the scatter plot. That’s
+    because the weights don’t follow a normal distribution. As we saw in [Chapter
+    5](chap05.html#section-lognormal-distribution), adult weights tend to follow a
+    lognormal distribution, which is skewed toward larger values – and those values
+    pull the fitted line up.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Another cause for concern is the distribution of the residuals, which looks
+    like this.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE78]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE79]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/df348d0cf285c7af9f7329f9f7ab1ad1c3db7f53cf3644907936d1992ef2ceb7.png](../Images/0237011c4f48171c22a06ba7f6c211c4.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The distribution of the residuals is skewed to the right. By itself, that’s
+    not necessarily a problem, but it suggests that the least squares fit has not
+    characterized the relationship between these variables properly.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If the weights follow a lognormal distribution, their logarithms follow a normal
+    distribution. So let’s see what happens if we fit a line to the logarithms of
+    weight as a function of height.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE80]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE81]'
+  prefs: []
+  type: TYPE_PRE
+- en: Because we transformed one of the variables, the slope and intercept are harder
+    to interpret. But we can use `predict` to compute the fitted line.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE82]'
+  prefs: []
+  type: TYPE_PRE
+- en: And then plot it along with a scatter plot of the transformed data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE83]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/43cb4016f0e05c73f57be4571c5a3717623132807d7711f8b365f6b913c4ead4.png](../Images/abfea30922f39942ec607829e73ad5b4.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The fitted line passes through the densest part of the plot, and the actual
+    values extend about the same distance above and below the line – so the distribution
+    of the residuals is roughly symmetric.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE84]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE85]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/f63c4baee11a0b5e2f31d2c8c46026c04a111c0b34c7bd185318b2cc71aad4c6.png](../Images/97a217555d2ca06d4a7a15437641ef0d.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The appearance of the scatter plot and the distribution of the residuals suggest
+    that the relationship of height and log-transformed weight is well described by
+    the fitted line. If we compare the \(r\) values of the two regressions, we see
+    that the correlation of height with log-transformed weights is slightly higher.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE86]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE87]'
+  prefs: []
+  type: TYPE_PRE
+- en: Which means that the \(R^2\) value is slightly higher, too.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE88]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE89]'
+  prefs: []
+  type: TYPE_PRE
+- en: If we use heights to guess weights, the guesses are a little better if we work
+    with the log-transformed weights.
+  prefs: []
+  type: TYPE_NORMAL
+- en: However, transforming the data makes the parameters of the model harder to interpret
+    – it can help to invert the transformation before presenting the results. For
+    example, the inverse of a logarithm in base 10 is exponentiation with base 10.
+    Here’s what the fitted line looks like after the inverse transformation, along
+    with the untransformed data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE90]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/05277c82c794c22d37f9c609147a3c17ef59cc8a0da9e9525303ea3b478396f6.png](../Images/d27aa2418a2b45840a3cd0b3b03aae4b.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: A fitted line that’s straight with respect to the transformed data is curved
+    with respect to the original data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Glossary
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '**model**: In the context of regression, a model is a mathematical description
+    of the relationship between variables – such as a straight line – along with a
+    description of random variation – such as a normal distribution.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**imputation:** A process for estimating and filling in missing values in a
+    dataset.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**line of best fit:** A line (or curve) that best describes a relationship
+    between variables, by some definition of “best”.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**linear regression:** A method for finding a line of best fit.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**prediction**: A point on a line of best fit – in the context of regression,
+    it is not necessarily a claim about the future.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**residual**: The difference between an observed value and a value predicted
+    by a line of best fit.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**linear least squares fit:** A line that minimizes the sum of squared residuals.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**coefficient of determination**: A statistic, denoted \(R^2\) and often pronounced
+    “R squared”, that quantifies how well a model fits the data.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**bootstrap resampling**: A way of resampling by treating the sample as a population
+    and drawing new samples with the same size as the original, with replacement.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Exercises
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Exercise 10.1
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'In this chapter we computed a least squares fit for penguin weights as a function
+    of flipper length. There are two other measurements in the dataset we can also
+    consider: culmen length and culmen depth (the culmen is the top ridge of the bill).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Compute the least squares fit for weight as a function of culmen length. Make
+    a scatter plot of these variables and plot the fitted line.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Based on the `rvalue` attribute of the `RegressionResult` object, what is the
+    correlation of these variables? What is the coefficient of determination? Which
+    is a better predictor of weight, culmen length or flipper length?
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE91]'
+  prefs: []
+  type: TYPE_PRE
+- en: Exercise 10.2
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'In this chapter we used resampling to approximate the sampling distribution
+    for the slope of a fitted line. We can approximate the sampling distribution of
+    the intercept the same way:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Write a function called `estimate_intercept` that takes a resampled `DataFrame`
+    as an argument, computes the least squares fit of penguin weight as a function
+    of flipper length, and returns the intercept.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Call the function with many resampled versions of `adelie` and collect the intercepts.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Use `plot_kde` to plot the sampling distribution of the intercept.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Compute the standard error and a 90% confidence interval.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Check that the standard error you get from resampling is consistent with the
+    `intercept_stderr` attribute in the `RegressionResult` object – it might be a
+    little smaller.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Exercise 10.3
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: A person’s Body Mass Index (BMI) is their weight in kilograms divided by their
+    height in meters raised to the second power. In the BRFSS dataset, we can compute
+    BMI like this, after converting heights from centimeters to meters.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE92]'
+  prefs: []
+  type: TYPE_PRE
+- en: In this definition, heights are squared, rather than raised to some other exponent,
+    because of the observation – early in the history of statistics – that average
+    weight increases roughly in proportion to height squared.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To see whether that’s true, we can use data from the BRFSS, a least squares
+    fit, and a little bit of math. Suppose weight is proportional to height raised
+    to an unknown exponent, \(a\). In that case, we can write:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[w = b h^a\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'where \(w\) is weight, \(h\) is height, and \(b\) is an unknown constant of
+    proportionality. Taking logarithms of both sides:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[\log w = \log b + a \log h\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: So, if we compute a least squares fit for log-transformed weights as a function
+    of log-transformed heights, the slope of the fitted line estimates the unknown
+    exponent \(a\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Compute the logarithms of height and weight. You can use any base for the logarithms,
+    as long as it’s the same for both transformations. Compute a least squares fit.
+    Is the slope close to 2?
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Think Stats: Exploratory Data Analysis in Python, 3rd Edition](https://allendowney.github.io/ThinkStats/index.html)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Copyright 2024 [Allen B. Downey](https://allendowney.com)
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Code license: [MIT License](https://mit-license.org/)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Text license: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  prefs: []
+  type: TYPE_NORMAL

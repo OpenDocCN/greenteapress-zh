@@ -1,0 +1,1153 @@
+- en: Multiple Regression
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/ThinkStats/chap11.html](https://allendowney.github.io/ThinkStats/chap11.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: The linear least squares fit in the previous chapter is an example of **regression**,
+    which is the more general problem of modeling the relationship between one set
+    of variables, called **response variables** or dependent variables, and another
+    set of variables, called **explanatory variables** or independent variables.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the examples in the previous chapter, there is only one response variable
+    and one explanatory variable, which is called **simple regression**. In this chapter,
+    we move on to **multiple regression**, with more than one explanatory variable,
+    but still only one response variable. If there is more than one response variable,
+    that’s multivariate regression, which we won’t cover in this book.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ThinkStats/blob/v3/nb/chap11.ipynb).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: StatsModels
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In the previous chapter we used the SciPy function `linregress` to compute least
+    squares fits. This function performs simple regression, but not multiple regression.
+    For that, we’ll use `StatsModels`, a package that provides several forms of regression
+    and other analyses.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As an first example, we’ll continue exploring the penguin data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following cell downloads the data from a repository created by Allison Horst.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Horst AM, Hill AP, Gorman KB (2020). palmerpenguins: Palmer Archipelago (Antarctica)
+    penguin data. R package version 0.1.0\. [https://allisonhorst.github.io/palmerpenguins/](https://allisonhorst.github.io/palmerpenguins/).
+    doi: 10.5281/zenodo.3960218.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The data was collected as part of the research that led to this paper: Gorman
+    KB, Williams TD, Fraser WR (2014). Ecological sexual dimorphism and environmental
+    variability within a community of Antarctic penguins (genus Pygoscelis). PLoS
+    ONE 9(3):e90081\. [https://doi.org/10.1371/journal.pone.0090081](https://doi.org/10.1371/journal.pone.0090081)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: When we load the data, we’ll use the following dictionary to give the columns
+    names that don’t contain spaces, which will make them easier to use with StatsModels.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can load the data, drop the rows with missing mass, and rename the columns.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: The dataset contains three species of penguins. We’ll work with just the Adélie
+    penguins.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: In the previous chapter, we computed a least squares fit between the penguins’
+    flipper lengths and weights.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: As a reminder, here’s how we did that with `linregress`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`StatsModels` provides two interfaces (APIs) – we’ll use the “formula” API,
+    which uses the Patsy formula language to specify the response and explanatory
+    variables. The following formula string specifies that the response variable,
+    `mass`, is a linear function of one explanatory variable, `flipper_length`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can pass this formula to the `StatsModels` function `ols`, along with the
+    data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: The name `ols` stands for “ordinary least squares”, which indicates that this
+    function computes a least squares fit under the most common, or “ordinary”, set
+    of assumptions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The result is an `OLS` object that represents the model. In general, a model
+    is a simplified description of the relationship between variables. In this example,
+    it’s a linear model, which means that it assumes that the response variable is
+    a linear function of the explanatory variables.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The `fit` method fits the model to the data and returns a `RegressionResults`
+    object that contains the result.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: The `RegressionResults` object contains a lot of information, so `thinkstats`
+    provides a function that just displays the information we need for now.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | coef | std err | t | P>&#124;t&#124; | [0.025 | 0.975] |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Intercept | -2535.8368 | 964.798 | -2.628 | 0.009 | -4442.291 | -629.382
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| flipper_length | 32.8317 | 5.076 | 6.468 | 0.000 | 22.801 | 42.862 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| R-squared: | 0.2192 |'
+  prefs: []
+  type: TYPE_TB
+- en: The first column contains the intercept and slope, which are the **coefficients**
+    of the model. We can confirm that they are the same as the coefficients we got
+    from `linregress`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: The second column contains the standard errors of the coefficients – again,
+    they are the same as the values we got from `linregress`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: The next column reports \(t\) statistics, which are used to compute p-values
+    – we can ignore them, because the p-values are in the next column, labeled `P>|t|`.
+    The p-value for `flipper_length` is rounded down to 0, but we can display it like
+    this.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: And confirm that `linregress` computed the same result.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: The p-value is very small, which means that if there were actually no relationship
+    between weight and flipper length, it is very unlikely we would see a slope as
+    big as the estimated value by chance.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The last two columns, labeled `[0.025` and `0.975]`, report 95% confidence intervals
+    for the intercept and slope. So the 95% CI for the slope is [22.8, 42.9].
+  prefs: []
+  type: TYPE_NORMAL
+- en: The last line reports the \(R^2\) value of the model, which is about 0.22 –
+    that means we can reduce MSE by about 22% if we use flipper length to predict
+    weight, compared to using only the average weight.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The \(R^2\) value we get from simple correlation is the square of the correlation
+    coefficient, \(r\). So we can compare `rsquared` computed by `ols` with the square
+    of the `rvalue` computed by `linregress`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: hey are the same except for a small difference due to floating-point approximation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Before we go on to multiple regression, let’s compute one more simple regression,
+    with `culmen_length` as the explanatory variable (the culmen is the top ridge
+    of the bill).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | coef | std err | t | P>&#124;t&#124; | [0.025 | 0.975] |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Intercept | 34.8830 | 458.439 | 0.076 | 0.939 | -870.998 | 940.764 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| culmen_length | 94.4998 | 11.790 | 8.015 | 0.000 | 71.202 | 117.798 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| R-squared: | 0.3013 |'
+  prefs: []
+  type: TYPE_TB
+- en: Again, the p-value of the slope is very small, which means that if there were
+    actually no relationship between mass and culmen length, it is unlikely we would
+    see a slope this big by chance. You might notice that the p-value associated with
+    the intercept is large, but that’s not a problem because we are not concerned
+    about whether the intercept might be zero. In this model, the intercept is close
+    to zero, but that’s just a coincidence – it doesn’t indicate a problem with the
+    model.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The \(R^2\) value for this model is about 0.30, so the reduction in MSE is a
+    little higher if we use culmen length rather than flipper length as an explanatory
+    variable (the \(R^2\) value with flipper length is 0.22). Now, let’s see what
+    happens if we combine them.
+  prefs: []
+  type: TYPE_NORMAL
+- en: On To Multiple Regression
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Here’s the Patsy formula for a multiple regression model where mass is a linear
+    function of both flipper length and culmen length.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here is the result of fitting this model to the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | coef | std err | t | P>&#124;t&#124; | [0.025 | 0.975] |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Intercept | -3573.0817 | 866.739 | -4.122 | 0.000 | -5285.864 | -1860.299
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| flipper_length | 22.7024 | 4.742 | 4.787 | 0.000 | 13.331 | 32.074 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| culmen_length | 76.3402 | 11.644 | 6.556 | 0.000 | 53.331 | 99.350 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| R-squared: | 0.3949 |'
+  prefs: []
+  type: TYPE_TB
+- en: 'This model has three coefficients: an intercept and two slopes. The slope associated
+    with flipper length is 22.7, which means we expect a penguin with a longer flipper,
+    by one millimeter, to weight more, by 22.7 grams – assuming that culmen length
+    is the same. Similarly, we expect a penguin with a longer culmen, by one millimeter,
+    to weight more, by 76.3 grams – assuming that flipper length is the same.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The p-values associated with both slopes are small, which means that the contribution
+    of both explanatory variables would be unlikely to happen by chance.
+  prefs: []
+  type: TYPE_NORMAL
+- en: And the \(R^2\) value is 0.39, higher than the model with only culmen length
+    (0.30) and the model with only flipper length (0.22). So predictions based on
+    both explanatory variables are better than predictions based on either one alone.
+  prefs: []
+  type: TYPE_NORMAL
+- en: But they are not as much better as we might have hoped. If flipper length reduces
+    MSE by 22% and culmen length reduces it by 30%, why don’t the two of them together
+    reduce it by a total of 52%? The reason is that the explanatory variables are
+    correlated with each other.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: A penguin with a longer flipper also has a longer culmen, on average. The explanatory
+    variables contain some information about each other, which means that they contain
+    some of the same information about the response variable. When we add an explanatory
+    variable to the model, the improvement in \(R^2\) reflects only the new information
+    provided by the new variable.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We see the same pattern if we add culmen depth as a third explanatory variable.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | coef | std err | t | P>&#124;t&#124; | [0.025 | 0.975] |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Intercept | -4341.3019 | 795.117 | -5.460 | 0.000 | -5912.639 | -2769.964
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| flipper_length | 17.4215 | 4.385 | 3.973 | 0.000 | 8.756 | 26.087 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| culmen_length | 55.3676 | 11.133 | 4.973 | 0.000 | 33.366 | 77.369 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| culmen_depth | 140.8946 | 24.216 | 5.818 | 0.000 | 93.037 | 188.752 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| R-squared: | 0.5082 |'
+  prefs: []
+  type: TYPE_TB
+- en: This model has four coefficients. All of the p-values are small, which means
+    that the contribution of each explanatory variable would be unlikely to happen
+    by chance. And the \(R^2\) value is about 0.51, somewhat better than the previous
+    model with two explanatory variables (0.39), and better than either model with
+    a single variable (0.22 and 0.30).
+  prefs: []
+  type: TYPE_NORMAL
+- en: But again, the incremental improvement is smaller than we might have hoped,
+    because culmen depth is correlated with the other two measurements.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: This example demonstrates a common use of multiple regression, combining multiple
+    explanatory variables to make better predictions. Another common use is to quantify
+    the contribution of one set of variables while controlling for the contribution
+    of another set.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Control Variables
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In Section [Chapter 4](chap04.html#section-comparing-cdfs) we saw that first
+    babies are lighter than other babies, on average. And in [Chapter 9](chap09.html#section-test-correlation)
+    we saw that birth weight is correlated with the mother’s age – older mothers have
+    heavier babies on average.
+  prefs: []
+  type: TYPE_NORMAL
+- en: These results might be related. If mothers of first babies are younger than
+    mothers of other babies – which seems likely – that might explain why their babies
+    are lighter. We can use multiple regression to test this conjecture, by estimating
+    the difference in birth weight between first babies and others while controlling
+    for the mothers’ ages.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Instructions for downloading the NSFG data are in the notebook for this chapter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following cells download the data files and install `statadict`, which we
+    need to read the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE37]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can use `get_nsfg_groups` to read the data, select live births, and group
+    live births into first babies and others.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE39]'
+  prefs: []
+  type: TYPE_PRE
+- en: We’ll use `dropna` to select the rows with valid birth weights, birth order,
+    and mother’s ages.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE40]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can use `StatsModels` to confirm that birth weight is correlated with
+    age, and to estimate the slope – assuming that it is a linear relationship.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE41]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | coef | std err | t | P>&#124;t&#124; | [0.025 | 0.975] |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Intercept | 6.8304 | 0.068 | 100.470 | 0.000 | 6.697 | 6.964 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| agepreg | 0.0175 | 0.003 | 6.559 | 0.000 | 0.012 | 0.023 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| R-squared: | 0.004738 |'
+  prefs: []
+  type: TYPE_TB
+- en: The slope is small, only 0.0175 pounds per year. So if two mothers differ in
+    age by a decade, we expect their babies to differ in weight by 0.175 pounds. But
+    the p-value is small, so this slope – small as it is – would be unlikely if there
+    were actually no relationship.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The \(R^2\) value is also small, which means that mother’s age is not very useful
+    as a predictive variable. If we know the mother’s age, our ability to predict
+    the baby’s weight is hardly improved at all.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This combination of a small p-value and a small \(R^2\) value is a common source
+    of confusion, because it seems contradictory – if the relationship is statistically
+    significant, it seems like it should be predictive. But this example shows that
+    there is no contradiction – a relationship can be statistically significant but
+    not very useful for prediction. If we visualize the results, we’ll see why. First
+    let’s select the relevant columns.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE42]'
+  prefs: []
+  type: TYPE_PRE
+- en: To compute the fitted line, we could extract the intercept and slope from `result_age`,
+    but we don’t have to. The `RegressionResults` object provides a `predict` method
+    we can use instead. First we’ll compute a range of values for `agepreg`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE43]'
+  prefs: []
+  type: TYPE_PRE
+- en: To use `predict`, we have to put values for the explanatory variables in a `DataFrame`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE44]'
+  prefs: []
+  type: TYPE_PRE
+- en: The columns in the `DataFrame` have to have the same names as the explanatory
+    variables. Then we can pass it to `predict`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE45]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is a `Series` containing the predicted values. Here’s what they look
+    like, along with a scatter plot of the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE46]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/cda101f361df541b28c8f63c79ee4f28dfa51697aa87a2bebc4a0b01a492658d.png](../Images/dc2cad1af8271d0ecff4c23cffb73d42.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Because the slope of the fitted line is small, we can barely see the difference
+    in the expected birth weight between the youngest and oldest mothers. The variation
+    in birth weight, at every maternal age, is much larger.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Next we’ll use `StatsModels` to confirm that first babies are lighter than others.
+    To make that work, we’ll create a Boolean `Series` that is `True` for first babies
+    and `False` for others, and add it as a new column called `is_first`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE47]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE48]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE49]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s the formula for a model with birth weight as the response variable and
+    `is_first` as the explanatory variable. In the Patsy formula language, `C` and
+    the parentheses around the variable name indicate that it is **categorical** –
+    that is, it represents categories like “first baby” rather than measurements like
+    birth weight.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE50]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can fit the model and display the results, as usual.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE51]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | coef | std err | t | P>&#124;t&#124; | [0.025 | 0.975] |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Intercept | 7.3259 | 0.021 | 356.007 | 0.000 | 7.286 | 7.366 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| C(is_first)[T.True] | -0.1248 | 0.030 | -4.212 | 0.000 | -0.183 | -0.067
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| R-squared: | 0.00196 |'
+  prefs: []
+  type: TYPE_TB
+- en: In the results, the label `C(is_first)[T.True]` indicates that `is_first` is
+    a categorical variable and the coefficient is associated with the value `True`.
+    The `T` before `True` stands for “treatment” – in the language of a controlled
+    experiment, first babies are considered the treatment group and other babies are
+    considered the reference group. These designations are arbitrary – we could consider
+    first babies to be the reference group and others to be the treatment group. But
+    we need to know which is which in order to interpret the results.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The intercept is about 7.3, which means that the average weight of the reference
+    group is 7.3 pounds. The coefficient of `is_first` is -0.12, which means that
+    the average weight of the treatment group – first babies – is 0.12 pounds lighter.
+    We can check both of these results by computing them directly.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE52]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE53]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE54]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE55]'
+  prefs: []
+  type: TYPE_PRE
+- en: In addition to these coefficients, `StatsModels` also computes p-values, confidence
+    intervals, and \(R^2\). The p-value associated with first babies is small, which
+    means that the difference between the groups is statistically significant. And
+    the \(R^2\) value is small, which means that if we’re trying to guess the weight
+    of a baby, it doesn’t help much to know whether it is a first baby.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now let’s see if it’s plausible that the difference in birth weight is due to
+    the difference in maternal age. On average, mothers of first babies are about
+    3.6 years younger than other mothers.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE56]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE57]'
+  prefs: []
+  type: TYPE_PRE
+- en: And the slope of birth weight as a function of age is 0.0175 pounds per year.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE58]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE59]'
+  prefs: []
+  type: TYPE_PRE
+- en: If we multiply the slope by the difference in ages, we get the expected difference
+    in birth weight for first babies and others, due to mother’s age.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE60]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE61]'
+  prefs: []
+  type: TYPE_PRE
+- en: The result is 0.063 pounds, which is about half of the observed difference.
+    So it seems like the observed difference in birth weight can be partly explained
+    by the difference in mother’s age.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using multiple regression, we can estimate coefficients for maternal age and
+    first babies at the same time.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE62]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | coef | std err | t | P>&#124;t&#124; | [0.025 | 0.975] |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Intercept | 6.9142 | 0.078 | 89.073 | 0.000 | 6.762 | 7.066 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| C(is_first)[T.True] | -0.0698 | 0.031 | -2.236 | 0.025 | -0.131 | -0.009
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| agepreg | 0.0154 | 0.003 | 5.499 | 0.000 | 0.010 | 0.021 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| R-squared: | 0.005289 |'
+  prefs: []
+  type: TYPE_TB
+- en: The coefficient of `is_first` is -0.0698, which means that first babies are
+    0.0698 pounds lighter than others, on average, after accounting for the difference
+    due to maternal age. That’s about half of the difference we get without accounting
+    for maternal age.
+  prefs: []
+  type: TYPE_NORMAL
+- en: And the p-value is 0.025, which is still considered statistically significant,
+    but it is in the borderline range where we can’t exclude the possibility that
+    a difference this size could happen by chance.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Because this model takes into account the weight difference due to maternal
+    age, we can say that it **controls for** maternal age. But it assumes that the
+    relationship between weight and maternal age is linear. So let’s see if that’s
+    true.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Nonlinear Relationships
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: To check whether the contribution of `agepreg` might be nonlinear, we can add
+    a new column to the dataset, which contains the values of `agepreg` squared.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE63]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can define a model that includes a linear relationship *and* a quadratic
+    relationship.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE64]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can fit the model in the usual way.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE65]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | coef | std err | t | P>&#124;t&#124; | [0.025 | 0.975] |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Intercept | 5.5720 | 0.275 | 20.226 | 0.000 | 5.032 | 6.112 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| agepreg | 0.1186 | 0.022 | 5.485 | 0.000 | 0.076 | 0.161 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| agepreg2 | -0.0019 | 0.000 | -4.714 | 0.000 | -0.003 | -0.001 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| R-squared: | 0.00718 |'
+  prefs: []
+  type: TYPE_TB
+- en: The p-value associated with the quadratic term, `agepreg2`, is very small, which
+    suggests that it contributes more information about birth weight than we would
+    expect by chance. And the \(R^2\) value for this model is 0.0072, higher than
+    for the linear model (0.0047).
+  prefs: []
+  type: TYPE_NORMAL
+- en: By estimating coefficients for `agepreg` and `agepreg2`, we are effectively
+    fitting a parabola to the data. To see that, we can use the `RegressionResults`
+    object to generate predictions for a range of maternal ages.
+  prefs: []
+  type: TYPE_NORMAL
+- en: First we’ll create a temporary `DataFrame` that contains columns named `agepreg`
+    and `agepreg2`, based on the range of ages in `agepreg_range`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE66]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can use the `predict` method, passing the `DataFrame` as an argument
+    and getting back a `Series` of predictions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE67]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s what the fitted parabola looks like, along with a scatter plot of the
+    data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE68]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/d94663cfe1d824e31e3655424abdf4415e1e69bdd489d7dcdec9e41d61c5e329.png](../Images/88b5a77519dcb7b3dd177e25910904b4.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The curvature is subtle, but it suggests that birth weights are lower for the
+    youngest and oldest mothers, and higher in the middle.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The quadratic model captures the relationship between these variables better
+    than the linear model, which means it can account more effectively for the difference
+    in birth weight due to maternal age. So let’s see what happens when we add `is_first`
+    to the quadratic model.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE69]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | coef | std err | t | P>&#124;t&#124; | [0.025 | 0.975] |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Intercept | 5.6923 | 0.286 | 19.937 | 0.000 | 5.133 | 6.252 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| C(is_first)[T.True] | -0.0504 | 0.031 | -1.602 | 0.109 | -0.112 | 0.011 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| agepreg | 0.1124 | 0.022 | 5.113 | 0.000 | 0.069 | 0.155 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| agepreg2 | -0.0018 | 0.000 | -4.447 | 0.000 | -0.003 | -0.001 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| R-squared: | 0.007462 |'
+  prefs: []
+  type: TYPE_TB
+- en: With a more effective control for maternal age, the estimated difference between
+    first babies and others is 0.0504 pounds, smaller than the estimate with just
+    the linear model (0.0698 pounds). And the p-value associated with `is_first` is
+    0.109, which mean it is plausible that the remaining difference between these
+    groups is due to chance.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can conclude that the difference in birth weight is explained – at least
+    in part and possibly in full – by the difference in mother’s age.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Logistic Regression
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Linear regression is based on a model where the expected value of the response
+    variable is the weighted sum of the explanatory variables and an intercept. This
+    model is appropriate when the response variable is a continuous quantity like
+    birth weight or penguin mass, but not when the response variable is a discrete
+    quantity like a count or a category.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'For these kinds of response variables, we can use **generalized linear models**
+    or GLMs. For example:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: If the response variable is a count, we can use Poisson regression.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: If it’s categorical with only two categories, we can use logistic regression.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: If it’s categorical with more than two categories, we can use multinomial logistic
+    regression.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: If it’s categorical and the categories can be arranged in order, we can use
+    ordered logistic regression.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: We won’t cover all of them in this book – just **logistic regression**, which
+    is the most widely used. As an example, we’ll use the penguin dataset again, and
+    see if we can tell whether a penguin is male or female, based on its weight and
+    other measurements.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`StatsModels` provides a function that does logistic regression – it’s called
+    `logit` because that’s the name of a mathematical function that appears in the
+    definition of logistic regression. Before we can use the `logit` function, we
+    have to transform the response variable so the values are `0` and `1`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE70]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE71]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE72]'
+  prefs: []
+  type: TYPE_PRE
+- en: We’ll start with a simple model with `y` as the response variable and `mass`
+    as the explanatory variable. Here’s how we make and fit the model – the argument
+    `disp=False` suppresses messages about the fitting process.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE73]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here are the results.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE74]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | coef | std err | z | P>&#124;z&#124; | [0.025 | 0.975] |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Intercept | -25.9871 | 4.221 | -6.156 | 0.000 | -34.261 | -17.713 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| mass | 0.0070 | 0.001 | 6.138 | 0.000 | 0.005 | 0.009 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Pseudo R-squared: | 0.5264 |'
+  prefs: []
+  type: TYPE_TB
+- en: The coefficient of determination, \(R^2\), does not apply to logistic regression,
+    but there are several alternatives that are used as “pseudo \(R^2\) values.” The
+    pseudo \(R^2\) value for this model is about 0.526, which doesn’t mean much by
+    itself, but we will use it to compare models.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The coefficient of `mass` is positive, which means that heavier penguins are
+    more likely to be male. Other than that, the coefficients are not easy to interpret
+    – we can understand the model better by plotting the predictions. We’ll make a
+    `DataFrame` with a range of values for `mass`, and use `predict` to compute a
+    `Series` of predictions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE75]'
+  prefs: []
+  type: TYPE_PRE
+- en: Each predicted value is the probability a penguin is male as a function of its
+    weight. Here’s what the predicted values look like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE76]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/c3e7e2a0a8a5c8b5e43914e573c0fc1edebf5ee62c0448ddb4ef9c70a63f350b.png](../Images/c3290d5a64b564339e470735b9bd74ba.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The lightest penguins are almost certain to be female, and the heaviest are
+    likely to be male – in the middle, a penguin weighing 3750 grams is about equally
+    likely to be male or female.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now let’s see what happens if we add the other measurements as explanatory variables.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE77]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | coef | std err | z | P>&#124;z&#124; | [0.025 | 0.975] |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Intercept | -60.6075 | 13.793 | -4.394 | 0.000 | -87.642 | -33.573 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| mass | 0.0059 | 0.001 | 4.153 | 0.000 | 0.003 | 0.009 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| flipper_length | -0.0209 | 0.052 | -0.403 | 0.687 | -0.123 | 0.081 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| culmen_length | 0.6208 | 0.176 | 3.536 | 0.000 | 0.277 | 0.965 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| culmen_depth | 1.0111 | 0.349 | 2.896 | 0.004 | 0.327 | 1.695 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Pseudo R-squared: | 0.6622 |'
+  prefs: []
+  type: TYPE_TB
+- en: The pseudo \(R^2\) value of this model is 0.662, higher than the previous model
+    (0.526) – so the additional measurements contain additional information that distinguishes
+    male and female penguins.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The p-values for culmen length and depth are small, which indicates that they
+    contribute more information than we expect by chance. The p-value for flipper
+    length is large, which suggests that if you know a penguin’s weight and bill dimensions,
+    flipper length doesn’t contribute additional information.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To understand this model, let’s look at some of its predictions. We’ll use the
+    following function, which takes a sequence of masses and a specific value for
+    `culmen_length`. It sets the other measurements to their mean values, computes
+    predicted probabilities as a function of mass, and plots the results.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE78]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Here’s what the results look like for three values of `culmen_length`: one
+    standard deviation above average, average, and one standard deviation below average.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE79]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE80]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/af727ffae8b33babe2578c8c6d52d5c3aaed4c4c7dc724ab57bce7a0ce063d53.png](../Images/6ed0ce5788cc6db900a4106f67140fd8.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: As we saw in the simpler model, heavier penguins are more likely to be male.
+    Also, at any weight, a penguin with a longer bill is more likely to be male.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This model is more useful than it might seem – in fact, it is similar to models
+    that were used in the original research paper this dataset was collected for.
+    The primary topic of that research is sexual dimorphism, which is the degree to
+    which male and female bodies differ. One way to quantify dimorphism is to use
+    measurements to classify males and females. In a species with higher dimorphism,
+    we expect these classifications to be more accurate.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The original paper is Gorman KB, Williams TD, Fraser WR (2014). Ecological sexual
+    dimorphism and environmental variability within a community of Antarctic penguins
+    (genus Pygoscelis). PLoS ONE 9(3):e90081\. [https://doi.org/10.1371/journal.pone.0090081](https://doi.org/10.1371/journal.pone.0090081)
+  prefs: []
+  type: TYPE_NORMAL
+- en: To test this methodology, let’s try the same model on a different species. In
+    addition to the Adélie penguins we’ve worked with so far, the dataset also contains
+    measurements from 123 Gentoo penguins. We’ll use the following function to select
+    them.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE81]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE82]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE83]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here are the results of the logistic regression model.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE84]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | coef | std err | z | P>&#124;z&#124; | [0.025 | 0.975] |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Intercept | -173.9123 | 62.326 | -2.790 | 0.005 | -296.069 | -51.756 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| mass | 0.0105 | 0.004 | 2.948 | 0.003 | 0.004 | 0.017 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| flipper_length | 0.2839 | 0.183 | 1.549 | 0.121 | -0.075 | 0.643 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| culmen_length | 0.2734 | 0.285 | 0.958 | 0.338 | -0.286 | 0.833 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| culmen_depth | 3.0843 | 1.291 | 2.389 | 0.017 | 0.554 | 5.614 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Pseudo R-squared: | 0.848 |'
+  prefs: []
+  type: TYPE_TB
+- en: The pseudo-\(R^2\) value is 0.848, higher than what we got with Adélie penguins
+    (0.662). That means Gentoo penguins can be classified more accurately using physical
+    measurements, compared to Adélie penguins, which suggests that Gentoo penguins
+    are more dimorphic.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Glossary
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '**regression**: A method for estimating coefficients that fit a model to data.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**response variables**: The variables a regression model tries to predict,
+    also known as dependent variables.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**explanatory variables**: The variables a model uses to predict the response
+    variables, also known as independent variables.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**simple regression**: A regression with one response variable and one explanatory
+    variable.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**multiple regression**: A regression with multiple explanatory variables,
+    but only one response variable.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**coefficients:** In a regression model, the coefficients are the intercept
+    and the estimated slopes for the explanatory variables.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**categorical variable**: A variable that can have one of a discrete set of
+    values, usually not numerical.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**control variable**: A variable included in a regression to separate the direct
+    effect of an explanatory variable from an indirect effect.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**generalized linear models:** A set of regression models based on different
+    mathematical relationships between the explanatory and response variables.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**logistic regression**: A generalized linear model used when the response
+    variable has only two possible values.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Exercises
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Exercise 11.1
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Are baby boys heavier than baby girls? To answer this question, we’ll use the
+    NSFG data again.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Fit a linear regression model with `totalwgt_lb` as the response variable and
+    `babysex` as a categorical explanatory variable – the value of this variable is
+    `1` for boys and `2` for girls. What is the estimated difference in weight? Is
+    it statistically significant? What if you control for the mother’s age – does
+    maternal age account for some or all of the apparent difference?
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exercise 11.2
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: The Trivers-Willard hypothesis suggests that for many mammals the sex ratio
+    depends on “maternal condition” – that is, factors like the mother’s age, size,
+    health, and social status. Some studies have shown this effect among humans, but
+    results are mixed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: See [https://en.wikipedia.org/wiki/Trivers-Willard_hypothesis](https://en.wikipedia.org/wiki/Trivers-Willard_hypothesis).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s see if there is a relationship between mother’s age and the probability
+    of having a boy. Fit a logistic regression model with the baby’s sex as the response
+    variable and mother’s age as an explanatory variable. Are older mothers more or
+    less likely to have boys? What if you use a quadratic model of maternal age?
+  prefs: []
+  type: TYPE_NORMAL
+- en: In order to use `babysex` as a response variable in a logistic regression, we’ll
+    recode it with the value `1` for boys and `0` for girls.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE85]'
+  prefs: []
+  type: TYPE_PRE
+- en: Exercise 11.3
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: For the Adelie penguins, fit a linear regression model that predicts penguin
+    weights as a function of `flipper_length`, `culmen_depth`, and `Sex` as a categorical
+    variable. If we control for flipper length and culmen depth, how much heavier
+    are male penguins? Generate and plot predictions for a range of flipper lengths,
+    for male and female penguins, with `culmen_depth` set to its average value.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exercise 11.4
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Let’s see if Chinstrap penguins are more or less dimorphic than the other penguin
+    species in the dataset, as quantified by the pseudo \(R^2\) value of the model.
+    Use `get_species` to select the Chinstrap penguins, then use logistic regression
+    to fit a logistic regression model with sex as the response variable and all four
+    measurements as explanatory variables. How does the pseudo \(R^2\) value compare
+    to the other models?
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE86]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE87]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[Think Stats: Exploratory Data Analysis in Python, 3rd Edition](https://allendowney.github.io/ThinkStats/index.html)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Copyright 2024 [Allen B. Downey](https://allendowney.com)
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Code license: [MIT License](https://mit-license.org/)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Text license: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  prefs: []
+  type: TYPE_NORMAL

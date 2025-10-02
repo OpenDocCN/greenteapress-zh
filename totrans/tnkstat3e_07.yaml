@@ -1,0 +1,1039 @@
+- en: Modeling Distributions
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://allendowney.github.io/ThinkStats/chap05.html](https://allendowney.github.io/ThinkStats/chap05.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: The distributions we have used so far are called empirical distributions because
+    they are based on empirical observations – in other words, data. Many datasets
+    we see in the real world can be closely approximated by a theoretical distribution,
+    which is usually based on a simple mathematical function. This chapter presents
+    some of these theoretical distributions and datasets they can be used to model.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'As examples, we’ll see that:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In a skeet shooting competition, the number of hits and misses is well modeled
+    by a binomial distribution.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: In games like hockey and soccer (football), the number of goals in a game follows
+    a Poisson distribution, and the time between goals follows an exponential distribution.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Birth weights follow a normal distribution, also called a Gaussian, and adult
+    weights follow a lognormal distribution.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: If you are not familiar with these distributions – or these sports – I will
+    explain what you need to know. For each example, we’ll start with a simulation
+    based on a simple model, and show that the simulation results follow a theoretical
+    distribution. Then we’ll see how well real data agrees with the model.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Click here to run this notebook on Colab](https://colab.research.google.com/github/AllenDowney/ThinkStats/blob/v3/nb/chap05.ipynb).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: The Binomial Distribution
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: As a first example, we’ll consider the sport of skeet shooting, in which competitors
+    use shotguns to shoot clay disks that are thrown into the air. In international
+    competition, including the Olympics, there are five rounds with 25 targets per
+    round, with additional rounds as needed to determine a winner.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As a model of a skeet-shooting competition, suppose that every participant has
+    the same probability, `p`, of hitting every target. Of course, this model is a
+    simplification – in reality, some competitors have a higher probability than others,
+    and even for a single competitor, it might vary from one attempt to the next.
+    But even if it is not realistic, this model makes some surprisingly accurate predictions,
+    as we’ll see.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To simulate the model, I’ll use the following function, which takes the number
+    of targets, `n`, and the probability of hitting each one, `p`, and returns a sequence
+    of 1s and 0s to indicate hits and misses.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s an example that simulates a round of 25 targets where the probability
+    of hitting each one is 90%.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: If we generate a longer sequence and compute the `Pmf` of the results, we can
+    confirm that the proportions of 1s and 0s are correct, at least approximately.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 0.101 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 0.899 |'
+  prefs: []
+  type: TYPE_TB
+- en: Now we can use `flip` to simulate a round of skeet shooting and return the number
+    of hits.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: In a large competition, suppose 200 competitors shoot 5 rounds each, all with
+    the same probability of hitting the target, `p=0.9`. We can simulate a competition
+    like that by calling `simulate_round` 1000 times.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: The average score is close to `22.5`, which is the product of `n` and `p`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s what the distribution of the results looks like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/08b871c8bbfdd217fe337feeadaa2984b89f506f7bdad8b02bf0d46d70f3c7fd.png](../Images/b3bc935aa73ee60fbf8812155f6f2226.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The peak is near the mean, and the distribution is skewed to the left.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Instead of running a simulation, we could have predicted this distribution.
+    Mathematically, the distribution of these outcomes follows a **binomial distribution**,
+    which has a PMF that is easy to compute.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: SciPy provides the `comb` function, which computes the number of combinations
+    of `n` things taken `k` at a time, often pronounced “n choose k”.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`binomial_pmf` computes the probability of getting `k` hits out of `n` attempts,
+    given `p`. If we call this function with a range of `k` values, we can make a
+    `Pmf` that represents the distribution of the outcomes.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here’s what it looks like compared to the simulation results.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/c851788dc1b44f61b20879c685e9f525105beb15524c952000ede59511b73994.png](../Images/54a70a9fc860c39df46a4857e6ff6a80.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: They are similar, with small differences because of random variation in the
+    simulation results. This agreement should not be surprising, because the simulation
+    and the model are based on the same assumptions – particularly the assumption
+    that every attempt has the same probability of success. A stronger test of a model
+    is how it compares to real data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: From the Wikipedia page for the men’s skeet shooting competition at the 2020
+    Summer Olympics, we can extract a table that shows the results for the qualification
+    rounds. Instructions for downloading the data are in the notebook for this chapter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Downloaded from [https://en.wikipedia.org/wiki/Shooting_at_the_2020_Summer_Olympics_–_Men’s_skeet](https://en.wikipedia.org/wiki/Shooting_at_the_2020_Summer_Olympics_%E2%80%93_Men's_skeet)
+    on July 15, 2024.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | Rank | Athlete | Country | 1 | 2 | 3 | 4 | 5 | Total[3] | Shoot-off |
+    Notes |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 0 | 1 | Éric Delaunay | France | 25 | 25 | 25 | 24 | 25 | 124 | +6 | Q, OR
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 1 | 2 | Tammaro Cassandro | Italy | 24 | 25 | 25 | 25 | 25 | 124 | +5 | Q,
+    OR |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 2 | 3 | Eetu Kallioinen | Finland | 25 | 25 | 24 | 25 | 24 | 123 | NaN |
+    Q |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3 | 4 | Vincent Hancock | United States | 25 | 25 | 25 | 25 | 22 | 122 |
+    +8 | Q |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 4 | 5 | Abdullah Al-Rashidi | Kuwait | 25 | 25 | 24 | 25 | 23 | 122 | +7
+    | Q |'
+  prefs: []
+  type: TYPE_TB
+- en: The table has one row for each competitor, with one column for each of five
+    rounds. We’ll select the columns that contain these results and use the NumPy
+    function `flatten` to put them into a single array.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: With 30 competitors, we have results from 150 rounds of 25 shots each, with
+    3750 hits out of a total of 3575 attempts.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: So the overall success rate is 95.3%.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now let’s compute a `Pmf` that represents the binomial distribution with `n=25`
+    and the value of `p` we just computed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: And we can compare that to the `Pmf` of the actual results.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/5ba25fda80b034b283df713496106e7b55e929e602dee01b8d19e0a15afc810c.png](../Images/85faeb855d8e5ea7b36328b284db979c.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The binomial model is a good fit for the distribution of the data – even though
+    it makes the unrealistic assumption that all competitors have the same, unchanging
+    capability.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Poisson Distribution
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: As another example where the outcomes of sports events follow predictable patterns,
+    let’s look at the number of goals scored in ice hockey games.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We’ll start by simulating a 60-minute game, which is 3600 seconds, assuming
+    that the teams score a total of 6 goals per game, on average, and that the goal-scoring
+    probability, `p`, is the same during any second.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can use the following function to simulate `n` seconds and return the
+    total number of goals scored.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: If we simulate many games, we can confirm that the average number of goals per
+    game is close to 6.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: We could use the binomial distribution to model these results, but when `n`
+    is large and `p` is small, the results are also well-modeled by a **Poisson distribution**,
+    which is specified by a value usually denoted with the Greek letter λ, which is
+    pronounced “lambda” and represented in code with the variable `lam` (`lambda`
+    is not a legal variable name because it is a Python keyword). `lam` represents
+    the goal-scoring rate, which is 6 goals per game in the example.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The PMF of the Poisson distribution is easy to compute – given `lam`, we can
+    use the following function to compute the probability of seeing `k` goals in a
+    game.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: SciPy provides the `factorial` function, which computes the product of the integers
+    from `1` to `k`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If we call `poisson_pmf` with a range of `k` values, we can make a `Pmf` that
+    represents the distribution of outcomes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: And confirm that the mean of the distribution is close to 6.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following figure compares the results from the simulation to the Poisson
+    distribution with the same mean.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/7345f1e5cdf82cf939c920fe4d073b1341499c127ae56ec6db528580c08f8b7e.png](../Images/66b5acc712ae0d4b9830f54ecd5f381e.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The distributions are similar except for small differences due to random variation.
+    That should not be surprising, because the simulation and the Poisson model are
+    based on the same assumption that the probability of scoring a goal is the same
+    during any second of the game. So a stronger test is to see how well the model
+    fits real data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: From HockeyReference, I downloaded results of every game of the National Hockey
+    League (NHL) 2023-2024 regular season (not including the playoffs). I extracted
+    information about goals scored during 60 minutes of regulation play, not including
+    overtime or tie-breaking shootouts. The results are in an HDF file with one key
+    for each game, and a list of times, in seconds since the beginning of the game,
+    when a goal was scored. Instructions for downloading the data are in the notebook
+    for this chapter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Raw data downloaded from [https://www.hockey-reference.com/leagues/NHL_2024_games.html](https://www.hockey-reference.com/leagues/NHL_2024_games.html)
+    on July 16, 2024.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s how we read the keys from the file.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE37]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: There were 1312 games during the regular season. Each key contains the date
+    of the game and a three-letter abbreviation for the home team. We can use `read_hdf`
+    to look up a key and get the list of times when a goal was scored.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE39]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE40]'
+  prefs: []
+  type: TYPE_PRE
+- en: In the first game of the season, six goals were scored, the first after 424
+    seconds of play, the last after 3513 seconds – with only 87 seconds left in the
+    game.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE41]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE42]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following loop reads the results for all games, counts the number of goals
+    in each one, and stores the results in a list.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE43]'
+  prefs: []
+  type: TYPE_PRE
+- en: The average number of goals per game is just over 6.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE44]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE45]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can use `poisson_pmf` to make a `Pmf` that represents a Poisson distribution
+    with the same mean as the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE46]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here’s what it looks like compared to the PMF of the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE47]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/2757a443895f4d2f8f8c4977ebeaf5a8337a9bd48a364680d2822351c11db977.png](../Images/b914fe24a43ddd116c592854511d3144.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The Poisson distribution fits the data well, which suggests that it is a good
+    model of the goal-scoring process in hockey.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Exponential Distribution
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In the previous section, we simulated a simple model of a hockey game where
+    a goal has the same probability of being scored during any second of the game.
+    Under the same model, it turns out, the time until the first goal follows an **exponential
+    distribution**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To demonstrate, let’s assume again that the teams score a total of 6 goals,
+    on average, and compute the probability of a goal during each second.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE48]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE49]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following function simulates `n` seconds and uses `argmax` to find the time
+    of the first goal.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE50]'
+  prefs: []
+  type: TYPE_PRE
+- en: This works because the result from `flip` is a sequence of 1s and 0s, so the
+    maximum is almost always 1. If there is at least one goal in the sequence, `argmax`
+    returns the index of the first. If there are no goals, it returns 0, but that
+    happens seldom enough that we’ll ignore it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We’ll use `simulate_first_goal` to simulate 1001 games and make a list of the
+    times until the first goal.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE51]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE52]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE53]'
+  prefs: []
+  type: TYPE_PRE
+- en: The average time until the first goal is close to 600 seconds, or 10 minutes.
+    And that makes sense – if we expect 6 goals per sixty-minute game, we expect one
+    goal every 10 minutes, on average.
+  prefs: []
+  type: TYPE_NORMAL
+- en: When `n` is large and `p` is small, we can show mathematically that the expected
+    time until the first goal follows an exponential distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Because the simulation generates many unique time values, we’ll use CDFs to
+    compare distributions, rather than PMFs. And the CDF of the exponential distribution
+    is easy to compute.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE54]'
+  prefs: []
+  type: TYPE_PRE
+- en: The value of `lam`, is the average number of events per unit of time – in this
+    example it is goals per second. We can use the mean of the simulated results to
+    compute `lam`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE55]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE56]'
+  prefs: []
+  type: TYPE_PRE
+- en: If we call this function with a range of time values, we can approximate the
+    distribution of first goal times. The NumPy function `linspace` creates an array
+    of equally-spaced values; in this example, it computes 201 values from 0 to 3600,
+    including both.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE57]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following figure compares the simulation results to the exponential distribution
+    we just computed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE58]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/08478961d3367ee9eeabdcf3debbd108f091e3f46e02d8ae784d9948ebb249df.png](../Images/5c7d27ece5c396b48bee080aee0128a4.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The exponential model fits the results from the simulation very well – but a
+    stronger test is to see how it does with real data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following loop reads the results for all games, gets the time of the first
+    goal, and stores the result in a list. If no goals were scored, it adds `nan`
+    to the list.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE59]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE60]'
+  prefs: []
+  type: TYPE_PRE
+- en: To estimate the goal-scoring rate, we can use `nanmean`, which computes the
+    mean of the times, ignoring `nan` values.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE61]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE62]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can compute the CDF of an exponential distribution with the same goal-scoring
+    rate as the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE63]'
+  prefs: []
+  type: TYPE_PRE
+- en: To compute the CDF of the data, we’ll use the `dropna=False` argument, which
+    includes `nan` values at the end.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE64]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|  | probs |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3286.0 | 0.996951 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 3581.0 | 0.997713 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| NaN | 1.000000 |'
+  prefs: []
+  type: TYPE_TB
+- en: The following figure compares the exponential distribution to the distribution
+    of the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE65]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/0c6bffdb53c411d3e52ea8a97a3859d64ec63495d7e950a75097c1c0031e81fe.png](../Images/343459be3d0c97b6729e29aa5316eb4d.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The data deviate from the model in some places – it looks like there are fewer
+    goals in the first 1000 seconds than the model predicts. But still, the model
+    fits the data well.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The underlying assumption of these models – the Poisson model of goals and the
+    exponential model of times – is that a goal is equally likely during any second
+    of a game. If you ask a hockey fan whether that’s true, they would say no, and
+    they would be right – the real world violates assumptions like these in many ways.
+    Nevertheless, theoretical distributions often fit real data remarkably well.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '## The Normal Distribution'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Many things we measure in the real world follow a **normal distribution**, also
+    known as a Gaussian distribution or a “bell curve”. To see where these distributions
+    come from, let’s consider a model of the way giant pumpkins grow. Suppose that
+    each day, a pumpkin gains 1 pound if the weather is bad, 2 pounds if the weather
+    is fair, and 3 pounds if the weather is good. And suppose the weather each day
+    is bad, fair, or good with the same probability.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can use the following function to simulate this model for `n` days and return
+    the total of the weight gains.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE66]'
+  prefs: []
+  type: TYPE_PRE
+- en: NumPy’s `random` module provides a `choice` function that generates an array
+    of `n` random selections from a sequence of values, `choices` in this example.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now suppose 1001 people grow giant pumpkins in different places with different
+    weather. If we simulate the growth process for 100 days, we get a list of 1001
+    weights.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE67]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE68]'
+  prefs: []
+  type: TYPE_PRE
+- en: The mean is close to 200 pounds and the standard deviation is about 8 pounds.
+    To see whether the weights follow a normal distribution, we’ll use the following
+    function, which takes a sample and makes a `Cdf` that represents a normal distribution
+    with the same mean and standard deviation as the sample, evaluated over the range
+    from 4 standard deviations below the mean to 4 standard deviations above.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE69]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here’s how we use it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE70]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now we can make a `Cdf` that represents the distribution of the simulation results.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE71]'
+  prefs: []
+  type: TYPE_PRE
+- en: We’ll use the following function to compare the distributions. `cdf_model` and
+    `cdf_data` are `Cdf` objects. `xlabel` is a string, and `options` is a dictionary
+    of options that controls the way `cdf_data` is plotted.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE72]'
+  prefs: []
+  type: TYPE_PRE
+- en: And here are the results.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE73]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/fd3fd1223c522241a9cfd160ee9602accaaa0b4110ff37b3ed8f9b3a81758123.png](../Images/c22e74d93667004ceef9b475514331fd.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The normal model fits the distribution of the weights very well. In general,
+    when we add up enough random factors, the sum tends to follow a normal distribution.
+    That’s a consequence of the Central Limit Theorem, which we’ll come back to in
+    [Chapter 14](chap14.html#section-central-limit-theorem).
+  prefs: []
+  type: TYPE_NORMAL
+- en: But first let’s see how well the normal distribution fits real data. As an example,
+    we’ll look at the distribution of birth weights in the National Survey of Family
+    Growth (NSFG). We can use `read_fem_preg` to read the data, then select the `totalwgt_lb`
+    column, which records birth weights in pounds.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following cells download the data files and install `statadict`, which we
+    need to read the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE74]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE75]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE76]'
+  prefs: []
+  type: TYPE_PRE
+- en: The average of the birth weights is about 7.27 pounds, and the standard deviation
+    is 1.4 pounds, but as we’ve seen, there are some outliers in this dataset that
+    are probably errors.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE77]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE78]'
+  prefs: []
+  type: TYPE_PRE
+- en: To reduce the effect of the outliers on the estimated mean and standard deviation,
+    we’ll use the SciPy function `trimboth` to remove the highest and lowest values.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE79]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE80]'
+  prefs: []
+  type: TYPE_PRE
+- en: With the trimmed data, the mean is a little lower and the standard deviation
+    is substantially lower. We’ll use the trimmed data to make a normal model.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE81]'
+  prefs: []
+  type: TYPE_PRE
+- en: And compare it to the `Cdf` of the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE82]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/7519965a8284ad77c330c840869a26fcc01a1e6135f1a3e928b8b0feac502565.png](../Images/57511d3446d77a185ef8709bc789a794.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The normal model fits the data well except below 5 pounds, where the distribution
+    of the data is to the left of the model – that is, the lightest babies are lighter
+    than we’d expect in a normal distribution. The real world is usually more complicated
+    than simple mathematical models.  ## The Lognormal Distribution'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the previous section, we simulated pumpkin growth under the assumption that
+    pumpkins grow 1-3 pounds per day, depending on the weather. Instead, let’s suppose
+    their growth is proportional to their current weight, so big pumpkins gain more
+    weight per day than small pumpkins – which is probably more realistic.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following function simulates this kind of proportional growth, where a pumpkin
+    gains 3% of its weight if the weather is bad, 5% if the weather is fair, and 7%
+    if the weather is good. Again, we’ll assume that the weather is bad, fair, or
+    good on any given day with equal probability.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE83]'
+  prefs: []
+  type: TYPE_PRE
+- en: If a pumpkin gains 3% of its weight, the final weight is the product of the
+    initial weight and the factor 1.03. So we can compute the weight after 100 days
+    by choosing random factors and multiplying them together.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We’ll call this function 1001 times to simulate 1001 pumpkins and save their
+    weights.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE84]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE85]'
+  prefs: []
+  type: TYPE_PRE
+- en: The average weight is about 131 pounds; the standard deviation is about 21 pounds.
+    So the pumpkins in this model are smaller but more variable than in the previous
+    model.
+  prefs: []
+  type: TYPE_NORMAL
+- en: And we can show mathematically that they follow a **lognormal distribution**,
+    which means that the logarithms of the weights follow a normal distribution. To
+    check, we’ll compute the logs of the weights and their mean and standard deviation.
+    We could use logarithms with any base, but I’ll use base 10 because it makes the
+    results easier to interpret.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE86]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE87]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now let’s compare the distribution of the logarithms to a normal distribution
+    with the same mean and standard deviation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE88]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/fc31422af01f443ef5adfa55b650526b18895d13a5ef3fb95b2ebb2f33036761.png](../Images/217527b756622a9d54e0a258e556f5f3.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The model fits the simulation result very well, which is what we expected.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If people are like pumpkins, where the change in weight from year to year is
+    proportionate to their current weight, we might expect the distribution of adult
+    weights to follow a lognormal distribution. Let’s find out.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The National Center for Chronic Disease Prevention and Health Promotion conducts
+    an annual survey as part of the Behavioral Risk Factor Surveillance System (BRFSS).
+    In 2008, they interviewed 414,509 respondents and asked about their demographics,
+    health, and health risks. Among the data they collected are the weights of 398,484
+    respondents. Instructions for downloading the data are in the notebook for this
+    chapter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE89]'
+  prefs: []
+  type: TYPE_PRE
+- en: The `thinkstats` module provides a function that reads BRFSS data and returns
+    a Pandas `DataFrame`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE90]'
+  prefs: []
+  type: TYPE_PRE
+- en: Adult weights in kilograms are recorded in the `wtkg2` column.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE91]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE92]'
+  prefs: []
+  type: TYPE_PRE
+- en: The mean is about 79 kg. Before we compute logarithms, let’s see if the weights
+    follow a normal distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE93]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/12ce2ebcee81043ddca2f3e0cac500efd089bfaea406e5ab9fd91185871f2faf.png](../Images/201dfb75d6e78e0b0d9c7add44407abf.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The normal distribution might be a good enough model for this data, for some
+    purposes – but let’s see if we can do better.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s the distribution of the log-transformed weights and a normal model with
+    the same mean and standard deviation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE94]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE95]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![_images/fa5390b4b1362c72412c85fdbb1da08506bca81c65968411636a85ad12674500.png](../Images/4cda7abac414ce6b3dcfe161e4c7a4b1.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The normal model fits the logarithms better than it fits the weights themselves,
+    which suggests that proportional growth is a better model of weight gain than
+    additive growth.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Why model?
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: At the beginning of this chapter, I said that many real world phenomena can
+    be modeled with theoretical distributions. But it might not have been clear why
+    we should care.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Like all models, theoretical distributions are abstractions, which means they
+    leave out details that are considered irrelevant. For example, an observed distribution
+    might have measurement errors or quirks that are specific to the sample; theoretical
+    models ignore these idiosyncrasies.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Theoretical models are also a form of data compression. When a model fits a
+    dataset well, a small set of numbers can summarize a large amount of data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: It is sometimes surprising when data from a natural phenomenon fit a theoretical
+    distribution, but these observations can provide insight into physical systems.
+    Sometimes we can explain why an observed distribution has a particular form. For
+    example, in the previous section we found that adult weights are well-modeled
+    by a lognormal distribution, which suggests that changes in weight from year to
+    year might be proportional to current weight.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Also, theoretical distributions lend themselves to mathematical analysis, as
+    we’ll see in [Chapter 14](chap14.html#chapter-analytic-methods).
+  prefs: []
+  type: TYPE_NORMAL
+- en: But it is important to remember that all models are imperfect. Data from the
+    real world never fit a theoretical distribution perfectly. People sometimes talk
+    as if data are generated by models; for example, they might say that the distribution
+    of human heights is normal, or the distribution of income is lognormal. Taken
+    literally, these claims cannot be true – there are always differences between
+    the real world and mathematical models.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Models are useful if they capture the relevant aspects of the real world and
+    leave out unneeded details. But what is relevant or unneeded depends on what you
+    are planning to use the model for.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Glossary
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '**binomial distribution:** A theoretical distribution often used to model the
+    number of successes or hits in a sequence of hits and misses.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Poisson distribution:** A theoretical distribution often used to model the
+    number of events that occur in an interval of time.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**exponential distribution:** A theoretical distribution often used to model
+    the time between events.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**normal distribution:** A theoretical distribution often used to model data
+    that follow a symmetric, bell-like curve.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**lognormal distribution:** A theoretical distribution often used to model
+    data that follow a bell-like curve that is skewed to the right.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Exercises
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Exercise 5.1
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: In the NSFG respondent file, the `numfmhh` column records the “number of family
+    members in” each respondent’s household. We can use `read_fem_resp` to read the
+    file, and `query` to select respondents who were 25 or older when they were interviewed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE96]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE97]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE98]'
+  prefs: []
+  type: TYPE_PRE
+- en: Compute the `Pmf` of `numfmhh` for these older respondents and compare it with
+    a Poisson distribution with the same mean. How well does the Poisson model fit
+    the data?
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exercise 5.2
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Earlier in this chapter we saw that the time until the first goal in a hockey
+    game follows an exponential distribution. If our model of goal-scoring is correct,
+    a goal is equally likely at any time, regardless of how long it has been since
+    the previous goal. And if that’s true, we expect the time between goals to follow
+    an exponential distribution, too.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following loop reads the hockey data again, computes the time between successive
+    goals, if there is more than one in a game, and collects the inter-goal times
+    in a list.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE99]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE100]'
+  prefs: []
+  type: TYPE_PRE
+- en: Use `exponential_cdf` to compute the CDF of an exponential distribution with
+    the same mean as the observed intervals and compare this model to the CDF of the
+    data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exercise 5.3
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'Is the distribution of human height more like a normal or a lognormal distribution?
+    To find out, we can select height data from the BRFSS like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE101]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE102]'
+  prefs: []
+  type: TYPE_PRE
+- en: Compute the CDF of these values and compare it to a normal distribution with
+    the same mean and standard deviation. Then compute the logarithms of the heights
+    and compute the distribution of the logarithms to a normal distribution. Based
+    on a visual comparison, which model fits the data better?
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Think Stats: Exploratory Data Analysis in Python, 3rd Edition](https://allendowney.github.io/ThinkStats/index.html)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Copyright 2024 [Allen B. Downey](https://allendowney.com)
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Code license: [MIT License](https://mit-license.org/)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Text license: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  prefs: []
+  type: TYPE_NORMAL
