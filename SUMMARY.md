@@ -7,3 +7,4 @@
 +   [Python 编程思维第二版](docs/think-py-2e/README.md)
 +   [统计思维第二版](docs/think-stat-2e/README.md)
 +   [Python 编程思维第三版](docs/tnkpy3e/README.md)
++   [统计思维（程序员的概率统计）第三版](docs/tnkstat3e/README.md)

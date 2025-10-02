@@ -1,4 +1,4 @@
-# 《Think Stats》，第 3 版
+# 统计思维第三版
 
 > 原文：[`allendowney.github.io/ThinkStats/index.html`](https://allendowney.github.io/ThinkStats/index.html)
 
